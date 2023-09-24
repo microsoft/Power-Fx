@@ -4,12 +4,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.PowerFx.Repl.Functions;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
@@ -58,7 +62,16 @@ namespace Microsoft.PowerFx
         /// Optional - provide the current user. 
         /// Must call <see cref="EnableUserObject(string[])"/> first to declare the schema.
         /// </summary>
-        public UserInfo UserInfo { get; set; }
+        public UserInfo UserInfo { get; set; } = SampleUserInfo.UserInfo;
+            
+        public static readonly BasicUserInfo SampleUserInfo = new BasicUserInfo
+        {
+            FullName = "Susan Burk",
+            Email = "susan@contoso.com",
+            DataverseUserId = new Guid("88888888-044f-4928-a95f-30d4c8ebf118"),
+            TeamsMemberId = "29:1DUjC5z4ttsBQa0fX2O7B0IDu30R",
+            EntraObjectId = new Guid("99999999-044f-4928-a95f-30d4c8ebf118"),
+        };
 
         /// <summary>
         /// Optional set of Services provided to Repl at eval time. 
@@ -67,6 +80,8 @@ namespace Microsoft.PowerFx
 
         // Policy for handling multiple lines. 
         public MultilineProcessor MultilineProcessor { get; set; } = new MultilineProcessor();
+
+        public ParserOptions ParserOptions { get; set; } = new ParserOptions() { AllowsSideEffects = true };
 
         // example override, switching to [1], [2] etc.
         public virtual string Prompt => ">> ";
@@ -95,6 +110,11 @@ namespace Microsoft.PowerFx
         }
 
         private bool _userEnabled = false;
+
+        public void EnableUserObject()
+        {
+            this.EnableUserObject(UserInfo.AllKeys);
+        }
 
         // Either inherited symbols must define User (and it's schema), 
         // or we can define it now. 
@@ -153,9 +173,14 @@ namespace Microsoft.PowerFx
         {
             string cmd = this.MultilineProcessor.HandleLine(line);
 
-            if (cmd != null)
+            var result = PowerFx.Engine.Parse(cmd, Engine.Config.Features, ParserOptions);
+
+            var missingClose = result.Errors.Count(error => error.Message.Contains("where 'ParenClose' is expected.") || error.Message.Contains("where 'CurlyClose' is expected") || error.Message.Contains("where 'BracketClose' is expected"));
+
+            if (missingClose == 0 || cmd.EndsWith("\r\n\r\n", StringComparison.InvariantCulture) || cmd.EndsWith("\n\n", StringComparison.InvariantCulture))
             {
-                await this.HandleCommandAsync(cmd, cancel);
+                this.MultilineProcessor.Clear();
+                await this.HandleCommandAsync(cmd, result, cancel);
             }
         }
 
@@ -163,10 +188,11 @@ namespace Microsoft.PowerFx
         /// Directly invoke a command. This skips multiline handling. 
         /// </summary>
         /// <param name="line">expression to run.</param>
+        /// <param name="parseResult">result of parsing line.</param>
         /// <param name="cancel">cancellation token.</param>
         /// <returns>status object with details.</returns>
         /// <exception cref="InvalidOperationException">invalid.</exception>
-        public virtual async Task<ReplResult> HandleCommandAsync(string line, CancellationToken cancel = default)
+        public virtual async Task<ReplResult> HandleCommandAsync(string line, ParseResult parseResult, CancellationToken cancel = default)
         {
             if (this.Engine == null)
             {
@@ -184,21 +210,15 @@ namespace Microsoft.PowerFx
             }
 
             var extraSymbolTable = this.ExtraSymbolValues?.SymbolTable;
-            var parserOpts = new ParserOptions { AllowsSideEffects = true };
 
-            if (this.AllowIRFunction)
+            if (this.AllowIRFunction && parseResult.Root is CallNode cn && cn.Head.Name == "IR")
             {
-                var match = Regex.Match(line, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline);
-                if (match.Success)
-                {
-                    var inner = match.Groups["expr"].Value;
-                    var cr = this.Engine.Check(inner, options: parserOpts, symbolTable: extraSymbolTable);
-                    var irText = cr.PrintIR();
-                    await this.Output.WriteLineAsync(irText, OutputKind.Repl, cancel)
-                        .ConfigureAwait(false);
+                var cr = this.Engine.Check(cn.Args.ToString(), options: ParserOptions, symbolTable: extraSymbolTable);
+                var irText = cr.PrintIR();
+                await this.Output.WriteLineAsync(irText, OutputKind.Repl, cancel)
+                    .ConfigureAwait(false);
 
-                    return new ReplResult();
-                }
+                return new ReplResult();
             }
             
             var runtimeConfig = new RuntimeConfig(this.ExtraSymbolValues)
@@ -221,7 +241,7 @@ namespace Microsoft.PowerFx
             var currentSymbolTable = ReadOnlySymbolTable.Compose(this.MetaFunctions, extraSymbolTable);
 
             var check = new CheckResult(this.Engine)
-                .SetText(line, parserOpts)
+                .SetText(line, ParserOptions)
                 .SetBindingInfo(currentSymbolTable);
 
             check.ApplyParse();
@@ -248,7 +268,7 @@ namespace Microsoft.PowerFx
                         // Get the type. 
                         var rhsExpr = declare._rhs.GetCompleteSpan().GetFragment(line);
 
-                        var setCheck = this.Engine.Check(rhsExpr, parserOpts, this.ExtraSymbolValues?.SymbolTable);
+                        var setCheck = this.Engine.Check(rhsExpr, ParserOptions, this.ExtraSymbolValues?.SymbolTable);
                         if (!setCheck.IsSuccess)
                         {
                             await this.Output.WriteLineAsync($"Failed to initialize '{name}'.", OutputKind.Error, cancel)
@@ -363,7 +383,7 @@ namespace Microsoft.PowerFx
     }
 
     /// <summary>
-    /// Result from <see cref="PowerFxReplBase.HandleCommandAsync(string, CancellationToken)"/>.
+    /// Result from <see cref="PowerFxReplBase.HandleCommandAsync(string, ParseResult, CancellationToken)"/>.
     /// </summary>
     public class ReplResult
     {

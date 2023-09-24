@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq.Expressions;
 using System.Text;
+using Microsoft.CodeAnalysis;
 
 namespace Microsoft.PowerFx
 {
@@ -22,17 +24,14 @@ namespace Microsoft.PowerFx
         {
             _commandBuffer.AppendLine(line);
 
-            // $$$ fix this check and apply ReadFormula logic.
-            bool complete = !line.TrimEnd('\r', '\n').EndsWith(" ", StringComparison.Ordinal); 
+            var s = _commandBuffer.ToString();
 
-            if (complete)
-            {
-                var cmd = _commandBuffer.ToString();
-                _commandBuffer.Clear();
-                return cmd;
-            }
+            return s;
+        }
 
-            return null;
+        public void Clear()
+        {
+            _commandBuffer.Clear();
         }
     }
 }

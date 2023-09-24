@@ -43,33 +43,11 @@ namespace Microsoft.PowerFx
         private const string OptionStackTrace = "StackTrace";
         private static bool _stackTrace = false;
 
-        private static readonly BasicUserInfo _userInfo = new BasicUserInfo
-        {
-            FullName = "Susan Burk",
-            Email = "susan@contoso.com",
-            DataverseUserId = new Guid("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),
-            TeamsMemberId = "29:1DUjC5z4ttsBQa0fX2O7B0IDu30R",
-            EntraObjectId = new Guid("99999999-044f-4928-a95f-30d4c8ebf118"),
-        };
-
         private static readonly Features _features = Features.PowerFxV1;
 
         private static void ResetEngine()
-        {
-            var props = new Dictionary<string, object>
-            {
-                { "FullName", _userInfo.FullName },
-                { "Email", _userInfo.Email },
-                { "DataverseUserId", _userInfo.DataverseUserId },
-                { "TeamsMemberId", _userInfo.TeamsMemberId }
-            };
-
-            var allKeys = props.Keys.ToArray();
-            SymbolTable userSymbolTable = new SymbolTable();
-
-            userSymbolTable.AddUserInfoObject(allKeys);
-
-            var config = new PowerFxConfig(_features) { SymbolTable = userSymbolTable };
+        { 
+            var config = new PowerFxConfig(_features);
 
             if (_largeCallDepth)
             {
@@ -161,6 +139,8 @@ namespace Microsoft.PowerFx
         {
             public MyRepl()
             {
+                this.EnableUserObject();
+                this.Engine = _engine;
             }
 
             public override async Task OnEvalExceptionAsync(Exception e, CancellationToken cancel)
@@ -176,7 +156,7 @@ namespace Microsoft.PowerFx
                 Console.ResetColor();
             }
 
-            public override async Task<ReplResult> HandleCommandAsync(string expr, CancellationToken cancel = default)
+            public override async Task<ReplResult> HandleCommandAsync(string expr, ParseResult parseResult, CancellationToken cancel = default)
             {
                 this.Engine = _engine; // apply latest engine. 
 
@@ -202,7 +182,7 @@ namespace Microsoft.PowerFx
                 else
                 {
                     // Default to standard behavior. 
-                    return await base.HandleCommandAsync(expr, cancel).ConfigureAwait(false);
+                    return await base.HandleCommandAsync(expr, parseResult, cancel).ConfigureAwait(false);
                 }
             }
         }
@@ -211,7 +191,6 @@ namespace Microsoft.PowerFx
         {
             var repl = new MyRepl
             {
-                UserInfo = _userInfo.UserInfo,
                 Echo = echo,
                 AllowSetDefinitions = true,
                 AllowIRFunction = true
