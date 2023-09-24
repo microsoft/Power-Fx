@@ -6,7 +6,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Repl.Functions;
 using Microsoft.PowerFx.Syntax;
