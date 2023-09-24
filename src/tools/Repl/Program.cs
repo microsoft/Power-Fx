@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Repl;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -43,33 +44,11 @@ namespace Microsoft.PowerFx
         private const string OptionStackTrace = "StackTrace";
         private static bool _stackTrace = false;
 
-        private static readonly BasicUserInfo _userInfo = new BasicUserInfo
-        {
-            FullName = "Susan Burk",
-            Email = "susan@contoso.com",
-            DataverseUserId = new Guid("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),
-            TeamsMemberId = "29:1DUjC5z4ttsBQa0fX2O7B0IDu30R",
-            EntraObjectId = new Guid("99999999-044f-4928-a95f-30d4c8ebf118"),
-        };
-
         private static readonly Features _features = Features.PowerFxV1;
 
         private static void ResetEngine()
-        {
-            var props = new Dictionary<string, object>
-            {
-                { "FullName", _userInfo.FullName },
-                { "Email", _userInfo.Email },
-                { "DataverseUserId", _userInfo.DataverseUserId },
-                { "TeamsMemberId", _userInfo.TeamsMemberId }
-            };
-
-            var allKeys = props.Keys.ToArray();
-            SymbolTable userSymbolTable = new SymbolTable();
-
-            userSymbolTable.AddUserInfoObject(allKeys);
-
-            var config = new PowerFxConfig(_features) { SymbolTable = userSymbolTable };
+        { 
+            var config = new PowerFxConfig(_features);
 
             if (_largeCallDepth)
             {
@@ -161,6 +140,9 @@ namespace Microsoft.PowerFx
         {
             public MyRepl()
             {
+                this.EnableUserObject();
+                this.AddPseudoFunction(new IRPseudoFunction());
+                this.Engine = _engine;
             }
 
             public override async Task OnEvalExceptionAsync(Exception e, CancellationToken cancel)
@@ -175,46 +157,14 @@ namespace Microsoft.PowerFx
 
                 Console.ResetColor();
             }
-
-            public override async Task<ReplResult> HandleCommandAsync(string expr, CancellationToken cancel = default)
-            {
-                this.Engine = _engine; // apply latest engine. 
-
-                // Intercept to enable  some experimentla commands 
-
-                Match match;
-
-                // named formula definition: <ident> = <formula>
-                if ((match = Regex.Match(expr, @"^\s*(?<ident>(\w+|'([^']|'')+'))\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success &&
-                              !Regex.IsMatch(match.Groups["ident"].Value, "^\\d") &&
-                              match.Groups["ident"].Value != "true" && match.Groups["ident"].Value != "false" && match.Groups["ident"].Value != "blank")
-                {
-                    var ident = match.Groups["ident"].Value;
-                    if (ident.StartsWith('\''))
-                    {
-                        ident = ident.Substring(1, ident.Length - 2).Replace("''", "'", StringComparison.Ordinal);
-                    }
-
-                    _engine.SetFormula(ident, match.Groups["formula"].Value, OnUpdate);
-
-                    return new ReplResult();
-                }
-                else
-                {
-                    // Default to standard behavior. 
-                    return await base.HandleCommandAsync(expr, cancel).ConfigureAwait(false);
-                }
-            }
         }
 
         public static void REPL(bool echo)
         {
             var repl = new MyRepl
             {
-                UserInfo = _userInfo.UserInfo,
                 Echo = echo,
-                AllowSetDefinitions = true,
-                AllowIRFunction = true
+                AllowSetDefinitions = true
             };
 
             while (true)
@@ -222,26 +172,6 @@ namespace Microsoft.PowerFx
                 repl.WritePromptAsync().Wait();
                 var line = Console.ReadLine();
                 repl.HandleLineAsync(line).Wait();
-            }
-        }
-
-        private static void OnUpdate(string name, FormulaValue newValue)
-        {
-            Console.Write($"{name}: ");
-            if (newValue is ErrorValue errorValue)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Error: " + errorValue.Errors[0].Message);
-                Console.ResetColor();
-            }
-            else
-            {
-                if (newValue is TableValue)
-                {
-                    Console.WriteLine();
-                }
-
-                Console.WriteLine(PrintResult(newValue));
             }
         }
 

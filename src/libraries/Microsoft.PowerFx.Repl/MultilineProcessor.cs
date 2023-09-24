@@ -2,7 +2,14 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
+using System.Text.RegularExpressions;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Repl.Functions;
+using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -22,17 +29,42 @@ namespace Microsoft.PowerFx
         {
             _commandBuffer.AppendLine(line);
 
-            // $$$ fix this check and apply ReadFormula logic.
-            bool complete = !line.TrimEnd('\r', '\n').EndsWith(" ", StringComparison.Ordinal); 
+            var commandBufferString = _commandBuffer.ToString();
 
-            if (complete)
+            // We use the parser results to determine if the command is complete or more lines are needed.
+            // The Engine features and parser options do not need to match what we will actually use,
+            // this just needs to be good enough to detect the errors below for multiline processing.
+            var result = Engine.Parse(commandBufferString);
+
+            // We will get this error, with this argument, if we are missing closing punctuation.
+            var missingClose = result.Errors.Any(error => error.MessageKey == "ErrExpectedFound_Ex_Fnd" &&
+                                                    ((TokKind)error.MessageArgs.Last() == TokKind.ParenClose ||
+                                                     (TokKind)error.MessageArgs.Last() == TokKind.CurlyClose ||
+                                                     (TokKind)error.MessageArgs.Last() == TokKind.BracketClose));
+
+            // However, we will get false positives from the above if the statement is very malformed.
+            // For example: Mid("a", 2,) where the second error about ParenClose expected at the end is incorrect.
+            // In this case, more characters will not help and we should complete the command and report the errors with what we have.
+            var badToken = result.Errors.Any(error => error.MessageKey == "ErrBadToken");
+
+            // An empty line (possibly with spaces) will also finish the command.
+            // This is the ultimate escape hatch for the user if our closing detection logic above fails.
+            var emptyLine = Regex.IsMatch(commandBufferString, @"\n[ \t]*\r?\n$", RegexOptions.Multiline);
+
+            if (!missingClose || badToken || emptyLine)
             {
-                var cmd = _commandBuffer.ToString();
-                _commandBuffer.Clear();
-                return cmd;
+                Clear();
+                return commandBufferString;
             }
+            else
+            {
+                return null;
+            }
+        }
 
-            return null;
+        public void Clear()
+        {
+            _commandBuffer.Clear();
         }
     }
 }
