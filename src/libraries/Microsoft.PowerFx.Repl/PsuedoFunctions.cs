@@ -7,14 +7,14 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Repl
 {
-    public interface IPsuedoFunction
+    public interface IPseudoFunction
     {
         public abstract void Execute(CallNode callNode, PowerFxReplBase repl, ReadOnlySymbolTable extraSymbolTable, CancellationToken cancel);
 
         public abstract string Name();
     }
 
-    public class IRPsuedoFunction : IPsuedoFunction
+    public class IRPseudoFunction : IPseudoFunction
     {
         public async void Execute(CallNode callNode, PowerFxReplBase repl, ReadOnlySymbolTable extraSymbolTable, CancellationToken cancel)
         {

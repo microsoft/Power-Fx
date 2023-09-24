@@ -91,9 +91,9 @@ namespace Microsoft.PowerFx
             await this.Output.WriteLineAsync(msg, OutputKind.Error, cancel);
         }
 
-        public IDictionary<string, IPsuedoFunction> _pseudoFunctions = new Dictionary<string, IPsuedoFunction>();
+        public IDictionary<string, IPseudoFunction> _pseudoFunctions = new Dictionary<string, IPseudoFunction>();
 
-        public void AddPseudoFunction(IPsuedoFunction func)
+        public void AddPseudoFunction(IPseudoFunction func)
         {
             _pseudoFunctions.Add(func.Name(), func);
         }

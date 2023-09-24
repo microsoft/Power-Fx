@@ -141,7 +141,7 @@ namespace Microsoft.PowerFx
             public MyRepl()
             {
                 this.EnableUserObject();
-                this.AddPseudoFunction(new IRPsuedoFunction());
+                this.AddPseudoFunction(new IRPseudoFunction());
                 this.Engine = _engine;
             }
 
