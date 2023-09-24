@@ -2,10 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Repl

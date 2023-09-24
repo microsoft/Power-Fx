@@ -157,36 +157,6 @@ namespace Microsoft.PowerFx
 
                 Console.ResetColor();
             }
-
-            public override async Task<ReplResult> HandleCommandAsync(string expr, CancellationToken cancel = default)
-            {
-                this.Engine = _engine; // apply latest engine. 
-
-                // Intercept to enable  some experimentla commands 
-
-                Match match;
-
-                // named formula definition: <ident> = <formula>
-                if ((match = Regex.Match(expr, @"^\s*(?<ident>(\w+|'([^']|'')+'))\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success &&
-                              !Regex.IsMatch(match.Groups["ident"].Value, "^\\d") &&
-                              match.Groups["ident"].Value != "true" && match.Groups["ident"].Value != "false" && match.Groups["ident"].Value != "blank")
-                {
-                    var ident = match.Groups["ident"].Value;
-                    if (ident.StartsWith('\''))
-                    {
-                        ident = ident.Substring(1, ident.Length - 2).Replace("''", "'", StringComparison.Ordinal);
-                    }
-
-                    _engine.SetFormula(ident, match.Groups["formula"].Value, OnUpdate);
-
-                    return new ReplResult();
-                }
-                else
-                {
-                    // Default to standard behavior. 
-                    return await base.HandleCommandAsync(expr, cancel).ConfigureAwait(false);
-                }
-            }
         }
 
         public static void REPL(bool echo)
@@ -202,26 +172,6 @@ namespace Microsoft.PowerFx
                 repl.WritePromptAsync().Wait();
                 var line = Console.ReadLine();
                 repl.HandleLineAsync(line).Wait();
-            }
-        }
-
-        private static void OnUpdate(string name, FormulaValue newValue)
-        {
-            Console.Write($"{name}: ");
-            if (newValue is ErrorValue errorValue)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Error: " + errorValue.Errors[0].Message);
-                Console.ResetColor();
-            }
-            else
-            {
-                if (newValue is TableValue)
-                {
-                    Console.WriteLine();
-                }
-
-                Console.WriteLine(PrintResult(newValue));
             }
         }
 

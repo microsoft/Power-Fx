@@ -10,8 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Repl;
 using Microsoft.PowerFx.Repl.Functions;
@@ -222,12 +221,22 @@ namespace Microsoft.PowerFx
             var extraSymbolTable = this.ExtraSymbolValues?.SymbolTable;
 
             // pseudo functions and named formula assignments, handled outside of the interpreter
+            // for our purposes, we don't need the engine's features or the parser options
             var parseResult = PowerFx.Engine.Parse(cmd);
 
-            if (parseResult.IsSuccess && parseResult.Root is CallNode cn && _pseudoFunctions.TryGetValue(cn.Head.Name, out var psuedoFunction))
+            if (parseResult.IsSuccess)
             {
-                psuedoFunction.Execute(cn, this, extraSymbolTable, cancel);
-                return new ReplResult();
+                if (parseResult.Root is CallNode cn && _pseudoFunctions.TryGetValue(cn.Head.Name, out var psuedoFunction))
+                {
+                    psuedoFunction.Execute(cn, this, extraSymbolTable, cancel);
+                    return new ReplResult();
+                }
+
+                if (parseResult.Root is BinaryOpNode bo && bo.Op == BinaryOp.Equal && bo.Left.Kind == NodeKind.FirstName)
+                {
+                    Engine.SetFormula(bo.Left.ToString(), bo.Right.ToString(), OnFormulaUpdate);
+                    return new ReplResult();
+                }
             }
             
             var runtimeConfig = new RuntimeConfig(this.ExtraSymbolValues)
@@ -369,6 +378,11 @@ namespace Microsoft.PowerFx
             await this.WriteLineVarAsync(result, cancel);
 
             return replResult;
+        }
+
+        public virtual async void OnFormulaUpdate(string name, FormulaValue newValue)
+        {
+            await this.WriteLineVarAsync(newValue, CancellationToken.None, $"{name}: ");
         }
 
         private async Task WriteLineVarAsync(FormulaValue result, CancellationToken cancel, string prefix = null)
