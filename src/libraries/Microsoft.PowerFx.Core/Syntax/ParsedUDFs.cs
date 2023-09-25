@@ -38,9 +38,16 @@ namespace Microsoft.PowerFx.Core.Syntax
             NumberIsFloat = numberIsFloat;
         }
 
-        public ParseUDFsResult GetParsed()
+        public ParseUserDefinitionResult GetParsed()
         {
-            return TexlParser.ParseUDFsScript(Script, Loc, NumberIsFloat);
+            var parserOptions = new ParserOptions()
+            {
+                Culture = Loc,
+                NumberIsFloat = NumberIsFloat,
+                AllowsSideEffects = true,
+            };
+
+            return TexlParser.ParseUserDefinitionScript(Script, parserOptions);
         }
     }
 }

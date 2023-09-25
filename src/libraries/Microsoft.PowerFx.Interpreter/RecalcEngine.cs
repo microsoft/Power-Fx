@@ -218,13 +218,13 @@ namespace Microsoft.PowerFx
         internal DefineFunctionsResult DefineFunctions(string script, bool numberIsFloat = false)
         {
             var parsedUDFS = new Core.Syntax.ParsedUDFs(script, numberIsFloat: numberIsFloat);
-            var result = parsedUDFS.GetParsed();
+            var result = UserDefinitions.Parse(script, new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = numberIsFloat });
             var errors = result.Errors?.ToList();
             var comments = new List<Syntax.CommentToken>();
 
             var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
                 udf.Ident.ToString(),
-                new ParseResult(udf.Body, errors, result.HasError, comments, null, null, script),
+                new ParseResult(udf.Body, errors, result.HasErrors, comments, null, null, script),
                 GetFormulaTypeFromName(udf.ReturnType._value),
                 udf.IsImperative,
                 udf.NumberIsFloat,
