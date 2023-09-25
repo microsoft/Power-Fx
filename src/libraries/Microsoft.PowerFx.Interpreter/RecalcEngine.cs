@@ -217,7 +217,6 @@ namespace Microsoft.PowerFx
         // Preview functionality 
         internal DefineFunctionsResult DefineFunctions(string script, bool numberIsFloat = false)
         {
-            var parsedUDFS = new Core.Syntax.ParsedUDFs(script, numberIsFloat: numberIsFloat);
             var result = UserDefinitions.Parse(script, new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = numberIsFloat });
             var errors = result.Errors?.ToList();
             var comments = new List<Syntax.CommentToken>();

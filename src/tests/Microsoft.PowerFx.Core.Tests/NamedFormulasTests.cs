@@ -77,7 +77,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Foo(x: Number): Number = Abs(x);")]
         public void DefFuncTest(string script)
         {
-            var parsedUDFS = new ParsedUDFs(script);
             var result = UserDefinitions.Parse(script, _parseOptions);
             Assert.False(result.HasErrors);
             var udf = result.UDFs.First();
@@ -96,7 +95,6 @@ namespace Microsoft.PowerFx.Core.Tests
                     "Rec7(x: Number): Number { x + 1 };")]
         public void DefFunctionFromDiscussion(string script)
         {
-            var parsedUDFs = new ParsedUDFs(script);
             var result = UserDefinitions.Parse(script, _parseOptions);
             Assert.False(result.HasErrors);
         }
@@ -108,7 +106,6 @@ namespace Microsoft.PowerFx.Core.Tests
                     "Rec7//comment\n(//comment\nx//comment\n://comment\n Number//comment\n)://comment\n Number//comment\n //comment\n { x + 1 }//comment\n;")]
         public void DefFunctionWeirdFormatting(string script)
         {
-            var parsedUDFs = new ParsedUDFs(script);
             var result = UserDefinitions.Parse(script, _parseOptions);
             Assert.False(result.HasErrors);
         }
@@ -117,7 +114,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Foo(): Number { 1+1; 2+2; };")]
         public void TestChaining(string script)
         {
-            var parsedUDFs = new ParsedUDFs(script);
             var result = UserDefinitions.Parse(script, _parseOptions);
 
             Assert.False(result.HasErrors);
@@ -130,7 +126,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Foo(): Number { Sum(1, 1); Sum(2, 2); };")]
         public void TestChaining2(string script)
         {
-            var parsedUDFs = new ParsedUDFs(script);
             var result = UserDefinitions.Parse(script, _parseOptions);
 
             Assert.False(result.HasErrors);
