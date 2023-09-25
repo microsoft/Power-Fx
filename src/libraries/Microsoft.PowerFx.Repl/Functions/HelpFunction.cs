@@ -64,8 +64,8 @@ namespace Microsoft.PowerFx.Repl.Functions
 
         public static IEnumerable<string> FunctionsList(PowerFxREPL repl)
         {
-            return repl.Engine.SupportedFunctions.FunctionNames
-                    .Concat(repl.MetaFunctions.FunctionNames);
+            // Can't use Engine.SupportedFunctions as that doesn't include Engine.AddFunction functions
+            return repl.Engine.GetAllFunctionNames().Concat(repl.MetaFunctions.FunctionNames);
         }
 
         public static string FormatFunctionsList(IEnumerable<string> functionList, int numColumns = 5, int columnWidth = 14, int leftPadding = 2)
