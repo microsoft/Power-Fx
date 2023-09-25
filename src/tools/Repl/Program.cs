@@ -148,23 +148,7 @@ namespace Microsoft.PowerFx
 
         public static void REPL()
         {
-                    // Default to standard behavior. 
-                    return await base.HandleCommandAsync(expr, cancel).ConfigureAwait(false);
-                }
-            }
-        }
-
-        public static void REPL(bool echo)
-        {
-            var repl = new MyRepl
-            {
-                UserInfo = _userInfo.UserInfo,
-                Echo = echo,
-                AllowSetDefinitions = true,
-                AllowIRFunction = true
-            };
-            repl.EnableUserObject(UserInfo.AllKeys);
-
+            var repl = new MyRepl();
             while (true)
             {
                 repl.WritePromptAsync().Wait();
