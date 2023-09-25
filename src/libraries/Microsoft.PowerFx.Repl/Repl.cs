@@ -73,11 +73,11 @@ namespace Microsoft.PowerFx
             await this.Output.WriteLineAsync(msg, OutputKind.Error, cancel);
         }
 
-        public IDictionary<string, IPseudoFunction> _pseudoFunctions = new Dictionary<string, IPseudoFunction>();
+        private readonly IDictionary<string, IPseudoFunction> _pseudoFunctions = new Dictionary<string, IPseudoFunction>();
 
         public void AddPseudoFunction(IPseudoFunction func)
         {
-            _pseudoFunctions.Add(func.Name(), func);
+            _pseudoFunctions.Add(func.Name, func);
         }
 
         public PowerFxREPL()
@@ -239,7 +239,14 @@ namespace Microsoft.PowerFx
 
                 if (check.Parse.Root is CallNode cn && _pseudoFunctions.TryGetValue(cn.Head.Name, out var psuedoFunction))
                 {
-                    psuedoFunction.Execute(cn, this, extraSymbolTable, cancel);
+                    // Foo(expr)
+                    // where Foo() is a peudo function, get CheckResult for just 'expr' and pass in. 
+                    // Inner expr doesn't get access to meta functions. 
+                    var innerExpr = cn.Args.ToString();
+                    CheckResult psuedoCheck = this.Engine.Check(innerExpr, options: this.ParserOptions, symbolTable: extraSymbolTable);
+
+                    await psuedoFunction.ExecuteAsync(psuedoCheck, this, cancel).ConfigureAwait(false);
+
                     return new ReplResult();
                 }
 

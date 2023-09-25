@@ -3,6 +3,7 @@
 
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Syntax;
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -15,9 +16,19 @@ namespace Microsoft.PowerFx.Repl
     /// </summary>
     public interface IPseudoFunction
     {
-        public abstract void Execute(CallNode callNode, PowerFxREPL repl, ReadOnlySymbolTable extraSymbolTable, CancellationToken cancel);
+        /// <summary>
+        /// Execute the psuedo function.
+        /// </summary>
+        /// <param name="checkResult">a check for the inner expression.</param>
+        /// <param name="repl">REPL for providing services like output windows.</param>
+        /// <param name="cancel">cancellation token.</param>
+        public abstract Task ExecuteAsync(CheckResult checkResult, PowerFxREPL repl, CancellationToken cancel);
 
-        public abstract string Name();
+        /// <summary>
+        /// Name of the psuedo function.
+        /// </summary>
+        /// <returns></returns>
+        public abstract string Name { get; }
     }
 
     /// <summary>
@@ -25,31 +36,13 @@ namespace Microsoft.PowerFx.Repl
     /// </summary>
     public class IRPseudoFunction : IPseudoFunction
     {
-        public async void Execute(CallNode callNode, PowerFxREPL repl, ReadOnlySymbolTable extraSymbolTable, CancellationToken cancel)
+        public async Task ExecuteAsync(CheckResult checkResult, PowerFxREPL repl, CancellationToken cancel)
         {
-            try
-            {
-                var cr = repl.Engine.Check(callNode.Args.ToString(), options: repl.ParserOptions, symbolTable: extraSymbolTable);
-                var irText = cr.PrintIR();
-                await repl.Output.WriteLineAsync(irText, OutputKind.Repl, cancel)
-                    .ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
-            {
-                // $$$ cancelled task, or a normal abort? 
-                // Signal to caller that we're done. 
-                throw;
-            }
-            catch (Exception e)
-            {
-                await repl.OnEvalExceptionAsync(e, cancel)
-                    .ConfigureAwait(false);
-            }
+            var irText = checkResult.PrintIR();
+            await repl.Output.WriteLineAsync(irText, OutputKind.Repl, cancel)
+                .ConfigureAwait(false);            
         }
 
-        public string Name()
-        {
-            return "IR";
-        }
+        public string Name => "IR";        
     }
 }
