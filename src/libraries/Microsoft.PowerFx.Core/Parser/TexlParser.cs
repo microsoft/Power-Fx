@@ -73,18 +73,6 @@ namespace Microsoft.PowerFx.Core.Parser
             _features = features;
         }
 
-        public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc = null, bool numberIsFloat = false)
-        {
-            Contracts.AssertValue(script);
-            Contracts.AssertValueOrNull(loc);
-
-            // UDFs always support ReservedKeywords, no back compat concern
-            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
-
-            return parser.ParseUDFs(script);
-        }
-
         public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, ParserOptions parserOptions)
         {
             Contracts.AssertValue(parserOptions);
