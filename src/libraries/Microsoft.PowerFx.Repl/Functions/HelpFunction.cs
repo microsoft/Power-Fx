@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Repl.Functions
             return repl.Engine.GetAllFunctionNames().Concat(repl.MetaFunctions.FunctionNames);
         }
 
-        public static string FormatFunctionsList(IEnumerable<string> functionList, int numColumns = 5, int columnWidth = 14, int leftPadding = 2)
+        public static string FormatFunctionsList(IEnumerable<string> functionList, int numColumns = 5, int leftPadding = 2, int columnWidth = 14)
         {
             var stringBuilder = new StringBuilder();
 
