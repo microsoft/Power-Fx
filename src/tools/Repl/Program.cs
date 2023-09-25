@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx
         }
 
         // Hook repl engine with customizations.
-        private class MyRepl : PowerFxRepl
+        private class MyRepl : PowerFxREPL
         {
             public MyRepl()
             {

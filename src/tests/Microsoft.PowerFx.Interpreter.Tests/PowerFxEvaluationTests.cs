@@ -411,13 +411,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             private readonly RecalcEngine _engine;
 
             // Repl engine does all the policy around declaring variables via Set().
-            public readonly PowerFxRepl _repl;
+            public readonly PowerFxREPL _repl;
 
             public ReplRunner(RecalcEngine engine)
             {
                 _engine = engine;
 
-                _repl = new PowerFxRepl
+                _repl = new PowerFxREPL
                 {
                     Engine = _engine,
                     AllowSetDefinitions = true

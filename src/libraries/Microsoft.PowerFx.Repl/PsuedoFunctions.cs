@@ -5,6 +5,8 @@ using System;
 using System.Threading;
 using Microsoft.PowerFx.Syntax;
 
+#pragma warning disable CS0618 // Type or member is obsolete
+
 namespace Microsoft.PowerFx.Repl
 {
     /// <summary>
@@ -13,7 +15,7 @@ namespace Microsoft.PowerFx.Repl
     /// </summary>
     public interface IPseudoFunction
     {
-        public abstract void Execute(CallNode callNode, PowerFxRepl repl, ReadOnlySymbolTable extraSymbolTable, CancellationToken cancel);
+        public abstract void Execute(CallNode callNode, PowerFxREPL repl, ReadOnlySymbolTable extraSymbolTable, CancellationToken cancel);
 
         public abstract string Name();
     }
@@ -23,7 +25,7 @@ namespace Microsoft.PowerFx.Repl
     /// </summary>
     public class IRPseudoFunction : IPseudoFunction
     {
-        public async void Execute(CallNode callNode, PowerFxRepl repl, ReadOnlySymbolTable extraSymbolTable, CancellationToken cancel)
+        public async void Execute(CallNode callNode, PowerFxREPL repl, ReadOnlySymbolTable extraSymbolTable, CancellationToken cancel)
         {
             var cr = repl.Engine.Check(callNode.Args.ToString(), options: repl.ParserOptions, symbolTable: extraSymbolTable);
             var irText = cr.PrintIR();

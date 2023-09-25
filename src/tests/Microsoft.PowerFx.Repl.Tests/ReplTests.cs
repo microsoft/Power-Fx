@@ -10,11 +10,13 @@ using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
+#pragma warning disable CS0618 // Type or member is obsolete
+
 namespace Microsoft.PowerFx.Repl.Tests
 {
     public class ReplTests
     {
-        private readonly PowerFxRepl _repl;
+        private readonly PowerFxREPL _repl;
         private readonly TestReplOutput _output = new TestReplOutput();
 
         public ReplTests()
@@ -25,7 +27,7 @@ namespace Microsoft.PowerFx.Repl.Tests
             // config.EnableSetFunction();
             var engine = new RecalcEngine(config);
 
-            _repl = new PowerFxRepl
+            _repl = new PowerFxREPL
             {
                 Engine = engine,
                 Output = _output,
@@ -226,11 +228,34 @@ Notify(z)
             var replResult = _repl.HandleCommandAsync("Set(Const1, 99)").Result;
             Assert.False(replResult.IsSuccess); 
         }
+
+        [Fact]
+        public void NamedFormulas()
+        {
+            _repl.HandleLine(
+"Set(x,1)",
+"NamedFormula1 = x*10",
+"Notify(NamedFormula1)",
+"Set(x,2);Notify(NamedFormula1)");
+
+            var log = _output.Get(OutputKind.Notify);
+            Assert.Equal(
+@"10
+20", log);
+        }
     }
 
     internal static class ReplExtensions
     {
-        public static void HandleLine(this PowerFxRepl repl, string input)
+        public static void HandleLine(this PowerFxREPL repl, params string[] inputs)
+        {
+            foreach (var input in inputs)
+            {
+                repl.HandleLine(input);
+            }
+        }
+
+        public static void HandleLine(this PowerFxREPL repl, string input)
         {
             try
             {

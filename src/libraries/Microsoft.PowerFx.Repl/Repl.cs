@@ -19,7 +19,8 @@ namespace Microsoft.PowerFx
     /// A REPL (Read-Eval-Print Loop) for Power Fx. 
     /// This accepts input, evaluates it, and prints the result.
     /// </summary>
-    public class PowerFxRepl
+    [Obsolete("Preview")]
+    public class PowerFxREPL
     {
         public RecalcEngine Engine { get; set; }
 
@@ -79,7 +80,7 @@ namespace Microsoft.PowerFx
             _pseudoFunctions.Add(func.Name(), func);
         }
 
-        public PowerFxRepl()
+        public PowerFxREPL()
         {
             this.MetaFunctions.AddFunction(new NotifyFunction());
             this.MetaFunctions.AddFunction(new HelpFunction(this));
@@ -389,7 +390,7 @@ namespace Microsoft.PowerFx
     }
 
     /// <summary>
-    /// Result from <see cref="PowerFxRepl.HandleCommandAsync(string, CancellationToken)"/>.
+    /// Result from <see cref="PowerFxREPL.HandleCommandAsync(string, CancellationToken)"/>.
     /// </summary>
     public class ReplResult
     {

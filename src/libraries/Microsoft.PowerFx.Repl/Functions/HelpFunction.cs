@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
 
+#pragma warning disable CS0618 // Type or member is obsolete
+
 namespace Microsoft.PowerFx.Repl.Functions
 {
     /// <summary>
@@ -16,9 +18,9 @@ namespace Microsoft.PowerFx.Repl.Functions
     /// </summary>
     internal class HelpFunction : ReflectionFunction
     {
-        private readonly PowerFxRepl _repl;
+        private readonly PowerFxREPL _repl;
 
-        public HelpFunction(PowerFxRepl repl)
+        public HelpFunction(PowerFxREPL repl)
             : base()
         {
             _repl = repl;
