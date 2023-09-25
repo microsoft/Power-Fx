@@ -26,36 +26,35 @@ namespace Microsoft.PowerFx.Repl.Functions
             _repl = repl;
         }
 
-        private async Task WriteAsync(string msg, CancellationToken cancel)
-        {
-            // $$$ Pointer to web URL?
-
-            await _repl.Output.WriteAsync(msg, OutputKind.Notify, cancel)
-                .ConfigureAwait(false);
-        }
-
         public async Task<BooleanValue> Execute(CancellationToken cancel)
         {
-            // $$$ include custom message 
-
-            await WriteAsync("Available functions:\n", cancel)
+            await _repl.HelpProvider.Execute(_repl, cancel)
                 .ConfigureAwait(false);
+
+            return FormulaValue.New(true);
+        }
+    }
+
+    public class HelpProvider
+    {
+        public static IEnumerable<string> FunctionsList(PowerFxREPL repl)
+        {
+            return repl.Engine.SupportedFunctions.FunctionNames
+                    .Concat(repl.MetaFunctions.FunctionNames);
+        }
+
+        public static string FormatFunctionsList(IEnumerable<string> functionList, int numColumns = 5, int columnWidth = 14)
+        {
+            var stringBuilder = new StringBuilder();
 
             var column = 0;
 
-            // $$$ better helper
-            IEnumerable<string> original =
-                _repl.Engine.SupportedFunctions.FunctionNames
-                    .Concat(_repl.MetaFunctions.FunctionNames);
-
-            var stringBuilder = new StringBuilder();
-
-            var funcNames = original.ToList();
+            var funcNames = functionList.ToList();
             funcNames.Sort();
             foreach (var func in funcNames)
             {
-                stringBuilder.Append($"  {func,-14}");
-                if (++column % 5 == 0)
+                stringBuilder.Append($"  " + func.PadLeft(columnWidth));
+                if (++column % numColumns == 0)
                 {
                     stringBuilder.AppendLine();
                 }
@@ -63,10 +62,25 @@ namespace Microsoft.PowerFx.Repl.Functions
 
             stringBuilder.AppendLine();
 
-            await WriteAsync(stringBuilder.ToString(), cancel)
-                    .ConfigureAwait(false);
+            return stringBuilder.ToString();
+        }
 
-            return FormulaValue.New(true);
+        protected async Task WriteAsync(PowerFxREPL repl, string msg, CancellationToken cancel)
+        {
+            await repl.Output.WriteAsync(msg, OutputKind.Notify, cancel)
+                .ConfigureAwait(false);
+        }
+
+        public virtual async Task Execute(PowerFxREPL repl, CancellationToken cancel)
+        {
+            // $$$ include custom message 
+            // $$$ Pointer to web URL?
+
+            await WriteAsync(repl, "Available functions (case sensitive):\n", cancel)
+                .ConfigureAwait(false);
+
+            await WriteAsync(repl, FormatFunctionsList(FunctionsList(repl)), cancel)
+                    .ConfigureAwait(false);
         }
     }
 }
