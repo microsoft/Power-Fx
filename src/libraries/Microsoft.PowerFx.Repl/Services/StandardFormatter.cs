@@ -7,26 +7,26 @@ using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx
+namespace Microsoft.PowerFx.Repl.Services
 {
     // This is the standard formatter, which handles tables in a tabular form.
     // This differs from the minimal formatter which uses .ToExpression().
     public class StandardFormatter : ValueFormatter
     {
         // Include hash codes for objects, useful for debugging references through mutations.
-        public bool HashCodes = false;
+        public bool HashCodes { get; set; } = false;
 
         // Format tables in tabular rows and columns.
         // Without this, tables are formatted in Table({},{},...) notation.
-        public bool FormatTable = true;
+        public bool FormatTable { get; set; } = true;
 
         // Use a tight representation, leaving out details.
         // Tables are returned as <Table> and records as <Record>.
-        public bool Minimal = false;
+        public bool Minimal { get; set; } = false;
 
         private string FormatRecordCore(RecordValue record)
         {
-            string resultString = string.Empty;
+            var resultString = string.Empty;
 
             var separator = string.Empty;
             if (HashCodes)
@@ -49,19 +49,19 @@ namespace Microsoft.PowerFx
 
         // Avoid traversing entity references.
         private string FormatField(NamedValue field)
-        { 
-            return field.IsExpandEntity ? "<reference>" : this.Format(field.Value);            
+        {
+            return field.IsExpandEntity ? "<reference>" : Format(field.Value);
         }
 
         private string FormatTableCore(TableValue table)
         {
             // Dispatch to appropriate table formatting. 
-            if (this.TryFormatTablePrimaryKeys(table, out var resultValue))
+            if (TryFormatTablePrimaryKeys(table, out var resultValue))
             {
                 return resultValue;
             }
 
-            return this.FormatStandardTable(table);
+            return FormatStandardTable(table);
         }
 
         // If table has PrimaryId,PrimaryName, then format with just those fields. 
@@ -77,10 +77,10 @@ namespace Microsoft.PowerFx
                 {
                     // Has special fields, print those. 
 
-                    int maxN = 10;
+                    var maxN = 10;
                     var drows = table.Rows.Take(maxN);
 
-                    StringBuilder sb = new StringBuilder();
+                    var sb = new StringBuilder();
                     foreach (var drow in drows)
                     {
                         if (drow.IsValue)
@@ -91,8 +91,8 @@ namespace Microsoft.PowerFx
                                 row.TryGetSpecialFieldValue(SpecialFieldKind.PrimaryName, out var nameValue))
                             {
                                 // These should be scalars. 
-                                var keyStr = this.Format(keyValue);
-                                var nameStr = this.Format(nameValue);
+                                var keyStr = Format(keyValue);
+                                var nameStr = Format(nameValue);
 
                                 sb.AppendLine($"{keyStr}: {nameStr}");
                             }
@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx
 
         private string FormatStandardTable(TableValue table)
         {
-            string resultString = string.Empty;
+            var resultString = string.Empty;
 
             var columnCount = 0;
             foreach (var row in table.Rows)
@@ -244,7 +244,7 @@ namespace Microsoft.PowerFx
 
         public override string Format(FormulaValue value)
         {
-            string resultString = string.Empty;
+            var resultString = string.Empty;
 
             if (value is BlankValue)
             {
@@ -270,7 +270,7 @@ namespace Microsoft.PowerFx
                 }
                 else
                 {
-                 resultString = this.FormatRecordCore(record);
+                    resultString = FormatRecordCore(record);
                 }
             }
             else if (value is TableValue table)
@@ -281,8 +281,8 @@ namespace Microsoft.PowerFx
                 }
                 else
                 {
-                    resultString = this.FormatTableCore(table);
-                }                
+                    resultString = FormatTableCore(table);
+                }
             }
             else
             {
@@ -298,5 +298,5 @@ namespace Microsoft.PowerFx
 
             return resultString;
         }
-    }    
+    }
 }

@@ -11,11 +11,14 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Repl.Functions
 {
+    /// <summary>
+    /// Help() function - prints a list of commands. 
+    /// </summary>
     internal class HelpFunction : ReflectionFunction
     {
-        private readonly PowerFxReplBase _repl;
+        private readonly PowerFxRepl _repl;
 
-        public HelpFunction(PowerFxReplBase repl)
+        public HelpFunction(PowerFxRepl repl)
             : base()
         {
             _repl = repl;

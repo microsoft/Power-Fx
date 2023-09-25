@@ -18,9 +18,16 @@ namespace Microsoft.PowerFx.Repl.Tests
         private readonly TestReplOutput _output = new TestReplOutput();
 
         public ReplTests()
-        {            
+        {
+            var config = new PowerFxConfig();
+            config.SymbolTable.EnableMutationFunctions();
+
+            // config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
             _repl = new PowerFxRepl
             {
+                Engine = engine,
                 Output = _output,
                 AllowSetDefinitions = true,
             };
@@ -42,6 +49,16 @@ namespace Microsoft.PowerFx.Repl.Tests
 
             var log = _output.Get(OutputKind.Repl);
             Assert.Equal("3", log);
+        }
+
+        [Fact]
+        public void TestHelp()
+        {
+            _repl.HandleLine("Help()");
+
+            // Ensure Test ran and wrote something.
+            var log = _output.Get(OutputKind.Notify);
+            Assert.NotEmpty(log);
         }
 
         [Fact]

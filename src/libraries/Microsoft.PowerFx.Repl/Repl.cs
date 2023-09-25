@@ -3,14 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Repl;
 using Microsoft.PowerFx.Repl.Functions;
+using Microsoft.PowerFx.Repl.Services;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
@@ -18,33 +15,17 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
-    // Default repl. 
-    public class PowerFxRepl : PowerFxReplBase
+    /// <summary>
+    /// A REPL (Read-Eval-Print Loop) for Power Fx. 
+    /// This accepts input, evaluates it, and prints the result.
+    /// </summary>
+    public class PowerFxRepl
     {
-        public PowerFxRepl()
-        {
-            var config = new PowerFxConfig();
-            config.SymbolTable.EnableMutationFunctions();
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            config.EnableRegExFunctions();
-#pragma warning restore CS0618 // Type or member is obsolete
-
-            // config.EnableSetFunction();
-            this.Engine = new RecalcEngine(config);
-        }
-    }
-
-    // Base REPL class
-    public class PowerFxReplBase
-    {
-        // $$$ Need some "Init" function 
         public RecalcEngine Engine { get; set; }
 
         public ValueFormatter ValueFormatter { get; set; } = new StandardFormatter();
 
-        // $$$ Print logo header
-        public IReplOutput Output { get; set; } = new ConsoleWriter();
+        public IReplOutput Output { get; set; } = new ConsoleReplOutput();
 
         // Allow repl to create new definitions, such as Set(). 
         public bool AllowSetDefinitions { get; set; }
@@ -98,21 +79,20 @@ namespace Microsoft.PowerFx
             _pseudoFunctions.Add(func.Name(), func);
         }
 
-        public PowerFxReplBase()
+        public PowerFxRepl()
         {
-            // $$$ Make it easy for host to hook Notify()? 
             this.MetaFunctions.AddFunction(new NotifyFunction());
             this.MetaFunctions.AddFunction(new HelpFunction(this));
         }
 
         private bool _userEnabled = false;
 
-        public void EnableUserObject()
+        public void EnableSampleUserObject()
         {
             var sampleUserInfo = new BasicUserInfo
             {
-                FullName = "Susan Burk",
-                Email = "susan@contoso.com",
+                FullName = "First Last",
+                Email = "SampleUser@contoso.com",
                 DataverseUserId = new Guid("88888888-044f-4928-a95f-30d4c8ebf118"),
                 TeamsMemberId = "29:1DUjC5z4ttsBQa0fX2O7B0IDu30R",
                 EntraObjectId = new Guid("99999999-044f-4928-a95f-30d4c8ebf118"),
@@ -151,11 +131,12 @@ namespace Microsoft.PowerFx
         // Separate symbol table so that Repl doesn't interfere with engine.
         public SymbolTable MetaFunctions { get; } = new SymbolTable { DebugName = "Repl Functions" };
 
-        // Can we get direct Reader/Writer?
-        // - writer can't do colorizing...
-        // public async Task RunAsync(TextReader input, TextWriter output, CancellationToken cancel)        
-
-        // $$$ Move to caller?
+        /// <summary>
+        /// Print the prompt - call this before input. The prompt can change based on whether this is the first
+        /// line of input or a contination within a multiline. 
+        /// </summary>
+        /// <param name="cancel"></param>
+        /// <returns></returns>
         public virtual async Task WritePromptAsync(CancellationToken cancel = default)
         {
             string prompt;
@@ -174,8 +155,14 @@ namespace Microsoft.PowerFx
             await this.Output.WriteAsync(prompt, OutputKind.Control, cancel);
         }
 
-        // Accept a line of input.  This supports multi-line handling. 
-        // Caller invokes this in a loop.  $$$ How to signal an exit? OperationCanceledException?
+        /// <summary>
+        /// Accept a single line of input and evaluate it.
+        /// This allows continuations via the policy set in <see cref="MultilineProcessor"/>.
+        /// </summary>
+        /// <param name="line">A line of input.</param>
+        /// <param name="cancel"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">If cancelled.</exception>
         public async Task HandleLineAsync(string line, CancellationToken cancel = default)
         {
             if (this.Engine == null)
@@ -183,43 +170,43 @@ namespace Microsoft.PowerFx
                 throw new InvalidOperationException($"Engine is not set.");
             }
 
-            string cmd = this.MultilineProcessor.HandleLine(line);
+            string expression = this.MultilineProcessor.HandleLine(line);
 
-            if (cmd != null)
+            if (expression != null)
             {
-                await this.HandleCommandAsync(cmd, cancel);
+                await this.HandleCommandAsync(expression, cancel);
             }
         }
 
         /// <summary>
         /// Directly invoke a command. This skips multiline handling. 
         /// </summary>
-        /// <param name="cmd">expression to run.</param>
+        /// <param name="expression">expression to run.</param>
         /// <param name="cancel">cancellation token.</param>
         /// <returns>status object with details.</returns>
         /// <exception cref="InvalidOperationException">invalid.</exception>
-        public virtual async Task<ReplResult> HandleCommandAsync(string cmd, CancellationToken cancel = default)
+        public virtual async Task<ReplResult> HandleCommandAsync(string expression, CancellationToken cancel = default)
         {
             if (this.Engine == null)
             {
                 throw new InvalidOperationException($"Engine is not set.");
             }
 
-            if (string.IsNullOrWhiteSpace(cmd))
+            if (string.IsNullOrWhiteSpace(expression))
             {
                 return new ReplResult();
             }
 
             if (this.Echo)
             {
-                await this.Output.WriteLineAsync(cmd, OutputKind.Repl, cancel);
+                await this.Output.WriteLineAsync(expression, OutputKind.Repl, cancel);
             }
 
             var extraSymbolTable = this.ExtraSymbolValues?.SymbolTable;
 
             // pseudo functions and named formula assignments, handled outside of the interpreter
             // for our purposes, we don't need the engine's features or the parser options
-            var parseResult = PowerFx.Engine.Parse(cmd);
+            var parseResult = PowerFx.Engine.Parse(expression);
 
             if (parseResult.IsSuccess)
             {
@@ -256,7 +243,7 @@ namespace Microsoft.PowerFx
             var currentSymbolTable = ReadOnlySymbolTable.Compose(this.MetaFunctions, extraSymbolTable);
 
             var check = new CheckResult(this.Engine)
-                .SetText(cmd, ParserOptions)
+                .SetText(expression, ParserOptions)
                 .SetBindingInfo(currentSymbolTable);
 
             check.ApplyParse();
@@ -281,7 +268,7 @@ namespace Microsoft.PowerFx
                         // Deosn't exist yet!
 
                         // Get the type. 
-                        var rhsExpr = declare._rhs.GetCompleteSpan().GetFragment(cmd);
+                        var rhsExpr = declare._rhs.GetCompleteSpan().GetFragment(expression);
 
                         var setCheck = this.Engine.Check(rhsExpr, ParserOptions, this.ExtraSymbolValues?.SymbolTable);
                         if (!setCheck.IsSuccess)
@@ -294,7 +281,6 @@ namespace Microsoft.PowerFx
                         // Start as blank. Will execute expression below to actually assign. 
                         var setValue = FormulaValue.NewBlank(setCheck.ReturnType);
 
-                        // $$$ separate symbol table?
                         this.Engine.UpdateVariable(name, setValue);
                         
                         createdDeclarations = true;
@@ -309,7 +295,7 @@ namespace Microsoft.PowerFx
                 {
                     // Rebind expression with new declarations. 
                     check = new CheckResult(this.Engine)
-                        .SetText(cmd, new ParserOptions { AllowsSideEffects = true })
+                        .SetText(expression, new ParserOptions { AllowsSideEffects = true })
                         .SetBindingInfo(currentSymbolTable);
 
                     check.ApplyParse();
@@ -403,7 +389,7 @@ namespace Microsoft.PowerFx
     }
 
     /// <summary>
-    /// Result from <see cref="PowerFxReplBase.HandleCommandAsync(string, CancellationToken)"/>.
+    /// Result from <see cref="PowerFxRepl.HandleCommandAsync(string, CancellationToken)"/>.
     /// </summary>
     public class ReplResult
     {

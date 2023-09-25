@@ -15,10 +15,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Repl;
+using Microsoft.PowerFx.Repl.Services;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx
         }
 
         // Hook repl engine with customizations.
-        private class MyRepl : PowerFxReplBase
+        private class MyRepl : PowerFxRepl
         {
             public MyRepl()
             {
@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx
                 this.ValueFormatter = _standardFormatter;
 
                 this.AllowSetDefinitions = true;
-                this.EnableUserObject();
+                this.EnableSampleUserObject();
                 this.AddPseudoFunction(new IRPseudoFunction());
             }
 

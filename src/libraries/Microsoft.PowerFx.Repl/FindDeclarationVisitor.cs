@@ -12,12 +12,15 @@ namespace Microsoft.PowerFx
     // Pattern match for Set(x,y) so that we can define the variable
     internal class FindDeclarationVisitor : IdentityTexlVisitor
     {
-        public List<Declaration> _declarations = new List<Declaration>();
+        public readonly List<Declaration> _declarations = new List<Declaration>();
 
+        // Instance of a Set(name, rhs) function.  
         public class Declaration
         {
+            // Name of the arg0 in Set(). This is the variable potentially being defined. 
             public string _variableName;
 
+            // The parsed arg1 in Set(). Get the type of this to infer the type of the variable.
             public TexlNode _rhs;
         }
 

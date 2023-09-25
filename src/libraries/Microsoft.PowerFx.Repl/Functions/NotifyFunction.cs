@@ -11,7 +11,9 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Repl.Functions
 {
-    // Notify(msg) - prints directly to output
+    /// <summary>
+    /// Notify(msg) - prints directly to output.
+    /// </summary>
     internal class NotifyFunction : ReflectionFunction
     {
         public NotifyFunction()
@@ -24,7 +26,6 @@ namespace Microsoft.PowerFx.Repl.Functions
             await output.WriteLineAsync(message.Value, OutputKind.Notify, cancel)
                 .ConfigureAwait(false);
 
-            // $$$ fix return value ... void / blank?
             return FormulaValue.New(true);
         }
     }

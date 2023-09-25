@@ -9,23 +9,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
 
-#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
-
-namespace Microsoft.PowerFx
+namespace Microsoft.PowerFx.Repl.Services
 {
-    // Override to control formatting. 
-    // - will get very interesting for dataverse values. 
+    /// <summary>
+    /// Format <see cref="FormulaValue"/> results to show in output. 
+    /// </summary>
     public class ValueFormatter
     {
         public FormulaValueSerializerSettings Settings { get; set; } = new FormulaValueSerializerSettings
         {
-             UseCompactRepresentation = true
+            UseCompactRepresentation = true
         };
 
         public virtual string Format(FormulaValue value)
         {
             var sb = new StringBuilder();
-            value.ToExpression(sb, this.Settings);
+            value.ToExpression(sb, Settings);
             return sb.ToString();
         }
     }

@@ -11,12 +11,12 @@ using Microsoft.PowerFx.Repl.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx
+namespace Microsoft.PowerFx.Repl.Services
 {
     // Handle accepting partial lines and determining when the command is complete. 
     public class MultilineProcessor
     {
-        private readonly StringBuilder _commandBuffer = new StringBuilder();
+        protected readonly StringBuilder _commandBuffer = new StringBuilder();
 
         // Useful for generating a prompt:
         // true if we're on the first line. 

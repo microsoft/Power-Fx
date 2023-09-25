@@ -21,8 +21,20 @@ namespace Microsoft.PowerFx.Types
     /// </summary>
     public enum SpecialFieldKind
     {
+        /// <summary>
+        /// Unique key associated to each record in application.
+        /// NOTE: If two table has a same record instance, then the key should be same.
+        /// </summary>
         PrimaryKey,
+
+        /// <summary>
+        /// The primary name of the record. Useful for showing summary. 
+        /// </summary>
         PrimaryName,
+
+        /// <summary>
+        /// Primary image of the record. Useful for showing an image summary. 
+        /// </summary>
         PrimaryImage
     }
 
@@ -55,16 +67,15 @@ namespace Microsoft.PowerFx.Types
             return false;
         }
 
-        // $$$ Deprecate virtual, use Kind?
-
         /// <summary>
         /// Unique key associated to each record in application.
         /// NOTE: If two table has a same record instance, then the key should be same.
         /// </summary>
         /// <param name="key"></param>
-        /// <returns></returns>
+        /// <returns></returns>        
         public virtual bool TryGetPrimaryKey(out string key)
         {
+            // Make Obsolete, use TryGetSpecialFieldValue - https://github.com/microsoft/Power-Fx/issues/1883
             key = default;
             return false;
         }
@@ -75,6 +86,7 @@ namespace Microsoft.PowerFx.Types
         /// <returns>Primary key name. Returns null in absence.</returns>
         public virtual string GetPrimaryKeyName()
         {
+            // Make Obsolete, use TryGetSpecialFieldValue - https://github.com/microsoft/Power-Fx/issues/1883
             return null;
         }
 
