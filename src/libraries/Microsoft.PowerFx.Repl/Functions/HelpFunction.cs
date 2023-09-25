@@ -85,7 +85,10 @@ namespace Microsoft.PowerFx.Repl.Functions
                 }
             }
 
-            stringBuilder.AppendLine();
+            if (column % numColumns != 0)
+            {
+                stringBuilder.AppendLine();
+            }
 
             return stringBuilder.ToString();
         }
