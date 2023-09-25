@@ -27,10 +27,24 @@ namespace Microsoft.PowerFx.Repl
     {
         public async void Execute(CallNode callNode, PowerFxREPL repl, ReadOnlySymbolTable extraSymbolTable, CancellationToken cancel)
         {
-            var cr = repl.Engine.Check(callNode.Args.ToString(), options: repl.ParserOptions, symbolTable: extraSymbolTable);
-            var irText = cr.PrintIR();
-            await repl.Output.WriteLineAsync(irText, OutputKind.Repl, cancel)
-                .ConfigureAwait(false);
+            try
+            {
+                var cr = repl.Engine.Check(callNode.Args.ToString(), options: repl.ParserOptions, symbolTable: extraSymbolTable);
+                var irText = cr.PrintIR();
+                await repl.Output.WriteLineAsync(irText, OutputKind.Repl, cancel)
+                    .ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                // $$$ cancelled task, or a normal abort? 
+                // Signal to caller that we're done. 
+                throw;
+            }
+            catch (Exception e)
+            {
+                await repl.OnEvalExceptionAsync(e, cancel)
+                    .ConfigureAwait(false);
+            }
         }
 
         public string Name()
