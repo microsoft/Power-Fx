@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
+using static System.Net.WebRequestMethods;
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
@@ -59,13 +60,15 @@ namespace Microsoft.PowerFx.Repl.Functions
 
     public class HelpProvider
     {
+        public const string FormulaRefURL = "https://aka.ms/Power-Fx-Formula-Reference";
+
         public static IEnumerable<string> FunctionsList(PowerFxREPL repl)
         {
             return repl.Engine.SupportedFunctions.FunctionNames
                     .Concat(repl.MetaFunctions.FunctionNames);
         }
 
-        public static string FormatFunctionsList(IEnumerable<string> functionList, int numColumns = 5, int columnWidth = 14)
+        public static string FormatFunctionsList(IEnumerable<string> functionList, int numColumns = 5, int columnWidth = 14, int leftPadding = 2)
         {
             var stringBuilder = new StringBuilder();
 
@@ -75,7 +78,7 @@ namespace Microsoft.PowerFx.Repl.Functions
             funcNames.Sort();
             foreach (var func in funcNames)
             {
-                stringBuilder.Append($"  " + func.PadLeft(columnWidth));
+                stringBuilder.Append(string.Empty.PadLeft(leftPadding) + func.PadRight(columnWidth));
                 if (++column % numColumns == 0)
                 {
                     stringBuilder.AppendLine();
@@ -102,6 +105,9 @@ namespace Microsoft.PowerFx.Repl.Functions
 
             await WriteAsync(repl, FormatFunctionsList(FunctionsList(repl)), cancel)
                     .ConfigureAwait(false);
+
+            await WriteAsync(repl, $"\nFormula reference: {FormulaRefURL}\n\n", cancel)
+                .ConfigureAwait(false);
         }
     }
 }
