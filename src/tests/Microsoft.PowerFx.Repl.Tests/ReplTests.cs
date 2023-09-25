@@ -159,9 +159,13 @@ Notify(z)
         [Fact]
         public void TestIR()
         {
+            _repl.AddPseudoFunction(new IRPseudoFunction());
+
             // IR() function is a meta-function that
             // circumvents eval and dumps the IR. 
             _repl.HandleLine("IR(1+2)");
+
+            Assert.Empty(_output.Get(OutputKind.Error));
 
             var log = _output.Get(OutputKind.Repl);
             Assert.Equal("AddDecimals:w(1:w, 2:w)", log);
