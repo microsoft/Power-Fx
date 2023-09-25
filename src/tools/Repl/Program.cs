@@ -3,8 +3,10 @@
 // </copyright>
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -26,7 +28,6 @@ namespace Microsoft.PowerFx
         private static RecalcEngine _engine;
 
         private const string OptionFormatTable = "FormatTable";
-        private static bool _formatTable = true;
 
         private const string OptionNumberIsFloat = "NumberIsFloat";
         private static bool _numberIsFloat = false;
@@ -39,12 +40,13 @@ namespace Microsoft.PowerFx
         private const string OptionPowerFxV1 = "PowerFxV1";
 
         private const string OptionHashCodes = "HashCodes";
-        private static bool _hashCodes = false;
 
         private const string OptionStackTrace = "StackTrace";
         private static bool _stackTrace = false;
 
         private static readonly Features _features = Features.PowerFxV1;
+
+        private static StandardFormatter _standardFormatter;
 
         private static void ResetEngine()
         { 
@@ -82,13 +84,9 @@ namespace Microsoft.PowerFx
 
             config.AddFunction(new ResetFunction());
             config.AddFunction(new ExitFunction());
-            config.AddFunction(new OptionFunction());
-
-#if false // $$$ enable these
-            config.AddFunction(new ResetImportFunction());
-            config.AddFunction(new ImportFunction1Arg());
-            config.AddFunction(new ImportFunction2Arg());
-#endif
+            config.AddFunction(new Option0Function());
+            config.AddFunction(new Option1Function());
+            config.AddFunction(new Option2Function());
 
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
@@ -99,6 +97,7 @@ namespace Microsoft.PowerFx
             config.AddOptionSet(optionsSet);
 
             _engine = new RecalcEngine(config);
+            _standardFormatter = new StandardFormatter();
         }
 
         public static void Main()
@@ -113,26 +112,12 @@ namespace Microsoft.PowerFx
             var version = typeof(RecalcEngine).Assembly.GetName().Version.ToString();
             Console.WriteLine($"Microsoft Power Fx Console Formula REPL, Version {version}");
 
-            foreach (var propertyInfo in typeof(Features).GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic))
-            {
-                if (propertyInfo.PropertyType == typeof(bool) && ((bool)propertyInfo.GetValue(_engine.Config.Features)) == true)
-                {
-                    enabled.Append(" " + propertyInfo.Name);
-                }
-            }
-
-            if (enabled.Length == 0)
-            {
-                enabled.Append(" <none>");
-            }
-
-            Console.WriteLine($"Experimental features enabled:{enabled}");
-
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
-            Console.WriteLine($"Enter Excel formulas.  Use \"Help()\" for details.");
+            Console.WriteLine("Enter Excel formulas.  Use \"Help()\" for details, \"Option()\" for options.");
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
+            Console.WriteLine();
 
-            REPL(false);
+            REPL();
         }
 
         // Hook repl engine with customizations.
@@ -140,9 +125,11 @@ namespace Microsoft.PowerFx
         {
             public MyRepl()
             {
+                this.Engine = _engine;
+                this.ValueFormatter = _standardFormatter;
+                this.AllowSetDefinitions = true;
                 this.EnableUserObject();
                 this.AddPseudoFunction(new IRPseudoFunction());
-                this.Engine = _engine;
             }
 
             public override async Task OnEvalExceptionAsync(Exception e, CancellationToken cancel)
@@ -159,222 +146,15 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public static void REPL(bool echo)
+        public static void REPL()
         {
-            var repl = new MyRepl
-            {
-                Echo = echo,
-                AllowSetDefinitions = true
-            };
-
+            var repl = new MyRepl();
             while (true)
             {
                 repl.WritePromptAsync().Wait();
                 var line = Console.ReadLine();
                 repl.HandleLineAsync(line).Wait();
             }
-        }
-
-        private class MyValueFormatter : ValueFormatter
-        {
-            public override string Format(FormulaValue result)
-            {
-                return PrintResult(result);
-            }
-        }
-
-        private static string PrintResult(FormulaValue value, bool minimal = false)
-        {
-            string resultString = string.Empty;
-
-            if (value is BlankValue)
-            {
-                resultString = minimal ? string.Empty : "Blank()";
-            }
-            else if (value is ErrorValue errorValue)
-            {
-                resultString = minimal ? "<error>" : "<Error: " + errorValue.Errors[0].Message + ">";
-            }
-            else if (value is UntypedObjectValue)
-            {
-                resultString = minimal ? "<untyped>" : "<Untyped: Use Value, Text, Boolean, or other functions to establish the type>";
-            }
-            else if (value is StringValue str)
-            {
-                resultString = minimal ? str.Value : str.ToExpression();
-            }
-            else if (value is RecordValue record)
-            {
-                if (minimal)
-                {
-                    resultString = "<record>";
-                }
-                else
-                {
-                    var separator = string.Empty;
-                    if (_hashCodes)
-                    {
-                        resultString += "#" + record.GetHashCode() + "#";
-                    }
-
-                    resultString += "{";
-                    foreach (var field in record.Fields)
-                    {
-                        resultString += separator + $"{field.Name}:";
-                        resultString += PrintResult(field.Value);
-                        separator = ", ";
-                    }
-
-                    resultString += "}";
-                }
-            }
-            else if (value is TableValue table)
-            {
-                if (minimal)
-                {
-                    resultString = "<table>";
-                }
-                else
-                {
-                    var columnCount = 0;
-                    foreach (var row in table.Rows)
-                    {
-                        if (row.Value != null)
-                        {
-                            columnCount = Math.Max(columnCount, row.Value.Fields.Count());
-                            break;
-                        }
-                    }
-
-                    if (columnCount == 0)
-                    {
-                        return minimal ? string.Empty : "Table()";
-                    }
-
-                    var columnWidth = new int[columnCount];
-
-                    foreach (var row in table.Rows)
-                    {
-                        if (row.Value != null)
-                        {
-                            var column = 0;
-                            foreach (var field in row.Value.Fields)
-                            {
-                                columnWidth[column] = Math.Max(columnWidth[column], PrintResult(field.Value, true).Length);
-                                column++;
-                            }
-                        }
-                    }
-
-                    if (_hashCodes)
-                    {
-                        resultString += "#" + table.GetHashCode() + "#";
-                    }
-
-                    // special treatment for single column table named Value
-                    if (columnWidth.Length == 1 && table.Rows.First().Value != null && table.Rows.First().Value.Fields.First().Name == "Value")
-                    {
-                        var separator = string.Empty;
-                        resultString += "[";
-                        foreach (var row in table.Rows)
-                        {
-                            resultString += separator;
-
-                            if (_hashCodes)
-                            {
-                                resultString += "#" + row.Value.GetHashCode() + "# ";
-                            }
-
-                            resultString += PrintResult(row.Value.Fields.First().Value);
-                            separator = ", ";
-                        }
-
-                        resultString += "]";
-                    }
-
-                    // otherwise a full table treatment is needed
-                    else if (_formatTable)
-                    {
-                        resultString += "\n ";
-                        var column = 0;
-
-                        foreach (var row in table.Rows)
-                        {
-                            if (row.Value != null)
-                            {
-                                column = 0;
-                                foreach (var field in row.Value.Fields)
-                                {
-                                    columnWidth[column] = Math.Max(columnWidth[column], field.Name.Length);
-                                    resultString += " " + field.Name.PadLeft(columnWidth[column]) + "  ";
-                                    column++;
-                                }
-
-                                break;
-                            }
-                        }
-
-                        resultString += "\n ";
-
-                        foreach (var width in columnWidth)
-                        {
-                            resultString += new string('=', width + 2) + " ";
-                        }
-
-                        foreach (var row in table.Rows)
-                        {
-                            column = 0;
-                            resultString += "\n ";
-                            if (row.Value != null)
-                            {
-                                foreach (var field in row.Value.Fields)
-                                {
-                                    resultString += " " + PrintResult(field.Value, true).PadLeft(columnWidth[column]) + "  ";
-                                    column++;
-                                }
-                            }
-                            else
-                            {
-                                resultString += row.IsError ? row.Error?.Errors?[0].Message : "Blank()";
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // table without formatting 
-
-                        resultString = "[";
-                        var separator = string.Empty;
-                        foreach (var row in table.Rows)
-                        {
-                            resultString += separator;
-
-                            if (_hashCodes)
-                            {
-                                resultString += "#" + row.Value.GetHashCode() + "# ";
-                            }
-
-                            resultString += PrintResult(row.Value);
-                            separator = ", ";
-                        }
-
-                        resultString += "]";
-                    }
-                }
-            }
-            else
-            {
-                var sb = new StringBuilder();
-                var settings = new FormulaValueSerializerSettings()
-                {
-                    UseCompactRepresentation = true,
-                };
-                value.ToExpression(sb, settings);
-
-                resultString = sb.ToString();
-            }
-
-            return resultString;
         }
 
         private class ResetFunction : ReflectionFunction
@@ -395,10 +175,86 @@ namespace Microsoft.PowerFx
             }
         }
 
-        private class OptionFunction : ReflectionFunction
+        private class Option0Function : ReflectionFunction
+        {
+            public Option0Function()
+                : base("Option", FormulaType.String)
+            {
+            }
+
+            public FormulaValue Execute()
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.Append("\n");
+
+                sb.Append($"{"FormatTable:",-42}{_standardFormatter.FormatTable}\n");
+                sb.Append($"{"HashCodes:",-42}{_standardFormatter.HashCodes}\n");
+                sb.Append($"{"NumberIsFloat:",-42}{_numberIsFloat}\n");
+                sb.Append($"{"LargeCallDepth:",-42}{_largeCallDepth}\n");
+                sb.Append($"{"StackTrace:",-42}{_stackTrace}\n");
+
+                foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                {
+                    if (prop.PropertyType == typeof(bool) && prop.CanWrite)
+                    {
+                        sb.Append($"{prop.Name + ((bool)prop.GetValue(Features.PowerFxV1) ? " (V1)" : string.Empty) + ":",-42}{prop.GetValue(_features)}\n");
+                    }
+                }
+
+                return FormulaValue.New(sb.ToString());
+            }
+        }
+
+        // displays a single setting
+        private class Option1Function : ReflectionFunction
+        {
+            public Option1Function()
+                : base("Option", FormulaType.Boolean, new[] { FormulaType.String })
+            {
+            }
+
+            public FormulaValue Execute(StringValue option)
+            {
+                if (string.Equals(option.Value, OptionFormatTable, StringComparison.OrdinalIgnoreCase))
+                {
+                    return BooleanValue.New(_standardFormatter.FormatTable);
+                }
+
+                if (string.Equals(option.Value, OptionNumberIsFloat, StringComparison.OrdinalIgnoreCase))
+                {
+                    return BooleanValue.New(_numberIsFloat);
+                }
+
+                if (string.Equals(option.Value, OptionLargeCallDepth, StringComparison.OrdinalIgnoreCase))
+                {
+                    return BooleanValue.New(_largeCallDepth);
+                }
+
+                if (string.Equals(option.Value, OptionHashCodes, StringComparison.OrdinalIgnoreCase))
+                {
+                    return BooleanValue.New(_standardFormatter.HashCodes);
+                }
+
+                if (string.Equals(option.Value, OptionStackTrace, StringComparison.OrdinalIgnoreCase))
+                {
+                    return BooleanValue.New(_stackTrace);
+                }
+
+                return FormulaValue.NewError(new ExpressionError()
+                {
+                    Kind = ErrorKind.InvalidArgument,
+                    Severity = ErrorSeverity.Critical,
+                    Message = $"Invalid option name: {option.Value}.  Use \"Option()\" to see available Options enum names."
+                });
+            }
+        }
+
+        // change a setting
+        private class Option2Function : ReflectionFunction
         {
             // explicit constructor needed so that the return type from Execute can be FormulaValue and acoomodate both booleans and errors
-            public OptionFunction()
+            public Option2Function()
                 : base("Option", FormulaType.Boolean, new[] { FormulaType.String, FormulaType.Boolean })
             {
             }
@@ -406,8 +262,8 @@ namespace Microsoft.PowerFx
             public FormulaValue Execute(StringValue option, BooleanValue value)
             {
                 if (string.Equals(option.Value, OptionFormatTable, StringComparison.OrdinalIgnoreCase))
-                {
-                    _formatTable = value.Value;
+                {   
+                    _standardFormatter.FormatTable = value.Value;
                     return value;
                 }
 
@@ -426,7 +282,7 @@ namespace Microsoft.PowerFx
 
                 if (string.Equals(option.Value, OptionHashCodes, StringComparison.OrdinalIgnoreCase))
                 {
-                    _hashCodes = value.Value;
+                    _standardFormatter.HashCodes = value.Value;
                     return value;
                 }
 
@@ -476,65 +332,9 @@ namespace Microsoft.PowerFx
                 {
                     Kind = ErrorKind.InvalidArgument,
                     Severity = ErrorSeverity.Critical,
-                    Message = $"Invalid option name: {option.Value}."
+                    Message = $"Invalid option name: {option.Value}.  Use \"Option()\" to see available Options enum names."
                 });
             }
         }
-
-#if false // $$$ - enable these
-        private class ImportFunction1Arg : ReflectionFunction
-        {
-            public BooleanValue Execute(StringValue fileNameSV)
-            {
-                var if2 = new ImportFunction2Arg();
-                return if2.Execute(fileNameSV, null);
-            }
-        }
-
-        private class ImportFunction2Arg : ReflectionFunction
-        {
-            public BooleanValue Execute(StringValue fileNameSV, StringValue outputSV)
-            {
-                var fileName = fileNameSV.Value;
-                if (File.Exists(fileName))
-                {
-                    TextReader fileReader = new StreamReader(fileName, true);
-                    TextWriter outputWriter = null;
-
-                    if (outputSV != null)
-                    {
-                        outputWriter = new StreamWriter(outputSV.Value, false, System.Text.Encoding.UTF8);
-                    }
-
-                    ConsoleRepl.REPL(fileReader, true, outputWriter);
-                    fileReader.Close();
-                    outputWriter?.Close();
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"File not found: {fileName}");
-                    Console.ResetColor();
-                    return BooleanValue.New(false);
-                }
-
-                return BooleanValue.New(true);
-            }
-        }
-
-        private class ResetImportFunction : ReflectionFunction
-        {
-            public BooleanValue Execute(StringValue fileNameSV)
-            {
-                var import = new ImportFunction1Arg();
-                if (File.Exists(fileNameSV.Value))
-                {
-                    ResetEngine();
-                }
-
-                return import.Execute(fileNameSV);
-            }
-        }
-#endif
     }
 }

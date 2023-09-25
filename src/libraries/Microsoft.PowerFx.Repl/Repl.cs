@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx
         // $$$ Need some "Init" function 
         public RecalcEngine Engine { get; set; }
 
-        public ValueFormatter ValueFormatter { get; set; } = new ValueFormatter();
+        public ValueFormatter ValueFormatter { get; set; } = new StandardFormatter();
 
         // $$$ Print logo header
         public IReplOutput Output { get; set; } = new ConsoleWriter();

@@ -1,0 +1,223 @@
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.PowerFx.Types;
+
+namespace Microsoft.PowerFx
+{
+    // This is the standard formatter, which handles tables in a tabular form.
+    // This differs from the minimal formatter which uses .ToExpression().
+    public class StandardFormatter : ValueFormatter
+    {
+        // Include hash codes for objects, useful for debugging references through mutations.
+        public bool HashCodes = false;
+
+        // Format tables in tabular rows and columns.
+        // Without this, tables are formatted in Table({},{},...) notation.
+        public bool FormatTable = true;
+
+        // Use a tight representation, leaving out details.
+        // Tables are returned as <Table> and records as <Record>.
+        public bool Minimal = false;
+
+        public override string Format(FormulaValue value)
+        {
+            string resultString = string.Empty;
+
+            if (value is BlankValue)
+            {
+                resultString = Minimal ? string.Empty : "Blank()";
+            }
+            else if (value is ErrorValue errorValue)
+            {
+                resultString = Minimal ? "<error>" : "<Error: " + errorValue.Errors[0].Message + ">";
+            }
+            else if (value is UntypedObjectValue)
+            {
+                resultString = Minimal ? "<untyped>" : "<Untyped: Use Value, Text, Boolean, or other functions to establish the type>";
+            }
+            else if (value is StringValue str)
+            {
+                resultString = Minimal ? str.Value : str.ToExpression();
+            }
+            else if (value is RecordValue record)
+            {
+                if (Minimal)
+                {
+                    resultString = "<record>";
+                }
+                else
+                {
+                    var separator = string.Empty;
+                    if (HashCodes)
+                    {
+                        resultString += "#" + record.GetHashCode() + "#";
+                    }
+
+                    resultString += "{";
+                    foreach (var field in record.Fields)
+                    {
+                        resultString += separator + $"{field.Name}:";
+                        resultString += Format(field.Value);
+                        separator = ", ";
+                    }
+
+                    resultString += "}";
+                }
+            }
+            else if (value is TableValue table)
+            {
+                if (Minimal)
+                {
+                    resultString = "<table>";
+                }
+                else
+                {
+                    var columnCount = 0;
+                    foreach (var row in table.Rows)
+                    {
+                        if (row.Value != null)
+                        {
+                            columnCount = Math.Max(columnCount, row.Value.Fields.Count());
+                            break;
+                        }
+                    }
+
+                    if (columnCount == 0)
+                    {
+                        return Minimal ? string.Empty : "Table()";
+                    }
+
+                    var columnWidth = new int[columnCount];
+
+                    foreach (var row in table.Rows)
+                    {
+                        if (row.Value != null)
+                        {
+                            var column = 0;
+                            foreach (var field in row.Value.Fields)
+                            {
+                                columnWidth[column] = Math.Max(columnWidth[column], Format(field.Value).Length);
+                                column++;
+                            }
+                        }
+                    }
+
+                    if (HashCodes)
+                    {
+                        resultString += "#" + table.GetHashCode() + "#";
+                    }
+
+                    // special treatment for single column table named Value
+                    if (columnWidth.Length == 1 && table.Rows.First().Value != null && table.Rows.First().Value.Fields.First().Name == "Value")
+                    {
+                        var separator = string.Empty;
+                        resultString += "[";
+                        foreach (var row in table.Rows)
+                        {
+                            resultString += separator;
+
+                            if (HashCodes)
+                            {
+                                resultString += "#" + row.Value.GetHashCode() + "# ";
+                            }
+
+                            resultString += Format(row.Value.Fields.First().Value);
+                            separator = ", ";
+                        }
+
+                        resultString += "]";
+                    }
+
+                    // otherwise a full table treatment is needed
+                    else if (FormatTable)
+                    {
+                        resultString += "\n ";
+                        var column = 0;
+
+                        foreach (var row in table.Rows)
+                        {
+                            if (row.Value != null)
+                            {
+                                column = 0;
+                                foreach (var field in row.Value.Fields)
+                                {
+                                    columnWidth[column] = Math.Max(columnWidth[column], field.Name.Length);
+                                    resultString += " " + field.Name.PadLeft(columnWidth[column]) + "  ";
+                                    column++;
+                                }
+
+                                break;
+                            }
+                        }
+
+                        resultString += "\n ";
+
+                        foreach (var width in columnWidth)
+                        {
+                            resultString += new string('=', width + 2) + " ";
+                        }
+
+                        foreach (var row in table.Rows)
+                        {
+                            column = 0;
+                            resultString += "\n ";
+                            if (row.Value != null)
+                            {
+                                foreach (var field in row.Value.Fields)
+                                {
+                                    resultString += " " + Format(field.Value).PadLeft(columnWidth[column]) + "  ";
+                                    column++;
+                                }
+                            }
+                            else
+                            {
+                                resultString += row.IsError ? row.Error?.Errors?[0].Message : "Blank()";
+                            }
+                        }
+
+                        resultString += "\n";
+                    }
+                    else
+                    {
+                        // table without formatting 
+
+                        resultString = "[";
+                        var separator = string.Empty;
+                        foreach (var row in table.Rows)
+                        {
+                            resultString += separator;
+
+                            if (HashCodes)
+                            {
+                                resultString += "#" + row.Value.GetHashCode() + "# ";
+                            }
+
+                            resultString += Format(row.Value);
+                            separator = ", ";
+                        }
+
+                        resultString += "]";
+                    }
+                }
+            }
+            else
+            {
+                var sb = new StringBuilder();
+                var settings = new FormulaValueSerializerSettings()
+                {
+                    UseCompactRepresentation = true,
+                };
+                value.ToExpression(sb, settings);
+
+                resultString = sb.ToString();
+            }
+
+            return resultString;
+        }
+    }
+}
