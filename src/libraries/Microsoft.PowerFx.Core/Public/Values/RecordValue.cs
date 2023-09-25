@@ -17,6 +17,16 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Types
 {
     /// <summary>
+    /// Optional special fields with special semantics. 
+    /// </summary>
+    public enum SpecialFieldKind
+    {
+        PrimaryKey,
+        PrimaryName,
+        PrimaryImage
+    }
+
+    /// <summary>
     /// Represent a Record. Records have named fields which can be other values. 
     /// </summary>
     public abstract class RecordValue : ValidFormulaValue
@@ -26,6 +36,26 @@ namespace Microsoft.PowerFx.Types
         /// The field names should match the names on <see cref="Type"/>. 
         /// </summary>
         public IEnumerable<NamedValue> Fields => GetFields();
+
+        public virtual bool TryGetSpecialFieldName(SpecialFieldKind kind, out string fieldName)
+        {
+            fieldName = null;
+            return false;
+        }
+
+        public bool TryGetSpecialFieldValue(SpecialFieldKind kind, out FormulaValue value)
+        {
+            if (this.TryGetSpecialFieldName(kind, out var fieldName))
+            {
+                value = this.GetField(fieldName);
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
+        // $$$ Deprecate virtual, use Kind?
 
         /// <summary>
         /// Unique key associated to each record in application.
