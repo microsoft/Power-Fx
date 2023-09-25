@@ -411,17 +411,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             private readonly RecalcEngine _engine;
 
             // Repl engine does all the policy around declaring variables via Set().
+#pragma warning disable CS0618 // Type or member is obsolete
             public readonly PowerFxREPL _repl;
+#pragma warning restore CS0618 // Type or member is obsolete
 
             public ReplRunner(RecalcEngine engine)
             {
                 _engine = engine;
 
+#pragma warning disable CS0618 // Type or member is obsolete
                 _repl = new PowerFxREPL
                 {
                     Engine = _engine,
                     AllowSetDefinitions = true
                 };
+#pragma warning restore CS0618 // Type or member is obsolete
             }
 
             protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)

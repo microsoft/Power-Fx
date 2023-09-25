@@ -118,7 +118,9 @@ namespace Microsoft.PowerFx
         }
 
         // Hook repl engine with customizations.
+#pragma warning disable CS0618 // Type or member is obsolete
         private class MyRepl : PowerFxREPL
+#pragma warning restore CS0618 // Type or member is obsolete
         {
             public MyRepl()
             {
