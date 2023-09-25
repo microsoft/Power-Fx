@@ -16,12 +16,12 @@ namespace Microsoft.PowerFx.Repl.Functions
     /// <summary>
     /// Help() function - prints a list of commands. 
     /// </summary>
-    internal class HelpFunction : ReflectionFunction
+    internal class Help0Function : ReflectionFunction
     {
         private readonly PowerFxREPL _repl;
 
-        public HelpFunction(PowerFxREPL repl)
-            : base()
+        public Help0Function(PowerFxREPL repl)
+                : base("Help", FormulaType.Boolean)
         {
             _repl = repl;
         }
@@ -29,6 +29,28 @@ namespace Microsoft.PowerFx.Repl.Functions
         public async Task<BooleanValue> Execute(CancellationToken cancel)
         {
             await _repl.HelpProvider.Execute(_repl, cancel)
+                .ConfigureAwait(false);
+
+            return FormulaValue.New(true);
+        }
+    }
+
+    /// <summary>
+    /// Help(string) function - prints information on a particular function or topic.
+    /// </summary>
+    internal class Help1Function : ReflectionFunction
+    {
+        private readonly PowerFxREPL _repl;
+
+        public Help1Function(PowerFxREPL repl)
+                : base("Help", FormulaType.Boolean, new[] { FormulaType.String })
+        {
+            _repl = repl;
+        }
+
+        public async Task<BooleanValue> Execute(StringValue context, CancellationToken cancel)
+        {
+            await _repl.HelpProvider.Execute(_repl, cancel, context.Value)
                 .ConfigureAwait(false);
 
             return FormulaValue.New(true);
@@ -71,10 +93,9 @@ namespace Microsoft.PowerFx.Repl.Functions
                 .ConfigureAwait(false);
         }
 
-        public virtual async Task Execute(PowerFxREPL repl, CancellationToken cancel)
+        public virtual async Task Execute(PowerFxREPL repl, CancellationToken cancel, string context = null)
         {
-            // $$$ include custom message 
-            // $$$ Pointer to web URL?
+            // default implementation ignores context and returns the full funciton list
 
             await WriteAsync(repl, "Available functions (case sensitive):\n", cancel)
                 .ConfigureAwait(false);

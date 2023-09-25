@@ -87,7 +87,8 @@ namespace Microsoft.PowerFx
         public PowerFxREPL()
         {
             this.MetaFunctions.AddFunction(new NotifyFunction(this));
-            this.MetaFunctions.AddFunction(new HelpFunction(this));
+            this.MetaFunctions.AddFunction(new Help0Function(this));
+            this.MetaFunctions.AddFunction(new Help1Function(this));
         }
 
         private bool _userEnabled = false;

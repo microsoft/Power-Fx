@@ -351,9 +351,45 @@ namespace Microsoft.PowerFx
         private class MyHelpProvider : HelpProvider
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            public override async Task Execute(PowerFxREPL repl, CancellationToken cancel)
+            public override async Task Execute(PowerFxREPL repl, CancellationToken cancel, string context = null)
 #pragma warning restore CS0618 // Type or member is obsolete
             {
+                if (context?.ToLowerInvariant() == "options" || context?.ToLowerInvariant() == "option")
+                {
+                    var msg =
+@"
+Options.FormatTable
+    Displays tables in a tabular format rather than using Table() function notation.
+
+Options.HashCodes        
+    When printing, includes hash codes of each object to better understand references.
+    This can be very helpful for debugging copy-on-mutation semantics.
+
+Options.NumberIsFloat
+    By default, literal numeric values such as ""1.23"" and the return type from the 
+    Value function are treated as decimal values.  Turning this flag on changes that
+    to floating point instead.  To test, ""1e300"" is legal in floating point but not decimal.
+
+Options.LargeCallDepth
+    Expands the call stack for testing complex user defined functions.
+
+Options.StackTrace
+    Displays the full stack trace when an exception is encountered.
+
+Options.PowerFxV1
+    Sets all the feature flags for Power Fx 1.0.
+
+Options.None
+    Removed all the feature flags, which is even less than Canvas uses.
+
+";
+
+                    await WriteAsync(repl, msg, cancel)
+                        .ConfigureAwait(false);
+
+                    return;
+                }
+
                 var pre =
 @"
 <formula> alone is evaluated and the result displayed.
@@ -380,10 +416,12 @@ Use [ <value>, ... ] for a single column table, field name is ""Value"".
 Records and Tables can be arbitrarily nested.
 
 Use Option( Options.FormatTable, false ) to disable table formatting.
-Use Option() to see a list of all options with their current value.
+Use Option() to see the list of all options with their current value.
+Use Help( ""Options"" ) for more information.
 
 Once a formula is defined or a variable's type is defined, it cannot be changed.
 Use Reset() to clear all formulas and variables.
+
 ";
 
                 await WriteAsync(repl, pre, cancel)
