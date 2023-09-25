@@ -24,9 +24,7 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx
 {
     public static class ConsoleRepl
-    {
-        private static RecalcEngine _engine;
-
+    { 
         private const string OptionFormatTable = "FormatTable";
 
         private const string OptionNumberIsFloat = "NumberIsFloat";
@@ -48,7 +46,9 @@ namespace Microsoft.PowerFx
 
         private static StandardFormatter _standardFormatter;
 
-        private static void ResetEngine()
+        private static bool _reset;
+
+        private static RecalcEngine ReplRecalcEngine()
         { 
             var config = new PowerFxConfig(_features);
 
@@ -96,8 +96,7 @@ namespace Microsoft.PowerFx
 
             config.AddOptionSet(optionsSet);
 
-            _engine = new RecalcEngine(config);
-            _standardFormatter = new StandardFormatter();
+            return new RecalcEngine(config);
         }
 
         public static void Main()
@@ -106,8 +105,6 @@ namespace Microsoft.PowerFx
 
             Console.InputEncoding = System.Text.Encoding.Unicode;
             Console.OutputEncoding = System.Text.Encoding.Unicode;
-
-            ResetEngine();
 
             var version = typeof(RecalcEngine).Assembly.GetName().Version.ToString();
             Console.WriteLine($"Microsoft Power Fx Console Formula REPL, Version {version}");
@@ -125,8 +122,11 @@ namespace Microsoft.PowerFx
         {
             public MyRepl()
             {
-                this.Engine = _engine;
+                this.Engine = ReplRecalcEngine();
+
+                _standardFormatter = new StandardFormatter();
                 this.ValueFormatter = _standardFormatter;
+
                 this.AllowSetDefinitions = true;
                 this.EnableUserObject();
                 this.AddPseudoFunction(new IRPseudoFunction());
@@ -148,12 +148,18 @@ namespace Microsoft.PowerFx
 
         public static void REPL()
         {
-            var repl = new MyRepl();
             while (true)
             {
-                repl.WritePromptAsync().Wait();
-                var line = Console.ReadLine();
-                repl.HandleLineAsync(line).Wait();
+                var repl = new MyRepl();
+
+                while (!_reset)
+                {
+                    repl.WritePromptAsync().Wait();
+                    var line = Console.ReadLine();
+                    repl.HandleLineAsync(line).Wait();
+                }
+
+                _reset = false;
             }
         }
 
@@ -161,7 +167,7 @@ namespace Microsoft.PowerFx
         {
             public BooleanValue Execute()
             {
-                ResetEngine();
+                _reset = true;
                 return FormulaValue.New(true);
             }
         }
@@ -276,7 +282,7 @@ namespace Microsoft.PowerFx
                 if (string.Equals(option.Value, OptionLargeCallDepth, StringComparison.OrdinalIgnoreCase))
                 {
                     _largeCallDepth = value.Value;
-                    ResetEngine();
+                    _reset = true;
                     return value;
                 }
 
@@ -302,7 +308,7 @@ namespace Microsoft.PowerFx
                         }
                     }
 
-                    ResetEngine();
+                    _reset = true;
                     return value;
                 }
 
@@ -316,7 +322,7 @@ namespace Microsoft.PowerFx
                         }
                     }
 
-                    ResetEngine();
+                    _reset = true;
                     return value;
                 }
 
@@ -324,7 +330,7 @@ namespace Microsoft.PowerFx
                 if (featureProperty?.CanWrite == true)
                 {
                     featureProperty.SetValue(_features, value.Value);
-                    ResetEngine();
+                    _reset = true;
                     return value;
                 }
 
