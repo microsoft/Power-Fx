@@ -204,25 +204,6 @@ namespace Microsoft.PowerFx
             }
 
             var extraSymbolTable = this.ExtraSymbolValues?.SymbolTable;
-
-            // pseudo functions and named formula assignments, handled outside of the interpreter
-            // for our purposes, we don't need the engine's features or the parser options
-            var parseResult = PowerFx.Engine.Parse(expression);
-
-            if (parseResult.IsSuccess)
-            {
-                if (parseResult.Root is CallNode cn && _pseudoFunctions.TryGetValue(cn.Head.Name, out var psuedoFunction))
-                {
-                    psuedoFunction.Execute(cn, this, extraSymbolTable, cancel);
-                    return new ReplResult();
-                }
-
-                if (parseResult.Root is BinaryOpNode bo && bo.Op == BinaryOp.Equal && bo.Left.Kind == NodeKind.FirstName)
-                {
-                    Engine.SetFormula(bo.Left.ToString(), bo.Right.ToString(), OnFormulaUpdate);
-                    return new ReplResult();
-                }
-            }
             
             var runtimeConfig = new RuntimeConfig(this.ExtraSymbolValues)
             {
@@ -250,6 +231,24 @@ namespace Microsoft.PowerFx
             check.ApplyParse();
 
             HashSet<string> varsToDisplay = new HashSet<string>();
+
+            if (check.Parse.IsSuccess)
+            {
+                // pseudo functions and named formula assignments, handled outside of the interpreter
+                // for our purposes, we don't need the engine's features or the parser options
+
+                if (check.Parse.Root is CallNode cn && _pseudoFunctions.TryGetValue(cn.Head.Name, out var psuedoFunction))
+                {
+                    psuedoFunction.Execute(cn, this, extraSymbolTable, cancel);
+                    return new ReplResult();
+                }
+
+                if (check.Parse.Root is BinaryOpNode bo && bo.Op == BinaryOp.Equal && bo.Left.Kind == NodeKind.FirstName)
+                {
+                    Engine.SetFormula(bo.Left.ToString(), bo.Right.ToString(), OnFormulaUpdate);
+                    return new ReplResult();
+                }
+            }
 
             // Pre-scan expression for declarations, like Set(x, y)
             // If found, declare 'x'. And the proceed with eval like normal. 
