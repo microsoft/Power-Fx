@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             rc.SetUserInfo(UserInfoTestSetup.UserInfo);
 
             var runner = new ReplRunner(engine);
-            runner._repl.EnableSampleUserObject();
+            runner._repl.EnableUserObject();
             runner._repl.UserInfo = UserInfoTestSetup.UserInfo.UserInfo;
             
             // runner._repl.InnerServices = rc.ServiceProvider;
