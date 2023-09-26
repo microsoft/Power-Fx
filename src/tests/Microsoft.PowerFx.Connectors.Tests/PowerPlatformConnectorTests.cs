@@ -739,7 +739,6 @@ namespace Microsoft.PowerFx.Tests
             AssertEqual(expected, actual);
         }
 
-
         [Fact]
         public async Task Office365Outlook_FindMeetingTimesV2()
         {

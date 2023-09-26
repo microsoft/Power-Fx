@@ -32,11 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Responses\Office 365 Outlook GetMailTipsV2.json" />
-    <None Remove="Responses\Office 365 Outlook GetRoomListsV2.json" />
-  </ItemGroup>
-  
-  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Connectors\Microsoft.PowerFx.Connectors.csproj" />
     <ProjectReference Include="..\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj" />
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />

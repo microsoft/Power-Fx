@@ -310,7 +310,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>ConnectorParameters class with suggestions.</returns>
         public async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsAsync(NamedValue[] knownParameters, ConnectorType connectorType, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
-        {            
+        {
             cancellationToken.ThrowIfCancellationRequested();
 
             if (connectorType != null)
@@ -362,7 +362,7 @@ namespace Microsoft.PowerFx.Connectors
         public async Task<ConnectorType> GetConnectorParameterTypeAsync(NamedValue[] knownParameters, ConnectorParameter connectorParameter, BaseRuntimeConnectorContext context, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await GetConnectorTypeAsync(knownParameters, connectorParameter.ConnectorType ?? ReturnParameterType, context, cancellationToken).ConfigureAwait(false);           
+            return await GetConnectorTypeAsync(knownParameters, connectorParameter.ConnectorType ?? ReturnParameterType, context, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -399,7 +399,7 @@ namespace Microsoft.PowerFx.Connectors
         public async Task<ConnectorType> GetConnectorReturnTypeAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext context, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await GetConnectorTypeAsync(knownParameters, ReturnParameterType, context, cancellationToken).ConfigureAwait(false);            
+            return await GetConnectorTypeAsync(knownParameters, ReturnParameterType, context, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -456,7 +456,7 @@ namespace Microsoft.PowerFx.Connectors
             cancellationToken.ThrowIfCancellationRequested();
             EnsureInitialized();
             BaseRuntimeConnectorContext context = ConnectorReturnType.Binary ? runtimeContext.WithRawResults() : runtimeContext;
-            ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(this, context), context.ThrowOnError);            
+            ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(this, context), context.ThrowOnError);
             FormulaValue result = await invoker.InvokeAsync(args, context, cancellationToken).ConfigureAwait(false);
             return await PostProcessResultAsync(result, runtimeContext, invoker, cancellationToken).ConfigureAwait(false);
         }
@@ -779,7 +779,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
 
                 if (Operation.RequestBody != null)
-                {                    
+                {
                     OpenApiRequestBody requestBody = Operation.RequestBody;
                     string bodyName = requestBody.GetBodyName();
 
@@ -816,8 +816,8 @@ namespace Microsoft.PowerFx.Connectors
                                             {
                                                 continue;
                                             }
-                                            
-                                            bodyPropertyHiddenRequired = !requestBody.Required;                                            
+
+                                            bodyPropertyHiddenRequired = !requestBody.Required;
                                         }
                                     }
 
