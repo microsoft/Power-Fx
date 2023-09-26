@@ -27,9 +27,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Swagger\*.json" />
     <EmbeddedResource Include="Responses\*.json" />
+    <EmbeddedResource Include="Responses\*.txt" />
     <EmbeddedResource Include="Responses\*.jsonSet" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Responses\Office 365 Outlook GetMailTipsV2.json" />
+    <None Remove="Responses\Office 365 Outlook GetRoomListsV2.json" />
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Connectors\Microsoft.PowerFx.Connectors.csproj" />
     <ProjectReference Include="..\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj" />
