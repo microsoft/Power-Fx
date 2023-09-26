@@ -17,6 +17,28 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Types
 {
     /// <summary>
+    /// Optional special fields with special semantics. 
+    /// </summary>
+    public enum SpecialFieldKind
+    {
+        /// <summary>
+        /// Unique key associated to each record in application.
+        /// NOTE: If two table has a same record instance, then the key should be same.
+        /// </summary>
+        PrimaryKey,
+
+        /// <summary>
+        /// The primary name of the record. Useful for showing summary. 
+        /// </summary>
+        PrimaryName,
+
+        /// <summary>
+        /// Primary image of the record. Useful for showing an image summary. 
+        /// </summary>
+        PrimaryImage
+    }
+
+    /// <summary>
     /// Represent a Record. Records have named fields which can be other values. 
     /// </summary>
     public abstract class RecordValue : ValidFormulaValue
@@ -27,14 +49,33 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         public IEnumerable<NamedValue> Fields => GetFields();
 
+        public virtual bool TryGetSpecialFieldName(SpecialFieldKind kind, out string fieldName)
+        {
+            fieldName = null;
+            return false;
+        }
+
+        public bool TryGetSpecialFieldValue(SpecialFieldKind kind, out FormulaValue value)
+        {
+            if (this.TryGetSpecialFieldName(kind, out var fieldName))
+            {
+                value = this.GetField(fieldName);
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
         /// <summary>
         /// Unique key associated to each record in application.
         /// NOTE: If two table has a same record instance, then the key should be same.
         /// </summary>
         /// <param name="key"></param>
-        /// <returns></returns>
+        /// <returns></returns>        
         public virtual bool TryGetPrimaryKey(out string key)
         {
+            // Make Obsolete, use TryGetSpecialFieldValue - https://github.com/microsoft/Power-Fx/issues/1883
             key = default;
             return false;
         }
@@ -45,6 +86,7 @@ namespace Microsoft.PowerFx.Types
         /// <returns>Primary key name. Returns null in absence.</returns>
         public virtual string GetPrimaryKeyName()
         {
+            // Make Obsolete, use TryGetSpecialFieldValue - https://github.com/microsoft/Power-Fx/issues/1883
             return null;
         }
 

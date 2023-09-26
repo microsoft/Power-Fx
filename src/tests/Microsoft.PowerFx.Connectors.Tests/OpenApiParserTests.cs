@@ -701,7 +701,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(suggestions2.Suggestions);
             Assert.Single(suggestions2.Suggestions);
             
-            Assert.True(executeProcedureV2.ReturnParameterType.SupportsSuggestions);
+            Assert.True(executeProcedureV2.ReturnParameterType.SupportsDynamicIntellisense);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 1.json");
             ConnectorType returnType = await executeProcedureV2.GetConnectorReturnTypeAsync(
