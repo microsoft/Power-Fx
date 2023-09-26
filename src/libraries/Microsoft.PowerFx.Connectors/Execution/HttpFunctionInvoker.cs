@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -35,6 +36,7 @@ namespace Microsoft.PowerFx.Connectors
             _logger = runtimeContext.ExecutionLogger;
         }
 
+        [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
         public HttpRequestMessage BuildRequest(FormulaValue[] args, IConvertToUTC utcConverter, Guid id, CancellationToken cancellationToken)
         {
             HttpContent body = null;
@@ -250,7 +252,7 @@ namespace Microsoft.PowerFx.Connectors
             return new InMemoryRecordValue(IRContext.NotInSource(rt), lst);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
+        [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
         private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, CancellationToken cancellationToken)
         {
             FormulaValueSerializer serializer = null;

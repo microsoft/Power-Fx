@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 {
     internal class TestConnectorRuntimeContext : BaseRuntimeConnectorContext
     {
-        private readonly Dictionary<string, HttpMessageInvoker> _clients = new();
+        private readonly Dictionary<string, HttpMessageInvoker> _clients = new ();
         private readonly bool _throwOnError;
         private readonly ConnectorLogger _logger;
 

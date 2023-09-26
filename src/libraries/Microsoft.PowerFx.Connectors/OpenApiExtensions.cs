@@ -509,7 +509,7 @@ namespace Microsoft.PowerFx.Connectors
         public static FormulaType GetReturnType(this OpenApiOperation openApiOperation)
         {
             (ConnectorType connectorType, string unsupportedReason) = openApiOperation.GetConnectorReturnType();
-            FormulaType ft = (connectorType?.FormulaType) ?? new BlankType();
+            FormulaType ft = connectorType?.FormulaType ?? new BlankType();
             return ft;
         }
 
