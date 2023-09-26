@@ -532,8 +532,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(payload.id, response.Id);
             var foundItems = response.Result.Items.Where(item => item.Label == "AliceBlue");
             Assert.True(Enumerable.Count(foundItems) == 1, "AliceBlue should be found from suggestion result");
-            Assert.True(foundItems.First().InsertText == "AliceBlue");
-            Assert.True(foundItems.First().SortText == "0");
+            Assert.Equal("AliceBlue", foundItems.First().InsertText);
+            Assert.Equal("000", foundItems.First().SortText);
 
             _sendToClientData.Clear();
             payload = GetCompletionPayload(params2);
@@ -545,8 +545,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             foundItems = response.Result.Items.Where(item => item.Label == "AliceBlue");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
             Assert.True(Enumerable.Count(foundItems) == 1, "AliceBlue should be found from suggestion result");
-            Assert.True(foundItems.First().InsertText == "AliceBlue");
-            Assert.True(foundItems.First().SortText == "0");
+            Assert.Equal("AliceBlue", foundItems.First().InsertText);
+            Assert.Equal("000", foundItems.First().SortText);
 
             _sendToClientData.Clear();
             payload = GetCompletionPayload(params3);
@@ -559,20 +559,20 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             foundItems = response.Result.Items.Where(item => item.Label == "a");
             Assert.True(Enumerable.Count(foundItems) == 1, "'a' should be found from suggestion result");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
-            Assert.True(foundItems.First().InsertText == "a");
-            Assert.True(foundItems.First().SortText == "0");
+            Assert.Equal("a", foundItems.First().InsertText);
+            Assert.Equal("000", foundItems.First().SortText);
 
             foundItems = response.Result.Items.Where(item => item.Label == "b");
             Assert.True(Enumerable.Count(foundItems) == 1, "'b' should be found from suggestion result");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
-            Assert.True(foundItems.First().InsertText == "b");
-            Assert.True(foundItems.First().SortText == "1");
+            Assert.Equal("b", foundItems.First().InsertText);
+            Assert.Equal("001", foundItems.First().SortText);
 
             foundItems = response.Result.Items.Where(item => item.Label == "c");
             Assert.True(Enumerable.Count(foundItems) == 1, "'c' should be found from suggestion result");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
-            Assert.True(foundItems.First().InsertText == "c");
-            Assert.True(foundItems.First().SortText == "2");
+            Assert.Equal("c", foundItems.First().InsertText);
+            Assert.Equal("002", foundItems.First().SortText);
 
             // missing 'expression' in documentUri
             _sendToClientData.Clear();
@@ -619,8 +619,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             // Test that the Identifier delimiter is ignored in case of insertText,
             // when preceding character is also the same identifier delimiter
-            Assert.True(foundItems.First().InsertText == "Account'");
-            Assert.True(foundItems.First().SortText == "0");
+            Assert.Equal("Account'", foundItems.First().InsertText);
+            Assert.Equal("000", foundItems.First().SortText);
         }
 
         private static (string payload, string id) GetCompletionPayload(CompletionParams completionParams)

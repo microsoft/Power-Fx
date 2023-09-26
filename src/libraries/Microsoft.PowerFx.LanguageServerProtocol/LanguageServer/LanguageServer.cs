@@ -330,8 +330,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     Kind = GetCompletionItemKind(item.Kind),
 
                     // The order of the results should be preserved.  To do that, we embed the index
-                    // into the sort text, which clients may sort lexigraphically.
-                    SortText = index.ToString(CultureInfo.InvariantCulture),
+                    // into the sort text, which clients may sort lexicographically.
+                    SortText = index.ToString("D3", CultureInfo.InvariantCulture),
 
                     // If the current position is in front of a single quote and the completion result starts with a single quote,
                     // we don't want to make it harder on the end user by inserting an extra single quote.
