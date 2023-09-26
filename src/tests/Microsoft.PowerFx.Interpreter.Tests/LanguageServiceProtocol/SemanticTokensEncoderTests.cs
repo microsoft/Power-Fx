@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection.Emit;
+using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
@@ -14,7 +16,9 @@ using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter.Tests.Helpers;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
+using Microsoft.PowerFx.LanguageServerProtocol.Schemas;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
@@ -93,7 +97,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             var eol = ChooseEol(expression);
 
             // Act
-            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol);
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol, null);
 
             // Assert
             AssertEncodedTokens(encodedTokens, tokens, expression, eol);
@@ -140,7 +144,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             tokens.Sort(new TokensComparer());
 
             // Act
-            var encodedTokens = SemanticTokensEncoder.EncodeTokens(overlappingToks, expression, eol);
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(overlappingToks, expression, eol, null);
 
             // Assert
             AssertEncodedTokens(encodedTokens, tokens, expression, eol, false);
@@ -197,10 +201,42 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             var eol = ChooseEol(expression);
 
             // Act
-            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol);
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol, null);
 
             // Assert
             AssertEncodedTokens(encodedTokens, tokens, expression, eol, true);
+        }
+
+        [Theory]
+        [InlineData("9 + 9", 0)]
+        [InlineData("Max(10, 20, 30)", 0)]
+        [InlineData("Color.AliceBlue", 0)]
+        [InlineData("9 + 9\n Max(1, 3, 19); \n Color.AliceBlue", 0)]
+        [InlineData("/*jj*/\n\r\n\r\n//yes", 0)]
+        [InlineData("Label2.Text", 1, new string[] { "Label2,0,0,0,6" })]
+        [InlineData("NestedLabel1", 1, new string[] { "NestedLabel1,0,0,0,12" })]
+        [InlineData("Label2.Text;\nNestedLabel1", 2, new string[] { "Label2,0,0,0,6", "NestedLabel1,1,0,1,12" })]
+        public void TestControlTokensAreComputedCorrectlyWhenPresent(string expression, int expectedNumberOfControlTokens, string[] expectedControlTokenIndicesArray = null)
+        {
+            // Arrange
+            var checkResult = SemanticTokenTestHelper.GetCheckResultWithControlSymbols(expression);
+            var tokens = checkResult.GetTokens();
+            tokens = tokens.OrderBy(token => token, new TokensComparer());
+            var eol = ChooseEol(expression);
+            var controlTokens = new LinkedList<ControlToken>();
+
+            List<ControlTokenTestDataSchema> expectedControlTokenIndices = new List<ControlTokenTestDataSchema>();
+            if (expectedControlTokenIndicesArray != null)
+            {
+                expectedControlTokenIndices = GetControlTokenIndices(expectedControlTokenIndicesArray);
+            }
+
+            // Act
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol, controlTokens);
+
+            // Assert
+            Assert.True(controlTokens.Count == expectedNumberOfControlTokens);
+            AssertControlTokens(tokens, controlTokens, expectedControlTokenIndices);
         }
 
         private static void AssertEncodedTokens(IEnumerable<uint> encodedTokensCollection, IEnumerable<ITokenTextSpan> tokens, string expression, string eol, bool hasMultilineTokens = false)
@@ -304,6 +340,58 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             return checkResult;
         }
 
+        // A helper method to extract control token data list.
+        private List<ControlTokenTestDataSchema> GetControlTokenIndices(string[] expectedControlTokenIndicesArray)
+        {
+            List<ControlTokenTestDataSchema> controlTokenTestMaps = new List<ControlTokenTestDataSchema>();
+
+            foreach (string expectedControlTokenIndices in expectedControlTokenIndicesArray)
+            {
+                var resultData = expectedControlTokenIndices.Split(',');
+                ControlTokenTestDataSchema controlTokenTestMap = new ControlTokenTestDataSchema()
+                {
+                    Name = resultData[0],
+                    StartLineNumber = uint.Parse(resultData[1]),
+                    StartIndexNumber = uint.Parse(resultData[2]),
+                    EndLineNumber = uint.Parse(resultData[3]),
+                    EndIndexNumber = uint.Parse(resultData[4]),
+                };
+                controlTokenTestMaps.Add(controlTokenTestMap);
+            }
+
+            return controlTokenTestMaps;
+        }
+
+        private void AssertControlTokens(IEnumerable<ITokenTextSpan> tokens, LinkedList<ControlToken> controlTokens, List<ControlTokenTestDataSchema> expectedControlTokenIndices = null)
+        {
+            foreach (var token in tokens)
+            {
+                if (token.TokenType == TokenType.Control)
+                {
+                    var expectedControlToken = expectedControlTokenIndices?.Where(controlToken => controlToken.Name == token.TokenName);
+                    var actualControlToken = controlTokens.Where(controlToken => controlToken.Name == token.TokenName);
+
+                    // Asserting that the control token is present in the computed control tokens list
+                    Assert.Single(actualControlToken);
+
+                    var actualControlStartIndices = actualControlToken.Last().EncodedTokenIndices.First();
+                    var actualControlEndIndices = actualControlToken.Last().EncodedTokenIndices.Last();
+                    Assert.NotEmpty(actualControlStartIndices);
+                    Assert.NotEmpty(actualControlEndIndices);
+
+                    // Asserting the actual control token indices and line numbers computed
+                    Assert.Equal(expectedControlToken.Last().StartLineNumber, actualControlStartIndices[0]);
+                    Assert.Equal(expectedControlToken.Last().StartIndexNumber, actualControlStartIndices[1]);
+                    Assert.Equal(expectedControlToken.Last().EndLineNumber, actualControlEndIndices[0]);
+                    Assert.Equal(expectedControlToken.Last().EndIndexNumber, actualControlEndIndices[1]);
+                }
+                else
+                {
+                    Assert.Empty(controlTokens.Where(controlToken => controlToken.Name == token.TokenName));
+                }
+            }
+        }
+
         private class NotifyFunc : TexlFunction
         {
             public NotifyFunc()
@@ -354,28 +442,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             }
         }
 
-        /// <summary>
-        /// Just a small handy mock of symbol table to be able to customize binder to compute different token types.
-        /// Might not be 100% correct but it works and allows testing against different token types.
-        /// </summary>
-        private class MockSymbolTable : ReadOnlySymbolTable
+        private class ControlTokenTestDataSchema
         {
-            public void Add(string name, NameLookupInfo info)
-            {
-                _variables.Add(name, info);
-            }
+            public string Name { get; set; } = string.Empty;
 
-            public void AddRecord(string name, BindKind? type = null, params TypedName[] keyValues)
-            {
-                type ??= BindKind.Data;
-                var recordType = DType.CreateRecord(keyValues);
-                Add(name, new NameLookupInfo(type.Value, recordType, DPath.Root, 0, displayName: DName.MakeValid(name, out _)));
-            }
+            public uint StartLineNumber { get; set; } = 0;
 
-            internal override bool TryLookup(DName name, out NameLookupInfo nameInfo)
-            {
-                return _variables.TryGetValue(name.Value, out nameInfo);
-            }
+            public uint StartIndexNumber { get; set; } = 0;
+
+            public uint EndLineNumber { get; set; } = 0;
+
+            public uint EndIndexNumber { get; set; } = 0;
         }
     }
 }

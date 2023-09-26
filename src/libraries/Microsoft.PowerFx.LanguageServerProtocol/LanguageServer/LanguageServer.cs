@@ -17,6 +17,7 @@ using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
+using Microsoft.PowerFx.LanguageServerProtocol.Schemas;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
@@ -613,7 +614,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
-            HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.FullDocumentSemanticTokens);
+            HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.FullDocumentSemanticTokens, true);
         }
 
         /// <summary>
@@ -637,10 +638,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
-            HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.RangeDocumentSemanticTokens);
+            HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.RangeDocumentSemanticTokens, false);
         }
 
-        private void HandleSemanticTokens<T>(string id, T semanticTokensParams, string method)
+        private void HandleSemanticTokens<T>(string id, T semanticTokensParams, string method, bool isFullDocument = false)
             where T : SemanticTokensParams
         {
             var uri = new Uri(semanticTokensParams.TextDocument.Uri);
@@ -689,8 +690,36 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 tokens = tokens.Where(token => !(token.EndIndex <= startIndex || token.StartIndex >= endIndex));
             }
 
-            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol);
+            var controlTokens = isFullDocument ? new LinkedList<ControlToken>() : null;
+
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol, controlTokens);
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse() { Data = encodedTokens }));
+
+            PublishControlTokenNotification(controlTokens, queryParams);
+        }
+
+        /// <summary>
+        /// Handles publishing a control token notification if any control tokens found.
+        /// </summary>
+        /// <param name="controlTokens">Collection to add control tokens to.</param>
+        /// <param name="queryParams">Collection of query params.</param>
+        private void PublishControlTokenNotification(IEnumerable<ControlToken> controlTokens, NameValueCollection queryParams)
+        {
+            if (controlTokens == null || controlTokens.Count() == 0 || queryParams == null)
+            {
+                return;
+            }
+
+            var version = queryParams.Get("version") ?? string.Empty;
+
+            // Send PublishControlTokens notification
+            _sendToClient(JsonRpcHelper.CreateNotification(
+                CustomProtocolNames.PublishControlTokens,
+                new PublishControlTokensParams()
+                {
+                    Version = version,
+                    Data = controlTokens
+                }));
         }
 
         private HashSet<TokenType> ParseTokenTypesToSkipParam(string rawTokenTypesToSkipParam)
