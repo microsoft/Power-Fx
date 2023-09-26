@@ -172,7 +172,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var rc = new RuntimeConfig();
             rc.SetUserInfo(UserInfoTestSetup.UserInfo);
 
-            var runner = new ReplRunner(engine, rc);
+            var runner = new ReplRunner(engine);
+            runner._repl.EnableUserObject();
+            runner._repl.UserInfo = UserInfoTestSetup.UserInfo.UserInfo;
+            
+            // runner._repl.InnerServices = rc.ServiceProvider;
 
             var testRunner = new TestRunner(runner);
 

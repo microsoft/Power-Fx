@@ -139,6 +139,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.PrimitiveValueConversions",
                 "Microsoft.PowerFx.Types.RecordType",
                 "Microsoft.PowerFx.Types.RecordValue",
+                "Microsoft.PowerFx.Types.SpecialFieldKind",
                 "Microsoft.PowerFx.Types.StringType",
                 "Microsoft.PowerFx.Types.StringValue",
                 "Microsoft.PowerFx.Types.TableType",
