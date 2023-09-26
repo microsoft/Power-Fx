@@ -95,8 +95,9 @@ true
 >> -3;t1
 Table({Value:false},{Value:true})
 
+// Value is t1 because of Set, should be old unchanged value.
 >> true || Set(t1, [false, false])
-true
+Table({Value:false},{Value:true})
 
 >> -4;t1
 Table({Value:false},{Value:true})
