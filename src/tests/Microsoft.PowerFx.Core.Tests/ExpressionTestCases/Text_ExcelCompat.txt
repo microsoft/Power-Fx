@@ -1975,3 +1975,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(1448318857*1000, "mmm. dd, yyyy (hh:mm:ss AM/PM)")
 Error({Kind:ErrorKind.InvalidArgument})
+
+// Comma-counting logic works properly
+>> Text(12345678.87654321, "0,z0,z0,z0,z0,z0,z0,z0,z.0z0")
+"1z2z3z4z5z6z7z8z.8z8"

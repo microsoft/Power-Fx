@@ -171,6 +171,7 @@ namespace Microsoft.PowerFx.Core.Utils
                         for (int j = commaIdxList.Count - 1; j >= 0; j--)
                         {
                             formatStr = formatStr.Insert(commaIdxList[j], "\\");
+                            i++;
                         }
 
                         // Reset comma index list if it has any index because comma before numeric character is not used for scaling factor.
