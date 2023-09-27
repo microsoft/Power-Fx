@@ -26,6 +26,10 @@ namespace Microsoft.PowerFx
 
         public ValueFormatter ValueFormatter { get; set; } = new StandardFormatter();
 
+        public HelpProvider HelpProvider { get; set; } = new HelpProvider();
+
+        public NotifyProvider NotifyProvider { get; set; } = new NotifyProvider();
+
         public IReplOutput Output { get; set; } = new ConsoleReplOutput();
 
         // Allow repl to create new definitions, such as Set(). 
@@ -82,8 +86,9 @@ namespace Microsoft.PowerFx
 
         public PowerFxREPL()
         {
-            this.MetaFunctions.AddFunction(new NotifyFunction());
-            this.MetaFunctions.AddFunction(new HelpFunction(this));
+            this.MetaFunctions.AddFunction(new NotifyFunction(this));
+            this.MetaFunctions.AddFunction(new Help0Function(this));
+            this.MetaFunctions.AddFunction(new Help1Function(this));
         }
 
         private bool _userEnabled = false;
