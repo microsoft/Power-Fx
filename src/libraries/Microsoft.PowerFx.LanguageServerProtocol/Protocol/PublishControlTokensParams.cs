@@ -18,6 +18,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <summary>
         /// A list of control token information items.
         /// </summary>
-        public IEnumerable<ControlToken> Data { get; set; } = new List<ControlToken>();
+        public IEnumerable<ControlToken> Controls { get; set; } = new List<ControlToken>();
     }
 }

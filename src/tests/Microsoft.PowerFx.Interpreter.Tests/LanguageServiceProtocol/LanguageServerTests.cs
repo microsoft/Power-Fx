@@ -2212,7 +2212,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             // Arrange
             var engine = new Engine(new PowerFxConfig());
-            var checkResult = SemanticTokenTestHelper.GetCheckResultWithControlSymbols(expression);
+            var checkResult = SemanticTokensRelatedTestsHelper.GetCheckResultWithControlSymbols(expression);
             var scopeFactory = new TestPowerFxScopeFactory(
                 (string documentUri) => new EditorContextScope(
                     (expr) => checkResult));
@@ -2235,7 +2235,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 Assert.Equal("$/publishControlTokens", notification.Method);
                 Assert.Equal("someVersionId", notification.Params.Version);
 
-                var controlTokenList = notification.Params.Data;
+                var controlTokenList = notification.Params.Controls;
                 Assert.Equal(expectedNumberOfControlTokens, controlTokenList.Count());
                 foreach (var controlToken in controlTokenList)
                 {

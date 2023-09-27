@@ -14,6 +14,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Schemas
         public string Name { get; set; }
 
         // Representing the range of the control token
-        public LinkedList<List<uint>> EncodedTokenIndices { get; set; }
+        public List<uint[]> Range { get; set; }
     }
 }

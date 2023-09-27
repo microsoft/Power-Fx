@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Schemas;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
@@ -178,16 +179,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
                 return;
             }
 
-            // Starting position of current token relative to previous token starting position. 
-            var relativeStartPosition = currentLineNumber == previousTokenLineNumber ? startPosition - previousTokenStartIdx : startPosition;
-
-            // Ending position of current token relative to current token starting position. 
-            var relativeEndPosition = currentLineNumber == previousTokenLineNumber ? relativeStartPosition + length : endPosition.Value;
-
             // Line number of current token relative to previous token
             encodedTokens.Add(currentLineNumber - previousTokenLineNumber);
-            
-            encodedTokens.Add(relativeStartPosition);
+
+            // Starting position of current token relative to previous token starting position. 
+            encodedTokens.Add(currentLineNumber == previousTokenLineNumber ? startPosition - previousTokenStartIdx : startPosition);
 
             // Length of the token
             encodedTokens.Add(length);
@@ -201,7 +197,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
             // Handle control tokens only if control token list is initialized. Only for full document semantic tokens.
             if (controlTokens != null)
             {
-                HandleControlTokensData(controlTokens, currentToken, currentLineNumber, relativeStartPosition, relativeEndPosition);
+                HandleControlTokensData(controlTokens, currentToken, currentLineNumber, startPosition, startPosition + length);
             }          
            
             previousTokenLineNumber = currentLineNumber;
@@ -219,20 +215,24 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         internal static void HandleControlTokensData(ICollection<ControlToken> controlTokens, ITokenTextSpan currentToken, uint currentLineNumber, uint tokenStartPosition, uint tokenEndPosition)
         {
             if (currentToken.TokenType == TokenType.Control)
-            {                
-                var startList = new List<uint> { currentLineNumber, tokenStartPosition };
-                var endList = new List<uint> { currentLineNumber, tokenEndPosition };
-
-                var encodedTokenIndicesList = new LinkedList<List<uint>>();
-                encodedTokenIndicesList.AddFirst(startList);
-                encodedTokenIndicesList.AddLast(endList);
-                ControlToken contrlToken = new ControlToken
+            {
+                var controlTokenIfPresent = controlTokens.Where(controlToken => controlToken.Name == currentToken.TokenName);
+                if (controlTokenIfPresent.Count() > 0)
                 {
-                    Name = currentToken.TokenName,
-                    EncodedTokenIndices = encodedTokenIndicesList
-                };
+                    var tokenIndicesArray = new uint[] { currentLineNumber, tokenStartPosition, currentLineNumber, tokenEndPosition };
+                    controlTokenIfPresent.Last().Range.Add(tokenIndicesArray);
+                }
+                else
+                {
+                    var tokenIndicesList = new List<uint[]>() { new uint[] { currentLineNumber, tokenStartPosition, currentLineNumber, tokenEndPosition } };
+                    ControlToken contrlToken = new ControlToken
+                    {
+                        Name = currentToken.TokenName,
+                        Range = tokenIndicesList
+                    };
 
-                controlTokens.Add(contrlToken);
+                    controlTokens.Add(contrlToken);
+                }                
             }
         }
 

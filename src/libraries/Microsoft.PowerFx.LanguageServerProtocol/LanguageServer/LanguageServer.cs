@@ -656,15 +656,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
-            var isRangeSemanticTokensMethod = method == TextDocumentNames.RangeDocumentSemanticTokens;
-
             // Monaco-Editor sometimes uses \r\n for the newline character. \n is not always the eol character so allowing clients to pass eol character
             var eol = queryParams?.Get("eol");
             eol = !string.IsNullOrEmpty(eol) ? eol : EOL.ToString();
 
             var startIndex = -1;
             var endIndex = -1;
-            if (isRangeSemanticTokensMethod)
+            if (!isFullDocument)
             {
                 (startIndex, endIndex) = (semanticTokensParams as SemanticTokensRangeParams).Range.ConvertRangeToPositions(expression, eol);
                 if (startIndex < 0 || endIndex < 0)
@@ -685,7 +683,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             var tokens = result.GetTokens(tokenTypesToSkip);
 
-            if (isRangeSemanticTokensMethod)
+            if (!isFullDocument)
             {
                 // Only consider overlapping tokens. end index is exlcusive
                 tokens = tokens.Where(token => !(token.EndIndex <= startIndex || token.StartIndex >= endIndex));
@@ -719,7 +717,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 new PublishControlTokensParams()
                 {
                     Version = version,
-                    Data = controlTokens
+                    Controls = controlTokens
                 }));
         }
 
