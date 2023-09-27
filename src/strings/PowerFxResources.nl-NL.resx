@@ -5048,4 +5048,28 @@
     <value>Type letterlijke aangifte was ongeldig</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Bron- en doelrecordtypen komen niet overeen. Het opgegeven type heeft extra velden: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Bron- en doelrecordtypen komen niet overeen. Het opgegeven type heeft ontbrekende velden: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Bron- en doelrecordtypen komen niet overeen. Veldnaam: {0} niet gevonden.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Bron- en doelrecordtypen komen niet overeen. Veldnaam: {0} Verwacht {1}, gevonden {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Opgegeven type {0} kan niet worden overeengestemd met brontype {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Bron- en doeltypen komen niet overeen. Verwacht {0}, gevonden {1}.</value>
+    
+  </data>
 </root>

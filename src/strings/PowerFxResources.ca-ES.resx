@@ -5048,4 +5048,28 @@
     <value>La declaració literal de tipus no és vàlida</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Els tipus dels registres d'origen i de destinació no coincideixen. El tipus especificat té camps addicionals: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Els tipus dels registres d'origen i de destinació no coincideixen. Falten camps en el tipus especificat: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Els tipus dels registres d'origen i de destinació no coincideixen. No s'ha trobat el nom de camp {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Els tipus dels registres d'origen i de destinació no coincideixen. El nom de camp {0} esperava {1}, però s'ha trobat {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>El tipus {0} especificat no es pot coaccionar al tipus d'origen {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Els tipus d'origen i de destinació no coincideixen. S'esperava {0}, però s'ha trobat {1}.</value>
+    
+  </data>
 </root>

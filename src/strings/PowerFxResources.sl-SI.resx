@@ -5048,4 +5048,28 @@
     <value>Vrsta dobesedne deklaracije ni bila veljavna</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Neujemanje vrste med izvornimi in ciljnimi vrstami zapisov. Dana vrsta ima dodatna polja: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Neujemanje vrste med izvornimi in ciljnimi vrstami zapisov. V dani vrsti manjkajo polja: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Neujemanje vrste med izvornimi in ciljnimi vrstami zapisov. Imena polja: {0} ni bilo mogoče najti.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Neujemanje vrste med izvornimi in ciljnimi vrstami zapisov. Ime polja: {0}; pričakovano: {1}; najdeno: {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Dane vrste {0} ni mogoče vsiliti v vrsto vira {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Neujemanje vrste med izvornimi in ciljnimi vrstami. Pričakovano: {0}; najdeno: {1}.</value>
+    
+  </data>
 </root>

@@ -5048,4 +5048,28 @@
     <value>Tipa literāļa deklarācija bija nederīga</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Avota un mērķa ierakstu tipu neatbilstība. Norādītajam tipam ir papildu lauki: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Avota un mērķa ierakstu tipu neatbilstība. Norādītajam tipam trūkst lauku: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Avota un mērķa ierakstu tipu neatbilstība. Lauka nosaukums: {0} nav atrasts.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Avota un mērķa ierakstu tipu neatbilstība. Lauka nosaukums: {0} paredzēts {1}; atrasts {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Norādīto {0} tipu nevar pievienot avota tipa laukā {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Avota un mērķa tipu neatbilstība. Paredzēts {0}; atrasts {1}.</value>
+    
+  </data>
 </root>

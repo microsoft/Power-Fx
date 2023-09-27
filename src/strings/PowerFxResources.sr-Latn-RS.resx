@@ -5048,4 +5048,28 @@
     <value>Deklaracija tipa literala nije važeća</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Izvorni i odredišni tip zapisa se ne podudaraju. Dati tip ima dodatna polja: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Izvorni i odredišni tip zapisa se ne podudaraju. Dati tip ima polja koja nedostaju: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Izvorni i odredišni tip zapisa se ne podudaraju. Naziv polja: {0} nije pronađen.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Izvorni i odredišni tip zapisa se ne podudaraju. Naziv polja: {0} Očekivano {1}; Pronađeno {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Dati tip {0} ne može da se ograniči na izvorni tip {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Izvorni i odredišni tip se ne podudaraju. Očekivano {0}; Pronađeno {1}.</value>
+    
+  </data>
 </root>

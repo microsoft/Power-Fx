@@ -5048,4 +5048,28 @@
     <value>Deklarácia explicitnej hodnoty premennej typu bola neplatná</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Nesúlad typov medzi zdrojovými a cieľovými typmi záznamov. Daný typ má ďalšie polia: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Nesúlad typov medzi zdrojovými a cieľovými typmi záznamov. V danom type chýbajú polia: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Nesúlad typov medzi zdrojovými a cieľovými typmi záznamov. Názov poľa: {0} sa nenašiel.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Nesúlad typov medzi zdrojovými a cieľovými typmi záznamov. Názov poľa: {0}, očakávaný: {1}; nájdený: {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Daný typ {0} nemožno vynútiť na typ zdroja {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Nesúlad typov medzi zdrojovými a cieľovými typmi. Očakávalo sa: {0}; našlo sa: {1}.</value>
+    
+  </data>
 </root>

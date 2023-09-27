@@ -5048,4 +5048,28 @@
     <value>类型文字声明无效</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>源记录类型与目标记录类型不匹配。给定类型包含额外字段: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>源记录类型与目标记录类型不匹配。给定类型缺少字段: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>源记录类型与目标记录类型不匹配。找不到字段名称: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>源记录类型与目标记录类型不匹配。字段名称: {0} 需要 {1}；找到 {2}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>给定 {0} 类型不能强制转换为源类型 {1}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>源类型与目标类型不匹配。需要 {0}；找到 {1}。</value>
+    
+  </data>
 </root>
