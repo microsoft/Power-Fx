@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         Assert.True(Guid.TryParse(header.Value.First(), out _));
                         break;
                     case "x-ms-request-method":
-                        Assert.Equal(request.Method.ToString(), header.Value.First());
+                        Assert.Equal(request.Method.ToString().ToUpperInvariant(), header.Value.First());
                         break;
                     case "Authorization":
                         Assert.Equal($"Bearer {TestAuthToken}", header.Value.First());
