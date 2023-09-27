@@ -33,6 +33,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             // When specified, allows reserved keywords to be used as identifiers.
             DisableReservedKeywords = 1 << 3,
+
+            // When specified, allows reserved keywords to be used as identifiers.
+            AllowTypeLiteral = 1 << 4,
         }
 
         private bool _hasSemicolon = false;
@@ -55,14 +58,13 @@ namespace Microsoft.PowerFx.Core.Parser
         private SourceList _before;
         private SourceList _after;
         private readonly Features _features;
-        private readonly ParserOptions _parserOptions;
 
         // Represents temporary extra trivia, for when a parsing method
         // had to parse tailing trivia to do 1-lookahead. Will be
         // collected by the next call to ParseTrivia.
         private ITexlSource _extraTrivia;
 
-        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, ParserOptions parserOptions, Features features = null)
+        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, Features features = null)
         {
             Contracts.AssertValue(tokens);
 
@@ -72,15 +74,14 @@ namespace Microsoft.PowerFx.Core.Parser
             _flagsMode = new Stack<Flags>();
             _flagsMode.Push(flags);
             _features = features;
-            _parserOptions = parserOptions;
         }
 
         public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, ParserOptions parserOptions)
         {
             Contracts.AssertValue(parserOptions);
-            var flags = Flags.NamedFormulas | (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0);
+            var flags = (Flags.NamedFormulas | (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0)) | (parserOptions.AllowParseAsTypeLiteral ? Flags.AllowTypeLiteral : 0);
             var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
-            var parser = new TexlParser(formulaTokens, flags, parserOptions);
+            var parser = new TexlParser(formulaTokens, flags);
 
             return parser.ParseUDFsAndNamedFormulas(script, parserOptions);
         }
@@ -452,7 +453,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValueOrNull(culture);
 
             var tokens = TokenizeScript(script, culture, flags);
-            var parser = new TexlParser(tokens, flags, new ParserOptions(), features);
+            var parser = new TexlParser(tokens, flags, features);
             List<TexlError> errors = null;
             var parsetree = parser.Parse(ref errors);
 
@@ -465,7 +466,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValueOrNull(loc);
 
             var formulaTokens = TokenizeScript(script, loc, flags | Flags.NamedFormulas);
-            var parser = new TexlParser(formulaTokens, flags | Flags.NamedFormulas, new ParserOptions());
+            var parser = new TexlParser(formulaTokens, flags | Flags.NamedFormulas);
 
             return parser.ParseFormulas(script);
         }
@@ -1093,7 +1094,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (AfterSpaceTokenId() == TokKind.ParenOpen)
                     {
-                        if (ident.Token.As<IdentToken>().Name.Value == "Type" && _parserOptions.AllowParseAsTypeLiteral)
+                        if (ident.Token.As<IdentToken>().Name.Value == "Type" && _flagsMode.Peek().HasFlag(Flags.AllowTypeLiteral))
                         {
                             return ParseTypeLiteral();
                         }
