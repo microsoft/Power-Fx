@@ -689,22 +689,22 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 tokens = tokens.Where(token => !(token.EndIndex <= startIndex || token.StartIndex >= endIndex));
             }
 
-            var controlTokenDict = isFullDocument ? new ControlTokenDictionary() : null;
+            var controlTokensObj = isFullDocument ? new ControlTokens() : null;
 
-            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol, controlTokenDict);
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol, controlTokensObj);
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse() { Data = encodedTokens }));
 
-            PublishControlTokenNotification(controlTokenDict, queryParams);
+            PublishControlTokenNotification(controlTokensObj, queryParams);
         }
 
         /// <summary>
         /// Handles publishing a control token notification if any control tokens found.
         /// </summary>
-        /// <param name="controlTokenDict">Collection to add control tokens to.</param>
+        /// <param name="controlTokensObj">Collection to add control tokens to.</param>
         /// <param name="queryParams">Collection of query params.</param>
-        private void PublishControlTokenNotification(ControlTokenDictionary controlTokenDict, NameValueCollection queryParams)
+        private void PublishControlTokenNotification(ControlTokens controlTokensObj, NameValueCollection queryParams)
         {
-            if (controlTokenDict == null || controlTokenDict.Size() == 0 || queryParams == null)
+            if (controlTokensObj == null || controlTokensObj.Size() == 0 || queryParams == null)
             {
                 return;
             }
@@ -717,7 +717,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 new PublishControlTokensParams()
                 {
                     Version = version,
-                    Controls = controlTokenDict.GetControlTokens()
+                    Controls = controlTokensObj.GetControlTokens()
                 }));
         }
 
