@@ -5048,4 +5048,28 @@
     <value>Khai báo ký tự loại không hợp lệ</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Loại không khớp giữa loại bản ghi nguồn và đích. Loại đã cho có các trường phụ: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Loại không khớp giữa loại bản ghi nguồn và đích. Loại đã cho có các trường bị thiếu: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Nhập không khớp giữa loại bản ghi nguồn và đích. Không tìm thấy tên trường: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Loại không khớp giữa loại bản ghi nguồn và đích. Tên trường: {0} Dự kiến {1}; Tìm thấy {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Không thể buộc đưa loại {0} đã cho vào loại nguồn {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Loại không khớp giữa loại nguồn và loại đích. Dự kiến {0}; Tìm thấy {1}.</value>
+    
+  </data>
 </root>

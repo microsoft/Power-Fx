@@ -5048,4 +5048,28 @@
     <value>類型常值宣告無效</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。給定類型包含額外欄位: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。給定類型缺少欄位: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。找不到欄位名稱: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。欄位名稱: {0} 應為 {1}; 找到 {2}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>給定的 {0} 類型無法強制變更為來源類型 {1}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。應為 {0}; 找到 {1}。</value>
+    
+  </data>
 </root>

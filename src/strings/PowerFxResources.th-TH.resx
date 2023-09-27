@@ -4826,7 +4826,7 @@
     
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
-    <value>ไม่รองรับฟังก์ชัน {0} ใน namespace {1} </value>
+    <value>ไม่รองรับฟังก์ชัน {0} ใน namespace {1}</value>
     
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
@@ -5046,6 +5046,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>การประกาศสัญพจน์ของชนิดไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>ชนิดเรกคอร์ดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน ชนิดที่ให้มามีฟิลด์เกิน: {0}</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>ชนิดเรกคอร์ดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน ชนิดที่ให้มามีฟิลด์ขาดหายไป: {0}</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>ชนิดเรกคอร์ดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน ไม่พบชื่อฟิลด์: {0}</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>ชนิดเรกคอร์ดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน ชื่อฟิลด์: {0} คาดหวัง {1} แต่พบ {2}</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>ชนิด {0} ที่ให้มาไม่สามารถแปลงเป็นชนิดต้นทาง {1} ได้</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>ชนิดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน คาดหวัง {0} แต่พบ {1}</value>
     
   </data>
 </root>
