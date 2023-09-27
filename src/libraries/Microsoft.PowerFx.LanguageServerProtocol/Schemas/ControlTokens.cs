@@ -15,28 +15,33 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Schemas
     internal class ControlTokens 
     {      
         private readonly ICollection<ControlToken> _controlTokens;
-        private readonly ICollection<string> _controlTokenNames;
+        private readonly IDictionary<string, ControlToken> _controlTokenDict;
 
         public ControlTokens()
         {
             _controlTokens = new List<ControlToken>();
-            _controlTokenNames = new List<string>();
+            _controlTokenDict = new Dictionary<string, ControlToken>();
         }
 
         public void Add(ControlToken controlToken)
         {
             _controlTokens.Add(controlToken);
-            _controlTokenNames.Add(controlToken.Name);
+            _controlTokenDict.Add(controlToken.Name, controlToken);
         }
 
         public bool Contains(string controlName)
         {
-            return _controlTokenNames.Contains(controlName);
+            return _controlTokenDict.ContainsKey(controlName);
         }
 
         public ControlToken GetControlToken(string controlName)
         {
-            return _controlTokens.Where((token) => token.Name == controlName).Last();
+            if (_controlTokenDict.TryGetValue(controlName, out ControlToken controlTokenObj))
+            {
+                return controlTokenObj;
+            }
+
+            return null;
         }
 
         public IEnumerable<ControlToken> GetControlTokens()

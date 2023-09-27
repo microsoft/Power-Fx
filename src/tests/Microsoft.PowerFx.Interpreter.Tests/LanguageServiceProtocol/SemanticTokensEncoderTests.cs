@@ -216,6 +216,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
         [InlineData("NestedLabel1", 1, new string[] { "NestedLabel1,0,0,0,12" })]
         [InlineData("Label2.Text;\nNestedLabel1", 2, new string[] { "Label2,0,0,0,6", "NestedLabel1,1,0,1,12" })]
         [InlineData("Label2.Text;Label2.Text", 1, new string[] { "Label2,0,0,0,6,0,12,0,18" })]
+        [InlineData("Gallery1.Selected.NestedLabel1", 2, new string[] { "Gallery1,0,0,0,8", "NestedLabel1,0,19,0,31" })]
         public void TestControlTokensAreComputedCorrectlyWhenPresent(string expression, int expectedNumberOfControlTokens, string[] expectedControlTokenIndicesArray = null)
         {
             // Arrange
@@ -386,7 +387,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
                 }
                 else
                 {
-                    Assert.Empty(controlTokens.GetControlTokens());
+                    Assert.Null(controlTokens.GetControlToken(token.TokenName));
                 }
             }
         }

@@ -38,6 +38,17 @@ internal class MockSymbolTable : ReadOnlySymbolTable
         Add(name, controlInfo);
     }
 
+    public TypedName GetLookupInfoAsTypedName(string name)
+    {
+        var validName = DName.MakeValid(name, out _);
+        if (TryLookup(validName, out var lookupInfo))
+        {
+            return new TypedName(lookupInfo.Type, validName);
+        }
+
+        return new TypedName(DType.Unknown, validName);
+    }
+
     internal override bool TryLookup(DName name, out NameLookupInfo nameInfo)
     {
         return _variables.TryGetValue(name.Value, out nameInfo);
