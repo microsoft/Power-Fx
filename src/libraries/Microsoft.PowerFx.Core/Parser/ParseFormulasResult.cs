@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Core.Parser
         /// <summary>
         /// Represents ':' token before return type in a UDF.
         /// </summary>
-        internal Token ColonToken { get; }
+        internal Token ReturnTypeColonToken { get; }
 
         internal IdentToken ReturnType { get; }
         
@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Parser
         /// <summary>
         /// False if UDF is incomplete eg: Add(a: Number, b: Number): .
         /// </summary>
-        internal bool IsValid { get; }
+        internal bool IsParseValid { get; }
 
         public UDF(IdentToken ident, Token colonToken, IdentToken returnType, HashSet<UDFArg> args, TexlNode body, bool isImperative, bool numberIsFloat, bool isValid)
         {
@@ -98,8 +98,8 @@ namespace Microsoft.PowerFx.Core.Parser
             Body = body;
             IsImperative = isImperative;
             NumberIsFloat = numberIsFloat;
-            IsValid = isValid;
-            ColonToken = colonToken;
+            IsParseValid = isValid;
+            ReturnTypeColonToken = colonToken;
         }
     }
 

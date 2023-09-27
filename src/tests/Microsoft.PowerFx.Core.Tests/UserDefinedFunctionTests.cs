@@ -210,8 +210,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var parseResult = UserDefinitions.Parse(script, parserOptions);
 
             Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
-            Assert.Equal(validUDFCount, parseResult.UDFs.Count(udf => udf.IsValid));
-            Assert.Equal(inValidUDFCount, parseResult.UDFs.Count(udf => !udf.IsValid));
+            Assert.Equal(validUDFCount, parseResult.UDFs.Count(udf => udf.IsParseValid));
+            Assert.Equal(inValidUDFCount, parseResult.UDFs.Count(udf => !udf.IsParseValid));
         }
 
         /// <summary>
@@ -233,8 +233,8 @@ namespace Microsoft.PowerFx.Core.Tests
                             F4(";
             var parseResult = UserDefinitions.Parse(script, parserOptions);
             Assert.Equal(2, parseResult.NamedFormulas.Count());
-            Assert.Equal(1, parseResult.UDFs.Count(udf => udf.IsValid));
-            Assert.Equal(3, parseResult.UDFs.Count(udf => !udf.IsValid));
+            Assert.Equal(1, parseResult.UDFs.Count(udf => udf.IsParseValid));
+            Assert.Equal(3, parseResult.UDFs.Count(udf => !udf.IsParseValid));
 
             foreach (var udf in parseResult.UDFs)
             {
@@ -253,7 +253,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 else if (udf.Ident.Name == "F4")
                 {
                     Assert.Empty(udf.Args);
-                    Assert.Null(udf.ColonToken);
+                    Assert.Null(udf.ReturnTypeColonToken);
                     Assert.Null(udf.ReturnType);
                     Assert.Null(udf.Body);
                 }
@@ -275,14 +275,14 @@ namespace Microsoft.PowerFx.Core.Tests
             var parseResult = UserDefinitions.Parse(script, parserOptions);
             var func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
 
-            Assert.False(func.IsValid);
+            Assert.False(func.IsParseValid);
             Assert.NotNull(func);
             Assert.Single(func.Args);
             var firstArg = func.Args.Single();
             Assert.NotNull(firstArg.NameIdent);
             Assert.Null(firstArg.TypeIdent);
             Assert.Null(firstArg.ColonToken);
-            Assert.Null(func.ColonToken);
+            Assert.Null(func.ReturnTypeColonToken);
             Assert.Null(func.ReturnType);
             Assert.Null(func.Body);
 
@@ -290,7 +290,7 @@ namespace Microsoft.PowerFx.Core.Tests
             parseResult = UserDefinitions.Parse(script, parserOptions);
             func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
 
-            Assert.False(func.IsValid);
+            Assert.False(func.IsParseValid);
             Assert.NotNull(func);
             Assert.Single(func.Args);
             firstArg = func.Args.Single();
@@ -302,7 +302,7 @@ namespace Microsoft.PowerFx.Core.Tests
             parseResult = UserDefinitions.Parse(script, parserOptions);
             func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
 
-            Assert.False(func.IsValid);
+            Assert.False(func.IsParseValid);
             Assert.NotNull(func);
             Assert.Single(func.Args);
             firstArg = func.Args.Single();
@@ -314,7 +314,7 @@ namespace Microsoft.PowerFx.Core.Tests
             parseResult = UserDefinitions.Parse(script, parserOptions);
             func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
 
-            Assert.False(func.IsValid);
+            Assert.False(func.IsParseValid);
             Assert.NotNull(func);
             Assert.Equal(2, func.Args.Count());
             firstArg = func.Args.ElementAt(0);
@@ -328,10 +328,10 @@ namespace Microsoft.PowerFx.Core.Tests
             parseResult = UserDefinitions.Parse(script, parserOptions);
             func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
 
-            Assert.False(func.IsValid);
+            Assert.False(func.IsParseValid);
             Assert.NotNull(func);
             Assert.Single(func.Args);
-            Assert.NotNull(func.ColonToken);
+            Assert.NotNull(func.ReturnTypeColonToken);
             Assert.Null(func.ReturnType);
             Assert.Null(func.Body);
 
@@ -339,10 +339,10 @@ namespace Microsoft.PowerFx.Core.Tests
             parseResult = UserDefinitions.Parse(script, parserOptions);
             func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
 
-            Assert.False(func.IsValid);
+            Assert.False(func.IsParseValid);
             Assert.NotNull(func);
             Assert.Single(func.Args);
-            Assert.NotNull(func.ColonToken);
+            Assert.NotNull(func.ReturnTypeColonToken);
             Assert.NotNull(func.ReturnType);
             Assert.Null(func.Body);
 
@@ -352,10 +352,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.NotNull(func);
             Assert.Single(func.Args);
-            Assert.NotNull(func.ColonToken);
+            Assert.NotNull(func.ReturnTypeColonToken);
             Assert.NotNull(func.ReturnType);
             Assert.NotNull(func.Body);
-            Assert.True(func.IsValid);
+            Assert.True(func.IsParseValid);
         }
     }
 }
