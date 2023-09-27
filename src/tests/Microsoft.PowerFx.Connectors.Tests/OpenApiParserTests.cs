@@ -72,8 +72,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("ConversationAnalysis_AnalyzeConversation_Conversation", function.OriginalName);
             Assert.Equal("/apim/cognitiveservicestextanalytics/{connectionId}/language/:analyze-conversations", function.OperationPath);
 
-            Assert.Equal(2, function.RequiredParameters.Length);
-            Assert.Equal(3, function.HiddenRequiredParameters.Length);
+            Assert.Equal(3, function.RequiredParameters.Length);
+            Assert.Equal(2, function.HiddenRequiredParameters.Length);
             Assert.Empty(function.OptionalParameters);
 
             RecordType analysisInputRecordType = Extensions.MakeRecordType(
@@ -86,27 +86,33 @@ namespace Microsoft.PowerFx.Connectors.Tests
                                                     ("verbose", RecordType.Boolean));
 
             // -- Parameter 1 --
-            Assert.Equal("analysisInput", function.RequiredParameters[0].Name);
-            Assert.Equal(analysisInputRecordType, function.RequiredParameters[0].FormulaType);
+            Assert.Equal("kind", function.RequiredParameters[0].Name);
+            Assert.Equal(FormulaType.String, function.RequiredParameters[0].FormulaType);
             Assert.Equal("A single conversational task to execute.", function.RequiredParameters[0].Description);
-            Assert.Null(function.RequiredParameters[0].DefaultValue);
-            Assert.NotNull(function.RequiredParameters[0].ConnectorType);
-            Assert.Equal("analysisInput", function.RequiredParameters[0].ConnectorType.Name);
-            Assert.Null(function.RequiredParameters[0].ConnectorType.DisplayName);
-            Assert.Equal("The input ConversationItem and its optional parameters", function.RequiredParameters[0].ConnectorType.Description);
-            Assert.Equal(analysisInputRecordType, function.RequiredParameters[0].ConnectorType.FormulaType);
-            Assert.True(function.RequiredParameters[0].ConnectorType.IsRequired);
-            Assert.Single(function.RequiredParameters[0].ConnectorType.Fields);
-            Assert.Equal("conversationItem", function.RequiredParameters[0].ConnectorType.Fields[0].Name);
-            Assert.Null(function.RequiredParameters[0].ConnectorType.Fields[0].DisplayName);
-            Assert.Equal("The abstract base for a user input formatted conversation (e.g., Text, Transcript).", function.RequiredParameters[0].ConnectorType.Fields[0].Description);
-            Assert.True(function.RequiredParameters[0].ConnectorType.Fields[0].IsRequired);
+            Assert.Equal("Conversation", function.RequiredParameters[0].DefaultValue.ToObject());
 
             // -- Parameter 2 --
-            Assert.Equal("parameters", function.RequiredParameters[1].Name);
-            Assert.Equal(parametersRecordType, function.RequiredParameters[1].FormulaType);
+            Assert.Equal("analysisInput", function.RequiredParameters[1].Name);
+            Assert.Equal(analysisInputRecordType, function.RequiredParameters[1].FormulaType);
             Assert.Equal("A single conversational task to execute.", function.RequiredParameters[1].Description);
             Assert.Null(function.RequiredParameters[1].DefaultValue);
+            Assert.NotNull(function.RequiredParameters[1].ConnectorType);
+            Assert.Equal("analysisInput", function.RequiredParameters[1].ConnectorType.Name);
+            Assert.Null(function.RequiredParameters[1].ConnectorType.DisplayName);
+            Assert.Equal("The input ConversationItem and its optional parameters", function.RequiredParameters[1].ConnectorType.Description);
+            Assert.Equal(analysisInputRecordType, function.RequiredParameters[1].ConnectorType.FormulaType);
+            Assert.True(function.RequiredParameters[1].ConnectorType.IsRequired);
+            Assert.Single(function.RequiredParameters[1].ConnectorType.Fields);
+            Assert.Equal("conversationItem", function.RequiredParameters[1].ConnectorType.Fields[0].Name);
+            Assert.Null(function.RequiredParameters[1].ConnectorType.Fields[0].DisplayName);
+            Assert.Equal("The abstract base for a user input formatted conversation (e.g., Text, Transcript).", function.RequiredParameters[1].ConnectorType.Fields[0].Description);
+            Assert.True(function.RequiredParameters[1].ConnectorType.Fields[0].IsRequired);
+
+            // -- Parameter 3 --
+            Assert.Equal("parameters", function.RequiredParameters[2].Name);
+            Assert.Equal(parametersRecordType, function.RequiredParameters[2].FormulaType);
+            Assert.Equal("A single conversational task to execute.", function.RequiredParameters[2].Description);
+            Assert.Null(function.RequiredParameters[2].DefaultValue);
 
             RecordType analysisInputRecordTypeH = Extensions.MakeRecordType(
                                                     ("conversationItem", Extensions.MakeRecordType(
@@ -118,21 +124,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(FormulaType.String, function.HiddenRequiredParameters[0].FormulaType);
             Assert.Equal("Client API version.", function.HiddenRequiredParameters[0].Description);
             Assert.Equal("2022-05-01", function.HiddenRequiredParameters[0].DefaultValue.ToObject());
-
+            
             // -- Hidden Required Parameter 2 --
-            Assert.Equal("kind", function.HiddenRequiredParameters[1].Name);
-            Assert.Equal(FormulaType.String, function.HiddenRequiredParameters[1].FormulaType);
+            Assert.Equal("analysisInput", function.HiddenRequiredParameters[1].Name);
+            Assert.Equal(analysisInputRecordTypeH, function.HiddenRequiredParameters[1].FormulaType);
             Assert.Equal("A single conversational task to execute.", function.HiddenRequiredParameters[1].Description);
-            Assert.Equal("Conversation", function.HiddenRequiredParameters[1].DefaultValue.ToObject());
+            Assert.Equal(@"{""conversationItem"":{""id"":""0"",""participantId"":""0""}}", System.Text.Json.JsonSerializer.Serialize(function.HiddenRequiredParameters[1].DefaultValue.ToObject()));
 
-            // -- Hidden Required Parameter 3 --
-            Assert.Equal("analysisInput", function.HiddenRequiredParameters[2].Name);
-            Assert.Equal(analysisInputRecordTypeH, function.HiddenRequiredParameters[2].FormulaType);
-            Assert.Equal("A single conversational task to execute.", function.HiddenRequiredParameters[2].Description);
-            Assert.Equal(@"{""conversationItem"":{""id"":""0"",""participantId"":""0""}}", System.Text.Json.JsonSerializer.Serialize(function.HiddenRequiredParameters[2].DefaultValue.ToObject()));
-
-            Assert.Equal(2, function.ArityMin);
-            Assert.Equal(2, function.ArityMax);
+            Assert.Equal(3, function.ArityMin);
+            Assert.Equal(3, function.ArityMax);
 
             // -- Return Type --
             FormulaType returnType = function.ReturnType;
@@ -187,6 +187,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string parameters = @"{ deploymentName: ""deploy1"", projectName: ""project1"", verbose: true, stringIndexType: ""TextElement_V8"" }";
             FormulaValue analysisInputParam = engine.Eval(analysisInput);
             FormulaValue parametersParam = engine.Eval(parameters);
+            FormulaValue kind = FormulaValue.New("Conversation");
 
             using var httpClient = new HttpClient(testConnector);
             testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service for Language_Response.json");
@@ -197,7 +198,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client);
 
-            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
             httpClient.Dispose();
             client.Dispose();
             testConnector.Dispose();
@@ -212,7 +213,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             BaseRuntimeConnectorContext context2 = new TestConnectorRuntimeContext("ACSL", client2);
 
-            FormulaValue httpResult2 = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context2, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult2 = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context2, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult2);
             Assert.True(httpResult2 is RecordValue);
@@ -294,11 +295,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string parameters = @"{ deploymentName: ""deploy1"", projectName: ""project1"", verbose: true, stringIndexType: ""TextElement_V8"" }";
             FormulaValue analysisInputParam = engine.Eval(analysisInput);
             FormulaValue parametersParam = engine.Eval(parameters);
+            FormulaValue kind = FormulaValue.New("Conversation");
 
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878", };
             BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client);
             
-            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Diagnostics;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -9,6 +10,7 @@ namespace Microsoft.PowerFx.Connectors
     /// <summary>
     /// Represents a parameter of a connector function.
     /// </summary>
+    [DebuggerDisplay("{Name} {ConnectorType}")]
     public class ConnectorParameter : ConnectorSchema
     {
         public string Name { get; private set; }

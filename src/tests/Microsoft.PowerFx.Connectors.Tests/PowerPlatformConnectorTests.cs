@@ -603,6 +603,333 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public async Task Office365Outlook_GetEmailsV2()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net",   // endpoint
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14",          // environment
+                    "785da26033fe4f3f8604273d25f209d5",              // connectionId
+                    () => "eyJ0eXAiOiJKV1QiL...",
+                    httpClient)
+            {
+                SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
+            };
+
+            IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc);
+            
+            RecalcEngine engine = new RecalcEngine(config);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
+
+            testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook GetEmailsV2.json");
+            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.GetEmailsV2().value).Id", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            Assert.Equal(@"AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAVEFDU0AAA=", (result as StringValue).Value);
+
+            var actual = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+            var expected = @$"POST https://b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net/invoke
+ authority: b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJKV1QiL...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
+ x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/v2/Mail
+ x-ms-user-agent: PowerFx/{version}
+";
+
+            AssertEqual(expected, actual);
+        }
+
+        [Fact]
+        public async Task Office365Outlook_V4CalendarPostItem()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net",   // endpoint
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14",          // environment
+                    "785da26033fe4f3f8604273d25f209d5",              // connectionId
+                    () => "eyJ0eXAiOiJKV1...",
+                    httpClient)
+            {
+                SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
+            };
+
+            IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc);
+
+            RecalcEngine engine = new RecalcEngine(config);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
+            
+            testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook V4CalendarPostItem.json");
+            FormulaValue result = await engine.EvalAsync(@"Office365Outlook.V4CalendarPostItem(""Calendar"", ""Subject"", Today(), Today(), ""(UTC+01:00) Brussels, Copenhagen, Madrid, Paris"")", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            Assert.Equal(@"![body:s, categories:*[Value:s], createdDateTime:d, end:d, endWithTimeZone:d, iCalUId:s, id:s, importance:s, isAllDay:b, isHtml:b, isReminderOn:b, lastModifiedDateTime:d, location:s, numberOfOccurences:w, optionalAttendees:s, organizer:s, recurrence:s, recurrenceEnd:d, reminderMinutesBeforeStart:w, requiredAttendees:s, resourceAttendees:s, responseRequested:b, responseTime:d, responseType:s, selectedDaysOfWeek:N, sensitivity:s, seriesMasterId:s, showAs:s, start:d, startWithTimeZone:d, subject:s, timeZone:s, webLink:s]", result.Type._type.ToString());
+
+            var actual = testConnector._log.ToString();
+            var today = DateTime.UtcNow.Date.ToString("O");
+            var version = PowerPlatformConnectorClient.Version;
+            var expected = @$"POST https://b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net/invoke
+ authority: b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJKV1...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
+ x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/datasets/calendars/v4/tables/Calendar/items
+ x-ms-user-agent: PowerFx/{version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""subject"":""Subject"",""start"":""{today}"",""end"":""{today}"",""timeZone"":""(UTC\u002B01:00) Brussels, Copenhagen, Madrid, Paris""}}
+";
+
+            AssertEqual(expected, actual);
+        }
+
+        [Fact]
+        public async Task Office365Outlook_ExportEmailV2()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net",   // endpoint
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14",          // environment
+                    "785da26033fe4f3f8604273d25f209d5",              // connectionId
+                    () => "eyJ0eXAiOiJKV1QiLCJhb...",
+                    httpClient)
+            {
+                SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
+            };
+
+            IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc);
+
+            RecalcEngine engine = new RecalcEngine(config);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
+
+            testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook ExportEmailV2.txt");
+            FormulaValue result = await engine.EvalAsync(@"Office365Outlook.ExportEmailV2(""AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwCDi7i2pr6zRbiq9q8hHM-iAAAFMQAZAABDuyuwiYTvQLeL0nv55lGwAAVHeZkhAAA="")", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            Assert.StartsWith("Received: from DBBPR83MB0507.EURPRD83", (result as StringValue).Value);
+
+            var actual = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+            var expected = @$"POST https://b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net/invoke
+ authority: b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhb...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
+ x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/beta/me/messages/AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwCDi7i2pr6zRbiq9q8hHM-iAAAFMQAZAABDuyuwiYTvQLeL0nv55lGwAAVHeZkhAAA%3d/$value
+ x-ms-user-agent: PowerFx/{version}
+";
+
+            AssertEqual(expected, actual);
+        }
+
+        [Fact]
+        public async Task Office365Outlook_FindMeetingTimesV2()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net",   // endpoint
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14",          // environment
+                    "785da26033fe4f3f8604273d25f209d5",              // connectionId
+                    () => "eyJ0eXAiOiJKV1QiL...",
+                    httpClient)
+            {
+                SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
+            };
+
+            IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc);
+
+            RecalcEngine engine = new RecalcEngine(config);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
+
+            testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook FindMeetingTimesV2.json");
+            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.FindMeetingTimesV2().meetingTimeSuggestions).meetingTimeSlot.start", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            Assert.Equal(@"{dateTime:""2023-09-26T12:00:00.0000000"",timeZone:""UTC""}", result.ToExpression());
+
+            var actual = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+            var expected = @$"POST https://b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net/invoke
+ authority: b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJKV1QiL...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
+ x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/beta/me/findMeetingTimes
+ x-ms-user-agent: PowerFx/{version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""ActivityDomain"":""Work""}}
+";
+
+            AssertEqual(expected, actual);
+        }
+
+        [Fact]
+        public async Task Office365Outlook_FlagV2()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net",   // endpoint
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14",          // environment
+                    "785da26033fe4f3f8604273d25f209d5",              // connectionId
+                    () => "eyJ0eXAiOiJKV1Q...",
+                    httpClient)
+            {
+                SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
+            };
+            
+            IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc);
+
+            RecalcEngine engine = new RecalcEngine(config);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
+
+            testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook FlagV2.json");
+            FormulaValue result = await engine.EvalAsync(@"Office365Outlook.FlagV2(""AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAVHeWXcAAA="", {flag: {flagStatus: ""flagged""}})", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            Assert.True(result is not ErrorValue);
+
+            var actual = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+            var expected = @$"POST https://b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net/invoke
+ authority: b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJKV1Q...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
+ x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-request-method: PATCH
+ x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/v1.0/me/messages/AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAVHeWXcAAA%3d/flag
+ x-ms-user-agent: PowerFx/{version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""flag"":{{""flagStatus"":""flagged""}}}}
+";
+
+            AssertEqual(expected, actual);
+        }
+
+        [Fact]
+        public async Task Office365Outlook_GetMailTipsV2()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net",   // endpoint
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14",          // environment
+                    "785da26033fe4f3f8604273d25f209d5",              // connectionId
+                    () => "eyJ0eXAiOiJKV1QiL...",
+                    httpClient)
+            {
+                SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
+            };
+
+            IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc);
+
+            RecalcEngine engine = new RecalcEngine(config);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
+
+            testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook GetMailTipsV2.json");
+            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.GetMailTipsV2(""maxMessageSize"", [""jj@microsoft.com""]).value).maxMessageSize", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            Assert.Equal(37748736m, (result as DecimalValue).Value);
+
+            var actual = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+            var expected = @$"POST https://b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net/invoke
+ authority: b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJKV1QiL...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
+ x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/v1.0/me/getMailTips
+ x-ms-user-agent: PowerFx/{version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""MailTipsOptions"":""maxMessageSize"",""EmailAddresses"":[""jj@microsoft.com""]}}
+";
+
+            AssertEqual(expected, actual);
+        }
+
+        [Fact]
+        public async Task Office365Outlook_GetRoomListsV2()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net",   // endpoint
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14",          // environment
+                    "785da26033fe4f3f8604273d25f209d5",              // connectionId
+                    () => "eyJ0eXAiOiJK...",
+                    httpClient)
+            {
+                SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
+            };
+
+            IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc);
+            ConnectorFunction getRoomListsV2 = functions.First(f => f.Name == "GetRoomListsV2");
+
+            Assert.Equal("![value:*[address:s, name:s]]", getRoomListsV2.ReturnType._type.ToString());
+
+            RecalcEngine engine = new RecalcEngine(config);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
+
+            testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook GetRoomListsV2.json");
+            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.GetRoomListsV2().value).address", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            Assert.Equal("li-rl-1000HENRY@microsoft.com", (result as StringValue).Value);
+
+            var actual = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+            var expected = @$"POST https://b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net/invoke
+ authority: b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJK...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
+ x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/beta/me/findRoomLists
+ x-ms-user-agent: PowerFx/{version}
+";
+
+            AssertEqual(expected, actual);
+        }
+
+        [Fact]
         public async Task Office365Outlook_Load()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
