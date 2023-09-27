@@ -103,7 +103,7 @@ namespace Microsoft.PowerFx.Connectors
             req.Headers.Add("scheme", "https");
             req.Headers.Add("path", "/invoke");
             req.Headers.Add("x-ms-client-session-id", SessionId);
-            req.Headers.Add("x-ms-request-method", method.ToString());
+            req.Headers.Add("x-ms-request-method", method.ToString().ToUpperInvariant());
             req.Headers.Add("authorization", "Bearer " + authToken);
             req.Headers.Add("x-ms-client-environment-id", "/providers/Microsoft.PowerApps/environments/" + EnvironmentId);
             req.Headers.Add("x-ms-user-agent", $"PowerFx/{Version}");

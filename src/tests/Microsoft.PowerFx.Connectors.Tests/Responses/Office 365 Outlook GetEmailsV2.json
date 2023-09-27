@@ -1,0 +1,40 @@
+{
+  "value": [
+    {
+      "Id": "AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAVEFDU0AAA=",
+      "DateTimeReceived": "2023-09-21T07:41:02+00:00",
+      "HasAttachment": false,
+      "InternetMessageId": "<BL1PR21MB32839C3A93370B0705C91678A0F8A@BL1PR21MB3283.namprd21.prod.outlook.com>",
+      "Subject": "Notes for Power Fx",
+      "BodyPreview": "Some preview",
+      "Importance": 1,
+      "ConversationId": "AAQkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgAQAHfkjEAQQEwogXnmYlUvIDI=",
+      "IsRead": false,
+      "IsHtml": true,
+      "Body": "<html></html>",
+      "From": "john@microsoft.com",
+      "To": "jj@microsoft.com",
+      "Cc": null,
+      "Bcc": null,
+      "ReplyTo": null,
+      "Attachments": []
+    },
+    {
+      "Id": "AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAUieR6nAAA=",
+      "DateTimeReceived": "2023-08-01T16:36:05+00:00",
+      "HasAttachment": false,
+      "InternetMessageId": "<DM5PR21MB154170ACFDBCF262744BD99AD90AA@DM5PR21MB1541.namprd21.prod.outlook.com>",
+      "Subject": "[Action Required] Update nuget package",
+      "BodyPreview": "",
+      "Importance": 2,
+      "ConversationId": "AAQkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgAQAEw5LcNiw3JEvzmTPYInqdg=",
+      "IsRead": false,
+      "IsHtml": true,
+      "Body": "<html></html>",
+      "From": "jj@microsoft.com",
+      "To": "johnjohn@microsoft.com",      
+      "Bcc": null,      
+      "Attachments": []
+    }
+  ]
+}
