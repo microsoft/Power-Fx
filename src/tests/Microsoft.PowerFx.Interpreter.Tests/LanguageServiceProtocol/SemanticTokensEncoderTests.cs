@@ -223,7 +223,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             var tokens = checkResult.GetTokens();
             tokens = tokens.OrderBy(token => token, new TokensComparer());
             var eol = ChooseEol(expression);
-            var controlTokens = new LinkedList<ControlToken>();
+            var controlTokenDict = new ControlTokenDictionary();
 
             List<ControlToken> expectedControlTokenIndices = new List<ControlToken>();
             if (expectedControlTokenIndicesArray != null)
@@ -232,11 +232,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             }
 
             // Act
-            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol, controlTokens);
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol, controlTokenDict);
+            var actualControlTokens = controlTokenDict.GetControlTokens();
 
             // Assert
-            Assert.True(controlTokens.Count == expectedNumberOfControlTokens);
-            AssertControlTokens(tokens, controlTokens, expectedControlTokenIndices);
+            Assert.Equal(expectedNumberOfControlTokens, actualControlTokens.Count());
+            AssertControlTokens(tokens, actualControlTokens, expectedControlTokenIndices);
         }
 
         private static void AssertEncodedTokens(IEnumerable<uint> encodedTokensCollection, IEnumerable<ITokenTextSpan> tokens, string expression, string eol, bool hasMultilineTokens = false)
@@ -343,7 +344,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
         // A helper method to extract control token data list.
         private List<ControlToken> GetControlTokenIndices(string[] controlTokenIndicesArray)
         {
-            List<ControlToken> controlTokenTestMaps = new List<ControlToken>();
+            List<ControlToken> controlTokenTestData = new List<ControlToken>();
 
             foreach (string expectedControlTokenIndices in controlTokenIndicesArray)
             {
@@ -355,18 +356,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
                     rangeList.Add(rangeData[idx.. (idx + 4)].Select(uint.Parse).ToArray());
                 }
 
-                ControlToken controlTokenTestMap = new ControlToken()
+                ControlToken controlTokenTestObj = new ControlToken()
                 {
                     Name = resultData[0],
-                    Range = rangeList
+                    Ranges = rangeList
                 };
-                controlTokenTestMaps.Add(controlTokenTestMap);
+                controlTokenTestData.Add(controlTokenTestObj);
             }
 
-            return controlTokenTestMaps;
+            return controlTokenTestData;
         }
 
-        private void AssertControlTokens(IEnumerable<ITokenTextSpan> tokens, LinkedList<ControlToken> controlTokens, List<ControlToken> expectedControlTokenIndices = null)
+        private void AssertControlTokens(IEnumerable<ITokenTextSpan> tokens, IEnumerable<ControlToken> controlTokens, List<ControlToken> expectedControlTokenIndices = null)
         {
             foreach (var token in tokens)
             {
@@ -378,11 +379,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
                     // Asserting that the control token is present in the computed control tokens list
                     Assert.Single(actualControlToken);
 
-                    var actualControlIndices = actualControlToken.Last().Range;
+                    var actualControlIndices = actualControlToken.Last().Ranges;
                     Assert.NotEmpty(actualControlIndices);
 
                     // Asserting the actual control token indices and line numbers computed
-                    Assert.Equal(expectedControlToken.Last().Range, actualControlIndices);
+                    Assert.Equal(expectedControlToken.Last().Ranges, actualControlIndices);
                 }
                 else
                 {

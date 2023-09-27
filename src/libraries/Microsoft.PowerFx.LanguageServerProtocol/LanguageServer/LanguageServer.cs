@@ -689,22 +689,22 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 tokens = tokens.Where(token => !(token.EndIndex <= startIndex || token.StartIndex >= endIndex));
             }
 
-            var controlTokens = isFullDocument ? new LinkedList<ControlToken>() : null;
+            var controlTokenDict = isFullDocument ? new ControlTokenDictionary() : null;
 
-            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol, controlTokens);
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol, controlTokenDict);
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse() { Data = encodedTokens }));
 
-            PublishControlTokenNotification(controlTokens, queryParams);
+            PublishControlTokenNotification(controlTokenDict, queryParams);
         }
 
         /// <summary>
         /// Handles publishing a control token notification if any control tokens found.
         /// </summary>
-        /// <param name="controlTokens">Collection to add control tokens to.</param>
+        /// <param name="controlTokenDict">Collection to add control tokens to.</param>
         /// <param name="queryParams">Collection of query params.</param>
-        private void PublishControlTokenNotification(IEnumerable<ControlToken> controlTokens, NameValueCollection queryParams)
+        private void PublishControlTokenNotification(ControlTokenDictionary controlTokenDict, NameValueCollection queryParams)
         {
-            if (controlTokens == null || controlTokens.Count() == 0 || queryParams == null)
+            if (controlTokenDict == null || controlTokenDict.Count() == 0 || queryParams == null)
             {
                 return;
             }
@@ -717,7 +717,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 new PublishControlTokensParams()
                 {
                     Version = version,
-                    Controls = controlTokens
+                    Controls = controlTokenDict.GetControlTokens()
                 }));
         }
 

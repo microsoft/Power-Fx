@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.LanguageServerProtocol.Schemas;
 using Microsoft.PowerFx.Syntax;
 
@@ -53,10 +54,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <param name="tokens">Collection of tokens that would be encoded.</param>
         /// <param name="expression">Expression from which these tokens were extracted from.</param>
         /// <param name="eol">End of line character indiciating the line breaks in the given expression.</param>
-        /// <param name="controlTokens">Collection to add control tokens data.</param>
+        /// <param name="controlTokenDict">Collection to add control tokens data.</param>
         /// <returns>Encoded Tokens.</returns>
         // This encoding is done according to LSP specification for semantic tokens methods https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_semanticTokens
-        public static IEnumerable<uint> EncodeTokens(IEnumerable<ITokenTextSpan> tokens, string expression, string eol, ICollection<ControlToken> controlTokens = null)
+        public static IEnumerable<uint> EncodeTokens(IEnumerable<ITokenTextSpan> tokens, string expression, string eol, ControlTokenDictionary controlTokenDict = null)
         {
             if (tokens == null)
             {
@@ -115,7 +116,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
                 // Current token ends here -> encode it and put it into the encoded list
                 if (currentToken != null && currentToken.EndIndex - 1 == i && (endOfLineMatchIndex + 1 < eol.Length || eol[endOfLineMatchIndex] != expression[i]))
                 {
-                    EncodeAndAddToken(encodedTokens, currentToken, currentTokenStartLine, currentTokenStartPosition, positionOnCurrentLine, currentLineNumber, ref previousTokenLineNumber, ref previousTokenStartIdx, controlTokens);
+                    EncodeAndAddToken(encodedTokens, currentToken, currentTokenStartLine, currentTokenStartPosition, positionOnCurrentLine, currentLineNumber, ref previousTokenLineNumber, ref previousTokenStartIdx, controlTokenDict);
                     (currentToken, currentTokenStartLine, currentTokenStartPosition) = (null, null, null);
                 }
 
@@ -128,7 +129,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
                         {
                             // If current token is not null, we are dealing with multiline token, consider the current line of token as a separate encoded token
 
-                            EncodeAndAddToken(encodedTokens, currentToken, currentTokenStartLine, currentTokenStartPosition, eol.Length > positionOnCurrentLine ? null : positionOnCurrentLine - (uint)eol.Length, currentLineNumber, ref previousTokenLineNumber, ref previousTokenStartIdx, controlTokens);
+                            EncodeAndAddToken(encodedTokens, currentToken, currentTokenStartLine, currentTokenStartPosition, eol.Length > positionOnCurrentLine ? null : positionOnCurrentLine - (uint)eol.Length, currentLineNumber, ref previousTokenLineNumber, ref previousTokenStartIdx, controlTokenDict);
                             if (currentToken != null && i == currentToken.EndIndex - 1)
                             {
                                 (currentToken, currentTokenStartLine, currentTokenStartPosition) = (null, null, null);
@@ -163,8 +164,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <param name="currentLineNumber">Curent Line Number in the expression.</param>
         /// <param name="previousTokenLineNumber">Line number of the previous encoded token.</param>
         /// <param name="previousTokenStartIdx">Starting position of the previous encoded token.</param>
-        /// <param name="controlTokens">Collection to add control token data.</param>
-        private static void EncodeAndAddToken(ICollection<uint> encodedTokens, ITokenTextSpan currentToken, uint? currentTokenStartLine, uint? currentTokenStartPosition, uint? endPosition, uint currentLineNumber, ref uint previousTokenLineNumber, ref uint previousTokenStartIdx, ICollection<ControlToken> controlTokens = null)
+        /// <param name="controlTokenDict"></param>
+        private static void EncodeAndAddToken(ICollection<uint> encodedTokens, ITokenTextSpan currentToken, uint? currentTokenStartLine, uint? currentTokenStartPosition, uint? endPosition, uint currentLineNumber, ref uint previousTokenLineNumber, ref uint previousTokenStartIdx, ControlTokenDictionary controlTokenDict)
         {
             if (currentToken == null || !currentTokenStartLine.HasValue || !currentTokenStartPosition.HasValue || !endPosition.HasValue)
             {
@@ -195,9 +196,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
             encodedTokens.Add(NoTokenModifiersMask);
 
             // Handle control tokens only if control token list is initialized. Only for full document semantic tokens.
-            if (controlTokens != null)
+            if (controlTokenDict != null)
             {
-                HandleControlTokensData(controlTokens, currentToken, currentLineNumber, startPosition, startPosition + length);
+                HandleControlTokensData(currentToken, currentLineNumber, startPosition, startPosition + length, controlTokenDict);
             }          
            
             previousTokenLineNumber = currentLineNumber;
@@ -205,22 +206,22 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         }
 
         /// <summary>
-        /// Encodes the token and adds it to the given <paramref name="controlTokens"/> collection.
+        /// Encodes the token and adds it to the given <paramref name="controlTokenDict"/> dictionary.
         /// </summary>
-        /// <param name="controlTokens">Collection to add control tokens to.</param>
         /// <param name="currentToken">Current token.</param>
         /// <param name="currentLineNumber">current line number of the token.</param>
         /// <param name="tokenStartPosition">Start Position of the token.</param>
         /// <param name="tokenEndPosition">End Position of the token.</param>
-        internal static void HandleControlTokensData(ICollection<ControlToken> controlTokens, ITokenTextSpan currentToken, uint currentLineNumber, uint tokenStartPosition, uint tokenEndPosition)
+        /// <param name="controlTokenDict">Controls Token Dictionary.</param>
+        internal static void HandleControlTokensData(ITokenTextSpan currentToken, uint currentLineNumber, uint tokenStartPosition, uint tokenEndPosition, ControlTokenDictionary controlTokenDict)
         {
             if (currentToken.TokenType == TokenType.Control)
             {
-                var controlTokenIfPresent = controlTokens.Where(controlToken => controlToken.Name == currentToken.TokenName);
-                if (controlTokenIfPresent.Count() > 0)
+                if (controlTokenDict.Contains(currentToken.TokenName))
                 {
+                    var controlToken = controlTokenDict.Get(currentToken.TokenName);
                     var tokenIndicesArray = new uint[] { currentLineNumber, tokenStartPosition, currentLineNumber, tokenEndPosition };
-                    controlTokenIfPresent.Last().Range.Add(tokenIndicesArray);
+                    controlToken.Ranges.Add(tokenIndicesArray);
                 }
                 else
                 {
@@ -228,10 +229,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
                     ControlToken contrlToken = new ControlToken
                     {
                         Name = currentToken.TokenName,
-                        Range = tokenIndicesList
+                        Ranges = tokenIndicesList
                     };
-
-                    controlTokens.Add(contrlToken);
+                    controlTokenDict.Add(contrlToken.Name, contrlToken);
                 }                
             }
         }
