@@ -5048,4 +5048,28 @@
     <value>Декларација типа литерала није важећа</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Изворни и одредишни тип записа се не подударају. Дати тип има додатна поља: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Изворни и одредишни тип записа се не подударају. Дати тип има поља која недостају: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Изворни и одредишни тип записа се не подударају. Назив поља: {0} није пронађен.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Изворни и одредишни тип записа се не подударају. Назив поља: {0} Очекивано {1}; Пронађено {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Дати тип {0} не може да се ограничи на изворни тип {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Изворни и одредишни тип се не подударају. Очекивано {0}; Пронађено {1}.</value>
+    
+  </data>
 </root>

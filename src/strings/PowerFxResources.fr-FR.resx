@@ -5048,4 +5048,28 @@
     <value>Type de déclaration littérale non valide</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Correspondance incorrecte entre les types d’enregistrements source et cible. Le type donné comporte des champs supplémentaires : {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Correspondance incorrecte entre les types d’enregistrements source et cible. Des champs sont manquants pour le type donné : {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Correspondance incorrecte entre les types d’enregistrements source et cible. Nom du champ : {0} introuvable.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Correspondance incorrecte entre les types d’enregistrements source et cible. Nom du champ : {0}, attendu {1} ; trouvé {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Étant donné le type {0} ne peut pas être contraint au type source {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Correspondance incorrecte entre les types d’enregistrements source et cible. Attendu {0} ; trouvé {1}.</value>
+    
+  </data>
 </root>

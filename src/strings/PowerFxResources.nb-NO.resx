@@ -5048,4 +5048,28 @@
     <value>Type bokstavelig deklarasjon var ugyldig</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Manglende samsvar mellom kilde- og måloppføringstyper. Angitt type har ekstra felt: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Manglende samsvar mellom kilde- og måloppføringstyper. Angitt type har felt som mangler: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Manglende samsvar mellom kilde- og måloppføringstyper. Finner ikke feltnavnet {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Manglende samsvar mellom kilde- og måloppføringstyper. Feltnavn: {0}, forventet {1}, fant {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Angitt {0}-type kan ikke tvinges til kildetype {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Manglende samsvar mellom kilde- og måloppføringstyper. Forventet: {0}, fant {1}.</value>
+    
+  </data>
 </root>
