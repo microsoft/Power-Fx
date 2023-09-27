@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <param name="tokens">Collection of tokens that would be encoded.</param>
         /// <param name="expression">Expression from which these tokens were extracted from.</param>
         /// <param name="eol">End of line character indiciating the line breaks in the given expression.</param>
-        /// <param name="controlTokenDict">Collection to add control tokens data.</param>
+        /// <param name="controlTokenDict">Controls Token Dictionary that keeps a collection of control tokens data.</param>
         /// <returns>Encoded Tokens.</returns>
         // This encoding is done according to LSP specification for semantic tokens methods https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_semanticTokens
         public static IEnumerable<uint> EncodeTokens(IEnumerable<ITokenTextSpan> tokens, string expression, string eol, ControlTokenDictionary controlTokenDict = null)
@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 
             var encodedTokens = new LinkedList<uint>();
             var currentLineNumber = 0u;
-            var previousTokenLineNumber = 0u;  
+            var previousTokenLineNumber = 0u;
             var previousTokenStartIdx = 0u;
             var endOfLineMatchIndex = 0;
             var positionOnCurrentLine = 0u;
@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <param name="currentLineNumber">Curent Line Number in the expression.</param>
         /// <param name="previousTokenLineNumber">Line number of the previous encoded token.</param>
         /// <param name="previousTokenStartIdx">Starting position of the previous encoded token.</param>
-        /// <param name="controlTokenDict"></param>
+        /// <param name="controlTokenDict">Controls Token Dictionary that keeps a collection of control tokens data.</param>
         private static void EncodeAndAddToken(ICollection<uint> encodedTokens, ITokenTextSpan currentToken, uint? currentTokenStartLine, uint? currentTokenStartPosition, uint? endPosition, uint currentLineNumber, ref uint previousTokenLineNumber, ref uint previousTokenStartIdx, ControlTokenDictionary controlTokenDict)
         {
             if (currentToken == null || !currentTokenStartLine.HasValue || !currentTokenStartPosition.HasValue || !endPosition.HasValue)
@@ -212,7 +212,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <param name="currentLineNumber">current line number of the token.</param>
         /// <param name="tokenStartPosition">Start Position of the token.</param>
         /// <param name="tokenEndPosition">End Position of the token.</param>
-        /// <param name="controlTokenDict">Controls Token Dictionary.</param>
+        /// <param name="controlTokenDict">Controls Token Dictionary that keeps a collection of control tokens data.</param>
         internal static void HandleControlTokensData(ITokenTextSpan currentToken, uint currentLineNumber, uint tokenStartPosition, uint tokenEndPosition, ControlTokenDictionary controlTokenDict)
         {
             if (currentToken.TokenType == TokenType.Control)
