@@ -27,7 +27,6 @@ namespace Microsoft.PowerFx.Connector.Tests
             {
               "Microsoft.PowerFx.ConfigExtensions",
               "Microsoft.PowerFx.Connectors.BaseRuntimeConnectorContext",
-              "Microsoft.PowerFx.Connectors.Category",
               "Microsoft.PowerFx.Connectors.ConnectorEnhancedSuggestions",
               "Microsoft.PowerFx.Connectors.ConnectorFunction",
               "Microsoft.PowerFx.Connectors.ConnectorLog",
@@ -39,6 +38,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.ConnectorSettings",
               "Microsoft.PowerFx.Connectors.ConnectorType",
               "Microsoft.PowerFx.Connectors.Constants",
+              "Microsoft.PowerFx.Connectors.LogCategory",
               "Microsoft.PowerFx.Connectors.ODataParameters",
               "Microsoft.PowerFx.Connectors.ODataQueryableTableValue",
               "Microsoft.PowerFx.Connectors.OpenApiExtensions",              
