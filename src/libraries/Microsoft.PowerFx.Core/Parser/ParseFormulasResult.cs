@@ -70,6 +70,11 @@ namespace Microsoft.PowerFx.Core.Parser
     {
         internal IdentToken Ident { get; }
 
+        /// <summary>
+        /// Represents ':' token before return type in a UDF.
+        /// </summary>
+        internal Token ColonToken { get; }
+
         internal IdentToken ReturnType { get; }
         
         internal TexlNode Body { get; }
@@ -80,7 +85,12 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal bool NumberIsFloat { get; }
 
-        public UDF(IdentToken ident, IdentToken returnType, HashSet<UDFArg> args, TexlNode body, bool isImperative, bool numberIsFloat)
+        /// <summary>
+        /// False if UDF is incomplete eg: Add(a: Number, b: Number): .
+        /// </summary>
+        internal bool IsValid { get; }
+
+        public UDF(IdentToken ident, Token colonToken, IdentToken returnType, HashSet<UDFArg> args, TexlNode body, bool isImperative, bool numberIsFloat, bool isValid)
         {
             Ident = ident;
             ReturnType = returnType;
@@ -88,6 +98,8 @@ namespace Microsoft.PowerFx.Core.Parser
             Body = body;
             IsImperative = isImperative;
             NumberIsFloat = numberIsFloat;
+            IsValid = isValid;
+            ColonToken = colonToken;
         }
     }
 
@@ -107,14 +119,22 @@ namespace Microsoft.PowerFx.Core.Parser
     internal class UDFArg
     {
         internal IdentToken NameIdent;
+
         internal IdentToken TypeIdent;
+
+        /// <summary>
+        /// Represents ':' token before param type in a UDF.
+        /// </summary>
+        internal Token ColonToken { get; }
+
         internal int ArgIndex;
 
-        public UDFArg(IdentToken nameIdent, IdentToken typeIdent, int argIndex)
+        public UDFArg(IdentToken nameIdent, IdentToken typeIdent, Token colonToken, int argIndex)
         {
             NameIdent = nameIdent;
             TypeIdent = typeIdent;
             ArgIndex = argIndex;
+            ColonToken = colonToken;
         } 
     }
 }
