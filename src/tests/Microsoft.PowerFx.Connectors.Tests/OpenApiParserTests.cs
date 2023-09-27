@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -64,7 +63,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void ACSL_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
-            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("ACSL"), doc, Guid.NewGuid(), new ConsoleLogger(_output));
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("ACSL"), doc, new ConsoleLogger(_output));
             Assert.Contains(connectorFunctions, func => func.Namespace == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
         }
@@ -496,7 +495,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void LQA_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Language - Question Answering.json");
-            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("LQA"), doc, Guid.NewGuid(), new ConsoleLogger(_output));
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("LQA"), doc, new ConsoleLogger(_output));
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "LQA" && func.Name == "GetAnswersFromText");
         }
 
@@ -504,7 +503,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void SQL_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
-            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("SQL"), doc, Guid.NewGuid(), new ConsoleLogger(_output));
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("SQL"), doc, new ConsoleLogger(_output));
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "SQL" && func.Name == "GetProcedureV2");
         }
 

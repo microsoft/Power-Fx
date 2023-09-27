@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        public HttpRequestMessage BuildRequest(FormulaValue[] args, IConvertToUTC utcConverter, Guid id, CancellationToken cancellationToken)
+        public HttpRequestMessage BuildRequest(FormulaValue[] args, IConvertToUTC utcConverter, CancellationToken cancellationToken)
         {
             HttpContent body = null;
             var path = _function.OperationPath;
@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Connectors
             // Function couldn't be initialized properly, let's stop immediately
             if (_function._internals == null)
             {
-                _logger?.LogError(id, $"In {nameof(HttpFunctionInvoker)}.{nameof(BuildRequest)}, _function._internals is null");
+                _logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(BuildRequest)}, _function._internals is null");
                 return null;
             }
 
@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Connectors
 
                         case ParameterLocation.Cookie:
                         default:
-                            _logger?.LogError(id, $"In {nameof(HttpFunctionInvoker)}.{nameof(BuildRequest)}, unsupported {param.In.Value}");
+                            _logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(BuildRequest)}, unsupported {param.In.Value}");
                             return null;
                     }
                 }
@@ -320,14 +320,14 @@ namespace Microsoft.PowerFx.Connectors
                     _function.ReturnType);
         }
 
-        public async Task<FormulaValue> InvokeAsync(IConvertToUTC utcConverter, string cacheScope, FormulaValue[] args, HttpMessageInvoker localInvoker, Guid id, CancellationToken cancellationToken, bool throwOnError = false)
+        public async Task<FormulaValue> InvokeAsync(IConvertToUTC utcConverter, string cacheScope, FormulaValue[] args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using HttpRequestMessage request = BuildRequest(args, utcConverter, id, cancellationToken);
+            using HttpRequestMessage request = BuildRequest(args, utcConverter, cancellationToken);
 
             if (request == null)
             {
-                _logger?.LogError(id, $"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)} request is null");
+                _logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)} request is null");
                 return new ErrorValue(IRContext.NotInSource(_function.ReturnType), new ExpressionError()
                 {
                     Kind = ErrorKind.Internal,
@@ -336,28 +336,28 @@ namespace Microsoft.PowerFx.Connectors
                 });
             }
 
-            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, id, cancellationToken).ConfigureAwait(false);
+            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<FormulaValue> InvokeAsync(string url, string cacheScope, HttpMessageInvoker localInvoker, Guid id, CancellationToken cancellationToken, bool throwOnError = false)
+        public async Task<FormulaValue> InvokeAsync(string url, string cacheScope, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
             using HttpRequestMessage request = new HttpRequestMessage(_function.HttpMethod, new Uri(url).PathAndQuery);
-            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, id, cancellationToken).ConfigureAwait(false);
+            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
         }
 
-        private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, HttpMessageInvoker localInvoker, Guid id, CancellationToken cancellationToken)
+        private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, HttpMessageInvoker localInvoker, CancellationToken cancellationToken)
         {
             var client = localInvoker ?? _httpClient;
             var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             if ((int)response.StatusCode >= 300)
             {
-                _logger?.LogError(id, $"In {nameof(HttpFunctionInvoker)}.{nameof(ExecuteHttpRequest)}, response status code: {(int)response.StatusCode} {response.StatusCode}");
+                _logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(ExecuteHttpRequest)}, response status code: {(int)response.StatusCode} {response.StatusCode}");
             }
             else
             {
-                _logger?.LogInformation(id, $"In {nameof(HttpFunctionInvoker)}.{nameof(ExecuteHttpRequest)}, response status code: {(int)response.StatusCode} {response.StatusCode}");
+                _logger?.LogInformation($"In {nameof(HttpFunctionInvoker)}.{nameof(ExecuteHttpRequest)}, response status code: {(int)response.StatusCode} {response.StatusCode}");
             }
 
             return await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);
@@ -387,20 +387,20 @@ namespace Microsoft.PowerFx.Connectors
 
         internal HttpFunctionInvoker Invoker => _invoker;
 
-        public Task<FormulaValue> InvokeAsync(FormulaValue[] args, BaseRuntimeConnectorContext runtimeContext, Guid id, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(FormulaValue[] args, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);            
-            return _invoker.InvokeAsync(new ConvertToUTC(runtimeContext.TimeZoneInfo), _cacheScope, args, localInvoker, id, cancellationToken, _throwOnError);
+            return _invoker.InvokeAsync(new ConvertToUTC(runtimeContext.TimeZoneInfo), _cacheScope, args, localInvoker, cancellationToken, _throwOnError);
         }
 
-        public Task<FormulaValue> InvokeAsync(string url, BaseRuntimeConnectorContext runtimeContext, Guid id, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(string url, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);            
-            return _invoker.InvokeAsync(url, _cacheScope, localInvoker, id, cancellationToken, _throwOnError);
+            return _invoker.InvokeAsync(url, _cacheScope, localInvoker, cancellationToken, _throwOnError);
         }
     }
 

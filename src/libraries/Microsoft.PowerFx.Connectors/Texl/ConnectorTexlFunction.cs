@@ -69,31 +69,29 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
-            Guid id = ConnectorLogger.NewId();
             cancellationToken.ThrowIfCancellationRequested();
             BaseRuntimeConnectorContext runtimeContext = serviceProvider.GetService(typeof(BaseRuntimeConnectorContext)) as BaseRuntimeConnectorContext ?? throw new InvalidOperationException("RuntimeConnectorContext is missing from service provider");
 
             try
-            {                
-                runtimeContext.ExecutionLogger?.LogInformation(id, $"Entering in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(args)}");                
-                FormulaValue formulaValue = await ConnectorFunction.InvokeInternalAsync(args, runtimeContext, id, cancellationToken).ConfigureAwait(false);
-                runtimeContext.ExecutionLogger?.LogInformation(id, $"Exiting [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} returning from {nameof(ConnectorFunction.InvokeInternalAsync)} with {LogFormulaValue(formulaValue)}");
+            {
+                runtimeContext.ExecutionLogger?.LogInformation($"Entering in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(args)}");
+                FormulaValue formulaValue = await ConnectorFunction.InvokeInternalAsync(args, runtimeContext, cancellationToken).ConfigureAwait(false);
+                runtimeContext.ExecutionLogger?.LogInformation($"Exiting [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} returning from {nameof(ConnectorFunction.InvokeInternalAsync)} with {LogFormulaValue(formulaValue)}");
                 return formulaValue;
             }
             catch (Exception ex)
             {
-                runtimeContext.ExecutionLogger?.LogError(id, $"Exception in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(args)} {LogException(ex)}", ex);
+                runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(args)} {LogException(ex)}");
                 throw;
             }
         }
 
         public override async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] arguments, int argPosition, IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
-            Guid id = ConnectorLogger.NewId();
             cancellationToken.ThrowIfCancellationRequested();
 
             if (serviceProvider?.GetService(typeof(BaseRuntimeConnectorContext)) is not BaseRuntimeConnectorContext runtimeContext)
-            {                
+            {
                 return null;
             }
 
@@ -101,20 +99,20 @@ namespace Microsoft.PowerFx.Connectors
             {
                 if (argPosition >= ConnectorFunction.RequiredParameters.Length)
                 {
-                    runtimeContext.ExecutionLogger?.LogInformation(id, $"Exiting [Texl] {ConnectorFunction.LogFunction(nameof(GetConnectorSuggestionsAsync))} with null, with {LogArguments(arguments)} and position {argPosition} >= {ConnectorFunction.RequiredParameters.Length}");
+                    runtimeContext.ExecutionLogger?.LogInformation($"Exiting [Texl] {ConnectorFunction.LogFunction(nameof(GetConnectorSuggestionsAsync))} with null, with {LogArguments(arguments)} and position {argPosition} >= {ConnectorFunction.RequiredParameters.Length}");
                     return null;
                 }
 
                 NamedValue[] namedValues = arguments.Select((kp, i) => new NamedValue(ConnectorFunction.RequiredParameters[i].Name, kp)).ToArray();
-                runtimeContext.ExecutionLogger?.LogInformation(id, $"Entering [Texl] {ConnectorFunction.LogFunction(nameof(GetConnectorSuggestionsAsync))} with {LogKnownParameters(namedValues)} and position {argPosition}");
-                
-                ConnectorSuggestions suggestions = (await ConnectorFunction.GetConnectorSuggestionsInternalAsync(namedValues.ToArray(), ConnectorFunction.RequiredParameters[argPosition].ConnectorType, runtimeContext, id, cancellationToken).ConfigureAwait(false))?.ConnectorSuggestions;
-                runtimeContext.ExecutionLogger?.LogInformation(id, $"Exiting [Texl] {ConnectorFunction.LogFunction(nameof(GetConnectorSuggestionsAsync))} returning from {nameof(ConnectorFunction.GetConnectorSuggestionsInternalAsync)} with {LogConnectorSuggestions(suggestions)}");
+                runtimeContext.ExecutionLogger?.LogInformation($"Entering [Texl] {ConnectorFunction.LogFunction(nameof(GetConnectorSuggestionsAsync))} with {LogKnownParameters(namedValues)} and position {argPosition}");
+
+                ConnectorSuggestions suggestions = (await ConnectorFunction.GetConnectorSuggestionsInternalAsync(namedValues.ToArray(), ConnectorFunction.RequiredParameters[argPosition].ConnectorType, runtimeContext, cancellationToken).ConfigureAwait(false))?.ConnectorSuggestions;
+                runtimeContext.ExecutionLogger?.LogInformation($"Exiting [Texl] {ConnectorFunction.LogFunction(nameof(GetConnectorSuggestionsAsync))} returning from {nameof(ConnectorFunction.GetConnectorSuggestionsInternalAsync)} with {LogConnectorSuggestions(suggestions)}");
                 return suggestions;
             }
             catch (Exception ex)
             {
-                runtimeContext.ExecutionLogger?.LogError(id, $"Exception in [Texl] {ConnectorFunction.LogFunction(nameof(GetConnectorSuggestionsAsync))} with {LogArguments(arguments)} and position {argPosition} {LogException(ex)}", ex);
+                runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in [Texl] {ConnectorFunction.LogFunction(nameof(GetConnectorSuggestionsAsync))} with {LogArguments(arguments)} and position {argPosition} {LogException(ex)}");
                 throw;
             }
         }

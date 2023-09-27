@@ -27,8 +27,10 @@ namespace Microsoft.PowerFx.Connector.Tests
             {
               "Microsoft.PowerFx.ConfigExtensions",
               "Microsoft.PowerFx.Connectors.BaseRuntimeConnectorContext",
+              "Microsoft.PowerFx.Connectors.Category",
               "Microsoft.PowerFx.Connectors.ConnectorEnhancedSuggestions",
               "Microsoft.PowerFx.Connectors.ConnectorFunction",
+              "Microsoft.PowerFx.Connectors.ConnectorLog",
               "Microsoft.PowerFx.Connectors.ConnectorLogger",
               "Microsoft.PowerFx.Connectors.ConnectorParameter",
               "Microsoft.PowerFx.Connectors.ConnectorParameters",              

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using Xunit.Abstractions;
 
@@ -48,46 +49,40 @@ namespace Microsoft.PowerFx.Connectors.Tests
     {
         private readonly ITestOutputHelper _console;
         private readonly bool _includeDebug;
-        internal List<string> Logs = new List<string>();
+        private readonly List<ConnectorLog> _logs = new List<ConnectorLog>();
 
         internal ConsoleLogger(ITestOutputHelper console, bool includeDebug = false)
         {
             _console = console;
             _includeDebug = includeDebug;
-        }
-
-        private void Log(string message)
-        {
-            _console.WriteLine(message);
-            Logs.Add(message);
-        }
+        }       
 
         internal string GetLogs()
         {
-            return string.Join("|", Logs);
-        }
-
-        public override void LogDebug(Guid id, string message)
-        {
-            if (_includeDebug)
+            return string.Join("|", _logs.Select(cl =>
             {
-                Log($"[DEBUG] {id} {message}");
-            }
+                if (!_includeDebug && cl.Category == LogCategory.Debug)
+                {
+                    return null;
+                }
+
+                string cat = cl.Category switch
+                {
+                    LogCategory.Exception => "EXCPT",
+                    LogCategory.Error => "ERROR",
+                    LogCategory.Warning => "WARN ",
+                    LogCategory.Information => "INFO ",
+                    LogCategory.Debug => "DEBUG",
+                    _ => "??"
+                };
+
+                return $"[{cat}] {cl.Message}";
+            }).Where(m => m != null));
         }
 
-        public override void LogError(Guid id, string message, Exception ex = null)
+        public override void Log(ConnectorLog log)
         {
-            Log(ex == null ? $"[ERROR] {id} {message}" : $"[ERROR] {id} {message} - Exception {ex.GetType().FullName}, Message {ex.Message}, Callstack {ex.StackTrace}");
-        }
-
-        public override void LogInformation(Guid id, string message)
-        {
-            Log($"[INFO ] {id} {message}");
-        }
-
-        public override void LogWarning(Guid id, string message)
-        {
-            Log($"[WARN ] {id} {message}");
+            _logs.Add(log);
         }
     }
 }
