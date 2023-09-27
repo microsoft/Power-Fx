@@ -50,6 +50,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Schemas
             return _controlTokens.Values;
         }
 
+        public int Size()
+        {
+            return _controlTokens.Count;
+        }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();

@@ -704,7 +704,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <param name="queryParams">Collection of query params.</param>
         private void PublishControlTokenNotification(ControlTokenDictionary controlTokenDict, NameValueCollection queryParams)
         {
-            if (controlTokenDict == null || controlTokenDict.Count() == 0 || queryParams == null)
+            if (controlTokenDict == null || controlTokenDict.Size() == 0 || queryParams == null)
             {
                 return;
             }
