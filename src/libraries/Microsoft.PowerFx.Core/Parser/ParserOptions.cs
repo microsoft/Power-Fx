@@ -53,12 +53,11 @@ namespace Microsoft.PowerFx
         {
         }
 
-        public ParserOptions(CultureInfo culture, bool allowsSideEffects = false, int maxExpressionLength = 0, bool allowParseAsTypeLiteral = false)
+        public ParserOptions(CultureInfo culture, bool allowsSideEffects = false, int maxExpressionLength = 0)
         {
             Culture = culture;
             AllowsSideEffects = allowsSideEffects;
             MaxExpressionLength = maxExpressionLength;
-            AllowParseAsTypeLiteral = allowParseAsTypeLiteral;
         }
 
         internal ParseResult Parse(string script)
