@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Parser
             // When specified, allows reserved keywords to be used as identifiers.
             DisableReservedKeywords = 1 << 3,
 
-            // When specified, allows reserved keywords to be used as identifiers.
+            // When specified, allows type literals to be parsed.
             AllowTypeLiteral = 1 << 4,
         }
 
