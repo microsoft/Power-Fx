@@ -214,7 +214,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
         [InlineData("/*jj*/\n\r\n\r\n//yes", 0)]
         [InlineData("Label2.Text", 1, new string[] { "Label2,0,0,0,6" })]
         [InlineData("NestedLabel1", 1, new string[] { "NestedLabel1,0,0,0,12" })]
-        [InlineData("Label2.Text;\nNestedLabel1", 2, new string[] { "Label2,0,0,0,6", "NestedLabel1,1,0,1,11" })]
+        [InlineData("Label2.Text;\nNestedLabel1", 2, new string[] { "Label2,0,0,0,6", "NestedLabel1,1,0,1,12" })]
         [InlineData("Label2.Text;Label2.Text", 1, new string[] { "Label2,0,0,0,6,0,12,0,18" })]
         public void TestControlTokensAreComputedCorrectlyWhenPresent(string expression, int expectedNumberOfControlTokens, string[] expectedControlTokenIndicesArray = null)
         {
@@ -439,19 +439,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
                 var score = x.StartIndex - y.StartIndex;
                 return score;
             }
-        }
-
-        private class ControlTokenTestDataSchema
-        {
-            public string Name { get; set; } = string.Empty;
-
-            public uint StartLineNumber { get; set; } = 0;
-
-            public uint StartIndexNumber { get; set; } = 0;
-
-            public uint EndLineNumber { get; set; } = 0;
-
-            public uint EndIndexNumber { get; set; } = 0;
         }
     }
 }
