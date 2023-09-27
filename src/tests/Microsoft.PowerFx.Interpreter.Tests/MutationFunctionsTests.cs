@@ -307,11 +307,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("Collect(t1, {subject: \"something\", poly: {} })")]
-        public void MismatchErrorTests(string expr)
+        [InlineData("Collect(t1, {subject: \"something\", poly: {} })", true, true)]
+        [InlineData("Collect(t1, {subject: \"something\", poly: [] })", false, true)]
+
+        [InlineData("Collect(t1, {subject: \"something\", poly: {} })", false, false)]
+        [InlineData("Collect(t1, {subject: \"something\", poly: [] })", false, false)]
+        public void PolymorphicFieldUnions(string expr, bool isSuccess, bool isPowerFxV1)
         {
-            var engine = new RecalcEngine(new PowerFxConfig(Features.PowerFxV1));
-            var fv = FormulaValueJSON.FromJson("100", numberIsFloat: true);
+            var features = isPowerFxV1 ? Features.PowerFxV1 : Features.None;
+            var engine = new RecalcEngine(new PowerFxConfig(features));
 
             var rType = RecordType.Empty()
                 .Add(new NamedFormulaType("subject", FormulaType.String))
@@ -322,10 +326,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var check = engine.Check(expr, options: new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true });
 
-            Assert.False(check.IsSuccess);
-
-            // This error message is a mitigation.
-            Assert.Contains("The item you are trying to put into a table has a type that is not compatible with the table.", check.Errors.First().Message);
+            Assert.Equal(isSuccess, check.IsSuccess);
         }
     }
 }

@@ -308,7 +308,7 @@ namespace Microsoft.PowerFx.Tests
         [Theory]
         [InlineData("{x: 2}", true)]
         [InlineData("{x: 2, y: 5}", true)]
-        [InlineData("{x: \"2\", y: \"5\"}", true)]
+        [InlineData("{x: \"2\", y: \"5\"}", false)]
         [InlineData("{x: 2, y: 5, a: 8}", false)]
         [InlineData("{a: 8}", false)]
         [InlineData("{x: {x : 2}}", false)]

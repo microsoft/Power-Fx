@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Connectors.Constants;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -24,6 +25,7 @@ namespace Microsoft.PowerFx.Connectors
         public const string ContentType_TextJson = "text/json";
         public const string ContentType_XWwwFormUrlEncoded = "application/x-www-form-urlencoded";
         public const string ContentType_ApplicationJson = "application/json";
+        public const string ContentType_ApplicationOctetStream = "application/octet-stream";
         public const string ContentType_TextPlain = "text/plain";
         public const string ContentType_Any = "*/*";
 
@@ -68,16 +70,16 @@ namespace Microsoft.PowerFx.Connectors
 
         public static string GetBodyName(this OpenApiRequestBody requestBody)
         {
-            return requestBody.Extensions.TryGetValue("x-bodyName", out IOpenApiExtension value) && value is OpenApiString oas ? oas.Value : "body";
+            return requestBody.Extensions.TryGetValue(XMsBodyName, out IOpenApiExtension value) && value is OpenApiString oas ? oas.Value : "body";
         }
 
         // Get suggested options values.  Returns null if none. 
-        public static string[] GetOptions(this OpenApiParameter param)
+        public static string[] GetOptions(this OpenApiParameter openApiParameter)
         {
             // x-ms-enum-values is: array of { value :string, displayName:string}.
-            if (param.Extensions.TryGetValue("x-ms-enum-values", out var value))
+            if (openApiParameter.Extensions.TryGetValue(XMsEnumValues, out var enumValues))
             {
-                if (value is OpenApiArray array)
+                if (enumValues is OpenApiArray array)
                 {
                     var list = new List<string>(array.Capacity);
 
@@ -86,14 +88,14 @@ namespace Microsoft.PowerFx.Connectors
                         if (item is OpenApiObject obj)
                         {
                             // has keys, "value", and "displayName"
-                            if (obj.TryGetValue("value", out IOpenApiAny value2))
+                            if (obj.TryGetValue("value", out IOpenApiAny value))
                             {
-                                if (value2 is OpenApiString str)
+                                if (value is OpenApiString str)
                                 {
                                     list.Add(str.Value);
                                     continue;
                                 }
-                                else if (value2 is OpenApiInteger i)
+                                else if (value is OpenApiInteger i)
                                 {
                                     list.Add(i.Value.ToString(CultureInfo.InvariantCulture));
                                     continue;
@@ -101,7 +103,7 @@ namespace Microsoft.PowerFx.Connectors
                             }
                         }
 
-                        throw new NotImplementedException($"Unrecognized x-ms-enum-values schema");
+                        throw new NotImplementedException($"Unrecognized {XMsEnumValues} schema");
                     }
 
                     return list.ToArray();
@@ -116,10 +118,10 @@ namespace Microsoft.PowerFx.Connectors
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-trigger
             // Identifies whether the current operation is a trigger that produces a single event.
             // The absence of this field means this is an action operation.
-            return op.Extensions.ContainsKey("x-ms-trigger");
+            return op.Extensions.ContainsKey(XMsTrigger);
         }
 
-        public static bool TryGetDefaultValue(this OpenApiSchema schema, FormulaType formulaType, out FormulaValue defaultValue, bool numberIsFloat = false)
+        public static bool TryGetDefaultValue(this OpenApiSchema schema, FormulaType formulaType, out FormulaValue defaultValue)
         {
             IOpenApiAny openApiDefaultValue = schema.Default;
 
@@ -135,7 +137,7 @@ namespace Microsoft.PowerFx.Connectors
 
                         if (schema.Properties.ContainsKey(columnName))
                         {
-                            if (schema.Properties[columnName].TryGetDefaultValue(nft.Type, out FormulaValue innerDefaultValue, numberIsFloat: numberIsFloat))
+                            if (schema.Properties[columnName].TryGetDefaultValue(nft.Type, out FormulaValue innerDefaultValue))
                             {
                                 values.Add(new NamedValue(columnName, innerDefaultValue));
                             }
@@ -153,10 +155,10 @@ namespace Microsoft.PowerFx.Connectors
                 return false;
             }
 
-            return TryGetOpenApiValue(openApiDefaultValue, out defaultValue, numberIsFloat);
+            return TryGetOpenApiValue(openApiDefaultValue, out defaultValue);
         }
 
-        internal static bool TryGetOpenApiValue(IOpenApiAny openApiAny, out FormulaValue formulaValue, bool numberIsFloat = false)
+        internal static bool TryGetOpenApiValue(IOpenApiAny openApiAny, out FormulaValue formulaValue)
         {
             if (openApiAny is OpenApiString str)
             {
@@ -164,15 +166,15 @@ namespace Microsoft.PowerFx.Connectors
             }
             else if (openApiAny is OpenApiInteger intVal)
             {
-                formulaValue = numberIsFloat ? FormulaValue.New(intVal.Value) : FormulaValue.New((decimal)intVal.Value);
+                formulaValue = FormulaValue.New((decimal)intVal.Value);
             }
             else if (openApiAny is OpenApiDouble dbl)
             {
-                formulaValue = numberIsFloat ? FormulaValue.New(dbl.Value) : FormulaValue.New((decimal)dbl.Value);
+                formulaValue = FormulaValue.New((decimal)dbl.Value);
             }
             else if (openApiAny is OpenApiLong lng)
             {
-                formulaValue = numberIsFloat ? FormulaValue.New(lng.Value) : FormulaValue.New((decimal)lng.Value);
+                formulaValue = FormulaValue.New((decimal)lng.Value);
             }
             else if (openApiAny is OpenApiBoolean b)
             {
@@ -180,7 +182,7 @@ namespace Microsoft.PowerFx.Connectors
             }
             else if (openApiAny is OpenApiFloat flt)
             {
-                formulaValue = numberIsFloat ? FormulaValue.New(flt.Value) : FormulaValue.New((decimal)flt.Value);
+                formulaValue = FormulaValue.New((decimal)flt.Value);
             }
             else if (openApiAny is OpenApiByte by)
             {
@@ -207,7 +209,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 foreach (IOpenApiAny element in arr)
                 {
-                    bool ba = TryGetOpenApiValue(element, out FormulaValue fv, numberIsFloat);
+                    bool ba = TryGetOpenApiValue(element, out FormulaValue fv);
                     if (!ba)
                     {
                         formulaValue = null;
@@ -229,7 +231,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 foreach (KeyValuePair<string, IOpenApiAny> kvp in o)
                 {
-                    if (TryGetOpenApiValue(kvp.Value, out FormulaValue fv, numberIsFloat))
+                    if (TryGetOpenApiValue(kvp.Value, out FormulaValue fv))
                     {
                         dvParams[kvp.Key] = fv;
                     }
@@ -249,7 +251,7 @@ namespace Microsoft.PowerFx.Connectors
         // They can have a default value or be special cased by the infrastructure (like "connectionId").
         public static bool IsInternal(this IOpenApiExtensible schema) => string.Equals(schema.GetVisibility(), "internal", StringComparison.OrdinalIgnoreCase);
 
-        internal static string GetVisibility(this IOpenApiExtensible schema) => schema.Extensions.TryGetValue("x-ms-visibility", out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
+        internal static string GetVisibility(this IOpenApiExtensible schema) => schema.Extensions.TryGetValue(XMsVisibility, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
         internal static (bool IsPresent, string Value) GetString(this OpenApiObject apiObj, string str) => apiObj.TryGetValue(str, out IOpenApiAny openApiAny) && openApiAny is OpenApiString openApiStr ? (true, openApiStr.Value) : (false, null);
 
@@ -270,11 +272,17 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        // See https://swagger.io/docs/specification/data-models/data-types/
-        // numberIsFloat = numbers are stored as C# double when set to true, otherwise they are stored as C# decimal
-        public static ConnectorParameterType ToFormulaType(this OpenApiSchema schema, Stack<string> chain = null, int level = 0, bool numberIsFloat = false)
+        // See https://swagger.io/docs/specification/data-models/data-types/        
+        internal static ConnectorType ToConnectorType(this OpenApiParameter openApiParameter, Stack<string> chain = null, int level = 0)
         {
             chain ??= new Stack<string>();
+
+            if (openApiParameter == null)
+            {
+                return new ConnectorType();
+            }
+
+            OpenApiSchema schema = openApiParameter.Schema;
 
             if (level == 20)
             {
@@ -294,18 +302,18 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         case "date":
                         case "date-time":
-                            return new ConnectorParameterType(schema, FormulaType.DateTime);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.DateTime);
                         case "date-no-tz":
-                            return new ConnectorParameterType(schema, FormulaType.DateTimeNoTimeZone);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.DateTimeNoTimeZone);
 
                         case "binary":
-                            return new ConnectorParameterType(schema, FormulaType.String);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.String, binary: true);
 
                         case "enum":
                             if (schema.Enum.All(e => e is OpenApiString))
                             {
                                 OptionSet os = new OptionSet("enum", schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
-                                return new ConnectorParameterType(schema, os.FormulaType);
+                                return new ConnectorType(schema, openApiParameter, os.FormulaType);
                             }
                             else
                             {
@@ -313,7 +321,7 @@ namespace Microsoft.PowerFx.Connectors
                             }
 
                         default:
-                            return new ConnectorParameterType(schema, FormulaType.String);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.String);
                     }
 
                 // OpenAPI spec: Format could be float, double, or not specified.
@@ -328,19 +336,19 @@ namespace Microsoft.PowerFx.Connectors
                         case "byte":
                         case "number":
                         case "int32":
-                            return numberIsFloat ? new ConnectorParameterType(schema, FormulaType.Number) : new ConnectorParameterType(schema, FormulaType.Decimal);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
 
                         case null:
                         case "decimal":
                         case "currency":
-                            return new ConnectorParameterType(schema, FormulaType.Decimal);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
 
                         default:
                             throw new NotImplementedException($"Unsupported type of number: {schema.Format}");
                     }
 
                 // Always a boolean (Format not used)                
-                case "boolean": return new ConnectorParameterType(schema, FormulaType.Boolean);
+                case "boolean": return new ConnectorType(schema, openApiParameter, FormulaType.Boolean);
 
                 // OpenAPI spec: Format could be <null>, int32, int64
                 case "integer":
@@ -349,53 +357,59 @@ namespace Microsoft.PowerFx.Connectors
                         case null:
                         case "integer":
                         case "int32":
-                            return numberIsFloat ? new ConnectorParameterType(schema, FormulaType.Number) : new ConnectorParameterType(schema, FormulaType.Decimal);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
 
                         case "int64":
                         case "unixtime":
-                            return new ConnectorParameterType(schema, FormulaType.Decimal);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
 
                         default:
                             throw new NotImplementedException($"Unsupported type of integer: {schema.Format}");
                     }
 
                 case "array":
+                    if (schema.Items == null)
+                    {
+                        // Type of items in unknown
+                        return new ConnectorType(schema, openApiParameter, FormulaType.UntypedObject);
+                    }
+
                     var innerA = GetUniqueIdentifier(schema.Items);
 
                     if (innerA.StartsWith("R:", StringComparison.Ordinal) && chain.Contains(innerA))
                     {
                         // Here, we have a circular reference and default to a string
-                        return new ConnectorParameterType(schema, FormulaType.String);
+                        return new ConnectorType(schema, openApiParameter, FormulaType.String);
                     }
 
                     // Inheritance/Polymorphism - Can't know the exact type
                     // https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md
                     if (schema.Items.Discriminator != null)
                     {
-                        return new ConnectorParameterType(schema, FormulaType.UntypedObject);
+                        return new ConnectorType(schema, openApiParameter, FormulaType.UntypedObject);
                     }
 
-                    chain.Push(innerA);
-                    ConnectorParameterType cpt = schema.Items.ToFormulaType(chain, level + 1, numberIsFloat: numberIsFloat);
-                    cpt.SetProperties("Array", true, schema.Items.GetVisibility());
+                    chain.Push(innerA);                    
+                    ConnectorType arrayType = new OpenApiParameter() { Name = "Array", Required = true, Schema = schema.Items, Extensions = schema.Items.Extensions }.ToConnectorType(chain, level + 1);
+
                     chain.Pop();
 
-                    if (cpt.Type is RecordType r)
+                    if (arrayType.FormulaType is RecordType connectorRecordType)
                     {
-                        return new ConnectorParameterType(schema, r.ToTable(), cpt.ConnectorType);
+                        return new ConnectorType(schema, openApiParameter, connectorRecordType.ToTable(), arrayType);
                     }
-                    else if (cpt.Type is TableType t)
+                    else if (arrayType.FormulaType is TableType tableType)
                     {
                         // Array of array 
-                        TableType tt = new TableType(TableType.Empty().Add(TableValue.ValueName, t)._type);
-                        return new ConnectorParameterType(schema, tt, cpt.ConnectorType);
+                        TableType newTableType = new TableType(TableType.Empty().Add(TableValue.ValueName, tableType)._type);
+                        return new ConnectorType(schema, openApiParameter, newTableType, arrayType);
                     }
-                    else if (cpt.Type is not AggregateType)
+                    else if (arrayType.FormulaType is not AggregateType)
                     {
                         // Primitives get marshalled as a SingleColumn table.
                         // Make sure this is consistent with invoker. 
-                        var r2 = RecordType.Empty().Add(TableValue.ValueName, cpt.Type);
-                        return new ConnectorParameterType(schema, r2.ToTable(), cpt.ConnectorType);
+                        var recordType3 = RecordType.Empty().Add(TableValue.ValueName, arrayType.FormulaType);
+                        return new ConnectorType(schema, openApiParameter, recordType3.ToTable(), arrayType);
                     }
                     else
                     {
@@ -409,7 +423,7 @@ namespace Microsoft.PowerFx.Connectors
                     // Key is always a string, Value is in AdditionalProperties
                     if ((schema.AdditionalProperties != null && schema.AdditionalProperties.Properties.Any()) || schema.Discriminator != null)
                     {
-                        return new ConnectorParameterType(schema, FormulaType.UntypedObject);
+                        return new ConnectorType(schema, openApiParameter, FormulaType.UntypedObject);
                     }
                     else
                     {
@@ -418,7 +432,7 @@ namespace Microsoft.PowerFx.Connectors
                         List<ConnectorType> connectorTypes = new List<ConnectorType>();
                         List<ConnectorType> hiddenConnectorTypes = new List<ConnectorType>();
 
-                        foreach (var kv in schema.Properties)
+                        foreach (KeyValuePair<string, OpenApiSchema> kv in schema.Properties)
                         {
                             bool hiddenRequired = false;
 
@@ -440,33 +454,32 @@ namespace Microsoft.PowerFx.Connectors
                             if (innerO.StartsWith("R:", StringComparison.Ordinal) && chain.Contains(innerO))
                             {
                                 // Here, we have a circular reference and default to a string                                
-                                return new ConnectorParameterType(schema, FormulaType.String, hiddenRecordType);
+                                return new ConnectorType(schema, openApiParameter, FormulaType.String, hiddenRecordType);
                             }
 
                             chain.Push(innerO);
-                            ConnectorParameterType cpt2 = kv.Value.ToFormulaType(chain, level + 1, numberIsFloat: numberIsFloat);
-                            cpt2.SetProperties(propName, schema.Required.Contains(propName), kv.Value.GetVisibility());
+                            ConnectorType propertyType = new OpenApiParameter() { Name = propName, Required = schema.Required.Contains(propName), Schema = kv.Value, Extensions = kv.Value.Extensions }.ToConnectorType(chain, level + 1);
                             chain.Pop();
 
-                            if (cpt2.HiddenRecordType != null)
+                            if (propertyType.HiddenRecordType != null)
                             {
-                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).Add(propName, cpt2.HiddenRecordType);
-                                hiddenConnectorTypes.Add(cpt2.HiddenConnectorType);
+                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).Add(propName, propertyType.HiddenRecordType);
+                                hiddenConnectorTypes.Add(propertyType); // Hidden
                             }
 
                             if (hiddenRequired)
                             {
-                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).Add(propName, cpt2.Type);
-                                hiddenConnectorTypes.Add(cpt2.ConnectorType);
+                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).Add(propName, propertyType.FormulaType);
+                                hiddenConnectorTypes.Add(propertyType);
                             }
                             else
                             {
-                                recordType = recordType.Add(propName, cpt2.Type);
-                                connectorTypes.Add(cpt2.ConnectorType);
+                                recordType = recordType.Add(propName, propertyType.FormulaType);
+                                connectorTypes.Add(propertyType);
                             }
                         }
 
-                        return new ConnectorParameterType(schema, recordType, hiddenRecordType, connectorTypes.ToArray(), hiddenConnectorTypes.ToArray());
+                        return new ConnectorType(schema, openApiParameter, recordType, hiddenRecordType, connectorTypes.ToArray(), hiddenConnectorTypes.ToArray());
                     }
 
                 default:
@@ -494,27 +507,23 @@ namespace Microsoft.PowerFx.Connectors
             };
         }
 
-        public static ConnectorType GetConnectorReturnType(this OpenApiOperation op, bool numberIsFloat)
+        public static FormulaType GetReturnType(this OpenApiOperation openApiOperation)
         {
-            (ConnectorParameterType ct, string unsupportedReason) = op.GetConnectorParameterReturnType(numberIsFloat);
-            return ct?.ConnectorType;
-        }
-
-        public static FormulaType GetReturnType(this OpenApiOperation op, bool numberIsFloat)
-        {
-            (ConnectorParameterType ct, string unsupportedReason) = op.GetConnectorParameterReturnType(numberIsFloat);
-            return ct?.Type ?? new BlankType();
+            (ConnectorType connectorType, string unsupportedReason) = openApiOperation.GetConnectorReturnType();
+            return connectorType?.FormulaType ?? new BlankType();
         }
 
         public static bool GetRequiresUserConfirmation(this OpenApiOperation op)
         {
-            return op.Extensions.TryGetValue("x-ms-require-user-confirmation", out IOpenApiExtension openExt) && openExt is OpenApiBoolean b && b.Value;
+            return op.Extensions.TryGetValue(XMsRequireUserConfirmation, out IOpenApiExtension openExt) && openExt is OpenApiBoolean b && b.Value;
         }
 
-        internal static (ConnectorParameterType, string) GetConnectorParameterReturnType(this OpenApiOperation op, bool numberIsFloat)
+        internal static (ConnectorType ConnectorType, string UnsupportedReason) GetConnectorReturnType(this OpenApiOperation openApiOperation)
         {
-            var responses = op.Responses;
-            if (!responses.TryGetValue("200", out OpenApiResponse response))
+            OpenApiResponses responses = openApiOperation.Responses;
+            OpenApiResponse response = responses.Where(kvp => kvp.Key?.Length == 3 && kvp.Key.StartsWith("2", StringComparison.Ordinal)).OrderBy(kvp => kvp.Key).FirstOrDefault().Value;
+
+            if (response == null)
             {
                 // If no 200, but "default", use that. 
                 if (!responses.TryGetValue("default", out response))
@@ -524,37 +533,42 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            if (response == null || response.Content.Count == 0)
-            {
+            if (response == null)
+            {                
                 // No return type. Void() method. 
-                return (new ConnectorParameterType(), null);
+                return (new ConnectorType(), null);
+            }
+
+            if (response.Content.Count == 0)
+            {                
+                OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "binary" };
+                ConnectorType connectorType = new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.ToConnectorType();
+                return (connectorType, null);
             }
 
             // Responses is a list by content-type. Find "application/json"
             // Headers are case insensitive.
-            foreach (var kv3 in response.Content)
+            foreach (KeyValuePair<string, OpenApiMediaType> contentKvp in response.Content)
             {
-                string mediaType = kv3.Key.Split(';')[0];
-                OpenApiMediaType openApiMediaType = kv3.Value;
+                string mediaType = contentKvp.Key.Split(';')[0];
+                OpenApiMediaType openApiMediaType = contentKvp.Value;
 
                 if (string.Equals(mediaType, ContentType_ApplicationJson, StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(mediaType, ContentType_TextPlain, StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(mediaType, ContentType_Any, StringComparison.OrdinalIgnoreCase))
+                    string.Equals(mediaType, ContentType_Any, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(mediaType, ContentType_ApplicationOctetStream, StringComparison.OrdinalIgnoreCase))
                 {
                     if (openApiMediaType.Schema == null)
                     {
-                        // Treat as void. 
-                        return (new ConnectorParameterType(), null);
+                        // Treat as void.                         
+                        OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "binary" };
+                        ConnectorType cType = new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.ToConnectorType();
+                        return (cType, null);
                     }
 
-                    ConnectorDynamicSchema connectorDynamicSchema = openApiMediaType.Schema.GetDynamicSchema(numberIsFloat);
-                    ConnectorDynamicProperty connectorDynamicProperty = openApiMediaType.Schema.GetDynamicProperty(numberIsFloat);
+                    ConnectorType connectorType = new OpenApiParameter() { Name = "response", Required = true, Schema = openApiMediaType.Schema, Extensions = openApiMediaType.Schema.Extensions }.ToConnectorType();
 
-                    ConnectorParameterType connectorParameterType = openApiMediaType.Schema.ToFormulaType(numberIsFloat: numberIsFloat);
-                    connectorParameterType.SetProperties("response", true, openApiMediaType.GetVisibility());
-                    connectorParameterType.SetDynamicReturnSchemaAndProperty(connectorDynamicSchema, connectorDynamicProperty);
-
-                    return (connectorParameterType, null);
+                    return (connectorType, null);
                 }
             }
 
@@ -613,7 +627,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         internal static string PageLink(this OpenApiOperation op)
-            => op.Extensions.TryGetValue("x-ms-pageable", out IOpenApiExtension ext) &&
+            => op.Extensions.TryGetValue(XMsPageable, out IOpenApiExtension ext) &&
                ext is OpenApiObject oao &&
                oao.Any() &&
                oao.First().Key == "nextLinkName" &&
@@ -624,31 +638,31 @@ namespace Microsoft.PowerFx.Connectors
         internal static string GetSummary(this IOpenApiExtensible param)
         {
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions
-            return param.Extensions != null && param.Extensions.TryGetValue("x-ms-summary", out IOpenApiExtension ext) && ext is OpenApiString apiStr ? apiStr.Value : null;
+            return param.Extensions != null && param.Extensions.TryGetValue(XMsSummary, out IOpenApiExtension ext) && ext is OpenApiString apiStr ? apiStr.Value : null;
         }
 
         internal static bool GetExplicitInput(this IOpenApiExtensible param)
         {
-            return param.Extensions != null && param.Extensions.TryGetValue("x-ms-explicit-input", out IOpenApiExtension ext) && ext is OpenApiBoolean apiBool && apiBool.Value;
+            return param.Extensions != null && param.Extensions.TryGetValue(XMsExplicitInput, out IOpenApiExtension ext) && ext is OpenApiBoolean apiBool && apiBool.Value;
         }
 
         // Get string content of x-ms-url-encoding parameter extension
         // Values can be "double" or "single" - https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-url-encoding
         internal static bool GetDoubleEncoding(this IOpenApiExtensible param)
         {
-            return param.Extensions != null && param.Extensions.TryGetValue("x-ms-url-encoding", out IOpenApiExtension ext) && ext is OpenApiString apiStr && apiStr.Value.Equals("double", StringComparison.OrdinalIgnoreCase);
+            return param.Extensions != null && param.Extensions.TryGetValue(XMsUrlEncoding, out IOpenApiExtension ext) && ext is OpenApiString apiStr && apiStr.Value.Equals("double", StringComparison.OrdinalIgnoreCase);
         }
 
-        internal static ConnectorDynamicValue GetDynamicValue(this IOpenApiExtensible param, bool numberIsFloat)
+        internal static ConnectorDynamicValue GetDynamicValue(this IOpenApiExtensible param)
         {
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
-            if (param.Extensions != null && param.Extensions.TryGetValue("x-ms-dynamic-values", out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
+            if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicValues, out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
             {
                 ConnectorDynamicValue cdv = new ();
 
                 // Mandatory openrationId for connectors, except when capibility or builtInOperation are defined
                 apiObj.WhenPresent("operationId", (opId) => cdv.OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId));
-                apiObj.WhenPresent("parameters", (opPrms) => cdv.ParameterMap = GetOpenApiObject(opPrms, numberIsFloat));
+                apiObj.WhenPresent("parameters", (opPrms) => cdv.ParameterMap = GetOpenApiObject(opPrms));
                 apiObj.WhenPresent("value-title", (opValTitle) => cdv.ValueTitle = opValTitle);
                 apiObj.WhenPresent("value-path", (opValPath) => cdv.ValuePath = opValPath);
                 apiObj.WhenPresent("value-collection", (opValCollection) => cdv.ValueCollection = opValCollection);
@@ -661,10 +675,10 @@ namespace Microsoft.PowerFx.Connectors
             return null;
         }
 
-        internal static ConnectorDynamicList GetDynamicList(this IOpenApiExtensible param, bool numberIsFloat)
+        internal static ConnectorDynamicList GetDynamicList(this IOpenApiExtensible param)
         {
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
-            if (param.Extensions != null && param.Extensions.TryGetValue("x-ms-dynamic-list", out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
+            if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicList, out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
             {
                 // Mandatory openrationId for connectors
                 if (apiObj.TryGetValue("operationId", out IOpenApiAny op_id) && op_id is OpenApiString opId)
@@ -674,7 +688,7 @@ namespace Microsoft.PowerFx.Connectors
                         ConnectorDynamicList cdl = new ()
                         {
                             OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),
-                            ParameterMap = GetOpenApiObject(opPrms, numberIsFloat)
+                            ParameterMap = GetOpenApiObject(opPrms)
                         };
 
                         if (apiObj.TryGetValue("itemTitlePath", out IOpenApiAny op_valtitle) && op_valtitle is OpenApiString opValTitle)
@@ -697,20 +711,20 @@ namespace Microsoft.PowerFx.Connectors
                 }
                 else
                 {
-                    throw new NotImplementedException("Missing mandatory parameters operationId and parameters in x-ms-dynamic-list extension");
+                    throw new NotImplementedException($"Missing mandatory parameters operationId and parameters in {XMsDynamicList} extension");
                 }
             }
 
             return null;
         }
 
-        internal static Dictionary<string, IConnectorExtensionValue> GetOpenApiObject(this OpenApiObject opPrms, bool numberIsFloat)
+        internal static Dictionary<string, IConnectorExtensionValue> GetOpenApiObject(this OpenApiObject opPrms)
         {
             Dictionary<string, IConnectorExtensionValue> dvParams = new ();
 
             foreach (KeyValuePair<string, IOpenApiAny> prm in opPrms)
             {
-                if (!OpenApiExtensions.TryGetOpenApiValue(prm.Value, out FormulaValue fv, numberIsFloat))
+                if (!OpenApiExtensions.TryGetOpenApiValue(prm.Value, out FormulaValue fv))
                 {
                     throw new NotImplementedException($"Unsupported param with OpenApi type {prm.Value.GetType().FullName}, key = {prm.Key}");
                 }
@@ -736,9 +750,9 @@ namespace Microsoft.PowerFx.Connectors
                         dynamicValue = rv.GetField("parameterReference");
                     }
 
-                    if (dynamicValue is StringValue sv2)
+                    if (dynamicValue is StringValue dynamicStringValue)
                     {
-                        dvParams.Add(prm.Key, new DynamicConnectorExtensionValue() { Reference = sv2.Value });
+                        dvParams.Add(prm.Key, new DynamicConnectorExtensionValue() { Reference = dynamicStringValue.Value });
                     }
                     else
                     {
@@ -750,10 +764,10 @@ namespace Microsoft.PowerFx.Connectors
             return dvParams;
         }
 
-        internal static ConnectorDynamicSchema GetDynamicSchema(this IOpenApiExtensible param, bool numberIsFloat)
+        internal static ConnectorDynamicSchema GetDynamicSchema(this IOpenApiExtensible param)
         {
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
-            if (param.Extensions != null && param.Extensions.TryGetValue("x-ms-dynamic-schema", out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
+            if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicSchema, out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
             {
                 // Mandatory openrationId for connectors
                 if (apiObj.TryGetValue("operationId", out IOpenApiAny op_id) && op_id is OpenApiString opId)
@@ -763,7 +777,7 @@ namespace Microsoft.PowerFx.Connectors
                         ConnectorDynamicSchema cds = new ()
                         {
                             OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),
-                            ParameterMap = GetOpenApiObject(opPrms, numberIsFloat)
+                            ParameterMap = GetOpenApiObject(opPrms)
                         };
 
                         if (apiObj.TryGetValue("value-path", out IOpenApiAny op_valpath) && op_valpath is OpenApiString opValPath)
@@ -776,17 +790,17 @@ namespace Microsoft.PowerFx.Connectors
                 }
                 else
                 {
-                    throw new NotImplementedException("Missing mandatory parameters operationId and parameters in x-ms-dynamic-schema extension");
+                    throw new NotImplementedException($"Missing mandatory parameters operationId and parameters in {XMsDynamicSchema} extension");
                 }
             }
 
             return null;
         }
 
-        internal static ConnectorDynamicProperty GetDynamicProperty(this IOpenApiExtensible param, bool numberIsFloat)
+        internal static ConnectorDynamicProperty GetDynamicProperty(this IOpenApiExtensible param)
         {
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
-            if (param.Extensions != null && param.Extensions.TryGetValue("x-ms-dynamic-properties", out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
+            if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicProperties, out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
             {
                 // Mandatory openrationId for connectors
                 if (apiObj.TryGetValue("operationId", out IOpenApiAny op_id) && op_id is OpenApiString opId)
@@ -796,7 +810,7 @@ namespace Microsoft.PowerFx.Connectors
                         ConnectorDynamicProperty cdp = new ()
                         {
                             OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),
-                            ParameterMap = GetOpenApiObject(opPrms, numberIsFloat)
+                            ParameterMap = GetOpenApiObject(opPrms)
                         };
 
                         if (apiObj.TryGetValue("itemValuePath", out IOpenApiAny op_valpath) && op_valpath is OpenApiString opValPath)
@@ -809,7 +823,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
                 else
                 {
-                    throw new NotImplementedException("Missing mandatory parameters operationId and parameters in x-ms-dynamic-properties extension");
+                    throw new NotImplementedException($"Missing mandatory parameters operationId and parameters in {XMsDynamicProperties} extension");
                 }
             }
 

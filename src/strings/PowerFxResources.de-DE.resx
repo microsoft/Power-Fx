@@ -5048,4 +5048,28 @@
     <value>Die Literal-Meldung war ungültig</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Typkonflikt zwischen Quell- und Zieldatensatztypen. Für den angegebenen Typ sind zusätzliche Felder vorhanden: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Typkonflikt zwischen Quell- und Zieldatensatztypen. Für den angegebenen Typ fehlen Felder: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Typkonflikt zwischen Quell- und Zieldatensatztypen. Feldname: {0} nicht gefunden.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Typkonflikt zwischen Quell- und Zieldatensatztypen. Feldname: {0}. Erwartet: {1}; Gefunden: {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Der angegebene Typ {0} kann nicht zum Quelltyp {1} gezwungen werden.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Typkonflikt zwischen Quell- und Zieltypen. Erwartet: {0}; Gefunden: {1}.</value>
+    
+  </data>
 </root>

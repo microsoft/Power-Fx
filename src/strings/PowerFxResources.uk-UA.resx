@@ -5048,4 +5048,28 @@
     <value>Неприпустиме оголошення літерала типу</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Невідповідність між вихідним і кінцевим типами записів. Заданий тип має зайві поля: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Невідповідність між вихідним і кінцевим типами записів. У заданому типі відсутні поля:{0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Невідповідність між вихідним і кінцевим типами записів. Ім’я поля {0} не знайдено.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Невідповідність між вихідним і кінцевим типами записів. Ім’я поля: {0}; очікувалося {1}; знайдено: {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Заданий тип {0} не можна привести до типу джерела {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Невідповідність між вихідним і кінцевим типами. Очікувалося {0}; знайдено {1}.</value>
+    
+  </data>
 </root>

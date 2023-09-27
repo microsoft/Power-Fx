@@ -5045,7 +5045,31 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration was invalid</value>
+    <value>Η κυριολεκτική δήλωση τύπου δεν ήταν έγκυρη</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Ασυμφωνία τύπων μεταξύ τύπων καρτέλας προέλευσης και προορισμού. Ο δεδομένος τύπος έχει επιπλέον πεδία: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Ασυμφωνία τύπων μεταξύ τύπων καρτέλας προέλευσης και προορισμού. Στον δεδομένο τύπο λείπουν πεδία: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Ασυμφωνία τύπων μεταξύ τύπων καρτέλας προέλευσης και προορισμού. Όνομα πεδίου: {0} βρέθηκε.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Ασυμφωνία τύπων μεταξύ τύπων καρτέλας προέλευσης και προορισμού. Όνομα πεδίου: {0} αναμενόμενο {1}; Βρέθηκε {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Ο δεδομένος τύπος {0} δεν μπορεί να εξαναγκαστεί σε τύπο προέλευσης {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Ασυμφωνία τύπων μεταξύ τύπων προέλευσης και προορισμού. Αναμενόμενες {0}; Βρέθηκε {1}.</value>
     
   </data>
 </root>

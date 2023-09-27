@@ -5045,7 +5045,31 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration was invalid</value>
+    <value>Tüübi sõnasõnaline deklaratsioon ei sobinud</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Lähte- ja sihtkirje tüüpide tüübi lahknevus. Antud tüübil on lisavälju: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Lähte- ja sihtkirje tüüpide tüübi lahknevus. Antud tüübil on puuduvaid välju: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Lähte- ja sihtkirje tüüpide tüübi lahknevus. Välja nimi: üksust {0} ei leitud.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Lähte- ja sihtkirje tüüpide tüübi lahknevus. Välja nimi: {0} eeldatud {1}; leiti {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Antud tüüpi {0} ei saa sundida lähtetüübile {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Lähte- ja sihtkirje tüüpide tüübi lahknevus. Eeldatud {0}; leiti {1}.</value>
     
   </data>
 </root>

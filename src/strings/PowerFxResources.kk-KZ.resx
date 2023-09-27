@@ -5048,4 +5048,28 @@
     <value>Түрдің тура декларациясы жарамсыз болды</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. Берілген түрдің қосымша өрістері бар: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. Берілген түрдің жетіспейтін өрістері бар: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. Өріс атауы: {0} табылмады.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. Өріс атауы: {0} {1} күтілді; {2} табылды.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Берілген {0} түрін {1} бастапқы түріне келтіру мүмкін емес.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. {0} күтілді; {1} табылды.</value>
+    
+  </data>
 </root>

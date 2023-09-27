@@ -5041,11 +5041,35 @@
     
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
-    <value>Muutujan, jolla on online-tietolähteen arvo (taulukko tai tietue), määrittäminen voi aiheuttaa useita pyyntöjä palvelimelle. Tämä estetään pian.</value>
+    <value>Muuttujan, jolla on online-tietolähteen arvo (taulukko tai tietue), määrittäminen voi aiheuttaa useita pyyntöjä palvelimelle. Tämä estetään pian.</value>
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Tyyppiliteraalin esittely oli virheellinen</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Lähde- ja kohdetietuetyyppien välinen tyyppiristiriita. Annetulla tyypillä on ylimääräisiä kenttiä: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Lähde- ja kohdetietuetyyppien välinen tyyppiristiriita. Annetusta tyypistä puuttuu kenttiä: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Lähde- ja kohdetietuetyyppien välinen tyyppiristiriita. Kentän nimi: {0} ei löydy.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Lähde- ja kohdetietuetyyppien välinen tyyppiristiriita. Kentän nimi: {0} odotettu {1}; Löytyi {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Annettua tyyppiä {0} ei voi muuttaa lähdetyypiksi {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Lähteen ja kohdetyyppien välinen tyyppiristiriita. Odotettu {0}; Löytyi {1}.</value>
     
   </data>
 </root>

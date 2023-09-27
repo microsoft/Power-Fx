@@ -5048,4 +5048,28 @@
     <value>タイプ リテラルの宣言が無効です</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。指定された種類には次の余分なフィールドが存在します: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。指定された型に次のフィールドが見つかりません: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。ファイル名: {0} が見つかりません。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。ファイル名: {0}、予期: {1}、実際: {2}</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>指定された種類 {0} は、ソースの種類 {1} には強制的に変換できません。</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>ソースとターゲットの間で種類が一致しません。予期: {0}、実際: {1}</value>
+    
+  </data>
 </root>

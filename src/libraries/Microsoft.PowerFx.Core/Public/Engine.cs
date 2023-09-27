@@ -368,7 +368,7 @@ namespace Microsoft.PowerFx
 
             // CheckResult has the binding, which has already captured both the INameResolver and any row scope parameters. 
             // So these both become available to intellisense. 
-            var context = new IntellisenseContext(expression, cursorPosition)
+            var context = new IntellisenseContext(expression, cursorPosition, checkResult.ExpectedReturnType)
             {
                 Services = services
             };

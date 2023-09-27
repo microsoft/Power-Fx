@@ -69,6 +69,13 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     bodyParts.Add(param.Name, (param.Schema, paramValue));
                 }
+                else if (param.Schema.Default != null)
+                {
+                    if (OpenApiExtensions.TryGetOpenApiValue(param.Schema.Default, out FormulaValue defaultValue))
+                    {
+                        bodyParts.Add(param.Name, (param.Schema, defaultValue));
+                    }
+                }
             }
 
             if (bodyParts.Any())
@@ -111,7 +118,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();
+            var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();            
             var request = new HttpRequestMessage(_function.HttpMethod, url);
 
             foreach (var kv in headers)
@@ -155,7 +162,7 @@ namespace Microsoft.PowerFx.Connectors
                 FormulaValue value = args[i];
 
                 // Objects are always flattenned                
-                if (value is RecordValue record && !(_function.RequiredParameters[i].Description == "Body"))
+                if (value is RecordValue record && !_function.RequiredParameters[i].IsBodyParameter)
                 {
                     foreach (NamedValue field in record.Fields)
                     {
