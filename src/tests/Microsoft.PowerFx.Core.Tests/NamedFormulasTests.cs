@@ -22,7 +22,8 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true,
             };
 
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
@@ -37,7 +38,8 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true,
             };
 
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
@@ -54,6 +56,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true,
             };
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
             Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
@@ -65,7 +68,8 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true,
             };
             var result = UserDefinitions.Parse(script, parserOptions);
             Assert.True(result.HasErrors);
