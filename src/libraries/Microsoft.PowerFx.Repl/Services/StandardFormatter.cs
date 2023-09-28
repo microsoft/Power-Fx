@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.PowerFx.Types;
@@ -55,7 +54,7 @@ namespace Microsoft.PowerFx.Repl.Services
                     resultString.Append(separator);
                     resultString.Append(field.Name);
                     resultString.Append(':');
-                    resultString.Append(GetPrintField(field));
+                    resultString.Append(FormatField(field));
                     separator = ", ";
                 }
             }
@@ -72,9 +71,9 @@ namespace Microsoft.PowerFx.Repl.Services
         }
 
         // Avoid traversing entity references.
-        private string FormatField(NamedValue field)
+        private string FormatField(NamedValue field, bool minimal = false)
         {
-            return field.IsExpandEntity ? "<reference>" : Format(field.Value);
+            return field.IsExpandEntity ? "<reference>" : FormatValue(field.Value, minimal);
         }
 
         private string FormatTableCore(TableValue table)
@@ -116,14 +115,16 @@ namespace Microsoft.PowerFx.Repl.Services
             }
 
             // special treatment for single column table named Value
-            else if (table.Rows.First().Value.Fields.Count() == 1 && table.Rows.First().Value != null && table.Rows.First().Value.Fields.First().Name == "Value")
+            else if (table.Rows.Count() > 0 && 
+                     table.Rows.First().Value?.Fields.Count() == 1 && 
+                     table.Rows.First().Value?.Fields.First().Name == "Value")
             {
                 var separator = string.Empty;
                 resultString = new StringBuilder("[");
                 foreach (var row in table.Rows)
                 {
                     resultString.Append(separator);
-                    resultString.Append(GetPrintField(row.Value.Fields.First(), false));
+                    resultString.Append(FormatField(row.Value.Fields.First(), false));
                     separator = ", ";
                 }
 
@@ -158,7 +159,7 @@ namespace Microsoft.PowerFx.Repl.Services
                         {
                             if (fieldNames.Contains(field.Name))
                             {
-                                columnWidth[column] = Math.Max(columnWidth[column], GetPrintField(field, true).Length);
+                                columnWidth[column] = Math.Max(columnWidth[column], FormatField(field, true).Length);
                                 column++;
                             }
                         }
@@ -241,7 +242,7 @@ namespace Microsoft.PowerFx.Repl.Services
                                 if (fieldNames.Contains(field.Name))
                                 {
                                     resultString.Append(' ');
-                                    resultString.Append(GetPrintField(field, true).PadRight(columnWidth[column]));
+                                    resultString.Append(FormatField(field, true).PadRight(columnWidth[column]));
                                     resultString.Append("  ");
                                     column++;
                                 }
@@ -340,11 +341,6 @@ namespace Microsoft.PowerFx.Repl.Services
             }
 
             return resultString;
-        }
-
-        public string GetPrintField(NamedValue field, bool minimal = false)
-        {
-            return field.IsExpandEntity ? "<EE>" : FormatValue(field.Value, minimal);
         }
     }
 }
