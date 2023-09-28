@@ -257,10 +257,23 @@ namespace Microsoft.PowerFx.Core.Tests
 
             foreach (var udf in parseResult.UDFs)
             {
-                if (udf.Ident.Name == "F2")
+                if (udf.Ident.Name == "F1")
+                {
+                    // Verify return type colon token span
+                    Assert.Equal(67, udf.ReturnTypeColonToken.Span.Min);
+                    Assert.Equal(68, udf.ReturnTypeColonToken.Span.Lim);
+                }
+                else if (udf.Ident.Name == "F2")
                 {
                     Assert.Equal(2, udf.Args.Count());
+                    var firstArg = udf.Args.ElementAt(0);
                     var secondArg = udf.Args.ElementAt(1);
+                    Assert.NotNull(firstArg.ColonToken);
+
+                    // Verify first arg colon token span
+                    Assert.Equal(129, firstArg.ColonToken.Span.Min);
+                    Assert.Equal(130, firstArg.ColonToken.Span.Lim);
+
                     Assert.Null(secondArg.ColonToken);
                     Assert.Null(secondArg.TypeIdent);
                 }
