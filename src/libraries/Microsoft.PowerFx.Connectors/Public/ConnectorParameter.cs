@@ -17,6 +17,9 @@ namespace Microsoft.PowerFx.Connectors
 
         public string Description { get; }
 
+        // Query, Header, Path or Cookie (not supported yet)
+        public ParameterLocation? Location { get; }
+
         internal bool IsBodyParameter = false;
 
         internal ConnectorParameter(OpenApiParameter openApiParameter)
@@ -40,6 +43,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             Name = openApiParameter.Name;
             Description = openApiParameter.Description;
+            Location = openApiParameter.In;
         }
 
         internal ConnectorParameter(ConnectorParameter connectorParameter, ConnectorType connectorType)

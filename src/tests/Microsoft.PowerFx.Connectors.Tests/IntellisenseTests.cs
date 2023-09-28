@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(3, 5, @"SQL.ExecuteProcedureV2(""default"", ""connectortest"",", @"""[dbo].[sp_1]""|""[dbo].[sp_2]""")]       // testing with "default" server
         [InlineData(3, 6, @"SQL.ExecuteProcedureV2(""default"", ""default"",", @"""[dbo].[sp_1]""|""[dbo].[sp_2]""")]             // testing with "default" server & database
         // Using fake function
-        [InlineData(3, 4, @"SQL.ExecuteProcedureV2z(true, 17, ""connectortest"",", @"""[dbo].[sp_1]""|""[dbo].[sp_2]""")]
+        [InlineData(3, 4, @"SQL.ExecuteProcedureV2z(true, ""connectortest"",", @"""[dbo].[sp_1]""|""[dbo].[sp_2]""")]
         public void ConnectorIntellisenseTest(int responseIndex, int queryIndex, string expression, string expectedSuggestions)
         {
             // These tests are exercising 'x-ms-dynamic-values' extension property

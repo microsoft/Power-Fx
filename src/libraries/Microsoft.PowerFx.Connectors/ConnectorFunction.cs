@@ -817,7 +817,7 @@ namespace Microsoft.PowerFx.Connectors
                                                 continue;
                                             }
 
-                                            bodyPropertyHiddenRequired = !requestBody.Required;
+                                            bodyPropertyHiddenRequired = ConnectorSettings.Compatibility == ConnectorCompatibility.PowerAppsCompatibility ? !requestBody.Required : true;
                                         }
                                     }
 
@@ -893,10 +893,10 @@ namespace Microsoft.PowerFx.Connectors
                     }
                 }
 
-                // Required params are first N params in the final list. 
+                // Required params are first N params in the final list, "in" parameters first.
                 // Optional params are fields on a single record argument at the end.
                 // Hidden required parameters do not count here            
-                _requiredParameters = requiredParameters.ToArray();
+                _requiredParameters = ConnectorSettings.Compatibility == ConnectorCompatibility.PowerAppsCompatibility ? GetPowerAppsParameterOrder(requiredParameters) : requiredParameters.ToArray();
                 _optionalParameters = optionalParameters.ToArray();
                 _hiddenRequiredParameters = hiddenRequiredParameters.ToArray();
                 _arityMin = _requiredParameters.Length;
@@ -932,6 +932,45 @@ namespace Microsoft.PowerFx.Connectors
                 ParameterDefaultValues = parameterDefaultValues,
                 SchemaLessBody = schemaLessBody
             };
+        }
+
+        private ConnectorParameter[] GetPowerAppsParameterOrder(List<ConnectorParameter> parameters)
+        {
+            List<ConnectorParameter> newList = new List<ConnectorParameter>();
+
+            foreach (ConnectorParameter parameter in parameters)
+            {
+                if (parameter.Location == ParameterLocation.Path)
+                {
+                    newList.Add(parameter);
+                }
+            }
+
+            foreach (ConnectorParameter parameter in parameters)
+            {
+                if (parameter.Location == ParameterLocation.Query)
+                {
+                    newList.Add(parameter);
+                }
+            }
+
+            foreach (ConnectorParameter parameter in parameters)
+            {
+                if (parameter.Location == ParameterLocation.Header)
+                {
+                    newList.Add(parameter);
+                }
+            }
+
+            foreach (ConnectorParameter parameter in parameters)
+            {
+                if (parameter.Location == null || parameter.Location == ParameterLocation.Cookie)
+                {
+                    newList.Add(parameter);
+                }
+            }
+
+            return newList.ToArray();
         }
     }
 }
