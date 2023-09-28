@@ -191,23 +191,6 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(commentSpan.Lim, end);
         }
 
-        [Fact]
-        public void TestCommentSpansFromUserDefinitionsScript1()
-        {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false
-            };
-
-            var script = "xyz = 1; F1(a:):NUmber = xy; F2():Number = 1";
-            
-            var parseResult = UserDefinitions.Parse(script, parserOptions);
-
-            Assert.Single(parseResult.Comments);
-
-            var commentSpan = parseResult.Comments.First().Span;
-        }
-
         [Theory]
         [InlineData("a = Abs(1.2);\nAdd(a: Number, b: Number):Number = a + b;\nb = Add(1, 2);", 2, 1, 0)]
         [InlineData("a = Abs(1.2);\nAdd(a: Number, b:):Number = a + b;\nb = Add(1, 2); ", 2, 0, 1)]
