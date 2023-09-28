@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
     {
         private readonly ITestOutputHelper _console;
         private readonly bool _includeDebug;
-        private readonly List<ConnectorLog> _logs = new List<ConnectorLog>();
+        private readonly List<ConnectorLog> _logs = new ();
 
         internal ConsoleLogger(ITestOutputHelper console, bool includeDebug = false)
         {
@@ -59,30 +59,31 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         internal string GetLogs()
         {
-            return string.Join("|", _logs.Select(cl =>
+            return string.Join("|", _logs.Select(cl => GetMessage(cl)).Where(m => m != null));
+        }
+
+        private string GetMessage(ConnectorLog connectorLog)
+        {           
+            string cat = connectorLog.Category switch
             {
-                if (!_includeDebug && cl.Category == LogCategory.Debug)
-                {
-                    return null;
-                }
+                LogCategory.Exception => "EXCPT",
+                LogCategory.Error => "ERROR",
+                LogCategory.Warning => "WARN ",
+                LogCategory.Information => "INFO ",
+                LogCategory.Debug => "DEBUG",
+                _ => "??"
+            };
 
-                string cat = cl.Category switch
-                {
-                    LogCategory.Exception => "EXCPT",
-                    LogCategory.Error => "ERROR",
-                    LogCategory.Warning => "WARN ",
-                    LogCategory.Information => "INFO ",
-                    LogCategory.Debug => "DEBUG",
-                    _ => "??"
-                };
-
-                return $"[{cat}] {cl.Message}";
-            }).Where(m => m != null));
+            return $"[{cat}] {connectorLog.Message}";        
         }
 
         public override void Log(ConnectorLog log)
-        {
-            _logs.Add(log);
+        {            
+            if (_includeDebug || log.Category != LogCategory.Debug)
+            {
+                _console.WriteLine(GetMessage(log));
+                _logs.Add(log);
+            }
         }
     }
 }

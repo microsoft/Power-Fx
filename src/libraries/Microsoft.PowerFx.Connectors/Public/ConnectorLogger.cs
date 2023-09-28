@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public virtual void LogException(Exception ex, string message)
         {
-            Log(new ConnectorLog(LogCategory.Warning, message, ex));
+            Log(new ConnectorLog(LogCategory.Exception, message, ex));
         }
     }
 
