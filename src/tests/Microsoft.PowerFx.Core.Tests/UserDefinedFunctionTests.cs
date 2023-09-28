@@ -191,6 +191,23 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(commentSpan.Lim, end);
         }
 
+        [Fact]
+        public void TestCommentSpansFromUserDefinitionsScript1()
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var script = "xyz = 1; F1(a:):NUmber = xy; F2():Number = 1";
+            
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+
+            Assert.Single(parseResult.Comments);
+
+            var commentSpan = parseResult.Comments.First().Span;
+        }
+
         [Theory]
         [InlineData("a = Abs(1.2);\nAdd(a: Number, b: Number):Number = a + b;\nb = Add(1, 2);", 2, 1, 0)]
         [InlineData("a = Abs(1.2);\nAdd(a: Number, b:):Number = a + b;\nb = Add(1, 2); ", 2, 0, 1)]
@@ -212,6 +229,25 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
             Assert.Equal(validUDFCount, parseResult.UDFs.Count(udf => udf.IsParseValid));
             Assert.Equal(inValidUDFCount, parseResult.UDFs.Count(udf => !udf.IsParseValid));
+        }
+
+        [Theory]
+
+        [InlineData("a = Abs(1.2);\n F1(a:Number):Number = a;", 0)]
+        [InlineData("a = Abs(1.2);\n F1(a):Number = a;", 1)]
+        [InlineData("a = Abs(1.2);\n F1(a:):Number = a;", 1)]
+        [InlineData("a = Abs(1.2);\n F1(a:Number): = a;", 1)]
+        [InlineData("a = -;\n F1(a:):Number = 1;F2(a:Number): = 1;", 3)]
+        public void TestErrorCountsWithUDFs(string script, int errorCount)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+
+            Assert.Equal(errorCount, parseResult.Errors?.Count() ?? 0);
         }
 
         /// <summary>

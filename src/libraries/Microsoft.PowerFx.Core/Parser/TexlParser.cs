@@ -116,10 +116,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     }
 
                     // If the result was an error, keep moving cursor until end of expression
-                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
-                    {
-                        _curs.TokMove();
-                    }
+                    MoveToNextUserDefinition();
 
                     return false;
                 }
@@ -135,10 +132,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     args.Add(new UDFArg(varIdent.As<IdentToken>(), typeIdent: null, colonToken, argIndex));
 
                     // If the result was an error, keep moving cursor until end of expression
-                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
-                    {
-                        _curs.TokMove();
-                    }
+                    MoveToNextUserDefinition();
 
                     return false;
                 }
@@ -146,10 +140,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 if (varIdent == null)
                 {
                     // If the result was an error, keep moving cursor until end of expression
-                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
-                    {
-                        _curs.TokMove();
-                    }
+                    MoveToNextUserDefinition();
 
                     return false;
                 }
@@ -162,10 +153,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     ErrorTid(_curs.TokCur, TokKind.Comma);
 
                     // If the result was an error, keep moving cursor until end of expression
-                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
-                    {
-                        _curs.TokMove();
-                    }
+                    MoveToNextUserDefinition();
 
                     return false;
                 }
@@ -179,6 +167,22 @@ namespace Microsoft.PowerFx.Core.Parser
 
             TokEat(TokKind.ParenClose);
             return true;
+        }
+
+        private void MoveToNextUserDefinition()
+        {
+            // Move to semicolon
+            while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+            {
+                _curs.TokMove();
+            }
+
+            if (_curs.TidCur == TokKind.Semicolon)
+            {
+                // Consume semicolon and any comments
+                _curs.TokMove();
+                ParseTrivia();
+            }
         }
 
         private TypeLiteralNode ParseTypeLiteral()
