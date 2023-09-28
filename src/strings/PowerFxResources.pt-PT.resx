@@ -5048,4 +5048,28 @@
     <value>A declaração literal do tipo é inválida</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Erro de correspondência de tipo entre os tipos de registo de origem e destino. O tipo fornecido tem campos adicionais: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Erro de correspondência de tipo entre os tipos de registo de origem e destino. O tipo fornecido tem campos em falta: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Erro de correspondência de tipo entre os tipos de registo de origem e destino. O nome de campo {0} não foi encontrado.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Erro de correspondência de tipo entre os tipos de registo de origem e destino. Nome de campo {0} Esperado {1}; Encontrado {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>O tipo {0} fornecido não pode ser forçado para o tipo de origem {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Erro de correspondência de tipo entre os tipos de origem e destino. Esperado {0}; Encontrado {1}.</value>
+    
+  </data>
 </root>

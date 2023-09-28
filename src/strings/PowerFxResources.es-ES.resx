@@ -5048,4 +5048,28 @@
     <value>La declaración literal de tipo no fue válida</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Error de coincidencia entre tipos de registros de origen y destino. El tipo especificado tiene campos adicionales: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Error de coincidencia entre tipos de registros de origen y destino. Al tipo especificado le faltan campos: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Error de coincidencia entre tipos de registros de origen y destino. Nombre de campo: {0} no encontrado.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Error de coincidencia entre tipos de registros de origen y destino. Nombre de campo: {0} Previsto {1}; encontrado {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>El tipo {0} proporcionado no se puede forzar para el tipo de origen {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Error de coincidencia entre tipos de registros de origen y destino. Previsto {0}; encontrado {1}.</value>
+    
+  </data>
 </root>
