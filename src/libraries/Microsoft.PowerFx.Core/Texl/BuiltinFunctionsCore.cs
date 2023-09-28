@@ -165,6 +165,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction PlainText = _library.Add(new PlainTextFunction());
         public static readonly TexlFunction Power = _library.Add(new PowerFunction());
         public static readonly TexlFunction PowerT = _library.Add(new PowerTFunction());
+        public static readonly TexlFunction PowerFxVersion = _library.Add(new PowerFxVersionFunction());
         public static readonly TexlFunction Proper = _library.Add(new ProperFunction());
         public static readonly TexlFunction ProperT = _library.Add(new ProperTFunction());
         public static readonly TexlFunction Radians = _library.Add(new RadiansFunction());
