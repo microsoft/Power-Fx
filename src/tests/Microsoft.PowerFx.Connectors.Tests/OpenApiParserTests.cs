@@ -278,7 +278,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("The results of a Conversation task.", connectorReturnType.Description);
         }
 
-
         [Fact]
         public async Task ACSL_InvokeFunction()
         {

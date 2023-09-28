@@ -330,6 +330,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             int j = 0;
             using StreamWriter writer = new StreamWriter(Path.Combine(outFolder, reportName), append: false);
 
+            Dictionary<string, List<string>> w2 = new Dictionary<string, List<string>>();
+
             Dictionary<string, int> exceptionMessages = new ();
             Dictionary<string, IEnumerable<ConnectorFunction>> allFunctions = new ();
 
@@ -356,6 +358,29 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                     // Check we can add the service (more comprehensive test)
                     config.AddActionConnector("Connector", doc);
+                    
+                    IEnumerable<ConnectorFunction> functions2 = OpenApiParser.GetFunctions(new ConnectorSettings("C1") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc);                    
+
+                    foreach (ConnectorFunction cf1 in functions)
+                    {
+                        ConnectorFunction cf2 = functions2.First(f => f.Name == cf1.Name);
+
+                        string rp1 = string.Join(", ", cf1.RequiredParameters.Select(rp => rp.Name));
+                        string rp2 = string.Join(", ", cf2.RequiredParameters.Select(rp => rp.Name));
+
+                        if (rp1 != rp2)
+                        {
+                            string s = $"Function {cf1.Name} - Required parameters are different: [{rp1}] -- [{rp2}]";
+                            if (w2.ContainsKey(title))
+                            {
+                                w2[title].Add(s);
+                            }
+                            else
+                            {
+                                w2.Add(title, new List<string>() { s });
+                            }   
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -372,6 +397,20 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     {
                         exceptionMessages.Add(key, 1);
                     }
+                }
+
+                using StreamWriter writer2 = new StreamWriter(Path.Combine(outFolder, "ConnectorComparison.txt"), append: false);
+
+                foreach (KeyValuePair<string, List<string>> kvp in w2.OrderBy(kvp => kvp.Key))
+                {
+                    writer2.WriteLine($"-- {kvp.Key} --");
+
+                    foreach (string s in kvp.Value.OrderBy(x => x))
+                    {
+                        writer2.WriteLine(s);
+                    }
+
+                    writer2.WriteLine();
                 }
             }
 
