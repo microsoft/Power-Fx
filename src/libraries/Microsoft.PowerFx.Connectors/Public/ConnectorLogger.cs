@@ -7,7 +7,7 @@ namespace Microsoft.PowerFx.Connectors
 {
     public abstract class ConnectorLogger
     {
-        public abstract void Log(ConnectorLog log);
+        protected abstract void Log(ConnectorLog log);
 
         public virtual void LogInformation(string message)
         {

@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             return $"[{cat}] {connectorLog.Message}";        
         }
 
-        public override void Log(ConnectorLog log)
+        protected override void Log(ConnectorLog log)
         {            
             if (_includeDebug || log.Category != LogCategory.Debug)
             {
