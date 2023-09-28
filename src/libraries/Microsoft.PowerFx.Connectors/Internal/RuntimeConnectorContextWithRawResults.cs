@@ -22,5 +22,7 @@ namespace Microsoft.PowerFx.Connectors
         public override bool ThrowOnError => _baseRuntimeConnectorContext.ThrowOnError;
 
         internal override bool ReturnRawResults => true;
+
+        public override ConnectorLogger ExecutionLogger => _baseRuntimeConnectorContext.ExecutionLogger;
     }
 }

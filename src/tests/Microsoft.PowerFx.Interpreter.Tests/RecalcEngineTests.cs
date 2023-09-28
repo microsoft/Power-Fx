@@ -431,6 +431,7 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true,
             };
 #pragma warning disable CS0618 // Type or member is obsolete
             var errors = recalcEngine.DefineType("Person = Type({ Age: Number});", parserOptions);
@@ -449,6 +450,7 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true
             };
 #pragma warning disable CS0618 // Type or member is obsolete
             var errors = recalcEngine.DefineType("Complex = Type({ A: {B: Number}});", parserOptions);
@@ -467,6 +469,7 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true
             };
 #pragma warning disable CS0618
             var errors = recalcEngine.DefineType("People = Type([{Age: Number}]);", parserOptions);
@@ -485,6 +488,7 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true
             };
 #pragma warning disable CS0618
             var errors = recalcEngine.DefineType("A = Type({A: Number}); People = Type([{Age: A}]);", parserOptions);
@@ -503,6 +507,7 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true
             };
 #pragma warning disable CS0618 // Type or member is obsolete
             var errors = recalcEngine.DefineType("Complex = Type({ A: Number });", parserOptions);
@@ -521,6 +526,7 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true
             };
 #pragma warning disable CS0618 // Type or member is obsolete
             var errors = recalcEngine.DefineType("A = Type({ num: Number}); B = Type({ a: A}); C = Type({ b: B, a: A});", parserOptions);
@@ -539,6 +545,7 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true
             };
 #pragma warning disable CS0618 // Type or member is obsolete
             var errors = recalcEngine.DefineType("Weight = Type(Number);", parserOptions);

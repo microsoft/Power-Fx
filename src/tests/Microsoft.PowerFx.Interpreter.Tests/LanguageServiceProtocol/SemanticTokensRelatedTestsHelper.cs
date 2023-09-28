@@ -3,7 +3,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
@@ -71,6 +76,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
                     Character = endLineCol
                 }
             };
+        }
+
+        internal static CheckResult GetCheckResultWithControlSymbols(string expression)
+        {
+            var powerFxConfig = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet());
+            var engine = new Engine(powerFxConfig);
+            var mockSymbolTable = new MockSymbolTable();
+            mockSymbolTable.AddControlAsAggregateType("Label2", new TypedName(DType.String, DName.MakeValid("Text", out _)));
+            mockSymbolTable.AddControlAsControlType("NestedLabel1");
+            mockSymbolTable.AddControlAsAggregateType("Gallery1", new TypedName(DType.CreateRecord(mockSymbolTable.GetLookupInfoAsTypedName("NestedLabel1")), DName.MakeValid("Selected", out _)));
+
+            var checkResult = engine.Check(expression, new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true }, mockSymbolTable);
+            return checkResult;
         }
     }
 }

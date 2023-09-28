@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -14,15 +15,19 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.Interpreter.Tests.Helpers;
 using Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
+using Microsoft.PowerFx.LanguageServerProtocol.Schemas;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
@@ -2193,6 +2198,56 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             // Assert
             var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
             Assert.Empty(response.Data);
+        }
+
+        [Theory]
+        [InlineData("9 + 9", 0)]
+        [InlineData("Max(10, 20, 30)", 0)]
+        [InlineData("Color.AliceBlue", 0)]
+        [InlineData("9 + 9\n Max(1, 3, 19); \n Color.AliceBlue", 0)]
+        [InlineData("Label2.Text", 1)]
+        [InlineData("NestedLabel1", 1)]
+        [InlineData("Label2.Text;\nNestedLabel1", 2)]
+        public void TestPublishControlTokensNotification(string expression, int expectedNumberOfControlTokens)
+        {
+            // Arrange
+            var engine = new Engine(new PowerFxConfig());
+            var checkResult = SemanticTokensRelatedTestsHelper.GetCheckResultWithControlSymbols(expression);
+            var scopeFactory = new TestPowerFxScopeFactory(
+                (string documentUri) => new EditorContextScope(
+                    (expr) => checkResult));
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
+
+            var payload = GetFullDocumentSemanticTokensRequestPayload(new SemanticTokensParams
+            {
+                TextDocument = GetTextDocument(GetUri("&version=someVersionId")),
+                Text = expression
+            });
+
+            // Act
+            testServer.OnDataReceived(payload.payload);
+            if (expectedNumberOfControlTokens > 0)
+            {
+                var notification = JsonSerializer.Deserialize<JsonRpcPublishControlTokensNotification>(_sendToClientData[1], _jsonSerializerOptions);
+
+                // Assert
+                Assert.Equal("2.0", notification.Jsonrpc);
+                Assert.Equal("$/publishControlTokens", notification.Method);
+                Assert.Equal("someVersionId", notification.Params.Version);
+
+                var controlTokenList = notification.Params.Controls;
+                Assert.Equal(expectedNumberOfControlTokens, controlTokenList.Count());
+                foreach (var controlToken in controlTokenList)
+                {
+                    Assert.Equal(typeof(ControlToken), controlToken.GetType());
+                }
+            }
+            else
+            {
+                // No control tokens, then no control token notification created. 
+                // Here the only data is the semantic token data.
+                Assert.Single(_sendToClientData);
+            }            
         }
 
         private static SemanticTokensResponse AssertAndGetSemanticTokensResponse(string response, string id)

@@ -12,7 +12,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         public const string InitialFixup = "$/initialFixup";
         public const string PublishExpressionType = "$/publishExpressionType";
         public const string CommandExecuted = "$/commandExecuted";
-
+        
+        public const string PublishControlTokens = "$/publishControlTokens";
         public const string GetCapabilities = "$/getcapabilities";
         public const string NL2FX = "$/nl2fx";
         public const string FX2NL = "$/fx2nl";
