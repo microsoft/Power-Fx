@@ -13,6 +13,7 @@
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Json\Microsoft.PowerFx.Json.csproj" />
+    <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Repl\Microsoft.PowerFx.Repl.csproj" />
   </ItemGroup>
 
 </Project>

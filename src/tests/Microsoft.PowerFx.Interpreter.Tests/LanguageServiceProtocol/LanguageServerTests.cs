@@ -1528,6 +1528,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     throw new InvalidOperationException($"Simulated error");
                 }
 
+                Assert.NotNull(request.Engine);
+
                 var sb = new StringBuilder();
                 sb.Append(request.Sentence);
                 sb.Append(": ");

@@ -25,6 +25,7 @@ namespace Microsoft.PowerFx.Connectors
         public const string ContentType_TextJson = "text/json";
         public const string ContentType_XWwwFormUrlEncoded = "application/x-www-form-urlencoded";
         public const string ContentType_ApplicationJson = "application/json";
+        public const string ContentType_ApplicationOctetStream = "application/octet-stream";
         public const string ContentType_TextPlain = "text/plain";
         public const string ContentType_Any = "*/*";
 
@@ -306,7 +307,7 @@ namespace Microsoft.PowerFx.Connectors
                             return new ConnectorType(schema, openApiParameter, FormulaType.DateTimeNoTimeZone);
 
                         case "binary":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.String);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.String, binary: true);
 
                         case "enum":
                             if (schema.Enum.All(e => e is OpenApiString))
@@ -533,10 +534,17 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            if (response == null || response.Content.Count == 0)
+            if (response == null)
             {                
                 // No return type. Void() method. 
                 return (new ConnectorType(), null);
+            }
+
+            if (response.Content.Count == 0)
+            {                
+                OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "binary" };
+                ConnectorType connectorType = new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.ToConnectorType();
+                return (connectorType, null);
             }
 
             // Responses is a list by content-type. Find "application/json"
@@ -548,12 +556,15 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (string.Equals(mediaType, ContentType_ApplicationJson, StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(mediaType, ContentType_TextPlain, StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(mediaType, ContentType_Any, StringComparison.OrdinalIgnoreCase))
+                    string.Equals(mediaType, ContentType_Any, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(mediaType, ContentType_ApplicationOctetStream, StringComparison.OrdinalIgnoreCase))
                 {
                     if (openApiMediaType.Schema == null)
                     {
                         // Treat as void.                         
-                        return (new ConnectorType(), null);
+                        OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "binary" };
+                        ConnectorType cType = new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.ToConnectorType();
+                        return (cType, null);
                     }
 
                     ConnectorType connectorType = new OpenApiParameter() { Name = "response", Required = true, Schema = openApiMediaType.Schema, Extensions = openApiMediaType.Schema.Extensions }.ToConnectorType();

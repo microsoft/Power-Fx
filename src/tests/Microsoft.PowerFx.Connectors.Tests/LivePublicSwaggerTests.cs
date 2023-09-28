@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _output = output;
         }
 
-        [Fact]//(Skip = "These APIs are rate limited and HTTP error 429 is possible")]
+        [Fact(Skip = "These APIs are rate limited and HTTP error 429 is possible")]
         public async Task RealTest()
         {
             var config = new PowerFxConfig();

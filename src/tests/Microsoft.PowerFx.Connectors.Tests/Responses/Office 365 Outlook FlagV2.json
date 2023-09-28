@@ -1,0 +1,60 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users('1508713b-8fcb-4951-9add-e11bbbd602c3')/messages/$entity",
+  "@odata.etag": "W/\"CQAAABYAAABDuyuwiYTvQLeL0nv55lGwAAVAFEkU\"",
+  "id": "AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAVHeWXcAAA=",
+  "createdDateTime": "2023-09-26T12:03:20Z",
+  "lastModifiedDateTime": "2023-09-26T13:01:57Z",
+  "changeKey": "CQAAABYAAABDuyuwiYTvQLeL0nv55lGwAAVAFEkU",
+  "categories": [],
+  "receivedDateTime": "2023-09-26T12:03:20Z",
+  "sentDateTime": "2023-09-26T12:03:16Z",
+  "hasAttachments": false,
+  "internetMessageId": "<[fef61224de0f4ea0afc6afe5b9c5a0b9-JFBVALKQOJXWILKNK4YVA7CBPJ2XEZKEMV3E64DTPRCW2YLJNR6EK6DPKNWXI4A=@microsoft.com]>",
+  "subject": "some subject",
+  "bodyPreview": "some preview",
+  "importance": "normal",
+  "parentFolderId": "AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgAuAAAAAACivZtRsXzPEaP8AIBfULPVAQBBHsoKDHXPEaP6AIBfULPVAAAABp8rAAA=",
+  "conversationId": "AAQkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgAQAAlTZwhuY2a64Q5oGegwZL0=",
+  "conversationIndex": "AdnwcWrgCVNnCG5jZrrhDmgZ6DBkvQ==",
+  "isDeliveryReceiptRequested": null,
+  "isReadReceiptRequested": false,
+  "isRead": false,
+  "isDraft": false,
+  "webLink": "https://emea.mail.microsoft.com/owa/?ItemID=AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAVHeWXcAAA%3D&exvsurl=1&viewmodel=ReadMessageItem",
+  "inferenceClassification": "focused",
+  "body": {
+    "contentType": "html",
+    "content": "<html></html>"
+  },
+  "sender": {
+    "emailAddress": {
+      "name": "Some Notifications",
+      "address": "somevops@microsoft.com"
+    }
+  },
+  "from": {
+    "emailAddress": {
+      "name": "Some Notifications",
+      "address": "somevops@microsoft.com"
+    }
+  },
+  "toRecipients": [
+    {
+      "emailAddress": {
+        "name": "John John",
+        "address": "jj@microsoft.com"
+      }
+    }
+  ],
+  "ccRecipients": [],
+  "bccRecipients": [],
+  "replyTo": [
+    {
+      "emailAddress": {
+        "name": "Visual Studio Team Services",
+        "address": "someone@microsoft.com"
+      }
+    }
+  ],
+  "flag": { "flagStatus": "flagged" }
+}

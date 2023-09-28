@@ -589,9 +589,9 @@ namespace Microsoft.PowerFx.Connectors
 
             EnsureInitialized();
             runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(InvokeInternalAsync))}, with {LogArguments(arguments)}");
-            ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(this, runtimeContext), runtimeContext.ThrowOnError);
-
-            FormulaValue result = await invoker.InvokeAsync(arguments, runtimeContext, cancellationToken).ConfigureAwait(false);
+            BaseRuntimeConnectorContext context = ConnectorReturnType.Binary ? runtimeContext.WithRawResults() : runtimeContext;
+            ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(this, context), context.ThrowOnError);
+            FormulaValue result = await invoker.InvokeAsync(arguments, context, cancellationToken).ConfigureAwait(false);
             FormulaValue formulaValue = await PostProcessResultAsync(result, runtimeContext, invoker, cancellationToken).ConfigureAwait(false);
 
             runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(InvokeInternalAsync))}, returning {LogFormulaValue(formulaValue)}");
@@ -941,7 +941,6 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (Operation.RequestBody != null)
                 {
-                    // We don't support x-ms-dynamic-values in "body" parameters for now (is that possible?)
                     OpenApiRequestBody requestBody = Operation.RequestBody;
                     string bodyName = requestBody.GetBodyName();
 
@@ -972,13 +971,14 @@ namespace Microsoft.PowerFx.Connectors
 
                                     if (bodyPropertySchema.IsInternal())
                                     {
-                                        if (bodyPropertyRequired && bodyPropertySchema.Default != null)
+                                        if (bodyPropertyRequired)
                                         {
-                                            bodyPropertyHiddenRequired = true;
-                                        }
-                                        else
-                                        {
-                                            continue;
+                                            if (bodyPropertySchema.Default == null)
+                                            {
+                                                continue;
+                                            }
+
+                                            bodyPropertyHiddenRequired = !requestBody.Required;
                                         }
                                     }
 

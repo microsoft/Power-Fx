@@ -493,7 +493,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 var req = new NL2FxParameters
                 {
                     Sentence = request.Sentence,
-                    SymbolSummary = summary
+                    SymbolSummary = summary,
+                    Engine = check.Engine
                 };
 
                 CancellationToken cancel = default;

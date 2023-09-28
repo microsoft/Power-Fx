@@ -33,6 +33,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             // When specified, allows reserved keywords to be used as identifiers.
             DisableReservedKeywords = 1 << 3,
+
+            // When specified, allows type literals to be parsed.
+            AllowTypeLiteral = 1 << 4,
         }
 
         private bool _hasSemicolon = false;
@@ -73,22 +76,10 @@ namespace Microsoft.PowerFx.Core.Parser
             _features = features;
         }
 
-        public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc = null, bool numberIsFloat = false)
-        {
-            Contracts.AssertValue(script);
-            Contracts.AssertValueOrNull(loc);
-
-            // UDFs always support ReservedKeywords, no back compat concern
-            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
-
-            return parser.ParseUDFs(script);
-        }
-
         public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, ParserOptions parserOptions)
         {
             Contracts.AssertValue(parserOptions);
-            var flags = Flags.NamedFormulas | (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0);
+            var flags = (Flags.NamedFormulas | (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0)) | (parserOptions.AllowParseAsTypeLiteral ? Flags.AllowTypeLiteral : 0);
             var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
             var parser = new TexlParser(formulaTokens, flags);
 
@@ -1103,7 +1094,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (AfterSpaceTokenId() == TokKind.ParenOpen)
                     {
-                        if (ident.Token.As<IdentToken>().Name.Value == "Type")
+                        if (ident.Token.As<IdentToken>().Name.Value == "Type" && _flagsMode.Peek().HasFlag(Flags.AllowTypeLiteral))
                         {
                             return ParseTypeLiteral();
                         }
