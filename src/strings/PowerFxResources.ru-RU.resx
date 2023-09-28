@@ -5048,4 +5048,28 @@
     <value>Недопустимая декларация типа литерала</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Несоответствие типов между исходным и целевым типами записей. У данного типа есть дополнительные поля: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Несоответствие типов между исходным и целевым типами записей. Для данного типа отсутствуют поля: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Несоответствие типов между исходным и целевым типами записей. Имя поля "{0}" не найдено.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Несоответствие типов между исходным и целевым типами записей. Имя поля: "{0}"; ожидаемое: "{1}"; найдено "{2}".</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Данный тип "{0}" не может быть приведен к типу источника "{1}".</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Несоответствие типов между исходными и целевыми типами. Ожидаемое: "{0}"; найдено: "{1}".</value>
+    
+  </data>
 </root>

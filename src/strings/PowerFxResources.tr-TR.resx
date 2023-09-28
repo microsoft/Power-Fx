@@ -5048,4 +5048,28 @@
     <value>Tür değişmez bildirimi geçersiz</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Kaynak ve hedef kayıt türleri arasında tür uyuşmazlığı. Belirtilen türde ekstra alanlar var: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Kaynak ve hedef kayıt türleri arasında tür uyuşmazlığı. Belirtilen türde eksik alanlar var: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Kaynak ve hedef kayıt türleri arasında tür uyuşmazlığı. Alan adı: {0} bulunamadı.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Kaynak ve hedef kayıt türleri arasında tür uyuşmazlığı. Alan adı: {0} {1} bekleniyordu, {2} bulundu.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Belirtilen {0} türü, {1} kaynak türüyle birleştirilemez.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Kaynak ve hedef türler arasında tür uyuşmazlığı. {0} bekleniyordu; {1} bulundu.</value>
+    
+  </data>
 </root>

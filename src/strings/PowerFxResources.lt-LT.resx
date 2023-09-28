@@ -5048,4 +5048,28 @@
     <value>Tipo literalo deklaracija buvo neteisinga</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Šaltinio ir paskirties įrašų tipai neatitinka. Pateiktame tipe yra papildomų laukų: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Šaltinio ir paskirties įrašų tipai neatitinka. Pateiktame tipe trūksta laukų: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Šaltinio ir paskirties įrašų tipai neatitinka. Lauko pavadinimas „{0}“ nerastas.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Šaltinio ir paskirties įrašų tipai neatitinka. Lauko pavadinimas „{0}“. Tikimasi „{1}“. Rasta „{2}“.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Pateikto {0} tipo negalima pakeisti į šaltinio tipą {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Šaltinio ir paskirties tipai neatitinka. Tikimasi „{0}“. Rasta „{1}“.</value>
+    
+  </data>
 </root>
