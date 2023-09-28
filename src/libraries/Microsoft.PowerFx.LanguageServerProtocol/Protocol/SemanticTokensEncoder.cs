@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <param name="previousTokenLineNumber">Line number of the previous encoded token.</param>
         /// <param name="previousTokenStartIdx">Starting position of the previous encoded token.</param>
         /// <param name="controlTokens">Control Tokens that keeps a collection of control tokens data.</param>
-        private static void EncodeAndAddToken(ICollection<uint> encodedTokens, ITokenTextSpan currentToken, uint? currentTokenStartLine, uint? currentTokenStartPosition, uint? endPosition, uint currentLineNumber, ref uint previousTokenLineNumber, ref uint previousTokenStartIdx, ControlTokens controlTokens)
+        private static void EncodeAndAddToken(ICollection<uint> encodedTokens, ITokenTextSpan currentToken, uint? currentTokenStartLine, uint? currentTokenStartPosition, uint? endPosition, uint currentLineNumber, ref uint previousTokenLineNumber, ref uint previousTokenStartIdx, ControlTokens controlTokens = null)
         {
             if (currentToken == null || !currentTokenStartLine.HasValue || !currentTokenStartPosition.HasValue || !endPosition.HasValue)
             {
@@ -213,7 +213,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <param name="tokenStartPosition">Start Position of the token.</param>
         /// <param name="tokenEndPosition">End Position of the token.</param>
         /// <param name="controlTokens">Control Tokens that keeps a collection of control tokens data.</param>
-        private static void HandleControlTokensData(ITokenTextSpan currentToken, uint currentLineNumber, uint tokenStartPosition, uint tokenEndPosition, ControlTokens controlTokens)
+        private static void HandleControlTokensData(ITokenTextSpan currentToken, uint currentLineNumber, uint tokenStartPosition, uint tokenEndPosition, ControlTokens controlTokens = null)
         {
             if (currentToken.TokenType == TokenType.Control)
             {
@@ -226,11 +226,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
                 else
                 {
                     var tokenIndicesList = new List<uint[]>() { new uint[] { currentLineNumber, tokenStartPosition, currentLineNumber, tokenEndPosition } };
-                    ControlToken contrlToken = new ControlToken
-                    {
-                        Name = currentToken.TokenName,
-                        Ranges = tokenIndicesList
-                    };
+                    ControlToken contrlToken = new ControlToken(currentToken.TokenName, tokenIndicesList);
                     controlTokens.Add(contrlToken);
                 }                
             }

@@ -356,11 +356,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
                     rangeList.Add(rangeData[idx.. (idx + 4)].Select(uint.Parse).ToArray());
                 }
 
-                ControlToken controlTokenTestObj = new ControlToken()
-                {
-                    Name = resultData[0],
-                    Ranges = rangeList
-                };
+                ControlToken controlTokenTestObj = new ControlToken(resultData[0], rangeList);
                 controlTokenTestData.Add(controlTokenTestObj);
             }
 
