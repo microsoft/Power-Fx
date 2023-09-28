@@ -13,7 +13,9 @@ using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
@@ -23,7 +25,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public const string SwaggerFile = @"http://localhost:5189/swagger/v1/swagger.json";
         private static bool skip = false;
 
-        private static void GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions)
+        private readonly ITestOutputHelper _output;
+
+        public DynamicTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
+        private void GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions)
         {
             functions = null;
             doc = null;
@@ -35,7 +44,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 {
                     using WebClient webClient = new WebClient();
                     doc = new OpenApiStreamReader().Read(webClient.OpenRead(SwaggerFile), out var diagnostic);
-                    functions = OpenApiParser.GetFunctions("Test", doc).OrderBy(cf => cf.Name).ToList();
+                    functions = OpenApiParser.GetFunctions("Test", doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
                 }
             }
             catch (WebException we)
@@ -57,14 +66,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
         }
 
-        private static void GetEngine(OpenApiDocument doc, out RecalcEngine engine, out BaseRuntimeConnectorContext connectorContext, out BasicServiceProvider services)
+        private void GetEngine(OpenApiDocument doc, out RecalcEngine engine, out BaseRuntimeConnectorContext connectorContext, out BasicServiceProvider services)
         {
             HttpClient client = new HttpClient() { BaseAddress = new Uri(Host) };
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
-            config.AddActionConnector(new ConnectorSettings("Test"), doc);
+            config.AddActionConnector(new ConnectorSettings("Test"), doc, new ConsoleLogger(_output));
 
             engine = new RecalcEngine(config);
-            connectorContext = new TestConnectorRuntimeContext("Test", client, throwOnError: true);
+            connectorContext = new TestConnectorRuntimeContext("Test", client, throwOnError: true, console: _output);
             services = new BasicServiceProvider().AddRuntimeContext(connectorContext);
         }
 
