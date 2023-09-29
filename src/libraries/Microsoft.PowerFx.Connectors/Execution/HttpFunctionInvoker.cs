@@ -138,13 +138,10 @@ namespace Microsoft.PowerFx.Connectors
 
             Dictionary<string, FormulaValue> map = new (StringComparer.OrdinalIgnoreCase);
 
-            // Seed with default values. This will get over written if provided. 
+            // Seed with default values. This will get overwritten if provided. 
             foreach (KeyValuePair<string, (bool required, FormulaValue fValue, DType dType)> kv in _function._internals.ParameterDefaultValues)
             {
-                if (kv.Value.required)
-                {
-                    map[kv.Key] = kv.Value.fValue;
-                }
+                map[kv.Key] = kv.Value.fValue;
             }
 
             foreach (ConnectorParameter param in _function.HiddenRequiredParameters)

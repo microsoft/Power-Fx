@@ -71,10 +71,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
 #pragma warning disable SA1118, SA1117, SA1119, SA1137
 
         [Fact]
-        public void ACSL_GetFunctionParameters()
+        public void ACSL_GetFunctionParameters_PowerAppsCompatibility()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
-            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList()[19];
+            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.PowerAppsCompatibility }, doc).OrderBy(cf => cf.Name).ToList()[19];
 
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("ConversationAnalysis_AnalyzeConversation_Conversation", function.OriginalName);
@@ -179,6 +179,114 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
+        public void ACSL_GetFunctionParameters_SwaggerCompatibility()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
+            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc).OrderBy(cf => cf.Name).ToList()[19];
+
+            Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
+            Assert.Equal("ConversationAnalysis_AnalyzeConversation_Conversation", function.OriginalName);
+            Assert.Equal("/apim/cognitiveservicestextanalytics/{connectionId}/language/:analyze-conversations", function.OperationPath);
+
+            RecordType analysisInputRecordType = Extensions.MakeRecordType(
+                                                    ("conversationItem", Extensions.MakeRecordType(
+                                                        ("language", FormulaType.String),
+                                                        ("text", FormulaType.String))));
+            RecordType parametersRecordType = Extensions.MakeRecordType(
+                                                    ("deploymentName", FormulaType.String),
+                                                    ("projectName", FormulaType.String),
+                                                    ("verbose", RecordType.Boolean));
+
+            Assert.Equal(2, function.RequiredParameters.Length);
+            Assert.Equal(3, function.HiddenRequiredParameters.Length);
+            Assert.Empty(function.OptionalParameters);
+
+            // -- Parameter 1 --
+            Assert.Equal("analysisInput", function.RequiredParameters[0].Name);
+            Assert.Equal(analysisInputRecordType, function.RequiredParameters[0].FormulaType);
+            Assert.Equal("A single conversational task to execute.", function.RequiredParameters[0].Description);
+            Assert.Null(function.RequiredParameters[0].DefaultValue);
+            Assert.NotNull(function.RequiredParameters[0].ConnectorType);
+            Assert.Equal("analysisInput", function.RequiredParameters[0].ConnectorType.Name);
+            Assert.Null(function.RequiredParameters[0].ConnectorType.DisplayName);
+            Assert.Equal("The input ConversationItem and its optional parameters", function.RequiredParameters[0].ConnectorType.Description);
+            Assert.Equal(analysisInputRecordType, function.RequiredParameters[0].ConnectorType.FormulaType);
+            Assert.True(function.RequiredParameters[0].ConnectorType.IsRequired);
+            Assert.Single(function.RequiredParameters[0].ConnectorType.Fields);
+            Assert.Equal("conversationItem", function.RequiredParameters[0].ConnectorType.Fields[0].Name);
+            Assert.Null(function.RequiredParameters[0].ConnectorType.Fields[0].DisplayName);
+            Assert.Equal("The abstract base for a user input formatted conversation (e.g., Text, Transcript).", function.RequiredParameters[0].ConnectorType.Fields[0].Description);
+            Assert.True(function.RequiredParameters[0].ConnectorType.Fields[0].IsRequired);
+
+            // -- Parameter 2 --
+            Assert.Equal("parameters", function.RequiredParameters[1].Name);
+            Assert.Equal(parametersRecordType, function.RequiredParameters[1].FormulaType);
+            Assert.Equal("A single conversational task to execute.", function.RequiredParameters[1].Description);
+            Assert.Null(function.RequiredParameters[1].DefaultValue);
+
+            RecordType analysisInputRecordTypeH = Extensions.MakeRecordType(
+                                                    ("conversationItem", Extensions.MakeRecordType(
+                                                        ("id", FormulaType.String),
+                                                        ("participantId", FormulaType.String))));
+
+            // -- Hidden Required Parameter 1 --
+            Assert.Equal("api-version", function.HiddenRequiredParameters[0].Name);
+            Assert.Equal(FormulaType.String, function.HiddenRequiredParameters[0].FormulaType);
+            Assert.Equal("Client API version.", function.HiddenRequiredParameters[0].Description);
+            Assert.Equal("2022-05-01", function.HiddenRequiredParameters[0].DefaultValue.ToObject());
+
+            // -- Hidden Required Parameter 2 --
+            Assert.Equal("kind", function.HiddenRequiredParameters[1].Name);
+            Assert.Equal(FormulaType.String, function.HiddenRequiredParameters[1].FormulaType);
+            Assert.Equal("A single conversational task to execute.", function.HiddenRequiredParameters[1].Description);
+            Assert.Equal("Conversation", function.HiddenRequiredParameters[1].DefaultValue.ToObject());
+
+            // -- Hidden Required Parameter 3 --
+            Assert.Equal("analysisInput", function.HiddenRequiredParameters[2].Name);
+            Assert.Equal(analysisInputRecordTypeH, function.HiddenRequiredParameters[2].FormulaType);
+            Assert.Equal("A single conversational task to execute.", function.HiddenRequiredParameters[2].Description);
+            Assert.Equal(@"{""conversationItem"":{""id"":""0"",""participantId"":""0""}}", System.Text.Json.JsonSerializer.Serialize(function.HiddenRequiredParameters[2].DefaultValue.ToObject()));
+
+            Assert.Equal(2, function.ArityMin);
+            Assert.Equal(2, function.ArityMax);
+
+            // -- Return Type --
+            FormulaType returnType = function.ReturnType;
+
+            RecordType expectedReturnType = Extensions.MakeRecordType(
+                                                ("kind", FormulaType.String),
+                                                ("result", Extensions.MakeRecordType(
+                                                    ("detectedLanguage", FormulaType.String),
+                                                    ("prediction", Extensions.MakeRecordType(
+                                                        ("entities", Extensions.MakeTableType(
+                                                            ("category", FormulaType.String),
+                                                            ("confidenceScore", FormulaType.Decimal),
+                                                            ("extraInformation", FormulaType.UntypedObject), // property has a discriminator
+                                                            ("length", FormulaType.Decimal),
+                                                            ("offset", FormulaType.Decimal),
+                                                            ("resolutions", FormulaType.UntypedObject),      // property has a discriminator
+                                                            ("text", FormulaType.String))),
+                                                        ("intents", Extensions.MakeTableType(
+                                                            ("category", FormulaType.String),
+                                                            ("confidenceScore", FormulaType.Decimal))),
+                                                        ("projectKind", FormulaType.String),
+                                                        ("topIntent", FormulaType.String))),
+                                                        ("query", FormulaType.String))));
+
+            string rt3Name = expectedReturnType.ToStringWithDisplayNames();
+            string returnTypeName = expectedReturnType.ToStringWithDisplayNames();
+
+            Assert.Equal(rt3Name, returnTypeName);
+            Assert.True((FormulaType)expectedReturnType == returnType);
+
+            ConnectorType connectorReturnType = function.ConnectorReturnType;
+            Assert.NotNull(connectorReturnType);
+            Assert.Equal((FormulaType)expectedReturnType, connectorReturnType.FormulaType);
+            Assert.Equal(2, connectorReturnType.Fields.Length);
+            Assert.Equal("The results of a Conversation task.", connectorReturnType.Description);
+        }
+
+        [Fact]
         public async Task ACSL_InvokeFunction()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language.json");
@@ -186,7 +294,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             ConsoleLogger logger = new ConsoleLogger(_output);
 
             PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
-            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList()[19];
+            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, apiDoc).OrderBy(cf => cf.Name).ToList()[19];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:w, offset:w, resolutions:O, text:s], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
@@ -207,7 +315,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client, console: _output);
 
-            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
             httpClient.Dispose();
             client.Dispose();
             testConnector.Dispose();
@@ -222,7 +330,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             BaseRuntimeConnectorContext context2 = new TestConnectorRuntimeContext("ACSL", client2, console: _output);
 
-            FormulaValue httpResult2 = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context2, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult2 = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context2, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult2);
             Assert.True(httpResult2 is RecordValue);
@@ -775,7 +883,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
 
             BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
 
-            ConnectorFunction[] functions = OpenApiParser.GetFunctions("DV", testConnector._apiDocument, new ConsoleLogger(_output)).ToArray();
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
             ConnectorFunction createRecord = functions.First(f => f.Name == "CreateRecordWithOrganization");
 
             testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_1.json");
