@@ -3,12 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.CodeAnalysis;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
 using Microsoft.PowerFx.Core.IR;
@@ -24,43 +26,37 @@ namespace Microsoft.PowerFx.Connectors
         private readonly HttpMessageInvoker _httpClient;
         private readonly ConnectorFunction _function;
         private readonly bool _returnRawResults;
+        private readonly ConnectorLogger _logger;
 
-        public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext brcc)
+        public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext)
         {
             _function = function;
-            _httpClient = brcc.GetInvoker(function.Namespace);            
-            _returnRawResults = brcc.ReturnRawResults;
+            _httpClient = runtimeContext.GetInvoker(function.Namespace);
+            _returnRawResults = runtimeContext.ReturnRawResults;
+            _logger = runtimeContext.ExecutionLogger;
         }
 
-        internal static void VerifyCanHandle(ParameterLocation? location)
-        {
-            switch (location.Value)
-            {
-                case ParameterLocation.Path:
-                case ParameterLocation.Query:
-                case ParameterLocation.Header:
-                    break;
-
-                case ParameterLocation.Cookie:
-                default:
-                    throw new NotImplementedException($"Unsupported ParameterIn {location}");
-            }
-        }
-
+        [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
         public HttpRequestMessage BuildRequest(FormulaValue[] args, IConvertToUTC utcConverter, CancellationToken cancellationToken)
         {
+            HttpContent body = null;
             var path = _function.OperationPath;
             var query = new StringBuilder();
 
             cancellationToken.ThrowIfCancellationRequested();
 
+            // Function couldn't be initialized properly, let's stop immediately
+            if (_function._internals == null)
+            {
+                _logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(BuildRequest)}, _function._internals is null");
+                return null;
+            }
+
             // https://stackoverflow.com/questions/5258977/are-http-headers-case-sensitive
             // Header names are not case sensitive.
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            HttpContent body = null;
             Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
-
             Dictionary<string, FormulaValue> map = ConvertToNamedParameters(args);
 
             foreach (OpenApiParameter param in _function._internals.OpenApiBodyParameters)
@@ -68,6 +64,13 @@ namespace Microsoft.PowerFx.Connectors
                 if (map.TryGetValue(param.Name, out var paramValue))
                 {
                     bodyParts.Add(param.Name, (param.Schema, paramValue));
+                }
+                else if (param.Schema.Default != null)
+                {
+                    if (OpenApiExtensions.TryGetOpenApiValue(param.Schema.Default, out FormulaValue defaultValue))
+                    {
+                        bodyParts.Add(param.Name, (param.Schema, defaultValue));
+                    }
                 }
             }
 
@@ -106,12 +109,13 @@ namespace Microsoft.PowerFx.Connectors
 
                         case ParameterLocation.Cookie:
                         default:
-                            throw new NotImplementedException($"{param.In}");
+                            _logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(BuildRequest)}, unsupported {param.In.Value}");
+                            return null;
                     }
                 }
             }
 
-            var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();
+            var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();            
             var request = new HttpRequestMessage(_function.HttpMethod, url);
 
             foreach (var kv in headers)
@@ -134,13 +138,10 @@ namespace Microsoft.PowerFx.Connectors
 
             Dictionary<string, FormulaValue> map = new (StringComparer.OrdinalIgnoreCase);
 
-            // Seed with default values. This will get over written if provided. 
+            // Seed with default values. This will get overwritten if provided. 
             foreach (KeyValuePair<string, (bool required, FormulaValue fValue, DType dType)> kv in _function._internals.ParameterDefaultValues)
             {
-                if (kv.Value.required)
-                {
-                    map[kv.Key] = kv.Value.fValue;
-                }
+                map[kv.Key] = kv.Value.fValue;
             }
 
             foreach (ConnectorParameter param in _function.HiddenRequiredParameters)
@@ -255,7 +256,7 @@ namespace Microsoft.PowerFx.Connectors
             return new InMemoryRecordValue(IRContext.NotInSource(rt), lst);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
+        [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
         private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, CancellationToken cancellationToken)
         {
             FormulaValueSerializer serializer = null;
@@ -327,6 +328,18 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
             using HttpRequestMessage request = BuildRequest(args, utcConverter, cancellationToken);
+
+            if (request == null)
+            {
+                _logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)} request is null");
+                return new ErrorValue(IRContext.NotInSource(_function.ReturnType), new ExpressionError()
+                {
+                    Kind = ErrorKind.Internal,
+                    Severity = ErrorSeverity.Critical,
+                    Message = $"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)} request is null"
+                });
+            }
+
             return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
         }
 
@@ -341,6 +354,16 @@ namespace Microsoft.PowerFx.Connectors
         {
             var client = localInvoker ?? _httpClient;
             var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+            if ((int)response.StatusCode >= 300)
+            {
+                _logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(ExecuteHttpRequest)}, response status code: {(int)response.StatusCode} {response.StatusCode}");
+            }
+            else
+            {
+                _logger?.LogInformation($"In {nameof(HttpFunctionInvoker)}.{nameof(ExecuteHttpRequest)}, response status code: {(int)response.StatusCode} {response.StatusCode}");
+            }
+
             return await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);
         }
     }
@@ -370,17 +393,17 @@ namespace Microsoft.PowerFx.Connectors
 
         public Task<FormulaValue> InvokeAsync(FormulaValue[] args, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
-            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
-
             cancellationToken.ThrowIfCancellationRequested();
+
+            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);            
             return _invoker.InvokeAsync(new ConvertToUTC(runtimeContext.TimeZoneInfo), _cacheScope, args, localInvoker, cancellationToken, _throwOnError);
         }
 
         public Task<FormulaValue> InvokeAsync(string url, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
-            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
-
             cancellationToken.ThrowIfCancellationRequested();
+
+            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);            
             return _invoker.InvokeAsync(url, _cacheScope, localInvoker, cancellationToken, _throwOnError);
         }
     }

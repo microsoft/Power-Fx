@@ -5048,4 +5048,28 @@
     <value>유형 리터럴 선언이 유효하지 않습니다.</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>원본 레코드 종류와 대상 레코드 종류가 일치하지 않습니다. 지정된 형식에 {0} 필드가 추가로 있습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>원본 레코드 종류와 대상 레코드 종류가 일치하지 않습니다. 지정된 형식에 {0} 필드가 빠져 있습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>원본 레코드 종류와 대상 레코드 종류가 일치하지 않습니다. 필드 이름인 {0}을(를) 찾을 수 없습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>원본 레코드 종류와 대상 레코드 종류가 일치하지 않습니다. 필드 이름: {0} 예상 {1}, 발견 {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>주어진 {0} 형식을 원본 형식 {1}(으)로 강제 변경할 수 없습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>원본 형식과 대상 형식이 일치하지 않습니다. 예상 {0}, 발견 {1}.</value>
+    
+  </data>
 </root>

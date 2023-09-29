@@ -1,0 +1,12 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#Collection(microsoft.graph.mailTips)",
+  "value": [
+    {
+      "maxMessageSize": 37748736,
+      "emailAddress": {
+        "name": "",
+        "address": "jj@microsoft.com"
+      }
+    }
+  ]
+}

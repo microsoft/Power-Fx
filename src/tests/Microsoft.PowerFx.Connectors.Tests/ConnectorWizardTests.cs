@@ -12,7 +12,9 @@ using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
+using Xunit.Abstractions;
 
 #pragma warning disable SA1119 // Statement should not use unnecessary parenthesis
 #pragma warning disable SA1107 // Code should not contain multiple statements on one line
@@ -21,6 +23,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
 {
     public class ConnectorWizardTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public ConnectorWizardTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public async Task ConnectorWizardTest()
         {
@@ -37,12 +46,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client);
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client, console: _output);
 
             // Get all functions based on OpenApi document and using provided http client
             // throwOnError is set to true so that any later GetParameters call will generate an exception in case of HTTP failure (HTTP result not 200)
             // Default behavior: no exception and no suggestion in case of error
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("SQL", apiDoc);
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("SQL", apiDoc, new ConsoleLogger(_output));
 
             Assert.Equal(64, functions.Count());
 
@@ -159,22 +168,22 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("SQL", apiDoc); 
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("SQL", apiDoc, new ConsoleLogger(_output)); 
             ConnectorFunction executeProcedureV2 = functions.First(cf => cf.Name == "ExecuteProcedureV2");
 
-            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client, throwOnError: true);
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client, throwOnError: true, console: _output);
 
             // Simulates an invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
             await Assert.ThrowsAsync<HttpRequestException>(async () => await executeProcedureV2.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), executeProcedureV2.RequiredParameters[0], context, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
 
             // now let's try with throwOnError false
-            functions = OpenApiParser.GetFunctions("SQL", apiDoc);
+            functions = OpenApiParser.GetFunctions("SQL", apiDoc, new ConsoleLogger(_output));
             executeProcedureV2 = functions.First(cf => cf.Name == "ExecuteProcedureV2");
 
             // Same invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
-            context = new TestConnectorRuntimeContext("SQL", client, throwOnError: false);
+            context = new TestConnectorRuntimeContext("SQL", client, throwOnError: false, console: _output);
             ConnectorParameters parameters = await executeProcedureV2.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), executeProcedureV2.RequiredParameters[0], context, CancellationToken.None).ConfigureAwait(false);
 
             CheckParameters(parameters.ParametersWithSuggestions);

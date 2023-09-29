@@ -586,6 +586,36 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: DropColumns)
             },
             {
+                BuiltinFunctionsCore.EDate,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.EDate.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWith(
+                        new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                    checkRuntimeTypes: ExactSequence(
+                        DateOrDateTime,
+                        ExactValueType<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: EDate)
+            },
+            {
+                BuiltinFunctionsCore.EOMonth,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.EOMonth.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWith(
+                        new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                    checkRuntimeTypes: ExactSequence(
+                        DateOrDateTime,
+                        ExactValueType<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: EOMonth)
+            },
+            {
                 BuiltinFunctionsCore.EncodeUrl,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.EncodeUrl.Name,

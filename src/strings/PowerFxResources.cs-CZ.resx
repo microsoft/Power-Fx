@@ -5048,4 +5048,28 @@
     <value>Deklarace literálu typu byla neplatná</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Neshoda typů mezi zdrojovým a cílovým typem záznamu. Daný typ má další pole: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Neshoda typů mezi zdrojovým a cílovým typem záznamu. Danému typu chybí pole: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Neshoda typů mezi zdrojovým a cílovým typem záznamu. Název pole: {0} nebyl nalezen.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Neshoda typů mezi zdrojovým a cílovým typem záznamu. Název pole: {0} Očekávané {1}; Nalezeno {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Zadaný typ {0} nelze vynutit na typ zdroje {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Neshoda typů mezi zdrojovým a cílovým typem. Očekávané {0}; Nalezeno {1}.</value>
+    
+  </data>
 </root>
