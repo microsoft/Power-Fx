@@ -336,7 +336,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public EDateFunction()
-            : base("EDate", TexlStrings.AboutEDate, FunctionCategories.DateTime, DType.Date, 0, 2, 2, DType.Date, DType.Number)
+            : base("EDate", TexlStrings.AboutEDate, FunctionCategories.DateTime, DType.Date, 0, 2, 2, DType.DateTime, DType.Number)
         {
         }
 

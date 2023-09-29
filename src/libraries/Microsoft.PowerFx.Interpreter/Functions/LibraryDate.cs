@@ -2,11 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
@@ -733,9 +731,10 @@ namespace Microsoft.PowerFx.Functions
                 {
                     int truncAdd = (int)nv.Value;
 
-                    DateTime added = arg0.AddMonths(truncAdd);
+                    DateTime original = new DateTime(arg0.Year, arg0.Month, arg0.Day);
+                    DateTime plusMonths = original.AddMonths(truncAdd);
 
-                    DateTime newDate = MakeValidDateTime(runner, added, timeZoneInfo);
+                    DateTime newDate = MakeValidDateTime(runner, plusMonths, timeZoneInfo);
 
                     return new DateValue(irContext, newDate);
                 }
