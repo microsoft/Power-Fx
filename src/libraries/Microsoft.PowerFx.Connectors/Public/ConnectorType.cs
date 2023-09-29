@@ -75,13 +75,15 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ConnectorDynamicList DynamicList { get; private set; }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType)
+        internal bool Binary { get; private set; }
+
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, bool binary = false)
         {
             Name = openApiParameter?.Name;
             IsRequired = openApiParameter?.Required == true;
             Visibility = openApiParameter?.GetVisibility().ToVisibility() ?? Visibility.Unknown;
-
             FormulaType = formulaType;
+            Binary = binary;
 
             if (schema != null)
             {

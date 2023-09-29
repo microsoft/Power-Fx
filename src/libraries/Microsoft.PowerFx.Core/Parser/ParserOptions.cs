@@ -44,6 +44,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         public int MaxExpressionLength { get; set; }
 
+        /// <summary>
+        /// Flag for parse type literals.
+        /// </summary>
+        internal bool AllowParseAsTypeLiteral { get; set; }
+
         public ParserOptions()
         {
         }

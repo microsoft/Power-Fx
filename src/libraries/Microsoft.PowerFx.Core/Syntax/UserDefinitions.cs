@@ -65,8 +65,9 @@ namespace Microsoft.PowerFx.Syntax
         private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult)
         {
             var parseResult = TexlParser.ParseUserDefinitionScript(_script, _parserOptions);
-               
-            var functions = CreateUserDefinedFunctions(parseResult.UDFs, out var errors);
+            
+            // Parser returns both complete & incomplete UDFs, and we are only interested in creating TexlFunctions for valid UDFs. 
+            var functions = CreateUserDefinedFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
 
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
             userDefinitionResult = new UserDefinitionResult(

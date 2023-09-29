@@ -5048,4 +5048,28 @@
     <value>Typens bogstavelig værdi var ugyldig</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Typeuoverensstemmelse mellem kilde- og målposttyper. Den angivne type har ekstra felter: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Typeuoverensstemmelse mellem kilde- og målposttyper. Den angivne type har manglende felter: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Typeuoverensstemmelse mellem kilde- og målposttyper. Feltnavnet: {0} blev ikke fundet.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Typeuoverensstemmelse mellem kilde- og målposttyper. Feltnavn: {0} forventede {1}, fandt {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Den angivne {0} type kan ikke tvinges til kildetype {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Typeuoverensstemmelse mellem kilde- og måltyper. Forventede {0}, fandt {1}.</value>
+    
+  </data>
 </root>

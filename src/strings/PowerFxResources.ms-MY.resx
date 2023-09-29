@@ -5048,4 +5048,28 @@
     <value>Perisytiharan harfiah jenis tidak sah</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Jenis yang tidak sepadan antara jenis rekod sumber dengan sasaran. Jenis yang diberikan mempunyai medan tambahan: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Jenis yang tidak sepadan antara jenis rekod sumber dengan sasaran. Jenis yang diberikan tiada medan: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Jenis yang tidak sepadan antara jenis rekod sumber dengan sasaran. Nama medan: {0} tidak ditemukan.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Jenis yang tidak sepadan antara jenis rekod sumber dengan sasaran. Nama medan: {0} {1} dijangkakan; {2} ditemukan.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Jenis {0} yang diberikan tidak boleh dipaksa kepada jenis sumber {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Jenis yang tidak sepadan antara jenis sumber dengan sasaran. {0} dijangkakan; {1} ditemukan.</value>
+    
+  </data>
 </root>

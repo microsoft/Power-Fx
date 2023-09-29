@@ -5048,4 +5048,28 @@
     <value>Deklaracja literału typu była nieprawidłowa</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Niezgodność typów rekordu źródłowego i docelowego. Dany typ ma dodatkowe pola: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Niezgodność typów rekordu źródłowego i docelowego. W danym typie brakuje pól: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Niezgodność typów rekordu źródłowego i docelowego. Nie znaleziono nazwy pola {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Niezgodność typów rekordu źródłowego i docelowego. Nazwa pola: {0}; oczekiwano: {1}; znaleziono: {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Nie można przekształcić danego typu {0} na typ źródłowy {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Niezgodność typów źródłowego i docelowego. Oczekiwano: {0}; znaleziono: {1}.</value>
+    
+  </data>
 </root>

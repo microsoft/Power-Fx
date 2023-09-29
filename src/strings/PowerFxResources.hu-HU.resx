@@ -5048,4 +5048,28 @@
     <value>A szó szerinti deklaráció típusa érvénytelen volt</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Típuseltérés a forrás- és célrekordtípusok között. A megadott típus további mezőket tartalmaz: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Típuseltérés a forrás- és célrekordtípusok között. A megadott típusnak hiányzó mezői vannak: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Típuseltérés a forrás- és célrekordtípusok között. Mezőnév: {0} található.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Típuseltérés a forrás- és célrekordtípusok között. Mezőnév: {0} Várt {1}; Talált {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Az adott {0} típus nem kényszeríthető a(z) {1} forrástípusra.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Típuseltérés a forrás- és céltípusok között. Várt {0}; Talált {1}.</value>
+    
+  </data>
 </root>

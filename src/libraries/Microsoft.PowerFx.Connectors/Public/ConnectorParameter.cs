@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Diagnostics;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -9,11 +10,15 @@ namespace Microsoft.PowerFx.Connectors
     /// <summary>
     /// Represents a parameter of a connector function.
     /// </summary>
+    [DebuggerDisplay("{Name} {ConnectorType}")]
     public class ConnectorParameter : ConnectorSchema
     {
         public string Name { get; private set; }
 
         public string Description { get; }
+
+        // Query, Header, Path or Cookie (not supported yet)
+        public ParameterLocation? Location { get; }
 
         internal bool IsBodyParameter = false;
 
@@ -38,6 +43,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             Name = openApiParameter.Name;
             Description = openApiParameter.Description;
+            Location = openApiParameter.In;
         }
 
         internal ConnectorParameter(ConnectorParameter connectorParameter, ConnectorType connectorType)

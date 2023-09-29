@@ -1,0 +1,13 @@
+{
+  "@odata.context": "https://graph.microsoft.com/beta/$metadata#Collection(microsoft.graph.emailAddress)",
+  "value": [
+    {
+      "name": "1000 Henry",
+      "address": "li-rl-1000HENRY@microsoft.com"
+    },
+    {
+      "name": "1000 Henry (Non-Bookable)",
+      "address": "li-amer-rl-1000henry@microsoft.com"
+    }    
+  ]
+}

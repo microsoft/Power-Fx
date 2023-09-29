@@ -5048,4 +5048,28 @@
     <value>Deklarazio literalaren motak ez du balio</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Iturburuko eta helburuko erregistro motak ez datoz bat. Emandako motak eremu gehigarriak ditu: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Iturburuko eta helburuko erregistro motak ez datoz bat. Emandako motak falta diren eremuak ditu: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Iturburuko eta helburuko erregistro motak ez datoz bat. Ez da aurkitu {0} eremua.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Iturburuko eta helburuko erregistro motak ez datoz bat. Eremuaren izena {0} da, baina {1} espero zen; {2} aurkitu da.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Emandako {0} mota ezin da gehitu {1} iturburu-motan.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Iturburuko eta helburuko motak ez datoz bat. {0} espero zen, baina {1} aurkitu da.</value>
+    
+  </data>
 </root>

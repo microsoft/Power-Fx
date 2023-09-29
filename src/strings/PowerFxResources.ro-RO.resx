@@ -5048,4 +5048,28 @@
     <value>Declarația literală a tipului nu a fost validă</value>
     
   </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Nepotrivire de tip între tipurile de înregistrări sursă și țintă. Tipul dat are câmpuri suplimentare: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Nepotrivire de tip între tipurile de înregistrări sursă și țintă. Tipul dat are câmpuri lipsă: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Nepotrivire de tip între tipurile de înregistrări sursă și țintă. Numele de câmp : {0} nu s-a găsit.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Nepotrivire de tip între tipurile de înregistrări sursă și țintă. Nume de câmp: {0}, așteptat {1}; găsit {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Tipul {0} dat nu poate fi constrâns la tipul sursă {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Nepotrivire între tipurile sursă și țintă. Așteptat {0}; găsit {1}.</value>
+    
+  </data>
 </root>
