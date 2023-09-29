@@ -301,7 +301,10 @@ namespace Microsoft.PowerFx.Core.Parser
                     {
                         CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingReturnType);
                         udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType: null, new HashSet<UDFArg>(args), body: null, _hasSemicolon, parserOptions.NumberIsFloat, isValid: false));
-                        break;
+
+                        // Return type not found, move to next user definition
+                        MoveToNextUserDefinition();
+                        continue;
                     }
 
                     // <bracs-exp> ::= '{' (((<EXP> ';')+ <EXP>) | <EXP>) (';')? '}'
