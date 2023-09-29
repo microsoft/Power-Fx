@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
+using Xunit.Abstractions;
 
 #pragma warning disable SA1515 // Single-line comment should be preceded by blank line
 #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
@@ -18,6 +20,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
 {
     public class IntellisenseTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public IntellisenseTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Theory]
         // Get list of servers
         [InlineData(1, 1, @"SQL.ExecuteProcedureV2(", @"""default""")]
@@ -53,7 +62,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddActionConnector("SQL", apiDoc);
+            config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
             testConnector.SetResponseFromFile(responseIndex switch
             {
                 0 => null,
@@ -63,7 +72,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 _ => null
             });
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client));
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
 
             CheckResult checkResult = engine.Check(expression, symbolTable: null);
             IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);
@@ -134,7 +143,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddActionConnector("SQL", apiDoc);
+            config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
             if (networkCall > 0)
             {
                 testConnector.SetResponseFromFile(responseIndex switch
@@ -146,7 +155,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             }
 
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client));
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
 
             CheckResult checkResult = engine.Check(expression, symbolTable: null);
             IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);
@@ -199,7 +208,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
                 BaseAddress = client.BaseAddress
             };
             const string cxNamespace = "SQL";
-            config.AddActionConnector(new ConnectorSettings(cxNamespace), apiDoc);
+            config.AddActionConnector(new ConnectorSettings(cxNamespace), apiDoc, new ConsoleLogger(_output));
             if (networkCall > 0)
             {
                 testConnector.SetResponseFromFile(responseIndex switch
@@ -211,7 +220,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             }
 
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider services = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext(cxNamespace, client));
+            BasicServiceProvider services = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext(cxNamespace, client, console: _output));
 
             IPowerFxScope scope = new EditorContextScope((expr) => engine.Check(expression, symbolTable: null)) { Services = services };
             IIntellisenseResult suggestions = scope.Suggest(expression, expression.Length);
@@ -247,7 +256,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "2f0cc19d-893e-e765-b15d-2906e3231c09" /* env */, "6fb0a1a8e2f5487eafbe306821d8377e" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
 
-            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("SP", apiDoc).OrderBy(f => f.Name).ToList();
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("SP", apiDoc, new ConsoleLogger(_output)).OrderBy(f => f.Name).ToList();
 
             // Total 101 functions, including 1 deprecated & 50 internal functions (and no deprecated+internal functions)
             Assert.Equal(101, functions.Count);
@@ -255,7 +264,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(50, functions.Where(f => f.IsInternal).Count());
             Assert.Empty(functions.Where(f => f.IsDeprecated && f.IsInternal));
 
-            IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector("SP", apiDoc);
+            IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector("SP", apiDoc, new ConsoleLogger(_output));
             RecalcEngine engine = new RecalcEngine(config);
 
             CheckResult checkResult = engine.Check("SP.", symbolTable: null);
@@ -287,9 +296,9 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddActionConnector("SQL", apiDoc);
+            config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client));
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
 
             CheckResult checkResult = engine.Check(expression, symbolTable: null);
             IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);

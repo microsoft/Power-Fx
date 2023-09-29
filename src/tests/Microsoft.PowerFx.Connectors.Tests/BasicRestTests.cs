@@ -11,13 +11,22 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Connectors.Tests;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Tests
 {
     // Simulate calling basic REST services, such as ASP.Net + Swashbuckle. 
     public class BasicRestTests : PowerFxTest
     {
+        private readonly ITestOutputHelper _output;
+
+        public BasicRestTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         // Must set the BaseAddress on an httpClient, even if we don't actually use it. 
         // All the Send() methods will enforce this. 
         private static readonly Uri _fakeBaseAddress = new ("http://localhost:5000");
@@ -60,13 +69,13 @@ namespace Microsoft.PowerFx.Tests
             using var testConnector = new LoggingTestServer(swaggerFile);
             testConnector.SetResponseFromFile(@"Responses\HttpCall_1.json");
 
-            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("Test", testConnector._apiDocument).OrderBy(cf => cf.Name).ToList();
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("Test", testConnector._apiDocument, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
             string funcName = new Regex(@"Test.([^(]+)").Match(fxQuery).Groups[1].Value;
             Assert.Equal("*[date:d, index:w, summary:s, temperatureC:w, temperatureF:w]", functions.First(f => funcName == f.Name).ReturnType.ToStringWithDisplayNames());
 
             var config = new PowerFxConfig(Features.PowerFxV1);
             using var httpClient = new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress };
-            config.AddActionConnector("Test", testConnector._apiDocument);
+            config.AddActionConnector("Test", testConnector._apiDocument, new ConsoleLogger(_output));
 
             var engine = new RecalcEngine(config);
 
@@ -75,7 +84,7 @@ namespace Microsoft.PowerFx.Tests
 
             var rConfig = new RuntimeConfig();            
             rConfig.SetTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
-            rConfig.AddRuntimeContext(new TestConnectorRuntimeContext("Test", httpClient));
+            rConfig.AddRuntimeContext(new TestConnectorRuntimeContext("Test", httpClient, console: _output));
 
             var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost, runtimeConfig: rConfig).ConfigureAwait(false);
             Assert.NotNull(result);
@@ -101,7 +110,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
             var apiDoc = testConnector._apiDocument;
 
-            config.AddActionConnector("Test", apiDoc);
+            config.AddActionConnector("Test", apiDoc, new ConsoleLogger(_output));
 
             var engine = new RecalcEngine(config);
 
@@ -119,7 +128,7 @@ namespace Microsoft.PowerFx.Tests
             var apiDoc = Helpers.ReadSwagger(@"Swagger\TestOpenAPI.json");
 
             // If we don't pass httpClient, we can still bind, we just can't invoke.
-            config.AddActionConnector("Test", apiDoc);
+            config.AddActionConnector("Test", apiDoc, new ConsoleLogger(_output));
 
             var engine = new Engine(config);
 
@@ -135,7 +144,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
 
             // Verify we can load the service
-            config.AddActionConnector("PetStore", apiDoc);
+            config.AddActionConnector("PetStore", apiDoc, new ConsoleLogger(_output));
 
             // Ensure we use HTTPS protocol
             Assert.Equal("https", apiDoc.GetScheme().Substring(0, 5));

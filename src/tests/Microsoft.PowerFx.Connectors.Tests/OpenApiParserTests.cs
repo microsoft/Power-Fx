@@ -13,11 +13,19 @@ using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Newtonsoft.Json;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
     public class OpenApiParserTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public OpenApiParserTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public void ACSL_GetFunctionNames()
         {
@@ -29,7 +37,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // OpenAPI spec: Info.Description is optional
             Assert.Equal("Azure Cognitive Service for Language, previously known as 'Text Analytics' connector detects language, sentiment and more of the text you provide.", doc.Info.Description);
 
-            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("ACSL", doc).OrderBy(cf => cf.Name).ToList();
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("ACSL", doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
             Assert.Equal(51, functions.Count);
             ConnectorFunction conversationAnalysisAnalyzeConversationConversation = functions[19];
 
@@ -44,7 +52,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void ACSL_GetFunctionNames22()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language v2.2.json");               
-            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("ACSL", doc).OrderBy(cf => cf.Name).ToList();
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("ACSL", doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
             ConnectorFunction detectSentimentV3 = functions.First(cf => cf.Name == "DetectSentimentV3");
 
             Assert.Equal("Documents", detectSentimentV3.OptionalParameters[0].Summary);
@@ -55,7 +63,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void ACSL_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
-            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.Parse(new ConnectorSettings("ACSL"), doc);
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("ACSL"), doc, new ConsoleLogger(_output));
             Assert.Contains(connectorFunctions, func => func.Namespace == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
         }
@@ -283,6 +291,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language.json");
             OpenApiDocument apiDoc = testConnector._apiDocument;
+            ConsoleLogger logger = new ConsoleLogger(_output);
 
             PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
             ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, apiDoc).OrderBy(cf => cf.Name).ToList()[19];
@@ -304,7 +313,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client);
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client, console: _output);
 
             FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
             httpClient.Dispose();
@@ -319,7 +328,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            BaseRuntimeConnectorContext context2 = new TestConnectorRuntimeContext("ACSL", client2);
+            BaseRuntimeConnectorContext context2 = new TestConnectorRuntimeContext("ACSL", client2, console: _output);
 
             FormulaValue httpResult2 = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context2, CancellationToken.None).ConfigureAwait(false);
 
@@ -371,7 +380,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             OpenApiDocument apiDoc = testConnector._apiDocument;
 
             PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
-            ConnectorFunction[] functions = OpenApiParser.GetFunctions("OpenAI", apiDoc).OrderBy(cf => cf.Name).ToArray();
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions("OpenAI", apiDoc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToArray();
 
             Assert.Equal("ChatCompletionsCreate", functions[0].Name);
             Assert.Equal("![choices:*[finish_reason:s, index:w, message:![content:s, role:s]], created:w, id:s, model:s, object:s, usage:![completion_tokens:w, prompt_tokens:w, total_tokens:w]]", functions[0].ReturnType.ToStringWithDisplayNames());
@@ -388,12 +397,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.1.json");
             OpenApiDocument apiDoc = testConnector._apiDocument;
+            ConsoleLogger logger = new ConsoleLogger(_output);
 
             PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
             using var httpClient = new HttpClient(testConnector);
             testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service for Language v2.1_Response.json");
 
-            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc).OrderBy(cf => cf.Name).ToList()[13];
+            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList()[13];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:w, multipleResolutions:b, offset:w, resolutions:O, text:s, topResolution:O], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
@@ -406,7 +416,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             FormulaValue kind = FormulaValue.New("Conversation");
 
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878", };
-            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client);
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client, console: _output);
             
             FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
 
@@ -595,7 +605,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void LQA_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Language - Question Answering.json");
-            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.Parse(new ConnectorSettings("LQA"), doc);
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("LQA"), doc, new ConsoleLogger(_output));
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "LQA" && func.Name == "GetAnswersFromText");
         }
 
@@ -603,7 +613,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void SQL_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
-            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.Parse(new ConnectorSettings("SQL"), doc);
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("SQL"), doc, new ConsoleLogger(_output));
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "SQL" && func.Name == "GetProcedureV2");
         }
 
@@ -611,7 +621,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void Dataverse_Sample()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\DataverseSample.json");
-            ConnectorFunction[] functions = OpenApiParser.GetFunctions("DV", doc).ToArray();
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions("DV", doc, new ConsoleLogger(_output)).ToArray();
 
             Assert.NotNull(functions);
             Assert.Equal(3, functions.Count());
@@ -663,7 +673,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void VisibilityTest()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\AzureBlobStorage.json");
-            ConnectorFunction[] functions = OpenApiParser.GetFunctions("AzBlob", doc).ToArray();
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions("AzBlob", doc, new ConsoleLogger(_output)).ToArray();
 
             ConnectorFunction createFileV2 = functions.First(f => f.Name == "CreateFileV2");
 
@@ -701,7 +711,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             using HttpClient httpClient = new ();
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
-            ConnectorFunction[] functions = OpenApiParser.GetFunctions("SQL", doc).ToArray();
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions("SQL", doc, new ConsoleLogger(_output)).ToArray();
 
             ConnectorFunction createFileV2 = functions.First(f => f.Name == "ExecuteProcedureV2");
 
@@ -759,9 +769,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var httpClient = new HttpClient(testConnector);            
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4" /* environment Id */, "4bf9a87fc9054b6db3a4d07a1c1f5a5b" /* connectionId */, () => "eyJ0eXAi...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
 
-            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client);
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("SQL", client, console: _output);
 
-            ConnectorFunction[] functions = OpenApiParser.GetFunctions("SQL", testConnector._apiDocument).ToArray();
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions("SQL", testConnector._apiDocument, new ConsoleLogger(_output)).ToArray();
             ConnectorFunction executeProcedureV2 = functions.First(f => f.Name == "ExecuteProcedureV2");
 
             Assert.True(executeProcedureV2.RequiredParameters[0].SupportsDynamicIntellisense);
@@ -786,7 +796,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     new NamedValue("database", FormulaValue.New("connectortest"))
                 },
                 executeProcedureV2.RequiredParameters[2], // procedure
-                context, 
+                runtimeContext, 
                 CancellationToken.None).ConfigureAwait(false);
 
             ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[2];
@@ -803,7 +813,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     new NamedValue("procedure", FormulaValue.New("sp_1"))
                 },
                 executeProcedureV2.RequiredParameters[3], // parameters
-                context,
+                runtimeContext,
                 CancellationToken.None).ConfigureAwait(false);
             
             ConnectorParameterWithSuggestions suggestions2 = parameters2.ParametersWithSuggestions[3];
@@ -821,7 +831,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     new NamedValue("database", FormulaValue.New("connectortest")),
                     new NamedValue("procedure", FormulaValue.New("sp_1"))
                 },            
-                context,
+                runtimeContext,
                 CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(returnType);
@@ -871,7 +881,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
             using var httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1-shared.azure-apim.net", "Default-9f6be790-4a16-4dd6-9850-44a0d2649aef" /* environment Id */, "461a30624723445c9ba87313d8bbefa3" /* connectionId */, () => "eyJ0eXAiO...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
 
-            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("DV", client);
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
 
             ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
             ConnectorFunction createRecord = functions.First(f => f.Name == "CreateRecordWithOrganization");
@@ -883,7 +893,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
                     new NamedValue("organization", FormulaValue.New("https://org283e9949.crm10.dynamics.com")) 
                 },
                 createRecord.RequiredParameters[1], // entityName
-                context,
+                runtimeContext,
                 CancellationToken.None).ConfigureAwait(false);
 
             ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[1];
@@ -899,7 +909,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
                     new NamedValue("entityName", FormulaValue.New("accounts")) 
                 },
                 createRecord.RequiredParameters[2], // item
-                context, 
+                runtimeContext, 
                 CancellationToken.None).ConfigureAwait(false);
 
             ConnectorParameterWithSuggestions suggestions2 = parameters2.ParametersWithSuggestions[2];

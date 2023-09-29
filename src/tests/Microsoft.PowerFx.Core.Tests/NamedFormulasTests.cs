@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
 
             Assert.Equal(namedFormulaCount, parsedNamedFormulasAndUDFs.NamedFormulas.Count());
-            Assert.Equal(udfCount, parsedNamedFormulasAndUDFs.UDFs.Count());
+            Assert.Equal(udfCount, parsedNamedFormulasAndUDFs.UDFs.Count(udf => udf.IsParseValid));
             Assert.Equal(expectErrors, parsedNamedFormulasAndUDFs.HasErrors);
         }
 

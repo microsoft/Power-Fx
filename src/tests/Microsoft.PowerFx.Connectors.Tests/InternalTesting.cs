@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Tests;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -17,11 +18,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
 {
     public class InternalTesting
     {
-        public readonly ITestOutputHelper Console;
+        public readonly ITestOutputHelper _output;
 
         public InternalTesting(ITestOutputHelper output)
         {
-            Console = output;
+            _output = output;
         }
 
         // This test is only meant for internal testing
@@ -42,9 +43,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
             // Locally         : ENV: C:\Data\Power-Fx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Debug\netcoreapp3.1
-            Console.WriteLine($"ENV: {Environment.CurrentDirectory}");
-            Console.WriteLine($"OUT: {outFolder}");
-            Console.WriteLine($"SRC: {srcFolder}");
+            _output.WriteLine($"ENV: {Environment.CurrentDirectory}");
+            _output.WriteLine($"OUT: {outFolder}");
+            _output.WriteLine($"SRC: {srcFolder}");
 
             Directory.CreateDirectory(Path.Combine(outFolder, "report"));
             GenerateReport(reportName, outFolder, srcFolder);
@@ -233,19 +234,19 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 }
             }
 
-            "Stats".Dump(Console);
-            $"Total: {totalConnectors}".Dump(Console);
-            string.Empty.Dump(Console);
-            string.Format("- Supported: {0} - {1:0.00} %", totalGreen + totalOrange, (totalGreen + totalOrange) * 100m / totalConnectors).Dump(Console);
-            string.Format("- Not Supported: {0} - {1:0.00} %", totalRed, totalRed * 100m / totalConnectors).Dump(Console);
-            string.Empty.Dump(Console);
-            $"- Red: {totalRed}".Dump(Console);
-            $"- Orange: {totalOrange}".Dump(Console);
-            $"- Green: {totalGreen}".Dump(Console);
-            string.Empty.Dump(Console);
+            "Stats".Dump(_output);
+            $"Total: {totalConnectors}".Dump(_output);
+            string.Empty.Dump(_output);
+            string.Format("- Supported: {0} - {1:0.00} %", totalGreen + totalOrange, (totalGreen + totalOrange) * 100m / totalConnectors).Dump(_output);
+            string.Format("- Not Supported: {0} - {1:0.00} %", totalRed, totalRed * 100m / totalConnectors).Dump(_output);
+            string.Empty.Dump(_output);
+            $"- Red: {totalRed}".Dump(_output);
+            $"- Orange: {totalOrange}".Dump(_output);
+            $"- Green: {totalGreen}".Dump(_output);
+            string.Empty.Dump(_output);
 
             List<Connector> orderedConnectors = connectors.OrderBy(c => (c.ParseError ? "0" : "1") + c.ConnectorName).ToList();
-            orderedConnectors.Dump(Console);
+            orderedConnectors.Dump(_output);
 
             // JSON export
             string json = JsonSerializer.Serialize(orderedConnectors, new JsonSerializerOptions() { WriteIndented = true });
@@ -324,7 +325,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             White = 3,  // #FFFFFF
         }
 
-        private static void GenerateReport(string reportName, string outFolder, string srcFolder)
+        private void GenerateReport(string reportName, string outFolder, string srcFolder)
         {
             int i = 0;
             int j = 0;
@@ -347,7 +348,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     title = $"{doc.Info.Title} [{swaggerFile}]";
 
                     // Check we can get the functions
-                    IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc);
+                    IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc, new ConsoleLogger(_output));
 
                     allFunctions.Add(title, functions);
                     var config = new PowerFxConfig();
@@ -481,12 +482,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             string swaggerFile = @"c:\data\AAPT-connectors\src\ConnectorPlatform\build-system\SharedTestAssets\Assets\BaselineBuild\locPublish\Connectors\AzureAD\apidefinition.swagger.json";
             OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile);
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc);
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc, new ConsoleLogger(_output));
 
             var config = new PowerFxConfig();
             using var client = new PowerPlatformConnectorClient("firstrelease-001.azure-apim.net", "839eace6-59ab-4243-97ec-a5b8fcc104e4", "72c42ee1b3c7403c8e73aa9c02a7fbcc", () => "Some JWT token") { SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f" };
 
-            config.AddActionConnector("Connector", doc);
+            config.AddActionConnector("Connector", doc, new ConsoleLogger(_output));
         }
     }
 
