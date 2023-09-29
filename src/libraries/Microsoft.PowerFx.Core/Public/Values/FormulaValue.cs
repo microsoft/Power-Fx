@@ -4,7 +4,6 @@
 using System;
 using System.Diagnostics;
 using System.Text;
-using Microsoft.CodeAnalysis.Operations;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
