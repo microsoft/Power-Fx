@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
-using static System.Net.WebRequestMethods;
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
