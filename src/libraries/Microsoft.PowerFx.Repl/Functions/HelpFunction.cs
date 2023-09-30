@@ -14,59 +14,103 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Repl.Functions
 {
     /// <summary>
-    /// Help() function - prints a list of commands. 
+    /// Help() function - "0" for no arguments - prints a list of functions and general help. 
     /// </summary>
-    internal class HelpFunction : ReflectionFunction
+    internal class Help0Function : ReflectionFunction
     {
         private readonly PowerFxREPL _repl;
 
-        public HelpFunction(PowerFxREPL repl)
-            : base()
+        public Help0Function(PowerFxREPL repl)
+                : base("Help", FormulaType.Boolean)
         {
             _repl = repl;
         }
 
-        private async Task WriteAsync(string msg, CancellationToken cancel)
-        {
-            // $$$ Pointer to web URL?
-
-            await _repl.Output.WriteAsync(msg, OutputKind.Notify, cancel)
-                .ConfigureAwait(false);
-        }
-
         public async Task<BooleanValue> Execute(CancellationToken cancel)
         {
-            // $$$ include custom message 
-
-            await WriteAsync("Available functions:\n", cancel)
+            await _repl.HelpProvider.Execute(_repl, cancel)
                 .ConfigureAwait(false);
+
+            return FormulaValue.New(true);
+        }
+    }
+
+    /// <summary>
+    /// Help(string) function - "1" for one argument - prints information on a particular function or topic.
+    /// </summary>
+    internal class Help1Function : ReflectionFunction
+    {
+        private readonly PowerFxREPL _repl;
+
+        public Help1Function(PowerFxREPL repl)
+                : base("Help", FormulaType.Boolean, new[] { FormulaType.String })
+        {
+            _repl = repl;
+        }
+
+        public async Task<BooleanValue> Execute(StringValue context, CancellationToken cancel)
+        {
+            await _repl.HelpProvider.Execute(_repl, cancel, context.Value)
+                .ConfigureAwait(false);
+
+            return FormulaValue.New(true);
+        }
+    }
+
+    public class HelpProvider
+    {
+        public const string FormulaRefURL = "https://aka.ms/Power-Fx-Formula-Reference";
+
+        public static IEnumerable<string> FunctionsList(PowerFxREPL repl)
+        {
+            // Can't use Engine.SupportedFunctions as that doesn't include Engine.AddFunction functions
+            return repl.Engine.GetAllFunctionNames().Concat(repl.MetaFunctions.FunctionNames);
+        }
+
+        public static string FormatFunctionsList(IEnumerable<string> functionList, int numColumns = 5, int leftPadding = 2, int columnWidth = 14)
+        {
+            var stringBuilder = new StringBuilder();
 
             var column = 0;
 
-            // $$$ better helper
-            IEnumerable<string> original =
-                _repl.Engine.SupportedFunctions.FunctionNames
-                    .Concat(_repl.MetaFunctions.FunctionNames);
-
-            var stringBuilder = new StringBuilder();
-
-            var funcNames = original.ToList();
+            var funcNames = functionList.ToList();
             funcNames.Sort();
             foreach (var func in funcNames)
             {
-                stringBuilder.Append($"  {func,-14}");
-                if (++column % 5 == 0)
+                stringBuilder.Append(string.Empty.PadLeft(leftPadding) + func.PadRight(columnWidth));
+                if (++column % numColumns == 0)
                 {
                     stringBuilder.AppendLine();
                 }
             }
 
-            stringBuilder.AppendLine();
+            if (column % numColumns != 0)
+            {
+                stringBuilder.AppendLine();
+            }
 
-            await WriteAsync(stringBuilder.ToString(), cancel)
+            return stringBuilder.ToString();
+        }
+
+        protected async Task WriteAsync(PowerFxREPL repl, string msg, CancellationToken cancel)
+        {
+            await repl.Output.WriteAsync(msg, OutputKind.Notify, cancel)
+                .ConfigureAwait(false);
+        }
+
+        public virtual async Task Execute(PowerFxREPL repl, CancellationToken cancel, string context = null)
+        {
+            // context is set in the 1 argument version of Help(topic), null otherwise
+            // default implementation ignores context and returns the full funciton list
+
+            await WriteAsync(repl, "Available functions (case sensitive):\n", cancel)
+                .ConfigureAwait(false);
+
+            await WriteAsync(repl, FormatFunctionsList(FunctionsList(repl)), cancel)
                     .ConfigureAwait(false);
 
-            return FormulaValue.New(true);
+            await WriteAsync(repl, $"\nFormula reference: {FormulaRefURL}\n\n", cancel)
+                .ConfigureAwait(false);
         }
     }
 }
