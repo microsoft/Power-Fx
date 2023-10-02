@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>A date value for which the ISO week number will be calculated.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Returns a date adjusted by a number of months. The day of the month remains the same but is capped by the number of days in the new month.</value>
+    <comment>Description of 'EDate' function.</comment>
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>date</value>
+    <comment>function_parameter - First parameter for the EDate function - a date value to be adjusted by the specified number of months.</comment>
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>months</value>
+    <comment>function_parameter - Second parameter for the EDate function - number of months by which to change the date.</comment>
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>A date value to be adjusted by the specified number of months.</value>
+    <comment>Description of the first argument to the 'EDate' function.</comment>      
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Number of months by which to change the date. A positive value yields a future date, a negative value a past date, and zero will not change the month.</value>
+    <comment>Description of the second argument to the 'EDate' function.</comment>    
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Returns the last day of the month for a specified date, adjusted by a number of months.</value>
+    <comment>Description of 'EOMonth' function.</comment>
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>date</value>
+    <comment>function_parameter - First parameter for the EOMonth function - a date value to be adjusted by the specified number of months.</comment>
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>months</value>
+    <comment>function_parameter - Second parameter for the EOMonth function - number of months by which to change the date.</comment>
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>A date value to be adjusted by the specified number of months.</value>
+    <comment>Description of the first argument to the 'EOMonth' function.</comment>      
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>>Number of months by which to change the date. A positive value yields a future date, a negative value a past date, and zero will not change the month.</value>
+    <comment>Description of the second argument to the 'EOMonth' function.</comment>     
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Truncates 'number' by rounding toward negative infinity.</value>
     <comment>Description of 'Int' function.</comment>

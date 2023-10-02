@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Repl;
+using Microsoft.PowerFx.Repl.Functions;
 using Microsoft.PowerFx.Repl.Services;
 using Microsoft.PowerFx.Types;
 
@@ -128,6 +129,7 @@ namespace Microsoft.PowerFx
 
                 _standardFormatter = new StandardFormatter();
                 this.ValueFormatter = _standardFormatter;
+                this.HelpProvider = new MyHelpProvider();
 
                 this.AllowSetDefinitions = true;
                 this.EnableSampleUserObject();
@@ -342,6 +344,96 @@ namespace Microsoft.PowerFx
                     Severity = ErrorSeverity.Critical,
                     Message = $"Invalid option name: {option.Value}.  Use \"Option()\" to see available Options enum names."
                 });
+            }
+        }
+
+        private class MyHelpProvider : HelpProvider
+        {
+#pragma warning disable CS0618 // Type or member is obsolete
+            public override async Task Execute(PowerFxREPL repl, CancellationToken cancel, string context = null)
+#pragma warning restore CS0618 // Type or member is obsolete
+            {
+                if (context?.ToLowerInvariant() == "options" || context?.ToLowerInvariant() == "option")
+                {
+                    var msg =
+@"
+Options.FormatTable
+    Displays tables in a tabular format rather than using Table() function notation.
+
+Options.HashCodes        
+    When printing, includes hash codes of each object to better understand references.
+    This can be very helpful for debugging copy-on-mutation semantics.
+
+Options.NumberIsFloat
+    By default, literal numeric values such as ""1.23"" and the return type from the 
+    Value function are treated as decimal values.  Turning this flag on changes that
+    to floating point instead.  To test, ""1e300"" is legal in floating point but not decimal.
+
+Options.LargeCallDepth
+    Expands the call stack for testing complex user defined functions.
+
+Options.StackTrace
+    Displays the full stack trace when an exception is encountered.
+
+Options.PowerFxV1
+    Sets all the feature flags for Power Fx 1.0.
+
+Options.None
+    Removed all the feature flags, which is even less than Canvas uses.
+
+";
+
+                    await WriteAsync(repl, msg, cancel)
+                        .ConfigureAwait(false);
+
+                    return;
+                }
+
+                var pre =
+@"
+<formula> alone is evaluated and the result displayed.
+    Example: 1+1 or ""Hello, World""
+Set( <identifier>, <formula> ) creates or changes a variable's value.
+    Example: Set( x, x+1 )
+
+<identifier> = <formula> defines a named formula with automatic recalc.
+    Example: F = m * a
+
+Available functions (case sensitive):
+";
+
+                var post =
+@"
+Available operators: = <> <= >= + - * / % ^ && And || Or ! Not in exactin 
+
+Record syntax is { < field >: < value >, ... } without quoted field names.
+    Example: { Name: ""Joe"", Age: 29 }
+Use the Table function for a list of records.  
+    Example: Table( { Name: ""Joe"" }, { Name: ""Sally"" } )
+Use [ <value>, ... ] for a single column table, field name is ""Value"".
+    Example: [ 1, 2, 3 ] 
+Records and Tables can be arbitrarily nested.
+
+Use Option( Options.FormatTable, false ) to disable table formatting.
+Use Option() to see the list of all options with their current value.
+Use Help( ""Options"" ) for more information.
+
+Once a formula is defined or a variable's type is defined, it cannot be changed.
+Use Reset() to clear all formulas and variables.
+
+";
+
+                await WriteAsync(repl, pre, cancel)
+                    .ConfigureAwait(false);
+
+                await WriteAsync(repl, FormatFunctionsList(FunctionsList(repl)), cancel)
+                    .ConfigureAwait(false);
+
+                await WriteAsync(repl, $"\nFormula reference: {FormulaRefURL}\n", cancel)
+                    .ConfigureAwait(false);
+
+                await WriteAsync(repl, post, cancel)
+                    .ConfigureAwait(false);
             }
         }
     }
