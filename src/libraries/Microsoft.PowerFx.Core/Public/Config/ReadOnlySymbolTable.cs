@@ -297,6 +297,9 @@ namespace Microsoft.PowerFx
         // ComposedReadOnlySymbolTable will handle composition by looking up in each symbol table. 
         private protected EnumStoreBuilder _enumStoreBuilder;
         private EnumSymbol[] _enumSymbolCache;
+        protected HashSet<string> _userDefinedFunctions;
+
+        public IEnumerable<string> UserDefinedFunctionNames => _userDefinedFunctions;
 
         private EnumSymbol[] GetEnumSymbolSnapshot
         {

@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
     /// <summary>
     /// Lookup info for parameters in user defined functions.
     /// </summary>
-    internal sealed class UDFParameterInfo
+    internal sealed class UDFParameterInfo : ISymbolSlot
     {
         public readonly DType Type;
         public readonly int ArgIndex;
@@ -25,5 +25,9 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             ArgIndex = argIndex;
             Name = name;
         }
+
+        public ReadOnlySymbolTable Owner => throw new System.NotImplementedException();
+
+        public int SlotIndex => ArgIndex;
     }
 }

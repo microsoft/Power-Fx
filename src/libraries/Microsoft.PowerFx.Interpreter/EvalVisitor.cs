@@ -7,11 +7,15 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
@@ -267,15 +271,31 @@ namespace Microsoft.PowerFx
             {                
                 return await asyncConnectorTexlFunction.InvokeAsync(args, _services, _cancellationToken).ConfigureAwait(false);
             }
-            else if (func is UserDefinedTexlFunction udtf)
-            {
-                // $$$ Should add _runtimeConfig
-                result = await udtf.InvokeAsync(args, _cancellationToken, context.StackDepthCounter.Increment()).ConfigureAwait(false);
-            }
             else if (func is CustomTexlFunction customTexlFunc)
             {
                 // If custom function throws an exception, don't catch it - let it propagate up to the host.
                 result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken).ConfigureAwait(false);
+            }
+            else if (func is UserDefinedFunction userDefinedFunc)
+            {
+                //result = await userDefinedFunc.InvokeAsync(args, _cancellationToken, context.IncrementStackDepthCounter()).ConfigureAwait(false);
+                userDefinedFunc.BindBody();
+
+                (var irnode, var ruleScopeSymbol) = userDefinedFunc.GetIRTranslator();
+
+                var expr = new ParsedExpression(irnode, ruleScopeSymbol, context.StackDepthCounter)
+                {
+                    _allSymbols = userDefinedFunc.AllSymbols
+                };
+
+                //var runtimeConfig = new RuntimeConfig(ComposedReadOnlySymbolValues.NewFromRecord(userDefinedFunc.AllSymbols, userDefinedFunc.GetRuntimeRecordValue(args, _cancellationToken)));
+
+                var runtimeConfig = new RuntimeConfig(ReadOnlySymbolValues.NewFromRecord(userDefinedFunc.GetRuntimeRecordValue(args, _cancellationToken)));
+
+                //ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(false, userDefinedFunc.AllSymbols, runtimeConfig?.Values);
+
+                //result = expr.Eval(ReadOnlySymbolValues.NewFromRecord(userDefinedFunc.GetRuntimeRecordValue(args, _cancellationToken)));
+                result = expr.Eval(userDefinedFunc.AllSymbols.CreateValues());
             }
             else
             {
@@ -728,6 +748,8 @@ namespace Microsoft.PowerFx
                     }
 
                     return hostObj;
+                case UDFParameterInfo parm:
+                    return this.GetVariableOrFail(node, parm);
                 default:
                     return ResolvedObjectHelpers.ResolvedObjectError(node);
             }

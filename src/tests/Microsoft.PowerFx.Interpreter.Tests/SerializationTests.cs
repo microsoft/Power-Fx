@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
@@ -18,6 +19,34 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class SerializationTests : PowerFxTest
     {
+        [Fact]
+        public void DateT3333333333333imeSerializationTests()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+            var script = "Add(x: Number, y:Number): Number = (x + y); Foo(x: Number): Number = Abs(x); y = 2;";
+
+            //engine.UpdateVariable("z", FormulaValue.New(10));
+            config.SymbolTable.AddUserFunction(script, CultureInfo.CurrentCulture);
+
+            //var check = engine.Check("Add(1,2)");
+            //Assert.True(check.IsSuccess);
+
+            //check = engine.Check("Foo(1)");
+            //Assert.True(check.IsSuccess);
+
+            //check = engine.Check("y");
+            //Assert.True(check.IsSuccess);
+
+            var check = engine.Check("Foo(Add(1,2))");
+
+            Assert.True(check.IsSuccess);
+
+            var result = check.GetEvaluator().Eval();
+
+            Assert.IsNotType<ErrorValue>(result);
+        }
+
         [Fact]
         public void DateTimeSerializationTests()
         {

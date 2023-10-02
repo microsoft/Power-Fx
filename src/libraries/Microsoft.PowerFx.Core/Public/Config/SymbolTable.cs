@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Annotations;
@@ -14,6 +16,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -278,6 +281,18 @@ namespace Microsoft.PowerFx
             EnumStoreBuilder?.WithRequiredEnums(new TexlFunctionSet(function));
         }
 
+        internal void AddUserFunction(TexlFunction function)
+        {
+            AddFunction(function);
+
+            if (_userDefinedFunctions == null)
+            {
+                _userDefinedFunctions = new HashSet<string>();
+            }
+
+            _userDefinedFunctions.Add(function.Name);
+        }
+
         internal EnumStoreBuilder EnumStoreBuilder
         {
             get => _enumStoreBuilder;
@@ -353,6 +368,22 @@ namespace Microsoft.PowerFx
                 displayName: default);
 
             _variables.Add(hostDName, info);
+        }
+
+        internal void AddUserFunction(string script, CultureInfo locale)
+        {
+            if (UserDefinitions.ProcessUserDefinitions(script, new ParserOptions() { AllowsSideEffects = true, Culture = locale }, out var userDefinitionResult) && !userDefinitionResult.HasErrors)
+            {
+                foreach (var udf in userDefinitionResult.UDFs)
+                {
+                    //udf.BindBody(this, new Glue2DocumentBinderGlue(), BindingConfig.Default);
+                    AddUserFunction(udf);
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException(string.Join(", ", userDefinitionResult.Errors.Select(er => er.ShortMessage)));
+            }
         }
     }
 }
