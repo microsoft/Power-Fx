@@ -2,17 +2,10 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -2550,7 +2543,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static async ValueTask<FormulaValue> PowerFxVersion(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            IEnumerable<Assembly> powerFxAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.StartsWith("Microsoft.PowerFx", StringComparison.OrdinalIgnoreCase));
+            IEnumerable<Assembly> powerFxAssemblies = AssemblyRegistrar.AssemblyList;
             string versions = string.Join(", ", powerFxAssemblies.OrderBy(a => a.ManifestModule.Name).Select(a => $"{a.ManifestModule.Name} {a.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.Split('+')[0]}"));
             return new StringValue(irContext, versions);
         }
