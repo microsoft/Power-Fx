@@ -26,6 +26,7 @@ namespace Microsoft.PowerFx.Connectors
         public const string ContentType_XWwwFormUrlEncoded = "application/x-www-form-urlencoded";
         public const string ContentType_ApplicationJson = "application/json";
         public const string ContentType_ApplicationOctetStream = "application/octet-stream";
+        public const string ContentType_TextCsv = "text/csv";
         public const string ContentType_TextPlain = "text/plain";
         public const string ContentType_Any = "*/*";
 
@@ -557,7 +558,8 @@ namespace Microsoft.PowerFx.Connectors
                 if (string.Equals(mediaType, ContentType_ApplicationJson, StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(mediaType, ContentType_TextPlain, StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(mediaType, ContentType_Any, StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(mediaType, ContentType_ApplicationOctetStream, StringComparison.OrdinalIgnoreCase))
+                    string.Equals(mediaType, ContentType_ApplicationOctetStream, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(mediaType, ContentType_TextCsv, StringComparison.OrdinalIgnoreCase))
                 {
                     if (openApiMediaType.Schema == null)
                     {
