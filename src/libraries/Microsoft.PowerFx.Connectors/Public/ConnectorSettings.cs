@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Connectors
 
         // Swagger File Conformity
         // - parameters appear in the order specified in the swagger file
-        // - internal visible parameters are completely hidden
+        // - internal visible parameters are completely hidden (required/optional, with or without default value)
         SwaggerCompatibility = 2
     }
 }
