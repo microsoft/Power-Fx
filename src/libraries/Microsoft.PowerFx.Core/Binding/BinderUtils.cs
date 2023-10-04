@@ -270,17 +270,17 @@ namespace Microsoft.PowerFx.Core.Binding
         /// </summary>
         /// <param name="errorContainer">Errors will be reported here.</param>
         /// <param name="node">Node for which we are checking the type.</param>
-        /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
-        /// primitive Accepts relationships).</param>
+        /// <param name="features">Controls set of enabled/disabled features.</param>
         /// <param name="type">The type for node.</param>
         /// <param name="alternateTypes">List of acceptable types for this operation, in order of suitability.</param>
         /// <returns></returns>
-        private static BinderCheckTypeResult CheckComparisonTypeOneOfCore(IErrorContainer errorContainer, TexlNode node, bool usePowerFxV1CompatibilityRules, DType type, params DType[] alternateTypes)
+        private static BinderCheckTypeResult CheckComparisonTypeOneOfCore(IErrorContainer errorContainer, TexlNode node, Features features, DType type, params DType[] alternateTypes)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(alternateTypes);
             Contracts.Assert(alternateTypes.Any());
 
+            var usePowerFxV1CompatibilityRules = features.PowerFxV1CompatibilityRules;
             var coercions = new List<BinderCoercionResult>();
 
             foreach (var altType in alternateTypes)
@@ -293,19 +293,22 @@ namespace Microsoft.PowerFx.Core.Binding
                 return new BinderCheckTypeResult();
             }
 
-            // If the node is a control, we may be able to coerce its primary output property
-            // to the desired type, and in the process support simplified syntax such as: slider2 <= slider4
-            IExternalControlProperty primaryOutProp;
-            if (type is IExternalControlType controlType && node.AsFirstName() != null && (primaryOutProp = controlType.ControlTemplate.PrimaryOutputProperty) != null)
+            if (!features.PrimaryOutputPropertyCoercionDeprecated)
             {
-                var outType = primaryOutProp.GetOpaqueType();
-                var acceptedType = alternateTypes.FirstOrDefault(alt => alt.Accepts(outType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-                if (acceptedType != default)
+                // If the node is a control, we may be able to coerce its primary output property
+                // to the desired type, and in the process support simplified syntax such as: slider2 <= slider4
+                IExternalControlProperty primaryOutProp;
+                if (type is IExternalControlType controlType && node.AsFirstName() != null && (primaryOutProp = controlType.ControlTemplate.PrimaryOutputProperty) != null)
                 {
-                    // We'll coerce the control to the desired type, by pulling from the control's
-                    // primary output property. See codegen for details.
-                    coercions.Add(new BinderCoercionResult() { Node = node, CoercedType = acceptedType });
-                    return new BinderCheckTypeResult() { Coercions = coercions };
+                    var outType = primaryOutProp.GetOpaqueType();
+                    var acceptedType = alternateTypes.FirstOrDefault(alt => alt.Accepts(outType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                    if (acceptedType != default)
+                    {
+                        // We'll coerce the control to the desired type, by pulling from the control's
+                        // primary output property. See codegen for details.
+                        coercions.Add(new BinderCoercionResult() { Node = node, CoercedType = acceptedType });
+                        return new BinderCheckTypeResult() { Coercions = coercions };
+                    }
                 }
             }
 
@@ -315,12 +318,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
         // Returns whether the node was of the type wanted, and reports appropriate errors.
         // A list of allowed alternate types specifies what other types of values can be coerced to the wanted type.
-        private static BinderCheckTypeResult CheckTypeCore(IErrorContainer errorContainer, TexlNode node, bool usePowerFxV1CompatibilityRules, DType nodeType, DType typeWant, params DType[] alternateTypes)
+        private static BinderCheckTypeResult CheckTypeCore(IErrorContainer errorContainer, TexlNode node, Features features, DType nodeType, DType typeWant, params DType[] alternateTypes)
         {
             Contracts.AssertValue(node);
             Contracts.Assert(typeWant.IsValid || typeWant == DType.Deferred);
             Contracts.Assert(!typeWant.IsError);
             Contracts.AssertValue(alternateTypes);
+
+            var usePowerFxV1CompatibilityRules = features.PowerFxV1CompatibilityRules;
 
             var coercions = new List<BinderCoercionResult>();
 
@@ -353,18 +358,21 @@ namespace Microsoft.PowerFx.Core.Binding
                 return new BinderCheckTypeResult() { Coercions = coercions };
             }
 
-            // If the node is a control, we may be able to coerce its primary output property
-            // to the desired type, and in the process support simplified syntax such as: label1 + slider4
-            IExternalControlProperty primaryOutProp;
-            if (nodeType is IExternalControlType controlType && node.AsFirstName() != null && (primaryOutProp = controlType.ControlTemplate.PrimaryOutputProperty) != null)
+            if (!features.PrimaryOutputPropertyCoercionDeprecated)
             {
-                var outType = primaryOutProp.GetOpaqueType();
-                if (typeWant.Accepts(outType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || alternateTypes.Any(alt => alt.Accepts(outType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+                // If the node is a control, we may be able to coerce its primary output property
+                // to the desired type, and in the process support simplified syntax such as: label1 + slider4
+                IExternalControlProperty primaryOutProp;
+                if (nodeType is IExternalControlType controlType && node.AsFirstName() != null && (primaryOutProp = controlType.ControlTemplate.PrimaryOutputProperty) != null)
                 {
-                    // We'll "coerce" the control to the desired type, by pulling from the control's
-                    // primary output property. See codegen for details.
-                    coercions.Add(new BinderCoercionResult() { Node = node, CoercedType = typeWant });
-                    return new BinderCheckTypeResult() { Coercions = coercions };
+                    var outType = primaryOutProp.GetOpaqueType();
+                    if (typeWant.Accepts(outType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || alternateTypes.Any(alt => alt.Accepts(outType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+                    {
+                        // We'll "coerce" the control to the desired type, by pulling from the control's
+                        // primary output property. See codegen for details.
+                        coercions.Add(new BinderCoercionResult() { Node = node, CoercedType = typeWant });
+                        return new BinderCheckTypeResult() { Coercions = coercions };
+                    }
                 }
             }
 

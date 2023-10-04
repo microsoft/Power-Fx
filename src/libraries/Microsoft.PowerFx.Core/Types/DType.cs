@@ -2448,19 +2448,19 @@ namespace Microsoft.PowerFx.Core.Types
         // Produces the union of the two given types.
         // For primitive types, this is the same as the least common supertype.
         // For aggregates, the union is a common subtype that includes fields from both types, assuming no errors.
-        public static DType Union(DType type1, DType type2, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
+        public static DType Union(DType type1, DType type2, bool useLegacyDateTimeAccepts, Features features)
         {
             var fError = false;
             return Union(ref fError, type1, type2, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, usePowerFxV1CompatibilityRules);
         }
 
-        public bool CanUnionWith(DType type, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
+        public bool CanUnionWith(DType type, bool useLegacyDateTimeAccepts, Features features)
         {
             AssertValid();
             type.AssertValid();
 
             var fError = false;
-            Union(ref fError, this, type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
+            Union(ref fError, this, type, useLegacyDateTimeAccepts, features);
 
             return !fError;
         }
@@ -2689,7 +2689,7 @@ namespace Microsoft.PowerFx.Core.Types
             return false;
         }
 
-        public static DType Union(ref bool fError, DType leftType, DType rightType, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules, bool allowCoerce = false, bool unionToLeftTypeOnly = false)
+        public static DType Union(ref bool fError, DType leftType, DType rightType, bool useLegacyDateTimeAccepts, Features features, bool allowCoerce = false, bool unionToLeftTypeOnly = false)
         {
             leftType.AssertValid();
             rightType.AssertValid();
@@ -2756,8 +2756,8 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (unionToLeftTypeOnly)
             {
-                if (leftType.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)
-                    || (allowCoerce && rightType.CoercesTo(leftType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+                if (leftType.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: features.PowerFxV1CompatibilityRules)
+                    || (allowCoerce && rightType.CoercesTo(leftType, aggregateCoercion: true, isTopLevelCoercion: false, features: features)))
                 {
                     fError |= leftType.IsError;
                     return CreateDTypeWithConnectedDataSourceInfoMetadata(leftType, rightType.AssociatedDataSources, rightType.DisplayNameProvider);
@@ -2765,27 +2765,27 @@ namespace Microsoft.PowerFx.Core.Types
             }
             else
             {
-                if (leftType.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)
-                    || (allowCoerce && leftType.CoercesTo(rightType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+                if (leftType.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: features.PowerFxV1CompatibilityRules)
+                    || (allowCoerce && leftType.CoercesTo(rightType, aggregateCoercion: true, isTopLevelCoercion: false, features: features)))
                 {
                     fError |= leftType.IsError;
                     return CreateDTypeWithConnectedDataSourceInfoMetadata(leftType, rightType.AssociatedDataSources, rightType.DisplayNameProvider);
                 }
 
-                if (rightType.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
-                    (allowCoerce && rightType.CoercesTo(leftType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+                if (rightType.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: features.PowerFxV1CompatibilityRules) ||
+                    (allowCoerce && rightType.CoercesTo(leftType, aggregateCoercion: true, isTopLevelCoercion: false, features: features)))
                 {
                     fError |= rightType.IsError;
                     return CreateDTypeWithConnectedDataSourceInfoMetadata(rightType, leftType.AssociatedDataSources, leftType.DisplayNameProvider);
                 }
             }
 
-            var result = Supertype(leftType, rightType, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
+            var result = Supertype(leftType, rightType, useLegacyDateTimeAccepts, features);
             fError = result == Error;
             return result;
         }
 
-        private static DType UnionCore(ref bool fError, DType leftType, DType rightType, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules, bool allowCoerce, bool unionToLeftTypeOnly)
+        private static DType UnionCore(ref bool fError, DType leftType, DType rightType, bool useLegacyDateTimeAccepts, Features features, bool allowCoerce, bool unionToLeftTypeOnly)
         {
             leftType.AssertValid();
             Contracts.Assert(leftType.IsAggregate);
@@ -2817,7 +2817,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
                 else if (field1Type.IsAggregate && field2Type.IsAggregate)
                 {
-                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce, unionToLeftTypeOnly);
+                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, features, allowCoerce, unionToLeftTypeOnly);
                 }
                 else if (field1Type.IsAggregate || field2Type.IsAggregate)
                 {
@@ -2846,7 +2846,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
                 else
                 {
-                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce, unionToLeftTypeOnly);
+                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, features, allowCoerce, unionToLeftTypeOnly);
                 }
 
                 result = result.SetType(ref fError, DPath.Root.Append(field2Name), fieldType);
@@ -3114,17 +3114,17 @@ namespace Microsoft.PowerFx.Core.Types
                 (n.Type.IsAggregate && n.Type.ContainsControlType(DPath.Root)));
         }
 
-        public bool CoercesTo(DType typeDest, bool aggregateCoercion, bool isTopLevelCoercion, bool usePowerFxV1CompatibilityRules)
+        public bool CoercesTo(DType typeDest, bool aggregateCoercion, bool isTopLevelCoercion, Features features)
         {
-            return CoercesTo(typeDest, out _, aggregateCoercion, isTopLevelCoercion, usePowerFxV1CompatibilityRules);
+            return CoercesTo(typeDest, out _, aggregateCoercion, isTopLevelCoercion, features);
         }
 
-        public bool CoercesTo(DType typeDest, out bool isSafe, bool aggregateCoercion, bool isTopLevelCoercion, bool usePowerFxV1CompatibilityRules)
+        public bool CoercesTo(DType typeDest, out bool isSafe, bool aggregateCoercion, bool isTopLevelCoercion, Features features)
         {
-            return CoercesTo(typeDest, out isSafe, out _, out _, out _, aggregateCoercion, isTopLevelCoercion, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            return CoercesTo(typeDest, out isSafe, out _, out _, out _, aggregateCoercion, isTopLevelCoercion, features);
         }
 
-        public bool AggregateCoercesTo(DType typeDest, out bool isSafe, out DType coercionType, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, bool aggregateCoercion = true, bool usePowerFxV1CompatibilityRules = false)
+        public bool AggregateCoercesTo(DType typeDest, out bool isSafe, out DType coercionType, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, Features features, bool aggregateCoercion = true)
         {
             Contracts.Assert(IsAggregate);
 
@@ -3169,7 +3169,7 @@ namespace Microsoft.PowerFx.Core.Types
                     out schemaDifferenceType,
                     aggregateCoercion: true,
                     isTopLevelCoercion: false,
-                    usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                    features);
             }
 
             if (Kind != typeDest.Kind)
@@ -3204,7 +3204,7 @@ namespace Microsoft.PowerFx.Core.Types
                         out var fieldSchemaDifferenceType,
                         aggregateCoercion,
                         isTopLevelCoercion: false,
-                        usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                        features);
 
                     // This is the attempted coercion type.  If we fail, we need to know this for error handling
                     coercionType = coercionType.Add(typedName.Name, fieldCoercionType);
@@ -3220,7 +3220,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                     isValid &= isFieldValid;
                 }
-                else if (usePowerFxV1CompatibilityRules)
+                else if (features.PowerFxV1CompatibilityRules)
                 {
                     coercionType = coercionType.Add(typedName.Name, typedName.Type);
                 }
@@ -3246,7 +3246,7 @@ namespace Microsoft.PowerFx.Core.Types
             out DType schemaDifferenceType,
             bool aggregateCoercion,
             bool isTopLevelCoercion,
-            bool usePowerFxV1CompatibilityRules)
+            Features features)
         {
             AssertValid();
             Contracts.Assert(typeDest.IsValid);
@@ -3317,7 +3317,8 @@ namespace Microsoft.PowerFx.Core.Types
                 out coercionType,
                 ref schemaDifference,
                 ref schemaDifferenceType,
-                usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules,
+                primaryOutputPropertyCoercionDeprecated: primaryOutputPropertyCoercionDeprecated);
             if (subtypeCoerces.HasValue)
             {
                 return subtypeCoerces.Value;
@@ -3507,7 +3508,8 @@ namespace Microsoft.PowerFx.Core.Types
                         out schemaDifferenceType,
                         aggregateCoercion: true,
                         isTopLevelCoercion: false,
-                        usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                        usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules,
+                        primaryOutputPropertyCoercionDeprecated: primaryOutputPropertyCoercionDeprecated);
                 case DKind.OptionSetValue:
                     doesCoerce = (typeDest.OptionSetInfo?.IsBooleanValued() ?? false) && Kind == DKind.Boolean && !isTopLevelCoercion;
                     break;
@@ -3525,7 +3527,7 @@ namespace Microsoft.PowerFx.Core.Types
             return doesCoerce;
         }
 
-        protected virtual bool? SubtypeCoercesTo(DType typeDest, ref bool isSafe, out DType coercionType, ref KeyValuePair<string, DType> schemaDifference, ref DType schemaDifferenceType, bool usePowerFxV1CompatibilityRules = false)
+        protected virtual bool? SubtypeCoercesTo(DType typeDest, ref bool isSafe, out DType coercionType, ref KeyValuePair<string, DType> schemaDifference, ref DType schemaDifferenceType, bool usePowerFxV1CompatibilityRules = false, bool primaryOutputPropertyCoercionDeprecated = true)
         {
             coercionType = null;
             return null;

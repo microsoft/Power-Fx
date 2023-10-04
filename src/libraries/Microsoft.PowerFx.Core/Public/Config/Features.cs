@@ -62,6 +62,12 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool FirstLastNRequiresSecondArguments { get; set; }
 
+        /// <summary>
+        /// Removes support for coercing a control to it's primary output property. 
+        /// This only impacts PA Client scenarios, but some code still lives in PFx. 
+        /// </summary>
+        internal bool PrimaryOutputPropertyCoercionDeprecated { get; set; }
+
         internal bool PowerFxV1CompatibilityRules { get; set; }
 
         internal static Features None => new Features();
@@ -76,6 +82,7 @@ namespace Microsoft.PowerFx
             RestrictedIsEmptyArguments = true,
             FirstLastNRequiresSecondArguments = true,
             PowerFxV1CompatibilityRules = true,
+            PrimaryOutputPropertyCoercionDeprecated = true,
         };
 
         internal Features()

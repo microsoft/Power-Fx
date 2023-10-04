@@ -47,6 +47,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (argTypes[0] is IExternalControlType controlType)
             {
+                if (context.Features.PrimaryOutputPropertyCoercionDeprecated)
+                {
+                    return false;
+                }
+
+                // If primary output property coercion is enabled,
                 // A control will never be null. It never worked as intended.
                 // We coerce the control to control.primaryOutProperty.
                 var primaryOutputProperty = controlType.ControlTemplate.VerifyValue().PrimaryOutputProperty;
