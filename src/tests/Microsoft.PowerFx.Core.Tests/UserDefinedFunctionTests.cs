@@ -203,6 +203,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData(@"A(a:Number, b:/*comment*/Number):Number = 12;b(a:Number): = 1;c(a:Number):Number = 100;x = 10;", 1, 2, 1)]
         [InlineData(@"A(a:Number, b:/*comment*/Number):Number = 12;b(a:):Number = 1;c(a:Number):Number = 100;", 0, 2, 1)]
         [InlineData("a = Abs(1.2);\nAdd(a: Number, b: Number):/* Number */Number", 1, 0, 1)]
+        [InlineData("a = Abs(1.2);\nAdd(a: Number, b: Number):/* Number */Number = a + b;", 1, 1, 0)]
 
         public void TestParseUserDefinitionsCountswithIncompleteUDFs(string script, int nfCount, int validUDFCount, int inValidUDFCount)
         {
