@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>A dátumérték, amelyhez a rendszer kiszámítja az ISO szerinti hétszámot.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>A hónapok száma által helyesbített dátumot adja vissza. A hónap napja változatlan marad, de az új hónap napjainak száma jelenti a felső határértéket.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>dátum</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>hónap</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Ezt a dátumot kell módosítani a megadott számú hónappal.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Azon hónapok száma, amelyekkel a dátumot módosítani kell. A pozitív érték jövőbeli dátumot, a negatív érték múltbeli dátumot eredményez, a nulla pedig nem módosítja a hónapot.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>A hónap utolsó napját adja vissza egy adott dátumra vonatkozóan, amelyet több hónappal módosított.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>dátum</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>hónap</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Ezt a dátumot kell módosítani a megadott számú hónappal.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Azon hónapok száma, amelyekkel a dátumot módosítani kell. A pozitív érték jövőbeli dátumot, a negatív érték múltbeli dátumot eredményez, a nulla pedig nem módosítja a hónapot.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>A szám csonkolása a negatív végtelen felé kerekítéssel.</value>
     

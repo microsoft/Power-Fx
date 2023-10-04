@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Giá trị ngày để tính số tuần ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Trả về một ngày được điều chỉnh theo số tháng. Ngày trong tháng vẫn giữ nguyên nhưng bị giới hạn bởi số ngày trong tháng mới.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>ngày</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>tháng</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Giá trị ngày được điều chỉnh theo số tháng được chỉ định.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Số tháng để thay đổi ngày. Giá trị dương sẽ cho ra một ngày trong tương lai, giá trị âm sẽ cho ra một ngày trong quá khứ và số 0 sẽ giữ nguyên tháng.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Trả về ngày cuối cùng trong tháng cho một ngày được chỉ định, được điều chỉnh theo số tháng.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>ngày</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>tháng</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Giá trị ngày được điều chỉnh theo số tháng được chỉ định.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Số tháng để thay đổi ngày. Giá trị dương sẽ cho ra một ngày trong tương lai, giá trị âm sẽ cho ra một ngày trong quá khứ và số 0 sẽ giữ nguyên tháng.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Cắt bớt 'số' bằng cách làm tròn về phía âm vô cực.</value>
     

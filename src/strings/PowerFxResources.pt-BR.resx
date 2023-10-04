@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Um valor de data para o qual o número da semana ISO será calculado.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Retorna uma data ajustada por um número de meses. O dia do mês permanece igual, mas é limitado pelo número de dias do novo mês.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>meses</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Valor de data a ser ajustado pelo número de meses especificado.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Número de meses para alterar a data. Um valor positivo gera uma data futura, um valor negativo uma data no passado e zero não alterará o mês.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Retorna o último dia do mês para uma data especificada, ajustada por um número de meses.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>meses</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Valor de data a ser ajustado pelo número de meses especificado.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Número de meses para alterar a data. Um valor positivo gera uma data futura, um valor negativo uma data no passado e zero não alterará o mês.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Trunca o 'número' por arredondamento para infinidade negativa.</value>
     
