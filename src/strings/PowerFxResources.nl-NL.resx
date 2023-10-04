@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Een datumwaarde waarvoor het ISO-weeknummer wordt berekend.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Retourneert een datum die is aangepast met een aantal maanden. De dag van de maand is gelijk, maar wordt begrensd door het aantal dagen in de nieuwe maand.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>datum</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>maanden</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Een datumwaarde die moet worden aangepast aan het opgegeven aantal maanden.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Aantal maanden waarmee de datum moet worden gewijzigd. Een positieve waarde heeft een datum in de toekomst, een negatieve waarde een datum in het verleden en nul wijzigt de maand niet.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Retourneert de laatste dag van de maand voor een opgegeven datum, aangepast door een aantal maanden.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>datum</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>maanden</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Een datumwaarde die moet worden aangepast aan het opgegeven aantal maanden.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Aantal maanden waarmee de datum moet worden gewijzigd. Een positieve waarde heeft een datum in de toekomst, een negatieve waarde een datum in het verleden en nul wijzigt de maand niet.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Getal wordt afgekapt door afronding op een negatieve oneindigheid.</value>
     

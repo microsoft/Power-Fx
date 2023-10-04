@@ -66,8 +66,34 @@ namespace Microsoft.PowerFx.Connectors.Tests
             (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("ACSL"), doc, new ConsoleLogger(_output));
             Assert.Contains(connectorFunctions, func => func.Namespace == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
+
+            ConnectorFunction func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");            
+            Assert.Equal("analysisInput:![documents:*[id:s, language:s, text:s]]|task:![parameters:![deploymentName:s, projectName:s]]", string.Join("|", func1.RequiredParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));
+            Assert.Equal("displayName:s", string.Join("|", func1.OptionalParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type.ToString()}")));
+
+            (connectorFunctions, texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc, new ConsoleLogger(_output));
+            Assert.Contains(connectorFunctions, func => func.Namespace == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
+            Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
+
+            func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");
+            Assert.Equal("analysisInput:![documents:*[id:s, language:s, text:s]]|task:![parameters:![deploymentName:s, projectName:s]]", string.Join("|", func1.RequiredParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));
+            Assert.Empty(func1.OptionalParameters);
         }
 
+        [Fact]
+        public void SF_TextCsv()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SalesForce.json");
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("SF") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc, new ConsoleLogger(_output));
+
+            // function returns text/csv
+            ConnectorFunction func1 = connectorFunctions.First(f => f.Name == "GetJobRecordResults");
+            ConnectorType returnType = func1.ReturnParameterType;
+
+            // returns a string
+            Assert.Equal("s", returnType.FormulaType._type.ToString());
+        }
+        
 #pragma warning disable SA1118, SA1117, SA1119, SA1137
 
         [Fact]
