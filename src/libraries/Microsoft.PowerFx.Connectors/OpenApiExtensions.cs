@@ -139,13 +139,13 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     defaultValue = FormulaValue.NewTable(recordType, itemDefaultRecordValue);
                     return true;
-                }               
-                    
+                }
+
                 defaultValue = FormulaValue.NewTable(recordType, FormulaValue.NewRecordFromFields(new NamedValue[] { new NamedValue(TableValue.ValueName, itemDefaultValue) }));
                 return true;
             }
 
-            if (schema.Type == "object" || schema.Default == null) 
+            if (schema.Type == "object" || schema.Default == null)
             {
                 if (formulaType is RecordType recordType2 && schema.Properties != null)
                 {
@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     defaultValue = values.Any(v => v.Value is not BlankValue) ? FormulaValue.NewRecordFromFields(values) : FormulaValue.NewBlank(recordType2);
-                    return true;                    
+                    return true;
                 }
 
                 if (schema.Default == null)
@@ -177,9 +177,9 @@ namespace Microsoft.PowerFx.Connectors
                     defaultValue = null;
                     return false;
                 }
-            }           
+            }
 
-            return TryGetOpenApiValue(schema.Default, formulaType, out defaultValue);            
+            return TryGetOpenApiValue(schema.Default, formulaType, out defaultValue);
         }
 
         internal static bool TryGetOpenApiValue(IOpenApiAny openApiAny, FormulaType formulaType, out FormulaValue formulaValue)
@@ -210,17 +210,17 @@ namespace Microsoft.PowerFx.Connectors
                     else if (formulaType is NumberType && double.TryParse(str.Value, out double dbl))
                     {
                         formulaValue = FormulaValue.New(dbl);
-                    } 
+                    }
                     else if (formulaType is OptionSetValueType osvt && osvt.TryGetValue(new DName(str.Value), out OptionSetValue osv))
                     {
                         formulaValue = osv;
-                    }                    
+                    }
                 }
 
                 if (formulaValue == null)
                 {
                     formulaValue = FormulaValue.New(str.Value);
-                }                
+                }
             }
             else if (openApiAny is OpenApiInteger intVal)
             {
@@ -274,7 +274,7 @@ namespace Microsoft.PowerFx.Connectors
                         if (formulaType is TableType tableType)
                         {
                             newType = tableType.ToRecord();
-                        }                        
+                        }
                     }
 
                     bool ba = TryGetOpenApiValue(element, newType, out FormulaValue fv);
@@ -430,7 +430,7 @@ namespace Microsoft.PowerFx.Connectors
                         case "int64":
                         case "unixtime":
                             return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
-                        
+
                         default:
                             throw new NotImplementedException($"Unsupported type of integer: {schema.Format}");
                     }
@@ -457,7 +457,7 @@ namespace Microsoft.PowerFx.Connectors
                         return new ConnectorType(schema, openApiParameter, FormulaType.UntypedObject);
                     }
 
-                    chain.Push(innerA);                    
+                    chain.Push(innerA);
                     ConnectorType arrayType = new OpenApiParameter() { Name = "Array", Required = true, Schema = schema.Items, Extensions = schema.Items.Extensions }.ToConnectorType(chain, level + 1);
 
                     chain.Pop();
@@ -603,13 +603,13 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             if (response == null)
-            {                
+            {
                 // No return type. Void() method. 
                 return (new ConnectorType(), null);
             }
 
             if (response.Content.Count == 0)
-            {                
+            {
                 OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "binary" };
                 ConnectorType connectorType = new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.ToConnectorType();
                 return (connectorType, null);
