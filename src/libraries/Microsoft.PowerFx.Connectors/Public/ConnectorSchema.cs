@@ -35,9 +35,8 @@ namespace Microsoft.PowerFx.Connectors
         {
             Schema = openApiParameter.Schema;
             UseHiddenTypes = useHiddenTypes;
-            ConnectorType = openApiParameter.ToConnectorType();
-            DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue) ? defaultValue : null;
-
+            ConnectorType = openApiParameter.ToConnectorType();         
+            DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue) && defaultValue is not BlankValue ? defaultValue : null;           
             ConnectorExtensions = new ConnectorExtensions(openApiParameter, bodyExtensions);
         }
 

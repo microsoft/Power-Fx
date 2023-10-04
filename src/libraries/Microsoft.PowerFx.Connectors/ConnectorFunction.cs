@@ -827,6 +827,11 @@ namespace Microsoft.PowerFx.Connectors
         // Only used by ConnectorTexlFunction
         private DType[] GetParamTypes()
         {
+            if (RequiredParameters == null)
+            {
+                return Array.Empty<DType>();
+            }
+
             IEnumerable<DType> parameterTypes = RequiredParameters.Select(parameter => parameter.FormulaType._type);
             if (OptionalParameters.Any())
             {

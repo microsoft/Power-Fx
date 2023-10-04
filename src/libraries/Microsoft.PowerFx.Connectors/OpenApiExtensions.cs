@@ -123,46 +123,103 @@ namespace Microsoft.PowerFx.Connectors
 
         public static bool TryGetDefaultValue(this OpenApiSchema schema, FormulaType formulaType, out FormulaValue defaultValue)
         {
-            IOpenApiAny openApiDefaultValue = schema.Default;
-
-            if (openApiDefaultValue == null)
+            if (schema.Type == "array" && formulaType is TableType tableType && schema.Items != null)
             {
-                if (formulaType is RecordType rt && schema.Properties != null)
+                RecordType recordType = tableType.ToRecord();
+                bool b = schema.Items.TryGetDefaultValue(recordType, out FormulaValue itemDefaultValue);
+
+                if (!b || itemDefaultValue is BlankValue)
+                {
+                    defaultValue = FormulaValue.NewTable(recordType);
+                    return true;
+                }
+
+                if (itemDefaultValue is RecordValue itemDefaultRecordValue)
+                {
+                    defaultValue = FormulaValue.NewTable(recordType, itemDefaultRecordValue);
+                    return true;
+                }               
+                    
+                defaultValue = FormulaValue.NewTable(recordType, FormulaValue.NewRecordFromFields(new NamedValue[] { new NamedValue(TableValue.ValueName, itemDefaultValue) }));
+                return true;
+            }
+
+            if (schema.Type == "object" || schema.Default == null) 
+            {
+                if (formulaType is RecordType recordType2 && schema.Properties != null)
                 {
                     List<NamedValue> values = new List<NamedValue>();
 
-                    foreach (NamedFormulaType nft in rt.GetFieldTypes())
+                    foreach (NamedFormulaType namedFormulaType in recordType2.GetFieldTypes())
                     {
-                        string columnName = nft.Name.Value;
+                        string columnName = namedFormulaType.Name.Value;
 
                         if (schema.Properties.ContainsKey(columnName))
                         {
-                            if (schema.Properties[columnName].TryGetDefaultValue(nft.Type, out FormulaValue innerDefaultValue))
+                            if (schema.Properties[columnName].TryGetDefaultValue(namedFormulaType.Type, out FormulaValue innerDefaultValue))
                             {
                                 values.Add(new NamedValue(columnName, innerDefaultValue));
+                            }
+                            else
+                            {
+                                values.Add(new NamedValue(columnName, FormulaValue.NewBlank(namedFormulaType.Type)));
                             }
                         }
                     }
 
-                    if (values.Any())
-                    {
-                        defaultValue = new InMemoryRecordValue(IRContext.NotInSource(rt), values);
-                        return true;
-                    }
+                    defaultValue = values.Any(v => v.Value is not BlankValue) ? FormulaValue.NewRecordFromFields(values) : FormulaValue.NewBlank(recordType2);
+                    return true;                    
                 }
 
-                defaultValue = null;
-                return false;
-            }
+                if (schema.Default == null)
+                {
+                    defaultValue = null;
+                    return false;
+                }
+            }           
 
-            return TryGetOpenApiValue(openApiDefaultValue, out defaultValue);
+            return TryGetOpenApiValue(schema.Default, formulaType, out defaultValue);            
         }
 
-        internal static bool TryGetOpenApiValue(IOpenApiAny openApiAny, out FormulaValue formulaValue)
+        internal static bool TryGetOpenApiValue(IOpenApiAny openApiAny, FormulaType formulaType, out FormulaValue formulaValue)
         {
             if (openApiAny is OpenApiString str)
             {
-                formulaValue = FormulaValue.New(str.Value);
+                formulaValue = null;
+
+                if (formulaType != null && formulaType is not StringType && formulaType is not RecordType)
+                {
+                    if (formulaType is BooleanType && bool.TryParse(str.Value, out bool b))
+                    {
+                        formulaValue = FormulaValue.New(b);
+                    }
+                    else if (formulaType is DecimalType && decimal.TryParse(str.Value, out decimal d))
+                    {
+                        formulaValue = FormulaValue.New(d);
+                    }
+                    else if (formulaType is DateTimeType)
+                    {
+                        if (DateTime.TryParse(str.Value, out DateTime dt))
+                        {
+                            formulaValue = FormulaValue.New(dt);
+                        }
+
+                        throw new PowerFxConnectorException($"Unsupported DateTime format: {str.Value}");
+                    }
+                    else if (formulaType is NumberType && double.TryParse(str.Value, out double dbl))
+                    {
+                        formulaValue = FormulaValue.New(dbl);
+                    } 
+                    else if (formulaType is OptionSetValueType osvt && osvt.TryGetValue(new DName(str.Value), out OptionSetValue osv))
+                    {
+                        formulaValue = osv;
+                    }                    
+                }
+
+                if (formulaValue == null)
+                {
+                    formulaValue = FormulaValue.New(str.Value);
+                }                
             }
             else if (openApiAny is OpenApiInteger intVal)
             {
@@ -209,7 +266,17 @@ namespace Microsoft.PowerFx.Connectors
 
                 foreach (IOpenApiAny element in arr)
                 {
-                    bool ba = TryGetOpenApiValue(element, out FormulaValue fv);
+                    FormulaType newType = null;
+
+                    if (formulaType != null)
+                    {
+                        if (formulaType is TableType tableType)
+                        {
+                            newType = tableType.ToRecord();
+                        }                        
+                    }
+
+                    bool ba = TryGetOpenApiValue(element, newType, out FormulaValue fv);
                     if (!ba)
                     {
                         formulaValue = null;
@@ -231,7 +298,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 foreach (KeyValuePair<string, IOpenApiAny> kvp in o)
                 {
-                    if (TryGetOpenApiValue(kvp.Value, out FormulaValue fv))
+                    if (TryGetOpenApiValue(kvp.Value, null, out FormulaValue fv))
                     {
                         dvParams[kvp.Key] = fv;
                     }
@@ -362,7 +429,7 @@ namespace Microsoft.PowerFx.Connectors
                         case "int64":
                         case "unixtime":
                             return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
-
+                        
                         default:
                             throw new NotImplementedException($"Unsupported type of integer: {schema.Format}");
                     }
@@ -725,7 +792,7 @@ namespace Microsoft.PowerFx.Connectors
 
             foreach (KeyValuePair<string, IOpenApiAny> prm in opPrms)
             {
-                if (!OpenApiExtensions.TryGetOpenApiValue(prm.Value, out FormulaValue fv))
+                if (!OpenApiExtensions.TryGetOpenApiValue(prm.Value, null, out FormulaValue fv))
                 {
                     throw new NotImplementedException($"Unsupported param with OpenApi type {prm.Value.GetType().FullName}, key = {prm.Key}");
                 }
