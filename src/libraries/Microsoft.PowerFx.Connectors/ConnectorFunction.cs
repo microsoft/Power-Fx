@@ -921,6 +921,10 @@ namespace Microsoft.PowerFx.Connectors
                             // Ex: Api-Version 
                             hiddenRequired = true;
                         }
+                        else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
+                        {
+                            continue;
+                        }
                     }
 
                     if (!VerifyCanHandle(parameter.In))
@@ -984,6 +988,10 @@ namespace Microsoft.PowerFx.Connectors
                                             }
 
                                             bodyPropertyHiddenRequired = ConnectorSettings.Compatibility == ConnectorCompatibility.PowerAppsCompatibility ? !requestBody.Required : true;
+                                        }
+                                        else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
+                                        {
+                                            continue;
                                         }
                                     }
 
