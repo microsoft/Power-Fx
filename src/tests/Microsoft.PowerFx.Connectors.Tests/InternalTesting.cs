@@ -605,7 +605,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             if (connectorParam.DefaultValue != null)
             {
-                cParam.DefaultValue = connectorParam.DefaultValue.ToObject()?.ToString() ?? "null";
+                cParam.DefaultValue = connectorParam.DefaultValue.ToExpression();                
             }
 
             if (!string.IsNullOrEmpty(connectorParam.Title))
@@ -809,15 +809,34 @@ namespace Microsoft.PowerFx.Connectors.Tests
             {
                 if (kvp.Value is StaticConnectorExtensionValue scev)
                 {
-                    dMap[kvp.Key] = new { Value = scev.Value.ToObject()?.ToString() ?? "null", Type = scev.Value.Type._type.ToString() };
+                    dMap[kvp.Key] = GetStaticExt(scev.Value.ToExpression(), scev.Value.Type._type.ToString());
                 }
                 else if (kvp.Value is DynamicConnectorExtensionValue dcev)
                 {
-                    dMap[kvp.Key] = new { Ref = dcev.Reference };
+                    dMap[kvp.Key] = GetDynamicExt(dcev.Reference);
                 }
             }
 
             return (dynamic)dMap;
+        }
+
+        internal static ExpandoObject GetStaticExt(string value, string type)
+        {
+            dynamic s = new ExpandoObject();
+
+            s.Value = value;
+            s.Type = type;
+
+            return s;
+        }
+
+        internal static ExpandoObject GetDynamicExt(string @ref)
+        {
+            dynamic s = new ExpandoObject();
+
+            s.Reference = @ref;
+
+            return s;
         }
     }
 }
