@@ -383,6 +383,7 @@ namespace Microsoft.PowerFx.Connectors
                     isSupported = false;
                     notSupportedReason = $"OpenApiParameter is null";
                     logger?.LogWarning($"OperationId {op.OperationId} has a null OpenApiParameter");
+                    return;
                 }
 
                 if (param.Deprecated)

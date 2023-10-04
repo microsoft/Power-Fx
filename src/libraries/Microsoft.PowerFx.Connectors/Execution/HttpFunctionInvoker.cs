@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
                 else if (param.Schema.Default != null)
                 {
-                    if (OpenApiExtensions.TryGetOpenApiValue(param.Schema.Default, out FormulaValue defaultValue))
+                    if (OpenApiExtensions.TryGetOpenApiValue(param.Schema.Default, null, out FormulaValue defaultValue))
                     {
                         bodyParts.Add(param.Name, (param.Schema, defaultValue));
                     }
@@ -239,9 +239,19 @@ namespace Microsoft.PowerFx.Connectors
                         lst.Remove(field1);
                         lst.Add(field2);
                     }
+                    else if (field1.Value is BlankValue)
+                    {
+                        lst.Remove(field1);
+                        lst.Add(field2);
+                    }
+                    else if (field2.Value is BlankValue)
+                    {
+                        lst.Remove(field2);
+                        lst.Add(field1);
+                    }
                     else
                     {
-                        throw new ArgumentException($"Cannot merge {field1.Name} of type {field1.Value.GetType().Name} with {field2.Name} of type {field2.Value.GetType().Name}");
+                        throw new ArgumentException($"Cannot merge '{field1.Name}' of type {field1.Value.GetType().Name} with '{field2.Name}' of type {field2.Value.GetType().Name}");
                     }
                 }
             }
