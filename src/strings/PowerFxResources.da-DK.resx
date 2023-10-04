@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>En datoværdi, som ISO-ugenummeret beregnes for.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Returnerer en dato justeret med et antal måneder. Månedens dag forbliver den samme, men er begrænset af antallet af dage i den nye måned.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>dato</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>måneder</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>En datoværdi, der skal justeres med det angivne antal måneder.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Det antal måneder, datoen skal ændres med. En positiv værdi giver en fremtidig dato, en negativ værdi en tidligere dato og nul ændrer ikke måneden.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Returnerer den sidste dag i måneden for en angivet dato, justeret med et antal måneder.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>dato</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>måneder</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>En datoværdi, der skal justeres med det angivne antal måneder.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Det antal måneder, datoen skal ændres med. En positiv værdi giver en fremtidig dato, en negativ værdi en tidligere dato og nul ændrer ikke måneden.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Afkorter 'tal' ved at afrunde mod negativ uendelighed.</value>
     

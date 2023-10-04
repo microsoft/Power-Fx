@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Ett datumvärde som ISO-veckonumret ska beräknas för.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Returnerar ett datum justerat med ett antal månader. Dagen i månaden är densamma men justeras av antalet dagar i den nya månaden.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>datum</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>månader</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Ett datumvärde som ska justeras med angivet antal månader.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Antal månader som datumet ska ändras med. Ett positivt värde ger ett framtida datum, ett negativt ger ett tidigare datum och noll ändrar inte månaden.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Returnerar den sista dagen i månaden för ett angivet datum, justerat med ett antal månader.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>datum</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>månader</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Ett datumvärde som ska justeras med angivet antal månader.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Antal månader som datumet ska ändras med. Ett positivt värde ger ett framtida datum, ett negativt ger ett tidigare datum och noll ändrar inte månaden.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Trunkerar "tal" genom att avrunda mot negativ oändlighet.</value>
     
