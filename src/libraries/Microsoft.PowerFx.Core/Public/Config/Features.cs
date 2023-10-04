@@ -72,6 +72,12 @@ namespace Microsoft.PowerFx
         internal bool CoalesceShortCircuit { get; set; }
 
         /// <summary>
+        /// Removes support for coercing a control to it's primary output property. 
+        /// This only impacts PA Client scenarios, but some code still lives in PFx. 
+        /// </summary>
+        internal bool PrimaryOutputPropertyCoercionDeprecated { get; set; }
+
+        /// <summary>
         /// This is specific for Cards team and it is a temporary feature.
         /// It will be soon deleted.
         /// </summary>
@@ -101,6 +107,7 @@ namespace Microsoft.PowerFx
             FirstLastNRequiresSecondArguments = true,
             PowerFxV1CompatibilityRules = true,
             CoalesceShortCircuit = true,
+            PrimaryOutputPropertyCoercionDeprecated = true,
         };
 
         internal Features()
