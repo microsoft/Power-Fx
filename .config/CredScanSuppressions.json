@@ -1,0 +1,13 @@
+{
+  "tool": "Credential Scanner",
+  "suppressions": [
+    {
+      "placeholder": "password",
+      "_justification": "YAML files in report folder are auto-generated and safe"
+    },
+    {
+      "hash": "k+575RyMT3N7/zEYEg3z1hc+BWqtHExK1ib2jhk5Kvs=",
+      "_justification": "YAML files in report folder are auto-generated and safe"
+    }
+  ]
+}
