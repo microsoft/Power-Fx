@@ -1,0 +1,581 @@
+
+// EDate basic tests
+
+>> EDate(Date(1981,1,1),1)
+Date(1981,2,1)
+
+>> EDate(Date(1981,1,15),1)
+Date(1981,2,15)
+
+>> EDate(Date(1981,1,27),1)
+Date(1981,2,27)
+
+>> EDate(Date(1981,1,28),1)
+Date(1981,2,28)
+
+>> EDate(Date(1981,1,29),1)
+Date(1981,2,28)
+
+>> EDate(Date(1981,1,30),1)
+Date(1981,2,28)
+
+>> EDate(Date(1981,1,31),1)
+Date(1981,2,28)
+
+>> EDate(Date(1981,2,1),1)
+Date(1981,3,1)
+
+>> EDate(Date(1981,2,28),1)
+Date(1981,3,28)
+
+>> EDate(Date(1981,2,1),0)
+Date(1981,2,1)
+
+>> EDate(Date(1981,2,28),0)
+Date(1981,2,28)
+
+>> EDate(Date(1981,3,30),1)
+Date(1981,4,30)
+
+>> EDate(Date(1981,3,1),0)
+Date(1981,3,1)
+
+>> EDate(Date(1981,3,30),0)
+Date(1981,3,30)
+
+>> EDate(Date(1981,12,1),1)
+Date(1982,1,1)
+
+>> EDate(Date(1981,12,15),1)
+Date(1982,1,15)
+
+>> EDate(Date(1981,12,30),1)
+Date(1982,1,30)
+
+>> EDate(Date(1981,12,31),1)
+Date(1982,1,31)
+
+>> EDate(Date(1981,12,1),2)
+Date(1982,2,1)
+
+>> EDate(Date(1981,12,15),2)
+Date(1982,2,15)
+
+>> EDate(Date(1981,12,30),2)
+Date(1982,2,28)
+
+>> EDate(Date(1981,12,31),2)
+Date(1982,2,28)
+
+// EOMonth basic tests
+
+>> EOMonth(Date(1981,1,1),1)
+Date(1981,2,28)
+
+>> EOMonth(Date(1981,1,15),1)
+Date(1981,2,28)
+
+>> EOMonth(Date(1981,1,28),1)
+Date(1981,2,28)
+
+>> EOMonth(Date(1981,1,29),1)
+Date(1981,2,28)
+
+>> EOMonth(Date(1981,1,30),1)
+Date(1981,2,28)
+
+>> EOMonth(Date(1981,1,31),1)
+Date(1981,2,28)
+
+>> EOMonth(Date(1981,2,1),1)
+Date(1981,3,31)
+
+>> EOMonth(Date(1981,2,28),1)
+Date(1981,3,31)
+
+>> EOMonth(Date(1981,2,1),0)
+Date(1981,2,28)
+
+>> EOMonth(Date(1981,2,28),0)
+Date(1981,2,28)
+
+>> EOMonth(Date(1981,3,30),1)
+Date(1981,4,30)
+
+>> EOMonth(Date(1981,3,1),0)
+Date(1981,3,31)
+
+>> EOMonth(Date(1981,3,30),0)
+Date(1981,3,31)
+
+>> EOMonth(Date(1981,12,1),1)
+Date(1982,1,31)
+
+>> EOMonth(Date(1981,12,15),1)
+Date(1982,1,31)
+
+>> EOMonth(Date(1981,12,30),1)
+Date(1982,1,31)
+
+>> EOMonth(Date(1981,12,31),1)
+Date(1982,1,31)
+
+>> EOMonth(Date(1981,12,1),2)
+Date(1982,2,28)
+
+>> EOMonth(Date(1981,12,15),2)
+Date(1982,2,28)
+
+>> EOMonth(Date(1981,12,30),2)
+Date(1982,2,28)
+
+>> EOMonth(Date(1981,12,31),2)
+Date(1982,2,28)
+
+// Leap year
+
+>> EDate(Date(2016,1,31),1)
+Date(2016,2,29)
+
+>> EOMonth(Date(2016,1,31),1)
+Date(2016,2,29)
+
+>> EDate(Date(2016,1,15),1)
+Date(2016,2,15)
+
+>> EOMonth(Date(2016,1,15),1)
+Date(2016,2,29)
+
+>> EDate(Date(2016,1,15),2)
+Date(2016,3,15)
+
+>> EOMonth(Date(2016,1,15),2)
+Date(2016,3,31)
+
+// Fractional months, should truncate (toward zero)
+
+>> EDate(Date(2012,1,31),1)
+Date(2012,2,29)
+
+>> EDate(Date(2012,1,31),1.1)
+Date(2012,2,29)
+
+>> EDate(Date(2012,1,31),1.5)
+Date(2012,2,29)
+
+>> EDate(Date(2012,1,31),1.9)
+Date(2012,2,29)
+
+>> EDate(Date(2012,1,31),1.9999999)
+Date(2012,2,29)
+
+>> EDate(Date(2012,1,31),2)
+Date(2012,3,31)
+
+>> EDate(Date(2012,1,31),-1)
+Date(2011,12,31)
+
+>> EDate(Date(2012,1,31),-1.1)
+Date(2011,12,31)
+
+>> EDate(Date(2012,1,31),-1.5)
+Date(2011,12,31)
+
+>> EDate(Date(2012,1,31),-1.9)
+Date(2011,12,31)
+
+>> EDate(Date(2012,1,31),-1.9999999)
+Date(2011,12,31)
+
+>> EDate(Date(2012,1,31),-2)
+Date(2011,11,30)
+
+>> EOMonth(Date(2012,1,31),1)
+Date(2012,2,29)
+
+>> EOMonth(Date(2012,1,31),1.1)
+Date(2012,2,29)
+
+>> EOMonth(Date(2012,1,31),1.5)
+Date(2012,2,29)
+
+>> EOMonth(Date(2012,1,31),1.9)
+Date(2012,2,29)
+
+>> EOMonth(Date(2012,1,31),1.9999999)
+Date(2012,2,29)
+
+>> EOMonth(Date(2012,1,31),2)
+Date(2012,3,31)
+
+>> EOMonth(Date(2012,1,31),-1)
+Date(2011,12,31)
+
+>> EOMonth(Date(2012,1,31),-1.1)
+Date(2011,12,31)
+
+>> EOMonth(Date(2012,1,31),-1.5)
+Date(2011,12,31)
+
+>> EOMonth(Date(2012,1,31),-1.9)
+Date(2011,12,31)
+
+>> EOMonth(Date(2012,1,31),-1.9999999)
+Date(2011,12,31)
+
+>> EOMonth(Date(2012,1,31),-2)
+Date(2011,11,30)
+
+// EDate with a DateTime at thee end of the month
+// Ensure 31 is properly translated for other months with less than 31 days
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),0)
+Date(2023,1,31)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),-1)
+Date(2022,12,31)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),-2)
+Date(2022,11,30)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),-6)
+Date(2022,7,31)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),-7)
+Date(2022,6,30)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),-1000)
+Date(1939,9,30)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),-10000)
+Date(1189,9,30)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),-100000)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),-20000)
+Date(356,5,31)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),-24264)
+Date(1,1,31)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),-24265)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),-24250)
+Date(2,3,31)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),1)
+Date(2023,2,28)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),2)
+Date(2023,3,31)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),5)
+Date(2023,6,30)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),6)
+Date(2023,7,31)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),10000)
+Date(2856,5,31)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),20000)
+Date(3689,9,30)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),95722)
+Date(9999,11,30)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),95723)
+Date(9999,12,31)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),95724)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// 12/30/1899 is the starting date as it is the epoch, hence this returns 30 for the date
+// EXCEL difference: 12/31/9876 since the epoch is off by one day
+>> EDate(Blank(),95724)
+Date(9876,12,30)
+
+>> EDate(DateTime(2023,1,31,12,32,45,234),Blank())
+Date(2023,1,31)
+
+// 12/30/1899 is the starting date as it is the epoch, hence this returns 30 for the date
+// EXCEL difference: 1/0/1900 since the epoch is off by one day
+>> EDate(Blank(),Blank())
+Date(1899,12,30)
+
+// EDate with a Date only at thee end of the month
+// Ensure 31 is properly translated for other months with less than 31 days
+
+>> EDate(Date(2023,1,31),0)
+Date(2023,1,31)
+
+>> EDate(Date(2023,1,31),-1)
+Date(2022,12,31)
+
+>> EDate(Date(2023,1,31),-2)
+Date(2022,11,30)
+
+>> EDate(Date(2023,1,31),-6)
+Date(2022,7,31)
+
+>> EDate(Date(2023,1,31),-7)
+Date(2022,6,30)
+
+>> EDate(Date(2023,1,31),-1000)
+Date(1939,9,30)
+
+>> EDate(Date(2023,1,31),-10000)
+Date(1189,9,30)
+
+>> EDate(Date(2023,1,31),-100000)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> EDate(Date(2023,1,31),-20000)
+Date(356,5,31)
+
+>> EDate(Date(2023,1,31),-24264)
+Date(1,1,31)
+
+>> EDate(Date(2023,1,31),-24265)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> EDate(Date(2023,1,31),-24250)
+Date(2,3,31)
+
+>> EDate(Date(2023,1,31),1)
+Date(2023,2,28)
+
+>> EDate(Date(2023,1,31),2)
+Date(2023,3,31)
+
+>> EDate(Date(2023,1,31),5)
+Date(2023,6,30)
+
+>> EDate(Date(2023,1,31),6)
+Date(2023,7,31)
+
+>> EDate(Date(2023,1,31),10000)
+Date(2856,5,31)
+
+>> EDate(Date(2023,1,31),20000)
+Date(3689,9,30)
+
+>> EDate(Date(2023,1,31),95722)
+Date(9999,11,30)
+
+>> EDate(Date(2023,1,31),95723)
+Date(9999,12,31)
+
+>> EDate(Date(2023,1,31),95724)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> EDate(Date(2023,1,31),Blank())
+Date(2023,1,31)
+
+// EOMonth with a DateTime at thee end of the month should give same results as EDate at the end of the month
+// Ensure 31 is properly translated for other months with less than 31 days
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),0)
+Date(2023,1,31)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),-1)
+Date(2022,12,31)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),-2)
+Date(2022,11,30)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),-6)
+Date(2022,7,31)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),-7)
+Date(2022,6,30)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),-1000)
+Date(1939,9,30)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),-10000)
+Date(1189,9,30)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),-100000)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),-20000)
+Date(356,5,31)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),-24264)
+Date(1,1,31)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),-24265)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),-24250)
+Date(2,3,31)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),1)
+Date(2023,2,28)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),2)
+Date(2023,3,31)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),5)
+Date(2023,6,30)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),6)
+Date(2023,7,31)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),10000)
+Date(2856,5,31)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),20000)
+Date(3689,9,30)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),95722)
+Date(9999,11,30)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),95723)
+Date(9999,12,31)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),95724)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// 12/30/1899 is the starting date as it is the epoch, but since we are asking for the last day of the month it returns 31 instead of EDate's 30
+// EXCEL difference, 1/31/9877
+>> EOMonth(Blank(),95724)
+Date(9876,12,31)
+
+>> EOMonth(DateTime(2023,1,31,12,32,45,234),Blank())
+Date(2023,1,31)
+
+// 12/30/1899 is the starting date as it is the epoch, but since we are asking for the last day of the month it returns 31 instead of EDate's 30
+// EXCEL difference: 1/31/1900
+>> EOMonth(Blank(),Blank())
+Date(1899,12,31)
+
+// EOMonth with a Date only at thee end of the month, should give the same results as EDate
+// Ensure 31 is properly translated for other months with less than 31 days
+
+>> EOMonth(Date(2023,1,31),0)
+Date(2023,1,31)
+
+>> EOMonth(Date(2023,1,31),-1)
+Date(2022,12,31)
+
+>> EOMonth(Date(2023,1,31),-2)
+Date(2022,11,30)
+
+>> EOMonth(Date(2023,1,31),-6)
+Date(2022,7,31)
+
+>> EOMonth(Date(2023,1,31),-7)
+Date(2022,6,30)
+
+>> EOMonth(Date(2023,1,31),-1000)
+Date(1939,9,30)
+
+>> EOMonth(Date(2023,1,31),-10000)
+Date(1189,9,30)
+
+>> EOMonth(Date(2023,1,31),-100000)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> EOMonth(Date(2023,1,31),-20000)
+Date(356,5,31)
+
+>> EOMonth(Date(2023,1,31),-24264)
+Date(1,1,31)
+
+>> EOMonth(Date(2023,1,31),-24265)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> EOMonth(Date(2023,1,31),-24250)
+Date(2,3,31)
+
+>> EOMonth(Date(2023,1,31),1)
+Date(2023,2,28)
+
+>> EOMonth(Date(2023,1,31),2)
+Date(2023,3,31)
+
+>> EOMonth(Date(2023,1,31),5)
+Date(2023,6,30)
+
+>> EOMonth(Date(2023,1,31),6)
+Date(2023,7,31)
+
+>> EOMonth(Date(2023,1,31),10000)
+Date(2856,5,31)
+
+>> EOMonth(Date(2023,1,31),20000)
+Date(3689,9,30)
+
+>> EOMonth(Date(2023,1,31),95722)
+Date(9999,11,30)
+
+>> EOMonth(Date(2023,1,31),95723)
+Date(9999,12,31)
+
+>> EOMonth(Date(2023,1,31),95724)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> EOMonth(Date(2023,1,31),Blank())
+Date(2023,1,31)
+
+// Excel serial numbers
+
+// 1/31/1920
+>> EDate(7336,0)
+Date(1920,1,31)
+
+>> EDate(7336,1)
+Date(1920,2,29)
+
+>> EDate(7336,5)
+Date(1920,6,30)
+
+>> EDate(7336,-1)
+Date(1919,12,31)
+
+>> EDate(7336,-2)
+Date(1919,11,30)
+
+>> EOMonth(7336,1)
+Date(1920,2,29)
+
+>> EOMonth(7336,5)
+Date(1920,6,30)
+
+>> EOMonth(7336,-1)
+Date(1919,12,31)
+
+>> EOMonth(7336,-2)
+Date(1919,11,30)
+
+// 2/15/1928
+>> EDate(10273,-2)
+Date(1927,12,15)
+
+>> EDate(10273,2)
+Date(1928,4,15)
+
+>> EOMonth(10273,-2)
+Date(1927,12,31)
+
+>> EOMonth(10273,2)
+Date(1928,4,30)
+
+// Ensure date values are truncated and do not include time
+
+>> Text(EOMonth(DateTime(2023,1,15,12,34,56),0),"yyyy-mm-dd hh:mm:ss")
+"2023-01-31 00:00:00"
+
+>> Text(EDate(DateTime(2023,1,15,12,34,56),0),"yyyy-mm-dd hh:mm:ss")
+"2023-01-15 00:00:00"
+
+>> Value(EOMonth(DateTime(2023,1,15,12,34,56),0))
+44957
+
+>> Value(EDate(DateTime(2023,1,15,12,34,56),0))
+44941
+

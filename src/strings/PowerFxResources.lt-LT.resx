@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Datos reikšmė, kuriai bus skaičiuojamas ISO savaitės numeris.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Pateikia datą, pakoreguotą pagal mėnesių skaičių. Mėnesio diena išlieka tokia pati, bet ji apribojama naujojo mėnesio dienų skaičiumi.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>mėn.</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Datos reikšmė, kuri turi būti pakoreguota pagal nurodytą mėnesių skaičių.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Mėnesių skaičius, pagal kurį reikia pakeisti datą. Teigiama reikšmė pateiks datą ateityje, neigiama reikšmė – datą praeityje, o nulis mėnesio nepakeis.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Pateikia paskutinę nurodytos datos mėnesio dieną, pakoreguotą pagal mėnesių skaičių.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>mėn.</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Datos reikšmė, kuri turi būti pakoreguota pagal nurodytą mėnesių skaičių.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Mėnesių skaičius, pagal kurį reikia pakeisti datą. Teigiama reikšmė pateiks datą ateityje, neigiama reikšmė – datą praeityje, o nulis mėnesio nepakeis.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Skaičius trumpinamas suapvalinant iki neigiamos begalybės.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Tipo literalo deklaracija buvo neteisinga</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Šaltinio ir paskirties įrašų tipai neatitinka. Pateiktame tipe yra papildomų laukų: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Šaltinio ir paskirties įrašų tipai neatitinka. Pateiktame tipe trūksta laukų: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Šaltinio ir paskirties įrašų tipai neatitinka. Lauko pavadinimas „{0}“ nerastas.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Šaltinio ir paskirties įrašų tipai neatitinka. Lauko pavadinimas „{0}“. Tikimasi „{1}“. Rasta „{2}“.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Pateikto {0} tipo negalima pakeisti į šaltinio tipą {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Šaltinio ir paskirties tipai neatitinka. Tikimasi „{0}“. Rasta „{1}“.</value>
     
   </data>
 </root>

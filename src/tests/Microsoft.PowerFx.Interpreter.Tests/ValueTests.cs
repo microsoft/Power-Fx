@@ -423,6 +423,52 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.False(Library.TryGetInt(str, out int outputStringToInt));
         }
+
+        [Fact]
+        public void AsNumberTests()
+        {
+            NumberValue num = FormulaValue.New((double)1.2);
+            DecimalValue dec = FormulaValue.New(1.2m);
+
+            Assert.Equal(1.2, num.AsDouble());
+            Assert.Equal(1.2, dec.AsDouble());
+
+            Assert.Equal(1.2m, num.AsDecimal());
+            Assert.Equal(1.2m, dec.AsDecimal());
+        }
+
+        [Fact]
+        public void AsNumberTestsBlank()
+        {
+            BlankValue num = FormulaValue.NewBlank(FormulaType.Number);
+            BlankValue dec = FormulaValue.NewBlank(FormulaType.Decimal);
+
+            Assert.Equal(0, num.AsDouble());
+            Assert.Equal(0m, dec.AsDecimal());
+        }
+
+        [Fact]
+        public void AsBooleanTests()
+        {
+            var x = FormulaValue.New(true);
+
+            bool b = x.AsBoolean();
+            Assert.True(x.AsBoolean());
+
+            var x2 = FormulaValue.NewBlank(FormulaType.Boolean);
+            bool b2 = x2.AsBoolean();
+            Assert.False(x2.AsBoolean());
+        }
+
+        [Fact]
+        public void AsNumberFailTests()
+        {
+            StringValue num = FormulaValue.New("1.2");
+
+            Assert.Throws<InvalidOperationException>(() => num.AsDouble());
+            Assert.Throws<InvalidOperationException>(() => num.AsDecimal());
+            Assert.Throws<InvalidOperationException>(() => num.AsBoolean());
+        }
     }
 
     public static class FormulaValueExtensions

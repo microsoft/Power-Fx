@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Nilai tanggal yang jumlah minggu ISO-nya akan dihitung.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Mengembalikan tanggal yang disesuaikan dengan jumlah bulan. Hari dalam bulan tersebut tetap sama, tetapi dipetakan dengan jumlah hari pada bulan baru.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>tanggal</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>bulan</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Nilai tanggal yang akan disesuaikan dengan jumlah bulan yang ditentukan.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Jumlah bulan untuk mengubah tanggal. Nilai positif menghasilkan tanggal di masa mendatang, nilai negatif menghasilkan tanggal di masa lampau, dan nol tidak akan mengubah bulan.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Mengembalikan hari terakhir dalam sebulan untuk tanggal yang ditentukan, yang disesuaikan dengan jumlah bulan.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>tanggal</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>bulan</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Nilai tanggal yang akan disesuaikan dengan jumlah bulan yang ditentukan.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Jumlah bulan untuk mengubah tanggal. Nilai positif menghasilkan tanggal di masa mendatang, nilai negatif menghasilkan tanggal di masa lampau, dan nol tidak akan mengubah bulan.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Memotong 'angka' dengan membulatkan ke arah negatif tak terhingga.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Deklarasi harfiah jenis tidak valid</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Ketidakcocokan jenis antara jenis rekaman sumber dan target. Jenis yang diberikan memiliki bidang tambahan: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Ketidakcocokan jenis antara jenis rekaman sumber dan target. Jenis yang diberikan tidak memiliki bidang: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Ketidakcocokan jenis antara jenis rekaman sumber dan target. Nama bidang: {0} tidak ditemukan.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Ketidakcocokan jenis antara jenis rekaman sumber dan target. Nama bidang: {0} Diharapkan {1}; Ditemukan {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Jenis {0} yang diberikan tidak dapat dipaksakan menjadi jenis sumber {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Ketidakcocokan jenis antara jenis sumber dan target. Diharapkan {0}; Ditemukan {1}.</value>
     
   </data>
 </root>

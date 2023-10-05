@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Вредност датума за коју ће бити израчунат ISO број седмице.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Враћа датум прилагођен према броју месеци. Дан у месецу остаје исти, али је ограничен бројем дана у новом месецу.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>датум</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>месеци</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Вредност датума коју треба прилагодити у складу са наведеним бројем месеци.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Број месеци у складу са којим треба променити датум. Позитивна вредност за резултат има будући датум, негативна вредност прошли датум, а нула неће променити месец.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Враћа последњи дан у месецу за наведени датум, коригован за одређени број месеци.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>датум</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>месеци</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Вредност датума коју треба прилагодити у складу са наведеним бројем месеци.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Број месеци у складу са којим треба променити датум. Позитивна вредност за резултат има будући датум, негативна вредност прошли датум, а нула неће променити месец.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Скраћује „број“ заокруживањем према негативној бесконачности.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Декларација типа литерала није важећа</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Изворни и одредишни тип записа се не подударају. Дати тип има додатна поља: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Изворни и одредишни тип записа се не подударају. Дати тип има поља која недостају: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Изворни и одредишни тип записа се не подударају. Назив поља: {0} није пронађен.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Изворни и одредишни тип записа се не подударају. Назив поља: {0} Очекивано {1}; Пронађено {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Дати тип {0} не може да се ограничи на изворни тип {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Изворни и одредишни тип се не подударају. Очекивано {0}; Пронађено {1}.</value>
     
   </data>
 </root>

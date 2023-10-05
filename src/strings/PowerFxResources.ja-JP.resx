@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>ISO 週番号を計算する日付の値です。</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>月を変更した日付を返します。日は変わりませんが、変更後の月の最終日以下に制限されます。</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>日付</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>か月</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>指定した月数で変更された日付の値です。</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>日付の変更に適用する月数です。正の値を指定すると未来の日付に、負の値を指定すると過去の日付に変わります。ゼロを指定すると月は変わりません。</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>指定された日付を月数で変更した後の、月の最終日を返します。</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>日付</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>か月</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>指定した月数で変更された日付の値です。</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;日付の変更に適用する月数です。正の値を指定すると未来の日付に、負の値を指定すると過去の日付に変わります。ゼロを指定すると月は変わりません。</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>負の無限大に丸めることで、'number' を切り詰めます。</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>タイプ リテラルの宣言が無効です</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。指定された種類には次の余分なフィールドが存在します: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。指定された型に次のフィールドが見つかりません: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。ファイル名: {0} が見つかりません。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。ファイル名: {0}、予期: {1}、実際: {2}</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>指定された種類 {0} は、ソースの種類 {1} には強制的に変換できません。</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>ソースとターゲットの間で種類が一致しません。予期: {0}、実際: {1}</value>
     
   </data>
 </root>

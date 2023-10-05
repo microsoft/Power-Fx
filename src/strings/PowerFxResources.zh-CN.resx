@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>将针对其计算 ISO 周编号的日期值。</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>返回按月数调整的日期。月中的日期仍然相同，但因新月份中的天数而受限制。</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>日期</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>月</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>要按指定的月数调整的日期值。</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>日期的更改月数。正值产生将来日期，负值产生过去日期，零将不会更改该月。</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>返回指定日期中月份的最后一天(已按月数进行了调整)。</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>日期</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>月</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>要按指定的月数调整的日期值。</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;日期的更改月数。正值产生将来日期，负值产生过去日期，零将不会更改该月。</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>通过向负无穷大舍入来截断“数字”。</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>类型文字声明无效</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>源记录类型与目标记录类型不匹配。给定类型包含额外字段: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>源记录类型与目标记录类型不匹配。给定类型缺少字段: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>源记录类型与目标记录类型不匹配。找不到字段名称: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>源记录类型与目标记录类型不匹配。字段名称: {0} 需要 {1}；找到 {2}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>给定 {0} 类型不能强制转换为源类型 {1}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>源类型与目标类型不匹配。需要 {0}；找到 {1}。</value>
     
   </data>
 </root>

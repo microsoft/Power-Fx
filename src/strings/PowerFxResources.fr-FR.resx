@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Valeur de date pour laquelle le numéro de semaine ISO sera calculé.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Retourne une date ajustée par un nombre de mois. Le jour du mois reste le même, mais il est limité par le nombre de jours au cours du nouveau mois.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>date</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>mois</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Valeur de date à ajuster par le nombre de mois indiqué.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Nombre de mois par lequel modifier la date. Une valeur positive produit une date future, une valeur négative une date passée et zéro ne modifie pas le mois.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Retourne le dernier jour du mois pour une date indiquée, ajusté par un nombre de mois.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>date</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>mois</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Valeur de date à ajuster par le nombre de mois indiqué.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Nombre de mois par lequel modifier la date. Une valeur positive produit une date future, une valeur négative une date passée et zéro ne modifie pas le mois.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Tronque le « nombre » en arrondissant vers l’infini négatif.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Type de déclaration littérale non valide</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Correspondance incorrecte entre les types d’enregistrements source et cible. Le type donné comporte des champs supplémentaires : {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Correspondance incorrecte entre les types d’enregistrements source et cible. Des champs sont manquants pour le type donné : {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Correspondance incorrecte entre les types d’enregistrements source et cible. Nom du champ : {0} introuvable.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Correspondance incorrecte entre les types d’enregistrements source et cible. Nom du champ : {0}, attendu {1} ; trouvé {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Étant donné le type {0} ne peut pas être contraint au type source {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Correspondance incorrecte entre les types d’enregistrements source et cible. Attendu {0} ; trouvé {1}.</value>
     
   </data>
 </root>

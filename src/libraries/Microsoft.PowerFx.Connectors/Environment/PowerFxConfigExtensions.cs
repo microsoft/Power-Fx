@@ -3,18 +3,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 
 namespace Microsoft.PowerFx
 {
@@ -30,15 +27,35 @@ namespace Microsoft.PowerFx
         /// <param name="config">Config to add the functions to.</param>
         /// <param name="connectorSettings">Connector settings containing Namespace and MaxRows to be returned.</param>        
         /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
-        /// <param name="globalValues">Global constant values, like connectionId.</param>
-        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
-        {
-            if (openApiDocument == null)
+        /// <param name="configurationLogger">Logger.</param>
+        /// <param name="globalValues">Global Values.</param>
+        /// <returns>List of connector functions.</returns>
+        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
+        {            
+            try
             {
-                throw new ArgumentNullException(nameof(openApiDocument));
+                configurationLogger?.LogInformation($"Entering in ConfigExtensions.{nameof(AddActionConnector)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");
+                IReadOnlyList<ConnectorFunction> connectorFunctions = AddActionConnectorInternal(config, connectorSettings, openApiDocument, configurationLogger, globalValues);
+                configurationLogger?.LogInformation($"Exiting ConfigExtensions.{nameof(AddActionConnector)}, returning {connectorFunctions.Count()} functions");
+
+                return connectorFunctions;
+            }
+            catch (Exception ex)
+            {
+                configurationLogger?.LogException(ex, $"Exception in ConfigExtensions.{nameof(AddActionConnector)}, {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, {LogException(ex)}");
+                throw;
+            }
+        }
+
+        internal static IReadOnlyList<ConnectorFunction> AddActionConnectorInternal(this PowerFxConfig config, ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
+        {
+            if (config == null)
+            {
+                configurationLogger?.LogError($"PowerFxConfig is null, cannot add functions");
+                return null;
             }
 
-            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.Parse(connectorSettings, openApiDocument, globalValues);
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(connectorSettings, openApiDocument, configurationLogger, globalValues);
             foreach (TexlFunction function in texlFunctions)
             {
                 config.AddFunction(function);
@@ -55,36 +72,39 @@ namespace Microsoft.PowerFx
         /// <param name="config">Config to add the functions to.</param>
         /// <param name="namespace">Namespace name.</param>
         /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
-        /// <param name="globalValues">Global constant values, like connectionId.</param>
-        /// <returns></returns>
-        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
-        {
-            return config.AddActionConnector(new ConnectorSettings(@namespace), openApiDocument, globalValues);
+        /// <param name="configurationLogger">Logger.</param>
+        /// <param name="globalValues">Global Values.</param>
+        /// <returns>List of connector functions.</returns>
+        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
+        {            
+            try
+            {
+                configurationLogger?.LogInformation($"Entering in ConfigExtensions.{nameof(AddActionConnector)}, with {nameof(ConnectorSettings)} Namespace {@namespace ?? Null(nameof(@namespace))}");
+                IReadOnlyList<ConnectorFunction> connectorFunctions = AddActionConnectorInternal(config, new ConnectorSettings(@namespace), openApiDocument, configurationLogger, globalValues);
+
+                if (connectorFunctions == null)
+                {
+                    return null;
+                }
+
+                configurationLogger?.LogInformation($"Exiting ConfigExtensions.{nameof(AddActionConnector)}, returning {connectorFunctions.Count()} functions");                
+                return connectorFunctions;
+            }
+            catch (Exception ex)
+            {
+                configurationLogger?.LogException(ex, $"Exception in ConfigExtensions.{nameof(AddActionConnector)}, Namespace {@namespace ?? Null(nameof(@namespace))}, {LogException(ex)}");
+                throw;
+            }            
         }
 
-        /// <summary>
-        /// Add functions for each operation in the <see cref="OpenApiDocument"/>. 
-        /// Functions names will be 'functionNamespace.operationName'.
-        /// Functions are invoked via rest via the httpClient. The client must handle authentication. 
-        /// </summary>
-        /// <param name="config">Config to add the functions to.</param>
-        /// <param name="namespace">Namespace name.</param>
-        /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
-        /// <param name="connectionId">ConnectionId.</param>
-        /// <returns></returns>
-        public static IReadOnlyList<ConnectorFunction> AddPowerPlatformActionConnector(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument, string connectionId)
+        public static async Task<ConnectorTableValue> AddTabularConnector(this PowerFxConfig config, string tableName, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, HttpClient client, CancellationToken cancellationToken, ConnectorLogger configurationLogger = null)
         {
-            return config.AddActionConnector(new ConnectorSettings(@namespace), openApiDocument, new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>() { { "connectionId", FormulaValue.New(connectionId) } }));
+            return await config.AddTabularConnector(new ConnectorSettings($"_tbl_{tableName}"), tableName, openApiDocument, globalValues, client, cancellationToken, configurationLogger).ConfigureAwait(false);
         }
 
-        public static async Task<ConnectorTableValue> AddTabularConnector(this PowerFxConfig config, string tableName, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, HttpClient client, CancellationToken cancellationToken)
+        public static async Task<ConnectorTableValue> AddTabularConnector(this PowerFxConfig config, ConnectorSettings connectorSettings, string tableName, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, HttpClient client, CancellationToken cancellationToken, ConnectorLogger configurationLogger = null)
         {
-            return await config.AddTabularConnector(new ConnectorSettings($"_tbl_{tableName}"), tableName, openApiDocument, globalValues, client, cancellationToken).ConfigureAwait(false);
-        }
-
-        public static async Task<ConnectorTableValue> AddTabularConnector(this PowerFxConfig config, ConnectorSettings connectorSettings, string tableName, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, HttpClient client, CancellationToken cancellationToken)
-        {
-            IReadOnlyList<ConnectorFunction> tabularFunctions = config.AddActionConnector(connectorSettings, openApiDocument, globalValues);
+            IReadOnlyList<ConnectorFunction> tabularFunctions = config.AddActionConnector(connectorSettings, openApiDocument, configurationLogger, globalValues);
 
             // Retrieve table schema with dynamic intellisense on 'GetItem' function            
             ConnectorFunction getItem = tabularFunctions.First(f => f.Name.Contains("GetItem") && !f.Name.Contains("GetItems")); // SQL: GetItemV2 (not GetItemsV2)
@@ -99,7 +119,10 @@ namespace Microsoft.PowerFx
         {
             private readonly HttpMessageInvoker _invoker;
 
-            internal TempConnectorContext(HttpMessageInvoker invoker) { _invoker = invoker; }
+            internal TempConnectorContext(HttpMessageInvoker invoker) 
+            { 
+                _invoker = invoker; 
+            }
 
             public override TimeZoneInfo TimeZoneInfo => TimeZoneInfo.Utc;
 

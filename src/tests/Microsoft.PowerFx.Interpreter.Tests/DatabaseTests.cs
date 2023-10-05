@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void PatchByIdInMemory1()
         {
-            string expr = @"Set(x, FirstN(t, 5)); Patch(x, {Id: ""2""}, { Name: ""John""}); First(Filter(x, Id=2)).Name";
+            string expr = @"Set(x, FirstN(t, 5)); Patch(x, {Id: 2}, { Name: ""John""}); First(Filter(x, Id=2)).Name";
             (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult, ISymbolSlot dbSlot) = CheckExpression(expr);
             (SymbolValues values, TestDatabaseTableValue database) = GetData(config, dbSlot);
 

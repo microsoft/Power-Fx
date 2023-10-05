@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Valore di data per cui verrà calcolato il numero della settimana ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Restituisce una data rettificata di un certo numero di mesi. Il giorno del mese resta invariato, ma è limitato dal numero di giorni nel nuovo mese.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>mesi</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Valore di data da rettificare in base al numero di mesi specificato.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Numero di mesi in base ai quali modificare la data. Un valore positivo indica una data futura, un valore negativo una data passata e zero non modifica il mese.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Restituisce l'ultimo giorno del mese per una data specificata, rettificato di un numero di mesi.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>mesi</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Valore di data da rettificare in base al numero di mesi specificato.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Numero di mesi in base ai quali modificare la data. Un valore positivo indica una data futura, un valore negativo una data passata e zero non modifica il mese.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Tronca il "numero" arrotondando all'infinito negativo.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Dichiarazione valore letterale del tipo non valida</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Mancata corrispondenza del tipo tra i tipi di record di origine e di destinazione. Il tipo specificato include campi aggiuntivi: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Mancata corrispondenza del tipo tra i tipi di record di origine e di destinazione. Il tipo specificato include campi mancanti: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Mancata corrispondenza del tipo tra i tipi di record di origine e di destinazione. Nome campo: {0} non trovato.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Mancata corrispondenza del tipo tra i tipi di record di origine e di destinazione. Nome campo: {0} Previsto {1}; Trovato {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Il tipo {0} specificato non può essere forzato al tipo di origine {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Tipo non corrispondente tra tipi di origine e di destinazione. Previsto {0}; Trovato {1}.</value>
     
   </data>
 </root>

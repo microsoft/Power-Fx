@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Ein Datumswert, für den die ISO-Wochenzahl berechnet wird.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Gibt ein um eine Anzahl von Monaten angepasstes Datum zurück. Der Tag des Monats bleibt unverändert, wird aber durch die Anzahl der Tage im neuen Monat begrenzt.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>Datum</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>Monate</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Ein Datumswert, der um die angegebene Anzahl von Monaten angepasst werden soll.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Anzahl der Monate, um die das Datum geändert werden soll. Ein positiver Wert ergibt ein zukünftiges Datum, ein negativer Wert ein Datum in der Vergangenheit, und null ändert den Monat nicht.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Gibt den letzten Tag des Monats für ein angegebenes Datum zurück, angepasst um eine Anzahl von Monaten.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>Datum</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>Monate</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Ein Datumswert, der um die angegebene Anzahl von Monaten angepasst werden soll.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Anzahl der Monate, um die das Datum geändert werden soll. Ein positiver Wert ergibt ein zukünftiges Datum, ein negativer Wert ein Datum in der Vergangenheit, und null ändert den Monat nicht.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Kürzt „Zahl“ durch Runden in Richtung negativer Unendlichkeit.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Die Literal-Meldung war ungültig</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Typkonflikt zwischen Quell- und Zieldatensatztypen. Für den angegebenen Typ sind zusätzliche Felder vorhanden: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Typkonflikt zwischen Quell- und Zieldatensatztypen. Für den angegebenen Typ fehlen Felder: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Typkonflikt zwischen Quell- und Zieldatensatztypen. Feldname: {0} nicht gefunden.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Typkonflikt zwischen Quell- und Zieldatensatztypen. Feldname: {0}. Erwartet: {1}; Gefunden: {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Der angegebene Typ {0} kann nicht zum Quelltyp {1} gezwungen werden.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Typkonflikt zwischen Quell- und Zieltypen. Erwartet: {0}; Gefunden: {1}.</value>
     
   </data>
 </root>

@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Значение даты, для которой будет рассчитываться номер недели по стандарту ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Возвращает дату, откорректированную по количеству месяцев. День месяца останется таким же, но он сокращается на число дней в новом месяце.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>дата</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>мес.</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Значение даты, которая должна быть откорректирована по указанному количеству месяцев.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Количество месяцев, по которым необходимо изменить дату. Положительное значение означает дату в будущем, отрицательное значение означает дату в прошлом, а нулевое значение не приводит к изменению месяца.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Возвращает последний день месяца для указанной даты, с корректировкой по числу месяцев.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>дата</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>мес.</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Значение даты, которая должна быть откорректирована по указанному количеству месяцев.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Количество месяцев, по которым необходимо изменить дату. Положительное значение означает дату в будущем, отрицательное значение означает дату в прошлом, а нулевое значение не приводит к изменению месяца.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Усекает число путем округления в сторону отрицательной бесконечности.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Недопустимая декларация типа литерала</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Несоответствие типов между исходным и целевым типами записей. У данного типа есть дополнительные поля: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Несоответствие типов между исходным и целевым типами записей. Для данного типа отсутствуют поля: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Несоответствие типов между исходным и целевым типами записей. Имя поля "{0}" не найдено.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Несоответствие типов между исходным и целевым типами записей. Имя поля: "{0}"; ожидаемое: "{1}"; найдено "{2}".</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Данный тип "{0}" не может быть приведен к типу источника "{1}".</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Несоответствие типов между исходными и целевыми типами. Ожидаемое: "{0}"; найдено: "{1}".</value>
     
   </data>
 </root>

@@ -36,8 +36,10 @@ namespace Microsoft.PowerFx.Connectors
         /// Allow using functions that are identified as unsupported.
         /// NotSupportedReason property will still be specified.
         /// </summary>
-        public bool AllowUnsupportedFunctions { get; init; } = false;        
+        public bool AllowUnsupportedFunctions { get; init; } = false;    
         
+        public ConnectorCompatibility Compatibility { get; init; } = ConnectorCompatibility.Default;
+
         public void Validate()
         {
             if (Namespace == null)
@@ -50,5 +52,20 @@ namespace Microsoft.PowerFx.Connectors
                 throw new ArgumentException(nameof(Namespace), $"invalid functionNamespace: {Namespace}");
             }
         }
+    }
+
+    public enum ConnectorCompatibility
+    {
+        Default = PowerAppsCompatibility,
+        
+        // Power Apps Compatibility
+        // - required parameters can be reordered based on their locations
+        // - required internal visible parameters with defaults are required
+        PowerAppsCompatibility = 1,
+
+        // Swagger File Conformity
+        // - parameters appear in the order specified in the swagger file
+        // - internal visible parameters are completely hidden (required/optional, with or without default value)
+        SwaggerCompatibility = 2
     }
 }

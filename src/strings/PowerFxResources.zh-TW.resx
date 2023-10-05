@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>將計算 ISO 週數的日期值。</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>傳回依月份數調整的日期。該月的日期仍然相同，但上限為新月份的天數。</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>日期</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>個月</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>要依指定月份數調整的日期值。</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>用以變更日期的月份數。正值會得出未來的日期，負值會得出過去的日期，零則不會變更月份。</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>傳回指定日期當月的最後一天 (依月份數調整)。</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>日期</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>個月</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>要依指定月份數調整的日期值。</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;用以變更日期的月份數。正值會產生未來的日期，負值會產生過去的日期，零則不會變更月份。</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>通過向負無限大捨入來截斷「數字」。</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>類型常值宣告無效</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。給定類型包含額外欄位: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。給定類型缺少欄位: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。找不到欄位名稱: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。欄位名稱: {0} 應為 {1}; 找到 {2}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>給定的 {0} 類型無法強制變更為來源類型 {1}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。應為 {0}; 找到 {1}。</value>
     
   </data>
 </root>

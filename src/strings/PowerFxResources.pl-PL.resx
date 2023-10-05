@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Wartość daty, dla której zostanie obliczony numer tygodnia ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Zwraca datę dostosowaną przy użyciu liczby miesięcy. Dzień miesiąca pozostaje taki sam, ale jest ograniczany przez liczbę dni w nowym miesiącu.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>miesiące</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Wartość daty, która ma zostać dostosowana przy użyciu określonej liczby miesięcy.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Liczba miesięcy, przy użyciu której ma zostać zmieniona data. Wartość dodatnia wskazuje datę w przyszłości, wartość ujemna datę w przeszłości, a wartość zero nie powoduje zmiany miesiąca.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Zwraca ostatni dzień miesiąca dla określonej daty dostosowanej za pomocą liczby miesięcy.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>miesiące</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Wartość daty, która ma zostać dostosowana przy użyciu określonej liczby miesięcy.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>Liczba miesięcy, przy użyciu której ma zostać zmieniona data. Wartość dodatnia wskazuje datę w przyszłości, wartość ujemna datę w przeszłości, a wartość zero nie powoduje zmiany miesiąca.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Obcina wartość typu „liczba”, wykonując zaokrąglenie w stronę ujemnej nieskończoności.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Deklaracja literału typu była nieprawidłowa</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Niezgodność typów rekordu źródłowego i docelowego. Dany typ ma dodatkowe pola: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Niezgodność typów rekordu źródłowego i docelowego. W danym typie brakuje pól: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Niezgodność typów rekordu źródłowego i docelowego. Nie znaleziono nazwy pola {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Niezgodność typów rekordu źródłowego i docelowego. Nazwa pola: {0}; oczekiwano: {1}; znaleziono: {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Nie można przekształcić danego typu {0} na typ źródłowy {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Niezgodność typów źródłowego i docelowego. Oczekiwano: {0}; znaleziono: {1}.</value>
     
   </data>
 </root>

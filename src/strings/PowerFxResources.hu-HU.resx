@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>A dátumérték, amelyhez a rendszer kiszámítja az ISO szerinti hétszámot.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>A hónapok száma által helyesbített dátumot adja vissza. A hónap napja változatlan marad, de az új hónap napjainak száma jelenti a felső határértéket.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>dátum</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>hónap</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Ezt a dátumot kell módosítani a megadott számú hónappal.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Azon hónapok száma, amelyekkel a dátumot módosítani kell. A pozitív érték jövőbeli dátumot, a negatív érték múltbeli dátumot eredményez, a nulla pedig nem módosítja a hónapot.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>A hónap utolsó napját adja vissza egy adott dátumra vonatkozóan, amelyet több hónappal módosított.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>dátum</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>hónap</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Ezt a dátumot kell módosítani a megadott számú hónappal.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Azon hónapok száma, amelyekkel a dátumot módosítani kell. A pozitív érték jövőbeli dátumot, a negatív érték múltbeli dátumot eredményez, a nulla pedig nem módosítja a hónapot.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>A szám csonkolása a negatív végtelen felé kerekítéssel.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>A szó szerinti deklaráció típusa érvénytelen volt</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Típuseltérés a forrás- és célrekordtípusok között. A megadott típus további mezőket tartalmaz: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Típuseltérés a forrás- és célrekordtípusok között. A megadott típusnak hiányzó mezői vannak: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Típuseltérés a forrás- és célrekordtípusok között. Mezőnév: {0} található.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Típuseltérés a forrás- és célrekordtípusok között. Mezőnév: {0} Várt {1}; Talált {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Az adott {0} típus nem kényszeríthető a(z) {1} forrástípusra.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Típuseltérés a forrás- és céltípusok között. Várt {0}; Talált {1}.</value>
     
   </data>
 </root>

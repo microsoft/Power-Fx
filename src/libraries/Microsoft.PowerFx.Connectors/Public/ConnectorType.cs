@@ -59,21 +59,31 @@ namespace Microsoft.PowerFx.Connectors
 
         public Visibility Visibility { get; internal set; }
 
-        internal RecordType HiddenRecordType { get; }
+        internal RecordType HiddenRecordType { get; }       
 
-        public bool SupportsSuggestions => DynamicSchema != null || DynamicProperty != null;
+        public bool SupportsDynamicValuesOrList => DynamicValues != null || DynamicList != null;
+
+        public bool SupportsDynamicSchemaOrProperty => DynamicSchema != null || DynamicProperty != null;
+
+        public bool SupportsDynamicIntellisense => SupportsDynamicValuesOrList || SupportsDynamicSchemaOrProperty;
 
         internal ConnectorDynamicSchema DynamicSchema { get; private set; }
 
         internal ConnectorDynamicProperty DynamicProperty { get; private set; }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType)
+        internal ConnectorDynamicValue DynamicValues { get; private set; }
+
+        internal ConnectorDynamicList DynamicList { get; private set; }
+
+        internal bool Binary { get; private set; }
+
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, bool binary = false)
         {
             Name = openApiParameter?.Name;
             IsRequired = openApiParameter?.Required == true;
             Visibility = openApiParameter?.GetVisibility().ToVisibility() ?? Visibility.Unknown;
-
             FormulaType = formulaType;
+            Binary = binary;
 
             if (schema != null)
             {
@@ -86,7 +96,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (IsEnum)
                 {
-                    EnumValues = schema.Enum.Select(oaa => OpenApiExtensions.TryGetOpenApiValue(oaa, out FormulaValue fv) ? fv : throw new NotSupportedException($"Invalid conversion for type {oaa.GetType().Name} in enum")).ToArray();
+                    EnumValues = schema.Enum.Select(oaa => OpenApiExtensions.TryGetOpenApiValue(oaa, null, out FormulaValue fv) ? fv : throw new NotSupportedException($"Invalid conversion for type {oaa.GetType().Name} in enum")).ToArray();
                     EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue(XMsEnumDisplayName, out IOpenApiExtension enumNames) && enumNames is OpenApiArray oaa
                                         ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
                                         : Array.Empty<string>();
@@ -100,6 +110,8 @@ namespace Microsoft.PowerFx.Connectors
 
             DynamicSchema = openApiParameter.GetDynamicSchema();
             DynamicProperty = openApiParameter.GetDynamicProperty();
+            DynamicValues = openApiParameter.GetDynamicValue();
+            DynamicList = openApiParameter.GetDynamicList();
         }
 
         internal ConnectorType()

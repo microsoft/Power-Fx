@@ -355,13 +355,11 @@ Output/
 # Tool folder
 tool/
 
+# Report folder 
+report/
+
 # ApiCompat suppression files
 suppress.*.xml
-
-# Connector analysis reports
-/report/Analysis.txt
-/report/Report.json
-/report/Report_*.json
 
 # global.json
 /src/global.json

@@ -329,6 +329,40 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+    // EDate()
+    // Equivalent DAX/Excel function: EDate
+    internal sealed class EDateFunction : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public EDateFunction()
+            : base("EDate", TexlStrings.AboutEDate, FunctionCategories.DateTime, DType.Date, 0, 2, 2, DType.DateTime, DType.Number)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.EDateArg1, TexlStrings.EDateArg2 };
+        }
+    }
+
+    // EOMonth()
+    // Equivalent DAX/Excel function: EOMonth
+    internal sealed class EOMonthFunction : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public EOMonthFunction()
+            : base("EOMonth", TexlStrings.AboutEOMonth, FunctionCategories.DateTime, DType.Date, 0, 2, 2, DType.DateTime, DType.Number)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.EOMonthArg1, TexlStrings.EOMonthArg2 };
+        }
+    }
+
     internal abstract class DateTimeGenericFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;

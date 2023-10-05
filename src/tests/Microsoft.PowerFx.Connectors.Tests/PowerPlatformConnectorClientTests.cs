@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         private HttpMessageInvoker HttpMessageInvoker => new (TestHandler);
 
-        private PowerPlatformConnectorClient Client => new (TestEndpoint, TestEnvironmentId, async () => TestAuthToken, HttpMessageInvoker);
+        private PowerPlatformConnectorClient Client => new(TestEndpoint, TestEnvironmentId, TestConnectionId, async () => TestAuthToken, HttpMessageInvoker);
 
         [Fact]
         public async Task PowerPlatformConnectorClient_Constructor()
@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         Assert.True(Guid.TryParse(header.Value.First(), out _));
                         break;
                     case "x-ms-request-method":
-                        Assert.Equal(request.Method.ToString(), header.Value.First());
+                        Assert.Equal(request.Method.ToString().ToUpperInvariant(), header.Value.First());
                         break;
                     case "Authorization":
                         Assert.Equal($"Bearer {TestAuthToken}", header.Value.First());

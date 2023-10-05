@@ -44,5 +44,4 @@ namespace Microsoft.PowerFx.Connectors
             _cachedRows = null;
         }
     }
-
 }

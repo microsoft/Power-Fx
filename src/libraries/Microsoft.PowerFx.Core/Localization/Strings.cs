@@ -349,6 +349,12 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter WeekNumArg2 = (b) => StringResources.Get("WeekNumArg2", b);
         public static StringGetter AboutISOWeekNum = (b) => StringResources.Get("AboutISOWeekNum", b);
         public static StringGetter ISOWeekNumArg1 = (b) => StringResources.Get("ISOWeekNumArg1", b);
+        public static StringGetter AboutEDate = (b) => StringResources.Get("AboutEDate", b);
+        public static StringGetter EDateArg1 = (b) => StringResources.Get("EDateArg1", b);
+        public static StringGetter EDateArg2 = (b) => StringResources.Get("EDateArg2", b);
+        public static StringGetter AboutEOMonth = (b) => StringResources.Get("AboutEOMonth", b);
+        public static StringGetter EOMonthArg1 = (b) => StringResources.Get("EOMonthArg1", b);
+        public static StringGetter EOMonthArg2 = (b) => StringResources.Get("EOMonthArg2", b);
 
         public static StringGetter AboutCalendar__MonthsLong = (b) => StringResources.Get("AboutCalendar__MonthsLong", b);
         public static StringGetter AboutCalendar__MonthsShort = (b) => StringResources.Get("AboutCalendar__MonthsShort", b);
@@ -702,5 +708,12 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WrnSetExpandableType = new ErrorResourceKey("WrnSetExpandableType");
 
         public static ErrorResourceKey ErrNotSupportedFormat_Func = new ErrorResourceKey("ErrNotSupportedFormat_Func");
+
+        public static ErrorResourceKey ErrExpectedRVExtraFields = new ErrorResourceKey("ErrExpectedRVExtraFields");
+        public static ErrorResourceKey ErrExpectedRVMissingFields = new ErrorResourceKey("ErrExpectedRVMissingFields");
+        public static ErrorResourceKey ErrExpectedRVFieldNotFound = new ErrorResourceKey("ErrExpectedRVFieldNotFound");
+        public static ErrorResourceKey ErrExpectedRVFieldTypeMismatch = new ErrorResourceKey("ErrExpectedRVFieldTypeMismatch");
+        public static ErrorResourceKey ErrExpectedRVCannotCoerceType = new ErrorResourceKey("ErrExpectedRVCannotCoerceType");
+        public static ErrorResourceKey ErrExpectedRVTypeMismatch = new ErrorResourceKey("ErrExpectedRVTypeMismatch");
     }
 }

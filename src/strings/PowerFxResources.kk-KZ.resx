@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>ISO апта нөмірі есептелетін күн мәні.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Ай саны бойынша реттелген күнді қайтарады. Ай күні бірдей болып қалады, бірақ жаңа айдағы күн санымен жабылады.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>күн</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>айлар</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Көрсетілген айлар саны бойынша реттелетін күн мәні.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Күн өзгертілетін айлар саны. Оң мән болашақ күнді, теріс мән өткен күнді береді, ал нөл айды өзгертпейді.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Көрсетілген күн үшін, ай саны бойынша реттелген соңғы ай күнін береді.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>күн</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>айлар</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Көрсетілген айлар саны бойынша реттелетін күн мәні.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Күн өзгертілетін айлар саны. Оң мән болашақ күнді, теріс мән өткен күнді береді, ал нөл айды өзгертпейді.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Теріс шексіздікке қарай дөңгелектеу арқылы "санды" қысқартады.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Түрдің тура декларациясы жарамсыз болды</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. Берілген түрдің қосымша өрістері бар: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. Берілген түрдің жетіспейтін өрістері бар: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. Өріс атауы: {0} табылмады.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. Өріс атауы: {0} {1} күтілді; {2} табылды.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Берілген {0} түрін {1} бастапқы түріне келтіру мүмкін емес.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. {0} күтілді; {1} табылды.</value>
     
   </data>
 </root>

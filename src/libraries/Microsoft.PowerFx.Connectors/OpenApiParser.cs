@@ -8,7 +8,9 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 using static Microsoft.PowerFx.Connectors.Constants;
 using static Microsoft.PowerFx.Connectors.OpenApiHelperFunctions;
 
@@ -16,24 +18,73 @@ namespace Microsoft.PowerFx.Connectors
 {
     public class OpenApiParser
     {
-        public static IEnumerable<ConnectorFunction> GetFunctions(string @namespace, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> namedValues = null)
+        public static IEnumerable<ConnectorFunction> GetFunctions(string @namespace, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
         {
-            return GetFunctions(new ConnectorSettings(@namespace), openApiDocument, namedValues);
+            try
+            {
+                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}");
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(new ConnectorSettings(@namespace), openApiDocument, configurationLogger, globalValues);
+                configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}, returning {functions.Count()} functions");
+                return functions;
+            }
+            catch (Exception ex)
+            {
+                configurationLogger?.LogException(ex, $"Exception in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, {nameof(ConnectorSettings)} Namespace {@namespace}, {LogException(ex)}");
+                throw;
+            }
         }
 
-        public static IEnumerable<ConnectorFunction> GetFunctions(string @namespace, OpenApiDocument openApiDocument, string connectionId)
+        public static IEnumerable<ConnectorFunction> GetFunctions(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
         {
-            return GetFunctions(new ConnectorSettings(@namespace), openApiDocument, new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>() { { "connectionId", FormulaValue.New(connectionId) } }));
-        }        
+            try
+            {
+                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger, globalValues);
+                configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, returning {functions.Count()} functions");
+                return functions;
+            }
+            catch (Exception ex)
+            {
+                configurationLogger?.LogException(ex, $"Exception in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, {LogException(ex)}");
+                throw;
+            }
+        }
 
-        public static IEnumerable<ConnectorFunction> GetFunctions(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> namedValues = null)
+        internal static IEnumerable<ConnectorFunction> GetFunctionsInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
         {
             bool connectorIsSupported = true;
             string connectorNotSupportedReason = string.Empty;
-
-            ValidateSupportedOpenApiDocument(openApiDocument, ref connectorIsSupported, ref connectorNotSupportedReason, connectorSettings.IgnoreUnknownExtensions);
-
             List<ConnectorFunction> functions = new ();
+
+            if (connectorSettings == null)
+            {
+                configurationLogger?.LogError($"{nameof(connectorSettings)} is null");
+                return functions;
+            }
+
+            if (connectorSettings.Namespace == null)
+            {
+                configurationLogger?.LogError($"{nameof(connectorSettings)}.{nameof(connectorSettings.Namespace)} is null");
+                return functions;
+            }
+
+            if (!DName.IsValidDName(connectorSettings.Namespace))
+            {
+                configurationLogger?.LogError($"{nameof(connectorSettings)}.{nameof(connectorSettings.Namespace)} is not a valid DName");
+                return functions;
+            }
+
+            if (openApiDocument == null)
+            {
+                configurationLogger?.LogError($"{nameof(openApiDocument)} is null");
+                return functions;
+            }
+
+            if (!ValidateSupportedOpenApiDocument(openApiDocument, ref connectorIsSupported, ref connectorNotSupportedReason, connectorSettings.IgnoreUnknownExtensions, configurationLogger))
+            {
+                return functions;
+            }
+
             string basePath = openApiDocument.GetBasePath();
 
             foreach (KeyValuePair<string, OpenApiPathItem> kv in openApiDocument.Paths)
@@ -46,10 +97,11 @@ namespace Microsoft.PowerFx.Connectors
                 // Skip Webhooks
                 if (ops.Extensions.Any(kvp => kvp.Key == XMsNotificationContent))
                 {
+                    configurationLogger?.LogInformation($"Skipping Webhook {path} {ops.Description}");
                     continue;
                 }
 
-                ValidateSupportedOpenApiPathItem(ops, ref isSupportedForPath, ref notSupportedReasonForPath, connectorSettings.IgnoreUnknownExtensions);
+                ValidateSupportedOpenApiPathItem(ops, ref isSupportedForPath, ref notSupportedReasonForPath, connectorSettings.IgnoreUnknownExtensions, configurationLogger);
 
                 foreach (KeyValuePair<OperationType, OpenApiOperation> kv2 in ops.Operations)
                 {
@@ -59,17 +111,37 @@ namespace Microsoft.PowerFx.Connectors
                     HttpMethod verb = kv2.Key.ToHttpMethod(); // "GET", "POST"...
                     OpenApiOperation op = kv2.Value;
 
-                    // We only want to keep "actions", triggers are always ignored
-                    if (op.IsTrigger())
+                    if (op == null)
                     {
+                        configurationLogger?.LogError($"Operation {verb} {path} is null");
                         continue;
                     }
 
-                    ValidateSupportedOpenApiOperation(op, ref isSupportedForOperation, ref notSupportedReasonForOperation, connectorSettings.IgnoreUnknownExtensions);
-                    ValidateSupportedOpenApiParameters(op, ref isSupportedForOperation, ref notSupportedReasonForOperation, connectorSettings.IgnoreUnknownExtensions);
+                    // We only want to keep "actions", triggers are always ignored
+                    if (op.IsTrigger())
+                    {
+                        configurationLogger?.LogInformation($"Operation {verb} {path} is trigger");
+                        continue;
+                    }
+
+                    ValidateSupportedOpenApiOperation(op, ref isSupportedForOperation, ref notSupportedReasonForOperation, connectorSettings.IgnoreUnknownExtensions, configurationLogger);
+                    ValidateSupportedOpenApiParameters(op, ref isSupportedForOperation, ref notSupportedReasonForOperation, connectorSettings.IgnoreUnknownExtensions, configurationLogger);
 
                     string operationName = NormalizeOperationId(op.OperationId ?? path);
+
+                    if (string.IsNullOrEmpty(operationName))
+                    {
+                        configurationLogger?.LogError($"Operation {verb} {path}, OperationId {op.OperationId} has a null or empty operationName");
+                        continue;
+                    }
+
                     string opPath = basePath != null && basePath != "/" ? basePath + path : path;
+
+                    if (string.IsNullOrEmpty(opPath))
+                    {
+                        configurationLogger?.LogError($"Operation {verb} {path}, OperationId {op.OperationId} has a null or empty operation path");
+                        continue;
+                    }
 
                     bool isSupported = isSupportedForPath && connectorIsSupported && isSupportedForOperation;
                     string notSupportedReason = !string.IsNullOrEmpty(connectorNotSupportedReason)
@@ -78,27 +150,26 @@ namespace Microsoft.PowerFx.Connectors
                                               ? notSupportedReasonForPath
                                               : notSupportedReasonForOperation;
 
-                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings, functions, namedValues) { Servers = openApiDocument.Servers };
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings, functions, configurationLogger, globalValues) { Servers = openApiDocument.Servers };
                     functions.Add(connectorFunction);
                 }
             }
 
-            return functions.Where(f => !f.Filtered);
+            configurationLogger?.LogInformation($"Namespace {connectorSettings.Namespace}: '{openApiDocument.Info.Title}' version {openApiDocument.Info.Version} - {functions.Count} functions found");
+            configurationLogger?.LogDebug($"Functions found: {string.Join(", ", functions.Select(f => f.Name))}");
+
+            return functions;
         }
 
-        private static void ValidateSupportedOpenApiDocument(OpenApiDocument openApiDocument, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions)
+        private static bool ValidateSupportedOpenApiDocument(OpenApiDocument openApiDocument, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions, ConnectorLogger logger = null)
         {
             // OpenApiDocument - https://learn.microsoft.com/en-us/dotnet/api/microsoft.openapi.models.openapidocument?view=openapi-dotnet
-            // AutoRest Extensions for OpenAPI 2.0 - https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md
-
-            if (openApiDocument == null)
-            {
-                throw new ArgumentNullException(nameof(openApiDocument));
-            }
+            // AutoRest Extensions for OpenAPI 2.0 - https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md            
 
             if (openApiDocument.Paths == null)
             {
-                throw new InvalidOperationException($"OpenApiDocument is invalid - has null paths");
+                logger?.LogError($"OpenApiDocument is invalid, it has no Path");
+                return false;
             }
 
             if (!ignoreUnknownExtensions)
@@ -129,16 +200,18 @@ namespace Microsoft.PowerFx.Connectors
 
                 // Undocumented but safe to ignore
                 infoExtensions.Remove("x-ms-connector-name");
-                infoExtensions.Remove("x-ms-keywords");                
+                infoExtensions.Remove("x-ms-keywords");
 
                 if (infoExtensions.Any())
                 {
                     isSupported = false;
                     notSupportedReason = $"OpenApiDocument Info contains unsupported extensions {string.Join(", ", infoExtensions)}";
+                    logger?.LogWarning($"Unsupported document: {notSupportedReason}");
                 }
             }
 
             // openApiDocument.ExternalDocs - may contain URL pointing to doc
+
             if (openApiDocument.Components != null)
             {
                 if (isSupported && openApiDocument.Components.Callbacks.Any())
@@ -147,6 +220,7 @@ namespace Microsoft.PowerFx.Connectors
                     // https://learn.microsoft.com/en-us/dotnet/api/microsoft.openapi.models.openapicallback
                     isSupported = false;
                     notSupportedReason = $"OpenApiDocument Components contains Callbacks";
+                    logger?.LogWarning($"Unsupported document: {notSupportedReason}");
                 }
 
                 // openApiDocument.Examples can be ignored
@@ -157,6 +231,7 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         isSupported = false;
                         notSupportedReason = $"OpenApiDocument Components contains Extensions {string.Join(", ", openApiDocument.Components.Extensions.Keys)}";
+                        logger?.LogWarning($"Unsupported document: {notSupportedReason}");
                     }
                 }
 
@@ -164,12 +239,14 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     isSupported = false;
                     notSupportedReason = $"OpenApiDocument Components contains Headers";
+                    logger?.LogWarning($"Unsupported document: {notSupportedReason}");
                 }
 
                 if (isSupported && openApiDocument.Components.Links.Any())
                 {
                     isSupported = false;
                     notSupportedReason = $"OpenApiDocument Components contains Links";
+                    logger?.LogWarning($"Unsupported document: {notSupportedReason}");
                 }
 
                 // openApiDocument.Components.Parameters is ok                
@@ -197,6 +274,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     isSupported = false;
                     notSupportedReason = $"OpenApiDocument contains unsupported Extensions {string.Join(", ", extensions)}";
+                    logger?.LogWarning($"Unsupported document: {notSupportedReason}");
                 }
             }
 
@@ -208,16 +286,14 @@ namespace Microsoft.PowerFx.Connectors
             {
                 isSupported = false;
                 notSupportedReason = $"OpenApiDocument contains unsupported Workspace";
+                logger?.LogWarning($"Unsupported document: {notSupportedReason}");
             }
+
+            return true;
         }
 
-        private static void ValidateSupportedOpenApiPathItem(OpenApiPathItem ops, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions)
+        private static void ValidateSupportedOpenApiPathItem(OpenApiPathItem ops, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions, ConnectorLogger logger = null)
         {
-            if (!isSupported)
-            {
-                return;
-            }
-
             if (!ignoreUnknownExtensions)
             {
                 List<string> pathExtensions = ops.Extensions.Keys.ToList();
@@ -231,11 +307,12 @@ namespace Microsoft.PowerFx.Connectors
                     // x-ms-notification - https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-notification-content
                     isSupported = false;
                     notSupportedReason = $"OpenApiPathItem contains unsupported Extensions {string.Join(", ", ops.Extensions.Keys)}";
+                    logger?.LogWarning($"Unsupported path '{ops.Description}': {notSupportedReason}");
                 }
             }
         }
 
-        private static void ValidateSupportedOpenApiOperation(OpenApiOperation op, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions)
+        private static void ValidateSupportedOpenApiOperation(OpenApiOperation op, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions, ConnectorLogger logger = null)
         {
             if (!isSupported)
             {
@@ -246,12 +323,14 @@ namespace Microsoft.PowerFx.Connectors
             {
                 isSupported = false;
                 notSupportedReason = $"OpenApiOperation contains unsupported Callbacks";
+                logger?.LogWarning($"Unsupported operationId {op.OperationId}: {notSupportedReason}");
             }
 
             if (isSupported && op.Deprecated)
             {
                 isSupported = false;
                 notSupportedReason = $"OpenApiOperation is deprecated";
+                logger?.LogWarning($"OperationId {op.OperationId} is deprecated");
             }
 
             if (!ignoreUnknownExtensions)
@@ -290,11 +369,12 @@ namespace Microsoft.PowerFx.Connectors
 
                     // x-ms-pageable not supported - https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md#x-ms-pageable
                     notSupportedReason = $"OpenApiOperation contains unsupported Extensions {string.Join(", ", opExtensions)}";
+                    logger?.LogWarning($"OperationId {op.OperationId}: {notSupportedReason}");
                 }
             }
         }
 
-        private static void ValidateSupportedOpenApiParameters(OpenApiOperation op, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions)
+        private static void ValidateSupportedOpenApiParameters(OpenApiOperation op, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions, ConnectorLogger logger = null)
         {
             foreach (OpenApiParameter param in op.Parameters)
             {
@@ -304,6 +384,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     isSupported = false;
                     notSupportedReason = $"OpenApiParameter is null";
+                    logger?.LogWarning($"OperationId {op.OperationId} has a null OpenApiParameter");
                     return;
                 }
 
@@ -311,6 +392,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     isSupported = false;
                     notSupportedReason = $"OpenApiParameter {param.Name} is deprecated";
+                    logger?.LogWarning($"OperationId {op.OperationId}, parameter {param.Name} is deprecated");
                     return;
                 }
 
@@ -318,6 +400,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     isSupported = false;
                     notSupportedReason = $"OpenApiParameter {param.Name} contains unsupported AllowReserved";
+                    logger?.LogWarning($"OperationId {op.OperationId}, parameter {param.Name}: {notSupportedReason}");
                     return;
                 }
 
@@ -325,6 +408,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     isSupported = false;
                     notSupportedReason = $"OpenApiParameter {param.Name} contains unsupported Content {string.Join(", ", param.Content.Keys)}";
+                    logger?.LogWarning($"OperationId {op.OperationId}, parameter {param.Name}: {notSupportedReason}");
                     return;
                 }
 
@@ -334,15 +418,16 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     isSupported = false;
                     notSupportedReason = $"OpenApiParameter {param.Name} contains unsupported Style";
+                    logger?.LogWarning($"OperationId {op.OperationId}, parameter {param.Name}: {notSupportedReason}");
                     return;
                 }
             }
         }
 
         // Parse an OpenApiDocument and return functions. 
-        internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) Parse(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> namedValues = null)
+        internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) ParseInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
         {
-            List<ConnectorFunction> cFunctions = GetFunctions(connectorSettings, openApiDocument, namedValues).ToList();
+            List<ConnectorFunction> cFunctions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger, globalValues).ToList();
             List<ConnectorTexlFunction> tFunctions = cFunctions.Select(f => new ConnectorTexlFunction(f)).ToList();
 
             return (cFunctions, tFunctions);

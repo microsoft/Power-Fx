@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Valor de data para o que se vai calcular o numero de semana ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Devolve unha data axustada en función dun número de meses. O día do mes segue sendo o mesmo, pero está limitado polo número de días do novo mes.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>meses</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Valor de data que se vai axustar en función do número de meses especificado.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Número de meses en función dos que se vai cambiar de data. Un valor positivo xera unha data futura, un valor negativo xera unha data pasada e o cero non modifica o mes.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Devolve o último día do mes dunha data determinada, axustada en función dun número de meses.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>meses</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Valor de data que se vai axustar en función do número de meses especificado.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Número de meses en función dos que se vai cambiar de data. Un valor positivo xera unha data futura, un valor negativo xera unha data pasada e o cero non modifica o mes.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Corta o "número" ao arredondar ao infinito negativo.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>A declaración literal de tipo non foi válida</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Incoherencia entre os tipos de rexistro de orixe e de destino. O tipo indicado ten campos extra: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Incoherencia entre os tipos de rexistro de orixe e de destino. Ao tipo indicado fáltanlle campos: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Incoherencia entre os tipos de rexistro de orixe e de destino. Non se atopou o nome do campo: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Incoherencia entre os tipos de rexistro de orixe e de destino. Nome do campo: {0}. Esperábase: {1}. Atopouse: {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>O tipo {0} indicado non se pode coaccionar ao tipo de orixe {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Incoherencia entre os tipos de rexistro de orixe e de destino. Esperábase: {0}. Atopouse: {1}.</value>
     
   </data>
 </root>

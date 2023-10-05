@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>ค่าวันที่ที่จะคำนวณหมายเลขสัปดาห์ตาม ISO</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>ส่งกลับวันที่ที่ปรับตามจำนวนเดือน วันของเดือนจะยังคงเหมือนเดิม แต่ถูกจำกัดด้วยจำนวนวันในเดือนใหม่</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>วันที่</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>เดือน</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>ค่าวันที่ที่จะปรับตามจำนวนเดือนที่ระบุ</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>จำนวนเดือนที่จะเปลี่ยนวันที่ ค่าบวกจะให้วันที่ในอนาคต ค่าลบจะให้วันที่ในอดีต และศูนย์จะไม่เปลี่ยนแปลงเดือน</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>ส่งกลับวันสุดท้ายของเดือนสำหรับวันที่ที่ระบุ ซึ่งปรับตามจำนวนเดือน</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>วันที่</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>เดือน</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>ค่าวันที่ที่จะปรับตามจำนวนเดือนที่ระบุ</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;จำนวนเดือนที่จะเปลี่ยนวันที่ ค่าบวกจะให้วันที่ในอนาคต ค่าลบจะให้วันที่ในอดีต และศูนย์จะไม่เปลี่ยนแปลงเดือน</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>ตัดทอน 'ตัวเลข' โดยการปัดเศษไปทางจำนวนอนันต์ลบ</value>
     
@@ -4826,7 +4866,7 @@
     
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
-    <value>ไม่รองรับฟังก์ชัน {0} ใน namespace {1} </value>
+    <value>ไม่รองรับฟังก์ชัน {0} ใน namespace {1}</value>
     
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>การประกาศสัญพจน์ของชนิดไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>ชนิดเรกคอร์ดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน ชนิดที่ให้มามีฟิลด์เกิน: {0}</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>ชนิดเรกคอร์ดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน ชนิดที่ให้มามีฟิลด์ขาดหายไป: {0}</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>ชนิดเรกคอร์ดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน ไม่พบชื่อฟิลด์: {0}</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>ชนิดเรกคอร์ดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน ชื่อฟิลด์: {0} คาดหวัง {1} แต่พบ {2}</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>ชนิด {0} ที่ให้มาไม่สามารถแปลงเป็นชนิดต้นทาง {1} ได้</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>ชนิดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน คาดหวัง {0} แต่พบ {1}</value>
     
   </data>
 </root>

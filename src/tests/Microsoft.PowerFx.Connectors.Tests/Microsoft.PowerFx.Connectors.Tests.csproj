@@ -18,6 +18,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Xunit.SkippableFact" Version="1.4.13" />
+    <PackageReference Include="YamlDotNet" Version="13.4.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +28,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Swagger\*.json" />
     <EmbeddedResource Include="Responses\*.json" />
+    <EmbeddedResource Include="Responses\*.txt" />
     <EmbeddedResource Include="Responses\*.jsonSet" />
   </ItemGroup>
 

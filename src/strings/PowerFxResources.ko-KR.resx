@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>ISO 주 번호를 계산할 날짜 값입니다.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>개월 수만큼 조정된 날짜를 반환합니다. 월의 날짜는 동일하게 유지되지만 새 월의 일 수로 제한됩니다.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>날짜</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>개월</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>지정된 월 수만큼 조정할 날짜 값입니다.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>날짜를 변경할 개월 수입니다. 양수 값은 미래 날짜, 음수 값은 과거 날짜가 되며 0은 월을 그대로 유지합니다.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>지정된 날짜의 월 마지막 날을 월 단위로 조정하여 반환합니다.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>날짜</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>개월</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>지정된 개월 수만큼 조정할 날짜 값입니다.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;날짜를 변경할 개월 수입니다. 양수 값은 미래 날짜, 음수 값은 과거 날짜가 되며 0은 월을 그대로 유지합니다.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>음의 무한대로 반올림하여 '숫자'를 자릅니다.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>유형 리터럴 선언이 유효하지 않습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>원본 레코드 종류와 대상 레코드 종류가 일치하지 않습니다. 지정된 형식에 {0} 필드가 추가로 있습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>원본 레코드 종류와 대상 레코드 종류가 일치하지 않습니다. 지정된 형식에 {0} 필드가 빠져 있습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>원본 레코드 종류와 대상 레코드 종류가 일치하지 않습니다. 필드 이름인 {0}을(를) 찾을 수 없습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>원본 레코드 종류와 대상 레코드 종류가 일치하지 않습니다. 필드 이름: {0} 예상 {1}, 발견 {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>주어진 {0} 형식을 원본 형식 {1}(으)로 강제 변경할 수 없습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>원본 형식과 대상 형식이 일치하지 않습니다. 예상 {0}, 발견 {1}.</value>
     
   </data>
 </root>

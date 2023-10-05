@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>तिथि मान जिसके लिए ISO सप्ताह संख्या की गणना की जाएगी.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>कई महीनों से समायोजित तिथि लौटाता है. महीने का दिन वही रहता है लेकिन नए महीने में दिनों की संख्या से सीमित होता है.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>दिनांक</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>महीने</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>महीनों की निर्दिष्ट संख्या के अनुसार समायोजित किया जाने वाला दिनांक मान.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>तिथि बदलने के लिए महीनों की संख्या. एक सकारात्मक मान एक भविष्य की तारीख देता है, एक नकारात्मक मान एक पिछली तारीख देता है, और शून्य से महीना नहीं बदलेगा.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>किसी निर्दिष्ट तिथि के लिए महीने का अंतिम दिन लौटाता है, जिसे कई महीनों के अनुसार समायोजित किया जाता है.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>दिनांक</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>महीने</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>महीनों की निर्दिष्ट संख्या के अनुसार समायोजित किया जाने वाला दिनांक मान.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;तिथि बदलने के लिए महीनों की संख्या. एक सकारात्मक मान एक भविष्य की तारीख देता है, एक नकारात्मक मान एक पिछली तारीख देता है, और शून्य से महीना नहीं बदलेगा.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>नकारात्मक अनंत की ओर पूर्णांकन करके 'number' को कम करता है.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>प्रकार लिटरल घोषणा अमान्य थी</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>स्रोत और लक्ष्य रिकॉर्ड प्रकारों के बीच बेमेल प्रकार. दिए गए प्रकार में अतिरिक्त फ़ील्ड हैं: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>स्रोत और लक्ष्य रिकॉर्ड प्रकारों के बीच बेमेल प्रकार. दिए गए प्रकार में फ़ील्ड गायब हैं: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>स्रोत और लक्ष्य रिकॉर्ड प्रकारों के बीच बेमेल प्रकार. फ़ील्ड नाम: {0} नहीं मिला.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>स्रोत और लक्ष्य रिकॉर्ड प्रकारों के बीच बेमेल प्रकार. फ़ील्ड का नाम: {0} अपेक्षित {1}; {2} मिला.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>दिए गए {0} प्रकार को स्रोत प्रकार {1} के लिए बाध्य नहीं किया जा सकता.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>स्रोत और लक्ष्य प्रकार के बीच बेमेल प्रकार. अपेक्षित {0}; {1} मिला.</value>
     
   </data>
 </root>

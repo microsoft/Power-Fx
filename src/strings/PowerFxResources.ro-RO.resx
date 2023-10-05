@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>O valoare de tip dată pentru care se va calcula numărul săptămânii conform ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Returnează o dată la care s-a modificat un număr de luni. Ziua din lună rămâne aceeași, dar este limitată la numărul de zile din noua lună.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>dată</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>luni</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>O valoare de dată care urmează a fi modificată cu un număr specificat de luni.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Numărul de luni cu care se modifică data. O valoare pozitivă returnează o dată viitoare, o valoare negativă o dată trecută, iar zero nu va schimba luna.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Returnează ultima zi din luna datei specificate, ajustată cu un număr de luni.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>dată</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>luni</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>O valoare de dată care urmează a fi modificată cu un număr specificat de luni.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Numărul de luni cu care se modifică data. O valoare pozitivă returnează o dată viitoare, o valoare negativă o dată trecută, iar zero nu va schimba luna.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Trunchiază „numărul” rotunjindu-l spre infinit negativ.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Declarația literală a tipului nu a fost validă</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Nepotrivire de tip între tipurile de înregistrări sursă și țintă. Tipul dat are câmpuri suplimentare: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Nepotrivire de tip între tipurile de înregistrări sursă și țintă. Tipul dat are câmpuri lipsă: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Nepotrivire de tip între tipurile de înregistrări sursă și țintă. Numele de câmp : {0} nu s-a găsit.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Nepotrivire de tip între tipurile de înregistrări sursă și țintă. Nume de câmp: {0}, așteptat {1}; găsit {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Tipul {0} dat nu poate fi constrâns la tipul sursă {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Nepotrivire între tipurile sursă și țintă. Așteptat {0}; găsit {1}.</value>
     
   </data>
 </root>

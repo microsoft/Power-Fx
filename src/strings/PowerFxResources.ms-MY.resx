@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Nilai tarikh yang nombor minggu ISO akan dikira.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Mengembalikan tarikh yang dilaraskan mengikut bilangan bulan. Hari dalam bulan kekal sama, tetapi dihadkan oleh bilangan hari dalam bulan baharu.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>tarikh</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>bulan</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Nilai tarikh untuk dilaraskan mengikut bilangan bulan yang ditentukan.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Bilangan bulan untuk mengubah tarikh. Nilai positif menunjukkan tarikh akan datang, nilai negatif menunjukkan tarikh lalu dan sifar tidak akan mengubah bulan tersebut.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Mengembalikan hari terakhir dalam bulan untuk tarikh yang ditentukan dengan dilaraskan mengikut bilangan bulan.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>tarikh</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>bulan</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Nilai tarikh untuk dilaraskan mengikut bilangan bulan yang ditentukan.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Bilangan bulan untuk mengubah tarikh. Nilai positif menunjukkan tarikh akan datang, nilai negatif menunjukkan tarikh lalu dan sifar tidak akan mengubah bulan tersebut.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Memotong 'nombor' dengan membundarkan nombor kepada infiniti negatif.</value>
     
@@ -5046,6 +5086,30 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Perisytiharan harfiah jenis tidak sah</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Jenis yang tidak sepadan antara jenis rekod sumber dengan sasaran. Jenis yang diberikan mempunyai medan tambahan: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Jenis yang tidak sepadan antara jenis rekod sumber dengan sasaran. Jenis yang diberikan tiada medan: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Jenis yang tidak sepadan antara jenis rekod sumber dengan sasaran. Nama medan: {0} tidak ditemukan.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Jenis yang tidak sepadan antara jenis rekod sumber dengan sasaran. Nama medan: {0} {1} dijangkakan; {2} ditemukan.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Jenis {0} yang diberikan tidak boleh dipaksa kepada jenis sumber {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Jenis yang tidak sepadan antara jenis sumber dengan sasaran. {0} dijangkakan; {1} ditemukan.</value>
     
   </data>
 </root>
