@@ -2567,26 +2567,6 @@
     <value>The index of the record to be retrieved.</value>
     <comment>function_parameter - Second argument of the Index function - Number type.</comment>
   </data>
-  <data name="Screen_Name_DisplayName" xml:space="preserve">
-    <value>Name</value>
-    <comment>Display text for the Name property of the screen</comment>
-  </data>
-  <data name="Screen_Printing_DisplayName" xml:space="preserve">
-    <value>Printing</value>
-    <comment>Display text for the Printing property of the screen</comment>
-  </data>
-  <data name="Screen_ImagePosition_DisplayName" xml:space="preserve">
-    <value>Image position</value>
-    <comment>Display text for position of background image on the screen.</comment>
-  </data>
-  <data name="Screen_Size_DisplayName" xml:space="preserve">
-    <value>Size</value>
-    <comment>Display text for the property to fetch the current size of the screen.</comment>
-  </data>
-  <data name="export_Data_DisplayName" xml:space="preserve">
-    <value>Data</value>
-    <comment>Display text for Data</comment>
-  </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
     <comment>Value of label</comment>
@@ -2606,30 +2586,6 @@
   <data name="icon_Rotation_DisplayName" xml:space="preserve">
     <value>Rotation</value>
     <comment>Display text for Rotation</comment>
-  </data>
-  <data name="image_ImagePosition_DisplayName" xml:space="preserve">
-    <value>Image position</value>
-    <comment>Display text for ImagePosition</comment>
-  </data>
-  <data name="label_Live_DisplayName" xml:space="preserve">
-    <value>Live</value>
-    <comment>Display text for Live. Live as in live announcement. Equivalent to HTML attribute "aria-live", which determines how text changes should be announced by screen readers.</comment>
-  </data>
-  <data name="label_Overflow_DisplayName" xml:space="preserve">
-    <value>Overflow</value>
-    <comment>Display text for Overflow</comment>
-  </data>
-  <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
-    <value>Date time zone</value>
-    <comment>The kind of date (local / UTC) that the picker will use</comment>
-  </data>
-  <data name="DatePicker_Format_DisplayName" xml:space="preserve">
-    <value>Format</value>
-    <comment>Display text for the Format property of DatePicker control.</comment>
-  </data>
-  <data name="DatePicker_Language_DisplayName" xml:space="preserve">
-    <value>Language</value>
-    <comment>Display text for the Language property of DatePicker control.</comment>
   </data>
   <data name="Calendar_Width_DisplayName" xml:space="preserve">
     <value>Calendar width</value>
