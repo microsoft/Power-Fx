@@ -694,6 +694,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("[{A]", 0, 4)]
         [InlineData("[{A:2}]", 0, 7)]
         [InlineData("With({A:2", 0, 9)]
+        [InlineData("Filter(CDS, {A:2", 0, 16)]
+        [InlineData("{", 0, 1)]
+        [InlineData("Filter(CDS, {", 0, 13)]
         public void TestParseRecordNodesSpan(string script, int min, int lim)
         {
             var result = TexlParser.ParseScript(script);
