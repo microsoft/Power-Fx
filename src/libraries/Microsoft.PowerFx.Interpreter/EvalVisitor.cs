@@ -293,8 +293,10 @@ namespace Microsoft.PowerFx
                 {
                     _allSymbols = symbolsTable
                 };
-                
-                result = expr.Eval(symbolValues);
+
+                RuntimeConfig runtimeConfig = new RuntimeConfig(symbolValues, CultureInfo);
+
+                result = await expr.EvalAsync(_cancellationToken, runtimeConfig).ConfigureAwait(false);
             }
             else
             {

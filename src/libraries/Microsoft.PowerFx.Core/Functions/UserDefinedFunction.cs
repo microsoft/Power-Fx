@@ -45,11 +45,6 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public ReadOnlySymbolTable AllSymbols => _symbols;
 
-        public void SetSymbols(ReadOnlySymbolTable symbols)
-        {
-            _symbols = symbols;
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class.
         /// </summary>

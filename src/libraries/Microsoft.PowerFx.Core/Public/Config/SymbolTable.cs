@@ -361,21 +361,5 @@ namespace Microsoft.PowerFx
 
             _variables.Add(hostDName, info);
         }
-
-        internal void AddUserFunction(string script, CultureInfo locale)
-        {
-            if (UserDefinitions.ProcessUserDefinitions(script, new ParserOptions() { AllowsSideEffects = true, Culture = locale }, out var userDefinitionResult) && !userDefinitionResult.HasErrors)
-            {
-                foreach (var udf in userDefinitionResult.UDFs)
-                {
-                    //udf.BindBody(this, new Glue2DocumentBinderGlue(), BindingConfig.Default);
-                    AddUserFunction(udf);
-                }
-            }
-            else
-            {
-                throw new InvalidOperationException(string.Join(", ", userDefinitionResult.Errors.Select(er => er.ShortMessage)));
-            }
-        }
     }
 }
