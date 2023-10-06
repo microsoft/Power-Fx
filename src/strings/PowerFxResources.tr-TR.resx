@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>ISO hafta numarasının hesaplanacağı tarih değeri.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Ay sayısına göre ayarlanmış bir tarih döndürür. Ayın günü aynı kalır ancak yeni ay içindeki gün sayısıyla sınırlı olur.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>tarih</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>ay</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Belirtilen ay sayısına göre ayarlanacak tarih değeri.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Tarihin değiştirileceği ay sayısı. Pozitif değer gelecek bir tarihi, negatif değer geçmiş bir tarihi verir ve sıfır değeri ayı değiştirmez.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Belirli bir tarih için ayın son gününü, ay sayısına göre ayarlanmış olarak döndürür.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>tarih</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>ay</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Belirtilen ay sayısına göre ayarlanacak tarih değeri.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Tarihin değiştirileceği ay sayısı. Pozitif değer gelecek bir tarihi, negatif değer geçmiş bir tarihi verir ve sıfır değeri ayı değiştirmez.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Eksi sonsuza doğru yuvarlayarak "sayıyı" kısaltır.</value>
     

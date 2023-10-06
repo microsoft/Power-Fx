@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Hodnota dátumu, pre ktorú sa vypočíta číslo týždňa ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Vráti dátum upravený o určitý počet mesiacov. Deň v mesiaci zostáva rovnaký, je však obmedzený počtom dní v novom mesiaci.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>dátum</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>mesiace</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Hodnota dátumu, ktorá sa má upraviť o zadaný počet mesiacov.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Počet mesiacov, o ktoré sa má zmeniť dátum. Kladná hodnota poskytne dátum v budúcnosti, záporná hodnota dátum v minulosti a nula mesiac nezmení.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Vráti posledný deň mesiaca pre zadaný dátum upravený o určitý počet mesiacov.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>dátum</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>mesiace</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Hodnota dátumu, ktorá sa má upraviť o zadaný počet mesiacov.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Počet mesiacov, o ktoré sa má zmeniť dátum. Kladná hodnota poskytne dátum v budúcnosti, záporná hodnota dátum v minulosti a nula mesiac nezmení.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Skráti číslo zaokrúhlením smerom k zápornému nekonečnu (nadol).</value>
     

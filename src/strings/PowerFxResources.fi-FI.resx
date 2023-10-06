@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Päivämääräarvo, jolle ISO-viikon numero lasketaan.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Palauttaa päivämäärän mukautettuna kuukausien määrällä. Kuukauden päivä pysyy samana, mutta sitä rajoittaa uuden kuukauden päivien lukumäärä.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>päivämäärä</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>kuukautta</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Päivämääräarvo, jota oikaistaan määritetyllä kuukausien määrällä.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Kuukausien lukumäärä, joihin mennessä päivämäärää muutetaan. Positiivinen arvo antaa tulevan päivämäärän, negatiivinen arvo menneen päivämäärän, ja nolla ei muuta kuukautta.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Palauttaa kuukauden viimeisen päivän määritettynä päivänä, korjattuna kuukausien määrällä.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>päivämäärä</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>kuukautta</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Päivämääräarvo, jota oikaistaan määritetyllä kuukausien määrällä.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Kuukausien lukumäärä, joihin mennessä päivämäärää muutetaan. Positiivinen arvo antaa tulevan päivämäärän, negatiivinen arvo menneen päivämäärän, ja nolla ei muuta kuukautta.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Katkaisee luvun pyöristämällä negatiivista ääretöntä kohti.</value>
     

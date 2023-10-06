@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>ISO aste-zenbakia kalkulatuko den dataren balioa.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Hilabete kopuruaren arabera doitutako data bat itzultzen du aukera honek. Hileko eguna berdina izango da, baina hilabete berriaren egun kopuruaren arabera mugatuko da.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>hilabete</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Zehaztutako hilabete kopuruaren arabera doituko den data-balioa.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Hilabete kopurua data aldatzeko. Balio positibo batek etorkizuneko data bat adierazten du, balio negatiboa iraganeko data eta zero balioak ez du hilabetea aldatuko.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Zehaztutako data baten hileko azken eguna itzultzen du, hilabete kopuruaren arabera.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>hilabete</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Zehaztutako hilabete kopuruaren arabera doituko den data-balioa.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Hilabete kopurua data aldatzeko. Balio positibo batek etorkizuneko data bat adierazten du, balio negatiboa iraganeko data eta zero balioak ez du hilabetea aldatuko.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>"Zenbakia" laburtzen du infinitu negatiborantz borobilduz.</value>
     

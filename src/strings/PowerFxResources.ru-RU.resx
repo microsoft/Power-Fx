@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Значение даты, для которой будет рассчитываться номер недели по стандарту ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Возвращает дату, откорректированную по количеству месяцев. День месяца останется таким же, но он сокращается на число дней в новом месяце.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>дата</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>мес.</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Значение даты, которая должна быть откорректирована по указанному количеству месяцев.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Количество месяцев, по которым необходимо изменить дату. Положительное значение означает дату в будущем, отрицательное значение означает дату в прошлом, а нулевое значение не приводит к изменению месяца.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Возвращает последний день месяца для указанной даты, с корректировкой по числу месяцев.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>дата</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>мес.</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Значение даты, которая должна быть откорректирована по указанному количеству месяцев.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Количество месяцев, по которым необходимо изменить дату. Положительное значение означает дату в будущем, отрицательное значение означает дату в прошлом, а нулевое значение не приводит к изменению месяца.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Усекает число путем округления в сторону отрицательной бесконечности.</value>
     
