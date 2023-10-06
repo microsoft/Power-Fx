@@ -1200,10 +1200,14 @@ namespace Microsoft.PowerFx.Functions
             return true;
         }
 
+#pragma warning disable SA1313 // Parameter '_' should begin with a lower-case letter
+
         internal static FormulaValue Json(EvalVisitor runner, EvalVisitorContext _, IRContext irContext, FormulaValue[] args)
         {
             return new JsonProcessing(runner.TimeZoneInfo, irContext, args).Process();
         }
+
+#pragma warning restore SA1313
 
         internal class JsonProcessing
         {
@@ -1275,7 +1279,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 return arg0 switch
                 {
-                    BlankValue blkv => null,
+                    BlankValue blkv => "null",
                     BooleanValue bv => bv.Value.ToString(CultureInfo.InvariantCulture).ToLowerInvariant(),
                     ColorValue cv => GetColorString(cv.Value),
                     DateTimeValue dtv => WithQuotes(TimeZoneInfo.ConvertTimeToUtc(dtv.Value, _timeZoneInfo).ToString("yyyy-MM-dd'T'HH:mm:ss.fffK", CultureInfo.InvariantCulture)),
@@ -1288,8 +1292,7 @@ namespace Microsoft.PowerFx.Functions
                     StringValue sv => WithQuotes(sv.Value),
                     TableValue tv => GetJsonStringForTable(tv, indent),
                     TimeValue tmv => WithQuotes(tmv.Value.ToString(@"hh\:mm\:ss\.fff", CultureInfo.InvariantCulture)),
-
-                    _ => null,
+                    _ => "invalid",
                 };
             }
 
@@ -1338,6 +1341,12 @@ namespace Microsoft.PowerFx.Functions
                     AddIndentation(stringBuilder, indent);
                     stringBuilder.Append(WithQuotes(namedValue.Name));
                     stringBuilder.Append(':');
+
+                    if (!_flags.Compact)
+                    {
+                        stringBuilder.Append(' ');
+                    }
+
                     stringBuilder.Append(JsonInternal(namedValue.Value, indent));
                     b = true;
                 }

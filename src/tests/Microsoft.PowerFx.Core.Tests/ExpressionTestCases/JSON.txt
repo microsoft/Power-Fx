@@ -3,7 +3,7 @@
 #SETUP: OptionSetTestSetup
 
 >> JSON(Blank())
-Blank()
+"null"
 
 >> JSON("hello")
 """hello"""
@@ -57,16 +57,16 @@ Blank()
 "{""a"":1,""b"":""hello"",""c"":true}"
 
 >> Substitute(Substitute(Substitute(JSON({a:1,b:"hello",c:true}, JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
-"{*<t>""a"":1,*<t>""b"":""hello"",*<t>""c"":true*}"
+"{*<t>""a"": 1,*<t>""b"": ""hello"",*<t>""c"": true*}"
 
 >> JSON(Table({a:1,b:"hello",c:true},{a:-3,b:"world",c:false}))
 "[{""a"":1,""b"":""hello"",""c"":true},{""a"":-3,""b"":""world"",""c"":false}]"
 
 >> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:true},{a:-3,b:"world",c:false}), JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
-"[*<t>{*<t><t>""a"":1,*<t><t>""b"":""hello"",*<t><t>""c"":true*<t>},*<t>{*<t><t>""a"":-3,*<t><t>""b"":""world"",*<t><t>""c"":false*<t>}*]"
+"[*<t>{*<t><t>""a"": 1,*<t><t>""b"": ""hello"",*<t><t>""c"": true*<t>},*<t>{*<t><t>""a"": -3,*<t><t>""b"": ""world"",*<t><t>""c"": false*<t>}*]"
 
 >> Substitute(Substitute(Substitute(JSON({a:1,b:"hello",c:true}, JSONFormat.IndentFour & JSONFormat.Compact), Char(10), "*"), Char(13), ""), "    ", "<t>")
-"{*<t>""a"":1,*<t>""b"":""hello"",*<t>""c"":true*}"
+"{*<t>""a"": 1,*<t>""b"": ""hello"",*<t>""c"": true*}"
 
 >> JSON(DateTimeValue("2022-08-07T12:34:56Z"))
 """2022-08-07T12:34:56.000Z"""
