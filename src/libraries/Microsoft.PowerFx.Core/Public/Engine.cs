@@ -331,24 +331,7 @@ namespace Microsoft.PowerFx
                             null, 
                             Config.Features);
 
-            BindingUserDefinedFunctions(combinedSymbols as ComposedReadOnlySymbolTable);
-
             return (binding, combinedSymbols);
-        }
-
-        private void BindingUserDefinedFunctions(ComposedReadOnlySymbolTable combinedSymbols)
-        {
-            foreach (ReadOnlySymbolTable symbol in combinedSymbols.SubTables.Where(symbol => symbol.UserDefinedFunctionNames != null))
-            {
-                foreach (var name in symbol.UserDefinedFunctionNames)
-                {
-                    foreach (UserDefinedFunction udf in combinedSymbols.Functions.WithName(name))
-                    {
-                        //udf.BindBody(combinedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
-                        udf.SetSymbols(combinedSymbols);
-                    }
-                }                
-            }
         }
 
         /// <summary>

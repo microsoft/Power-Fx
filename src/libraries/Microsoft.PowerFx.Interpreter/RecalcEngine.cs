@@ -3,14 +3,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -214,7 +215,31 @@ namespace Microsoft.PowerFx
             return result;
         }
 
-        // Preview functionality 
+        internal void AddUserFunction(string script, CultureInfo locale)
+        {
+            if (UserDefinitions.ProcessUserDefinitions(script, new ParserOptions() { AllowsSideEffects = true, Culture = locale }, out var userDefinitionResult) && !userDefinitionResult.HasErrors)
+            {
+                foreach (var udf in userDefinitionResult.UDFs)
+                {
+                    _symbolTable.AddUserFunction(udf);
+                }
+            }
+            else
+            {
+                var sb = new StringBuilder();
+
+                sb.AppendLine("Something went worng when parsing user definied functions.");
+
+                foreach (var error in userDefinitionResult.Errors)
+                {
+                    error.FormatCore(sb);
+                }
+
+                throw new InvalidOperationException(sb.ToString());
+            }
+        }
+
+        [Obsolete("This has been deprecated and will soon be replaced by 'AddUserFunction'.")]
         internal DefineFunctionsResult DefineFunctions(string script, bool numberIsFloat = false)
         {
             var result = UserDefinitions.Parse(script, new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = numberIsFloat });
@@ -232,7 +257,7 @@ namespace Microsoft.PowerFx
             return DefineFunctions(udfDefinitions);
         }
 
-        [Obsolete("preview")]
+        [Obsolete("This has been deprecated and will soon be deleted.")]
         internal IEnumerable<TexlError> DefineType(string script, ParserOptions parserOptions)
         {
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
@@ -308,6 +333,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="udfDefinitions"></param>
         /// <returns></returns>
+        [Obsolete("This has been deprecated and will soon be deleted.")]
         internal DefineFunctionsResult DefineFunctions(IEnumerable<UDFDefinition> udfDefinitions)
         {
             var expressionErrors = new List<ExpressionError>();
@@ -338,6 +364,7 @@ namespace Microsoft.PowerFx
             return new DefineFunctionsResult(expressionErrors, binders.Select(binder => new FunctionInfo(binder.Function)));
         }
 
+        [Obsolete("This has been deprecated and will soon be deleted.")]
         internal DefineFunctionsResult DefineFunctions(params UDFDefinition[] udfDefinitions)
         {
             return DefineFunctions(udfDefinitions.AsEnumerable());

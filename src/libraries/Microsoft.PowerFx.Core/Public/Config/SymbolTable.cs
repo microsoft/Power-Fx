@@ -13,7 +13,6 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -284,13 +283,6 @@ namespace Microsoft.PowerFx
         internal void AddUserFunction(TexlFunction function)
         {
             AddFunction(function);
-
-            if (_userDefinedFunctions == null)
-            {
-                _userDefinedFunctions = new HashSet<string>();
-            }
-
-            _userDefinedFunctions.Add(function.Name);
         }
 
         internal EnumStoreBuilder EnumStoreBuilder

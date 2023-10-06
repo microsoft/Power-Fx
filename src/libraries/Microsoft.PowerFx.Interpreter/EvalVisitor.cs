@@ -8,14 +8,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
@@ -278,24 +276,25 @@ namespace Microsoft.PowerFx
             }
             else if (func is UserDefinedFunction userDefinedFunc)
             {
-                //result = await userDefinedFunc.InvokeAsync(args, _cancellationToken, context.IncrementStackDepthCounter()).ConfigureAwait(false);
-                userDefinedFunc.BindBody();
+                var recordValue = userDefinedFunc.GetRuntimeRecordValue(args, _cancellationToken);
+
+                var symbolsTableRecord = ReadOnlySymbolTable.NewFromRecord(recordValue.Type);
+                var symbolValuesRecord = SymbolValues.NewFromRecord(symbolsTableRecord, recordValue);
+
+                var symbolsTable = ReadOnlySymbolTable.Compose(_symbolValues.SymbolTable, symbolsTableRecord);
+                var symbolValues = ReadOnlySymbolValues.Compose(_symbolValues, symbolValuesRecord);
+
+                userDefinedFunc.SetFormulaValues(args);
+                userDefinedFunc.BindBody(symbolsTable, new Glue2DocumentBinderGlue(), bindingConfig: BindingConfig.Default);
 
                 (var irnode, var ruleScopeSymbol) = userDefinedFunc.GetIRTranslator();
 
                 var expr = new ParsedExpression(irnode, ruleScopeSymbol, context.StackDepthCounter)
                 {
-                    _allSymbols = userDefinedFunc.AllSymbols
+                    _allSymbols = symbolsTable
                 };
-
-                //var runtimeConfig = new RuntimeConfig(ComposedReadOnlySymbolValues.NewFromRecord(userDefinedFunc.AllSymbols, userDefinedFunc.GetRuntimeRecordValue(args, _cancellationToken)));
-
-                var runtimeConfig = new RuntimeConfig(ReadOnlySymbolValues.NewFromRecord(userDefinedFunc.GetRuntimeRecordValue(args, _cancellationToken)));
-
-                //ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(false, userDefinedFunc.AllSymbols, runtimeConfig?.Values);
-
-                //result = expr.Eval(ReadOnlySymbolValues.NewFromRecord(userDefinedFunc.GetRuntimeRecordValue(args, _cancellationToken)));
-                result = expr.Eval(userDefinedFunc.AllSymbols.CreateValues());
+                
+                result = expr.Eval(symbolValues);
             }
             else
             {
@@ -748,8 +747,6 @@ namespace Microsoft.PowerFx
                     }
 
                     return hostObj;
-                case UDFParameterInfo parm:
-                    return this.GetVariableOrFail(node, parm);
                 default:
                     return ResolvedObjectHelpers.ResolvedObjectError(node);
             }

@@ -30,6 +30,7 @@ namespace Microsoft.PowerFx.Core.Functions
     {
         private readonly bool _isImperative;
         private readonly IEnumerable<UDFArg> _args;
+        private FormulaValue[] _fvArgs;
         private TexlBinding _binding;
 
         public override bool IsAsync => _binding?.IsAsync(UdfBody) ?? false;
@@ -118,22 +119,16 @@ namespace Microsoft.PowerFx.Core.Functions
             _symbols = nameResolver as ReadOnlySymbolTable;
 
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
-            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args), bindingConfig, features: features, rule: rule);
+            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, _fvArgs), bindingConfig, features: features, rule: rule);
 
             CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding);
 
             return _binding;
         }
 
-        public TexlBinding BindBody()
+        public void SetFormulaValues(FormulaValue[] formulaValues)
         {
-            if (_symbols == null)
-            {
-                // !!! Change exception method
-                throw new InvalidOperationException("No symbols");
-            }
-
-            return BindBody(_symbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
+            _fvArgs = formulaValues;
         }
 
         /// <summary>
@@ -196,16 +191,29 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             private readonly INameResolver _globalNameResolver;
             private readonly IReadOnlyDictionary<string, UDFArg> _args;
+            private readonly FormulaValue[] _fvArgs;
 
             public static INameResolver Create(INameResolver globalNameResolver, IEnumerable<UDFArg> args)
             {
                 return new UserDefinitionsNameResolver(globalNameResolver, args);
             }
 
+            public static INameResolver Create(INameResolver globalNameResolver, IEnumerable<UDFArg> args, FormulaValue[] fvArgs)
+            {
+                return new UserDefinitionsNameResolver(globalNameResolver, args, fvArgs);
+            }
+
             private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args)
             {
                 this._globalNameResolver = globalNameResolver;
                 this._args = args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => arg);
+            }
+
+            private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args, FormulaValue[] fvArgs)
+            {
+                this._globalNameResolver = globalNameResolver;
+                this._args = args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => arg);
+                this._fvArgs = fvArgs;
             }
 
             public IExternalDocument Document => _globalNameResolver.Document;
@@ -228,7 +236,16 @@ namespace Microsoft.PowerFx.Core.Functions
                 if (_args.TryGetValue(name, out var value))
                 {
                     var type = value.TypeIdent.GetFormulaType()._type;
-                    nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, value.ArgIndex, value.NameIdent.Name));
+
+                    if (_fvArgs != null)
+                    {
+                        var formulaValue = _fvArgs[value.ArgIndex];
+                        nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, formulaValue);
+                    }
+                    else
+                    {                        
+                        nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, value.ArgIndex, value.NameIdent.Name));
+                    }
 
                     return true;
                 }
