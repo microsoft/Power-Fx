@@ -117,6 +117,18 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("[{A]", 0, 4)]
+        [InlineData("[{A:2}]", 0, 7)]
+        [InlineData("With({A:2", 0, 9)]
+        public void TexlParseRecordNodes(string script, int min, int lim)
+        {
+            var result = TexlParser.ParseScript(script);
+            var span = result.Root.GetCompleteSpan();
+            Assert.Equal(min, span.Min);
+            Assert.Equal(lim, span.Lim);
+        }
+
+        [Theory]
         [InlineData("true")]
         [InlineData("false")]
         public void TexlParseBoolLiterals(string script)
