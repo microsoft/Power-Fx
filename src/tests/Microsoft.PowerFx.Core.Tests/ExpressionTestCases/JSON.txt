@@ -1,0 +1,79 @@
+// (UTC-08:00) Pacific Time (US & Canada)
+#SETUP: TimeZoneInfo("Pacific Standard Time")
+#SETUP: OptionSetTestSetup
+
+>> JSON(Blank())
+Blank()
+
+>> JSON("hello")
+"""hello"""
+
+>> JSON(1.23)
+"1.23"
+
+>> JSON(0)
+"0"
+
+>> JSON(1)
+"1"
+
+>> JSON(-1)
+"-1"
+
+>> JSON(true)
+"true"
+
+>> JSON(false)
+"false"
+
+>> JSON(RGBA(10, 30, 50, 0.75))
+"""#0a1e32bf"""
+
+>> JSON(Color.Turquoise)
+"""#40e0d0ff"""
+
+>> JSON(OptionSet.Option2)
+"""option_2"""
+
+>> JSON(TimeUnit.Hours)
+"""hours"""
+
+// This only works because we're in Pacific Time
+// If we would be in UTC+N time zone, the result would be "2022-08-06" as we convert the date to UTC
+>> JSON(Date(2022,8,7))
+"""2022-08-07"""
+
+>> JSON(DateTimeValue("1970-01-01T00:00:00Z"))
+"""1970-01-01T00:00:00.000Z"""
+
+// Midnight local time in Pacific Time is 8 AM UTC
+>> JSON(DateTimeValue("1970-01-01T00:00:00"))
+"""1970-01-01T08:00:00.000Z"""
+
+>> JSON({a:1,b:"hello",c:true})
+"{""a"":1,""b"":""hello"",""c"":true}"
+
+>> JSON({a:1,b:"hello",c:true}, JSONFormat.Compact)
+"{""a"":1,""b"":""hello"",""c"":true}"
+
+>> Substitute(Substitute(Substitute(JSON({a:1,b:"hello",c:true}, JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"{*<t>""a"":1,*<t>""b"":""hello"",*<t>""c"":true*}"
+
+>> JSON(Table({a:1,b:"hello",c:true},{a:-3,b:"world",c:false}))
+"[{""a"":1,""b"":""hello"",""c"":true},{""a"":-3,""b"":""world"",""c"":false}]"
+
+>> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:true},{a:-3,b:"world",c:false}), JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"[*<t>{*<t><t>""a"":1,*<t><t>""b"":""hello"",*<t><t>""c"":true*<t>},*<t>{*<t><t>""a"":-3,*<t><t>""b"":""world"",*<t><t>""c"":false*<t>}*]"
+
+>> Substitute(Substitute(Substitute(JSON({a:1,b:"hello",c:true}, JSONFormat.IndentFour & JSONFormat.Compact), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"{*<t>""a"":1,*<t>""b"":""hello"",*<t>""c"":true*}"
+
+>> JSON(DateTimeValue("2022-08-07T12:34:56Z"))
+"""2022-08-07T12:34:56.000Z"""
+
+// DateTime is local time, so 1AM in UTC
+>> JSON(Table({a:DateTime(2014,11,29,17,5,1,997),b:Date(2019, 4, 22),c:Time(12, 34, 56, 789)}))
+"[{""a"":""2014-11-30T01:05:01.997Z"",""b"":""2019-04-22"",""c"":""12:34:56.789""}]"
+
+>> JSON(Table({a:GUID("01234567-89AB-CDEF-0123-456789ABCDEF"),b:RGBA(18, 52, 86, 0.5),c:"https://www.microsoft.com",d:Float(23.45)}))
+"[{""a"":""01234567-89ab-cdef-0123-456789abcdef"",""b"":""#12345680"",""c"":""https://www.microsoft.com"",""d"":23.45}]"

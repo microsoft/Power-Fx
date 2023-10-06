@@ -5308,4 +5308,44 @@
     <value>Type mismatch between source and target types. Expected {0}; Found {1}.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Generates a JSON text string for a table, record, or value.</value>
+    <comment>Description of the 'JSON' function.</comment>
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>data</value>
+    <comment>function_parameter - First argument to the JSON function - the data (table, record or value) to be converted to the JSON format.</comment>
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>The data structure to be converted to JSON. Tables, records, and primitive values are supported, arbitrarily nested.</value>
+    <comment>Tooltip for the first argument of the JSON function.</comment>
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>format</value>
+    <comment>function_parameter - Second argument to the JSON function - The format for the JSON conversion. Member of the JSONFormat enum value.</comment>
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>The format to be used in the JSON conversion. The value will be a member of the JSONFormat enumeration.</value>
+    <comment>{Locked=JSONFormat} Tooltip for the second argument of the JSON function.</comment>
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>The '{1}' parameter to the {0} function must be a constant value.</value>
+    <comment>Error message shown to the user if they use a non-constant value for the a function that requires a constant value. The first parameter is the function name, and the second parameter is the function parameter name.</comment>
+  </data>
+ <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>The JSONFormat values '{0}' and '{1}' cannot be used together.</value>
+    <comment>{Locked=JSONFormat} Error message shown to the user if they try to use incompatible values from the JSONFormat enumeration. The parameters are string values, members of that enumeration. For example: The JSONFormat values 'IgnoreBinaryData' and 'IncludeBinaryData' cannot be used together.</comment>
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>The value passed to the JSON function contains media, and it is not supported by default. To allow JSON serialization of media values, make sure to use the IncludeBinaryData option in the 'format' parameter.</value>
+    <comment>{Locked=JSON}{Locked=IncludeBinaryData}. Error message shown to the user if they try to serialize an object that contains media values, without specifying the flag that would allow that operation to happen. Media values are any form of media (audio, images, video) that are included as part of a record or a table. The term 'format' should be translated like the term 'JSONArg2' in this same file.</comment>
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>The JSON function cannot serialize objects of type '{0}'.</value>
+    <comment>{Locked=JSON}. Error message shown to the user if they try to serialize an object which is not supported in the JSON function.</comment>
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>The JSON function cannot serialize tables / objects with a nested property called '{0}' of type '{1}'.</value>
+    <comment>{Locked=JSON}. Error message shown to the user if they try to serialize an object which contain a nested property of a type which is not supported in the JSON function. Both parameters are strings. E.g.: The JSON function cannot serialize tables / objects with a nested property called 'value' of type 'Polymorphic'.</comment>
+  </data>
 </root>

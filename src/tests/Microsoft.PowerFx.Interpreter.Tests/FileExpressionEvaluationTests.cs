@@ -34,14 +34,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // 4. No features with NumberIsFloat (occasional) - important for back compat convertes in Canvas as the
         //    back compat converters depend on the feature mix being the same as when the original app was serialized.
         //
-        // See the README.md in the ExpressionTestCases directory for more details.
+        // See the README.md in the ExpressionTestCases directory for more details.        
 
+        // Canvas currently does not support decimal, but since this interpreter does, we can run tests with decimal here.
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,NumberIsFloat,DecimalSupport")]
         [InterpreterTheory]
-        [TxtFileData(
-            "ExpressionTestCases",
-            "InterpreterExpressionTestCases",
-            nameof(InterpreterRunner),            
-            "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,NumberIsFloat,DecimalSupport")] // Canvas currently does not support decimal, but since this interpreter does, we can run tests with decimal here.
         public void Canvas_Float(ExpressionTestCase testCase)
         {
             // current default features in Canvas abc
@@ -61,12 +58,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: false);
         }
 
+        // Although we are using numbers as floats by default, since this interpreter supports decimal, we can run tests with decimal here.        
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,NumberIsFloat,DecimalSupport")]
         [InterpreterTheory]
-        [TxtFileData(
-            "ExpressionTestCases",
-            "InterpreterExpressionTestCases",
-            nameof(InterpreterRunner),
-            "PowerFxV1,NumberIsFloat,DecimalSupport")] // Although we are using numbers as floats by default, since this interpreter supports decimal, we can run tests with decimal here.
         public void V1_Float(ExpressionTestCase testCase)
         {
             RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: true);

@@ -3,17 +3,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
-using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// Represents a Date and Time together, in the local time zone.
     /// </summary>
+    [DebuggerDisplay("{ToObject().ToString()} ({Type}) {Value.Kind.ToString()}")]
     public class DateTimeValue : PrimitiveValue<DateTime>
     {
         // List of types that allowed to convert to DateTimeValue
@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Types
 
         /// <summary>
         /// Converts To UTC time if value is not utc and <paramref name="timeZoneInfo"/> is utc.
-        /// Converts from UTC time if  value is utc and <paramref name="timeZoneInfo"/> is non utc.
+        /// Converts from UTC time if value is utc and <paramref name="timeZoneInfo"/> is non utc.
         /// else returns the  value/>/>.
         /// NOTE: if <paramref name="timeZoneInfo"/> is null, Local time zone is used.
         /// </summary>
@@ -56,6 +56,7 @@ namespace Microsoft.PowerFx.Types
             }
             else if (value.Kind == DateTimeKind.Local && timeZoneInfo.BaseUtcOffset != TimeSpan.Zero)
             {
+                // Suspicious - should probably be TimeZoneInfo.ConvertTimeToUtc(value, timeZoneInfo) as we want to convert to UTC...
                 return DateTime.SpecifyKind(value, DateTimeKind.Unspecified);
             }
             else if (value.Kind == DateTimeKind.Unspecified && timeZoneInfo.BaseUtcOffset == TimeSpan.Zero)
@@ -64,6 +65,7 @@ namespace Microsoft.PowerFx.Types
             }
             else if (value.Kind == DateTimeKind.Utc && timeZoneInfo.BaseUtcOffset != TimeSpan.Zero)
             {
+                // Should probably use ConvertTimeFromUtc instead
                 return TimeZoneInfo.ConvertTime(value, timeZoneInfo);
             }
 
