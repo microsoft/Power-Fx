@@ -491,6 +491,88 @@ namespace Microsoft.PowerFx.Syntax
             return new Regex(@"\n +(\n +)").Replace(preRegex, (Match match) => match.Groups[1].Value);
         }
 
+        // Public entry point for prettyprinting TEXL parse trees
+        private string FormatNamedFormula(PrettyPrintVisitor visitor, NamedFormula namedFormula, string script)
+        {
+            Contracts.AssertValue(namedFormula);
+
+            return string.Concat(LazyList<string>.Of(namedFormula.Ident.Name, " = ")
+                .With(namedFormula.Formula.ParseTree.Accept(visitor, new Context(0)))
+                .With(";"));
+        }
+
+        // Public entry point for prettyprinting TEXL parse trees
+        private string FormatUserDefinedFunction(PrettyPrintVisitor visitor, UDFWithTrivia udf, string script)
+        {
+            Contracts.AssertValue(udf);
+
+            var parameters = new List<string>();
+            var list = visitor.CommentsOf(udf.Ident.Before)
+                .With(udf.Ident.Token.As<IdentToken>().Name)
+                .With(visitor.CommentsOf(udf.Ident.After)).With("(");
+
+            if (udf.Args.Count() > 0)
+            {
+                var orderedArgs = udf.Args.OrderBy(x => x.ArgIndex).ToArray();
+
+                for (int i = 0; i < orderedArgs.Length; i++)
+                {
+                    var arg = orderedArgs[i];
+                    list = list.With(visitor.CommentsOf(arg.NameIdent.Before))
+                        .With(arg.NameIdent.Token.As<IdentToken>().Name)
+                        .With(visitor.CommentsOf(arg.NameIdent.After)
+                        .With(": ")
+                        .With(visitor.CommentsOf(arg.TypeIdent.Before))
+                        .With(arg.TypeIdent.Token.As<IdentToken>().Name)
+                        .With(visitor.CommentsOf(arg.TypeIdent.After)));
+
+                    if (i < orderedArgs.Length - 1)
+                    {
+                        list = list.With(", ");
+                    }
+                } 
+            }
+
+            list = list.With(")")
+                    .With(visitor.CommentsOf(udf.ReturnTypeColonToken.Before))
+                    .With(": ")
+                    .With(visitor.CommentsOf(udf.ReturnType.Before))
+                    .With(udf.ReturnType.Token.As<IdentToken>().Name)
+                    .With(visitor.CommentsOf(udf.ReturnType.After))
+                    .With(" = ")
+                    .With(visitor.CommentsOf(udf.Body.Before))
+                    .With(udf.Body.Node.Accept(visitor, new Context(1)))
+                    .With(visitor.CommentsOf(udf.Body.After))
+                    .With(";\n");
+
+            return string.Concat(list);
+        }
+
+        public static string FormatUserDefinitions(ParseUserDefinitionFormattingResult result, Queue<string> order, string text)
+        {
+            var builder = new StringBuilder();
+            var pretty = new PrettyPrintVisitor(text);
+
+            while (order.Count > 0)
+            {
+                var userDef = order.Dequeue();
+
+                if (result.UDFs.TryGetValue(userDef, out var udf))
+                {
+                    builder.Append(string.Concat(pretty.FormatUserDefinedFunction(pretty, udf, text)));
+                }
+
+                if (result.NamedFormulas.TryGetValue(userDef, out var namedFormula))
+                {
+                    builder.Append(string.Concat(pretty.FormatNamedFormula(pretty, namedFormula, text)));
+                }
+            }
+
+            builder.Append(string.Concat(pretty.CommentsOf(result.CommentsAtTheEnd)).Replace("\n\n", "\n"));
+
+            return new Regex(@"\n +(\n +)").Replace(builder.ToString(), (Match match) => match.Groups[1].Value);
+        }
+
         private LazyList<string> CommentsOf(SourceList list)
         {
             if (list == null)

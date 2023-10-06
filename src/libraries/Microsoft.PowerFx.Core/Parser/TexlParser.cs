@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
@@ -92,6 +93,16 @@ namespace Microsoft.PowerFx.Core.Parser
             return parser.ParseUDFsAndNamedFormulas(script, parserOptions);
         }
 
+        private static ParseUserDefinitionFormattingResult ParseUserDefinitionScript(string script, ParserOptions parserOptions, out Queue<string> order)
+        {
+            Contracts.AssertValue(parserOptions);
+            var flags = (Flags.NamedFormulas | (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0)) | (parserOptions.AllowParseAsTypeLiteral ? Flags.AllowTypeLiteral : 0);
+            var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
+            var parser = new TexlParser(formulaTokens, flags);
+
+            return parser.ParseUDFsAndNamedFormulas(script, parserOptions, out order);
+        }
+
         private bool ParseUDFArgs(out HashSet<UDFArg> args)
         {
             args = new HashSet<UDFArg>();
@@ -151,6 +162,88 @@ namespace Microsoft.PowerFx.Core.Parser
                 ParseTrivia();
 
                 args.Add(new UDFArg(varIdent.As<IdentToken>(), varType.As<IdentToken>(), colonToken, argIndex++));
+                if (_curs.TokCur.Kind != TokKind.ParenClose && _curs.TokCur.Kind != TokKind.Comma)
+                {
+                    ErrorTid(_curs.TokCur, TokKind.Comma);
+
+                    // If the result was an error, keep moving cursor until end of expression
+                    MoveToNextUserDefinition();
+
+                    return false;
+                }
+                else if (_curs.TokCur.Kind == TokKind.Comma)
+                {
+                    TokEat(TokKind.Comma);
+                }
+            }
+
+            ParseTrivia();
+
+            TokEat(TokKind.ParenClose);
+            return true;
+        }
+
+        private bool ParseUDFArgs(out HashSet<UDFArgWithTrivia> args)
+        {
+            args = new HashSet<UDFArgWithTrivia>();
+            int argIndex = 0;
+            if (TokEat(TokKind.ParenOpen) == null)
+            {
+                return false;
+            }
+
+            ParseTrivia();
+            while (_curs.TokCur.Kind != TokKind.ParenClose)
+            {
+                var triviaBeforeIdent = ParseTrivia();
+                var varIdent = TokEat(TokKind.Ident);
+                var triviaAfterIdent = ParseTrivia();
+                var identWithTrivia = TokenWithTrivia.Create(varIdent.As<IdentToken>(), triviaBeforeIdent, triviaAfterIdent);
+                var colonToken = TokEat(TokKind.Colon, addError: false);
+                if (colonToken == null)
+                {
+                    CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingParamType);
+
+                    if (varIdent != null)
+                    {
+                        // Add incomplete UDFArgs (colon & type are missing) as well, these are needed for intellisense.
+                        args.Add(new UDFArgWithTrivia(identWithTrivia, typeIdent: null, colonToken: null, argIndex));
+                    }
+
+                    // If the result was an error, keep moving cursor until end of expression
+                    MoveToNextUserDefinition();
+
+                    return false;
+                }
+
+                var triviaBeforeType = ParseTrivia();
+
+                var varType = TokEat(TokKind.Ident, addError: false);
+                if (varType == null)
+                {
+                    CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingParamType);
+
+                    // Add incomplete UDFArgs (type is mising) as well, these are needed for intellisense.
+                    args.Add(new UDFArgWithTrivia(identWithTrivia, typeIdent: null, colonToken, argIndex));
+
+                    // If the result was an error, keep moving cursor until end of expression
+                    MoveToNextUserDefinition();
+
+                    return false;
+                }
+
+                if (varIdent == null)
+                {
+                    // If the result was an error, keep moving cursor until end of expression
+                    MoveToNextUserDefinition();
+
+                    return false;
+                }
+
+                var triviaAfterType = ParseTrivia();
+                var typeIdentWithTrivia = TokenWithTrivia.Create(varType.As<IdentToken>(), triviaBeforeType, triviaAfterType);
+
+                args.Add(new UDFArgWithTrivia(identWithTrivia, typeIdentWithTrivia, colonToken, argIndex++));
                 if (_curs.TokCur.Kind != TokKind.ParenClose && _curs.TokCur.Kind != TokKind.Comma)
                 {
                     ErrorTid(_curs.TokCur, TokKind.Comma);
@@ -324,7 +417,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
                         }
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken,  returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: true));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: true));
                     }
                     else if (_curs.TidCur == TokKind.Equ)
                     {
@@ -367,6 +460,179 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors, _comments);
+        }
+
+        private ParseUserDefinitionFormattingResult ParseUDFsAndNamedFormulas(string script, ParserOptions parserOptions, out Queue<string> order)
+        {
+            var udfs = new Dictionary<string, UDFWithTrivia>();
+            var namedFormulas = new Dictionary<string, NamedFormula>();
+            var definedTypes = new List<DefinedType>();
+            ITexlSource triviaAtTheEnd = null;
+            order = new Queue<string>();
+
+            while (_curs.TokCur.Kind != TokKind.Eof)
+            {
+                var triviaBeforeDefinition = ParseTrivia();
+                var thisIdentifier = TokEat(TokKind.Ident);
+                if (thisIdentifier == null)
+                {
+                    CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingValue);
+                    _curs.TokMove();
+                    continue;
+                }
+
+                var userDefName = thisIdentifier.As<IdentToken>()?.Name;
+
+                var triviaAfterIdent = ParseTrivia();
+                var identWithTrivia = TokenWithTrivia.Create(thisIdentifier.As<IdentToken>(), triviaBeforeDefinition, triviaAfterIdent);
+                _startingIndex = thisIdentifier.Span.Min;
+
+                if (_curs.TidCur == TokKind.Semicolon)
+                {
+                    CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
+                    _curs.TokMove();
+                    continue;
+                }
+
+                if (_curs.TidCur == TokKind.Equ)
+                {
+                    _curs.TokMove();
+                    var triviaBeforeExpr = ParseTrivia();
+
+                    if (_curs.TidCur == TokKind.Semicolon)
+                    {
+                        CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
+                    }
+
+                    // Extract expression
+                    while (_curs.TidCur != TokKind.Semicolon)
+                    {
+                        // Check if we're at EOF before a semicolon is found
+                        if (_curs.TidCur == TokKind.Eof)
+                        {
+                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
+                            break;
+                        }
+
+                        // Parse expression
+                        var result = ParseExpr(Precedence.None);
+                        if (result is TypeLiteralNode typeLiteralNode)
+                        {
+                            definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode));
+                            continue;
+                        }
+
+                        namedFormulas.Add(userDefName, new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex));
+
+                        // If the result was an error, keep moving cursor until end of named formula expression
+                        if (result.Kind == NodeKind.Error)
+                        {
+                            while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                            {
+                                _curs.TokMove();
+                            }
+                        }
+                    }
+
+                    _curs.TokMove();
+                    var triviaAferNF = ParseTrivia();
+                }
+                else if (_curs.TidCur == TokKind.ParenOpen)
+                {
+                    if (!ParseUDFArgs(out HashSet<UDFArgWithTrivia> args))
+                    {
+                        udfs.Add(userDefName, new UDFWithTrivia(identWithTrivia, colonToken: null, returnType: null, args, body: null, _hasSemicolon, parserOptions.NumberIsFloat, isValid: false));
+                        continue;
+                    }
+
+                    var triviaAfterArgs = ParseTrivia();
+                    var colonToken = TokEat(TokKind.Colon, addError: false);
+
+                    if (colonToken == null)
+                    {
+                        CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingReturnType);
+                        _curs.TokMove();
+                        continue;
+                    }
+
+                    var colonWithTrivia = TokenWithTrivia.Create(colonToken, triviaAfterArgs);
+                    var triviaBeforeReturnType = ParseTrivia();
+
+                    var returnType = TokEat(TokKind.Ident, addError: false);
+                    if (returnType == null)
+                    {
+                        CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingReturnType);
+                        udfs.Add(userDefName, new UDFWithTrivia(identWithTrivia, colonWithTrivia, returnType: null, args, body: null, _hasSemicolon, parserOptions.NumberIsFloat, isValid: false));
+
+                        // Return type not found, move to next user definition
+                        MoveToNextUserDefinition();
+                        continue;
+                    }
+
+                    // <bracs-exp> ::= '{' (((<EXP> ';')+ <EXP>) | <EXP>) (';')? '}'
+
+                    var triviaAfterReturnType = ParseTrivia();
+                    var returnTypeWithTrivia = TokenWithTrivia.Create(returnType, triviaBeforeReturnType, triviaAfterReturnType);
+                    if (_curs.TidCur == TokKind.CurlyOpen)
+                    {
+                        _curs.TokMove();
+                        _hasSemicolon = false;
+                        var triviaBeforeExpr = ParseTrivia();
+                        _flagsMode.Push(parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : Flags.None);
+                        var exp_result = ParseExpr(Precedence.None);
+                        _flagsMode.Pop();
+                        var triviaAfterExpr = ParseTrivia();
+                        if (TokEat(TokKind.CurlyClose) == null)
+                        {
+                            break;
+                        }
+
+                        udfs.Add(userDefName, new UDFWithTrivia(identWithTrivia, colonWithTrivia,  returnTypeWithTrivia, args, BodyWithTrivia.Create(exp_result, triviaBeforeExpr, triviaAfterExpr), _hasSemicolon, parserOptions.NumberIsFloat, isValid: true));
+                    }
+                    else if (_curs.TidCur == TokKind.Equ)
+                    {
+                        _curs.TokMove();
+                        var triviaBeforeExpr = ParseTrivia();
+                        var result = ParseExpr(Precedence.None);
+                        var bodyScript = result.GetCompleteSpan().GetFragment(script);
+                        var triviaAfterExpr = ParseTrivia();
+
+                        // Check if we're at EOF before a semicolon is found
+                        if (_curs.TidCur == TokKind.Eof)
+                        {
+                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
+                            break;
+                        }
+
+                        udfs.Add(userDefName, new UDFWithTrivia(identWithTrivia, colonWithTrivia, returnTypeWithTrivia, args, BodyWithTrivia.Create(result, triviaBeforeExpr, triviaAfterExpr), false, parserOptions.NumberIsFloat, isValid: true, bodyScript));
+                    }
+                    else
+                    {
+                        CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingFunctionBody);
+                        udfs.Add(userDefName, new UDFWithTrivia(identWithTrivia, colonWithTrivia, returnTypeWithTrivia, args, body: null, false, parserOptions.NumberIsFloat, isValid: false));
+                        break;
+                    }
+
+                    //ParseTrivia();
+
+                    if (TokEat(TokKind.Semicolon) == null)
+                    {
+                        break;
+                    }
+
+                    order.Enqueue(userDefName);
+
+                    triviaAtTheEnd = ParseTrivia();
+                }
+                else
+                {
+                    // = or ( expected here
+                    ErrorTid(_curs.TokCur, TokKind.Equ);
+                    break;
+                }
+            }
+
+            return new ParseUserDefinitionFormattingResult(namedFormulas, udfs, definedTypes, _errors, _comments, triviaAtTheEnd);
         }
 
         // Parse the script
@@ -1811,6 +2077,24 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             return PrettyPrintVisitor.Format(result.Root, result.Before, result.After, text);
+        }
+
+        /// <summary>
+        /// Formats/Pretty Print the given expression text to more a readable form.
+        /// </summary>
+        /// <param name="text">Expression text to format.</param>
+        /// <returns>Formatted expression text.</returns>
+        public static string FormatUserDefinitions(string text)
+        {
+            var result = ParseUserDefinitionScript(text, new ParserOptions() { AllowsSideEffects = false }, out var order);
+
+            // Can't pretty print a script with errors.
+            if (result.HasErrors)
+            {
+                return text;
+            }
+
+            return PrettyPrintVisitor.FormatUserDefinitions(result, order, text);
         }
     }
 }

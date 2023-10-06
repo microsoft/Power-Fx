@@ -21,6 +21,8 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class UserDefinedFunctionTests : PowerFxTest
     {
+        private readonly ParserOptions _parserOptions = new ParserOptions() { AllowsSideEffects = false };
+
         [Theory]
         [InlineData("Foo(x: Number): Number = Abs(x);", 1, 0, false)]
         [InlineData("IsType(x: Number): Number = Abs(x);", 0, 0, true)]
@@ -50,12 +52,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData(@"F2(b: String): String  = ""Test"";", 0, 0, true)]
         public void TestUDFNamedFormulaCounts(string script, int udfCount, int namedFormulaCount, bool expectErrors)
         {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false
-            };
-
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, _parserOptions, out var userDefinitionResult);
             var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
             var glue = new Glue2DocumentBinderGlue();
             var hasBinderErrors = false;
@@ -75,14 +72,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Mul(x:Number, y:DateTime): DateTime = x * y;", "Mul(\"4a\", Date(1900, 1, 3))", "Mul:d(Float:n(\"4a\":s), DateToDateTime:d(Date:D(Coalesce:n(Float:n(1900:w), 0:n), Coalesce:n(Float:n(1:w), 0:n), Coalesce:n(Float:n(3:w), 0:n))))")]
         public void TestCoercionWithUDFParams(string udfScript, string invocationScript, string expectedIR)
         {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false
-            };
-
             var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
             var glue = new Glue2DocumentBinderGlue();
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(udfScript, parserOptions, out var userDefinitionResult);
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(udfScript, _parserOptions, out var userDefinitionResult);
             var texlFunctionSet = new TexlFunctionSet(userDefinitionResult.UDFs);
 
             var engine = new Engine();
@@ -135,14 +127,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("GUIDToText(x:GUID): Text = x;", "(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), Scope 0)")]
         public void TestCoercionWithUDFBody(string udfScript, string expectedIR)
         {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false
-            };
-
             var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
             var glue = new Glue2DocumentBinderGlue();
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(udfScript, parserOptions, out var userDefinitionResult);
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(udfScript, _parserOptions, out var userDefinitionResult);
             var udfs = new TexlFunctionSet(userDefinitionResult.UDFs);
 
             Assert.Single(userDefinitionResult.UDFs);
@@ -159,12 +146,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Foo(x: Number): Number /* Comment1 */ =  Abs(x);// Comment2", 2)]
         public void TestCommentsFromUserDefinitionsScript(string script, int commentCount)
         {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false
-            };
-
-            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var parseResult = UserDefinitions.Parse(script, _parserOptions);
 
             Assert.Equal(commentCount, parseResult.Comments.Count());
         }
@@ -176,12 +158,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Foo(x: Number): Number = Abs(x); /* Comment1 */", 33, 47)]
         public void TestCommentSpansFromUserDefinitionsScript(string script, int begin, int end)
         {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false
-            };
-
-            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var parseResult = UserDefinitions.Parse(script, _parserOptions);
 
             Assert.Single(parseResult.Comments);
 
@@ -207,12 +184,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public void TestParseUserDefinitionsCountswithIncompleteUDFs(string script, int nfCount, int validUDFCount, int inValidUDFCount)
         {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false
-            };
-
-            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var parseResult = UserDefinitions.Parse(script, _parserOptions);
 
             Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
             Assert.Equal(validUDFCount, parseResult.UDFs.Count(udf => udf.IsParseValid));
@@ -228,12 +200,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a = -;\n F1(a:):Number = 1;F2(a:Number): = 1;", 3)]
         public void TestErrorCountsWithUDFs(string script, int errorCount)
         {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false
-            };
-
-            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var parseResult = UserDefinitions.Parse(script, _parserOptions);
 
             Assert.Equal(errorCount, parseResult.Errors?.Count() ?? 0);
         }
@@ -244,18 +211,13 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestUserDefinedFunctionValidity()
         {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false
-            };
-
             var script = @" a = Abs(1.2);
                             F1(a:Number, b: Number):Number = a + b /*comment*/;
                             F2(a:Number, b):Number = a + b;
                             F3(a:Number, b:):Number = a + b;
                             b = ""test"";
                             F4(";
-            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var parseResult = UserDefinitions.Parse(script, _parserOptions);
             Assert.Equal(2, parseResult.NamedFormulas.Count());
             Assert.Equal(1, parseResult.UDFs.Count(udf => udf.IsParseValid));
             Assert.Equal(3, parseResult.UDFs.Count(udf => !udf.IsParseValid));
@@ -303,13 +265,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestUserDefinedFunctionValidity2()
         {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false
-            };
-
             var script = @"func(a";
-            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var parseResult = UserDefinitions.Parse(script, _parserOptions);
             var func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
 
             Assert.False(func.IsParseValid);
@@ -324,7 +281,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Null(func.Body);
 
             script = @"func(a:";
-            parseResult = UserDefinitions.Parse(script, parserOptions);
+            parseResult = UserDefinitions.Parse(script, _parserOptions);
             func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
 
             Assert.False(func.IsParseValid);
@@ -336,7 +293,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotNull(firstArg.ColonToken);
 
             script = @"func(a:Number";
-            parseResult = UserDefinitions.Parse(script, parserOptions);
+            parseResult = UserDefinitions.Parse(script, _parserOptions);
             func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
 
             Assert.False(func.IsParseValid);
@@ -348,7 +305,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotNull(firstArg.ColonToken);
 
             script = @"func(a:Number, b";
-            parseResult = UserDefinitions.Parse(script, parserOptions);
+            parseResult = UserDefinitions.Parse(script, _parserOptions);
             func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
 
             Assert.False(func.IsParseValid);
@@ -362,7 +319,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotNull(firstArg.NameIdent);
 
             script = @"func(a:Number):";
-            parseResult = UserDefinitions.Parse(script, parserOptions);
+            parseResult = UserDefinitions.Parse(script, _parserOptions);
             func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
 
             Assert.False(func.IsParseValid);
@@ -373,7 +330,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Null(func.Body);
 
             script = @"func(a:Number):Number";
-            parseResult = UserDefinitions.Parse(script, parserOptions);
+            parseResult = UserDefinitions.Parse(script, _parserOptions);
             func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
 
             Assert.False(func.IsParseValid);
@@ -384,7 +341,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Null(func.Body);
 
             script = @"func(a:Number):Number = 1;";
-            parseResult = UserDefinitions.Parse(script, parserOptions);
+            parseResult = UserDefinitions.Parse(script, _parserOptions);
             func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
 
             Assert.NotNull(func);
@@ -393,6 +350,35 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotNull(func.ReturnType);
             Assert.NotNull(func.Body);
             Assert.True(func.IsParseValid);
+        }
+
+        [Theory]
+        [InlineData("F1(x:Number, y:Number):SomeType = x + y;")]
+        [InlineData("F1(x:Number, y:SomeType):Number = x + y;")]
+        public void VerifyUnknownTypeErrorOnReturnType(string script)
+        {
+            var isSuccess = UserDefinitions.ProcessUserDefinitions(script, _parserOptions, out var userDefinitions);
+
+            Assert.Contains(userDefinitions.Errors, x => x.ErrorResourceKey.Key == "ErrUDF_UnknownType");
+        }
+
+        [Fact]
+        public void VerifyDuplicateParamsError()
+        {
+            var script = "F1(x:Number, x:Number):Number = x + y;";
+            var isSuccess = UserDefinitions.ProcessUserDefinitions(script, _parserOptions, out var userDefinitions);
+
+            Assert.Contains(userDefinitions.Errors, x => x.ErrorResourceKey.Key == "ErrUDF_DuplicateParameter");
+        }
+
+        [Theory]
+        [InlineData("First(x:Number, x:Number):Number = x + y;")]
+        [InlineData("F1(x:Number, y:Number):Number = x + y; F1():Number = 1;")]
+        public void VerifyDuplicateFunctionErrorWhenUDFNamedAsBuiltin(string script)
+        {
+            var isSuccess = UserDefinitions.ProcessUserDefinitions(script, _parserOptions, out var userDefinitions);
+
+            Assert.Contains(userDefinitions.Errors, x => x.ErrorResourceKey.Key == "ErrUDF_FunctionAlreadyDefined");
         }
     }
 }
