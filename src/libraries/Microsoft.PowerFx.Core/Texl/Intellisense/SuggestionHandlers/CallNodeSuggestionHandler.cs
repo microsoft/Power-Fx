@@ -59,33 +59,27 @@ namespace Microsoft.PowerFx.Intellisense
                     intellisenseData.BoundTo = intellisenseData.Binding.ErrorContainer.HasErrors(callNode) ? string.Empty : callNode.Head.Name;
                     IntellisenseHelper.AddSuggestionsForFunctions(intellisenseData);
                 }
-                else if (callNode.Token.Span.Lim > cursorPos || callNode.ParenClose == null)
+                else if (callNode.Token.Span.Lim > cursorPos)
                 {
                     // Handling the erroneous case when user enters a space after functionName and cursor is after space.
                     // Cursor is before the open paren of the function.
                     // Eg: "Filter | (" AND "Filter | (some Table, some predicate)"
                     return false;
                 }
-                else
+                else if (callNode.ParenClose != null && cursorPos <= callNode.ParenClose.Span.Min)
                 {
-                    // If there was no closed parenthesis we would have an error node.
-                    Contracts.Assert(callNode.ParenClose != null);
-
-                    if (cursorPos <= callNode.ParenClose.Span.Min)
+                    // Cursor position is before the closed parenthesis and there are no arguments.
+                    // If there were arguments FindNode should have returned one of those.
+                    if (intellisenseData.CurFunc != null && intellisenseData.CurFunc.MaxArity > 0)
                     {
-                        // Cursor position is before the closed parenthesis and there are no arguments.
-                        // If there were arguments FindNode should have returned one of those.
-                        if (intellisenseData.CurFunc != null && intellisenseData.CurFunc.MaxArity > 0)
-                        {
-                            IntellisenseHelper.AddSuggestionsForTopLevel(intellisenseData, callNode);
-                        }
+                        IntellisenseHelper.AddSuggestionsForTopLevel(intellisenseData, callNode);
                     }
-                    else if (IntellisenseHelper.CanSuggestAfterValue(cursorPos, intellisenseData.Script))
-                    {
-                        // Verify that cursor is after a space after the closed parenthesis and
-                        // suggest binary operators.
-                        IntellisenseHelper.AddSuggestionsForAfterValue(intellisenseData, intellisenseData.Binding.GetType(callNode));
-                    }
+                }
+                else if (IntellisenseHelper.CanSuggestAfterValue(cursorPos, intellisenseData.Script))
+                {
+                    // Verify that cursor is after a space after the closed parenthesis and
+                    // suggest binary operators.
+                    IntellisenseHelper.AddSuggestionsForAfterValue(intellisenseData, intellisenseData.Binding.GetType(callNode));
                 }
 
                 return true;

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
@@ -25,9 +26,13 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         // $$$ This should probably be symbol and not just config. 
         protected readonly PowerFxConfig _powerFxConfig;
 
+        internal PowerFxConfig PowerFxConfig => _powerFxConfig;
+
         internal Features Features => _powerFxConfig.Features;
 
         private readonly IEnumStore _enumStore;
+
+        internal IEnumStore EnumStore => _enumStore;
 
         public IntellisenseData(PowerFxConfig powerFxConfig, IEnumStore enumStore, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
         {
@@ -265,7 +270,72 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// <returns>
         /// True if the function may be suggested, false otherwise.
         /// </returns>
-        internal virtual bool ShouldSuggestFunction(TexlFunction function) => true;
+        internal virtual bool ShouldSuggestFunction(TexlFunction function)
+        {
+            if (CurFunc == null)
+            {
+                return true;
+            }
+
+            DType expectedReturnType;
+
+            expectedReturnType = GetCurrentArgType();
+
+            var functionReturnType = function.ReturnType;
+
+            if (expectedReturnType.IsTableNonObjNull)
+            {
+                if (function.ScopeInfo != null && function.ReturnType.IsTableNonObjNull)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            
+            if (CurFunc.SupportsParamCoercion && !functionReturnType.IsUnknown)
+            {
+                return functionReturnType.CoercesTo(expectedReturnType, false, false, Features.PowerFxV1CompatibilityRules);
+            }
+            else
+            {
+                return functionReturnType.Equals(expectedReturnType);
+            }
+        }
+
+        internal DType GetCurrentArgType()
+        {
+            var func = CurFunc; 
+            var callNode = IntellisenseHelper.GetNearestCallNode(CurNode);
+
+            if (func == null || callNode == null)
+            {
+                return DType.Error;
+            }
+
+            if (TryGetSpecialFunctionType(func, callNode, out var type))
+            {
+                return type;
+            }
+            else if (func.TryGetTypeForArgSuggestionAt(ArgIndex, out type))
+            {
+                return type;
+            }
+            else
+            {
+                type = Binding.GetType(callNode.Args.Children[0]);
+                if (type.IsTableNonObjNull)
+                {
+                    return type.ToRecord();
+                }
+                else if (type.IsRecord)
+                {
+                    return type;
+                }
+            }
+
+            return DType.Unknown;
+        }
 
         /// <summary>
         /// Returns a list of argument suggestions for a given function, scope type, and argument index.
@@ -325,7 +395,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// </summary>
         internal virtual void AddCustomSuggestionsForGlobals()
         {
-            AddSuggestionForCurrentFunction();
+            TryAddSuggestionForCurrentFunction();
             AddSuggestionForCurrentBinaryOp();
         }
 
@@ -509,6 +579,11 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 
         internal void AddSuggestionsForGlobals()
         {
+            if (TryAddSuggestionForCurrentFunction())
+            {
+                return;
+            }
+
             if (Binding.NameResolver is IGlobalSymbolNameResolver nr2)
             {
                 //NOTE: suggesting the user info symbol here is fine.
@@ -530,7 +605,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             }
         }
 
-        internal void AddSuggestionForCurrentFunction()
+        internal bool TryAddSuggestionForCurrentFunction(string startsWith = null)
         {
             var function = CurFunc;
             var argIndex = ArgIndex;
@@ -539,15 +614,14 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                 || function == null
                 || argIndex < 0)
             {
-                return;
+                return false;
             }
 
             var maxArgIndex = (function?.ParamTypes?.Count() ?? 0) - 1;
 
             var symbols = globalResolver.GlobalSymbols;
 
-            var parentCallNode = IntellisenseHelper.GetNearestCallNode(CurNode);
-            var argType = FunctionRecordNameSuggestionHandler.GetAggregateType(function, parentCallNode, this);
+            var argType = this.GetCurrentArgType();
 
             if (CurNode?.Parent?.Kind == NodeKind.Record)
             {
@@ -563,9 +637,11 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 
                 if (suggestable)
                 {
-                    IntellisenseHelper.AddSuggestion(this, symbol, SuggestionKind.Global, SuggestionIconKind.Other, argType, requiresSuggestionEscaping: true);
+                    IntellisenseHelper.AddSuggestion(this, symbol, SuggestionKind.Global, SuggestionIconKind.Other, symbolType, requiresSuggestionEscaping: true);
                 }
             }
+
+            return true;
         }
 
         private bool IsSymbolSuggestableForFunctionArg(TexlFunction function, int argIndex, DType argType, DType symbolType, bool usePowerFxV1CompatibilityRules)
@@ -577,7 +653,12 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             }
 
             bool isSuggestable;
-            if (argType.IsAggregate && argType.ChildCount != 0)
+
+            if (function.HasColumnIdentifiers && argType.IsUnknown)
+            {
+                isSuggestable = true;
+            }
+            else if (argType.IsAggregate && argType.ChildCount != 0)
             {
                 // Case 1: Aggregate type with non-zero children.
                 isSuggestable = argType.Kind == symbolType.Kind &&

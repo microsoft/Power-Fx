@@ -154,8 +154,8 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Not |")]
 
         // StrInterpSuggestionHandler
-        [InlineData("With( {Apples:3}, $\"We have {appl|", "Apples", "ErrorKind.NotApplicable")]
-        [InlineData("With( {Apples:3}, $\"We have {appl|} apples.", "Apples", "ErrorKind.NotApplicable")]
+        [InlineData("With( {Apples:3}, $\"We have {appl|", "Apples")]
+        [InlineData("With( {Apples:3}, $\"We have {appl|} apples.", "Apples")]
         [InlineData("$\"This is a randomly generated number: {rand|", "Rand", "RandBetween")]
 
         // StrNumLitNodeSuggestionHandler
@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // AddSuggestionsForEnums
         [InlineData("Monday|", "StartOfWeek.Monday", "StartOfWeek.MondayZero")]
-        [InlineData("Value(Missing|", "ErrorKind.MissingRequired")]
+        [InlineData("Value(Missing|")]
         [InlineData("ErrorKind.Inv|", "InvalidArgument", "InvalidFunctionUsage")]
         [InlineData("Quota|", "ErrorKind.QuotaExceeded")]
         [InlineData("DateTimeFormat.h|", "ShortDate", "ShortTime", "ShortTime24", "ShortDateTime", "ShortDateTime24")]

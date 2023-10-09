@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Intellisense
                 // Adding suggestions for callNode arguments which reference a collection's columns
                 if (func.CanSuggestInputColumns)
                 {
-                    var aggregateType = GetAggregateType(func, callNode, intellisenseData);
+                    var aggregateType = intellisenseData.GetCurrentArgType();
                     if (aggregateType.IsError || !aggregateType.IsAggregate)
                     {
                         return false;
@@ -167,7 +167,7 @@ namespace Microsoft.PowerFx.Intellisense
                 return suggestionsAdded;
             }
 
-            internal static DType GetAggregateType(TexlFunction func, CallNode callNode, IntellisenseData.IntellisenseData intellisenseData)
+            internal static DType GetCurrentArgType(TexlFunction func, CallNode callNode, IntellisenseData.IntellisenseData intellisenseData)
             {
                 Contracts.AssertValue(func);
                 Contracts.AssertValue(callNode);

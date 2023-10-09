@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -192,8 +193,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("Collect(|", "Entity1", "Entity2", "Table1", "table2")]
+        [InlineData("Collect(e|", "Entity1", "Entity2", "Filter", "Table1", "table2", "false", "Self", "true")]
         [InlineData("Patch(|", "Entity1", "Entity2", "Table1", "table2")]
+        [InlineData("Patch(t|", "Distinct", "Entity1", "Entity2", "Filter", "Sort", "Table1", "table2", "Not", "true")]
         [InlineData("Remove(|", "Entity1", "Entity2", "Table1", "table2")]
+        [InlineData("Remove(e|", "Entity1", "Entity2",  "Filter", "Table1", "table2", "false", "Self", "true")]
 
         // doesn't suggest Irrelevant global variables if type1 is non empty aggregate.
         [InlineData("Collect(table2,|", "record2")]
@@ -203,15 +207,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [InlineData("Collect(|, record1", "Entity1", "Entity2", "Table1", "table2")]
         [InlineData("Sum(|", "num", "str")]
+        [InlineData("Sum(nu|", "Minute", "num", "IsNumeric")]
         [InlineData("Text(|", "num", "str")]
         [InlineData("Language(|")]
         [InlineData("Filter([1,2], |", "ThisRecord", "Value")]
 
         // Suggests Enum.
         [InlineData("Text(Now(), |", "DateTimeFormat.LongDate", "DateTimeFormat.LongDateTime", "DateTimeFormat.LongDateTime24", "DateTimeFormat.LongTime", "DateTimeFormat.LongTime24", "DateTimeFormat.ShortDate", "DateTimeFormat.ShortDateTime", "DateTimeFormat.ShortDateTime24", "DateTimeFormat.ShortTime", "DateTimeFormat.ShortTime24", "DateTimeFormat.UTC", "num", "str")]
+        [InlineData("DateDiff(Date(2023,1,1), Date(2023, 2,1), |", "TimeUnit.Days", "TimeUnit.Hours", "TimeUnit.Milliseconds", "TimeUnit.Minutes", "TimeUnit.Months", "TimeUnit.Quarters", "TimeUnit.Seconds", "TimeUnit.Years")]
+        [InlineData("DateDiff(Date(2023,1,1), Date(2023, 2,1), T|", "Not", "TimeUnit.Days", "TimeUnit.Hours", "TimeUnit.Milliseconds", "TimeUnit.Minutes", "TimeUnit.Months", "TimeUnit.Quarters", "TimeUnit.Seconds", "TimeUnit.Years", "true")]
 
         // Custom Function has arg with signature of tableType2, So only suggest table2
         [InlineData("RecordsTest(|", "table2")]
+        [InlineData("RecordsTest(t|", "table2", "Distinct", "Filter", "Not", "Sort",  "true")]
 
         // No suggestion if function is not in binder.
         [InlineData("InvalidFunction(|")]
@@ -263,7 +271,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var cursorPos = expression.IndexOf('|');
             var result = engine.Suggest(check, cursorPos);
 
-            Assert.Equal(expectedSuggestions, result.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray());
+            var actualSuggestion = result.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
+            var extraSuggestions = string.Join(", ", actualSuggestion.Except(expectedSuggestions));
+            extraSuggestions = string.IsNullOrEmpty(extraSuggestions) ? string.Join(", ", actualSuggestion) : extraSuggestions;
+
+            Assert.True(expectedSuggestions.SequenceEqual(actualSuggestion), $"Actual suggestion has extra suggestions: {extraSuggestions}");
         }
 
         [Theory]
