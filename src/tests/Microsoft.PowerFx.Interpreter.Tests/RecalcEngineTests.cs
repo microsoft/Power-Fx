@@ -509,7 +509,7 @@ namespace Microsoft.PowerFx.Tests
 
             try
             {
-                recalcEngine.AddUserFunction(udfExpression, CultureInfo.InvariantCulture);
+                recalcEngine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture);
 
                 var check = recalcEngine.Check(expression);
 

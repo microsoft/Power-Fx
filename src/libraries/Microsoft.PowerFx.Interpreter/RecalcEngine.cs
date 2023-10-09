@@ -215,20 +215,20 @@ namespace Microsoft.PowerFx
             return result;
         }
 
-        internal void AddUserFunction(string script, CultureInfo locale)
+        internal void AddUserDefinedFunction(string script, CultureInfo locale)
         {
             if (UserDefinitions.ProcessUserDefinitions(script, new ParserOptions() { AllowsSideEffects = true, Culture = locale }, out var userDefinitionResult) && !userDefinitionResult.HasErrors)
             {
                 foreach (var udf in userDefinitionResult.UDFs)
                 {
-                    _symbolTable.AddUserFunction(udf);
+                    _symbolTable.AddUserDefinedFunction(udf);
                 }
             }
             else
             {
                 var sb = new StringBuilder();
 
-                sb.AppendLine("Something went worng when parsing user definied functions.");
+                sb.AppendLine("Something went wrong when parsing user defined functions.");
 
                 foreach (var error in userDefinitionResult.Errors)
                 {

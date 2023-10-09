@@ -280,7 +280,7 @@ namespace Microsoft.PowerFx
             EnumStoreBuilder?.WithRequiredEnums(new TexlFunctionSet(function));
         }
 
-        internal void AddUserFunction(TexlFunction function)
+        internal void AddUserDefinedFunction(TexlFunction function)
         {
             AddFunction(function);
         }
