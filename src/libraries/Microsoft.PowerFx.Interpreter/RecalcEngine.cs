@@ -217,14 +217,12 @@ namespace Microsoft.PowerFx
 
         internal void AddUserDefinedFunction(string script, CultureInfo locale)
         {
-            if (UserDefinitions.ProcessUserDefinitions(script, new ParserOptions() { AllowsSideEffects = true, Culture = locale }, out var userDefinitionResult) && !userDefinitionResult.HasErrors)
-            {
-                foreach (var udf in userDefinitionResult.UDFs)
-                {
-                    _symbolTable.AddUserDefinedFunction(udf);
-                }
-            }
-            else
+            // Phase 1: Side affects are not allowed.
+            var options = new ParserOptions() { AllowsSideEffects = false, Culture = locale };
+
+            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult);
+
+            if (userDefinitionResult.HasErrors)
             {
                 var sb = new StringBuilder();
 
@@ -236,6 +234,11 @@ namespace Microsoft.PowerFx
                 }
 
                 throw new InvalidOperationException(sb.ToString());
+            }
+
+            foreach (var udf in userDefinitionResult.UDFs)
+            {
+                _symbolTable.AddFunction(udf);
             }
         }
 
