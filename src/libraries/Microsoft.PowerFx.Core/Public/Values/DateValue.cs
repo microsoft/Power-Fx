@@ -33,18 +33,6 @@ namespace Microsoft.PowerFx.Types
             return DateTimeValue.GetConvertedDateTimeValue(_value, timeZoneInfo);
         }
 
-        public DateTime GetUtc(TimeZoneInfo timeZoneInfo)
-        {
-            DateTime dt = GetConvertedValue(timeZoneInfo);
-
-            if (dt.Kind == DateTimeKind.Utc)
-            {
-                return dt;
-            }
-
-            return TimeZoneInfo.ConvertTimeToUtc(dt, timeZoneInfo);
-        }
-
         internal DateValue(IRContext irContext, DateTime value)
             : base(irContext, value)
         {

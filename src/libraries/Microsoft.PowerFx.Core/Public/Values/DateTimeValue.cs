@@ -37,18 +37,6 @@ namespace Microsoft.PowerFx.Types
             return GetConvertedDateTimeValue(_value, timeZoneInfo);
         }
 
-        public DateTime GetUtc(TimeZoneInfo timeZoneInfo)
-        {
-            DateTime dt = GetConvertedValue(timeZoneInfo);
-
-            if (dt.Kind == DateTimeKind.Utc)
-            {
-                return dt;
-            }
-
-            return TimeZoneInfo.ConvertTimeToUtc(dt, timeZoneInfo);
-        }
-
         internal static DateTime GetConvertedDateTimeValue(DateTime value, TimeZoneInfo timeZoneInfo)
         {
             // If timeZoneInfo is null and stored value is in UTC, we don't want to convert.
