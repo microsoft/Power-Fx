@@ -762,21 +762,22 @@ namespace Microsoft.PowerFx.Core.Functions
             return ArgValidators.DelegatableDataSourceInfoValidator.TryGetValidValue(arg0, binding, out dsInfo);
         }
 
-        // Returns a datasource node for a function if function operates on datasource.
-        public virtual bool TryGetDataSourceNodes(CallNode callNode, TexlBinding binding, out IList<FirstNameNode> dsNodes)
+        /// <summary>
+        /// This method should be overridden to return true if the function provides
+        /// arguments that may affect a datasource and should set the output parameter to
+        /// the indices corresponding to those arguments.  The caller should provide the
+        /// arg count which is necessary in cases where the arity may be variably large.
+        /// </summary>
+        public virtual bool TryGetDataSourceArgumentIndices(int argCount, out IEnumerable<int> dataSourceArgs)
         {
-            Contracts.AssertValue(callNode);
-            Contracts.AssertValue(binding);
-
-            dsNodes = new List<FirstNameNode>();
-            if (callNode.Args.Count < 1)
+            if (argCount < 1)
             {
+                dataSourceArgs = Enumerable.Empty<int>();
                 return false;
             }
 
-            var args = callNode.Args.Children.VerifyValue();
-            var arg0 = args[0].VerifyValue();
-            return ArgValidators.DataSourceArgNodeValidator.TryGetValidValue(arg0, binding, out dsNodes);
+            dataSourceArgs = new List<int>() { 0 };
+            return true;
         }
 
         // Returns a entityInfo for a function if function operates on entity.

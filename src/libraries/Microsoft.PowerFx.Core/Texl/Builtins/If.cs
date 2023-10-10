@@ -275,52 +275,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new ReadOnlyCollection<TexlStrings.StringGetter[]>(overloads);
         }
 
-        private bool TryGetDSNodes(TexlBinding binding, TexlNode[] args, out IList<FirstNameNode> dsNodes)
+        public override bool TryGetDataSourceArgumentIndices(int argCount, out IEnumerable<int> dataSourceArgs)
         {
-            dsNodes = new List<FirstNameNode>();
+            Contracts.Assert(argCount >= MinArity);
+            Contracts.Assert(argCount <= MaxArity);
 
-            var count = args.Count();
-            for (var i = 1; i < count;)
-            {
-                var nodeArg = args[i];
-
-                if (ArgValidators.DataSourceArgNodeValidator.TryGetValidValue(nodeArg, binding, out var tmpDsNodes))
-                {
-                    foreach (var node in tmpDsNodes)
-                    {
-                        dsNodes.Add(node);
-                    }
-                }
-
-                // If there are an odd number of args, the last arg also participates.
-                i += 2;
-                if (i == count)
-                {
-                    i--;
-                }
-            }
-
-            return dsNodes.Any();
-        }
-
-        public override bool TryGetDataSourceNodes(CallNode callNode, TexlBinding binding, out IList<FirstNameNode> dsNodes)
-        {
-            Contracts.AssertValue(callNode);
-            Contracts.AssertValue(binding);
-
-            dsNodes = new List<FirstNameNode>();
-            if (callNode.Args.Count < 2)
-            {
-                return false;
-            }
-
-            var args = callNode.Args.Children.VerifyValue();
-            return TryGetDSNodes(binding, args.ToArray(), out dsNodes);
+            dataSourceArgs = ControlFlowFunctionHelper.GetDataSourceArgumentIndices(argCount);
+            return true;
         }
 
         public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
         {
-            if (!TryGetDataSourceNodes(callNode, binding, out var dsNodes))
+            if (!DataSourceNodeHelper.TryGetDataSourceNodes(callNode, this, binding, out _))
             {
                 return false;
             }
