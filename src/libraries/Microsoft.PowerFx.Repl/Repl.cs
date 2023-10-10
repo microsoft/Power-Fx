@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx
         public ParserOptions ParserOptions { get; set; } = new ParserOptions() { AllowsSideEffects = true };
 
         // example override, switching to [1], [2] etc.
-        public virtual string Prompt => ">> ";
+        public virtual string Prompt => "\n>> ";
 
         // prompt for multiline continuation
         public virtual string PromptContinuation => ".. ";
