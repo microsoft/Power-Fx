@@ -277,14 +277,13 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                 return true;
             }
 
-            DType expectedReturnType;
-
-            expectedReturnType = GetCurrentArgType();
-
+            // Expected return type is, type of argument at current index, e.g. Collect(| the first arg is the table type, so we expect to suggest all function that can return a table.
+            var expectedReturnType = GetCurrentArgType();
             var functionReturnType = function.ReturnType;
 
             if (expectedReturnType.IsTableNonObjNull)
             {
+                // this avoids non scope tabular functions from being suggested, e.g. Abs([1,-2]) is tabular overload but doesn't have scope.
                 if (function.ScopeInfo != null && function.ReturnType.IsTableNonObjNull)
                 {
                     return true;
@@ -293,6 +292,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                 return false;
             }
             
+            // escape unknown, because unknown can always be coerced.
             if (CurFunc.SupportsParamCoercion && !functionReturnType.IsUnknown)
             {
                 return functionReturnType.CoercesTo(expectedReturnType, false, false, Features.PowerFxV1CompatibilityRules);
@@ -323,6 +323,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             }
             else
             {
+                // Collect like functions rely on the type of the first argument.
                 type = Binding.GetType(callNode.Args.Children[0]);
                 if (type.IsTableNonObjNull)
                 {

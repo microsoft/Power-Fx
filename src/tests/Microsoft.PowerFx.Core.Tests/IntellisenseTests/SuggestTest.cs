@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Atan |(")]
         [InlineData("Clock.A|(", "Clock.AmPm", "Clock.AmPmShort")]
         [InlineData("ForAll([\"test\"],EndsWith(|))", "Value")]
-        [InlineData("ForAll([1],Value) |", "As", "exactin", "in")]
+        [InlineData("ForAll([1],Value) |")]
 
         // BoolLitNodeSuggestionHandler
         [InlineData("true|", "true")]

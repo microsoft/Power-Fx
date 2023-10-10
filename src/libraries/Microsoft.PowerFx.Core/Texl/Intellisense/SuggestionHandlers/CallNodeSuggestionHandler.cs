@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Intellisense
                         IntellisenseHelper.AddSuggestionsForTopLevel(intellisenseData, callNode);
                     }
                 }
-                else if (IntellisenseHelper.CanSuggestAfterValue(cursorPos, intellisenseData.Script))
+                else if (callNode.ParenClose == null && IntellisenseHelper.CanSuggestAfterValue(cursorPos, intellisenseData.Script))
                 {
                     // Verify that cursor is after a space after the closed parenthesis and
                     // suggest binary operators.

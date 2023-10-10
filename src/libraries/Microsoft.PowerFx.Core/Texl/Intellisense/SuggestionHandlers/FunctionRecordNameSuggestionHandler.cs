@@ -167,41 +167,6 @@ namespace Microsoft.PowerFx.Intellisense
                 return suggestionsAdded;
             }
 
-            internal static DType GetCurrentArgType(TexlFunction func, CallNode callNode, IntellisenseData.IntellisenseData intellisenseData)
-            {
-                Contracts.AssertValue(func);
-                Contracts.AssertValue(callNode);
-                Contracts.AssertValue(intellisenseData);
-
-                if (func == null || callNode == null || intellisenseData == null)
-                {
-                    return DType.Error;
-                }
-
-                if (intellisenseData.TryGetSpecialFunctionType(func, callNode, out var type))
-                {
-                    return type;
-                }
-                else if (func.TryGetTypeForArgSuggestionAt(intellisenseData.ArgIndex, out type))
-                {
-                    return type;
-                }
-                else
-                {
-                    type = intellisenseData.Binding.GetType(callNode.Args.Children[0]);
-                    if (type.IsTableNonObjNull)
-                    {
-                        return type.ToRecord();
-                    }
-                    else if (type.IsRecord)
-                    {
-                        return type;
-                    }
-                }
-
-                return DType.Unknown;
-            }
-
             private static bool TryGetParentRecordNode(TexlNode node, out RecordNode recordNode)
             {
                 Contracts.AssertValue(node);

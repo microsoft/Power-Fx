@@ -211,6 +211,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Text(|", "num", "str")]
         [InlineData("Language(|")]
         [InlineData("Filter([1,2], |", "ThisRecord", "Value")]
+        [InlineData("Filter([1,2], true) |")]
 
         // Suggests Enum.
         [InlineData("Text(Now(), |", "DateTimeFormat.LongDate", "DateTimeFormat.LongDateTime", "DateTimeFormat.LongDateTime24", "DateTimeFormat.LongTime", "DateTimeFormat.LongTime24", "DateTimeFormat.ShortDate", "DateTimeFormat.ShortDateTime", "DateTimeFormat.ShortDateTime24", "DateTimeFormat.ShortTime", "DateTimeFormat.ShortTime24", "DateTimeFormat.UTC", "num", "str")]
