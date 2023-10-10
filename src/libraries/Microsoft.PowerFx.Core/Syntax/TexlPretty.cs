@@ -491,24 +491,28 @@ namespace Microsoft.PowerFx.Syntax
             return new Regex(@"\n +(\n +)").Replace(preRegex, (Match match) => match.Groups[1].Value);
         }
 
-        // Public entry point for prettyprinting TEXL parse trees
-        private string FormatNamedFormula(PrettyPrintVisitor visitor, NamedFormula namedFormula, string script)
+        private string FormatNamedFormula(PrettyPrintVisitor visitor, NamedFormulaWithTrivia nf, string script)
         {
-            Contracts.AssertValue(namedFormula);
+            Contracts.AssertValue(nf);
 
-            return string.Concat(LazyList<string>.Of(namedFormula.Ident.Name, " = ")
-                .With(namedFormula.Formula.ParseTree.Accept(visitor, new Context(0)))
-                .With(";"));
+            var list = visitor.CommentsOf(nf.Ident.Before)
+                        .With(nf.Ident.Name)
+                        .With(visitor.CommentsOf(nf.Ident.After))
+                        .With(" = ")
+                        .With(visitor.CommentsOf(nf.NodeWithTrivia.Before))
+                        .With(nf.NodeWithTrivia.Node.Accept(visitor, new Context(0)))
+                        .With(visitor.CommentsOf(nf.NodeWithTrivia.After))
+                        .With(";\n");
+
+            return string.Concat(list);
         }
 
-        // Public entry point for prettyprinting TEXL parse trees
         private string FormatUserDefinedFunction(PrettyPrintVisitor visitor, UDFWithTrivia udf, string script)
         {
             Contracts.AssertValue(udf);
 
-            var parameters = new List<string>();
             var list = visitor.CommentsOf(udf.Ident.Before)
-                .With(udf.Ident.Token.As<IdentToken>().Name)
+                .With(udf.Ident.Name)
                 .With(visitor.CommentsOf(udf.Ident.After)).With("(");
 
             if (udf.Args.Count() > 0)
@@ -519,12 +523,16 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     var arg = orderedArgs[i];
                     list = list.With(visitor.CommentsOf(arg.NameIdent.Before))
-                        .With(arg.NameIdent.Token.As<IdentToken>().Name)
-                        .With(visitor.CommentsOf(arg.NameIdent.After)
-                        .With(": ")
+                        .With(arg.NameIdent.Name)
+                        .With(visitor.CommentsOf(arg.NameIdent.After));
+                    
+                    if (arg.TypeIdent != null)
+                    {
+                        list = list.With(": ")
                         .With(visitor.CommentsOf(arg.TypeIdent.Before))
-                        .With(arg.TypeIdent.Token.As<IdentToken>().Name)
-                        .With(visitor.CommentsOf(arg.TypeIdent.After)));
+                        .With(arg.TypeIdent.Name)
+                        .With(visitor.CommentsOf(arg.TypeIdent.After));
+                    }
 
                     if (i < orderedArgs.Length - 1)
                     {
@@ -537,7 +545,7 @@ namespace Microsoft.PowerFx.Syntax
                     .With(visitor.CommentsOf(udf.ReturnTypeColonToken.Before))
                     .With(": ")
                     .With(visitor.CommentsOf(udf.ReturnType.Before))
-                    .With(udf.ReturnType.Token.As<IdentToken>().Name)
+                    .With(udf.ReturnType.Name)
                     .With(visitor.CommentsOf(udf.ReturnType.After))
                     .With(" = ")
                     .With(visitor.CommentsOf(udf.Body.Before))
@@ -548,27 +556,48 @@ namespace Microsoft.PowerFx.Syntax
             return string.Concat(list);
         }
 
-        public static string FormatUserDefinitions(ParseUserDefinitionFormattingResult result, Queue<string> order, string text)
+        /// <summary>
+        /// Public entry point for prettyprinting user definitions.
+        /// </summary>
+        /// <param name="parseResult">Parse result of user definitions.</param>
+        /// <param name="queue">Format user definitions in the same order as they were parsed.</param>
+        /// <param name="text">Script with all the user definitions.</param>
+        /// <returns></returns>
+        /// <exception cref="KeyNotFoundException">Throws if a NF/UDF can not be in the parse result but it is in the queue.</exception>
+        public static string FormatUserDefinitions(UserDefinitionsWithTrivia parseResult, Queue<(string name, UserDefinitionKind kind)> queue, string text)
         {
             var builder = new StringBuilder();
             var pretty = new PrettyPrintVisitor(text);
 
-            while (order.Count > 0)
+            while (queue.Count > 0)
             {
-                var userDef = order.Dequeue();
+                var (name, kind) = queue.Dequeue();
 
-                if (result.UDFs.TryGetValue(userDef, out var udf))
+                if (kind == UserDefinitionKind.UserDefinedFunction)
                 {
-                    builder.Append(string.Concat(pretty.FormatUserDefinedFunction(pretty, udf, text)));
+                    if (parseResult.UDFs.TryGetValue(name, out var udf))
+                    {
+                        builder.Append(string.Concat(pretty.FormatUserDefinedFunction(pretty, udf, text)));
+                    }
+                    else
+                    {
+                        throw new KeyNotFoundException($"Unable to find user defined function with name '{name}'.");
+                    }
                 }
-
-                if (result.NamedFormulas.TryGetValue(userDef, out var namedFormula))
+                else if (kind == UserDefinitionKind.NamedFormula)
                 {
-                    builder.Append(string.Concat(pretty.FormatNamedFormula(pretty, namedFormula, text)));
+                    if (parseResult.NamedFormulas.TryGetValue(name, out var nf))
+                    {
+                        builder.Append(string.Concat(pretty.FormatNamedFormula(pretty, nf, text)));
+                    }
+                    else
+                    {
+                        throw new KeyNotFoundException($"Unable to find named formula with name '{name}'.");
+                    }
                 }
             }
 
-            builder.Append(string.Concat(pretty.CommentsOf(result.CommentsAtTheEnd)).Replace("\n\n", "\n"));
+            builder.Append(string.Concat(pretty.CommentsOf(parseResult.After))).Replace("\n\n", "\n");
 
             return new Regex(@"\n +(\n +)").Replace(builder.ToString(), (Match match) => match.Groups[1].Value);
         }

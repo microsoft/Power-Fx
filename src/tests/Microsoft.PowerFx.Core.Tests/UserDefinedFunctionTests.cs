@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Syntax;
@@ -379,6 +380,35 @@ namespace Microsoft.PowerFx.Core.Tests
             var isSuccess = UserDefinitions.ProcessUserDefinitions(script, _parserOptions, out var userDefinitions);
 
             Assert.Contains(userDefinitions.Errors, x => x.ErrorResourceKey.Key == "ErrUDF_FunctionAlreadyDefined");
+        }
+
+        [Fact]
+        public void EnsureCorrectnessAfterFormatting()
+        {
+            var script = @"/*1000*/A/*1001*/(/*1002*/a: Number, b: /*1003*/Number): Number = 12;/*1004*/nf1/*1005*/ = /*1006*/20/*1007*/;//1008
+                           b(a/*1009*/: /*1010*/Number): Number = 1;c(/*1011*/a: Number/*1012*/): /*1013*/Number/*1014*/ = /*1015*/1;d(/*1016*/): Number = First(/*1017*/[{id: /*1018*/1},{id: /*1019*/22}]).id/*1020*/;/*1021*/nf2 = d();//1022";
+            var resultBefore = TexlParser.ParseUserDefinitionScript(script, _parserOptions);
+            var formattedScript = TexlParser.FormatUserDefinitions(script);
+
+            var expectedFormattedScript =
+                "/*1000*/A/*1001*/(/*1002*/a: Number, b: /*1003*/Number): Number = 12;\n/*1004*/nf1/*1005*/ = /*1006*/20/*1007*/;\n//1008\r\nb(a/*1009*/: /*1010*/Number): Number = 1;\nc(/*1011*/a: Number/*1012*/): /*1013*/Number/*1014*/ = /*1015*/1;\nd(/*1016*/): Number = First(/*1017*/\n        [\n            {id: /*1018*/1},\n            {id: /*1019*/22}\n        ]\n    ).id/*1020*/;\n/*1021*/nf2 = d();\n//1022";
+
+            Assert.Equal(expectedFormattedScript, formattedScript);
+
+            var resultAfter = TexlParser.ParseUserDefinitionScript(formattedScript, _parserOptions);
+
+            var commentsBefore = resultBefore.Comments.ToArray();
+            var commentsAfter = resultAfter.Comments.ToArray();
+
+            Assert.Equal(commentsBefore.Length, commentsAfter.Length);
+            Assert.Equal(resultBefore.NamedFormulas.Count(), resultAfter.NamedFormulas.Count());
+            Assert.Equal(resultBefore.UDFs.Count(), resultAfter.UDFs.Count());
+            Assert.Equal(resultBefore.HasErrors, resultAfter.HasErrors);
+
+            for (int i = 0; i < commentsBefore.Length; i++)
+            {
+                Assert.Equal(commentsBefore[i].Value.Trim('\r', '\n'), commentsAfter[i].Value.Trim('\r', '\n'));
+            }
         }
     }
 }

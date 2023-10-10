@@ -8,7 +8,6 @@ using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Core.Parser
 {
@@ -104,50 +103,6 @@ namespace Microsoft.PowerFx.Core.Parser
         }
     }
 
-    internal class UDFWithTrivia
-    {
-        internal TokenWithTrivia Ident { get; }
-
-        /// <summary>
-        /// Represents ':' token before return type in a UDF.
-        /// </summary>
-        internal TokenWithTrivia ReturnTypeColonToken { get; }
-
-        internal TokenWithTrivia ReturnType { get; }
-
-        internal BodyWithTrivia Body { get; }
-
-        internal ISet<UDFArgWithTrivia> Args { get; }
-
-        internal SourceList Before { get; }
-
-        internal SourceList After { get; }
-
-        internal bool IsImperative { get; }
-
-        internal bool NumberIsFloat { get; }
-
-        /// <summary>
-        /// False if UDF is incomplete eg: Add(a: Number, b: Number): .
-        /// </summary>
-        internal bool IsParseValid { get; }
-
-        public string BodyScript { get; }
-
-        public UDFWithTrivia(TokenWithTrivia ident, TokenWithTrivia colonToken, TokenWithTrivia returnType, HashSet<UDFArgWithTrivia> args, BodyWithTrivia body, bool isImperative, bool numberIsFloat, bool isValid, string bodyScript = null)
-        {
-            Ident = ident;
-            ReturnType = returnType;
-            Args = args;
-            Body = body;
-            IsImperative = isImperative;
-            NumberIsFloat = numberIsFloat;
-            IsParseValid = isValid;
-            BodyScript = bodyScript;
-            ReturnTypeColonToken = colonToken;
-        }
-    }
-
     internal class DefinedType
     {
         internal IdentToken Ident { get; }
@@ -181,69 +136,5 @@ namespace Microsoft.PowerFx.Core.Parser
             ArgIndex = argIndex;
             ColonToken = colonToken;
         } 
-    }
-
-    internal class UDFArgWithTrivia
-    {
-        internal TokenWithTrivia NameIdent;
-
-        internal TokenWithTrivia TypeIdent;
-
-        /// <summary>
-        /// Represents ':' token before param type in a UDF.
-        /// </summary>
-        internal Token ColonToken { get; }
-
-        internal int ArgIndex;
-
-        public UDFArgWithTrivia(TokenWithTrivia nameIdent, TokenWithTrivia typeIdent, Token colonToken, int argIndex)
-        {
-            NameIdent = nameIdent;
-            TypeIdent = typeIdent;
-            ArgIndex = argIndex;
-            ColonToken = colonToken;
-        }
-    }
-
-    internal class TokenWithTrivia
-    {
-        internal Token Token;
-
-        internal SourceList Before;
-
-        internal SourceList After;
-
-        public TokenWithTrivia(Token token, SourceList before, SourceList after)
-        {
-            Token = token;
-            Before = before;
-            After = after;
-        }
-
-        public static TokenWithTrivia Create(Token token, ITexlSource before = null, ITexlSource after = null)
-        {
-            return new TokenWithTrivia(token, before == null ? null : new SourceList(before), after == null ? null : new SourceList(after));
-        }
-    }
-
-    internal class BodyWithTrivia
-    {
-        internal TexlNode Node;
-
-        internal SourceList Before;
-
-        internal SourceList After;
-
-        public BodyWithTrivia(TexlNode node, SourceList before, SourceList after)
-        {
-            Node = node;
-            Before = before;
-            After = after;
-        }
-
-        public static BodyWithTrivia Create(TexlNode node, ITexlSource before = null, ITexlSource after = null)
-        {
-            return new BodyWithTrivia(node, before == null ? null : new SourceList(before), after == null ? null : new SourceList(after));
-        }
     }
 }

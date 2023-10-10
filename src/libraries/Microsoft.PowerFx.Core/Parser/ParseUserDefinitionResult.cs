@@ -38,35 +38,27 @@ namespace Microsoft.PowerFx.Core.Parser
         }
     }
 
-    internal sealed class ParseUserDefinitionFormattingResult
+    internal sealed class UserDefinitionsWithTrivia : SourceWithTrivia
     {
         internal Dictionary<string, UDFWithTrivia> UDFs { get; }
 
-        internal Dictionary<string, NamedFormula> NamedFormulas { get; }
-
-        internal IEnumerable<DefinedType> DefinedTypes { get; }
-
-        internal IEnumerable<TexlError> Errors { get; }
-
-        internal IEnumerable<CommentToken> Comments { get; }
-
-        internal SourceList CommentsAtTheEnd { get; }
+        internal Dictionary<string, NamedFormulaWithTrivia> NamedFormulas { get; }
 
         internal bool HasErrors { get; }
 
-        public ParseUserDefinitionFormattingResult(Dictionary<string, NamedFormula> namedFormulas, Dictionary<string, UDFWithTrivia> uDFs, IEnumerable<DefinedType> definedTypes, IEnumerable<TexlError> errors, IEnumerable<CommentToken> comments, ITexlSource triviaAtTheEnd)
+        public UserDefinitionsWithTrivia(Dictionary<string, NamedFormulaWithTrivia> namedFormulas, Dictionary<string, UDFWithTrivia> uDFs, bool hasErrors, ITexlSource triviaAtTheEnd)
+            : base(null, triviaAtTheEnd)
         {
             NamedFormulas = namedFormulas;
             UDFs = uDFs;
-            DefinedTypes = definedTypes;
-            Comments = comments;
-            CommentsAtTheEnd = new SourceList(triviaAtTheEnd);
-
-            if (errors?.Any() ?? false)
-            {
-                Errors = errors;
-                HasErrors = true;
-            }
+            HasErrors = hasErrors;
         }
+    }
+
+    internal enum UserDefinitionKind
+    {
+        NamedFormula,
+        UserDefinedFunction,
+        TypeDefinition
     }
 }
