@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (arg is DateValue dateValue)
                 {
-                    writer.WriteStringValue(ConvertToUTC(dateValue.GetConvertedValue(_timeZoneInfo), _timeZoneInfo).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                    writer.WriteStringValue(dateValue.GetConvertedValue(null).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
                 }
                 else if (arg is DecimalValue decimalValue)
                 {

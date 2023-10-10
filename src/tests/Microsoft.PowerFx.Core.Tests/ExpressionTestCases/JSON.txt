@@ -54,8 +54,6 @@ Errors: Error 5-25: The JSON function cannot serialize objects of type 'Void'.
 >> JSON(TimeUnit.Hours)
 """hours"""
 
-// This only works because we're in Pacific Time
-// If we would be in UTC+N time zone, the result would be "2022-08-06" as we convert the date to UTC
 >> JSON(Date(2022,8,7))
 """2022-08-07"""
 
