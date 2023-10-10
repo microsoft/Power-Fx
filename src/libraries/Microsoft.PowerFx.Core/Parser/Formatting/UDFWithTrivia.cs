@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Parser
     /// <summary>
     /// User defined function and all the trivia in it, this is solely used for formatting.
     /// </summary>
-    internal class UDFWithTrivia
+    internal sealed class UDFWithTrivia
     {
         internal IdentifierWithTrivia Ident { get; }
 

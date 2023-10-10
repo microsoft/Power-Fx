@@ -6,7 +6,7 @@ namespace Microsoft.PowerFx.Core.Parser
     /// <summary>
     /// Arguments in user defined functions and their trivia.
     /// </summary>
-    internal class UDFArgWithTrivia
+    internal sealed class UDFArgWithTrivia
     {
         internal IdentifierWithTrivia NameIdent;
 

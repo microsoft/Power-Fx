@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Parser
     /// <summary>
     /// Identifiers in user definitions with comments before and after the identifier.
     /// </summary>
-    internal class IdentifierWithTrivia : SourceWithTrivia
+    internal sealed class IdentifierWithTrivia : SourceWithTrivia
     {
         internal string Name;
 

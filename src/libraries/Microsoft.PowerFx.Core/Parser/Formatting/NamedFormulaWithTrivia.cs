@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Parser
     /// <summary>
     /// Named formula and all the trivia in it, this is solely used for formatting.
     /// </summary>
-    internal class NamedFormulaWithTrivia
+    internal sealed class NamedFormulaWithTrivia
     {
         internal IdentifierWithTrivia Ident { get; }
 

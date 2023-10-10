@@ -6,7 +6,7 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Core.Parser
 {
-    internal class TexlNodeWithTrivia : SourceWithTrivia
+    internal sealed class TexlNodeWithTrivia : SourceWithTrivia
     {
         internal TexlNode Node;
 

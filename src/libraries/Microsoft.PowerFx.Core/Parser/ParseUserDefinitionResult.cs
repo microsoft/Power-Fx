@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Core.Parser
 {
@@ -36,29 +35,5 @@ namespace Microsoft.PowerFx.Core.Parser
                 HasErrors = true;
             }
         }
-    }
-
-    internal sealed class UserDefinitionsWithTrivia : SourceWithTrivia
-    {
-        internal Dictionary<string, UDFWithTrivia> UDFs { get; }
-
-        internal Dictionary<string, NamedFormulaWithTrivia> NamedFormulas { get; }
-
-        internal bool HasErrors { get; }
-
-        public UserDefinitionsWithTrivia(Dictionary<string, NamedFormulaWithTrivia> namedFormulas, Dictionary<string, UDFWithTrivia> uDFs, bool hasErrors, ITexlSource triviaAtTheEnd)
-            : base(null, triviaAtTheEnd)
-        {
-            NamedFormulas = namedFormulas;
-            UDFs = uDFs;
-            HasErrors = hasErrors;
-        }
-    }
-
-    internal enum UserDefinitionKind
-    {
-        NamedFormula,
-        UserDefinedFunction,
-        TypeDefinition
     }
 }
