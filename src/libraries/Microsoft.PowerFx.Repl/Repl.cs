@@ -257,11 +257,12 @@ namespace Microsoft.PowerFx
 
                 if (check.Parse.Root is BinaryOpNode bo && bo.Op == BinaryOp.Equal && bo.Left.Kind == NodeKind.FirstName)
                 {
-                    CheckResult formulaCheck = this.Engine.Check(bo.Right.ToString(), options: this.ParserOptions, symbolTable: extraSymbolTable);
+                    var formula = bo.Right.ToString();
+                    CheckResult formulaCheck = this.Engine.Check(formula, options: this.ParserOptions, symbolTable: extraSymbolTable);
 
                     if (formulaCheck.IsSuccess)
                     {
-                        Engine.SetFormula(bo.Left.ToString(), bo.Right.ToString(), OnFormulaUpdate);
+                        Engine.SetFormula(bo.Left.ToString(), formula, OnFormulaUpdate);
                         return new ReplResult();
                     }
                     else
