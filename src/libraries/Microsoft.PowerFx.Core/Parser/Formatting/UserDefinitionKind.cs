@@ -4,7 +4,7 @@
 namespace Microsoft.PowerFx.Core.Parser
 {
     /// <summary>
-    /// Different kinds of user definitions
+    /// Different kinds of user definitions.
     /// </summary>
     internal enum UserDefinitionKind
     {

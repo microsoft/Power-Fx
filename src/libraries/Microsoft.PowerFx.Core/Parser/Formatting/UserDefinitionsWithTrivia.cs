@@ -7,7 +7,7 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Core.Parser
 {
     /// <summary>
-    /// Represents all the user definitions and their trivia
+    /// Represents all the user definitions and their trivia.
     /// </summary>
     internal sealed class UserDefinitionsWithTrivia : SourceWithTrivia
     {
