@@ -257,8 +257,25 @@ namespace Microsoft.PowerFx
 
                 if (check.Parse.Root is BinaryOpNode bo && bo.Op == BinaryOp.Equal && bo.Left.Kind == NodeKind.FirstName)
                 {
-                    Engine.SetFormula(bo.Left.ToString(), bo.Right.ToString(), OnFormulaUpdate);
-                    return new ReplResult();
+                    var formula = bo.Right.ToString();
+                    CheckResult formulaCheck = this.Engine.Check(formula, options: this.ParserOptions, symbolTable: extraSymbolTable);
+
+                    if (formulaCheck.IsSuccess)
+                    {
+                        Engine.SetFormula(bo.Left.ToString(), formula, OnFormulaUpdate);
+                        return new ReplResult();
+                    }
+                    else
+                    {
+                        foreach (var error in formulaCheck.Errors)
+                        {
+                            var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
+                            await this.Output.WriteLineAsync(error.ToString(), kind, cancel)
+                                .ConfigureAwait(false);
+                        }
+
+                        return new ReplResult { CheckResult = formulaCheck };
+                    }
                 }
             }
 
