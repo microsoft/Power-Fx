@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Annotations;
@@ -191,6 +191,38 @@ namespace Microsoft.PowerFx
             }
 
             _variables.Add(name, info); // can't exist
+        }
+
+        /// <summary>
+        /// Adds an user defnied function.
+        /// </summary>
+        /// <param name="script">String representation of the user defined function.</param>
+        /// <param name="parseCulture">CultureInfo to parse the script againts.</param>
+        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture)
+        {
+            // Phase 1: Side affects are not allowed.
+            var options = new ParserOptions() { AllowsSideEffects = false, Culture = parseCulture };
+
+            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult);
+
+            if (userDefinitionResult.HasErrors)
+            {
+                var sb = new StringBuilder();
+
+                sb.AppendLine("Something went wrong when parsing user defined functions.");
+
+                foreach (var error in userDefinitionResult.Errors)
+                {
+                    error.FormatCore(sb);
+                }
+
+                throw new InvalidOperationException(sb.ToString());
+            }
+
+            foreach (var udf in userDefinitionResult.UDFs)
+            {
+                AddFunction(udf);
+            }
         }
 
         /// <summary>

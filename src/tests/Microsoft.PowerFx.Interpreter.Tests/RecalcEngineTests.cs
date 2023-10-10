@@ -433,6 +433,21 @@ namespace Microsoft.PowerFx.Tests
             "foo()",
             true,
             null)]
+        [InlineData(
+            "Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x);",
+            "Add(10, Foo(-10))",
+            false,
+            20.0)]
+        [InlineData(
+            "Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x);",
+            "Add(1 , Add(1 , Add(1 , Add(1 , Add(1 , Foo(-1))))))",
+            false,
+            6.0)]
+        [InlineData(
+            "TriplePowerSum(x: Number, y:Number, z:Number): Number = Power(2,x) + Power(2,y) + Power(2,z);",
+            "TriplePowerSum(1 , 2, 3)",
+            false,
+            14.0)]
 
         // Recursive calls are not allowed
         [InlineData(

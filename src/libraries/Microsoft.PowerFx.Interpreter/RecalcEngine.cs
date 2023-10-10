@@ -215,31 +215,9 @@ namespace Microsoft.PowerFx
             return result;
         }
 
-        internal void AddUserDefinedFunction(string script, CultureInfo locale)
+        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture)
         {
-            // Phase 1: Side affects are not allowed.
-            var options = new ParserOptions() { AllowsSideEffects = false, Culture = locale };
-
-            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult);
-
-            if (userDefinitionResult.HasErrors)
-            {
-                var sb = new StringBuilder();
-
-                sb.AppendLine("Something went wrong when parsing user defined functions.");
-
-                foreach (var error in userDefinitionResult.Errors)
-                {
-                    error.FormatCore(sb);
-                }
-
-                throw new InvalidOperationException(sb.ToString());
-            }
-
-            foreach (var udf in userDefinitionResult.UDFs)
-            {
-                _symbolTable.AddFunction(udf);
-            }
+            _symbolTable.AddUserDefinedFunction(script, parseCulture);
         }
 
         [Obsolete("This has been deprecated and will soon be replaced by 'AddUserFunction'.")]

@@ -30,7 +30,6 @@ namespace Microsoft.PowerFx.Core.Functions
     {
         private readonly bool _isImperative;
         private readonly IEnumerable<UDFArg> _args;
-        private FormulaValue[] _fvArgs;
         private TexlBinding _binding;
 
         public override bool IsAsync => _binding?.IsAsync(UdfBody) ?? false;
@@ -114,16 +113,11 @@ namespace Microsoft.PowerFx.Core.Functions
             _symbols = nameResolver as ReadOnlySymbolTable;
 
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
-            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, _fvArgs), bindingConfig, features: features, rule: rule);
+            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args), bindingConfig, features: features, rule: rule);
 
             CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding);
 
             return _binding;
-        }
-
-        public void SetFormulaValues(FormulaValue[] formulaValues)
-        {
-            _fvArgs = formulaValues;
         }
 
         /// <summary>
@@ -186,7 +180,6 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             private readonly INameResolver _globalNameResolver;
             private readonly IReadOnlyDictionary<string, UDFArg> _args;
-            private readonly FormulaValue[] _fvArgs;
 
             public static INameResolver Create(INameResolver globalNameResolver, IEnumerable<UDFArg> args)
             {
@@ -208,7 +201,6 @@ namespace Microsoft.PowerFx.Core.Functions
             {
                 this._globalNameResolver = globalNameResolver;
                 this._args = args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => arg);
-                this._fvArgs = fvArgs;
             }
 
             public IExternalDocument Document => _globalNameResolver.Document;
@@ -230,17 +222,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 // lookup in the local scope i.e., function params & body and then look in global scope.
                 if (_args.TryGetValue(name, out var value))
                 {
-                    var type = value.TypeIdent.GetFormulaType()._type;
-
-                    if (_fvArgs != null)
-                    {
-                        var formulaValue = _fvArgs[value.ArgIndex];
-                        nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, formulaValue);
-                    }
-                    else
-                    {                        
-                        nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, value.ArgIndex, value.NameIdent.Name));
-                    }
+                    nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, value.TypeIdent.GetFormulaType()._type, DPath.Root, 0, new UDFParameterInfo(value.TypeIdent.GetFormulaType()._type, value.ArgIndex, value.NameIdent.Name));
 
                     return true;
                 }

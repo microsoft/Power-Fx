@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
@@ -44,6 +45,8 @@ namespace Microsoft.PowerFx
         public DateTimeKind DateTimeKind => TimeZoneInfo.BaseUtcOffset == TimeSpan.Zero ? DateTimeKind.Utc : DateTimeKind.Unspecified;
 
         public Governor Governor { get; private set; }
+
+        private readonly Stack<FormulaValue[]> _formulaValuesStack = new Stack<FormulaValue[]>();
 
         public EvalVisitor(IRuntimeConfig config, CancellationToken cancellationToken)
         {
@@ -276,27 +279,17 @@ namespace Microsoft.PowerFx
             }
             else if (func is UserDefinedFunction userDefinedFunc)
             {
-                var recordValue = userDefinedFunc.GetRuntimeRecordValue(args, _cancellationToken);
+                userDefinedFunc.BindBody(_symbolValues.SymbolTable, new Glue2DocumentBinderGlue(), bindingConfig: BindingConfig.Default);
 
-                var symbolsTableRecord = ReadOnlySymbolTable.NewFromRecord(recordValue.Type);
-                var symbolValuesRecord = SymbolValues.NewFromRecord(symbolsTableRecord, recordValue);
+                _formulaValuesStack.Push(args);
 
-                var symbolsTable = ReadOnlySymbolTable.Compose(_symbolValues.SymbolTable, symbolsTableRecord);
-                var symbolValues = ReadOnlySymbolValues.Compose(_symbolValues, symbolValuesRecord);
+                (var irnode, _) = userDefinedFunc.GetIRTranslator();
 
-                userDefinedFunc.SetFormulaValues(args);
-                userDefinedFunc.BindBody(symbolsTable, new Glue2DocumentBinderGlue(), bindingConfig: BindingConfig.Default);
+                this.CheckCancel();
 
-                (var irnode, var ruleScopeSymbol) = userDefinedFunc.GetIRTranslator();
+                result = await irnode.Accept(this, context).ConfigureAwait(false);
 
-                var expr = new ParsedExpression(irnode, ruleScopeSymbol, context.StackDepthCounter)
-                {
-                    _allSymbols = symbolsTable
-                };
-
-                RuntimeConfig runtimeConfig = new RuntimeConfig(symbolValues, CultureInfo);
-
-                result = await expr.EvalAsync(_cancellationToken, runtimeConfig).ConfigureAwait(false);
+                _formulaValuesStack.Pop();
             }
             else
             {
@@ -749,6 +742,9 @@ namespace Microsoft.PowerFx
                     }
 
                     return hostObj;
+                case UDFParameterInfo uDFParameterInfo:
+                    var formulaValues = _formulaValuesStack.Peek();
+                    return formulaValues[uDFParameterInfo.ArgIndex];
                 default:
                     return ResolvedObjectHelpers.ResolvedObjectError(node);
             }
