@@ -28,12 +28,17 @@ namespace Microsoft.PowerFx.Repl.Tests
             log.Clear();
         }
 
-        public string Get(OutputKind kind)
+        public string Get(OutputKind kind, bool trim = true)
         {
-            var log = _buffers[kind].ToString().Trim();
+            var log = _buffers[kind].ToString();
             Clear(kind);
 
-            // Normalize \r\n to whatever the literal are.
+            if (trim)
+            {
+                log = log.Trim();
+            }
+
+            // Normalize \r\n to whatever the literal are, which will match the tests.
             var newLine = @"
 ";
             log = log.Replace("\r", string.Empty).Replace("\n", newLine);
