@@ -105,7 +105,6 @@ namespace Microsoft.PowerFx
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
             Console.WriteLine("Enter Excel formulas.  Use \"Help()\" for details, \"Option()\" for options.");
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
-            Console.WriteLine();
 
             REPL();
         }

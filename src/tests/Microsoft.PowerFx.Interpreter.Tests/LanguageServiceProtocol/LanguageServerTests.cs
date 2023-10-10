@@ -2211,7 +2211,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void TestPublishControlTokensNotification(string expression, int expectedNumberOfControlTokens)
         {
             // Arrange
-            var engine = new Engine(new PowerFxConfig());
             var checkResult = SemanticTokensRelatedTestsHelper.GetCheckResultWithControlSymbols(expression);
             var scopeFactory = new TestPowerFxScopeFactory(
                 (string documentUri) => new EditorContextScope(
@@ -2226,28 +2225,18 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             // Act
             testServer.OnDataReceived(payload.payload);
-            if (expectedNumberOfControlTokens > 0)
+            var notification = JsonSerializer.Deserialize<JsonRpcPublishControlTokensNotification>(_sendToClientData[1], _jsonSerializerOptions);
+
+            // Assert
+            Assert.Equal("2.0", notification.Jsonrpc);
+            Assert.Equal("$/publishControlTokens", notification.Method);
+            Assert.Equal("someVersionId", notification.Params.Version);
+            var controlTokenList = notification.Params.Controls;
+            Assert.Equal(expectedNumberOfControlTokens, controlTokenList.Count());
+            foreach (var controlToken in controlTokenList)
             {
-                var notification = JsonSerializer.Deserialize<JsonRpcPublishControlTokensNotification>(_sendToClientData[1], _jsonSerializerOptions);
-
-                // Assert
-                Assert.Equal("2.0", notification.Jsonrpc);
-                Assert.Equal("$/publishControlTokens", notification.Method);
-                Assert.Equal("someVersionId", notification.Params.Version);
-
-                var controlTokenList = notification.Params.Controls;
-                Assert.Equal(expectedNumberOfControlTokens, controlTokenList.Count());
-                foreach (var controlToken in controlTokenList)
-                {
-                    Assert.Equal(typeof(ControlToken), controlToken.GetType());
-                }
+                Assert.Equal(typeof(ControlToken), controlToken.GetType());
             }
-            else
-            {
-                // No control tokens, then no control token notification created. 
-                // Here the only data is the semantic token data.
-                Assert.Single(_sendToClientData);
-            }            
         }
 
         private static SemanticTokensResponse AssertAndGetSemanticTokensResponse(string response, string id)

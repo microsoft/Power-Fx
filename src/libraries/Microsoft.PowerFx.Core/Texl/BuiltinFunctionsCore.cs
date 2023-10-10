@@ -90,6 +90,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Degrees = _library.Add(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Add(new DegreesTableFunction());
         public static readonly TexlFunction DropColumns = _library.Add(new DropColumnsFunction());
+        public static readonly TexlFunction EDate = _library.Add(new EDateFunction());
+        public static readonly TexlFunction EOMonth = _library.Add(new EOMonthFunction());
         public static readonly TexlFunction EncodeUrl = _library.Add(new EncodeUrlFunction());
         public static readonly TexlFunction EndsWith = _library.Add(new EndsWithFunction());
         public static readonly TexlFunction Error = _library.Add(new ErrorFunction());
@@ -239,8 +241,6 @@ namespace Microsoft.PowerFx.Core.Texl
 
         public static readonly TexlFunction Decimal = _featureGateFunctions.Add(new DecimalFunction());
         public static readonly TexlFunction Decimal_UO = _featureGateFunctions.Add(new DecimalFunction_UO());
-        public static readonly TexlFunction EDate = _featureGateFunctions.Add(new EDateFunction());
-        public static readonly TexlFunction EOMonth = _featureGateFunctions.Add(new EOMonthFunction());
         public static readonly TexlFunction Float = _featureGateFunctions.Add(new FloatFunction());
         public static readonly TexlFunction Float_UO = _featureGateFunctions.Add(new FloatFunction_UO());
         public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Add(new IsUTCTodayFunction());

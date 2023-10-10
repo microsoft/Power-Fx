@@ -3479,15 +3479,18 @@ namespace Microsoft.PowerFx.Core.Binding
                     // an expensive operation especially for form control which generally has tons of nested controls. So we calculate the type here.
                     // There might be cases where we are getting the schema from imported data that once belonged to a control and now,
                     // we don't have a pass-through input associated with it. Therefore, we need to get the opaqueType to avoid localizing the schema.
-                    if (property.PassThroughInput == null)
+                    // We apply the same logic for output properties that infer their type from primary input properties.
+                    if (property.PassThroughInput == null && !property.IsTypeInferredFromPrimaryInput)
                     {
                         typeRhs = property.GetOpaqueType();
                     }
                     else
                     {
                         var firstNodeLhs = node.Left.AsFirstName();
-                        if (template.HasExpandoProperties &&
-                            template.ExpandoProperties.Any(p => p.InvariantName == property.InvariantName) &&
+
+                        if (((template.HasPropsInferringTypeFromPrimaryInProperty &&
+                            template.PropsInferringTypeFromPrimaryInProperty.Any(p => p.InvariantName == property.InvariantName)) ||
+                            (template.HasExpandoProperties && template.ExpandoProperties.Any(p => p.InvariantName == property.InvariantName))) &&
                             controlInfo != null && (firstNodeLhs == null || _txb.GetInfo(firstNodeLhs).Kind != BindKind.ScopeVariable))
                         {
                             // If visiting an expando type property of control type variable, we cannot calculate the type here because
