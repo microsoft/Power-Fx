@@ -28,6 +28,10 @@ namespace Microsoft.PowerFx.Repl.Services
         // Set to Int32.MaxInt to remove restriction.
         public int MaxTableRows { get; set; } = 10;
 
+        // Append a newline to the end of a formatted table.
+        // If the REPL does not include a newline for the prompt, set this to true for proper spacing.
+        public bool FormatTableNewLine { get; set; } = false;
+
         private string FormatRecordCore(RecordValue record)
         {
             return FormatStandardRecord(record, TryGetSpecialFieldNames(record));
@@ -253,11 +257,14 @@ namespace Microsoft.PowerFx.Repl.Services
                         }
                     }
 
-                    resultString.Append("\n ");
-
                     if (maxRows2 < 0)
                     {
-                        resultString.Append($" (showing first {MaxTableRows} records)\n ");
+                        resultString.Append($"\n (showing first {MaxTableRows} records)");
+                    }
+
+                    if (FormatTableNewLine)
+                    {
+                        resultString.Append("\n ");
                     }
                 }
                 else
