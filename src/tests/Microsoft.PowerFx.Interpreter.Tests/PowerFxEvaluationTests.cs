@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
 #pragma warning disable CS0618 // Type or member is obsolete
             config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
-#pragma warning restore CS0618 // Type or member is obsolete       
+#pragma warning restore CS0618 // Type or member is obsolete
 
             return null;
         }

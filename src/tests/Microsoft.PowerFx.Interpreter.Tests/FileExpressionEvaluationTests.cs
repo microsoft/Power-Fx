@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // 4. No features with NumberIsFloat (occasional) - important for back compat convertes in Canvas as the
         //    back compat converters depend on the feature mix being the same as when the original app was serialized.
         //
-        // See the README.md in the ExpressionTestCases directory for more details.        
+        // See the README.md in the ExpressionTestCases directory for more details.
 
         // Canvas currently does not support decimal, but since this interpreter does, we can run tests with decimal here.
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,NumberIsFloat,DecimalSupport")]

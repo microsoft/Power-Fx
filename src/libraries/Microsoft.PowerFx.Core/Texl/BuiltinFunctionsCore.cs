@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Texl
         };
 
         // Functions in this list are shared and may show up in other hosts by default.
-        internal static readonly TexlFunctionSet _library = new TexlFunctionSet();        
+        internal static readonly TexlFunctionSet _library = new TexlFunctionSet();
 
         public static readonly TexlFunction Abs = _library.Add(new AbsFunction());
         public static readonly TexlFunction AbsT = _library.Add(new AbsTableFunction());
@@ -89,9 +89,9 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Dec2HexT = _library.Add(new Dec2HexTFunction());
         public static readonly TexlFunction Degrees = _library.Add(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Add(new DegreesTableFunction());
-        public static readonly TexlFunction DropColumns = _library.Add(new DropColumnsFunction());        
+        public static readonly TexlFunction DropColumns = _library.Add(new DropColumnsFunction());
         public static readonly TexlFunction EncodeUrl = _library.Add(new EncodeUrlFunction());
-        public static readonly TexlFunction EndsWith = _library.Add(new EndsWithFunction());       
+        public static readonly TexlFunction EndsWith = _library.Add(new EndsWithFunction());
         public static readonly TexlFunction Error = _library.Add(new ErrorFunction());
         public static readonly TexlFunction Exp = _library.Add(new ExpFunction());
         public static readonly TexlFunction ExpT = _library.Add(new ExpTableFunction());
@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction IsError = _library.Add(new IsErrorFunction());
         public static readonly TexlFunction IsNumeric = _library.Add(new IsNumericFunction());
         public static readonly TexlFunction ISOWeekNum = _library.Add(new ISOWeekNumFunction());
-        public static readonly TexlFunction IsToday = _library.Add(new IsTodayFunction());        
+        public static readonly TexlFunction IsToday = _library.Add(new IsTodayFunction());
         public static readonly TexlFunction Language = _library.Add(new LanguageFunction());
         public static readonly TexlFunction Last = _library.Add(new FirstLastFunction(isFirst: false));
         public static readonly TexlFunction Last_UO = _library.Add(new FirstLastFunction_UO(isFirst: false));
@@ -251,7 +251,7 @@ namespace Microsoft.PowerFx.Core.Texl
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        
         public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library.Functions;
-        
+
         private static readonly TexlFunctionSet _testOnlyLibrary = new TexlFunctionSet(_library.Functions).Add(_featureGateFunctions);
 
         // Slow API, only use for backward compatibility

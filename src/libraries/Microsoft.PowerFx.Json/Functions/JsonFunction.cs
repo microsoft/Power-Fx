@@ -27,10 +27,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return Task.FromResult(new JsonProcessing(timezoneInfo, irContext, args).Process());
         }
 
-        // #pragma warning restore SA1313
-
         internal class JsonProcessing
-        {            
+        {
             private JsonFlags _flags;
             private readonly FormulaValue[] _args;
             private readonly IRContext _irContext;
@@ -61,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 string json = Encoding.UTF8.GetString(memoryStream.ToArray()).Replace(@"\u0022", @"\""").Replace(@"\u0027", @"'");
 
                 // replace two spaces with four spaces only at the beginning of each line
-                json = Regex.Replace(json, @"^(?<spc>(  )+)(?<right>[^ ].*)", @"$2$2$3", RegexOptions.Multiline);         
+                json = Regex.Replace(json, @"^(?<spc>(  )+)(?<right>[^ ].*)", @"$2$2$3", RegexOptions.Multiline);
 
                 return new StringValue(_irContext, json);
             }
@@ -95,8 +93,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-#pragma warning disable CS0618 // Use of [Obsolete] member: Date[Time]Value.Value
-
             internal void WriteToJson(Utf8JsonWriter writer, FormulaValue arg)
             {
                 if (arg is BlankValue blankValue)
@@ -112,11 +108,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     writer.WriteStringValue(GetColorString(colorValue.Value));
                 }
                 else if (arg is DateTimeValue dateTimeValue)
-                {                    
+                {
                     writer.WriteStringValue(ConvertToUTC(dateTimeValue.GetConvertedValue(_timeZoneInfo), _timeZoneInfo).ToString("yyyy-MM-dd'T'HH:mm:ss.fffK", CultureInfo.InvariantCulture));
                 }
                 else if (arg is DateValue dateValue)
-                {                    
+                {
                     writer.WriteStringValue(ConvertToUTC(dateValue.GetConvertedValue(_timeZoneInfo), _timeZoneInfo).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
                 }
                 else if (arg is DecimalValue decimalValue)
@@ -217,8 +213,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     throw new ArgumentException($"Unable to serialize type {arg.GetType().FullName} to Json format.");
                 }
             }
-
-#pragma warning restore CS0618          
 
             internal static string GetColorString(Color color) => $"#{color.R:x2}{color.G:x2}{color.B:x2}{color.A:x2}";
 
