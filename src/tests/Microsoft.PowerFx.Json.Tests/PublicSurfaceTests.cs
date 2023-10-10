@@ -27,7 +27,8 @@ namespace Microsoft.PowerFx.Json.Tests
                 "Microsoft.PowerFx.ConfigExtensions",
                 "Microsoft.PowerFx.Core.FormulaTypeJsonConverter",
                 "Microsoft.PowerFx.Core.FormulaTypeSerializerSettings",
-                "Microsoft.PowerFx.Types.FormulaValueJSON"
+                "Microsoft.PowerFx.JsonConfigExtensions",
+                "Microsoft.PowerFx.Types.FormulaValueJSON",
             };
 
             var sb = new StringBuilder();

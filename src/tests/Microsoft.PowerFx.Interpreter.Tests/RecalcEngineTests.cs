@@ -17,7 +17,6 @@ using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
@@ -765,7 +764,7 @@ namespace Microsoft.PowerFx.Tests
         public void CheckFunctionCounts()
         {
             var config = new PowerFxConfig();
-            config.EnableParseJSONFunction();
+            config.EnableJsonFunctions();
 
             var engine1 = new Engine(config);
 

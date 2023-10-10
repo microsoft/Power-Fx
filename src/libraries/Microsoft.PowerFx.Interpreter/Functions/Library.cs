@@ -960,17 +960,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: IsToday)
             },
             {
-                BuiltinFunctionsCore.Json,
-                StandardErrorHandling<FormulaValue>(
-                    BuiltinFunctionsCore.Json.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: DeferRuntimeTypeChecking,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Json)
-            },
-            {
                 BuiltinFunctionsCore.Language,
                 NoErrorHandling(Language)
             },

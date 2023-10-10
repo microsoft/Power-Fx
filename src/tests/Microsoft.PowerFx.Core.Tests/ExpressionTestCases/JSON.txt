@@ -1,9 +1,16 @@
 // (UTC-08:00) Pacific Time (US & Canada)
 #SETUP: TimeZoneInfo("Pacific Standard Time")
 #SETUP: OptionSetTestSetup
+#SETUP: EnableJsonFunctions
+
+>> JSON()
+Errors: Error 0-6: Invalid number of arguments: received 0, expected 1-2.
 
 >> JSON(Blank())
 "null"
+
+>> JSON(If(1<0,"true",{a:1}))
+Errors: Error 5-25: The JSON function cannot serialize objects of type 'Void'.
 
 >> JSON("hello")
 """hello"""
@@ -25,6 +32,15 @@
 
 >> JSON(false)
 "false"
+
+>> JSON("Back\slash")
+"""Back\\slash"""
+
+>> JSON("Quotes "" and ' may be escaped")
+"""Quotes \"" and ' may be escaped"""
+
+>> JSON($"Other {Char(13)} escaped {Char(10)} chars {Char(4)} should {Char(9)} also {Char(8)} be {Char(1)} escaped {Char(20)} properly")
+"""Other \r escaped \n chars \u0004 should \t also \b be \u0001 escaped \u0014 properly"""
 
 >> JSON(RGBA(10, 30, 50, 0.75))
 """#0a1e32bf"""
@@ -50,6 +66,10 @@
 >> JSON(DateTimeValue("1970-01-01T00:00:00"))
 """1970-01-01T08:00:00.000Z"""
 
+// Independent from local timezone
+>> With({dt: DateTime(1987,6,5,4,30,0)}, JSON(DateAdd(dt,-TimeZoneOffset(dt),TimeUnit.Minutes), JSONFormat.IndentFour))
+"""1987-06-05T04:30:00.000Z"""
+
 >> JSON({a:1,b:"hello",c:true})
 "{""a"":1,""b"":""hello"",""c"":true}"
 
@@ -59,8 +79,8 @@
 >> Substitute(Substitute(Substitute(JSON({a:1,b:"hello",c:true}, JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
 "{*<t>""a"": 1,*<t>""b"": ""hello"",*<t>""c"": true*}"
 
->> JSON(Table({a:1,b:"hello",c:true},{a:-3,b:"world",c:false}))
-"[{""a"":1,""b"":""hello"",""c"":true},{""a"":-3,""b"":""world"",""c"":false}]"
+>> JSON(Table({a:1,b:"hello",c:true,e:Blank()},{a:-3,b:"world",c:false,d:GUID("01234567-89AB-CDEF-0123-456789ABCDEF")}))
+"[{""a"":1,""b"":""hello"",""c"":true,""d"":null,""e"":null},{""a"":-3,""b"":""world"",""c"":false,""d"":""01234567-89ab-cdef-0123-456789abcdef"",""e"":null}]"
 
 >> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:true},{a:-3,b:"world",c:false}), JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
 "[*<t>{*<t><t>""a"": 1,*<t><t>""b"": ""hello"",*<t><t>""c"": true*<t>},*<t>{*<t><t>""a"": -3,*<t><t>""b"": ""world"",*<t><t>""c"": false*<t>}*]"
@@ -77,3 +97,9 @@
 
 >> JSON(Table({a:GUID("01234567-89AB-CDEF-0123-456789ABCDEF"),b:RGBA(18, 52, 86, 0.5),c:"https://www.microsoft.com",d:Float(23.45)}))
 "[{""a"":""01234567-89ab-cdef-0123-456789abcdef"",""b"":""#12345680"",""c"":""https://www.microsoft.com"",""d"":23.45}]"
+
+>> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:Blank()},{a:-3,b:"world",c:{d: 1, h:"test"}}), JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"[*<t>{*<t><t>""a"": 1,*<t><t>""b"": ""hello"",*<t><t>""c"": null*<t>},*<t>{*<t><t>""a"": -3,*<t><t>""b"": ""world"",*<t><t>""c"": {*<t><t><t>""d"": 1,*<t><t><t>""h"": ""test""*<t><t>}*<t>}*]"
+
+>> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:Blank()},{a:-3,b:"world",c:Table({r:3.1,s:"inner",t:-7})}), JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"[*<t>{*<t><t>""a"": 1,*<t><t>""b"": ""hello"",*<t><t>""c"": null*<t>},*<t>{*<t><t>""a"": -3,*<t><t>""b"": ""world"",*<t><t>""c"": [*<t><t><t>{*<t><t><t><t>""r"": 3.1,*<t><t><t><t>""s"": ""inner"",*<t><t><t><t>""t"": -7*<t><t><t>}*<t><t>]*<t>}*]"

@@ -2,10 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
@@ -16,18 +14,9 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // JSON(data:any, [format:s, [included_columns:*[Value:s]]])    
-    internal sealed class JsonFunction : BuiltinFunction
-    {
-        [Flags]
-        private enum TypeCacheKey
-        {
-            None = 0,
-            IncludeBinaryData = 1 >> 0,
-            IgnoreBinaryData = 1 >> 1,
-            IgnoreUnsupportedTypes = 1 >> 2
-        }
-        
+    // JSON(data:any, [format:s])    
+    internal class JsonFunction : BuiltinFunction
+    {        
         private const string _includeBinaryDataEnumValue = "B";
         private const string _ignoreBinaryDataEnumValue = "G";
         private const string _ignoreUnsupportedTypesEnumValue = "I";        
@@ -50,7 +39,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             DKind.OptionSet, 
             DKind.PenImage, 
             DKind.Polymorphic,
-            DKind.UntypedObject
+            DKind.UntypedObject,
+            DKind.Void
         };
 
         public override bool IsSelfContained => true;
@@ -83,9 +73,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Do not call base.CheckTypes
             if (args.Length > 1)
             {
-                TexlNode optionsNode = args[1];
-                string nodeValue = null;
-                if (!IsConstant(context, argTypes, optionsNode, ref nodeValue))
+                TexlNode optionsNode = args[1];                
+                if (!IsConstant(context, argTypes, optionsNode, out string nodeValue))
                 {
                     errors.EnsureError(optionsNode, TexlStrings.ErrFunctionArg2ParamMustBeConstant, "JSON", TexlStrings.JSONArg2.Invoke());
                     return false;
@@ -119,9 +108,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (args.Length > 1)
             {
-                TexlNode optionsNode = args[1];
-                string nodeValue = null;
-                if (!IsConstant(binding.CheckTypesContext, argTypes, optionsNode, ref nodeValue))
+                TexlNode optionsNode = args[1];                
+                if (!IsConstant(binding.CheckTypesContext, argTypes, optionsNode, out string nodeValue))
                 {
                     return;
                 }
@@ -157,7 +145,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
         }
 
-        private static bool IsConstant(CheckTypesContext context, DType[] argTypes, TexlNode optionsNode, ref string nodeValue)
+        private static bool IsConstant(CheckTypesContext context, DType[] argTypes, TexlNode optionsNode, out string nodeValue)
         {
             // Not limited to strings, can be an option set (enum)
             return BinderUtils.TryGetConstantValue(context, optionsNode, out nodeValue);

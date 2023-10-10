@@ -24,8 +24,7 @@ namespace Microsoft.PowerFx.Core.Texl
         };
 
         // Functions in this list are shared and may show up in other hosts by default.
-        internal static readonly TexlFunctionSet _library = new TexlFunctionSet();
-        internal static readonly TexlFunctionSet _featureGateFunctions = new TexlFunctionSet();
+        internal static readonly TexlFunctionSet _library = new TexlFunctionSet();        
 
         public static readonly TexlFunction Abs = _library.Add(new AbsFunction());
         public static readonly TexlFunction AbsT = _library.Add(new AbsTableFunction());
@@ -88,15 +87,11 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Day = _library.Add(new DayFunction());
         public static readonly TexlFunction Dec2Hex = _library.Add(new Dec2HexFunction());
         public static readonly TexlFunction Dec2HexT = _library.Add(new Dec2HexTFunction());
-        public static readonly TexlFunction Decimal = _featureGateFunctions.Add(new DecimalFunction());
-        public static readonly TexlFunction Decimal_UO = _featureGateFunctions.Add(new DecimalFunction_UO());
         public static readonly TexlFunction Degrees = _library.Add(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Add(new DegreesTableFunction());
-        public static readonly TexlFunction DropColumns = _library.Add(new DropColumnsFunction());
-        public static readonly TexlFunction EDate = _featureGateFunctions.Add(new EDateFunction());
+        public static readonly TexlFunction DropColumns = _library.Add(new DropColumnsFunction());        
         public static readonly TexlFunction EncodeUrl = _library.Add(new EncodeUrlFunction());
-        public static readonly TexlFunction EndsWith = _library.Add(new EndsWithFunction());
-        public static readonly TexlFunction EOMonth = _featureGateFunctions.Add(new EOMonthFunction());
+        public static readonly TexlFunction EndsWith = _library.Add(new EndsWithFunction());       
         public static readonly TexlFunction Error = _library.Add(new ErrorFunction());
         public static readonly TexlFunction Exp = _library.Add(new ExpFunction());
         public static readonly TexlFunction ExpT = _library.Add(new ExpTableFunction());
@@ -107,8 +102,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction First_UO = _library.Add(new FirstLastFunction_UO(isFirst: true));
         public static readonly TexlFunction FirstN = _library.Add(new FirstLastNFunction(isFirst: true));
         public static readonly TexlFunction FirstN_UO = _library.Add(new FirstLastNFunction_UO(isFirst: true));
-        public static readonly TexlFunction Float = _featureGateFunctions.Add(new FloatFunction());
-        public static readonly TexlFunction Float_UO = _featureGateFunctions.Add(new FloatFunction_UO());
         public static readonly TexlFunction ForAll = _library.Add(new ForAllFunction());
         public static readonly TexlFunction ForAll_UO = _library.Add(new ForAllFunction_UO());
         public static readonly TexlFunction GUID_UO = _library.Add(new GUIDPureFunction_UO());
@@ -131,9 +124,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction IsError = _library.Add(new IsErrorFunction());
         public static readonly TexlFunction IsNumeric = _library.Add(new IsNumericFunction());
         public static readonly TexlFunction ISOWeekNum = _library.Add(new ISOWeekNumFunction());
-        public static readonly TexlFunction IsToday = _library.Add(new IsTodayFunction());
-        public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Add(new IsUTCTodayFunction());
-        public static readonly TexlFunction Json = _featureGateFunctions.Add(new JsonFunction());
+        public static readonly TexlFunction IsToday = _library.Add(new IsTodayFunction());        
         public static readonly TexlFunction Language = _library.Add(new LanguageFunction());
         public static readonly TexlFunction Last = _library.Add(new FirstLastFunction(isFirst: false));
         public static readonly TexlFunction Last_UO = _library.Add(new FirstLastFunction_UO(isFirst: false));
@@ -166,7 +157,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction MonthsShort = _library.Add(new MonthsShortFunction());
         public static readonly TexlFunction Not = _library.Add(new NotFunction());
         public static readonly TexlFunction Now = _library.Add(new NowFunction());
-        public static readonly TexlFunction OptionsSetInfo = _featureGateFunctions.Add(new OptionSetInfoFunction());
         public static readonly TexlFunction Or = _library.Add(new VariadicLogicalFunction(isAnd: false));
         public static readonly TexlFunction ParseJSON = _library.Add(new ParseJSONFunction());
         public static readonly TexlFunction Pi = _library.Add(new PiFunction());
@@ -231,8 +221,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction TruncT = _library.Add(new TruncTableFunction());
         public static readonly TexlFunction Upper = _library.Add(new LowerUpperFunction(isLower: false));
         public static readonly TexlFunction UpperT = _library.Add(new LowerUpperTFunction(isLower: false));
-        public static readonly TexlFunction UTCNow = _featureGateFunctions.Add(new UTCNowFunction());
-        public static readonly TexlFunction UTCToday = _featureGateFunctions.Add(new UTCTodayFunction());
         public static readonly TexlFunction Value = _library.Add(new ValueFunction());
         public static readonly TexlFunction Value_UO = _library.Add(new ValueFunction_UO());
         public static readonly TexlFunction VarP = _library.Add(new VarPFunction());
@@ -245,6 +233,20 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Year = _library.Add(new YearFunction());
 
         // Don't add new functions here, follow alpha order
+
+        // _featureGateFunctions functions, not present in all platforms
+        internal static readonly TexlFunctionSet _featureGateFunctions = new TexlFunctionSet();
+
+        public static readonly TexlFunction Decimal = _featureGateFunctions.Add(new DecimalFunction());
+        public static readonly TexlFunction Decimal_UO = _featureGateFunctions.Add(new DecimalFunction_UO());
+        public static readonly TexlFunction EDate = _featureGateFunctions.Add(new EDateFunction());
+        public static readonly TexlFunction EOMonth = _featureGateFunctions.Add(new EOMonthFunction());
+        public static readonly TexlFunction Float = _featureGateFunctions.Add(new FloatFunction());
+        public static readonly TexlFunction Float_UO = _featureGateFunctions.Add(new FloatFunction_UO());
+        public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Add(new IsUTCTodayFunction());
+        public static readonly TexlFunction OptionsSetInfo = _featureGateFunctions.Add(new OptionSetInfoFunction());
+        public static readonly TexlFunction UTCNow = _featureGateFunctions.Add(new UTCNowFunction());
+        public static readonly TexlFunction UTCToday = _featureGateFunctions.Add(new UTCTodayFunction());
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        
