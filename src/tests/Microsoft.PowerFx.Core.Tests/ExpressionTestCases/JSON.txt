@@ -96,8 +96,8 @@ Errors: Error 5-25: The JSON function cannot serialize objects of type 'Void'.
 >> JSON(Table({a:DateTime(2014,11,29,17,5,1,997),b:Date(2019, 4, 22),c:Time(12, 34, 56, 789)}))
 "[{""a"":""2014-11-30T01:05:01.997Z"",""b"":""2019-04-22"",""c"":""12:34:56.789""}]"
 
->> JSON(Table({a:GUID("01234567-89AB-CDEF-0123-456789ABCDEF"),b:RGBA(18, 52, 86, 0.5),c:"https://www.microsoft.com",d:23.45}))
-"[{""a"":""01234567-89ab-cdef-0123-456789abcdef"",""b"":""#12345680"",""c"":""https://www.microsoft.com"",""d"":23.45}]"
+>> JSON(Table({a:GUID("01234567-89AB-CDEF-0123-456789ABCDEF"),b:RGBA(18, 52, 86, 0.5),c:"https://www.microsoft.com",d:Sqrt(9)}))
+"[{""a"":""01234567-89ab-cdef-0123-456789abcdef"",""b"":""#12345680"",""c"":""https://www.microsoft.com"",""d"":3}]"
 
 >> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:Blank()},{a:-3,b:"world",c:{d: 1, h:"test"}}), JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
 "[*<t>{*<t><t>""a"": 1,*<t><t>""b"": ""hello"",*<t><t>""c"": null*<t>},*<t>{*<t><t>""a"": -3,*<t><t>""b"": ""world"",*<t><t>""c"": {*<t><t><t>""d"": 1,*<t><t><t>""h"": ""test""*<t><t>}*<t>}*]"
