@@ -691,6 +691,21 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("[{A]", 0, 4)]
+        [InlineData("[{A:2}]", 0, 7)]
+        [InlineData("With({A:2", 0, 9)]
+        [InlineData("Filter(CDS, {A:2", 0, 16)]
+        [InlineData("{", 0, 1)]
+        [InlineData("Filter(CDS, {", 0, 13)]
+        public void TestParseRecordNodesSpan(string script, int min, int lim)
+        {
+            var result = TexlParser.ParseScript(script);
+            var span = result.Root.GetCompleteSpan();
+            Assert.Equal(min, span.Min);
+            Assert.Equal(lim, span.Lim);
+        }
+
+        [Theory]
         [InlineData("[]", "[  ]")]
         [InlineData("[  ]")]
         [InlineData("[ 1, 2, 3, 4, 5 ]")]

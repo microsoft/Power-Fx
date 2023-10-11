@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -115,7 +116,21 @@ namespace Microsoft.PowerFx.Syntax
         /// <inheritdoc />
         public override Span GetCompleteSpan()
         {
-            return new Span(GetTextSpan());
+            int lim;
+            if (CurlyClose != null)
+            {
+                lim = CurlyClose.Span.Lim;
+            }
+            else if (Children.Count() == 0)
+            {
+                lim = Token.VerifyValue().Span.Lim;
+            }
+            else
+            {
+                lim = Children.VerifyValue().Last().VerifyValue().GetCompleteSpan().Lim;
+            }
+
+            return new Span(Token.VerifyValue().Span.Min, lim);
         }
     }
 }
