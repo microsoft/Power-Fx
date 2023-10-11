@@ -23,9 +23,5 @@ namespace Microsoft.PowerFx.Interpreter
             _func = func;
             _args = args;
         }
-        
-        private UDFStackFrame()
-        {
-        }
     }
 }
