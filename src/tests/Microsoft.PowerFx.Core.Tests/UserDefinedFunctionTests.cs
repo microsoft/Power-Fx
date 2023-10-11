@@ -410,5 +410,29 @@ namespace Microsoft.PowerFx.Core.Tests
                 Assert.Equal(commentsBefore[i].Value.Trim('\r', '\n'), commentsAfter[i].Value.Trim('\r', '\n'));
             }
         }
+
+        [Fact]
+        public void EnsureNoFormattingWithErrors()
+        {
+            var script = @"/*1000*/A/*1001*/(/*1002*/a: Number, b: /*1003*/Number): Number = 12;/*1004*/nf1/*1005*/ = /*1006*/20/*1007*/;//1008
+                           b(a/*1009*/: /*1010*/Number): Number = 1;c(/*1011*/a: Number/*1012*/): /*1013*/Number/*1014*/ = /*1015*/1;d(/*1016*/): Number = First(/*1017*/[{id: /*1018*/1},{id: /*1019*/22}]).id/*1020*/;/*1021*/nf2 = d()//1022";
+            var resultBefore = TexlParser.ParseUserDefinitionScript(script, _parserOptions);
+            var formattedScript = TexlParser.FormatUserDefinitions(script);
+
+            Assert.Equal(script, formattedScript);
+            Assert.True(resultBefore.HasErrors);
+        }
+
+        [Fact]
+        public void TestUserDefinitionsWithJustComments()
+        {
+            var script = "/*1001*/\n//1002\n/*1003*/";
+            var resultBefore = TexlParser.ParseUserDefinitionScript(script, _parserOptions);
+            var formattedScript = TexlParser.FormatUserDefinitions(script);
+            var resultAfter = TexlParser.ParseUserDefinitionScript(formattedScript, _parserOptions);
+
+            Assert.Equal(script, formattedScript);
+            Assert.Equal(resultBefore.Comments.Count(), resultAfter.Comments.Count());
+        }
     }
 }
