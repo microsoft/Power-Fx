@@ -1023,43 +1023,43 @@
     <value>Стойност на дата, за която ще се изчисли номерът на седмицата по ISO.</value>
   </data>
   <data name="AboutEDate" xml:space="preserve">
-    <value>Returns a date adjusted by a number of months. The day of the month remains the same but is capped by the number of days in the new month.</value>
+    <value>Връща дата, коригирана с брой месеци. Денят от месеца остава същият, стига да не е след последния ден от новия месец.</value>
     
   </data>
   <data name="EDateArg1" xml:space="preserve">
-    <value>date</value>
+    <value>дата</value>
     
   </data>
   <data name="EDateArg2" xml:space="preserve">
-    <value>months</value>
+    <value>месеци</value>
     
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
-    <value>A date value to be adjusted by the specified number of months.</value>
+    <value>Дата, която да се коригира с указания брой месеци.</value>
           
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
-    <value>Number of months by which to change the date. A positive value yields a future date, a negative value a past date, and zero will not change the month.</value>
+    <value>Брой месеци, с които да се промени датата. Положителна стойност дава бъдеща дата, отрицателна стойност дава минала дата, а нула не променя месеца.</value>
         
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
-    <value>Returns the last day of the month for a specified date, adjusted by a number of months.</value>
+    <value>Връща последния ден от месеца за зададена дата, коригирана с брой месеци.</value>
     
   </data>
   <data name="EOMonthArg1" xml:space="preserve">
-    <value>date</value>
+    <value>дата</value>
     
   </data>
   <data name="EOMonthArg2" xml:space="preserve">
-    <value>months</value>
+    <value>месеци</value>
     
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
-    <value>A date value to be adjusted by the specified number of months.</value>
+    <value>Дата, която да се коригира с указания брой месеци.</value>
           
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Number of months by which to change the date. A positive value yields a future date, a negative value a past date, and zero will not change the month.</value>
+    <value>&gt;Брой месеци, с които да се промени датата. Положителна стойност дава бъдеща дата, отрицателна стойност дава минала дата, а нула не променя месеца.</value>
          
   </data>
   <data name="AboutInt" xml:space="preserve">
