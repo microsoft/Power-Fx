@@ -40,10 +40,6 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override bool IsSelfContained => !_isImperative;
 
-        private ReadOnlySymbolTable _symbols;
-
-        public ReadOnlySymbolTable AllSymbols => _symbols;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class.
         /// </summary>
@@ -110,8 +106,6 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(documentBinderGlue));
             }
 
-            _symbols = nameResolver as ReadOnlySymbolTable;
-
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
             _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args), bindingConfig, features: features, rule: rule);
 
@@ -157,22 +151,6 @@ namespace Microsoft.PowerFx.Core.Functions
             return IRTranslator.Translate(_binding);
         }
 
-        public RecordValue GetRuntimeRecordValue(FormulaValue[] args, CancellationToken cancellationToken)
-        {
-            var argsArray = _args.ToArray();
-            var fieldNames = new List<NamedValue>();
-
-            for (int i = 0; i < argsArray.Length; i++)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                var namedValue = new NamedValue(argsArray[i].NameIdent.Name.Value, args[i]);
-                fieldNames.Add(namedValue);
-            }
-
-            return FormulaValue.NewRecordFromFields(fieldNames);
-        }
-
         /// <summary>
         /// NameResolver that combines global named resolver and params for user defined function.
         /// </summary>
@@ -186,18 +164,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 return new UserDefinitionsNameResolver(globalNameResolver, args);
             }
 
-            public static INameResolver Create(INameResolver globalNameResolver, IEnumerable<UDFArg> args, FormulaValue[] fvArgs)
-            {
-                return new UserDefinitionsNameResolver(globalNameResolver, args, fvArgs);
-            }
-
             private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args)
-            {
-                this._globalNameResolver = globalNameResolver;
-                this._args = args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => arg);
-            }
-
-            private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args, FormulaValue[] fvArgs)
             {
                 this._globalNameResolver = globalNameResolver;
                 this._args = args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => arg);
@@ -222,7 +189,8 @@ namespace Microsoft.PowerFx.Core.Functions
                 // lookup in the local scope i.e., function params & body and then look in global scope.
                 if (_args.TryGetValue(name, out var value))
                 {
-                    nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, value.TypeIdent.GetFormulaType()._type, DPath.Root, 0, new UDFParameterInfo(value.TypeIdent.GetFormulaType()._type, value.ArgIndex, value.NameIdent.Name));
+                    var type = value.TypeIdent.GetFormulaType()._type;
+                    nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, value.ArgIndex, value.NameIdent.Name));
 
                     return true;
                 }

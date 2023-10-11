@@ -5,20 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.UDF;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -215,51 +211,9 @@ namespace Microsoft.PowerFx
             return result;
         }
 
-        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture)
+        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture, ReadOnlySymbolTable symbolTable = null)
         {
-            _symbolTable.AddUserDefinedFunction(script, parseCulture);
-        }
-
-        [Obsolete("This has been deprecated and will soon be replaced by 'AddUserFunction'.")]
-        internal DefineFunctionsResult DefineFunctions(string script, bool numberIsFloat = false)
-        {
-            var result = UserDefinitions.Parse(script, new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = numberIsFloat });
-            var errors = result.Errors?.ToList();
-            var comments = new List<Syntax.CommentToken>();
-
-            var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
-                udf.Ident.ToString(),
-                new ParseResult(udf.Body, errors, result.HasErrors, comments, null, null, script),
-                GetFormulaTypeFromName(udf.ReturnType._value),
-                udf.IsImperative,
-                udf.NumberIsFloat,
-                udf.Args.Select(arg => new NamedFormulaType(arg.NameIdent.ToString(), GetFormulaTypeFromName(arg.TypeIdent._value))).ToArray())).ToArray();
-
-            return DefineFunctions(udfDefinitions);
-        }
-
-        [Obsolete("This has been deprecated and will soon be deleted.")]
-        internal IEnumerable<TexlError> DefineType(string script, ParserOptions parserOptions)
-        {
-            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
-            var definedTypes = parsedNamedFormulasAndUDFs.DefinedTypes.ToList();
-
-            var errors = new List<TexlError>();
-
-            foreach (var defType in definedTypes)
-            {
-                var name = defType.Ident.Name.Value;
-                var res = DTypeVisitor.Run(defType.Type.TypeRoot, _definedTypeSymbolTable);
-                if (res == null)
-                {
-                    errors.Add(new TexlError(defType.Ident, DocumentErrorSeverity.Severe, Core.Localization.TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
-                    continue;
-                }
-
-                _definedTypeSymbolTable.RegisterType(name, FormulaType.Build(res));
-            }
-
-            return errors;
+            _symbolTable.AddUserDefinedFunction(script, parseCulture, SupportedFunctions, symbolTable);
         }
 
         internal FormulaType GetFormulaTypeFromName(string name)

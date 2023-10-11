@@ -7,11 +7,9 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
@@ -46,7 +44,7 @@ namespace Microsoft.PowerFx
 
         public Governor Governor { get; private set; }
 
-        private readonly Stack<FormulaValue[]> _formulaValuesStack = new Stack<FormulaValue[]>();
+        private readonly Stack<UDFStackFrame> _udfStack = new Stack<UDFStackFrame>();
 
         public EvalVisitor(IRuntimeConfig config, CancellationToken cancellationToken)
         {
@@ -279,17 +277,28 @@ namespace Microsoft.PowerFx
             }
             else if (func is UserDefinedFunction userDefinedFunc)
             {
-                userDefinedFunc.BindBody(_symbolValues.SymbolTable, new Glue2DocumentBinderGlue(), bindingConfig: BindingConfig.Default);
+                UDFStackFrame frame = new UDFStackFrame(userDefinedFunc, args);
+                UDFStackFrame framePop = null;
 
-                _formulaValuesStack.Push(args);
+                try
+                {
+                    _udfStack.Push(frame);
 
-                (var irnode, _) = userDefinedFunc.GetIRTranslator();
+                    (var irnode, _) = userDefinedFunc.GetIRTranslator();
 
-                this.CheckCancel();
+                    this.CheckCancel();
 
-                result = await irnode.Accept(this, context).ConfigureAwait(false);
+                    result = await irnode.Accept(this, context).ConfigureAwait(false);
+                }
+                finally
+                {
+                    framePop = _udfStack.Pop();
+                }
 
-                _formulaValuesStack.Pop();
+                if (frame != framePop)
+                {
+                    throw new Exception("Error message");
+                }
             }
             else
             {
@@ -743,8 +752,8 @@ namespace Microsoft.PowerFx
 
                     return hostObj;
                 case UDFParameterInfo uDFParameterInfo:
-                    var formulaValues = _formulaValuesStack.Peek();
-                    return formulaValues[uDFParameterInfo.ArgIndex];
+                    var frame = _udfStack.Peek();
+                    return frame.GetArg(uDFParameterInfo);
                 default:
                     return ResolvedObjectHelpers.ResolvedObjectError(node);
             }

@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -198,7 +199,9 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="script">String representation of the user defined function.</param>
         /// <param name="parseCulture">CultureInfo to parse the script againts.</param>
-        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture)
+        /// <param name="symbolTable">Extra symbols to bind UDF.</param>
+        /// <param name="extraSymbolTable"></param>
+        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null)
         {
             // Phase 1: Side affects are not allowed.
             var options = new ParserOptions() { AllowsSideEffects = false, Culture = parseCulture };
@@ -219,9 +222,22 @@ namespace Microsoft.PowerFx
                 throw new InvalidOperationException(sb.ToString());
             }
 
+            if (symbolTable == null)
+            {
+                symbolTable = new SymbolTable();
+            }    
+
+            if (extraSymbolTable == null)
+            {
+                extraSymbolTable = new SymbolTable();
+            }
+
+            var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
+
             foreach (var udf in userDefinitionResult.UDFs)
             {
                 AddFunction(udf);
+                udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
             }
         }
 

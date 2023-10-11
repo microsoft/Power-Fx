@@ -415,8 +415,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "func1(x:Number/*comment*/): Number = x * 10;\nfunc2(x:Number): Number = y1 * 10;",
             null,
-            true,
-            null)]
+            true)]
         [InlineData(
             "foo(x:Number):Number = If(x=0,foo(1),If(x=1,foo(2),If(x=2,Float(2))));",
             "foo(Float(0))",
@@ -426,13 +425,11 @@ namespace Microsoft.PowerFx.Tests
             "foo(x:Decimal):Decimal = If(x=0,foo(1),If(x=1,foo(2),If(x=2,2)));",
             "foo(0)",
             false,
-            2,
-            true)]
+            2.0)]
         [InlineData(
             "foo():Blank = foo();",
             "foo()",
-            true,
-            null)]
+            true)]
         [InlineData(
             "Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x);",
             "Add(10, Foo(-10))",
@@ -453,68 +450,56 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "hailstone(x:Number):Number = If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x);",
             "hailstone(Float(192))",
-            true,
-            null)]
+            true)]
         [InlineData(
             "hailstone(x:Decimal):Decimal = If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x);",
             "hailstone(192)",
-            true,
-            null)]
+            true)]
         [InlineData(
             "odd(number:Number):Boolean = If(number = 0, false, even(Abs(number)-1)); even(number:Number):Boolean = If(number = 0, true, odd(Abs(number)-1));",
             "odd(17)",
-            true,
-            null)]
+            true)]
         [InlineData(
             "odd(number:Number):Boolean = If(number = 0, false, even(Abs(number)-1)); even(number:Number):Boolean = If(number = 0, true, odd(Abs(number)-1));",
             "even(17)",
-            true,
-            null)]
+            true)]
         [InlineData(
             "odd(number:Decimal):Boolean = If(number = 0, false, even(If(number<0,-number,number)-1)); even(number:Decimal):Boolean = If(number = 0, true, odd(If(number<0,-number,number)-1));",
             "odd(17)",
-            true,
-            null,
             true)]
         [InlineData(
             "odd(number:Decimal):Boolean = If(number = 0, false, even(If(number<0,-number,number)-1)); even(number:Decimal):Boolean = If(number = 0, true, odd(If(number<0,-number,number)-1));",
             "even(17)",
-            true,
-            null,
             true)]
 
         // Redefinition is not allowed
         [InlineData(
             "foo():Blank = foo(); foo():Number = x + 1;", 
             null,
-            true,
-            null)]
+            true)]
 
         // Syntax error
         [InlineData(
             "foo():Blank = x[",
             null,
-            true,
-            null)]
+            true)]
 
         // Incorrect parameters
         [InlineData(
             "foo(x:Number):Number = x + 1;",
             "foo(False)",
-            true,
-            null)]
+            true)]
         [InlineData(
             "foo(x:Number):Number = x + 1;",
             "foo(Table( { Value: \"Strawberry\" }, { Value: \"Vanilla\" } ))",
-            true,
-            null)]
+            true)]
         [InlineData(
             "foo(x:Number):Number = x + 1;",
             "foo(Float(1))",
             false,
             2.0)]
 
-        public void UserDefiniedFunctionTest(string udfExpression, string expression, bool expectedError, object expected, bool isDecimal = false)
+        public void UserDefiniedFunctionTest(string udfExpression, string expression, bool expectedError, double expected = 0)
         {
             var config = new PowerFxConfig()
             {
@@ -531,16 +516,9 @@ namespace Microsoft.PowerFx.Tests
                 Assert.Equal(check.IsSuccess, !expectedError);
 
                 var result = recalcEngine.Eval(expression);
+                var fvExpected = FormulaValue.New(expected);
 
-                if (isDecimal)
-                {
-                    var decimalValue = decimal.Parse(expected.ToString());
-                    Assert.Equal(decimalValue, result.ToObject());
-                }
-                else
-                {
-                    Assert.Equal(expected, result.ToObject());
-                }
+                Assert.Equal(fvExpected.AsDecimal(), result.AsDecimal());
             }
             catch (Exception ex)
             {
@@ -1278,236 +1256,6 @@ namespace Microsoft.PowerFx.Tests
                 return _value;
             }
         }
-
-        #region Skypped tests.
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void UDFRecursionLimitTest()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig());
-#pragma warning disable CS0618 // Type or member is obsolete
-            recalcEngine.DefineFunctions("Foo(x: Number): Number = Foo(x);");
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.IsType<ErrorValue>(recalcEngine.Eval("Foo(Float(1))"));
-        }
-
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void UDFRecursionWorkingTest()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig());
-#pragma warning disable CS0618 // Type or member is obsolete
-            recalcEngine.DefineFunctions("Foo(x: Number): Number = If(x = 1, Float(1), If(Mod(x, 2) = 0, Foo(x/2), Foo(x*3 + 1)));");
-            Assert.Equal(1.0, recalcEngine.Eval("Foo(Float(5))").ToObject());
-        }
-
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void UDFRecursionWorkingTestDecimal()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig());
-#pragma warning disable CS0618 // Type or member is obsolete
-            recalcEngine.DefineFunctions("Foo(x: Decimal): Decimal = If(x = 1, 1, If(Mod(x, 2) = 0, Foo(x/2), Foo(x*3 + 1)));");
-            Assert.Equal(1m, recalcEngine.Eval("Foo(Decimal(5))").ToObject());
-        }
-
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void IndirectRecursionTest()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig()
-            {
-                MaxCallDepth = 81
-            });
-            var opts = new ParserOptions()
-            {
-                NumberIsFloat = true
-            };
-            recalcEngine.DefineFunctions(
-                "A(x: Number): Number = If(Mod(x, 2) = 0, B(x/2), B(x));" +
-                "B(x: Number): Number = If(Mod(x, 3) = 0, C(x/3), C(x));" +
-                "C(x: Number): Number = If(Mod(x, 5) = 0, D(x/5), D(x));" +
-                "D(x: Number): Number { If(Mod(x, 7) = 0, F(x/7), F(x)) };" +
-                "F(x: Number): Number { If(x = 1, 1, A(x+1)) };", numberIsFloat: true);
-            Assert.Equal(1.0, recalcEngine.Eval("A(12654)", options: opts).ToObject());
-        }
-
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void DoubleDefinitionTest()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig());
-            Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions("Foo(): Number = 10; Foo(x: Number): String = \"hi\";"));
-        }
-
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void TestNumberBinding()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig());
-            Assert.True(recalcEngine.DefineFunctions("Foo(): String = 10;").Errors.Any());
-        }
-
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void TestMultiReturn()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig());
-            var str = "Foo(x: Number): Number { 1+1; 2+2; };";
-            recalcEngine.DefineFunctions(str, numberIsFloat: true);
-            Assert.Equal(4.0, recalcEngine.Eval("Foo(1)", null, new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true }).ToObject());
-        }
-
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void DefFunc()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(x:Number, y:Number): Number = x * y;").Errors;
-            Assert.False(enumerable.Any());
-            Assert.Equal(17.0, recalcEngine.Eval("foo(Float(3),Float(4)) + 5").ToObject());
-        }
-
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void DefTypeAndFunc()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
-            };
-#pragma warning disable CS0618 // Type or member is obsolete
-            var errors = recalcEngine.DefineType("Person = Type({ Age: Number});", parserOptions);
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Empty(errors);
-#pragma warning disable CS0618 // Type or member is obsolete
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("getAge(p: Person): Number = p.Age;").Errors;
-            Assert.False(enumerable.Any());
-            Assert.Equal(1.0, recalcEngine.Eval("getAge({Age: Float(1)})").ToObject());
-        }
-
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void DefComplexTypeWithFunc()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
-            };
-#pragma warning disable CS0618 // Type or member is obsolete
-            var errors = recalcEngine.DefineType("Complex = Type({ A: {B: Number}});", parserOptions);
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Empty(errors);
-#pragma warning disable CS0618 // Type or member is obsolete
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(p: Complex): Number = p.A.B;").Errors;
-#pragma warning disable CS0618 // Type or member is obsolete
-            Assert.False(enumerable.Any());
-            Assert.Equal(1.0, recalcEngine.Eval("foo({A: {B: Float(1.0)}})").ToObject());
-        }
-
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void DefTableType()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
-            };
-#pragma warning disable CS0618
-            var errors = recalcEngine.DefineType("People = Type([{Age: Number}]);", parserOptions);
-#pragma warning restore CS0618
-            Assert.Empty(errors);
-#pragma warning disable CS0618 // Type or member is obsolete
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("countMinors(p: People): Number = Float(CountRows(Filter(p, Age < 18)));").Errors;
-#pragma warning disable CS0618 // Type or member is obsolete
-            Assert.False(enumerable.Any());
-            Assert.Equal(2.0, recalcEngine.Eval("countMinors([{Age: Float(1)}, {Age: Float(18)}, { Age: Float(4) }])").ToObject());
-        }
-
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void DefComplexTableType()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
-            };
-#pragma warning disable CS0618
-            var errors = recalcEngine.DefineType("A = Type({A: Number}); People = Type([{Age: A}]);", parserOptions);
-#pragma warning restore CS0618
-            Assert.Empty(errors);
-#pragma warning disable CS0618 // Type or member is obsolete
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("countMinors(p: People): Number = Float(CountRows(Filter(p, Age.A < 18)));").Errors;
-#pragma warning disable CS0618 // Type or member is obsolete
-            Assert.False(enumerable.Any());
-            Assert.Equal(2.0, recalcEngine.Eval("countMinors([{Age: {A: Float(1)}}, {Age: {A: Float(18)}}, { Age: {A: Float(4)} }])").ToObject());
-        }
-
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void IncorrectType()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
-            };
-#pragma warning disable CS0618 // Type or member is obsolete
-            var errors = recalcEngine.DefineType("Complex = Type({ A: Number });", parserOptions);
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Empty(errors);
-#pragma warning disable CS0618 // Type or member is obsolete
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(p: Complex): Number = Float(1.0);").Errors;
-#pragma warning disable CS0618 // Type or member is obsolete
-            Assert.False(enumerable.Any());
-            Assert.Throws<System.AggregateException>(() => recalcEngine.Eval("foo({A: \"hi\"})"));
-        }
-
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void DefManyType()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
-            };
-#pragma warning disable CS0618 // Type or member is obsolete
-            var errors = recalcEngine.DefineType("A = Type({ num: Number}); B = Type({ a: A}); C = Type({ b: B, a: A});", parserOptions);
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Empty(errors);
-#pragma warning disable CS0618 // Type or member is obsolete
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(p: C): Number = p.b.a.num + p.a.num;").Errors;
-#pragma warning disable CS0618 // Type or member is obsolete
-            Assert.False(enumerable.Any());
-            Assert.Equal(1.5, recalcEngine.Eval("foo({b: {a: {num: Float(0.5)}}, a: {num: Float(1.0)}})").ToObject());
-        }
-
-        [Fact(Skip = "DefineFunctions method is deprecated")]
-        public void TypeAlias()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
-            };
-#pragma warning disable CS0618 // Type or member is obsolete
-            var errors = recalcEngine.DefineType("Weight = Type(Number);", parserOptions);
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Empty(errors);
-#pragma warning disable CS0618 // Type or member is obsolete
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("over50Pounds(weight: Weight): Boolean = weight > 50;").Errors;
-#pragma warning disable CS0618 // Type or member is obsolete
-            Assert.False(enumerable.Any());
-            Assert.Equal(true, recalcEngine.Eval("over50Pounds(Float(51.0))").ToObject());
-        }
-        #endregion
 
         #region Test
 
