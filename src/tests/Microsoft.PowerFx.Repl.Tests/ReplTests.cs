@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
@@ -242,6 +243,148 @@ Notify(z)
             Assert.Equal(
 @"10
 20", log);
+        }
+
+        // test that we get back an error for an illegal named formula, as opposed to throwing an exception
+        [Fact]
+        public void BadNamedFormula()
+        {
+            _repl.HandleLine(
+"Result = If( Mid(\"asdf\",Value,1) = \"a\", \"X\", \"Y\" )");
+
+            var log = _output.Get(OutputKind.Error);
+            Assert.True(log.Length > 0);
+        }
+
+        // test that newlines are properly placed, especailly with FormatTable
+        [Fact]
+        public void NewLinesBasicPrompt()
+        {
+            _repl.WritePromptAsync().Wait();
+
+            var log1 = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log1 == @"
+>> ");
+
+            Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
+        }
+
+        [Fact]
+        public void NewLinesContinuationPrompt()
+        {
+            _repl.WritePromptAsync().Wait();
+            var log1p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log1p == @"
+>> ");
+
+            _repl.HandleLineAsync("Sqrt(4").Wait();     // intentionally left unclosed
+
+            Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
+
+            _repl.WritePromptAsync().Wait();
+            var log2p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log2p == @".. ");
+
+            _repl.HandleLineAsync(")").Wait();          // and now closed
+
+            _repl.WritePromptAsync().Wait();
+            var log3p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log3p == @"
+>> ");
+
+            Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Repl) == "2");
+        }
+
+        [Fact]
+        public void NewlinesValueTable()
+        {
+            _repl.WritePromptAsync().Wait();
+
+            var log1p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log1p == @"
+>> ");
+
+            _repl.HandleCommandAsync(
+"[1,2,3]").Wait();
+            var log2 = _output.Get(OutputKind.Repl, trim: true);
+            var expected2 = @"[1, 2, 3]";
+            Assert.True(log2 == expected2);
+
+            _repl.WritePromptAsync().Wait();
+            var log2p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log2p == @"
+>> ");
+
+            Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
+        }
+
+        [Fact]
+        public void NewlinesFormatTable()
+        {
+            _repl.WritePromptAsync().Wait();
+
+            var log1p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log1p == @"
+>> ");
+
+            // compare but ignore trailing whitespace at the end of each line
+            _repl.HandleCommandAsync(
+"Table({a:1},{b:2})").Wait();
+            var log2 = _output.Get(OutputKind.Repl, trim: false);
+            var expected2 = @"
+  a   b  
+ === === 
+  1      
+      2 
+";
+            Assert.True(Regex.Replace(log2, @"\s*\r?\n", @"\n") == Regex.Replace(expected2, @"\s*\r?\n", @"\n"));
+
+            _repl.WritePromptAsync().Wait();
+            var log2p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log2p == @"
+>> ");
+
+            Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
+        }
+
+        [Fact]
+        public void NewlinesNamedFormulaFormatTable()
+        {
+            _repl.WritePromptAsync().Wait();
+            var log1p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log1p == @"
+>> ");
+
+            // compare but ignore trailing whitespace at the end of each line
+            _repl.HandleCommandAsync(
+"MyTable = Table({a:1},{b:2})").Wait();
+            var log2 = _output.Get(OutputKind.Repl, trim: false);
+            var expected2 = @"MyTable:
+  a   b  
+ === === 
+  1      
+      2
+";
+            Assert.True(Regex.Replace(log2, @"\s*\r?\n", @"\n") == Regex.Replace(expected2, @"\s*\r?\n", @"\n"));
+
+            _repl.WritePromptAsync().Wait();
+            var log2p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log2p == @"
+>> ");
+
+            Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
         }
     }
 
