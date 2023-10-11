@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public new TableType Type => _tableType;
 
-        private TableType _tableType;
+        protected readonly TableType _tableType;
 
         public ConnectorTableValue(string tableName, IReadOnlyList<ConnectorFunction> tabularFunctions, RecordType recordType)
             : base(IRContext.NotInSource(new ConnectorTableType(recordType)))
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Connectors
             Name = tableName;
 
             _tabularFunctions = tabularFunctions;                        
-            _getItems = _tabularFunctions.First(f => f.Name.Contains("GetItems"));
+            _getItems = _tabularFunctions.First(f => f.Name.Contains("GetItemsV2"));
             _tableType = recordType.ToTable();
         }
 

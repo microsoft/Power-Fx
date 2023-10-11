@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         [Fact]
         public void ConnectorLogger_Test1()
-        {            
+        {
             ConsoleLogger logger = new ConsoleLogger(_output);
             IReadOnlyList<ConnectorFunction> functions = (null as PowerFxConfig).AddActionConnector(null as string, null, logger);
 
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
             IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector(null as ConnectorSettings, null, logger);
 
-            Assert.Empty(functions);           
+            Assert.Empty(functions);
             Assert.Equal(
                 @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings <null>|" +
                 @"[ERROR] connectorSettings is null|" +
@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(
                 @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace <Namespace is null>, MaxRows 1000, IgnoreUnknownExtensions False, AllowUnsupportedFunctions False, |" +
                 @"[ERROR] connectorSettings.Namespace is null|" +
-                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
+                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(
                 @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace Test, MaxRows 1000, IgnoreUnknownExtensions False, AllowUnsupportedFunctions False, |" +
                 @"[ERROR] openApiDocument is null|" +
-                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
+                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());
         }
 
         [Fact]
@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(
                 @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace Test, MaxRows 1000, IgnoreUnknownExtensions False, AllowUnsupportedFunctions False, |" +
                 @"[ERROR] OpenApiDocument is invalid, it has no Path|" +
-                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
+                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());
         }
 
         [Fact]
@@ -111,9 +111,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(
                 @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace , MaxRows 1000, IgnoreUnknownExtensions False, AllowUnsupportedFunctions False, |" +
                 @"[ERROR] connectorSettings.Namespace is not a valid DName|" +
-                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
+                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());
         }
-        
+
         [Fact]
         public void ConnectorLogger_Test8()
         {

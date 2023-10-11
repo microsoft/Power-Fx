@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         private void AnalyzeReport(string reportName, string outFolder, string srcFolder, string jsonReport)
         {
-            List<Connector> connectors = new();
+            List<Connector> connectors = new ();
             string[] lines = File.ReadAllLines(Path.Combine(outFolder, reportName));
             Regex rex = new Regex(@$"(.*) \[({srcFolder.Replace("\\", "\\\\")}.*)\]: (.*)", RegexOptions.Compiled);
             Regex rex2 = new Regex(@"OK - All ([0-9]+) functions are supported - \[([^\]]*)\]", RegexOptions.Compiled);
@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             int totalRed = 0;
             int totalGreen = 0;
             int totalOrange = 0;
-            Dictionary<string, long> r = new();
+            Dictionary<string, long> r = new ();
 
             foreach (string line in lines)
             {
@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     string supportedFunctionList = string.Empty;
                     string deprecatedFunctionList = string.Empty;
                     string unsupportedFunctionList = string.Empty;
-                    List<(string f, string ur)> ufl = new();
+                    List<(string f, string ur)> ufl = new ();
 
                     if (connectorName == "<Unknown Name>")
                     {
@@ -342,8 +342,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Dictionary<string, List<string>> w2 = new Dictionary<string, List<string>>();
 
-            Dictionary<string, int> exceptionMessages = new();
-            Dictionary<string, IEnumerable<ConnectorFunction>> allFunctions = new();
+            Dictionary<string, int> exceptionMessages = new ();
+            Dictionary<string, IEnumerable<ConnectorFunction>> allFunctions = new ();
 
             // To create aapt and ppc folders locally, you can use NTFS junctions. Ex: mklink /J ppc <folder to PowerPlatformConnectors>
             foreach (string swaggerFile in Directory.EnumerateFiles(@$"{srcFolder}\aapt\src", "apidefinition*swagger*json", new EnumerationOptions() { RecurseSubdirectories = true })
@@ -485,7 +485,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             writer.WriteLine("----------");
             writer.WriteLine();
 
-            Dictionary<string, int> notSupportedReasons = new();
+            Dictionary<string, int> notSupportedReasons = new ();
             foreach (var unsupportedFunction in allFunctions.SelectMany(kvp => kvp.Value.Where(f => !f.IsSupported).Select(f => new { SwaggerFile = kvp.Key, Function = f })))
             {
                 string nsr = unsupportedFunction.Function.NotSupportedReason;

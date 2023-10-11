@@ -971,9 +971,6 @@ namespace Microsoft.PowerFx.Tests
 
             // Validate optional parameter rectified name
             Assert.Equal("id_1", cf.OptionalParameters[0].Name);
-
-            // Validate ConnectorId is properly set
-            Assert.Equal("72c42ee1b3c7403c8e73aa9c02a7fbcc", cf.GlobalContext.ConnectorValues["connectionId"].ToObject());
         }
 
         [Fact]
@@ -1377,7 +1374,6 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(expected, testConnector._log.ToString());
         }
 
-
         [Fact]
         public async Task SQL_ExecuteStoredProc_Scoped()
         {
@@ -1390,7 +1386,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             using var client = new PowerPlatformConnectorClient(
                     "tip1-shared-002.azure-apim.net",         // endpoint 
                     "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",   // environment
-                    "1b0b3462817442e79846d79d779ddd32",       // connectionId
+                    "5f57ec83acef477b8ccc769e52fa22cc",       // connectionId
                     () => "eyJ0eX...",
                     httpClient)
             {
@@ -1444,14 +1440,15 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
 
-            using var httpClient = new HttpLogger(_output); // testConnector);
+            using var httpClient = new HttpClient(testConnector);
 
             using var client = new PowerPlatformConnectorClient(
-                    "tip1002-002.azure-apihub.net",           // endpoint 
-                    "ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4",   // environment
-                    "1b0b3462817442e79846d79d779ddd32",       // connectionId
-                    () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyIsImtpZCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyJ9.eyJhdWQiOiJodHRwczovL2FwaWh1Yi5henVyZS5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC84ZDgxNDc4YS01YjY4LTQxNWUtYjA4ZC03ZmZmZTcxMmI2NTcvIiwiaWF0IjoxNjk1MzI0MzE0LCJuYmYiOjE2OTUzMjQzMTQsImV4cCI6MTY5NTMyODM5MiwiYWNyIjoiMSIsImFpbyI6IkFUUUF5LzhVQUFBQWxNNmVtV2krUU52L1VhWjBwSStRSjVjd055SFZmQklJdE1hWW4yaGxXaVBOMmJ6SWRoUmVjL0oydHJzQjJSTEwiLCJhbXIiOlsicHdkIl0sImFwcGlkIjoiYThmN2E2NWMtZjViYS00ODU5LWIyZDYtZGY3NzJjMjY0ZTlkIiwiYXBwaWRhY3IiOiIwIiwiZmFtaWx5X25hbWUiOiJhdXJvcmEiLCJnaXZlbl9uYW1lIjoidXNlcjAxIiwiaXBhZGRyIjoiOTAuMTA0LjczLjIwMyIsIm5hbWUiOiJhdXJvcmF1c2VyMDEiLCJvaWQiOiIzZDhmNDZmMS1hMzk4LTQzZDktOGJiZC04NzQwOTIyNTQwZTEiLCJwdWlkIjoiMTAwMzIwMDJCQTBEQ0JBNSIsInJoIjoiMC5BYjBBaWtlQmpXaGJYa0d3alhfXzV4SzJWMTg4QmY2U05oUlBydkx1TlB3SUhLNjlBUFkuIiwic2NwIjoiUnVudGltZS5BbGwiLCJzdWIiOiJqUVd2UExGcERXYW5vOURTVGJvTmtFRnI4SnlNY09Na3N6VHNPTHBNTkg4IiwidGlkIjoiOGQ4MTQ3OGEtNWI2OC00MTVlLWIwOGQtN2ZmZmU3MTJiNjU3IiwidW5pcXVlX25hbWUiOiJhdXJvcmF1c2VyMDFAYXVyb3JhZmluYW5jZWludGVncmF0aW9uMDEub25taWNyb3NvZnQuY29tIiwidXBuIjoiYXVyb3JhdXNlcjAxQGF1cm9yYWZpbmFuY2VpbnRlZ3JhdGlvbjAxLm9ubWljcm9zb2Z0LmNvbSIsInV0aSI6Ild0NWhBdlBtRlVXdnY4dlVqaTU0QUEiLCJ2ZXIiOiIxLjAifQ.UhShqKd3FOAD3QcKe4X0zk9-vt2Y9lmf_t5FqQGzLhMw-F8haHgTn9imog3qjTNutSzonH_csa3OMNoLUv97IcPine_bnIszYYmxLNNfz_uJeMskbKTDuGCX2pDDKpckIztDrVCLVtK6_EsTcKo8ME_TK5EHva1kTD9IGiiIVLDMcUwIfWXgL9UxKpVF96dJsfWsVtr4td14XqJeRlOvgO9veEGj29DgdRRHkaTTot5AK2MEn03VHl7UizZSWunlD18O8zVwwG7yAn5uIHDGrimBecekZjS6JW-YE-KL3mb102OHZm0OUC_1Y9wE2CKXDfiHHrw5NZ-sDRsckyt4SA",
+                    "tip2-001.azure-apihub.net",                      // endpoint 
+                    "Default-f0900a13-bc1c-4df3-87a2-b7a403db8dd0",   // environment
+                    "5a6d0eb8c4dd44178c46d85caa5593dc",               // connectionId
+                    () => "eyJ0eXAiOiJKVZ...",
                     httpClient)
             {
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
@@ -1459,24 +1456,26 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
             IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
             {
-                { "connectionId", FormulaValue.New("1b0b3462817442e79846d79d779ddd32") },
+                { "connectionId", FormulaValue.New("5a6d0eb8c4dd44178c46d85caa5593dc") },
                 { "server", FormulaValue.New("pfxdev-sql.database.windows.net") },
                 { "database", FormulaValue.New("connectortest") },
                 { "table", FormulaValue.New("Customers") }
             });
 
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
             ConnectorTableValue sqlTable = await config.AddTabularConnector("Customers", apiDoc, globals, client, CancellationToken.None).ConfigureAwait(false);
-            var xx = sqlTable.Type;
 
-            //client.Dispose();
-            //client = new PowerPlatformConnectorClient();
+            Assert.Equal("Customers", sqlTable.Name);
+            Assert.Equal("_tbl_Customers", sqlTable.Namespace);
 
-            var engine = new RecalcEngine(config);
             engine.EnableTabularConnectors();
             RuntimeConfig rc = new RuntimeConfig(new SymbolValues().Add(sqlTable.Name, sqlTable)).AddRuntimeContext(new TestConnectorRuntimeContext(sqlTable.Namespace, client));
 
-            //testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
-            FormulaValue result = await engine.EvalAsync(@"First(Customers)", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
+            FormulaValue result = await engine.EvalAsync(@"First(Customers).Address", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+
+            StringValue address = Assert.IsType<StringValue>(result);
+            Assert.Equal("Juigné", address.Value);
         }
 
         public class HttpLogger : HttpClient

@@ -735,7 +735,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void DynamicReturnValueTest()
         {
-            using HttpClient httpClient = new();
+            using HttpClient httpClient = new ();
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
             ConnectorFunction[] functions = OpenApiParser.GetFunctions("SQL", doc, new ConsoleLogger(_output)).ToArray();
 
@@ -1012,29 +1012,3 @@ POST https://tip1-shared.azure-apim.net/invoke
 
 #pragma warning restore SA1118, SA1117, SA1119, SA1137
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -13,8 +13,7 @@ namespace Microsoft.PowerFx.Connectors
     {        
         public ConnectorSettings(string @namespace)
         {
-            Namespace = @namespace;
-            Validate();
+            Namespace = @namespace;            
         }
 
         /// <summary>
@@ -39,19 +38,6 @@ namespace Microsoft.PowerFx.Connectors
         public bool AllowUnsupportedFunctions { get; init; } = false;    
         
         public ConnectorCompatibility Compatibility { get; init; } = ConnectorCompatibility.Default;
-
-        public void Validate()
-        {
-            if (Namespace == null)
-            {
-                throw new ArgumentNullException(nameof(Namespace), "Namespace cannot be null");
-            }
-
-            if (!DName.IsValidDName(Namespace))
-            {
-                throw new ArgumentException(nameof(Namespace), $"invalid functionNamespace: {Namespace}");
-            }
-        }
     }
 
     public enum ConnectorCompatibility

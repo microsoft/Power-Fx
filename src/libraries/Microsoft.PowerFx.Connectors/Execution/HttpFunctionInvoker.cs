@@ -116,7 +116,19 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();            
+            var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();
+
+            // Replace connectionId or other parameters in the URL
+            foreach (Match m in new Regex(@"{(?<p>[^{}]+)}").Matches(url))
+            {
+                string toReplace = m.Groups["p"].Value;
+
+                if (_function.GlobalContext.ConnectorValues?.TryGetValue(toReplace, out FormulaValue value) == true)
+                {
+                    url = url.Replace("{" + toReplace + "}", value.ToObject().ToString());
+                }
+            }
+
             var request = new HttpRequestMessage(_function.HttpMethod, url);
 
             foreach (var kv in headers)
@@ -384,7 +396,7 @@ namespace Microsoft.PowerFx.Connectors
     {
         private readonly string _cacheScope;
         private readonly HttpFunctionInvoker _invoker;
-        private readonly bool _throwOnError;        
+        private readonly bool _throwOnError;
 
         public ScopedHttpFunctionInvoker(DPath ns, string name, string cacheScope, HttpFunctionInvoker invoker, bool throwOnError = false)
         {
@@ -393,7 +405,7 @@ namespace Microsoft.PowerFx.Connectors
 
             _cacheScope = cacheScope;
             _invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
-            _throwOnError = throwOnError;            
+            _throwOnError = throwOnError;
         }
 
         public DPath Namespace { get; }
@@ -406,7 +418,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);            
+            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
             return _invoker.InvokeAsync(new ConvertToUTC(runtimeContext.TimeZoneInfo), _cacheScope, args, localInvoker, cancellationToken, _throwOnError);
         }
 
@@ -414,7 +426,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);            
+            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
             return _invoker.InvokeAsync(url, _cacheScope, localInvoker, cancellationToken, _throwOnError);
         }
     }
@@ -432,7 +444,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             _tzi = tzi;
         }
-        
+
         public DateTime ToUTC(DateTimeValue dtv)
         {
             return dtv.GetConvertedValue(_tzi);

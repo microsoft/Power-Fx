@@ -273,6 +273,20 @@ namespace Microsoft.PowerFx.Connectors
             _configurationLogger = configurationLogger;
             _isSupported = isSupported || connectorSettings.AllowUnsupportedFunctions;
             _notSupportedReason = notSupportedReason ?? (isSupported ? string.Empty : "Internal error on not supported reason");
+
+            int nvCount = globalValues?.Count(nv => nv.Key != "connectionId") ?? 0;
+            if (nvCount > 0)
+            {
+                EnsureInitialized();
+                Filtered = _requiredParameters.Length < nvCount || !_requiredParameters.Take(nvCount).All(rp => globalValues.Keys.Contains(rp.Name));
+
+                if (!Filtered)
+                {
+                    _requiredParameters = _requiredParameters.Skip(nvCount).ToArray();
+                    _arityMin -= nvCount;
+                    _arityMax -= nvCount;
+                }
+            }
         }
 
         /// <summary>

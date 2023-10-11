@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool IsSelfContained => true;
 
-        public override bool IsAsync => true;
+        public override bool IsAsync => true;        
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

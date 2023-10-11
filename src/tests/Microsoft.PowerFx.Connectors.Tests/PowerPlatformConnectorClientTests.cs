@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         private HttpMessageInvoker HttpMessageInvoker => new (TestHandler);
 
-        private PowerPlatformConnectorClient Client => new(TestEndpoint, TestEnvironmentId, TestConnectionId, async () => TestAuthToken, HttpMessageInvoker);
+        private PowerPlatformConnectorClient Client => new (TestEndpoint, TestEnvironmentId, TestConnectionId, async () => TestAuthToken, HttpMessageInvoker);
 
         [Fact]
         public async Task PowerPlatformConnectorClient_Constructor()

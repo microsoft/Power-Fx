@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -35,7 +36,7 @@ namespace Microsoft.PowerFx.Connectors
             RecordValue rv = rows as RecordValue;
             TableValue tv = rv.Fields.FirstOrDefault(field => field.Name == "value").Value as TableValue;
 
-            _cachedRows = tv.Rows;
+            _cachedRows = new InMemoryTableValue(IRContext.NotInSource(_tableType), tv.Rows).Rows;            
             return _cachedRows;
         }
 

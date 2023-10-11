@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx
             IReadOnlyList<ConnectorFunction> tabularFunctions = config.AddActionConnector(connectorSettings, openApiDocument, configurationLogger, globalValues);
 
             // Retrieve table schema with dynamic intellisense on 'GetItem' function            
-            ConnectorFunction getItem = tabularFunctions.First(f => f.Name.Contains("GetItem") && !f.Name.Contains("GetItems")); // SQL: GetItemV2 (not GetItemsV2)
+            ConnectorFunction getItem = tabularFunctions.First(f => f.Name.Contains("GetItemV2") && !f.Name.Contains("GetItems")); // SQL: GetItemV2 (not GetItemsV2)
             ConnectorType tableSchema = await getItem.GetConnectorReturnTypeAsync(globalValues.Select(kvp => new NamedValue(kvp)).ToArray(), new TempConnectorContext(client), cancellationToken).ConfigureAwait(false);
 
             return tableSchema == null

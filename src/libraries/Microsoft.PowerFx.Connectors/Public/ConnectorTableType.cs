@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Connectors
         internal RecordType RecordType;      
 
         internal ConnectorDType(RecordType recordType)
-            : base(recordType._type.ToTable().Kind)
+            : base(DKind.Table, recordType._type.ToTable().TypeTree)
         {
             RecordType = recordType;
         }

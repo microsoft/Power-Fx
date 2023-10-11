@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             _console = console;
             _includeDebug = includeDebug;
-        }       
+        }
 
         internal string GetLogs()
         {
@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         private string GetMessage(ConnectorLog connectorLog)
-        {           
+        {
             string cat = connectorLog.Category switch
             {
                 LogCategory.Exception => "EXCPT",
@@ -74,11 +74,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 _ => "??"
             };
 
-            return $"[{cat}] {connectorLog.Message}";        
+            return $"[{cat}] {connectorLog.Message}";
         }
 
         protected override void Log(ConnectorLog log)
-        {            
+        {
             if (_includeDebug || log.Category != LogCategory.Debug)
             {
                 _console.WriteLine(GetMessage(log));
