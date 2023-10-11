@@ -72,8 +72,9 @@ namespace Microsoft.PowerFx.Types
 
         internal TableValue(IRContext irContext)
             : base(irContext)
-        {            
-            Contract.Assert(IRContext.ResultType._type.Kind == DKind.Table);
+        {
+            Contract.Assert(IRContext.ResultType._type.Kind == DKind.Table ||
+                            IRContext.ResultType._type.Kind == DKind.LazyTable);
         }
 
         public virtual int Count()
