@@ -42,7 +42,9 @@ Errors: Error 5-25: The JSON function cannot serialize objects of type 'Void'.
 >> JSON($"Other {Char(13)} escaped {Char(10)} chars {Char(4)} should {Char(9)} also {Char(8)} be {Char(1)} escaped {Char(20)} properly")
 """Other \r escaped \n chars \u0004 should \t also \b be \u0001 escaped \u0014 properly"""
 
->> JSON($"{Char(1)}{Char(2)}{Char(3)}{Char(4)}{Char(5)}{Char(6)}{Char(7)}{Char(8)}{Char(9)}{Char(10)}{Char(11)}{Char(12)}{Char(13)}{Char(14)}{Char(15)}{Char(16)}{Char(17)}{Char(18)}{Char(19)}{Char(20)}{Char(21)}{Char(22)}{Char(23)}{Char(24)}{Char(25)}{Char(26)}{Char(27)}{Char(28)}{Char(29)}{Char(30)}{Char(31)}{Char(32)}{Char(33)}{Char(34)}{Char(35)}{Char(36)}{Char(37)}{Char(38)}{Char(39)}{Char(40)}{Char(41)}{Char(42)}{Char(43)}{Char(44)}{Char(45)}{Char(46)}{Char(47)}{Char(48)}{Char(49)}{Char(50)}{Char(51)}{Char(52)}{Char(53)}{Char(54)}{Char(55)}{Char(56)}{Char(57)}{Char(58)}{Char(59)}{Char(60)}{Char(61)}{Char(62)}{Char(63)}{Char(64)}{Char(65)}{Char(66)}{Char(67)}{Char(68)}{Char(69)}{Char(70)}{Char(71)}{Char(72)}{Char(73)}{Char(74)}{Char(75)}{Char(76)}{Char(77)}{Char(78)}{Char(79)}{Char(80)}{Char(81)}{Char(82)}{Char(83)}{Char(84)}{Char(85)}{Char(86)}{Char(87)}{Char(88)}{Char(89)}{Char(90)}{Char(91)}{Char(92)}{Char(93)}{Char(94)}{Char(95)}{Char(96)}{Char(97)}{Char(98)}{Char(99)}{Char(100)}{Char(101)}{Char(102)}{Char(103)}{Char(104)}{Char(105)}{Char(106)}{Char(107)}{Char(108)}{Char(109)}{Char(110)}{Char(111)}{Char(112)}{Char(113)}{Char(114)}{Char(115)}{Char(116)}{Char(117)}{Char(118)}{Char(119)}{Char(120)}{Char(121)}{Char(122)}{Char(123)}{Char(124)}{Char(125)}{Char(126)}{Char(127)}{Char(128)}")
+// In \uXXXX escapings, letters of hex characters are upper case while they are lower case in Power Apps.
+// Technically, this is the exactly the same character.
+>> JSON(Concat(Sequence(128), Char(Value)))
 """\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000B\f\r\u000E\u000F\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001A\u001B\u001C\u001D\u001E\u001F !\""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u007F\u0080"""
 
 >> JSON(RGBA(10, 30, 50, 0.75))
@@ -104,3 +106,12 @@ Errors: Error 5-25: The JSON function cannot serialize objects of type 'Void'.
 
 >> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:Blank()},{a:-3,b:"world",c:Table({r:3.1,s:"inner",t:-7})}), JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
 "[*<t>{*<t><t>""a"": 1,*<t><t>""b"": ""hello"",*<t><t>""c"": null*<t>},*<t>{*<t><t>""a"": -3,*<t><t>""b"": ""world"",*<t><t>""c"": [*<t><t><t>{*<t><t><t><t>""r"": 3.1,*<t><t><t><t>""s"": ""inner"",*<t><t><t><t>""t"": -7*<t><t><t>}*<t><t>]*<t>}*]"
+
+>> JSON(1/0)
+Error({Kind:ErrorKind.Div0})
+
+>> JSON({a:1,b:Sqrt(-1),c:true})
+Error({Kind:ErrorKind.Numeric})
+
+>> JSON([{a:1,b:[2]},{a:3,b:[4,5]},{a:6,b:[7,1/0,9]}])
+Error({Kind:ErrorKind.Div0})

@@ -2,9 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -45,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 JsonFlags flags = GetFlags();
 
-                if (flags == null || HasUnsupportedType(_arguments[0].Type._type, out _, out _))
+                if (flags == null || JsonFunction.HasUnsupportedType(_arguments[0].Type._type, out _, out _))
                 {
                     return CommonErrors.GenericInvalidArgument(IRContext.NotInSource(_type));
                 }
@@ -57,6 +59,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 _arguments[0].Visit(jsonWriterVisitor);
                 writer.Flush();
 
+                if (jsonWriterVisitor.ErrorValues.Any())
+                {
+                    if (jsonWriterVisitor.ErrorValues.Count == 1)
+                    {
+                        return jsonWriterVisitor.ErrorValues[0];
+                    }
+
+                    return ErrorValue.Combine(IRContext.NotInSource(_type), jsonWriterVisitor.ErrorValues);
+                }
+
                 string json = Encoding.UTF8.GetString(memoryStream.ToArray());
 
                 // replace two spaces with four spaces only at the beginning of each line
@@ -67,7 +79,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             private JsonFlags GetFlags()
             {
-                JsonFlags flags = new JsonFlags() { HasMedia = DataHasMedia(_arguments[0].Type._type) };
+                JsonFlags flags = new JsonFlags() { HasMedia = JsonFunction.DataHasMedia(_arguments[0].Type._type) };
 
                 if (_arguments.Length > 1 && _arguments[1] is StringValue arg1string)
                 {
@@ -87,7 +99,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if ((flags.IncludeBinaryData && flags.IgnoreBinaryData) ||
                     (flags.HasMedia && !flags.IncludeBinaryData && !flags.IgnoreBinaryData) ||
-                    (!flags.IgnoreUnsupportedTypes && HasUnsupportedType(_arguments[0].Type._type, out var _, out var _)))
+                    (!flags.IgnoreUnsupportedTypes && JsonFunction.HasUnsupportedType(_arguments[0].Type._type, out var _, out var _)))
                 {
                     return null;
                 }
@@ -99,6 +111,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 private readonly Utf8JsonWriter _writer;
                 private readonly TimeZoneInfo _timeZoneInfo;
+
+                internal readonly List<ErrorValue> ErrorValues = new List<ErrorValue>();
 
                 internal Utf8JsonWriterVisitor(Utf8JsonWriter writer, TimeZoneInfo timeZoneInfo)
                 {
@@ -137,8 +151,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 public void Visit(ErrorValue errorValue)
-                {
-                    throw new ArgumentException($"Unable to serialize type {errorValue.GetType().FullName} to Json format.");
+                {                    
+                    ErrorValues.Add(errorValue);
+                    _writer.WriteStringValue("ErrorValue");
                 }
 
                 public void Visit(GuidValue guidValue)
