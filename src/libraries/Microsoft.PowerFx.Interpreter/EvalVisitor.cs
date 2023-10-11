@@ -297,7 +297,7 @@ namespace Microsoft.PowerFx
 
                 if (frame != framePop)
                 {
-                    throw new Exception("Error message");
+                    throw new Exception("Something went wrong. UDF stack values didn't match.");
                 }
             }
             else
