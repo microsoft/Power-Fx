@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -21,221 +22,241 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     internal class JsonFunctionImpl : JsonFunction, IAsyncTexlFunction4
     {
-        public Task<FormulaValue> InvokeAsync(TimeZoneInfo timezoneInfo, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(TimeZoneInfo timezoneInfo, FormulaType type, FormulaValue[] args, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return Task.FromResult(new JsonProcessing(timezoneInfo, irContext, args).Process());
+            return Task.FromResult(new JsonProcessing(timezoneInfo, type, args).Process());
         }
 
         internal class JsonProcessing
         {
-            private JsonFlags _flags;
-            private readonly FormulaValue[] _args;
-            private readonly IRContext _irContext;
+            private readonly FormulaValue[] _arguments;
+            private readonly FormulaType _type;
             private readonly TimeZoneInfo _timeZoneInfo;
 
-            internal JsonProcessing(TimeZoneInfo timezoneInfo, IRContext irContext, FormulaValue[] args)
+            internal JsonProcessing(TimeZoneInfo timezoneInfo, FormulaType type, FormulaValue[] args)
             {
-                _args = args;
-                _irContext = irContext;
+                _arguments = args;
                 _timeZoneInfo = timezoneInfo;
+                _type = type;
             }
 
             internal FormulaValue Process()
             {
-                GetFlags();
+                JsonFlags flags = GetFlags();
 
-                if (_flags == null || HasUnsupportedType(_args[0].Type._type, out _, out _))
+                if (flags == null || HasUnsupportedType(_arguments[0].Type._type, out _, out _))
                 {
-                    return CommonErrors.GenericInvalidArgument(_irContext);
+                    return CommonErrors.GenericInvalidArgument(IRContext.NotInSource(_type));
                 }
 
                 using MemoryStream memoryStream = new MemoryStream();
-                using Utf8JsonWriter writer = new Utf8JsonWriter(memoryStream, new JsonWriterOptions() { Indented = _flags.IndentFour });
+                using Utf8JsonWriter writer = new Utf8JsonWriter(memoryStream, new JsonWriterOptions() { Indented = flags.IndentFour, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+                Utf8JsonWriterVisitor jsonWriterVisitor = new Utf8JsonWriterVisitor(writer, _timeZoneInfo);
 
-                WriteToJson(writer, _args[0]);
+                _arguments[0].Visit(jsonWriterVisitor);
                 writer.Flush();
 
-                string json = Encoding.UTF8.GetString(memoryStream.ToArray()).Replace(@"\u0022", @"\""").Replace(@"\u0027", @"'");
+                string json = Encoding.UTF8.GetString(memoryStream.ToArray());
 
                 // replace two spaces with four spaces only at the beginning of each line
                 json = Regex.Replace(json, @"^(?<spc>(  )+)(?<right>[^ ].*)", @"$2$2$3", RegexOptions.Multiline);
 
-                return new StringValue(_irContext, json);
+                return new StringValue(IRContext.NotInSource(_type), json);
             }
 
-            private void GetFlags()
+            private JsonFlags GetFlags()
             {
-                _flags = new JsonFlags() { HasMedia = DataHasMedia(_args[0].Type._type) };
+                JsonFlags flags = new JsonFlags() { HasMedia = DataHasMedia(_arguments[0].Type._type) };
 
-                if (_args.Length > 1 && _args[1] is StringValue arg1string)
+                if (_arguments.Length > 1 && _arguments[1] is StringValue arg1string)
                 {
-                    _flags.IgnoreBinaryData = arg1string.Value.Contains("G");
-                    _flags.IgnoreUnsupportedTypes = arg1string.Value.Contains("I");
-                    _flags.IncludeBinaryData = arg1string.Value.Contains("B");
-                    _flags.IndentFour = arg1string.Value.Contains("4");
+                    flags.IgnoreBinaryData = arg1string.Value.Contains("G");
+                    flags.IgnoreUnsupportedTypes = arg1string.Value.Contains("I");
+                    flags.IncludeBinaryData = arg1string.Value.Contains("B");
+                    flags.IndentFour = arg1string.Value.Contains("4");
                 }
 
-                if (_args.Length > 1 && _args[1] is OptionSetValue arg1optionset)
+                if (_arguments.Length > 1 && _arguments[1] is OptionSetValue arg1optionset)
                 {
-                    _flags.IgnoreBinaryData = arg1optionset.Option == "IgnoreBinaryData";
-                    _flags.IgnoreUnsupportedTypes = arg1optionset.Option == "IgnoreUnsupportedTypes";
-                    _flags.IncludeBinaryData = arg1optionset.Option == "IncludeBinaryData";
-                    _flags.IndentFour = arg1optionset.Option == "IndentFour";
+                    flags.IgnoreBinaryData = arg1optionset.Option == "IgnoreBinaryData";
+                    flags.IgnoreUnsupportedTypes = arg1optionset.Option == "IgnoreUnsupportedTypes";
+                    flags.IncludeBinaryData = arg1optionset.Option == "IncludeBinaryData";
+                    flags.IndentFour = arg1optionset.Option == "IndentFour";
                 }
 
-                if ((_flags.IncludeBinaryData && _flags.IgnoreBinaryData) ||
-                    (_flags.HasMedia && !_flags.IncludeBinaryData && !_flags.IgnoreBinaryData) ||
-                    (!_flags.IgnoreUnsupportedTypes && HasUnsupportedType(_args[0].Type._type, out var _, out var _)))
+                if ((flags.IncludeBinaryData && flags.IgnoreBinaryData) ||
+                    (flags.HasMedia && !flags.IncludeBinaryData && !flags.IgnoreBinaryData) ||
+                    (!flags.IgnoreUnsupportedTypes && HasUnsupportedType(_arguments[0].Type._type, out var _, out var _)))
                 {
-                    _flags = null;
-                    return;
+                    return null;
                 }
+
+                return flags;
             }
 
-            internal void WriteToJson(Utf8JsonWriter writer, FormulaValue arg)
+            private class Utf8JsonWriterVisitor : IValueVisitor
             {
-                if (arg is BlankValue blankValue)
+                private readonly Utf8JsonWriter _writer;
+                private readonly TimeZoneInfo _timeZoneInfo;
+
+                internal Utf8JsonWriterVisitor(Utf8JsonWriter writer, TimeZoneInfo timeZoneInfo)
                 {
-                    writer.WriteNullValue();
+                    _writer = writer;
+                    _timeZoneInfo = timeZoneInfo;
                 }
-                else if (arg is BooleanValue booleanValue)
+
+                public void Visit(BlankValue blankValue)
                 {
-                    writer.WriteBooleanValue(booleanValue.Value);
+                    _writer.WriteNullValue();
                 }
-                else if (arg is ColorValue colorValue)
+
+                public void Visit(BooleanValue booleanValue)
                 {
-                    writer.WriteStringValue(GetColorString(colorValue.Value));
+                    _writer.WriteBooleanValue(booleanValue.Value);
                 }
-                else if (arg is DateTimeValue dateTimeValue)
+
+                public void Visit(ColorValue colorValue)
                 {
-                    writer.WriteStringValue(ConvertToUTC(dateTimeValue.GetConvertedValue(_timeZoneInfo), _timeZoneInfo).ToString("yyyy-MM-dd'T'HH:mm:ss.fffK", CultureInfo.InvariantCulture));
+                    _writer.WriteStringValue(GetColorString(colorValue.Value));
                 }
-                else if (arg is DateValue dateValue)
+
+                public void Visit(DateTimeValue dateTimeValue)
                 {
-                    writer.WriteStringValue(dateValue.GetConvertedValue(null).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                    _writer.WriteStringValue(ConvertToUTC(dateTimeValue.GetConvertedValue(_timeZoneInfo), _timeZoneInfo).ToString("yyyy-MM-dd'T'HH:mm:ss.fffK", CultureInfo.InvariantCulture));
                 }
-                else if (arg is DecimalValue decimalValue)
+
+                public void Visit(DateValue dateValue)
                 {
-                    writer.WriteNumberValue(decimalValue.Value);
+                    _writer.WriteStringValue(dateValue.GetConvertedValue(null).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
                 }
-                else if (arg is GuidValue guidValue)
+
+                public void Visit(DecimalValue decimalValue)
                 {
-                    writer.WriteStringValue(guidValue.Value.ToString("D", CultureInfo.InvariantCulture));
+                    _writer.WriteNumberValue(decimalValue.Value);
                 }
-                else if (arg is NumberValue numberValue)
+
+                public void Visit(ErrorValue errorValue)
                 {
-                    writer.WriteNumberValue(numberValue.Value);
+                    throw new ArgumentException($"Unable to serialize type {errorValue.GetType().FullName} to Json format.");
                 }
-                else if (arg is OptionSetValue optionSetValue)
+
+                public void Visit(GuidValue guidValue)
+                {
+                    _writer.WriteStringValue(guidValue.Value.ToString("D", CultureInfo.InvariantCulture));
+                }
+
+                public void Visit(NumberValue numberValue)
+                {
+                    _writer.WriteNumberValue(numberValue.Value);
+                }
+
+                public void Visit(OptionSetValue optionSetValue)
                 {
                     if (optionSetValue.Type._type.OptionSetInfo is EnumSymbol enumSymbol)
                     {
                         if (enumSymbol.EntityName == "Color")
                         {
                             Color color = Color.FromArgb((int)(uint)(double)optionSetValue.ExecutionValue);
-                            writer.WriteStringValue(GetColorString(color));
+                            _writer.WriteStringValue(GetColorString(color));
                         }
-                        else if (IsNumeric(optionSetValue.ExecutionValue, out object number))
+                        else if (optionSetValue.ExecutionValue is byte b)
                         {
-                            if (number is decimal dec)
-                            {
-                                writer.WriteNumberValue(dec);
-                            }
-                            else if (number is double dbl)
-                            {
-                                writer.WriteNumberValue(dbl);
-                            }
-                            else if (number is float flt)
-                            {
-                                writer.WriteNumberValue(flt);
-                            }
-                            else if (number is int i)
-                            {
-                                writer.WriteNumberValue(i);
-                            }
-                            else if (number is uint ui)
-                            {
-                                writer.WriteNumberValue(ui);
-                            }
-                            else if (number is long l)
-                            {
-                                writer.WriteNumberValue(l);
-                            }
-                            else if (number is ulong ul)
-                            {
-                                writer.WriteNumberValue(ul);
-                            }
+                            _writer.WriteNumberValue((int)b);
+                        }
+                        else if (optionSetValue.ExecutionValue is decimal d)
+                        {
+                            _writer.WriteNumberValue(d);
+                        }
+                        else if (optionSetValue.ExecutionValue is double dbl)
+                        {
+                            _writer.WriteNumberValue(dbl);
+                        }
+                        else if (optionSetValue.ExecutionValue is float flt)
+                        {
+                            _writer.WriteNumberValue(flt);
+                        }
+                        else if (optionSetValue.ExecutionValue is int i)
+                        {
+                            _writer.WriteNumberValue(i);
+                        }
+                        else if (optionSetValue.ExecutionValue is long l)
+                        {
+                            _writer.WriteNumberValue(l);
+                        }
+                        else if (optionSetValue.ExecutionValue is sbyte sb)
+                        {
+                            _writer.WriteNumberValue((int)sb);
+                        }
+                        else if (optionSetValue.ExecutionValue is short s)
+                        {
+                            _writer.WriteNumberValue((int)s);
+                        }
+                        else if (optionSetValue.ExecutionValue is uint ui)
+                        {
+                            _writer.WriteNumberValue(ui);
+                        }
+                        else if (optionSetValue.ExecutionValue is ulong ul)
+                        {
+                            _writer.WriteNumberValue(ul);
+                        }
+                        else if (optionSetValue.ExecutionValue is ushort us)
+                        {
+                            _writer.WriteNumberValue((uint)us);
                         }
                         else
                         {
-                            writer.WriteStringValue(optionSetValue.ExecutionValue.ToString());
+                            _writer.WriteStringValue(optionSetValue.ExecutionValue.ToString());
                         }
                     }
                     else if (optionSetValue.Type._type.OptionSetInfo is IExternalOptionSet ops)
                     {
-                        writer.WriteStringValue(optionSetValue.Option);
+                        _writer.WriteStringValue(optionSetValue.Option);
                     }
                 }
-                else if (arg is RecordValue rv)
-                {
-                    writer.WriteStartObject();
 
-                    foreach (NamedValue namedValue in rv.Fields)
+                public void Visit(RecordValue recordValue)
+                {
+                    _writer.WriteStartObject();
+
+                    foreach (NamedValue namedValue in recordValue.Fields)
                     {
-                        writer.WritePropertyName(namedValue.Name);
-                        WriteToJson(writer, namedValue.Value);
+                        _writer.WritePropertyName(namedValue.Name);
+                        namedValue.Value.Visit(this);
                     }
 
-                    writer.WriteEndObject();
+                    _writer.WriteEndObject();
                 }
-                else if (arg is StringValue sv)
-                {
-                    writer.WriteStringValue(sv.Value);
-                }
-                else if (arg is TableValue tv)
-                {
-                    writer.WriteStartArray();
 
-                    foreach (DValue<RecordValue> row in tv.Rows)
+                public void Visit(StringValue stringValue)
+                {
+                    _writer.WriteStringValue(stringValue.Value);
+                }
+
+                public void Visit(TableValue tableValue)
+                {
+                    _writer.WriteStartArray();
+
+                    foreach (DValue<RecordValue> row in tableValue.Rows)
                     {
-                        WriteToJson(writer, row.Value);
+                        row.Value.Visit(this);
                     }
 
-                    writer.WriteEndArray();
+                    _writer.WriteEndArray();
                 }
-                else if (arg is TimeValue tmv)
+
+                public void Visit(TimeValue timeValue)
                 {
-                    writer.WriteStringValue(tmv.Value.ToString(@"hh\:mm\:ss\.fff", CultureInfo.InvariantCulture));
+                    _writer.WriteStringValue(timeValue.Value.ToString(@"hh\:mm\:ss\.fff", CultureInfo.InvariantCulture));
                 }
-                else
+
+                public void Visit(UntypedObjectValue untypedObjectValue)
                 {
-                    throw new ArgumentException($"Unable to serialize type {arg.GetType().FullName} to Json format.");
+                    throw new ArgumentException($"Unable to serialize type {untypedObjectValue.GetType().FullName} to Json format.");
                 }
             }
 
             internal static string GetColorString(Color color) => $"#{color.R:x2}{color.G:x2}{color.B:x2}{color.A:x2}";
-
-            internal static bool IsNumeric(object value, out object number)
-            {
-                number = value switch
-                {
-                    byte b => (int)b,
-                    decimal d => d,
-                    double dbl => dbl,
-                    float flt => flt,
-                    int i => i,
-                    long l => l,
-                    sbyte sb => (int)sb,
-                    short s => (int)s,
-                    uint ui => ui,
-                    ulong ul => ul,
-                    ushort us => (uint)us,
-                    _ => null
-                };
-
-                return number != null;
-            }
 
             private class JsonFlags
             {

@@ -56,7 +56,6 @@ namespace Microsoft.PowerFx.Types
             }
             else if (value.Kind == DateTimeKind.Local && timeZoneInfo.BaseUtcOffset != TimeSpan.Zero)
             {
-                // Suspicious - should probably be TimeZoneInfo.ConvertTimeToUtc(value, timeZoneInfo) as we want to convert to UTC...
                 return DateTime.SpecifyKind(value, DateTimeKind.Unspecified);
             }
             else if (value.Kind == DateTimeKind.Unspecified && timeZoneInfo.BaseUtcOffset == TimeSpan.Zero)
