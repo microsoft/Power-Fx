@@ -499,7 +499,7 @@ namespace Microsoft.PowerFx.Tests
             false,
             2.0)]
 
-        public void UserDefiniedFunctionTest(string udfExpression, string expression, bool expectedError, double expected = 0)
+        public void UserDefinedFunctionTest(string udfExpression, string expression, bool expectedError, double expected = 0)
         {
             var config = new PowerFxConfig()
             {
@@ -524,6 +524,35 @@ namespace Microsoft.PowerFx.Tests
             {
                 Assert.True(expectedError, ex.Message);
             }
+        }
+
+        [Theory]
+        [InlineData("foo(x: Decimal, y:Decimal):Decimal = x + y;", "foo(1,2)", 3.0)]
+        [InlineData("foo(x: Decimal, y:Decimal):Decimal = x - Abs(y);", "foo(myArg,1)", 9.0)]
+        public void UserDefinedFunctionSymbolTableTest(string script, string expression, double expected)
+        {
+            var engine = new RecalcEngine();
+            var symbolTable = new SymbolTable();
+
+            engine.UpdateVariable("myArg", FormulaValue.New(10));
+
+            symbolTable.AddUserDefinedFunction(script, CultureInfo.InvariantCulture, engine.SupportedFunctions);
+
+            var check = engine.Check(expression, symbolTable: symbolTable);
+            var result = check.GetEvaluator().Eval();
+            var fvExpected = FormulaValue.New(expected);
+
+            Assert.Equal(fvExpected.AsDecimal(), result.AsDecimal());
+        }
+
+        [Theory]
+        [InlineData("foo(x:Number):Number = x + missingArg1 - missingArg2;")]
+        [InlineData("foo(x:Number):Number = x + ;")]
+        public void DefinedFunctionsErrorsTest(string script)
+        {
+            var engine = new RecalcEngine();
+
+            Assert.Throws<InvalidOperationException>(() => engine.AddUserDefinedFunction(script, CultureInfo.InvariantCulture));
         }
 
         [Fact]

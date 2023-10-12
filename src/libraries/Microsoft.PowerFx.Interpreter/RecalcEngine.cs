@@ -211,11 +211,6 @@ namespace Microsoft.PowerFx
             return result;
         }
 
-        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture, ReadOnlySymbolTable symbolTable = null)
-        {
-            _symbolTable.AddUserDefinedFunction(script, parseCulture, SupportedFunctions, symbolTable);
-        }
-
         internal FormulaType GetFormulaTypeFromName(string name)
         {
             return FormulaType.Build(GetTypeFromName(name));
@@ -229,80 +224,6 @@ namespace Microsoft.PowerFx
             }
 
             return FormulaType.GetFromStringOrNull(name)._type;
-        }
-
-        /// <summary>
-        /// For private use because we don't want anyone defining a function without binding it.
-        /// </summary>
-        /// <returns></returns>
-        private UDFLazyBinder DefineFunction(UDFDefinition definition)
-        {
-            // $$$ Would be a good helper function 
-            var record = RecordType.Empty();
-            foreach (var p in definition.Parameters)
-            {
-                record = record.Add(p);
-            }
-
-            var check = new CheckWrapper(this, definition.ParseResult, record, definition.IsImperative, definition.NumberIsFloat);
-
-            var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
-
-            if (_symbolTable.Functions.AnyWithName(definition.Name))
-            {
-                throw new InvalidOperationException($"Function {definition.Name} is already defined");
-            }
-
-            _symbolTable.AddFunction(func);
-            return new UDFLazyBinder(func, definition.Name);
-        }
-
-        private void RemoveFunction(string name)
-        {
-            _symbolTable.RemoveFunction(name);
-        }
-
-        /// <summary>
-        /// Tries to define and bind all the functions here. If any function names conflict returns an expression error. 
-        /// Also returns any errors from binding failing. All functions defined here are removed if any of them contain errors.
-        /// </summary>
-        /// <param name="udfDefinitions"></param>
-        /// <returns></returns>
-        [Obsolete("This has been deprecated and will soon be deleted.")]
-        internal DefineFunctionsResult DefineFunctions(IEnumerable<UDFDefinition> udfDefinitions)
-        {
-            var expressionErrors = new List<ExpressionError>();
-
-            var binders = new List<UDFLazyBinder>();
-            foreach (UDFDefinition definition in udfDefinitions)
-            {
-                binders.Add(DefineFunction(definition));
-            }
-
-            foreach (UDFLazyBinder lazyBinder in binders)
-            {
-                var possibleErrors = lazyBinder.Bind();
-                if (possibleErrors.Any())
-                {
-                    expressionErrors.AddRange(possibleErrors);
-                }
-            }
-
-            if (expressionErrors.Any())
-            {
-                foreach (UDFLazyBinder lazyBinder in binders)
-                {
-                    RemoveFunction(lazyBinder.Name);
-                }
-            }
-
-            return new DefineFunctionsResult(expressionErrors, binders.Select(binder => new FunctionInfo(binder.Function)));
-        }
-
-        [Obsolete("This has been deprecated and will soon be deleted.")]
-        internal DefineFunctionsResult DefineFunctions(params UDFDefinition[] udfDefinitions)
-        {
-            return DefineFunctions(udfDefinitions.AsEnumerable());
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 
