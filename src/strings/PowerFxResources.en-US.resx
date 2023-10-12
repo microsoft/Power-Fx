@@ -5348,4 +5348,7 @@
     <value>The JSON function cannot serialize tables / objects with a nested property called '{0}' of type '{1}'.</value>
     <comment>{Locked=JSON}. Error message shown to the user if they try to serialize an object which contain a nested property of a type which is not supported in the JSON function. Both parameters are strings. E.g.: The JSON function cannot serialize tables / objects with a nested property called 'value' of type 'Polymorphic'.</comment>
   </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>The JSON function cannot serialize binary data in non-behavioral expression.</value>    
+  </data>
 </root>

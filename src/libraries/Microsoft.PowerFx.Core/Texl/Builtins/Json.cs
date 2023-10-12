@@ -126,6 +126,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         return;
                     }
                 }
+
+                if (!binding.CheckTypesContext.AllowsSideEffects && includeBinaryData)
+                {
+                    errors.EnsureError(optionsNode, TexlStrings.ErrJSONArg1UnsupportedTypeWithNonBehavioral);
+                    return;
+                }
             }
 
             bool hasMedia = DataHasMedia(argTypes[0]);
@@ -142,7 +148,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedNestedType, unsupportedColumnName, unsupportedNestedType.GetKindString());
                 }
-            }
+            }            
         }
 
         private static bool IsConstant(CheckTypesContext context, DType[] argTypes, TexlNode optionsNode, out string nodeValue)
