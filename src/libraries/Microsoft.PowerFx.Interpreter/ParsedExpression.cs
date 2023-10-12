@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx
                 hasInnerServices = true;
             }
 
-            if (_additionalFunctions.Any())
+            if (_additionalFunctions != null && _additionalFunctions.Any())
             {
                 innerServices.AddService(_additionalFunctions);
                 hasInnerServices = true;

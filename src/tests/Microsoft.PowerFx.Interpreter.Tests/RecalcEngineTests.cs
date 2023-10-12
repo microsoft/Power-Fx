@@ -17,7 +17,6 @@ using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
@@ -410,307 +409,150 @@ namespace Microsoft.PowerFx.Tests
             // Can't redefine an existing formula. 
             Assert.Throws<InvalidOperationException>(() =>
                engine.SetFormula("A", "3", OnUpdate));
-        }
+        }     
 
-        [Fact]
-        public void DefFunc()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
+        [Theory]
+        [InlineData(
+            "func1(x:Number/*comment*/): Number = x * 10;\nfunc2(x:Number): Number = y1 * 10;",
+            null,
+            true)]
+        [InlineData(
+            "foo(x:Number):Number = If(x=0,foo(1),If(x=1,foo(2),If(x=2,Float(2))));",
+            "foo(Float(0))",
+            false,
+            2.0)]
+        [InlineData(
+            "foo(x:Decimal):Decimal = If(x=0,foo(1),If(x=1,foo(2),If(x=2,2)));",
+            "foo(0)",
+            false,
+            2.0)]
+        [InlineData(
+            "foo():Blank = foo();",
+            "foo()",
+            true)]
+        [InlineData(
+            "Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x);",
+            "Add(10, Foo(-10))",
+            false,
+            20.0)]
+        [InlineData(
+            "Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x);",
+            "Add(1 , Add(1 , Add(1 , Add(1 , Add(1 , Foo(-1))))))",
+            false,
+            6.0)]
+        [InlineData(
+            "TriplePowerSum(x: Number, y:Number, z:Number): Number = Power(2,x) + Power(2,y) + Power(2,z);",
+            "TriplePowerSum(1 , 2, 3)",
+            false,
+            14.0)]
 
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(x:Number, y:Number): Number = x * y;").Errors;
-            Assert.False(enumerable.Any());
-            Assert.Equal(17.0, recalcEngine.Eval("foo(Float(3),Float(4)) + 5").ToObject());
-        }
+        // Recursive calls are not allowed
+        [InlineData(
+            "hailstone(x:Number):Number = If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x);",
+            "hailstone(Float(192))",
+            true)]
+        [InlineData(
+            "hailstone(x:Decimal):Decimal = If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x);",
+            "hailstone(192)",
+            true)]
+        [InlineData(
+            "odd(number:Number):Boolean = If(number = 0, false, even(Abs(number)-1)); even(number:Number):Boolean = If(number = 0, true, odd(Abs(number)-1));",
+            "odd(17)",
+            true)]
+        [InlineData(
+            "odd(number:Number):Boolean = If(number = 0, false, even(Abs(number)-1)); even(number:Number):Boolean = If(number = 0, true, odd(Abs(number)-1));",
+            "even(17)",
+            true)]
+        [InlineData(
+            "odd(number:Decimal):Boolean = If(number = 0, false, even(If(number<0,-number,number)-1)); even(number:Decimal):Boolean = If(number = 0, true, odd(If(number<0,-number,number)-1));",
+            "odd(17)",
+            true)]
+        [InlineData(
+            "odd(number:Decimal):Boolean = If(number = 0, false, even(If(number<0,-number,number)-1)); even(number:Decimal):Boolean = If(number = 0, true, odd(If(number<0,-number,number)-1));",
+            "even(17)",
+            true)]
 
-        [Fact]
-        public void DefTypeAndFunc()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
-            };
-#pragma warning disable CS0618 // Type or member is obsolete
-            var errors = recalcEngine.DefineType("Person = Type({ Age: Number});", parserOptions);
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Empty(errors);
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("getAge(p: Person): Number = p.Age;").Errors;
-            Assert.False(enumerable.Any());
-            Assert.Equal(1.0, recalcEngine.Eval("getAge({Age: Float(1)})").ToObject());
-        }
+        // Redefinition is not allowed
+        [InlineData(
+            "foo():Blank = foo(); foo():Number = x + 1;", 
+            null,
+            true)]
 
-        [Fact]
-        public void DefComplexTypeWithFunc()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
-            };
-#pragma warning disable CS0618 // Type or member is obsolete
-            var errors = recalcEngine.DefineType("Complex = Type({ A: {B: Number}});", parserOptions);
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Empty(errors);
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(p: Complex): Number = p.A.B;").Errors;
-            Assert.False(enumerable.Any());
-            Assert.Equal(1.0, recalcEngine.Eval("foo({A: {B: Float(1.0)}})").ToObject());
-        }
+        // Syntax error
+        [InlineData(
+            "foo():Blank = x[",
+            null,
+            true)]
 
-        [Fact]
-        public void DefTableType()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
-            };
-#pragma warning disable CS0618
-            var errors = recalcEngine.DefineType("People = Type([{Age: Number}]);", parserOptions);
-#pragma warning restore CS0618
-            Assert.Empty(errors);
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("countMinors(p: People): Number = Float(CountRows(Filter(p, Age < 18)));").Errors;
-            Assert.False(enumerable.Any());
-            Assert.Equal(2.0, recalcEngine.Eval("countMinors([{Age: Float(1)}, {Age: Float(18)}, { Age: Float(4) }])").ToObject());
-        }
+        // Incorrect parameters
+        [InlineData(
+            "foo(x:Number):Number = x + 1;",
+            "foo(False)",
+            true)]
+        [InlineData(
+            "foo(x:Number):Number = x + 1;",
+            "foo(Table( { Value: \"Strawberry\" }, { Value: \"Vanilla\" } ))",
+            true)]
+        [InlineData(
+            "foo(x:Number):Number = x + 1;",
+            "foo(Float(1))",
+            false,
+            2.0)]
 
-        [Fact]
-        public void DefComplexTableType()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
-            };
-#pragma warning disable CS0618
-            var errors = recalcEngine.DefineType("A = Type({A: Number}); People = Type([{Age: A}]);", parserOptions);
-#pragma warning restore CS0618
-            Assert.Empty(errors);
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("countMinors(p: People): Number = Float(CountRows(Filter(p, Age.A < 18)));").Errors;
-            Assert.False(enumerable.Any());
-            Assert.Equal(2.0, recalcEngine.Eval("countMinors([{Age: {A: Float(1)}}, {Age: {A: Float(18)}}, { Age: {A: Float(4)} }])").ToObject());
-        }
-
-        [Fact]
-        public void IncorrectType()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
-            };
-#pragma warning disable CS0618 // Type or member is obsolete
-            var errors = recalcEngine.DefineType("Complex = Type({ A: Number });", parserOptions);
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Empty(errors);
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(p: Complex): Number = Float(1.0);").Errors;
-            Assert.False(enumerable.Any());
-            Assert.Throws<System.AggregateException>(() => recalcEngine.Eval("foo({A: \"hi\"})"));
-        }
-
-        [Fact]
-        public void DefManyType()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
-            };
-#pragma warning disable CS0618 // Type or member is obsolete
-            var errors = recalcEngine.DefineType("A = Type({ num: Number}); B = Type({ a: A}); C = Type({ b: B, a: A});", parserOptions);
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Empty(errors);
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(p: C): Number = p.b.a.num + p.a.num;").Errors;
-            Assert.False(enumerable.Any());
-            Assert.Equal(1.5, recalcEngine.Eval("foo({b: {a: {num: Float(0.5)}}, a: {num: Float(1.0)}})").ToObject());
-        }
-
-        [Fact]
-        public void TypeAlias()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
-            };
-#pragma warning disable CS0618 // Type or member is obsolete
-            var errors = recalcEngine.DefineType("Weight = Type(Number);", parserOptions);
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Empty(errors);
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("over50Pounds(weight: Weight): Boolean = weight > 50;").Errors;
-            Assert.False(enumerable.Any());
-            Assert.Equal(true, recalcEngine.Eval("over50Pounds(Float(51.0))").ToObject());
-        }
-
-        [Fact]
-        public void DefFuncDecimal()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(x:Decimal, y:Decimal): Decimal = x * y;").Errors;
-            Assert.False(enumerable.Any());
-            Assert.Equal(17m, recalcEngine.Eval("foo(3,4) + 5").ToObject());
-        }
-
-        [Fact]
-        public void DefFuncWithErrorsAndVerifySpans()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("func1(x:Number/*comment*/): Number = x * 10;\nfunc2(x:Number): Number = y1 * 10;").Errors;
-            Assert.True(enumerable.Any());
-            var span = enumerable.First().Span;
-            Assert.Equal(71, span.Min);
-            Assert.Equal(73, span.Lim);
-
-            enumerable = recalcEngine.DefineFunctions("func3():Blank = a + func1(10);").Errors;
-            Assert.True(enumerable.Any());
-
-            span = enumerable.First().Span;
-            Assert.Equal(16, span.Min);
-            Assert.Equal(17, span.Lim);
-
-            span = enumerable.ElementAt(1).Span;
-            Assert.Equal(20, span.Min);
-            Assert.Equal(29, span.Lim);
-        }
-
-        [Fact]
-        public void DefRecursiveFunc()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(x:Number):Number = If(x=0,foo(1),If(x=1,foo(2),If(x=2,Float(2)));", numberIsFloat: true).Errors;
-            var result = recalcEngine.Eval("foo(Float(0))");
-            Assert.Equal(2.0, result.ToObject());
-            Assert.False(enumerable.Any());
-        }
-
-        [Fact]
-        public void DefRecursiveFuncDecimal()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(x:Decimal):Decimal = If(x=0,foo(1),If(x=1,foo(2),If(x=2,2));").Errors;
-            var result = recalcEngine.Eval("foo(0)");
-            Assert.Equal(2m, result.ToObject());
-            Assert.False(enumerable.Any());
-        }
-
-        [Fact]
-        public void DefSimpleRecursiveFunc()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            Assert.False(recalcEngine.DefineFunctions("foo():Blank = foo();").Errors.Any());
-            var result = recalcEngine.Eval("foo()");
-            Assert.IsType<ErrorValue>(result);
-        }
-
-        [Fact]
-        public void DefHailstoneSequence()
+        public void UserDefinedFunctionTest(string udfExpression, string expression, bool expectedError, double expected = 0)
         {
             var config = new PowerFxConfig()
             {
                 MaxCallDepth = 100
             };
             var recalcEngine = new RecalcEngine(config);
-            var body = @"If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x)";
 
-            Assert.False(recalcEngine.DefineFunctions($"hailstone(x:Number):Number = {body};").Errors.Any());
-            Assert.Equal(1.0, recalcEngine.Eval("hailstone(Float(192))").ToObject());
-        }
-
-        [Fact]
-        public void DefHailstoneSequenceDecimal()
-        {
-            var config = new PowerFxConfig()
+            try
             {
-                MaxCallDepth = 100
-            };
-            var recalcEngine = new RecalcEngine(config);
-            var body = @"If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x)";
+                recalcEngine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture);
 
-            Assert.False(recalcEngine.DefineFunctions($"hailstone(x:Decimal):Decimal = {body};").Errors.Any());
-            Assert.Equal(1m, recalcEngine.Eval("hailstone(192)").ToObject());
-        }
+                var check = recalcEngine.Check(expression);
 
-        [Fact]
-        public void DefMutualRecursionFunc()
-        {
-            var config = new PowerFxConfig()
+                Assert.Equal(check.IsSuccess, !expectedError);
+
+                var result = recalcEngine.Eval(expression);
+                var fvExpected = FormulaValue.New(expected);
+
+                Assert.Equal(fvExpected.AsDecimal(), result.AsDecimal());
+            }
+            catch (Exception ex)
             {
-                MaxCallDepth = 100
-            };
-            var recalcEngine = new RecalcEngine(config);
-            var bodyEven = @"If(number = 0, true, odd(Abs(number)-1))";
-            var bodyOdd = @"If(number = 0, false, even(Abs(number)-1))";
-
-            var opts = new ParserOptions() { NumberIsFloat = true };
-            Assert.False(recalcEngine.DefineFunctions($"odd(number:Number):Boolean = {bodyOdd}; even(number:Number):Boolean = {bodyEven};").Errors.Any());
-            Assert.Equal(true, recalcEngine.Eval("odd(17)", options: opts).ToObject());
-            Assert.Equal(false, recalcEngine.Eval("even(17)", options: opts).ToObject());
+                Assert.True(expectedError, ex.Message);
+            }
         }
 
-        [Fact]
-        public void DefMutualRecursionFuncDecimal()
+        [Theory]
+        [InlineData("foo(x: Decimal, y:Decimal):Decimal = x + y;", "foo(1,2)", 3.0)]
+        [InlineData("foo(x: Decimal, y:Decimal):Decimal = x - Abs(y);", "foo(myArg,1)", 9.0)]
+        public void UserDefinedFunctionSymbolTableTest(string script, string expression, double expected)
         {
-            var config = new PowerFxConfig()
-            {
-                MaxCallDepth = 100
-            };
-            var recalcEngine = new RecalcEngine(config);
-            var bodyEven = @"If(number = 0, true, odd(If(number<0,-number,number)-1))";
-            var bodyOdd = @"If(number = 0, false, even(If(number<0,-number,number)-1))";
+            var engine = new RecalcEngine();
+            var symbolTable = new SymbolTable();
 
-            var opts = new ParserOptions() { NumberIsFloat = false };
-            Assert.False(recalcEngine.DefineFunctions($"odd(number:Decimal):Boolean = {bodyOdd}; even(number:Decimal):Boolean = {bodyEven};").Errors.Any());
-            Assert.Equal(true, recalcEngine.Eval("odd(17)", options: opts).ToObject());
-            Assert.Equal(false, recalcEngine.Eval("even(17)", options: opts).ToObject());
+            engine.UpdateVariable("myArg", FormulaValue.New(10));
+
+            symbolTable.AddUserDefinedFunction(script, CultureInfo.InvariantCulture, engine.SupportedFunctions);
+
+            var check = engine.Check(expression, symbolTable: symbolTable);
+            var result = check.GetEvaluator().Eval();
+            var fvExpected = FormulaValue.New(expected);
+
+            Assert.Equal(fvExpected.AsDecimal(), result.AsDecimal());
         }
 
-        [Fact]
-        public async void RedefinitionError()
+        [Theory]
+        [InlineData("foo(x:Number):Number = x + missingArg1 - missingArg2;")]
+        [InlineData("foo(x:Number):Number = x + ;")]
+        public void DefinedFunctionsErrorsTest(string script)
         {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions("foo():Blank = foo(); foo():Number = x + 1;"));
-        }
+            var engine = new RecalcEngine();
 
-        [Fact]
-        public void UDFBodySyntaxErrorTest()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            Assert.True(recalcEngine.DefineFunctions("foo():Blank = x[").Errors.Any());
-        }
-
-        [Fact]
-        public async void UDFIncorrectParametersTest()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            Assert.False(recalcEngine.DefineFunctions("foo(x:Number):Number = x + 1;").Errors.Any());
-            Assert.False(recalcEngine.Check("foo(False)").IsSuccess);
-            Assert.False(recalcEngine.Check("foo(Table( { Value: \"Strawberry\" }, { Value: \"Vanilla\" } ))").IsSuccess);
-            Assert.True(recalcEngine.Check("foo(Float(1))").IsSuccess);
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await recalcEngine.EvalAsync("foo(False)", CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Throws<InvalidOperationException>(() => engine.AddUserDefinedFunction(script, CultureInfo.InvariantCulture));
         }
 
         [Fact]
@@ -1203,64 +1045,6 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void UDFRecursionLimitTest()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig());
-            recalcEngine.DefineFunctions("Foo(x: Number): Number = Foo(x);");
-            Assert.IsType<ErrorValue>(recalcEngine.Eval("Foo(Float(1))"));
-        }
-
-        [Fact]
-        public void UDFRecursionWorkingTest()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig());
-            recalcEngine.DefineFunctions("Foo(x: Number): Number = If(x = 1, Float(1), If(Mod(x, 2) = 0, Foo(x/2), Foo(x*3 + 1)));");
-            Assert.Equal(1.0, recalcEngine.Eval("Foo(Float(5))").ToObject());
-        }
-
-        [Fact]
-        public void UDFRecursionWorkingTestDecimal()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig());
-            recalcEngine.DefineFunctions("Foo(x: Decimal): Decimal = If(x = 1, 1, If(Mod(x, 2) = 0, Foo(x/2), Foo(x*3 + 1)));");
-            Assert.Equal(1m, recalcEngine.Eval("Foo(Decimal(5))").ToObject());
-        }
-
-        [Fact]
-        public void IndirectRecursionTest()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig()
-            {
-                MaxCallDepth = 81
-            });
-            var opts = new ParserOptions()
-            {
-                NumberIsFloat = true
-            };
-            recalcEngine.DefineFunctions(
-                "A(x: Number): Number = If(Mod(x, 2) = 0, B(x/2), B(x));" +
-                "B(x: Number): Number = If(Mod(x, 3) = 0, C(x/3), C(x));" +
-                "C(x: Number): Number = If(Mod(x, 5) = 0, D(x/5), D(x));" +
-                "D(x: Number): Number { If(Mod(x, 7) = 0, F(x/7), F(x)) };" +
-                "F(x: Number): Number { If(x = 1, 1, A(x+1)) };", numberIsFloat: true);
-            Assert.Equal(1.0, recalcEngine.Eval("A(12654)", options: opts).ToObject());
-        }
-
-        [Fact]
-        public void DoubleDefinitionTest()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig());
-            Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions("Foo(): Number = 10; Foo(x: Number): String = \"hi\";"));
-        }
-
-        [Fact]
-        public void TestNumberBinding()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig());
-            Assert.True(recalcEngine.DefineFunctions("Foo(): String = 10;").Errors.Any());
-        }
-
-        [Fact]
         public void TestWithTimeZoneInfo()
         {
             // CultureInfo not set in PowerFxConfig as we use Symbols
@@ -1289,15 +1073,6 @@ namespace Microsoft.PowerFx.Tests
 
             // Then we convert the result to Japanese date/time format (English equivalent: "Sunday, October 30, 2022 02:34:03")
             Assert.Equal("日曜日, 10月 30, 2022 02:34:03", fv.ToObject());
-        }
-
-        [Fact]
-        public void TestMultiReturn()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig());
-            var str = "Foo(x: Number): Number { 1+1; 2+2; };";
-            recalcEngine.DefineFunctions(str, numberIsFloat: true);
-            Assert.Equal(4.0, recalcEngine.Eval("Foo(1)", null, new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true }).ToObject());
         }
 
         [Fact]
