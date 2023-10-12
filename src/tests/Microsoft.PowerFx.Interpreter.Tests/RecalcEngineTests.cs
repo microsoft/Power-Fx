@@ -607,7 +607,7 @@ namespace Microsoft.PowerFx.Tests
         public void CheckFunctionCounts()
         {
             var config = new PowerFxConfig();
-            config.EnableParseJSONFunction();
+            config.EnableJsonFunctions();
 
             var engine1 = new Engine(config);
 

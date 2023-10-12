@@ -25,7 +25,6 @@ namespace Microsoft.PowerFx.Core.Texl
 
         // Functions in this list are shared and may show up in other hosts by default.
         internal static readonly TexlFunctionSet _library = new TexlFunctionSet();
-        internal static readonly TexlFunctionSet _featureGateFunctions = new TexlFunctionSet();
 
         public static readonly TexlFunction Abs = _library.Add(new AbsFunction());
         public static readonly TexlFunction AbsT = _library.Add(new AbsTableFunction());
@@ -160,7 +159,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction MonthsShort = _library.Add(new MonthsShortFunction());
         public static readonly TexlFunction Not = _library.Add(new NotFunction());
         public static readonly TexlFunction Now = _library.Add(new NowFunction());
-        public static readonly TexlFunction OptionsSetInfo = _featureGateFunctions.Add(new OptionSetInfoFunction());
         public static readonly TexlFunction Or = _library.Add(new VariadicLogicalFunction(isAnd: false));
         public static readonly TexlFunction ParseJSON = _library.Add(new ParseJSONFunction());
         public static readonly TexlFunction Pi = _library.Add(new PiFunction());
@@ -236,18 +234,24 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction With = _library.Add(new WithFunction());
         public static readonly TexlFunction Year = _library.Add(new YearFunction());
 
+        // Don't add new functions here, follow alpha order
+
+        // _featureGateFunctions functions, not present in all platforms
+        internal static readonly TexlFunctionSet _featureGateFunctions = new TexlFunctionSet();
+
         public static readonly TexlFunction Decimal = _featureGateFunctions.Add(new DecimalFunction());
         public static readonly TexlFunction Decimal_UO = _featureGateFunctions.Add(new DecimalFunction_UO());
         public static readonly TexlFunction Float = _featureGateFunctions.Add(new FloatFunction());
         public static readonly TexlFunction Float_UO = _featureGateFunctions.Add(new FloatFunction_UO());
         public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Add(new IsUTCTodayFunction());
+        public static readonly TexlFunction OptionsSetInfo = _featureGateFunctions.Add(new OptionSetInfoFunction());
         public static readonly TexlFunction UTCNow = _featureGateFunctions.Add(new UTCNowFunction());
         public static readonly TexlFunction UTCToday = _featureGateFunctions.Add(new UTCTodayFunction());
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        
         public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library.Functions;
-        
+
         private static readonly TexlFunctionSet _testOnlyLibrary = new TexlFunctionSet(_library.Functions).Add(_featureGateFunctions);
 
         // Slow API, only use for backward compatibility

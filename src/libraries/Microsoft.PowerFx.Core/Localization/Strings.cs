@@ -527,6 +527,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutRefresh = (b) => StringResources.Get("AboutRefresh", b);
         public static StringGetter RefreshArg1 = (b) => StringResources.Get("RefreshArg1", b);
 
+        public static StringGetter AboutJSON = (b) => StringResources.Get("AboutJSON", b);
+        public static StringGetter JSONArg1 = (b) => StringResources.Get("JSONArg1", b);
+        public static StringGetter JSONArg2 = (b) => StringResources.Get("JSONArg2", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -715,5 +719,12 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrExpectedRVFieldTypeMismatch = new ErrorResourceKey("ErrExpectedRVFieldTypeMismatch");
         public static ErrorResourceKey ErrExpectedRVCannotCoerceType = new ErrorResourceKey("ErrExpectedRVCannotCoerceType");
         public static ErrorResourceKey ErrExpectedRVTypeMismatch = new ErrorResourceKey("ErrExpectedRVTypeMismatch");
+
+        public static ErrorResourceKey ErrFunctionArg2ParamMustBeConstant = new ErrorResourceKey("ErrFunctionArg2ParamMustBeConstant");
+        public static ErrorResourceKey ErrJSONArg1UnsupportedType = new ErrorResourceKey("ErrJSONArg1UnsupportedType");
+        public static ErrorResourceKey ErrJSONArg1ContainsUnsupportedMedia = new ErrorResourceKey("ErrJSONArg1ContainsUnsupportedMedia");
+        public static ErrorResourceKey ErrJSONArg2IncompatibleOptions = new ErrorResourceKey("ErrJSONArg2IncompatibleOptions");
+        public static ErrorResourceKey ErrJSONArg1UnsupportedNestedType = new ErrorResourceKey("ErrJSONArg1UnsupportedNestedType");
+        public static ErrorResourceKey ErrJSONArg1UnsupportedTypeWithNonBehavioral = new ErrorResourceKey("ErrJSONArg1UnsupportedTypeWithNonBehavioral");
     }
 }

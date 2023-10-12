@@ -3,17 +3,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
-using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// Represents a Date and Time together, in the local time zone.
     /// </summary>
+    [DebuggerDisplay("{ToObject().ToString()} ({Type}) {Value.Kind.ToString()}")]
     public class DateTimeValue : PrimitiveValue<DateTime>
     {
         // List of types that allowed to convert to DateTimeValue
@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Types
 
         /// <summary>
         /// Converts To UTC time if value is not utc and <paramref name="timeZoneInfo"/> is utc.
-        /// Converts from UTC time if  value is utc and <paramref name="timeZoneInfo"/> is non utc.
+        /// Converts from UTC time if value is utc and <paramref name="timeZoneInfo"/> is non utc.
         /// else returns the  value/>/>.
         /// NOTE: if <paramref name="timeZoneInfo"/> is null, Local time zone is used.
         /// </summary>
@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Types
             {
                 timeZoneInfo = TimeZoneInfo.Local;
             }
-
+            
             // Since we can't convert LocalKind time to UTC, if the time was of kind local just change kind.
             if (value.Kind == DateTimeKind.Local && timeZoneInfo.BaseUtcOffset == TimeSpan.Zero)
             {
@@ -56,6 +56,8 @@ namespace Microsoft.PowerFx.Types
             }
             else if (value.Kind == DateTimeKind.Local && timeZoneInfo.BaseUtcOffset != TimeSpan.Zero)
             {
+                // This code should be modified as we don't return a UTC time here
+                // https://github.com/microsoft/Power-Fx/issues/1931
                 return DateTime.SpecifyKind(value, DateTimeKind.Unspecified);
             }
             else if (value.Kind == DateTimeKind.Unspecified && timeZoneInfo.BaseUtcOffset == TimeSpan.Zero)
