@@ -4,16 +4,21 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Annotations;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -189,6 +194,64 @@ namespace Microsoft.PowerFx
             }
 
             _variables.Add(name, info); // can't exist
+        }
+
+        /// <summary>
+        /// Adds an user defnied function.
+        /// </summary>
+        /// <param name="script">String representation of the user defined function.</param>
+        /// <param name="parseCulture">CultureInfo to parse the script againts.</param>
+        /// <param name="symbolTable">Extra symbols to bind UDF.</param>
+        /// <param name="extraSymbolTable"></param>
+        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null)
+        {
+            // Phase 1: Side affects are not allowed.
+            var options = new ParserOptions() { AllowsSideEffects = false, Culture = parseCulture };
+            var sb = new StringBuilder();
+
+            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult);
+
+            if (userDefinitionResult.HasErrors)
+            {
+                sb.AppendLine("Something went wrong when parsing user defined functions.");
+
+                foreach (var error in userDefinitionResult.Errors)
+                {
+                    error.FormatCore(sb);
+                }
+
+                throw new InvalidOperationException(sb.ToString());
+            }
+
+            if (symbolTable == null)
+            {
+                symbolTable = new SymbolTable();
+            }    
+
+            if (extraSymbolTable == null)
+            {
+                extraSymbolTable = new SymbolTable();
+            }
+
+            var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
+
+            foreach (var udf in userDefinitionResult.UDFs)
+            {
+                AddFunction(udf);
+                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
+
+                List<TexlError> errors = new List<TexlError>();
+
+                if (binding.ErrorContainer.GetErrors(ref errors))
+                {
+                    sb.AppendLine(string.Join(", ", errors.Select(err => err.ToString())));
+                }
+            }
+
+            if (sb.Length > 0)
+            {
+                throw new InvalidOperationException(sb.ToString());
+            }
         }
 
         /// <summary>
