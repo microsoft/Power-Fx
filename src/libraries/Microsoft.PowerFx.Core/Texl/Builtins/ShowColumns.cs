@@ -81,9 +81,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 string expectedColumnName = null;
 
-                // Verify we have a string literal for the column name. Accd to spec, we don't support
-                // arbitrary expressions that evaluate to string values, because these values contribute to
-                // type analysis, so they need to be known upfront (before DropColumns executes).                            
                 if (supportColumnNamesAsIdentifiers)
                 {
                     if (nameArg is not FirstNameNode identifierNode)

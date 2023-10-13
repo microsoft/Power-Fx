@@ -150,7 +150,7 @@ namespace Microsoft.PowerFx.Functions
         public static async ValueTask<FormulaValue> ShowColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var tableType = ((TableValue)args[0]).Type;
-            var columnsToRemain = args.Skip(1).Select(fv => ((StringValue)fv).Value).ToArray();
+            var columnsToRemain = new HashSet<string>(args.OfType<StringValue>().Select(sv => sv.Value));
             var columnsToRemove = tableType.GetFieldTypes().Where(x => !columnsToRemain.Contains(x.Name)).Select(x => FormulaValue.New(x.Name));
 
             List<FormulaValue> newArgs = new List<FormulaValue>()
