@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.Docs
         public void Test()
         {
             var config = new PowerFxConfig();
-            config.EnableParseJSONFunction();
+            config.EnableJsonFunctions();
 #pragma warning disable CS0618 // Type or member is obsolete
             config.EnableRegExFunctions();
 #pragma warning restore CS0618 // Type or member is obsolete

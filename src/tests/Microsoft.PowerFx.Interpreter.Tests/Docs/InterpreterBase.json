@@ -69,6 +69,7 @@
     "IsMatch",
     "IsNumeric",
     "IsToday",
+    "JSON",
     "Language",
     "Last",
     "LastN",

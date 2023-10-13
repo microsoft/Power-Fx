@@ -46,7 +46,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
             if (schema.GetCompareString() != schemaActual.GetCompareString())
             {
-                var pathTemp = Path.GetTempFileName();
+                var pathTemp = Path.Combine(Path.GetTempPath(), "actual-" + Path.GetFileName(pathInput));
+
                 var jsonActual = JsonSerializer.Serialize(schemaActual, new JsonSerializerOptions
                 {
                     WriteIndented = true
