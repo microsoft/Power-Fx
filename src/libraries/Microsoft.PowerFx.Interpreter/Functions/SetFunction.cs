@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -34,16 +33,7 @@ namespace Microsoft.PowerFx.Interpreter
         }
 
         public RecalcEngineSetFunction()
-        : base(
-              DPath.Root,
-              "Set",
-              "Set",
-              TexlStrings.AboutSet,
-              FunctionCategories.Behavior,
-              DType.Boolean,
-              0, // no lambdas
-              2,
-              2)
+            : base(DPath.Root, "Set", "Set", TexlStrings.AboutSet, FunctionCategories.Behavior, DType.Boolean, 0, 2, 2)
         {
         }
 

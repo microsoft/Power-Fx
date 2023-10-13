@@ -334,7 +334,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             mockSymbolTable.Add("Phone_Number", new NameLookupInfo(BindKind.PowerFxResolvedObject, DType.String, DPath.Root, 0));
             mockSymbolTable.AddRecord("DataVar", null, new TypedName(DType.String, DName.MakeValid("Prop1", out _)));
             mockSymbolTable.Add("InvalidPhoneWarningText", new NameLookupInfo(BindKind.PowerFxResolvedObject, DType.String, DPath.Root, 0));
-            powerFxConfig.SymbolTable.AddFunction(new NotifyFunc());
+            powerFxConfig.SymbolTable.AddFunction(new NotifyFunc(), null);
             var engine = new Engine(powerFxConfig);
             var checkResult = engine.Check(expression, new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true }, mockSymbolTable);
             Assert.False(checkResult.Errors.Any(), string.Join(Environment.NewLine, checkResult.Errors));

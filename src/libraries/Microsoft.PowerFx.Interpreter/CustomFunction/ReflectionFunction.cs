@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx
     /// - class name should folow this convention: "[Method Name]" + "Function" + optional postfix for function orevloading
     /// - it should have a public static  method 'Execute'. this class will reflect over that signature to import to Power Fx. 
     /// </summary>
-    public abstract class ReflectionFunction
+    public abstract class ReflectionFunction : IFunctionImplementation
     {
         private readonly FunctionDescr _info;
 
@@ -154,19 +154,31 @@ namespace Microsoft.PowerFx
         internal TexlFunction GetTexlFunction()
         {
             var info = Scan();
-            
+
             // Special case SetProperty. Use reference equality to opt into special casing.
             if (object.ReferenceEquals(info.Name, SetPropertyName))
             {
                 return new CustomSetPropertyFunction(info.Name, info.ArgNames)
                 {
-                    _impl = args => InvokeAsync(null, args, CancellationToken.None)
+                    _impl = args =>
+                    {
+                        BasicServiceProvider serviceProvider = new BasicServiceProvider();
+                        serviceProvider.AddService(new FunctionExecutionContext(args));
+
+                        return InvokeAsync(serviceProvider, CancellationToken.None);
+                    }
                 };
             }
 
             return new CustomTexlFunction(info.Name, FunctionCategories.UserDefined, info.RetType, info.ArgNames, info.ParamTypes)
             {
-                _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken),
+                _impl = (serviceProvider, args, cancellationToken) =>
+                {
+                    BasicServiceProvider serviceProvider2 = new BasicServiceProvider(serviceProvider);
+                    serviceProvider2.AddService(args);
+
+                    return InvokeAsync(serviceProvider2, cancellationToken);
+                },
                 LamdaParamMask = info.LamdaParamMask,
             };
         }
@@ -181,13 +193,9 @@ namespace Microsoft.PowerFx
             return _info.Name;
         }
 
-        public FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
-            return InvokeAsync(serviceProvider, args, CancellationToken.None).Result;
-        }
-
-        public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
-        {
+            cancellationToken.ThrowIfCancellationRequested();
             var info = Scan();
 
             var args2 = new List<object>();
@@ -204,6 +212,7 @@ namespace Microsoft.PowerFx
                 }
             }
 
+            FormulaValue[] args = serviceProvider.GetService<FunctionExecutionContext>().Arguments;
             List<ErrorValue> errors = null;
             for (var i = 0; i < args.Length; i++)
             {

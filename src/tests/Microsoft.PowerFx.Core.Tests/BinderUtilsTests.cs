@@ -53,8 +53,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var globalSymbols = new SymbolTable { DebugName = "Globals" };
             var tableType = r2.ToTable();
             globalSymbols.AddVariable("crf_table", tableType, displayName: "Table");
-            globalSymbols.AddFunction(f1);
-            globalSymbols.AddFunction(f2);
+            globalSymbols.AddFunction(f1, null);
+            globalSymbols.AddFunction(f2, null);
 
             var allSymbols = ReadOnlySymbolTable.Compose(rowScopeSymbols, globalSymbols);
 

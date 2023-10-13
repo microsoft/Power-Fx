@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // New function 
             var func = new PowerFx.Tests.BindingEngineTests.BehaviorFunction();
             var funcName = func.Name;
-            s1.AddFunction(func);
+            s1.AddFunction(func, null);
             AssertUnique(set, s1);
             AssertUnique(set, s10);
 
@@ -152,14 +152,14 @@ namespace Microsoft.PowerFx.Core.Tests
 #pragma warning disable CS0618 // Type or member is obsolete
             Assert.Empty(s12.Functions.Functions);
 
-            s2.AddFunction(func2);
+            s2.AddFunction(func2, null);
             var funcs = s12.Functions.Functions.ToArray();
 #pragma warning restore CS0618 // Type or member is obsolete
             Assert.Single(funcs);
             Assert.Same(func2, funcs[0]);
 
             // Superceded 
-            s1.AddFunction(func1);
+            s1.AddFunction(func1, null);
 #pragma warning disable CS0618 // Type or member is obsolete
             funcs = s12.Functions.Functions.ToArray(); // Query again
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -283,7 +283,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void ComposedReadOnlySymbolTableFunctionCacheTest()
         {
             var symbolTable = new SymbolTable();
-            symbolTable.AddFunction(new BlankFunction());
+            symbolTable.AddFunction(new BlankFunction(), null);
 
             var composed = new ComposedReadOnlySymbolTable(symbolTable);
             var func1 = composed.Functions;
@@ -298,7 +298,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Same(func1, func2);
 
-            symbolTable.AddFunction(new SqrtFunction());
+            symbolTable.AddFunction(new SqrtFunction(), null);
 
             var func3 = composed.Functions;
             Assert.NotNull(func3);

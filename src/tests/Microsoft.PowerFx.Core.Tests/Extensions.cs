@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public static void AddBehaviorFunction(this PowerFxConfig config)
         {
-            config.AddFunction(new BehaviorFunction());
+            config.AddFunction(new BehaviorFunction(), null /* No implementation */);
         }
 
         public static string GetErrBehaviorPropertyExpectedMessage()

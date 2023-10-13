@@ -2,24 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
-using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -28,7 +17,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
 
         [Theory]
-        [InlineData(typeof(PatchFunction))]
+        [InlineData(typeof(PatchFunctionImpl))]
         public async Task CheckArgsTestAsync(Type type)
         {
             var expressionError = new ExpressionError()
@@ -38,13 +27,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Message = "Something went wrong"
             };
 
-            FormulaValue[] args = new[]
-            {
-                FormulaValue.NewError(expressionError)
-            };
+            FormulaValue[] args = new[] { FormulaValue.NewError(expressionError) };
 
-            var function = Activator.CreateInstance(type) as IAsyncTexlFunction;
-            var result = await function.InvokeAsync(args, CancellationToken.None).ConfigureAwait(false);
+            IFunctionImplementation function = Activator.CreateInstance(type) as IFunctionImplementation;
+            BasicServiceProvider serviceProvider = new BasicServiceProvider();
+            serviceProvider.AddService(new FunctionExecutionContext(args));
+            FormulaValue result = await function.InvokeAsync(serviceProvider, CancellationToken.None).ConfigureAwait(false);
 
             Assert.IsType<ErrorValue>(result);
         }

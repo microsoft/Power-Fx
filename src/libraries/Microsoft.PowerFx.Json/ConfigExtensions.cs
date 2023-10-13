@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx
         [Obsolete("Use EnableJsonFunctions instead.")]
         public static void EnableParseJSONFunction(this PowerFxConfig config)
         {
-            config.AddFunction(new ParseJSONFunctionImpl());
+            config.AddFunction(new ParseJSONFunction(), new ParseJSONFunctionImpl());
         }
     }
 }

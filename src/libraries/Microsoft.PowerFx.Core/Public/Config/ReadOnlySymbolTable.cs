@@ -290,6 +290,8 @@ namespace Microsoft.PowerFx
 
         private protected readonly TexlFunctionSet _functions = new TexlFunctionSet();
 
+        internal virtual Dictionary<TexlFunction, IFunctionImplementation> FunctionImplementations { get; } = new ();
+
         public IEnumerable<string> FunctionNames => _functions.FunctionNames;
 
         // Which enums are available. 
@@ -322,7 +324,7 @@ namespace Microsoft.PowerFx
 
         internal TexlFunctionSet Functions => ((INameResolver)this).Functions;
 
-        TexlFunctionSet INameResolver.Functions => _functions;
+        TexlFunctionSet INameResolver.Functions => _functions;        
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 

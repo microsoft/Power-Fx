@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var config = new PowerFxConfig();
 
             var func = new BehaviorFunction();
-            config.AddFunction(func);
+            config.AddFunction(func, null /* No implementation needed */);
 
             // Includes default functions 
             var functions = config.FunctionInfos.ToArray(); // Obsolete API

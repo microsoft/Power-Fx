@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Tests
         public void GetTokensTest(string expr, bool withAllowSideEffects, int expectedCount)
         {            
             var config = new PowerFxConfig();
-            config.AddFunction(new BehaviorFunction());
+            config.AddFunction(new BehaviorFunction(), null /* no implementation */);
 
             var scope = FromJson(
                 new RecalcEngine(config), 

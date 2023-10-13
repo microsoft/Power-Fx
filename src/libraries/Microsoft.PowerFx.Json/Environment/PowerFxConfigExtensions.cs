@@ -15,8 +15,8 @@ namespace Microsoft.PowerFx
         /// <param name="config">Config to add the functions to.</param>
         public static void EnableJsonFunctions(this PowerFxConfig config)
         {
-            config.AddFunction(new ParseJSONFunctionImpl());
-            config.AddFunction(new JsonFunctionImpl());
+            config.AddFunction(new ParseJSONFunction(), new ParseJSONFunctionImpl());
+            config.AddFunction(new JsonFunction(), new JsonFunctionImpl());
         }
     }
 }

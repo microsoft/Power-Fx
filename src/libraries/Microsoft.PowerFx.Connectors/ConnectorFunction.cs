@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -24,7 +25,7 @@ namespace Microsoft.PowerFx.Connectors
     /// Represents a connector function.
     /// </summary>
     [DebuggerDisplay("{Name}")]
-    public class ConnectorFunction
+    public class ConnectorFunction : IFunctionImplementation
     {
         /// <summary>
         /// Normalized name of the function.
@@ -559,6 +560,12 @@ namespace Microsoft.PowerFx.Connectors
             return sb.ToString();
         }
 
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await InvokeAsync(serviceProvider.GetService<FunctionExecutionContext>().Arguments, serviceProvider.GetService<BaseRuntimeConnectorContext>(), cancellationToken).ConfigureAwait(false);
+        }
+
         /// <summary>
         /// Call connector function.
         /// </summary>
@@ -568,9 +575,14 @@ namespace Microsoft.PowerFx.Connectors
         /// <returns>Function result.</returns>
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
+            if (runtimeContext == null)
+            {
+                throw new InvalidOperationException("RuntimeConnectorContext is missing from service provider");
+            }
+
             try
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();                                
                 runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(InvokeAsync))}, with {LogArguments(arguments)}");
                 FormulaValue formulaValue = await InvokeInternalAsync(arguments, runtimeContext, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(InvokeAsync))}, returning from {nameof(InvokeInternalAsync)}, with {LogFormulaValue(formulaValue)}");

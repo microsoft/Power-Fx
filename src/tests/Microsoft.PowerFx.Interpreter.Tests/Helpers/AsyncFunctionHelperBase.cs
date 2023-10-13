@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Tests
             return args[0];
         }
 
-        public TexlFunction GetFunction()
+        public CustomAsyncTexlFunction GetFunction()
         {
             return new CustomAsyncTexlFunction(_functionName, DType.Number, DType.Number)
             {

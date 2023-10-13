@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var config = new PowerFxConfig();
             var engine = new Engine(config);
             config.SymbolTable.AddVariable("tableVar", new TableType(TestUtils.DT("*[Value:n]")), mutable: true);
-            config.AddFunction(new FakePatchFunction());
+            config.AddFunction(new FakePatchFunction(), null /* no implementation needed */);
 
             var checkResult = engine.Check("With({x:[1,2,3]},x)");
             Assert.True(checkResult.IsSuccess);

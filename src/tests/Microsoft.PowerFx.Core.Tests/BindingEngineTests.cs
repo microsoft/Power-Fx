@@ -242,7 +242,7 @@ namespace Microsoft.PowerFx.Tests
         public void CheckParseResultSideEffects()
         {
             var config = new PowerFxConfig();
-            config.AddFunction(new BehaviorFunction());
+            config.AddFunction(new BehaviorFunction(), null /* No implementation */);
 
             var engine = new Engine(config);
             var formula = "Behavior(); Behavior()";
@@ -286,7 +286,7 @@ namespace Microsoft.PowerFx.Tests
 
             try
             {
-                config.AddFunction(new LambdaAndColumnIdentifierFunction());
+                config.AddFunction(new LambdaAndColumnIdentifierFunction(), null);
             }
             catch (ArgumentException ex)
             {
@@ -309,11 +309,11 @@ namespace Microsoft.PowerFx.Tests
                 var config = new PowerFxConfig();
                 var gotException = false;
 
-                config.AddFunction(funcs[i % 2]);
+                config.AddFunction(funcs[i % 2], null);
 
                 try
                 {
-                    config.AddFunction(funcs[(i + 1) % 2]);
+                    config.AddFunction(funcs[(i + 1) % 2], null);
                 }
                 catch (ArgumentException ex)
                 {
@@ -336,8 +336,8 @@ namespace Microsoft.PowerFx.Tests
             {
                 var config = new PowerFxConfig();                
 
-                config.AddFunction(funcs[i % 2]);
-                config.AddFunction(funcs[(i + 1) % 2]);                
+                config.AddFunction(funcs[i % 2], null);
+                config.AddFunction(funcs[(i + 1) % 2], null);                
             }
         }
 
@@ -350,10 +350,10 @@ namespace Microsoft.PowerFx.Tests
             {
                 var config = new PowerFxConfig();
 
-                config.AddFunction(funcs[i % 4]);
-                config.AddFunction(funcs[(i + 1) % 4]);
-                config.AddFunction(funcs[(i + 2) % 4]);
-                config.AddFunction(funcs[(i + 3) % 4]);
+                config.AddFunction(funcs[i % 4], null);
+                config.AddFunction(funcs[(i + 1) % 4], null);
+                config.AddFunction(funcs[(i + 2) % 4], null);
+                config.AddFunction(funcs[(i + 3) % 4], null);
             }
         }
 
@@ -369,9 +369,9 @@ namespace Microsoft.PowerFx.Tests
 
                 try
                 {
-                    config.AddFunction(funcs[i % 3]);
-                    config.AddFunction(funcs[(i + 1) % 3]);
-                    config.AddFunction(funcs[(i + 2) % 3]);
+                    config.AddFunction(funcs[i % 3], null);
+                    config.AddFunction(funcs[(i + 1) % 3], null);
+                    config.AddFunction(funcs[(i + 2) % 3], null);
                 }
                 catch (ArgumentException ex)
                 {
@@ -471,16 +471,7 @@ namespace Microsoft.PowerFx.Tests
         internal class BehaviorFunction : TexlFunction
         {
             public BehaviorFunction()
-                : base(
-                      DPath.Root,
-                      "Behavior",
-                      "Behavior",
-                      TexlStrings.AboutSet, // just to add something
-                      FunctionCategories.Behavior,
-                      DType.Boolean,
-                      0, // no lambdas
-                      0, // no args
-                      0)
+                : base(DPath.Root, "Behavior", "Behavior", TexlStrings.AboutSet, /* just to add something */ FunctionCategories.Behavior, DType.Boolean, 0, 0, 0)
             {
             }
 

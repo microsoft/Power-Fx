@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Functions
         /// <param name="regexTimeout">Timeout duration for regular expression execution. Default is 1 second.</param>
         /// <param name="regexCache">Regular expression type cache.</param>        
         /// <returns></returns>
-        internal static Dictionary<TexlFunction, IAsyncTexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexTypeCache regexCache)
+        internal static Dictionary<TexlFunction, IFunctionImplementation> RegexFunctions(TimeSpan regexTimeout, RegexTypeCache regexCache)
         {
             if (regexTimeout == TimeSpan.Zero)
             {
@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Functions
                 throw new ArgumentOutOfRangeException(nameof(regexTimeout), "Timeout duration for regular expression execution must be positive.");
             }
 
-            return new Dictionary<TexlFunction, IAsyncTexlFunction>()
+            return new Dictionary<TexlFunction, IFunctionImplementation>()
             {
                 { new IsMatchFunction(), new IsMatchImplementation(regexTimeout) },
                 { new MatchFunction(regexCache), new MatchImplementation(regexTimeout) },
@@ -193,16 +193,17 @@ namespace Microsoft.PowerFx.Functions
             return DType.CreateRecord(propertyNames.Values);
         }
 
-        internal abstract class RegexCommonImplementation : IAsyncTexlFunction
+        internal abstract class RegexCommonImplementation : IFunctionImplementation
         {
             protected abstract FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options);
 
             protected abstract string RegexOptions { get; }
 
-            public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+            public Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
+                FormulaValue[] args = serviceProvider.GetService<FunctionExecutionContext>().Arguments;
                 if (args[0] is not StringValue && args[0] is not BlankValue)
                 {
                     return Task.FromResult<FormulaValue>(args[0] is ErrorValue ? args[0] : CommonErrors.GenericInvalidArgument(args[0].IRContext));

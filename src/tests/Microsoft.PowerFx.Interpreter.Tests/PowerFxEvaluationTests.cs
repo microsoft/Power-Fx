@@ -299,10 +299,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 // Add Async(),WaitFor() functions 
                 var asyncHelper = new AsyncFunctionsHelper(verify);
-                config.AddFunction(asyncHelper.GetFunction());
+                var func1 = asyncHelper.GetFunction();
+                config.AddFunction(func1, func1);
 
                 var waitForHelper = new WaitForFunctionsHelper(verify);
-                config.AddFunction(waitForHelper.GetFunction());
+                var func2 = waitForHelper.GetFunction();
+                config.AddFunction(func2, func2);
 
                 config.EnableSetFunction();
                 var engine = new RecalcEngine(config);

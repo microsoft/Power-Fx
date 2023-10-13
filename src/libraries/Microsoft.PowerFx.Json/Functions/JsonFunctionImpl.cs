@@ -22,12 +22,14 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    internal class JsonFunctionImpl : JsonFunction, IAsyncTexlFunction4
-    {
-        public Task<FormulaValue> InvokeAsync(TimeZoneInfo timezoneInfo, FormulaType type, FormulaValue[] args, CancellationToken cancellationToken)
+    internal class JsonFunctionImpl : IFunctionImplementation
+    {       
+        public Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return Task.FromResult(new JsonProcessing(timezoneInfo, type, args).Process());
+
+            FunctionExecutionContext fec = serviceProvider.GetService<FunctionExecutionContext>();
+            return Task.FromResult(new JsonProcessing(fec).Process());
         }
 
         internal class JsonProcessing
@@ -36,11 +38,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             private readonly FormulaType _type;
             private readonly TimeZoneInfo _timeZoneInfo;
 
-            internal JsonProcessing(TimeZoneInfo timezoneInfo, FormulaType type, FormulaValue[] args)
+            internal JsonProcessing(FunctionExecutionContext executionContext)
             {
-                _arguments = args;
-                _timeZoneInfo = timezoneInfo;
-                _type = type;
+                _arguments = executionContext.Arguments;
+                _timeZoneInfo = executionContext.TimeZoneInfo;
+                _type = executionContext.ReturnType;
             }
 
             internal FormulaValue Process()

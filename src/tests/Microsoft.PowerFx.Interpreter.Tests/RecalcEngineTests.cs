@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
@@ -802,7 +803,7 @@ namespace Microsoft.PowerFx.Tests
         public void RecalcEngineMutateConfig()
         {
             var config = new PowerFxConfig();
-            config.SymbolTable.AddFunction(BuiltinFunctionsCore.Blank);
+            config.SymbolTable.AddFunction(BuiltinFunctionsCore.Blank, null);
 
             var recalcEngine = new Engine(config)
             {
@@ -816,7 +817,7 @@ namespace Microsoft.PowerFx.Tests
 
             // We can mutate config after engine is created.
             var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "one key", "one value" } }));
-            config.SymbolTable.AddFunction(func);
+            config.SymbolTable.AddFunction(func, null);
             config.SymbolTable.AddEntity(optionSet);
 
             Assert.True(config.TryGetVariable(new DName("foo"), out _));
@@ -833,17 +834,19 @@ namespace Microsoft.PowerFx.Tests
         public void RecalcEngine_AddFunction_Twice()
         {
             var config = new PowerFxConfig();
-            config.AddFunction(BuiltinFunctionsCore.Blank);
+            config.AddFunction(BuiltinFunctionsCore.Blank, null);
 
-            Assert.Throws<ArgumentException>(() => config.AddFunction(BuiltinFunctionsCore.Blank));
+            Assert.Throws<ArgumentException>(() => config.AddFunction(BuiltinFunctionsCore.Blank, null));
         }
 
         [Fact]
         public void RecalcEngine_FunctionOrdering1()
         {
             var config = new PowerFxConfig(Features.PowerFxV1);
-            config.AddFunction(new TestFunctionMultiply());
-            config.AddFunction(new TestFunctionSubstract());
+            var testFunctionMultiply = new TestFunctionMultiply();
+            var testFunctionSubstract = new TestFunctionSubstract();
+            config.AddFunction(testFunctionMultiply, testFunctionMultiply);
+            config.AddFunction(testFunctionSubstract, testFunctionSubstract);
 
             var engine = new RecalcEngine(config);
             var result = engine.Eval("Func(7, 11)");
@@ -858,8 +861,10 @@ namespace Microsoft.PowerFx.Tests
         public void RecalcEngine_FunctionOrdering2()
         {
             var config = new PowerFxConfig(Features.PowerFxV1);
-            config.AddFunction(new TestFunctionSubstract());
-            config.AddFunction(new TestFunctionMultiply());
+            var testFunctionMultiply = new TestFunctionMultiply();
+            var testFunctionSubstract = new TestFunctionSubstract();
+            config.AddFunction(testFunctionSubstract, testFunctionSubstract);
+            config.AddFunction(testFunctionMultiply, testFunctionMultiply);            
 
             var engine = new RecalcEngine(config);
             var result = engine.Eval("Func(7, 11)");
@@ -870,7 +875,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(-4.0, (result as NumberValue).Value);
         }
 
-        private class TestFunctionMultiply : CustomTexlFunction
+        private class TestFunctionMultiply : CustomTexlFunction, IFunctionImplementation
         {
             public override bool IsSelfContained => true;
 
@@ -884,8 +889,9 @@ namespace Microsoft.PowerFx.Tests
                 yield return new[] { TexlStrings.IsBlankArg1 };
             }
 
-            public override Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
+            public Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
             {
+                FormulaValue[] args = serviceProvider.GetService<FunctionExecutionContext>().Arguments;
                 var arg0 = args[0] as NumberValue;
                 var arg1 = args[1] as StringValue;
 
@@ -893,7 +899,7 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-        private class TestFunctionSubstract : CustomTexlFunction
+        private class TestFunctionSubstract : CustomTexlFunction, IFunctionImplementation
         {
             public override bool IsSelfContained => true;
 
@@ -907,8 +913,9 @@ namespace Microsoft.PowerFx.Tests
                 yield return new[] { TexlStrings.IsBlankArg1 };
             }
 
-            public override Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
+            public Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
             {
+                FormulaValue[] args = serviceProvider.GetService<FunctionExecutionContext>().Arguments;                
                 var arg0 = args[0] as StringValue;
                 var arg1 = args[1] as NumberValue;
 

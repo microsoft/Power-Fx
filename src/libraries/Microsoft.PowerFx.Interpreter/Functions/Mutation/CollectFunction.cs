@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Interpreter
     //
     // Called as:
     //   Set(var,newValue)
-    internal class CollectFunction : BuiltinFunction, IAsyncTexlFunction
+    internal class CollectFunction : BuiltinFunction
     {
         public override bool ManipulatesCollections => true;
 
@@ -72,28 +72,19 @@ namespace Microsoft.PowerFx.Interpreter
         /// Initializes a new instance of the <see cref="CollectFunction"/> class.
         /// To be consumed by ClearCollect function.
         /// </summary>
-        protected CollectFunction(string name, TexlStrings.StringGetter description)
+        protected CollectFunction(string name, StringGetter description)
             : base(name, description, FunctionCategories.Behavior, DType.EmptyRecord, 0, 2, 2, DType.EmptyTable, DType.EmptyRecord)
-        {
+        {            
         }
 
         public CollectFunction()
-        : base(
-              "Collect",
-              TexlStrings.AboutCollect,
-              FunctionCategories.Behavior,
-              DType.EmptyRecord,
-              0,
-              2,
-              2, // Not handling multiple arguments for now
-              DType.EmptyTable,
-              DType.EmptyRecord) 
-        {
+            : base("Collect", AboutCollect, FunctionCategories.Behavior, DType.EmptyRecord, 0, 2, 2, DType.EmptyTable, DType.EmptyRecord)
+        {            
         }
 
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.CollectDataSourceArg, TexlStrings.CollectRecordArg };
+            yield return new[] { CollectDataSourceArg, CollectRecordArg };
         }
 
         public virtual DType GetCollectedType(DType argType)
@@ -244,9 +235,20 @@ namespace Microsoft.PowerFx.Interpreter
 
             return Arg0RequiresAsync(callNode, binding);
         }
+    }
 
-        public virtual async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+    internal class CollectFunctionImpl : IFunctionImplementation
+    {
+        public virtual async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            FormulaValue[] args = serviceProvider.GetService<FunctionExecutionContext>().Arguments;
+            return await InvokeAsync(args, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();            
             FormulaValue arg0;
 
             // Need to check if the Lazy first argument has been evaluated since it may have already been

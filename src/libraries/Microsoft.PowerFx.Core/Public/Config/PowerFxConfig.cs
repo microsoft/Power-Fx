@@ -29,9 +29,7 @@ namespace Microsoft.PowerFx
         public SymbolTable SymbolTable { get; set; } = new SymbolTable
         {
             DebugName = "DefaultConfig"
-        };
-
-        internal readonly Dictionary<TexlFunction, IAsyncTexlFunction> AdditionalFunctions = new ();
+        };        
 
         [Obsolete("Use Config.EnumStore or symboltable directly")]
         internal EnumStoreBuilder EnumStoreBuilder => SymbolTable.EnumStoreBuilder;
@@ -111,7 +109,7 @@ namespace Microsoft.PowerFx
         {
             foreach (var func in functions)
             {
-                AddFunction(func);
+                AddFunction(func, null);
             }
         }
 
@@ -122,7 +120,7 @@ namespace Microsoft.PowerFx
         internal void AddEntity(IExternalEntity entity, DName displayName = default)
             => SymbolTable.AddEntity(entity, displayName);
 
-        internal void AddFunction(TexlFunction function)
+        internal void AddFunction(TexlFunction function, IFunctionImplementation functionImplementation)
         {
             if (function.HasLambdas || function.HasColumnIdentifiers)
             {
@@ -153,7 +151,7 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            SymbolTable.AddFunction(function);
+            SymbolTable.AddFunction(function, functionImplementation);
         }
 
         internal void AddFunctions(TexlFunctionSet functionSet)

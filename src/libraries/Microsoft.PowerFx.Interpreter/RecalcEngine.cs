@@ -3,18 +3,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -206,6 +205,22 @@ namespace Microsoft.PowerFx
 
             var stackMarker = new StackDepthCounter(Config.MaxCallDepth);
             var eval = check.GetEvaluator(stackMarker);
+
+            if (symbolsAll.FunctionImplementations.Any() || this.Config.SymbolTable.FunctionImplementations.Any())
+            {
+                runtimeConfig ??= new RuntimeConfig();
+                Dictionary<TexlFunction, IFunctionImplementation> funcs = new Dictionary<TexlFunction, IFunctionImplementation>(symbolsAll.FunctionImplementations);
+                               
+                foreach (var kvp in this.Config.SymbolTable.FunctionImplementations)
+                {
+                    if (!funcs.ContainsKey(kvp.Key))
+                    {
+                        funcs[kvp.Key] = kvp.Value;
+                    }
+                }                
+
+                runtimeConfig.ServiceProvider.AddService(funcs);
+            }
 
             var result = await eval.EvalAsync(cancellationToken, runtimeConfig).ConfigureAwait(false);
             return result;

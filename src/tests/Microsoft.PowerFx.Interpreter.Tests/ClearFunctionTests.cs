@@ -1,26 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
-using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -31,6 +19,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public async Task CheckArgsTestAsync()
         {
+            var functionImpl = new ClearFunctionImpl();
             var function = new ClearFunction();
             var expressionError = new ExpressionError()
             {
@@ -47,7 +36,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var arg in faultyArs)
             {
-                var result = await function.InvokeAsync(new FormulaValue[] { arg }, CancellationToken.None).ConfigureAwait(false);
+                BasicServiceProvider serviceProvider = new BasicServiceProvider();
+                serviceProvider.AddService(new FunctionExecutionContext(new FormulaValue[] { arg }));
+                var result = await functionImpl.InvokeAsync(serviceProvider, CancellationToken.None).ConfigureAwait(false);
 
                 if (arg is ErrorValue)
                 {

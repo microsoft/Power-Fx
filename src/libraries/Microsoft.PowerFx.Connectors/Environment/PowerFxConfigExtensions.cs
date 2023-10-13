@@ -50,13 +50,13 @@ namespace Microsoft.PowerFx
                 return null;
             }
 
-            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(connectorSettings, openApiDocument, configurationLogger);
-            foreach (TexlFunction function in texlFunctions)
+            Dictionary<TexlFunction, ConnectorFunction> funcDictionary = OpenApiParser.ParseInternal(connectorSettings, openApiDocument, configurationLogger);
+            foreach (KeyValuePair<TexlFunction, ConnectorFunction> function in funcDictionary)
             {
-                config.AddFunction(function);
+                config.AddFunction(function.Key, function.Value);
             }
 
-            return connectorFunctions;
+            return new List<ConnectorFunction>(funcDictionary.Values);
         }
 
         /// <summary>

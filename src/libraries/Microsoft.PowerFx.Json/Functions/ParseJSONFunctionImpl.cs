@@ -2,24 +2,23 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    internal class ParseJSONFunctionImpl : ParseJSONFunction, IAsyncTexlFunction
+    internal class ParseJSONFunctionImpl : IFunctionImplementation
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            FormulaValue[] args = serviceProvider.GetService<FunctionExecutionContext>().Arguments;
             var irContext = IRContext.NotInSource(FormulaType.UntypedObject);
             var arg = args[0];
 

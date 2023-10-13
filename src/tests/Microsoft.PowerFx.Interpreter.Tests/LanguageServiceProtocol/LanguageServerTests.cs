@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         private void Init(Features features = null, ParserOptions options = null)
         {
             var config = new PowerFxConfig(features: features ?? Features.None);
-            config.AddFunction(new BehaviorFunction());
+            config.AddFunction(new BehaviorFunction(), null /* no implementation */);
 
             var engine = new Engine(config);
 
@@ -1760,7 +1760,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             // ParseOptions locale
             var locale = CultureInfo.CreateSpecificCulture("fr-FR");
 
-            engine.Config.AddFunction(new BehaviorFunction());
+            engine.Config.AddFunction(new BehaviorFunction(), null /* no implementation */);
 
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory(
@@ -1803,7 +1803,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var parseLocale = CultureInfo.CreateSpecificCulture("fr-FR");
             var errorLocale = CultureInfo.CreateSpecificCulture("es-ES");
 
-            engine.Config.AddFunction(new BehaviorFunction());
+            engine.Config.AddFunction(new BehaviorFunction(), null /* no implementation */);
 
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory(

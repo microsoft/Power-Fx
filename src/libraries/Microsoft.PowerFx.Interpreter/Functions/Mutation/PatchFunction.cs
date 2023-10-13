@@ -59,71 +59,11 @@ namespace Microsoft.PowerFx.Functions
         {
             base.CheckSemantics(binding, args, argTypes, errors);
             base.ValidateArgumentIsMutable(binding, args[0], errors);
-        }
-
-        protected static bool CheckArgs(FormulaValue[] args, out FormulaValue faultyArg)
-        {
-            // If any args are error, propagate up.
-            foreach (var arg in args)
-            {
-                if (arg is ErrorValue)
-                {
-                    faultyArg = arg;
-
-                    return false;
-                }
-            }
-
-            faultyArg = null;
-
-            return true;
-        }
-
-        // Change records are processed in order from the beginning of the argument list to the end,
-        // with later property values overriding earlier ones.
-        protected static async Task<Dictionary<string, FormulaValue>> CreateRecordFromArgsDictAsync(FormulaValue[] args, int startFrom, CancellationToken cancellationToken)
-        {
-            var retFields = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
-
-            for (var i = startFrom; i < args.Length; i++)
-            {
-                var arg = args[i];
-
-                if (arg is BlankValue)
-                {
-                    continue;
-                }
-                else if (arg is RecordValue record)
-                {
-                    await foreach (var field in record.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
-                    {
-                        retFields[field.Name] = field.Value;
-                    }
-                }
-                else
-                {
-                    throw new ArgumentException($"Can't handle {arg.Type} argument type.");
-                }
-            }
-
-            return retFields;
-        }
-
-        protected static RecordValue FieldDictToRecordValue(IReadOnlyDictionary<string, FormulaValue> fieldsDict)
-        {
-            var list = new List<NamedValue>();
-
-            foreach (var field in fieldsDict)
-            {
-                list.Add(new NamedValue(field.Key, field.Value));
-            }
-
-            return FormulaValue.NewRecordFromFields(list);
-        }
+        }       
     }
 
     // Patch( DataSource, BaseRecord, ChangeRecord1 [, ChangeRecord2, … ])
-    internal class PatchFunction : PatchAndValidateRecordFunctionBase, IAsyncTexlFunction
+    internal class PatchFunction : PatchAndValidateRecordFunctionBase
     {
         public override bool IsSelfContained => false;
 
@@ -149,7 +89,7 @@ namespace Microsoft.PowerFx.Functions
 
         public PatchFunction()
             : base("Patch", AboutPatch, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyRecord, 0, 3, int.MaxValue, DType.EmptyTable, DType.EmptyRecord, DType.EmptyRecord)
-        {
+        {            
         }
 
         public override IEnumerable<StringGetter[]> GetSignatures()
@@ -237,9 +177,75 @@ namespace Microsoft.PowerFx.Functions
             returnType = retType;
             return isValid;
         }
+    }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+    internal class PatchFunctionImpl : IFunctionImplementation
+    {
+        // Change records are processed in order from the beginning of the argument list to the end,
+        // with later property values overriding earlier ones.
+        protected static async Task<Dictionary<string, FormulaValue>> CreateRecordFromArgsDictAsync(FormulaValue[] args, int startFrom, CancellationToken cancellationToken)
         {
+            var retFields = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
+
+            for (var i = startFrom; i < args.Length; i++)
+            {
+                var arg = args[i];
+
+                if (arg is BlankValue)
+                {
+                    continue;
+                }
+                else if (arg is RecordValue record)
+                {
+                    await foreach (var field in record.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
+                    {
+                        retFields[field.Name] = field.Value;
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException($"Can't handle {arg.Type} argument type.");
+                }
+            }
+
+            return retFields;
+        }
+
+        protected static RecordValue FieldDictToRecordValue(IReadOnlyDictionary<string, FormulaValue> fieldsDict)
+        {
+            var list = new List<NamedValue>();
+
+            foreach (var field in fieldsDict)
+            {
+                list.Add(new NamedValue(field.Key, field.Value));
+            }
+
+            return FormulaValue.NewRecordFromFields(list);
+        }
+
+        protected static bool CheckArgs(FormulaValue[] args, out FormulaValue faultyArg)
+        {
+            // If any args are error, propagate up.
+            foreach (var arg in args)
+            {
+                if (arg is ErrorValue)
+                {
+                    faultyArg = arg;
+
+                    return false;
+                }
+            }
+
+            faultyArg = null;
+
+            return true;
+        }
+
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            FormulaValue[] args = serviceProvider.GetService<FunctionExecutionContext>().Arguments;
             var validArgs = CheckArgs(args, out FormulaValue faultyArg);
 
             if (!validArgs)

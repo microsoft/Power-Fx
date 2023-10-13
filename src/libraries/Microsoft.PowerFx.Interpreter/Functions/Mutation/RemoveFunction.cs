@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -10,13 +11,11 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -52,28 +51,10 @@ namespace Microsoft.PowerFx.Functions
         public RemoveFunctionBase(string name, StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : this(DPath.Root, name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
-        }
-
-        protected static bool CheckArgs(FormulaValue[] args, out FormulaValue faultyArg)
-        {
-            // If any args are error, propagate up.
-            foreach (var arg in args)
-            {
-                if (arg is ErrorValue)
-                {
-                    faultyArg = arg;
-
-                    return false;
-                }
-            }
-
-            faultyArg = null;
-
-            return true;
-        }
+        }       
     }
 
-    internal class RemoveFunction : RemoveFunctionBase, IAsyncTexlFunction
+    internal class RemoveFunction : RemoveFunctionBase
     {
         public override bool IsSelfContained => false;
 
@@ -89,8 +70,8 @@ namespace Microsoft.PowerFx.Functions
         }
 
         public RemoveFunction()
-        : base("Remove", AboutRemove, FunctionCategories.Table | FunctionCategories.Behavior, DType.Unknown, 0, 2, int.MaxValue, DType.EmptyTable, DType.EmptyRecord)
-        {
+            : base("Remove", AboutRemove, FunctionCategories.Table | FunctionCategories.Behavior, DType.Unknown, 0, 2, int.MaxValue, DType.EmptyTable, DType.EmptyRecord)
+        {            
         }
 
         public override IEnumerable<StringGetter[]> GetSignatures()
@@ -181,9 +162,33 @@ namespace Microsoft.PowerFx.Functions
             base.CheckSemantics(binding, args, argTypes, errors);
             base.ValidateArgumentIsMutable(binding, args[0], errors);
         }
+    }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+    internal class RemoveFunctionImpl : IFunctionImplementation
+    {
+        internal static bool CheckArgs(FormulaValue[] args, out FormulaValue faultyArg)
         {
+            // If any args are error, propagate up.
+            foreach (var arg in args)
+            {
+                if (arg is ErrorValue)
+                {
+                    faultyArg = arg;
+
+                    return false;
+                }
+            }
+
+            faultyArg = null;
+
+            return true;
+        }
+
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            FormulaValue[] args = serviceProvider.GetService<FunctionExecutionContext>().Arguments;
             var validArgs = CheckArgs(args, out FormulaValue faultyArg);
 
             if (!validArgs)

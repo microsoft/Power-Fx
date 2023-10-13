@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.Controls;
@@ -21,7 +20,6 @@ using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Core.Functions
@@ -49,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="isImperative"></param>
         /// <param name="args"></param>
         public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args)
-        : base(DPath.Root, functionName, functionName, SG(functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType()._type).ToArray())
+            : base(DPath.Root, functionName, functionName, SG(functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType()._type).ToArray())
         {
             this._args = args;
             this._isImperative = isImperative;

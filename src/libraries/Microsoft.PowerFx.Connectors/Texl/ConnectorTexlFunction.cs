@@ -18,7 +18,7 @@ using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ConnectorTexlFunction : TexlFunction, IAsyncConnectorTexlFunction, IHasUnsupportedFunctions
+    internal class ConnectorTexlFunction : TexlFunction, IHasUnsupportedFunctions
     {
         public ConnectorFunction ConnectorFunction { get; }
 
@@ -66,25 +66,6 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public override bool HasSuggestionsForParam(int argumentIndex) => argumentIndex <= MaxArity;
-
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, IServiceProvider serviceProvider, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            BaseRuntimeConnectorContext runtimeContext = serviceProvider.GetService(typeof(BaseRuntimeConnectorContext)) as BaseRuntimeConnectorContext ?? throw new InvalidOperationException("RuntimeConnectorContext is missing from service provider");
-
-            try
-            {
-                runtimeContext.ExecutionLogger?.LogInformation($"Entering in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(args)}");
-                FormulaValue formulaValue = await ConnectorFunction.InvokeInternalAsync(args, runtimeContext, cancellationToken).ConfigureAwait(false);
-                runtimeContext.ExecutionLogger?.LogInformation($"Exiting [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} returning from {nameof(ConnectorFunction.InvokeInternalAsync)} with {LogFormulaValue(formulaValue)}");
-                return formulaValue;
-            }
-            catch (Exception ex)
-            {
-                runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(args)} {LogException(ex)}");
-                throw;
-            }
-        }
 
         public override async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] arguments, int argPosition, IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {

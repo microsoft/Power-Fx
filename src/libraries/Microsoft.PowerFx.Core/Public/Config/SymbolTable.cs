@@ -235,9 +235,9 @@ namespace Microsoft.PowerFx
 
             var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
 
-            foreach (var udf in userDefinitionResult.UDFs)
+            foreach (UserDefinedFunction udf in userDefinitionResult.UDFs)
             {
-                AddFunction(udf);
+                AddFunction(udf, null);
                 var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
 
                 List<TexlError> errors = new List<TexlError>();
@@ -305,6 +305,11 @@ namespace Microsoft.PowerFx
             Inc();
 
             _functions.RemoveAll(name);
+
+            foreach (TexlFunction func in FunctionImplementations.Keys.Where(f => string.Equals(f.Name, name, StringComparison.Ordinal)).ToList())
+            {
+                FunctionImplementations.Remove(func);
+            }
         }
 
         internal void RemoveFunction(TexlFunction function)
@@ -313,6 +318,7 @@ namespace Microsoft.PowerFx
             Inc();
 
             _functions.RemoveAll(function);
+            FunctionImplementations.Remove(function);
         }
 
         internal void AddFunctions(TexlFunctionSet functions)
@@ -331,11 +337,12 @@ namespace Microsoft.PowerFx
             EnumStoreBuilder?.WithRequiredEnums(functions);
         }
 
-        internal void AddFunction(TexlFunction function)
+        internal void AddFunction(TexlFunction function, IFunctionImplementation functionImplementation)
         {
             using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
             _functions.Add(function);
+            FunctionImplementations.Add(function, functionImplementation);
 
             // Add any associated enums 
             EnumStoreBuilder?.WithRequiredEnums(new TexlFunctionSet(function));

@@ -3,15 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -21,7 +18,7 @@ using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Functions
 {
-    internal class ClearFunction : BuiltinFunction, IAsyncTexlFunction
+    internal class ClearFunction : BuiltinFunction
     {
         public override bool IsSelfContained => false;
 
@@ -30,8 +27,8 @@ namespace Microsoft.PowerFx.Functions
         // Unlike the other mutation functions, there is no need to Lazy evaluate the first argument since there is only one arg.
 
         public ClearFunction()
-            : base("Clear", TexlStrings.AboutClear, FunctionCategories.Behavior, DType.Boolean, 0, 1, 1, DType.EmptyTable)
-        {
+            : base("Clear", AboutClear, FunctionCategories.Behavior, DType.Boolean, 0, 1, 1, DType.EmptyTable)
+        {            
         }
 
         public override IEnumerable<StringGetter[]> GetSignatures()
@@ -68,9 +65,14 @@ namespace Microsoft.PowerFx.Functions
             base.CheckSemantics(binding, args, argTypes, errors);
             base.ValidateArgumentIsMutable(binding, args[0], errors);
         }
+    }
 
+    internal class ClearFunctionImpl : IFunctionImplementation           
+    {
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            
             if (args[0] is ErrorValue errorValue)
             {
                 return errorValue;
@@ -85,6 +87,13 @@ namespace Microsoft.PowerFx.Functions
             var ret = await datasource.ClearAsync(cancellationToken).ConfigureAwait(false);
 
             return ret.ToFormulaValue();
+        }
+
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            FormulaValue[] args = serviceProvider.GetService<FunctionExecutionContext>().Arguments;
+            return await InvokeAsync(args, cancellationToken).ConfigureAwait(false);
         }
     }
 }

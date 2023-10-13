@@ -3,20 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.DLP;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
@@ -25,30 +15,41 @@ namespace Microsoft.PowerFx.Functions
     /// <summary>
     /// The ClearCollect function is a combination of Clear + Collect.
     /// </summary>
-    internal class ClearCollectFunction : CollectFunction, IAsyncTexlFunction
+    internal class ClearCollectFunction : CollectFunction
     {
         public override bool IsSelfContained => false;
 
         public ClearCollectFunction()
-            : base("ClearCollect", TexlStrings.AboutClearCollect)
+            : base("ClearCollect", AboutClearCollect)
         {
         }
 
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.ClearCollectDataSourceArg, TexlStrings.ClearCollectRecordArg };
+            yield return new[] { ClearCollectDataSourceArg, ClearCollectRecordArg };
+        }
+    }
+
+    internal class ClearCollectFunctionImpl : CollectFunctionImpl
+    {
+        private readonly ClearFunctionImpl _clearFunction;
+
+        public ClearCollectFunctionImpl(ClearFunctionImpl clearFunction)            
+        {
+            _clearFunction = clearFunction;
         }
 
-        public override async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        public override async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            FormulaValue[] args = serviceProvider.GetService<FunctionExecutionContext>().Arguments;
             if (args[0] is LambdaFormulaValue arg0lazy)
             {
                 args[0] = await arg0lazy.EvalAsync().ConfigureAwait(false);
-            }
+            }            
 
-            var clearFunction = new ClearFunction();
-
-            var cleared = await clearFunction.InvokeAsync(args, cancellationToken).ConfigureAwait(false);
+            var cleared = await _clearFunction.InvokeAsync(args, cancellationToken).ConfigureAwait(false);
 
             if (cleared is ErrorValue)
             {

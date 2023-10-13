@@ -86,10 +86,34 @@ namespace Microsoft.PowerFx
                 _globals = globals,
                 _allSymbols = result.Symbols,
                 _parameterSymbolTable = result.Parameters,
-                _additionalFunctions = result.Engine.Config.AdditionalFunctions
+                _additionalFunctions = MergeDictionaries(result.Engine.Config.SymbolTable.FunctionImplementations, result.Symbols.FunctionImplementations)
             };
 
             return expr;
+        }
+
+        internal static Dictionary<TexlFunction, IFunctionImplementation> MergeDictionaries(Dictionary<TexlFunction, IFunctionImplementation> dic1, Dictionary<TexlFunction, IFunctionImplementation> dic2)
+        {
+            if (dic1 == null)
+            {
+                return dic2;
+            }
+
+            if (dic2 == null)
+            {
+                return dic1;
+            }
+
+            var merged = new Dictionary<TexlFunction, IFunctionImplementation>(dic1);
+            foreach (var pair in dic2)
+            {
+                if (!merged.ContainsKey(pair.Key))
+                {
+                    merged[pair.Key] = pair.Value;
+                }
+            }
+
+            return merged;
         }
     }
 
@@ -103,7 +127,7 @@ namespace Microsoft.PowerFx
         internal ReadOnlySymbolValues _globals;
         internal ReadOnlySymbolTable _allSymbols;
         internal ReadOnlySymbolTable _parameterSymbolTable;
-        internal IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> _additionalFunctions;
+        internal Dictionary<TexlFunction, IFunctionImplementation> _additionalFunctions;
 
         internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
         {

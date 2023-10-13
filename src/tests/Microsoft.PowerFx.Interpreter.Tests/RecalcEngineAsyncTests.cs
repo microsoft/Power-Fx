@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -51,7 +52,7 @@ namespace Microsoft.PowerFx.Tests
             };
 
             var config = new PowerFxConfig();
-            config.AddFunction(func);
+            config.AddFunction(func, func);
 
             var engine = new RecalcEngine(config);
 
@@ -72,7 +73,7 @@ namespace Microsoft.PowerFx.Tests
             };
 
             var config = new PowerFxConfig();
-            config.AddFunction(func);
+            config.AddFunction(func, func);
 
             var engine = new RecalcEngine(config);
 
@@ -92,7 +93,7 @@ namespace Microsoft.PowerFx.Tests
             };
 
             var config = new PowerFxConfig();
-            config.AddFunction(func);
+            config.AddFunction(func, func);
 
             var engine = new RecalcEngine(config);
 
@@ -124,7 +125,7 @@ namespace Microsoft.PowerFx.Tests
                 _waiter.SetResult(FormulaValue.New(value));
             }
 
-            public TexlFunction GetFunction(string functionName)
+            public CustomAsyncTexlFunction GetFunction(string functionName)
             {
                 return new CustomAsyncTexlFunction(functionName, DType.Number, DType.Number)
                 {
@@ -141,7 +142,7 @@ namespace Microsoft.PowerFx.Tests
             var func = helper.GetFunction("CustomAsync");
 
             var config = new PowerFxConfig();
-            config.AddFunction(func);
+            config.AddFunction(func, func);
 
             var engine = new RecalcEngine(config);
 
@@ -180,7 +181,7 @@ namespace Microsoft.PowerFx.Tests
             };
 
             var config = new PowerFxConfig();
-            config.AddFunction(func);
+            config.AddFunction(func, func);
 
             var engine = new RecalcEngine(config);
 
@@ -211,8 +212,8 @@ namespace Microsoft.PowerFx.Tests
             var func2 = helper2.GetFunction("F2");
 
             var config1 = new PowerFxConfig();
-            config1.AddFunction(func1);
-            config1.AddFunction(func2);
+            config1.AddFunction(func1, func1);
+            config1.AddFunction(func2, func2);
             var engine = new RecalcEngine(config1);
 
             var task1 = engine.EvalAsync("F1(0)", CancellationToken.None);
@@ -269,7 +270,7 @@ namespace Microsoft.PowerFx.Tests
     }
 
     // Helper for making async functions. 
-    internal class CustomAsyncTexlFunction : TexlFunction, IAsyncTexlFunction
+    internal class CustomAsyncTexlFunction : TexlFunction, IFunctionImplementation
     {
         public Func<FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
 
@@ -295,9 +296,15 @@ namespace Microsoft.PowerFx.Tests
             yield return new[] { SG("Arg 1") };
         }
 
-        public virtual Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+        //public virtual Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+        //{
+        //    return _impl(args, cancel);
+        //}
+
+        public Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
-            return _impl(args, cancel);
+            cancellationToken.ThrowIfCancellationRequested();
+            return _impl(serviceProvider.GetService<FunctionExecutionContext>().Arguments, cancellationToken);
         }
     }
 }

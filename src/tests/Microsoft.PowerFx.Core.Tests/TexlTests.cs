@@ -2236,7 +2236,7 @@ namespace Microsoft.PowerFx.Core.Tests
             
             try
             {
-                symbol.AddFunction(churnDataFunction);
+                symbol.AddFunction(churnDataFunction, null);
                 TestSimpleBindingSuccess("ChurnData(\"123\", true)", DType.Number, symbol);
             }
             finally
@@ -2273,10 +2273,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                symbol.AddFunction(mockFunction1);
-                symbol.AddFunction(mockFunction2);
-                symbol.AddFunction(mockFunction3);
-                symbol.AddFunction(mockFunction4);
+                symbol.AddFunction(mockFunction1, null);
+                symbol.AddFunction(mockFunction2, null);
+                symbol.AddFunction(mockFunction3, null);
+                symbol.AddFunction(mockFunction4, null);
 
                 if (expectedErrors)
                 {
@@ -2314,9 +2314,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                symbol.AddFunction(mockFunction1);
-                symbol.AddFunction(mockFunction2);
-                symbol.AddFunction(mockFunction3);
+                symbol.AddFunction(mockFunction1, null);
+                symbol.AddFunction(mockFunction2, null);
+                symbol.AddFunction(mockFunction3, null);
 
                 if (expectedErrors)
                 {
@@ -3396,7 +3396,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                symbol.AddFunction(silentFilterFunction);
+                symbol.AddFunction(silentFilterFunction, null);
 
                 var config = new PowerFxConfig
                 {
@@ -3518,7 +3518,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             if (symbolTable != null)
             {
-                config.AddFunction(new ShowColumnsFunction());
+                config.AddFunction(new ShowColumnsFunction(), null /* Not implemented function */);
                 if (optionSets != null)
                 {
                     foreach (var optionSet in optionSets)

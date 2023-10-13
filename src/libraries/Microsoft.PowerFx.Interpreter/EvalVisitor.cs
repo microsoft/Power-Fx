@@ -254,31 +254,15 @@ namespace Microsoft.PowerFx
             var childContext = context.SymbolContext.WithScope(node.Scope);
 
             FormulaValue result;
-            IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> extraFunctions = _services.GetService<IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction>>();
+            
+            IReadOnlyDictionary<TexlFunction, IFunctionImplementation> extraFunctions = _services.GetService<Dictionary<TexlFunction, IFunctionImplementation>>();
 
-            if (func is IAsyncTexlFunction asyncFunc || extraFunctions?.TryGetValue(func, out asyncFunc) == true)
+            if (extraFunctions?.TryGetValue(func, out IFunctionImplementation funcImpl) == true && funcImpl != null)
             {
-                result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
-            }
-#pragma warning disable CS0618 // Type or member is obsolete
-            else if (func is IAsyncTexlFunction2 asyncFunc2)
-#pragma warning restore CS0618 // Type or member is obsolete
-            {
-                result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is IAsyncTexlFunction4 asyncFunc4)
-            {                
-                result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is IAsyncConnectorTexlFunction asyncConnectorTexlFunction)
-            {                
-                return await asyncConnectorTexlFunction.InvokeAsync(args, _services, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is CustomTexlFunction customTexlFunc)
-            {
-                // If custom function throws an exception, don't catch it - let it propagate up to the host.
-                result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken).ConfigureAwait(false);
-            }
+                var serviceProvider = new BasicServiceProvider(_services);
+                serviceProvider.AddService(new FunctionExecutionContext(args, TimeZoneInfo, CultureInfo, node.IRContext.ResultType));
+                result = await funcImpl.InvokeAsync(serviceProvider, _cancellationToken).ConfigureAwait(false);
+            }            
             else if (func is UserDefinedFunction userDefinedFunc)
             {
                 UDFStackFrame frame = new UDFStackFrame(userDefinedFunc, args);
