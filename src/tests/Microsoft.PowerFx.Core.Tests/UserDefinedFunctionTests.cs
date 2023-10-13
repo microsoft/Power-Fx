@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var glue = new Glue2DocumentBinderGlue();
             var hasBinderErrors = false;
 
-            foreach (var udf in userDefinitionResult.UDFs) 
+            foreach (var udf in userDefinitionResult.UDFs)
             {
                 var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(userDefinitionResult.UDFs)), glue, BindingConfig.Default);
                 hasBinderErrors |= binding.ErrorContainer.HasErrors();
@@ -393,6 +393,52 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotNull(func.ReturnType);
             Assert.NotNull(func.Body);
             Assert.True(func.IsParseValid);
+        }
+
+        // Show definitions directly on symbol tables
+        [Fact]
+        public void Basic()
+        {
+            var st1 = new SymbolTable();
+            st1.AddUserDefinedFunction("Foo1(x: Number): Number = x*2;");
+            st1.AddUserDefinedFunction("Foo2(x: Number): Number = Foo1(x)+1;");
+
+            var engine = new Engine();
+            var check = engine.Check("Foo2(3)", symbolTable: st1);
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Number, check.ReturnType);
+
+            // A different symbol table can have same function name with different type.  
+            var st2 = new SymbolTable();
+            st1.AddUserDefinedFunction("Foo2(x: Number): String = Text(x);");
+            check = engine.Check("Foo2(3)", symbolTable: st2);
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.String, check.ReturnType);
+        }
+                
+        [Fact]
+        public void DefineEmpty()
+        {
+            // Empty symbol table doesn't get builtins. 
+            var st = new SymbolTable();
+
+            st.AddUserDefinedFunction("Foo1(x: Number): Number = x;"); // ok 
+            Assert.Throws<InvalidOperationException>(() => st.AddUserDefinedFunction("Foo2(x: Number): Number = Abs(x);"));
+        }
+
+        // Show definitions on public symbol tables
+        [Fact]
+        public void BasicEngine()
+        {
+            var extra = new SymbolTable();
+            extra.AddVariable("K1", FormulaType.Number);
+
+            var engine = new Engine();
+            engine.AddUserDefinedFunction("Foo1(x: Number): Number = Abs(K1);", symbolTable: extra);
+
+            var check = engine.Check("Foo1(3)");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Number, check.ReturnType);
         }
     }
 }
