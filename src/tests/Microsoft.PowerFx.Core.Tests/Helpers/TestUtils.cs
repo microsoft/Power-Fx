@@ -280,9 +280,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
             public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
             {
-                IExternalDataSource dataSource = null;
-
-                if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource))
+                if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out IExternalDataSource dataSource))
                 {
                     if (dataSource != null && !dataSource.IsDelegatable)
                     {

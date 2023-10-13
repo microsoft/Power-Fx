@@ -21,11 +21,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
+        public override bool HasColumnIdentifiers => true;
+
         public override bool SupportsParamCoercion => false;
 
         public ShowColumnsFunction()
             : base("ShowColumns", TexlStrings.AboutShowColumns, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable)
         {
+            ScopeInfo = new FunctionScopeInfo(this);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -53,12 +56,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var isValidInvocation = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             if (!argTypes[0].IsTable)
             {
-                isValidInvocation = false;
+                fArgsValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedTable_Func, Name);
             }
             else
@@ -67,6 +70,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var colsToKeep = DType.EmptyTable;
+            var supportColumnNamesAsIdentifiers = context.Features.SupportColumnNamesAsIdentifiers;
 
             // The result type has N columns, as specified by (args[1],args[2],args[3],...)
             var count = args.Length;
@@ -75,31 +79,54 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var nameArg = args[i];
                 var nameArgType = argTypes[i];
 
+                string expectedColumnName = null;
+
                 // Verify we have a string literal for the column name. Accd to spec, we don't support
                 // arbitrary expressions that evaluate to string values, because these values contribute to
-                // type analysis, so they need to be known upfront (before ShowColumns executes).
-                StrLitNode nameNode;
-                if (nameArgType.Kind != DKind.String || (nameNode = nameArg.AsStrLit()) == null)
+                // type analysis, so they need to be known upfront (before DropColumns executes).                            
+                if (supportColumnNamesAsIdentifiers)
                 {
-                    isValidInvocation = false;
-                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());
-                    continue;
+                    if (nameArg is not FirstNameNode identifierNode)
+                    {
+                        fArgsValid = false;
+
+                        // Argument '{0}' is invalid, expected an identifier.
+                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedIdentifierArg_Name, nameArg.ToString());
+                        continue;
+                    }
+
+                    expectedColumnName = identifierNode.Ident.Name;
+                }
+                else
+                {
+                    StrLitNode strLitNode = nameArg.AsStrLit();
+
+                    if (nameArgType.Kind != DKind.String || strLitNode == null)
+                    {
+                        fArgsValid = false;
+
+                        // Argument '{0}' is invalid, expected a text literal.
+                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());
+                        continue;
+                    }
+
+                    expectedColumnName = strLitNode.Value;
                 }
 
                 // Verify that the name is valid.
-                if (!DName.IsValidDName(nameNode.Value))
+                if (!DName.IsValidDName(expectedColumnName))
                 {
-                    isValidInvocation = false;
-                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, nameNode.Value);
+                    fArgsValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, expectedColumnName);
                     continue;
                 }
 
-                var columnName = new DName(nameNode.Value);
+                var columnName = new DName(expectedColumnName);
 
                 // Verify that the name exists.
                 if (!returnType.TryGetType(columnName, out var columnType))
                 {
-                    isValidInvocation = false;
+                    fArgsValid = false;
                     returnType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, args[i]);
                     continue;
                 }
@@ -107,7 +134,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Verify that the name was only specified once.
                 if (colsToKeep.TryGetType(columnName, out var existingColumnType))
                 {
-                    isValidInvocation = false;
+                    fArgsValid = false;
                     errors.EnsureError(DocumentErrorSeverity.Warning, nameArg, TexlStrings.WarnColumnNameSpecifiedMultipleTimes_Name, columnName);
                     continue;
                 }
@@ -120,7 +147,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Drop everything but the columns that need to be kept.
             returnType = colsToKeep;
 
-            return isValidInvocation;
+            return fArgsValid;
         }
 
         public override bool UpdateDataQuerySelects(CallNode callNode, TexlBinding binding, DataSourceToQueryOptionsMap dataSourceToQueryOptionsMap)
@@ -163,6 +190,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex >= 0;
+        }
+
+        public override bool IsIdentifierParam(int index)
+        {
+            return index > 0;
         }
     }
 }

@@ -1,0 +1,31 @@
+﻿#SETUP: SupportColumnNamesAsIdentifiers
+
+>> ShowColumns(Table({a:1,b:2},{a:3,b:4}), b)
+Table({b:2},{b:4})
+
+>> ShowColumns(Table({a:1,b:2},{a:3,b:4}), b, a)
+Table({a:1,b:2},{a:3,b:4})
+
+>> ShowColumns(ShowColumns(Table({a:1,b:2},{a:3,b:4}), a), a)
+Table({a:1},{a:3})
+
+>> ShowColumns(AddColumns(Table({a:1,b:2},{a:3,b:4}), c, a * b), c)
+Table({c:2},{c:12})
+
+>> AddColumns(ShowColumns(Table({a:1,b:2},{a:3,b:4}), a), c, a * a * a)
+Table({a:1,c:1},{a:3,c:27})
+
+>> ShowColumns(Table({a:1,b:2},{a:3,b:4}), a, c)
+Errors: Error 43-44: The specified column 'c' does not exist. The column with the most similar name is 'a'.|Error 0-45: The function 'ShowColumns' has some invalid arguments.
+
+>> Last(ShowColumns(Table({a:1,b:2},{a:3,b:4}), b)).b
+4
+
+>> ShowColumns([1, 2, 3], Value)
+Table({Value:1},{Value:2},{Value:3})
+
+>> ShowColumns([1, 2], 3)
+Errors: Error 20-21: Expected identifier name|Error 0-22: The function 'ShowColumns' has some invalid arguments.
+
+>> ShowColumns([1, 2], z)
+Errors: Error 20-21: The specified column 'z' does not exist.|Error 0-22: The function 'ShowColumns' has some invalid arguments.
