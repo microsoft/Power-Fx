@@ -1407,6 +1407,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Shuffle)
             },
             {
+                BuiltinFunctionsCore.ShowColumns,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.ShowColumns.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DropColumnsTypeChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: ShowColumns)
+            },
+            {
                 BuiltinFunctionsCore.Sin,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Sin.Name,
