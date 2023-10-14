@@ -410,7 +410,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // A different symbol table can have same function name with different type.  
             var st2 = new SymbolTable();
-            st1.AddUserDefinedFunction("Foo2(x: Number): String = Text(x);");
+            st2.AddUserDefinedFunction("Foo2(x: Number): Text = x;");
             check = engine.Check("Foo2(3)", symbolTable: st2);
             Assert.True(check.IsSuccess);
             Assert.Equal(FormulaType.String, check.ReturnType);
