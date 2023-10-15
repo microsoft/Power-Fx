@@ -13,7 +13,8 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // DropColumns(source:*[...], name:s, name:s, ...)
-    internal sealed class DropColumnsFunction : FunctionWithTableInput
+    // DropColumns(source:![...], name:s, name:s, ...)
+    internal class DropColumnsFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
 
@@ -21,8 +22,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
+        public override bool RecordFirstArgumentCanCreateScope => true;
+
         public DropColumnsFunction()
-            : base("DropColumns", TexlStrings.AboutDropColumns, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable)
+            : base(
+                  name: "DropColumns",
+                  description: TexlStrings.AboutDropColumns,
+                  functionCategories: FunctionCategories.Table,
+                  returnType: DType.EmptyTable,
+                  maskLambdas: 0,
+                  arityMin: 2,
+                  arityMax: int.MaxValue,
+                  DType.EmptyTable)
         {
             ScopeInfo = new FunctionScopeInfo(this);
         }
@@ -52,17 +63,31 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.IsTable);
+            returnType = ReturnType;
+            nodeToCoercedTypeMap = null;
 
-            if (!argTypes[0].IsTable)
+            var isRecord = false;
+            var fArgsValid = true;
+            if (argTypes[0].IsTable)
+            {
+                returnType = argTypes[0];
+            }
+            else if (argTypes[0].IsRecord)
+            {
+                returnType = argTypes[0];
+                isRecord = true;
+            }
+            else
             {
                 fArgsValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedTable_Func, Name);
             }
-            else
+
+            Contracts.Assert(returnType.IsTable || returnType.IsRecord);
+
+            if (fArgsValid)
             {
-                returnType = argTypes[0];
+                fArgsValid = base.CheckType(context, args[0], argTypes[0], isRecord ? DType.EmptyRecord : ParamTypes[0], errors, ref nodeToCoercedTypeMap);
             }
 
             var supportColumnNamesAsIdentifiers = context.Features.SupportColumnNamesAsIdentifiers;

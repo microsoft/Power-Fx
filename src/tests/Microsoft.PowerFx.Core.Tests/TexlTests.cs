@@ -206,6 +206,108 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("DropColumns([{A:\"hello\",B:1}], A)", "*[B:n]")]
+        [InlineData("DropColumns([{A:\"hello\",B:1}], B)", "*[A:s]")]
+        [InlineData("DropColumns([{A:\"hello\",B:1}], A, B)", "*[]")]
+        [InlineData("DropColumns({A:\"hello\",B:1}, A)", "![B:n]")]
+        [InlineData("DropColumns({A:\"hello\",B:1}, B)", "![A:s]")]
+        [InlineData("DropColumns({A:\"hello\",B:1}, A, B)", "![]")]
+        public void TexlFunctionTypeSemanticsDropColumns(string expression, string expectedType)
+        {
+            var engine = new Engine(new PowerFxConfig(Features.PowerFxV1));
+            var options = new ParserOptions() { NumberIsFloat = true };
+            var result = engine.Check(expression, options);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("DropColumns([{A:\"hello\",B:1}], \"A\")", "*[B:n]")]
+        [InlineData("DropColumns([{A:\"hello\",B:1}], \"B\")", "*[A:s]")]
+        [InlineData("DropColumns([{A:\"hello\",B:1}], \"A\", \"B\")", "*[]")]
+        [InlineData("DropColumns({A:\"hello\",B:1}, \"A\")", "![B:n]")]
+        [InlineData("DropColumns({A:\"hello\",B:1}, \"B\")", "![A:s]")]
+        [InlineData("DropColumns({A:\"hello\",B:1}, \"A\", \"B\")", "![]")]
+        public void TexlFunctionTypeSemanticsDropColumns_ColumnNamesAsIdentifiersDisabled(string expression, string expectedType)
+        {
+            var engine = new Engine(new PowerFxConfig(new Features { SupportColumnNamesAsIdentifiers = false, TableSyntaxDoesntWrapRecords = true }));
+            var options = new ParserOptions() { NumberIsFloat = true };
+            var result = engine.Check(expression, options);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("DropColumns([{A:\"hello\",B:1}], C)")]
+        [InlineData("DropColumns([{A:\"hello\",B:1}], AB)")]
+        [InlineData("DropColumns([{A:\"hello\",B:1}], A1)")]
+        [InlineData("DropColumns({A:\"hello\",B:1}, C)")]
+        [InlineData("DropColumns({A:\"hello\",B:1}, AB)")]
+        [InlineData("DropColumns({A:\"hello\",B:1}, A1)")]
+        public void TexlFunctionTypeSemanticsDropColumns_Negative(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression);
+
+            Assert.False(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("ShowColumns([{A:\"hello\",B:1}], A)", "*[A:s]")]
+        [InlineData("ShowColumns([{A:\"hello\",B:1}], B)", "*[B:n]")]
+        [InlineData("ShowColumns([{A:\"hello\",B:1}], A, B)", "*[A:s,B:n]")]
+        [InlineData("ShowColumns({A:\"hello\",B:1}, A)", "![A:s]")]
+        [InlineData("ShowColumns({A:\"hello\",B:1}, B)", "![B:n]")]
+        [InlineData("ShowColumns({A:\"hello\",B:1}, A, B)", "![A:s,B:n]")]
+        public void TexlFunctionTypeSemanticsShowColumns(string expression, string expectedType)
+        {
+            var engine = new Engine(new PowerFxConfig(Features.PowerFxV1));
+            var options = new ParserOptions() { NumberIsFloat = true };
+            var result = engine.Check(expression, options);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("ShowColumns([{A:\"hello\",B:1}], \"A\")", "*[A:s]")]
+        [InlineData("ShowColumns([{A:\"hello\",B:1}], \"B\")", "*[B:n]")]
+        [InlineData("ShowColumns([{A:\"hello\",B:1}], \"A\", \"B\")", "*[A:s,B:n]")]
+        [InlineData("ShowColumns({A:\"hello\",B:1}, \"A\")", "![A:s]")]
+        [InlineData("ShowColumns({A:\"hello\",B:1}, \"B\")", "![B:n]")]
+        [InlineData("ShowColumns({A:\"hello\",B:1}, \"A\", \"B\")", "![A:s,B:n]")]
+        public void TexlFunctionTypeSemanticsShowColumns_ColumnNamesAsIdentifiersDisabled(string expression, string expectedType)
+        {
+            var engine = new Engine(new PowerFxConfig(new Features { SupportColumnNamesAsIdentifiers = false, TableSyntaxDoesntWrapRecords = true }));
+            var options = new ParserOptions() { NumberIsFloat = true };
+            var result = engine.Check(expression, options);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("ShowColumns([{A:\"hello\",B:1}], C)")]
+        [InlineData("ShowColumns([{A:\"hello\",B:1}], AB)")]
+        [InlineData("ShowColumns([{A:\"hello\",B:1}], A1)")]
+        [InlineData("ShowColumns({A:\"hello\",B:1}, C)")]
+        [InlineData("ShowColumns({A:\"hello\",B:1}, AB)")]
+        [InlineData("ShowColumns({A:\"hello\",B:1}, A1)")]
+        public void TexlFunctionTypeSemanticsShowColumns_Negative(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression);
+
+            Assert.False(result.IsSuccess);
+        }
+
+        [Theory]
         [InlineData("Average(\"3\")")]
         [InlineData("Average(\"3\", 4)")]
         [InlineData("Average(true, 4)")]

@@ -138,20 +138,35 @@ namespace Microsoft.PowerFx.Functions
 
         public static async ValueTask<FormulaValue> DropColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var sourceArg = (TableValue)args[0];
+            var columnsToRemove = args.Skip(1).ToArray();
+            if (args[0] is TableValue sourceArg)
+            {
+                var tableType = (TableType)irContext.ResultType;
+                var recordIRContext = new IRContext(irContext.SourceContext, tableType.ToRecord());
+                var rows = await LazyDropColumnsAsync(runner, context, sourceArg.Rows, recordIRContext, columnsToRemove).ConfigureAwait(false);
 
-            var tableType = (TableType)irContext.ResultType;
-            var recordIRContext = new IRContext(irContext.SourceContext, tableType.ToRecord());
-            var rows = await LazyDropColumnsAsync(runner, context, sourceArg.Rows, recordIRContext, args.Skip(1).ToArray()).ConfigureAwait(false);
+                return new InMemoryTableValue(irContext, rows);
+            }
 
-            return new InMemoryTableValue(irContext, rows);
+            var recordArg = (RecordValue)args[0];
+            var recordResult = DropColumnsRecord(runner, context, DValue<RecordValue>.Of(recordArg), irContext, columnsToRemove).Value;
+            return recordResult;
         }
 
         public static async ValueTask<FormulaValue> ShowColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var tableType = ((TableValue)args[0]).Type;
             var columnsToRemain = new HashSet<string>(args.OfType<StringValue>().Select(sv => sv.Value));
-            var columnsToRemove = tableType.GetFieldTypes().Where(x => !columnsToRemain.Contains(x.Name)).Select(x => FormulaValue.New(x.Name));
+            IEnumerable<NamedFormulaType> fields;
+            if (args[0] is TableValue tableValue)
+            {
+                fields = tableValue.Type.GetFieldTypes();
+            }
+            else
+            {
+                fields = ((RecordValue)args[0]).Type.GetFieldTypes();
+            }
+
+            var columnsToRemove = fields.Where(x => !columnsToRemain.Contains(x.Name)).Select(x => FormulaValue.New(x.Name));
 
             List<FormulaValue> newArgs = new List<FormulaValue>()
             {
@@ -210,17 +225,26 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                if (row.IsValue)
-                {
-                    list.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(recordIRContext, row.Value.Fields.Where(f => !columnNames.Contains(f.Name)).ToArray())));
-                }
-                else
-                {
-                    list.Add(row);
-                }
+                list.Add(DropColumnsRecord(runner, context, row, recordIRContext, columnsToRemove));
             }
 
             return list;
+        }
+
+        private static DValue<RecordValue> DropColumnsRecord(EvalVisitor runner, EvalVisitorContext context, DValue<RecordValue> source, IRContext recordIRContext, FormulaValue[] columnsToRemove)
+        {
+            var columnNames = new HashSet<string>(columnsToRemove.OfType<StringValue>().Select(sv => sv.Value));
+            if (source.IsValue)
+            {
+                return DValue<RecordValue>.Of(
+                    new InMemoryRecordValue(
+                        recordIRContext,
+                        source.Value.Fields.Where(f => !columnNames.Contains(f.Name)).ToArray()));
+            }
+            else
+            {
+                return source;
+            }
         }
 
         // CountRows

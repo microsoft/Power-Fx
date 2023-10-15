@@ -371,7 +371,7 @@
     <comment>function_parameter - Second argument to the DropColumns function - the name of the column to be dropped. Translate this string. Maintain as a single word (do not add spaces).</comment>
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>A table value to remove columns from.</value>
+    <value>A table or record value to remove columns from.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>The name of a column to remove.</value>
@@ -2812,7 +2812,7 @@
     <comment>function_parameter - Second argument of the ShowColumns function - the name of the column to be selected. Translate this string. Maintain as a single word (do not add spaces).</comment>
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>A table value to remove columns from.</value>
+    <value>A table or record value to remove columns from.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>The name of a column to keep.</value>

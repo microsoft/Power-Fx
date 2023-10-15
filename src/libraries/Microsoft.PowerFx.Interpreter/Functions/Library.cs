@@ -580,7 +580,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.DropColumns.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: DropColumnsTypeChecker,
+                    checkRuntimeTypes: ShowDropColumnsTypeChecker,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: DropColumns)
@@ -1412,7 +1412,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.ShowColumns.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: DropColumnsTypeChecker,
+                    checkRuntimeTypes: ShowColumnsTypeChecker,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: ShowColumns)
