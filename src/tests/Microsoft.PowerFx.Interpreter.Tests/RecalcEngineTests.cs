@@ -1275,6 +1275,18 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Fact]
+        public void TryGetValueShouldNotThrowOnNonExistingValue()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            var success = engine.TryGetValue("Invalid", out var shouldBeNull);
+
+            Assert.False(success);
+            Assert.Null(shouldBeNull);
+        }
+
         private class TestRandService : IRandomService
         {
             public double _value = 0.5;
