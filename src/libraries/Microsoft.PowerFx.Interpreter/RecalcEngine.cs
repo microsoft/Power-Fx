@@ -320,6 +320,24 @@ namespace Microsoft.PowerFx
             return value;
         }
 
+        /// <summary>
+        /// Try to get the current value of a formula.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool TryGetValue(string name, out FormulaValue value)
+        {
+            value = null;
+            if (!TryGetByName(name, out var fi))
+            {
+                return false;
+            }
+
+            value = _symbolValues.Get(fi.Slot);
+            return true;
+        }
+
         internal RecalcFormulaInfo GetByName(string name)
         {
             if (TryGetByName(name, out var fi))
