@@ -2,8 +2,10 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -46,6 +48,26 @@ namespace Microsoft.PowerFx.Core.Tests
 
             if (schema.GetCompareString() != schemaActual.GetCompareString())
             {
+                // Can we get a more specific message? 
+                var setExpected = new HashSet<string>(schema.FunctionNames);
+                setExpected.ExceptWith(schemaActual.FunctionNames); // missing
+
+                var setActual = new HashSet<string>(schemaActual.FunctionNames);
+                setActual.ExceptWith(schema.FunctionNames); // extra
+
+                var sb = new StringBuilder();
+                sb.Append("Schema different");
+
+                if (setExpected.Count > 0)
+                {
+                    sb.Append("; Extra: " + string.Join(", ", setExpected.ToArray()));
+                }
+
+                if (setActual.Count > 0)
+                {
+                    sb.Append("; Missing: " + string.Join(",", setActual.ToArray()));
+                }
+
                 var pathTemp = Path.Combine(Path.GetTempPath(), "actual-" + Path.GetFileName(pathInput));
 
                 var jsonActual = JsonSerializer.Serialize(schemaActual, new JsonSerializerOptions
@@ -54,8 +76,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 });
                 File.WriteAllText(pathTemp, jsonActual);
 
-                throw new InvalidOperationException(
-                    $"Schema is different. Expected: {pathInput}. Actual: {pathTemp}");
+                sb.Append($"; Expected: {pathInput}. Actual: {pathTemp}");
+
+                throw new InvalidOperationException(sb.ToString());
             }
         }
     }
