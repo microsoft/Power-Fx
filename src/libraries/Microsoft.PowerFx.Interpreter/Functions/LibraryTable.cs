@@ -147,6 +147,26 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, rows);
         }
 
+        public static async ValueTask<FormulaValue> ShowColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var tableType = ((TableValue)args[0]).Type;
+            var columnsToRemain = new HashSet<string>(args.OfType<StringValue>().Select(sv => sv.Value));
+            var columnsToRemove = tableType.GetFieldTypes().Where(x => !columnsToRemain.Contains(x.Name)).Select(x => FormulaValue.New(x.Name));
+
+            List<FormulaValue> newArgs = new List<FormulaValue>()
+            {
+                args[0]
+            };
+
+            foreach (var fv in columnsToRemove)
+            {
+                newArgs.Add(fv);
+            }
+
+            // Leveraging DropColumns function to remove all unnecessary columns.
+            return await DropColumns(runner, context, irContext, newArgs.ToArray()).ConfigureAwait(false);
+        }
+
         private static async Task<IEnumerable<DValue<RecordValue>>> LazyAddColumnsAsync(EvalVisitor runner, EvalVisitorContext context, IEnumerable<DValue<RecordValue>> sources, IRContext recordIRContext, NamedLambda[] newColumns)
         {
             var list = new List<DValue<RecordValue>>();
