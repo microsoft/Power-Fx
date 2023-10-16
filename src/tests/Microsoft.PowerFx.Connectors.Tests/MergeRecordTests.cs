@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             RecordValue rv2 = engine.Eval(@"{a:""x""}") as RecordValue;
 
             var ex = Assert.Throws<ArgumentException>(() => HttpFunctionInvoker.MergeRecords(rv1, rv2));
-            Assert.Equal("Cannot merge a of type DecimalValue with a of type StringValue", ex.Message);
+            Assert.Equal("Cannot merge 'a' of type DecimalValue with 'a' of type StringValue", ex.Message);
         }
 
         [Fact]

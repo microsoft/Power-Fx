@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
@@ -42,6 +43,8 @@ namespace Microsoft.PowerFx
         public DateTimeKind DateTimeKind => TimeZoneInfo.BaseUtcOffset == TimeSpan.Zero ? DateTimeKind.Utc : DateTimeKind.Unspecified;
 
         public Governor Governor { get; private set; }
+
+        private readonly Stack<UDFStackFrame> _udfStack = new Stack<UDFStackFrame>();
 
         public EvalVisitor(IRuntimeConfig config, CancellationToken cancellationToken)
         {
@@ -263,19 +266,43 @@ namespace Microsoft.PowerFx
             {
                 result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, _cancellationToken).ConfigureAwait(false);
             }
+            else if (func is IAsyncTexlFunction4 asyncFunc4)
+            {                
+                result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
+            }
             else if (func is IAsyncConnectorTexlFunction asyncConnectorTexlFunction)
             {                
                 return await asyncConnectorTexlFunction.InvokeAsync(args, _services, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is UserDefinedTexlFunction udtf)
-            {
-                // $$$ Should add _runtimeConfig
-                result = await udtf.InvokeAsync(args, _cancellationToken, context.StackDepthCounter.Increment()).ConfigureAwait(false);
             }
             else if (func is CustomTexlFunction customTexlFunc)
             {
                 // If custom function throws an exception, don't catch it - let it propagate up to the host.
                 result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken).ConfigureAwait(false);
+            }
+            else if (func is UserDefinedFunction userDefinedFunc)
+            {
+                UDFStackFrame frame = new UDFStackFrame(userDefinedFunc, args);
+                UDFStackFrame framePop = null;
+
+                try
+                {
+                    _udfStack.Push(frame);
+
+                    (var irnode, _) = userDefinedFunc.GetIRTranslator();
+
+                    this.CheckCancel();
+
+                    result = await irnode.Accept(this, context).ConfigureAwait(false);
+                }
+                finally
+                {
+                    framePop = _udfStack.Pop();
+                }
+
+                if (frame != framePop)
+                {
+                    throw new Exception("Something went wrong. UDF stack values didn't match.");
+                }
             }
             else
             {
@@ -728,6 +755,9 @@ namespace Microsoft.PowerFx
                     }
 
                     return hostObj;
+                case UDFParameterInfo uDFParameterInfo:
+                    var frame = _udfStack.Peek();
+                    return frame.GetArg(uDFParameterInfo);
                 default:
                     return ResolvedObjectHelpers.ResolvedObjectError(node);
             }

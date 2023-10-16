@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Μια τιμή ημερομηνίας για την οποία θα υπολογιστεί ο αριθμός εβδομάδας ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Επιστρέφει μια ημερομηνία προσαρμοσμένη κατά πολλούς μήνες. Η ημέρα του μήνα παραμένει η ίδια, αλλά με αυτόν τον τρόπο περιλαμβάνει τον αριθμό των ημερών του νέου μήνα.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>ημερομηνία</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>μήνες</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Μια τιμή ημερομηνίας που θα προσαρμοστεί έως τον καθορισμένο αριθμό μηνών.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Αριθμός μηνών με τον οποίο θα αλλάξετε την ημερομηνία. Μια θετική τιμή αποδίδει μια μελλοντική ημερομηνία, μια αρνητική τιμή μια προηγούμενη ημερομηνία και η τιμή μηδέν δεν θα αλλάξει το μήνα.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Επιστρέφει την τελευταία ημέρα του μήνα για μια καθορισμένη ημερομηνία, προσαρμοσμένη κατά σειρά μηνών.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>ημερομηνία</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>μήνες</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Μια τιμή ημερομηνίας που θα προσαρμοστεί έως τον καθορισμένο αριθμό μηνών.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Αριθμός μηνών με τον οποίο θα αλλάξετε την ημερομηνία. Μια θετική τιμή αποδίδει μια μελλοντική ημερομηνία, μια αρνητική τιμή μια προηγούμενη ημερομηνία και η τιμή μηδέν δεν θα αλλάξει το μήνα.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Περικόπτει την τιμή 'number' στρογγυλοποιώντας προς το αρνητικό άπειρο.</value>
     

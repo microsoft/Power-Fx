@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Стойност на дата, за която ще се изчисли номерът на седмицата по ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Връща дата, коригирана с брой месеци. Денят от месеца остава същият, стига да не е след последния ден от новия месец.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>дата</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>месеци</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Дата, която да се коригира с указания брой месеци.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Брой месеци, с които да се промени датата. Положителна стойност дава бъдеща дата, отрицателна стойност дава минала дата, а нула не променя месеца.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Връща последния ден от месеца за зададена дата, коригирана с брой месеци.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>дата</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>месеци</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Дата, която да се коригира с указания брой месеци.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Брой месеци, с които да се промени датата. Положителна стойност дава бъдеща дата, отрицателна стойност дава минала дата, а нула не променя месеца.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Съкращава „число“, като закръглява към отрицателна безкрайност.</value>
     
@@ -5049,27 +5089,27 @@
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
-    <value>Type mismatch between source and target record types. Given type has extra fields: {0}.</value>
+    <value>Несъответствие между типа на изходния и на целевия запис. Предоставеният тип съдържа допълнителни полета: {0}.</value>
     
   </data>
   <data name="ErrExpectedRVMissingFields" xml:space="preserve">
-    <value>Type mismatch between source and target record types. Given type has missing fields: {0}.</value>
+    <value>Несъответствие между типа на изходния и на целевия запис. В предоставения тип липсват полета: {0}.</value>
     
   </data>
   <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
-    <value>Type mismatch between source and target record types. Field name: {0} not found.</value>
+    <value>Несъответствие между типа на изходния и на целевия запис. Полето на име {0} не е намерено.</value>
     
   </data>
   <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
-    <value>Type mismatch between source and target record types. Field name: {0} Expected {1}; Found {2}.</value>
+    <value>Несъответствие между типа на изходния и на целевия запис. Име на полето: {0}; очаквано: {1}; открито: {2}.</value>
     
   </data>
   <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
-    <value>Given {0} type cannot be coerced to source type {1}.</value>
+    <value>Предоставеният тип {0} не може да бъде преобразуван в изходния тип {1}.</value>
     
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
-    <value>Type mismatch between source and target types. Expected {0}; Found {1}.</value>
+    <value>Несъответствие между типа на изходния и на целевия запис. Очаквано: {0}; открито: {1}.</value>
     
   </data>
 </root>

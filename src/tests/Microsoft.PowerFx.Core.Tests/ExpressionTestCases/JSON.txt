@@ -1,0 +1,117 @@
+﻿// (UTC-08:00) Pacific Time (US & Canada)
+#SETUP: TimeZoneInfo("Pacific Standard Time")
+#SETUP: OptionSetTestSetup
+#SETUP: EnableJsonFunctions
+
+>> JSON()
+Errors: Error 0-6: Invalid number of arguments: received 0, expected 1-2.
+
+>> JSON(Blank())
+"null"
+
+>> JSON(If(1<0,"true",{a:1}))
+Errors: Error 5-25: The JSON function cannot serialize objects of type 'Void'.
+
+>> JSON("hello")
+"""hello"""
+
+>> JSON(1.23)
+"1.23"
+
+>> JSON(0)
+"0"
+
+>> JSON(1)
+"1"
+
+>> JSON(-1)
+"-1"
+
+>> JSON(true)
+"true"
+
+>> JSON(false)
+"false"
+
+>> JSON("Back\slash")
+"""Back\\slash"""
+
+>> JSON("Quotes "" and ' may be escaped")
+"""Quotes \"" and ' may be escaped"""
+
+>> JSON($"Other {Char(13)} escaped {Char(10)} chars {Char(4)} should {Char(9)} also {Char(8)} be {Char(1)} escaped {Char(20)} properly")
+"""Other \r escaped \n chars \u0004 should \t also \b be \u0001 escaped \u0014 properly"""
+
+// In \uXXXX escapings, letters of hex characters are upper case while they are lower case in Power Apps.
+// Technically, this is the exactly the same character.
+>> JSON(Concat(Sequence(128), Char(Value)))
+"""\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000B\f\r\u000E\u000F\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001A\u001B\u001C\u001D\u001E\u001F !\""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u007F\u0080"""
+
+>> JSON(RGBA(10, 30, 50, 0.75))
+"""#0a1e32bf"""
+
+>> JSON(Color.Turquoise)
+"""#40e0d0ff"""
+
+>> JSON(OptionSet.Option2)
+"""option_2"""
+
+>> JSON(TimeUnit.Hours)
+"""hours"""
+
+>> JSON(Date(2022,8,7))
+"""2022-08-07"""
+
+>> JSON(DateTimeValue("1970-01-01T00:00:00Z"))
+"""1970-01-01T00:00:00.000Z"""
+
+// Midnight local time in Pacific Time is 8 AM UTC
+>> JSON(DateTimeValue("1970-01-01T00:00:00"))
+"""1970-01-01T08:00:00.000Z"""
+
+// Independent from local timezone
+>> With({dt: DateTime(1987,6,5,4,30,0)}, JSON(DateAdd(dt,-TimeZoneOffset(dt),TimeUnit.Minutes), JSONFormat.IndentFour))
+"""1987-06-05T04:30:00.000Z"""
+
+>> JSON({a:1,b:"hello",c:true})
+"{""a"":1,""b"":""hello"",""c"":true}"
+
+>> JSON({a:1,b:"hello",c:true}, JSONFormat.Compact)
+"{""a"":1,""b"":""hello"",""c"":true}"
+
+>> Substitute(Substitute(Substitute(JSON({a:1,b:"hello",c:true}, JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"{*<t>""a"": 1,*<t>""b"": ""hello"",*<t>""c"": true*}"
+
+>> JSON(Table({a:1,b:"hello",c:true,e:Blank()},{a:-3,b:"world",c:false,d:GUID("01234567-89AB-CDEF-0123-456789ABCDEF")}))
+"[{""a"":1,""b"":""hello"",""c"":true,""d"":null,""e"":null},{""a"":-3,""b"":""world"",""c"":false,""d"":""01234567-89ab-cdef-0123-456789abcdef"",""e"":null}]"
+
+>> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:true},{a:-3,b:"world",c:false}), JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"[*<t>{*<t><t>""a"": 1,*<t><t>""b"": ""hello"",*<t><t>""c"": true*<t>},*<t>{*<t><t>""a"": -3,*<t><t>""b"": ""world"",*<t><t>""c"": false*<t>}*]"
+
+>> Substitute(Substitute(Substitute(JSON({a:1,b:"hello",c:true}, JSONFormat.IndentFour & JSONFormat.Compact), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"{*<t>""a"": 1,*<t>""b"": ""hello"",*<t>""c"": true*}"
+
+>> JSON(DateTimeValue("2022-08-07T12:34:56Z"))
+"""2022-08-07T12:34:56.000Z"""
+
+// DateTime is local time, so 1AM in UTC
+>> JSON(Table({a:DateTime(2014,11,29,17,5,1,997),b:Date(2019, 4, 22),c:Time(12, 34, 56, 789)}))
+"[{""a"":""2014-11-30T01:05:01.997Z"",""b"":""2019-04-22"",""c"":""12:34:56.789""}]"
+
+>> JSON(Table({a:GUID("01234567-89AB-CDEF-0123-456789ABCDEF"),b:RGBA(18, 52, 86, 0.5),c:"https://www.microsoft.com",d:Sqrt(9)}))
+"[{""a"":""01234567-89ab-cdef-0123-456789abcdef"",""b"":""#12345680"",""c"":""https://www.microsoft.com"",""d"":3}]"
+
+>> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:Blank()},{a:-3,b:"world",c:{d: 1, h:"test"}}), JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"[*<t>{*<t><t>""a"": 1,*<t><t>""b"": ""hello"",*<t><t>""c"": null*<t>},*<t>{*<t><t>""a"": -3,*<t><t>""b"": ""world"",*<t><t>""c"": {*<t><t><t>""d"": 1,*<t><t><t>""h"": ""test""*<t><t>}*<t>}*]"
+
+>> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:Blank()},{a:-3,b:"world",c:Table({r:3.1,s:"inner",t:-7})}), JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"[*<t>{*<t><t>""a"": 1,*<t><t>""b"": ""hello"",*<t><t>""c"": null*<t>},*<t>{*<t><t>""a"": -3,*<t><t>""b"": ""world"",*<t><t>""c"": [*<t><t><t>{*<t><t><t><t>""r"": 3.1,*<t><t><t><t>""s"": ""inner"",*<t><t><t><t>""t"": -7*<t><t><t>}*<t><t>]*<t>}*]"
+
+>> JSON(1/0)
+Error({Kind:ErrorKind.Div0})
+
+>> JSON({a:1,b:Sqrt(-1),c:true})
+Error({Kind:ErrorKind.Numeric})
+
+>> JSON([{a:1,b:[2]},{a:3,b:[4,5]},{a:6,b:[7,1/0,9]}])
+Error({Kind:ErrorKind.Div0})

@@ -2,10 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
@@ -141,7 +138,7 @@ namespace Microsoft.PowerFx.Interpreter
             };
 
             config.EnableSetFunction();
-            config.EnableParseJSONFunction();
+            config.EnableJsonFunctions();
 
             var engine = new RecalcEngine(config);
             var result = engine.Check(script, options: new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = numberIsFloat });

@@ -43,9 +43,6 @@
 
 // There is a gap here where each platform may decide a different point to flip to scientific notation.
 
->> Text( 3e20 )
-"3E+20"
-
 >> Text( 3e21 )
 "3E+21"
 

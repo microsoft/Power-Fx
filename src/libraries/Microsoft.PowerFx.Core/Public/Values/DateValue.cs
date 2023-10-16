@@ -2,16 +2,17 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// Represents a Date only, without a time component, in the local time zone.
     /// </summary>
+    [DebuggerDisplay("{ToObject().ToString()} ({Type}) {Value.Kind.ToString()}")]
     public class DateValue : PrimitiveValue<DateTime>
     {
         /// <summary>

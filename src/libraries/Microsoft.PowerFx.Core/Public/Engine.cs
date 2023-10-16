@@ -455,5 +455,10 @@ namespace Microsoft.PowerFx
             var ruleScope = this.GetRuleScope();
             return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), culture, Config.Features, toDisplay: true);
         }
+
+        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture, ReadOnlySymbolTable symbolTable = null)
+        {
+            Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, SupportedFunctions, symbolTable);
+        }
     }
 }

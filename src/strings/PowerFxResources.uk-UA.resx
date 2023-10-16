@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Значення дати, для якого буде обчислено номер тижня ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Повертає дату, відкориговану на кількість місяців. День місяця залишається незмінним, але його обмежено кількістю днів у новому місяці.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>дата</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>міс.</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Значення дати, яке потрібно скоригувати на задану кількість місяців.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Кількість місяців, на яку потрібно скоригувати дату. Додатне значення означає дату в майбутньому, від’ємне значення — дату в минулому, а нуль не змінює місяць.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Повертає останній день місяця для заданої дати, скоригованої на кількість місяців.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>дата</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>міс.</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Значення дати, яке потрібно скоригувати на задану кількість місяців.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Кількість місяців, на яку потрібно скоригувати дату. Додатне значення означає дату в майбутньому, від’ємне значення — дату в минулому, а нуль не змінює місяць.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Скорочує "число" за допомогою округлення до від’ємної нескінченності.</value>
     

@@ -827,6 +827,11 @@ namespace Microsoft.PowerFx.Connectors
         // Only used by ConnectorTexlFunction
         private DType[] GetParamTypes()
         {
+            if (RequiredParameters == null)
+            {
+                return Array.Empty<DType>();
+            }
+
             IEnumerable<DType> parameterTypes = RequiredParameters.Select(parameter => parameter.FormulaType._type);
             if (OptionalParameters.Any())
             {
@@ -916,6 +921,10 @@ namespace Microsoft.PowerFx.Connectors
                             // Ex: Api-Version 
                             hiddenRequired = true;
                         }
+                        else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
+                        {
+                            continue;
+                        }
                     }
 
                     if (!VerifyCanHandle(parameter.In))
@@ -979,6 +988,10 @@ namespace Microsoft.PowerFx.Connectors
                                             }
 
                                             bodyPropertyHiddenRequired = ConnectorSettings.Compatibility == ConnectorCompatibility.PowerAppsCompatibility ? !requestBody.Required : true;
+                                        }
+                                        else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
+                                        {
+                                            continue;
                                         }
                                     }
 
