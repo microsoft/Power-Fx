@@ -3,20 +3,12 @@
 // </copyright>
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Repl;
 using Microsoft.PowerFx.Repl.Functions;
 using Microsoft.PowerFx.Repl.Services;
@@ -81,7 +73,7 @@ namespace Microsoft.PowerFx
             config.SymbolTable.EnableMutationFunctions();
 
             config.EnableSetFunction();
-            config.EnableParseJSONFunction();
+            config.EnableJsonFunctions();
 
             config.AddFunction(new ResetFunction());
             config.AddFunction(new ExitFunction());
@@ -113,7 +105,6 @@ namespace Microsoft.PowerFx
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
             Console.WriteLine("Enter Excel formulas.  Use \"Help()\" for details, \"Option()\" for options.");
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
-            Console.WriteLine();
 
             REPL();
         }

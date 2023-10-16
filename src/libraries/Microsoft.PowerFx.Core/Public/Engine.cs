@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
@@ -29,6 +30,21 @@ namespace Microsoft.PowerFx
         /// Configuration symbols for this Power Fx engine.
         /// </summary>
         public PowerFxConfig Config { get; }
+
+        /// <summary>
+        /// For diagnostics, get the assembly version of Power Fx Engine. 
+        /// </summary>
+        public static string AssemblyVersion
+        {
+            get
+            {
+                var fxAttr = typeof(Engine).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+                var fullVerStr = fxAttr.InformationalVersion;
+
+                var parts = fullVerStr.Split('+');
+                return parts[0];
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Engine"/> class.
@@ -454,6 +470,11 @@ namespace Microsoft.PowerFx
         {
             var ruleScope = this.GetRuleScope();
             return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), culture, Config.Features, toDisplay: true);
+        }
+
+        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture, ReadOnlySymbolTable symbolTable = null)
+        {
+            Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, SupportedFunctions, symbolTable);
         }
     }
 }

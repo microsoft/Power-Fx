@@ -2,15 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Reflection.Metadata;
 using System.Threading;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -23,7 +17,7 @@ namespace Microsoft.PowerFx.Json.Tests
         public void BasicParseJson()
         {
             var config = new PowerFxConfig();
-            config.EnableParseJSONFunction();
+            config.EnableJsonFunctions();
             var engine = new RecalcEngine(config);
             var result = engine.Eval("Value(ParseJSON(\"5\"))");
             Assert.Equal(5m, result.ToObject());
@@ -41,7 +35,7 @@ namespace Microsoft.PowerFx.Json.Tests
             symValue.Set(slot, res);
 
             var config = new PowerFxConfig();
-            config.EnableParseJSONFunction();
+            config.EnableJsonFunctions();
 
             var engine = new RecalcEngine(config);
             var result = engine.EvalAsync("First(table).Value", CancellationToken.None, symValue).ConfigureAwait(false).GetAwaiter().GetResult();

@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Data.SqlTypes;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     internal class InternalSetup
     {
-        internal string HandlerName { get; set; }
+        internal List<string> HandlerNames { get; set; }
 
         internal TexlParser.Flags Flags { get; set; }
 
@@ -111,14 +111,9 @@ namespace Microsoft.PowerFx.Core.Tests
                         throw new ArgumentException("Invalid TimeZoneInfo setup!");
                     }
                 }
-            }
+            }           
 
-            if (parts.Count > 1)
-            {
-                throw new ArgumentException("Too many setup handler names!");
-            }
-
-            iSetup.HandlerName = parts.FirstOrDefault();
+            iSetup.HandlerNames = parts;
             return iSetup;
         }
     }
