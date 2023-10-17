@@ -535,7 +535,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             var function = CurFunc;
             var argIndex = ArgIndex;
 
-            if (this.Binding.NameResolver is not IGlobalSymbolNameResolver globalResolver
+            if (Binding.NameResolver is not IGlobalSymbolNameResolver globalResolver
                 || function == null
                 || argIndex < 0)
             {
@@ -554,12 +554,11 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                 FunctionRecordNameSuggestionHandler.AddSuggestionForAggregateAndParentRecord(CurNode, argType, this);
             }
 
-            var usePowerFxV1CompatibilityRules = this.Binding.Features.PowerFxV1CompatibilityRules;
             foreach (var symbol in symbols)
             {
                 var symbolType = symbol.Value.Type;
 
-                var suggestable = IsSymbolSuggestableForFunctionArg(function, argIndex, argType, symbolType, usePowerFxV1CompatibilityRules);
+                var suggestable = IsSymbolSuggestableForFunctionArg(function, argIndex, argType, symbolType, Binding.Features);
 
                 if (suggestable)
                 {
@@ -568,7 +567,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             }
         }
 
-        private bool IsSymbolSuggestableForFunctionArg(TexlFunction function, int argIndex, DType argType, DType symbolType, bool usePowerFxV1CompatibilityRules)
+        private bool IsSymbolSuggestableForFunctionArg(TexlFunction function, int argIndex, DType argType, DType symbolType, Features features)
         {
             // Check for invalid symbol types and return false if found.
             if (IsSuggestionTypeInvalid(symbolType))
@@ -581,17 +580,17 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             {
                 // Case 1: Aggregate type with non-zero children.
                 isSuggestable = argType.Kind == symbolType.Kind &&
-                    argType.CheckAggregateNames(symbolType, CurNode, new ErrorContainer(), false, usePowerFxV1CompatibilityRules);
+                    argType.CheckAggregateNames(symbolType, CurNode, new ErrorContainer(), features, false);
             }
             else if (argType.IsAggregate && (function.ManipulatesCollections || function.ScopeInfo != null))
             {
                 // Case 2: Aggregate type with function manipulations or scope info.
-                isSuggestable = symbolType.CoercesTo(argType, false, false, usePowerFxV1CompatibilityRules);
+                isSuggestable = symbolType.CoercesTo(argType, false, false, features);
             }
             else if (!argType.IsAggregate && function.SupportCoercionForArg(argIndex))
             {
                 // Case 3: Non-aggregate type with support for coercion.
-                isSuggestable = symbolType.CoercesTo(argType, false, false, usePowerFxV1CompatibilityRules);
+                isSuggestable = symbolType.CoercesTo(argType, false, false, features);
             }
             else if (!argType.IsAggregate)
             {
@@ -614,8 +613,6 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                 return;
             }
 
-            var usePowerFxV1CompatibilityRules = this.Binding.Features.PowerFxV1CompatibilityRules;
-
             var symbols = globalResolver.GlobalSymbols;
 
             var nonErrorNode = binaryOp.Right.AsError() == null ? binaryOp.Right : binaryOp.Left;
@@ -632,7 +629,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                 }
 
                 var errors = new ErrorContainer();
-                BinderUtils.CheckBinaryOpCore(errors, binaryOp, usePowerFxV1CompatibilityRules, nonErrorNodeType, symbolType, true);
+                BinderUtils.CheckBinaryOpCore(errors, binaryOp, Binding.Features, nonErrorNodeType, symbolType, true);
 
                 if (!errors.HasErrors())
                 {

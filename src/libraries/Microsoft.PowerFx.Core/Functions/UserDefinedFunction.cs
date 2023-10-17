@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if (!ReturnType.Accepts(actualBodyReturnType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features.PowerFxV1CompatibilityRules))
+                if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features))
                 {
                     _binding.SetCoercedType(binding.Top, ReturnType);
                 }

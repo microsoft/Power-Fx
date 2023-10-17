@@ -2453,7 +2453,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static DType Union(DType type1, DType type2, bool useLegacyDateTimeAccepts, Features features)
         {
             var fError = false;
-            return Union(ref fError, type1, type2, useLegacyDateTimeAccepts, features);
+            return Union(ref fError, type1, type2, useLegacyDateTimeAccepts, features, allowCoerce: features.PowerFxV1CompatibilityRules);
         }
 
         public bool CanUnionWith(DType type, bool useLegacyDateTimeAccepts, Features features)

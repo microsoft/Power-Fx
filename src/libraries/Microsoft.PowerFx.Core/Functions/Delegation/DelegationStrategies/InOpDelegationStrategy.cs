@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             var nodeType = binding.GetType(column);
             var usePowerFxV1CompatibilityRules = binding.Features.PowerFxV1CompatibilityRules;
             return DType.String.Accepts(nodeType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
-                nodeType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                nodeType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, binding.Features) ||
                 (nodeType.IsMultiSelectOptionSet() && nodeType.IsTable);
         }
 

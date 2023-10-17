@@ -1038,7 +1038,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             KeyValuePair<string, DType> coercionDifference = default;
             DType coercionDifferenceType = null;
-            if (coerceIfSupported && nodeType.CoercesTo(expectedType, out _, out coercionType, out coercionDifference, out coercionDifferenceType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePFxv1CompatRules))
+            if (coerceIfSupported && nodeType.CoercesTo(expectedType, out _, out coercionType, out coercionDifference, out coercionDifferenceType, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
             {
                 return true;
             }
@@ -1109,7 +1109,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if (!expectedType.Accepts(column.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (SupportsParamCoercion && column.Type.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (SupportsParamCoercion && column.Type.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
                 {
                     returnType = DType.CreateTable(new TypedName(expectedType, column.Name));
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, arg, returnType);
