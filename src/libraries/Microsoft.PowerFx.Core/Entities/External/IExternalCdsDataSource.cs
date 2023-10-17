@@ -18,6 +18,6 @@ namespace Microsoft.PowerFx.Core.Entities
 
         bool TryGetRelatedColumn(string selectColumnName, out string additionalColumnName, IExternalTableDefinition expandsTableDefinition = null);
 
-        bool IsArgTypeValidForMutation(DType type, out IEnumerable<string> invalidFieldName);
+        bool IsArgTypeValidForMutation(DType type, out IEnumerable<string> invalidFieldNames);
     }
 }
