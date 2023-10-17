@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Interpreter
                     {
                         if (!cdsTableInfo.IsArgTypeValidForMutation(argTypes[i], out var invalidFieldName))
                         {
-                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrRecordContainsInvalidFields_Arg, string.Join(", ", $"'{invalidFieldName}'"));
+                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrRecordContainsInvalidFields_Arg, string.Join(", ", invalidFieldName));
                         }
                     }
                 }
