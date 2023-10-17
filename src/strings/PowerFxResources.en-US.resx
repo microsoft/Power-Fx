@@ -5351,4 +5351,8 @@
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
     <value>The JSON function cannot serialize binary data in non-behavioral expression.</value>    
   </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>The specified column is read-only and can't be modified: {0}.</value>
+    <comment>Error Message</comment>
+  </data>
 </root>
