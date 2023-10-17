@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Conditional = System.Diagnostics.ConditionalAttribute;
@@ -25,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static readonly DType Unknown = new DType(DKind.Unknown);
         public static readonly DType Boolean = new DType(DKind.Boolean);
         public static readonly DType Number = new DType(DKind.Number);
+        public static readonly DType Decimal = new DType(DKind.Decimal);
         public static readonly DType String = new DType(DKind.String);
         public static readonly DType DateTimeNoTimeZone = new DType(DKind.DateTimeNoTimeZone);
         public static readonly DType DateTime = new DType(DKind.DateTime);
@@ -52,6 +54,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static readonly DType MinimalLargeImage = CreateMinimalLargeImageType();
         public static readonly DType UntypedObject = new DType(DKind.UntypedObject);
         public static readonly DType Deferred = new DType(DKind.Deferred);
+        public static readonly DType Void = new DType(DKind.Void);
 
         public static readonly DType Invalid = new DType();
 
@@ -71,6 +74,7 @@ namespace Microsoft.PowerFx.Core.Types
             yield return Media;
             yield return Color;
             yield return Blob;
+            yield return Decimal;
         }
 
         private static readonly Lazy<Dictionary<DKind, DKind>> _kindToSuperkindMapping =
@@ -107,6 +111,7 @@ namespace Microsoft.PowerFx.Core.Types
                 { DKind.ViewValue, DKind.Error },
                 { DKind.NamedValue, DKind.Error },
                 { DKind.UntypedObject, DKind.Error },
+                { DKind.Decimal, DKind.Error },
             }, isThreadSafe: true);
 
         public static Dictionary<DKind, DKind> KindToSuperkindMapping => _kindToSuperkindMapping.Value;
@@ -158,7 +163,7 @@ namespace Microsoft.PowerFx.Core.Types
         #endregion
 
         #region Fields for Dataverse Support 
-        
+
         // These are legacy implementation that are special cases for dataverse concepts. 
         // We're trying to move away from these to the more generic versions. 
 
@@ -200,13 +205,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// </summary>
         public bool AreFieldsOptional { get; set; } = false;
 
-        #endregion 
-
-        /// <summary>
-        ///  Whether this type is a subtype of all possible types, meaning that it can be placed in
-        ///  any location without coercion.
-        /// </summary>
-        internal bool IsUniversal => Kind == DKind.Error || Kind == DKind.ObjNull;
+        #endregion        
 
         // Constructor for the single invalid DType sentinel value.
         private DType()
@@ -571,11 +570,15 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsDeferred => Kind == DKind.Deferred;
 
+        public bool IsVoid => Kind == DKind.Void;
+
         public bool IsError => Kind == DKind.Error;
 
         public bool IsRecord => Kind == DKind.Record || Kind == DKind.ObjNull || Kind == DKind.LazyRecord;
 
         public bool IsTable => Kind == DKind.Table || Kind == DKind.ObjNull || Kind == DKind.LazyTable;
+
+        public bool IsTableNonObjNull => Kind == DKind.Table || Kind == DKind.LazyTable;
 
         public bool IsEnum => Kind == DKind.Enum || Kind == DKind.ObjNull;
 
@@ -626,7 +629,17 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsLazyType => Kind == DKind.LazyRecord || Kind == DKind.LazyTable;
 
+        public bool IsDateTimeGroup => Kind == DKind.Date || Kind == DKind.DateTime || Kind == DKind.Time;
+
+        public bool IsNumeric => Kind == DKind.Number || Kind == DKind.Decimal;
+
         public bool HasPolymorphicInfo => PolymorphicInfo != null;
+
+        /// <summary>
+        ///  Whether this type is a subtype of all possible types, meaning that it can be placed in
+        ///  any location without coercion.
+        /// </summary>
+        internal bool IsUniversal => Kind == DKind.Error || Kind == DKind.ObjNull;
 
         public int ChildCount
         {
@@ -658,7 +671,7 @@ namespace Microsoft.PowerFx.Core.Types
                     : 0;
 
         public bool HasErrors => IsAggregate
-                    ? GetNames(DPath.Root).Any(tn => tn.Type.IsError || tn.Type.HasErrors)
+                    ? GetNames(DPath.Root).Any(tn => tn.Type.IsError || (!tn.Type.IsLazyType && tn.Type.HasErrors))
                     : IsError;
 
         public bool Contains(DName fieldName)
@@ -839,9 +852,9 @@ namespace Microsoft.PowerFx.Core.Types
         {
             Contracts.AssertValid(attachmentType);
             Contracts.Assert(attachmentType.IsAggregate);
-            
+
             var attachmentRecord = new BuiltInLazyTypes.AttachmentType(attachmentType.ToRecord());
-            
+
             return attachmentType.IsTable ? attachmentRecord.ToTable()._type : attachmentRecord._type;
         }
 
@@ -862,16 +875,10 @@ namespace Microsoft.PowerFx.Core.Types
         public static DType CreateOptionSetType(IExternalOptionSet info)
         {
             Contracts.AssertValue(info);
+            Contracts.Assert(info.BackingKind is DKind.String or DKind.Number or DKind.Boolean or DKind.Color);
 
-            var typedNames = new List<TypedName>();
-
-            foreach (var name in info.OptionNames)
-            {
-                var type = new DType(DKind.OptionSetValue, info);
-                typedNames.Add(new TypedName(type, name));
-            }
-
-            return new DType(DKind.OptionSet, TypeTree.Create(typedNames.Select(TypedNameToKVP)), info);
+            // This is a hotpath. Some scenarios have 10k option sets
+            return new DType(DKind.OptionSet, TypeTree.Create(info.OptionNames.Select(on => new KeyValuePair<string, DType>(on, new DType(DKind.OptionSetValue, info)))), info);
         }
 
         public static DType CreateViewType(IExternalViewInfo info)
@@ -983,8 +990,23 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (IsLazyType)
             {
+                Contracts.AssertValue(LazyTypeProvider);
+
                 var typeSuffix = string.IsNullOrEmpty(LazyTypeProvider.UserVisibleTypeName) ? string.Empty : $" ({LazyTypeProvider.UserVisibleTypeName})";
                 return (IsTable ? DKind.Table : DKind.Record) + typeSuffix;
+            }
+
+            if (IsOptionSet)
+            {
+                var typeSuffix = string.IsNullOrEmpty(OptionSetInfo?.EntityName) ? string.Empty : $" ({OptionSetInfo.EntityName})";
+                var kind = OptionSetInfo is EnumSymbol ? DKind.Enum : Kind;
+                return kind.ToString() + typeSuffix;
+            }
+
+            if (IsView)
+            {
+                var typeSuffix = string.IsNullOrEmpty(ViewInfo?.EntityName) ? string.Empty : $" ({ViewInfo.EntityName})";
+                return Kind.ToString() + typeSuffix;
             }
 
             return Kind.ToString();
@@ -1018,7 +1040,7 @@ namespace Microsoft.PowerFx.Core.Types
             var fError = false;
             var type = ToRecord(ref fError);
 
-            if (fError) 
+            if (fError)
             {
                 Contracts.Assert(false, "Bad source kind for ToRecord");
             }
@@ -1062,7 +1084,7 @@ namespace Microsoft.PowerFx.Core.Types
             var fError = false;
             var type = ToTable(ref fError);
 
-            if (fError) 
+            if (fError)
             {
                 Contracts.Assert(false, "Bad source kind for ToTable");
             }
@@ -1343,7 +1365,7 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(typedName.IsValid);
 
             // We don't want to allow building aggregate types around deferred type.
-            if(typedName.Type.IsDeferred)
+            if (typedName.Type.IsDeferred)
             {
                 throw new NotSupportedException();
             }
@@ -1356,7 +1378,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
             AssertValid();
             Contracts.Assert(name.IsValid);
-            
+
             var fullType = this;
             if (IsLazyType)
             {
@@ -1530,7 +1552,7 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 fError = true;
                 return this;
-            }            
+            }
 
             var fullType = this;
             if (IsLazyType)
@@ -1715,7 +1737,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// <summary>
         /// Covers Lazy.Accepts(other) scenarios.
         /// </summary>
-        private bool LazyTypeAccepts(DType other, bool exact)
+        private bool LazyTypeAccepts(DType other, bool exact, bool usePowerFxV1CompatibilityRules)
         {
             Contracts.AssertValid(other);
             Contracts.Assert(IsLazyType);
@@ -1728,7 +1750,7 @@ namespace Microsoft.PowerFx.Core.Types
                     return other.LazyTypeProvider.BackingFormulaType.Equals(LazyTypeProvider.BackingFormulaType) && IsTable == other.IsTable;
                 case DKind.Record:
                 case DKind.Table:
-                    return LazyTypeProvider.GetExpandedType(IsTable).Accepts(other, exact);
+                    return LazyTypeProvider.GetExpandedType(IsTable).Accepts(other, exact, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
                 default:
                     return other.Kind == DKind.Unknown || other.Kind == DKind.Deferred;
             }
@@ -1737,7 +1759,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// <summary>
         /// Covers Known.Accepts(Lazy) scenarios.
         /// </summary>
-        private bool AcceptsLazyType(DType lazy, bool exact)
+        private bool AcceptsLazyType(DType lazy, bool exact, bool usePowerFxV1CompatibilityRules)
         {
             Contracts.Assert(IsAggregate);
             Contracts.Assert(lazy.IsLazyType);
@@ -1749,7 +1771,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             foreach (var namedType in GetNames(DPath.Root))
             {
-                if (!lazy.TryGetType(namedType.Name, out var otherField) || !namedType.Type.Accepts(otherField, exact))
+                if (!lazy.TryGetType(namedType.Name, out var otherField) || !namedType.Type.Accepts(otherField, exact, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                 {
                     return false;
                 }
@@ -1758,7 +1780,7 @@ namespace Microsoft.PowerFx.Core.Types
             return true;
         }
 
-        private bool AcceptsEntityType(DType type)
+        private bool AcceptsEntityType(DType type, bool usePowerFxV1CompatibilityRules)
         {
             Contracts.AssertValid(type);
             Contracts.Assert(Kind == DKind.DataEntity);
@@ -1783,7 +1805,7 @@ namespace Microsoft.PowerFx.Core.Types
                         return false;
                     }
 
-                    return expandedEntityType.Accepts(type, true);
+                    return expandedEntityType.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
                 default:
                     return type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
             }
@@ -1805,13 +1827,15 @@ namespace Microsoft.PowerFx.Core.Types
         /// Whether or not <see cref="DType"/>'s absense of columns that are defined in <paramref name="type"/>
         /// should affect acceptance.
         /// </param>
-        /// <param name="useLegacyDateTimeAccepts"></param>
+        /// <param name="useLegacyDateTimeAccepts">Legacy rules for accepting date/time types.</param>
+        /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
+        /// permissive Accepts relationships).</param>
         /// <returns>
         /// True if <see cref="DType"/> accepts <paramref name="type"/>, false otherwise.
         /// </returns>
-        public bool Accepts(DType type, bool exact = true, bool useLegacyDateTimeAccepts = false)
+        public bool Accepts(DType type, bool exact, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
         {
-            return Accepts(type, out _, out _, exact, useLegacyDateTimeAccepts);
+            return Accepts(type, out _, out _, exact, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
         }
 
         /// <summary>
@@ -1837,17 +1861,25 @@ namespace Microsoft.PowerFx.Core.Types
         /// Whether or not <see cref="DType"/>'s absense of columns that are defined in <paramref name="type"/>
         /// should affect acceptance.
         /// </param>
-        /// <param name="useLegacyDateTimeAccepts"></param>
+        /// <param name="useLegacyDateTimeAccepts">Legacy rules for accepting date/time types.</param>
+        /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
+        /// permissive Accepts relationships).</param>
         /// <returns>
         /// True if <see cref="DType"/> accepts <paramref name="type"/>, false otherwise.
         /// </returns>
-        public virtual bool Accepts(DType type, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, bool exact = true, bool useLegacyDateTimeAccepts = false)
+        public virtual bool Accepts(DType type, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, bool exact, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
         {
             AssertValid();
             type.AssertValid();
 
             schemaDifference = new KeyValuePair<string, DType>(null, Invalid);
             schemaDifferenceType = Invalid;
+
+            if (Kind == DKind.Void || type.Kind == DKind.Void)
+            {
+                // No types accept a void type, void type doesn't accept any type
+                return false;
+            }
 
             // We accept ObjNull as any DType (but subtypes can override).
             if (type.Kind == DKind.ObjNull)
@@ -1859,7 +1891,7 @@ namespace Microsoft.PowerFx.Core.Types
                     targetType.Kind == Kind ||
                     targetType.Kind == DKind.Unknown ||
                     targetType.Kind == DKind.Deferred ||
-                    (targetType.Kind == DKind.Enum && Accepts(targetType.GetEnumSupertype()));
+                    (targetType.Kind == DKind.Enum && Accepts(targetType.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             bool accepts;
             switch (Kind)
@@ -1877,26 +1909,26 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.LargeImage:
                     if (type.IsLazyType)
                     {
-                        return AcceptsLazyType(type, exact);
+                        return AcceptsLazyType(type, exact, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
                     }
 
                     if (Kind == type.Kind)
                     {
-                        return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
+                        return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
                     }
 
                     accepts = type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
 
-                case DKind.Table:                    
+                case DKind.Table:
                     if (type.IsLazyType)
                     {
-                        return AcceptsLazyType(type, exact);
+                        return AcceptsLazyType(type, exact, usePowerFxV1CompatibilityRules);
                     }
 
                     if (Kind == type.Kind || type.IsExpandEntity)
                     {
-                        return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
+                        return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
                     }
 
                     accepts = (IsMultiSelectOptionSet() && TypeTree.GetPairs().First().Value.OptionSetInfo == type.OptionSetInfo) || type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
@@ -1914,33 +1946,58 @@ namespace Microsoft.PowerFx.Core.Types
                     accepts = type.Kind == DKind.Deferred || type.Kind == DKind.Unknown;
                     break;
                 case DKind.String:
-                    accepts =
-                        type.Kind == Kind ||
-                        type.Kind == DKind.Hyperlink ||
-                        type.Kind == DKind.Image ||
-                        type.Kind == DKind.PenImage ||
-                        type.Kind == DKind.Media ||
-                        type.Kind == DKind.Blob ||
-                        type.Kind == DKind.Unknown ||
-                        type.Kind == DKind.Deferred ||
-                        type.Kind == DKind.Guid ||
-                        (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype()));
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        accepts =
+                            type.Kind == Kind ||
+                            type.Kind == DKind.Unknown ||
+                            type.Kind == DKind.Deferred ||
+                            (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                    }
+                    else
+                    {
+                        accepts =
+                            type.Kind == Kind ||
+                            type.Kind == DKind.Hyperlink ||
+                            type.Kind == DKind.Image ||
+                            type.Kind == DKind.PenImage ||
+                            type.Kind == DKind.Media ||
+                            type.Kind == DKind.Blob ||
+                            type.Kind == DKind.Unknown ||
+                            type.Kind == DKind.Deferred ||
+                            type.Kind == DKind.Guid ||
+                            (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                    }
+
                     break;
 
                 case DKind.Number:
-                    accepts =
-                        type.Kind == Kind ||
-                        type.Kind == DKind.Currency ||
-                        type.Kind == DKind.Unknown ||
-                        type.Kind == DKind.Deferred ||
-                        (useLegacyDateTimeAccepts &&
-                            (type.Kind == DKind.DateTime ||
-                            type.Kind == DKind.Date ||
-                            type.Kind == DKind.Time ||
-                            type.Kind == DKind.DateTimeNoTimeZone)) ||
-                        (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype()));
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        accepts =
+                            type.Kind == Kind ||
+                            type.Kind == DKind.Unknown ||
+                            type.Kind == DKind.Deferred ||
+                            (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                    }
+                    else
+                    {
+                        accepts =
+                            type.Kind == Kind ||
+                            type.Kind == DKind.Currency ||
+                            type.Kind == DKind.Unknown ||
+                            type.Kind == DKind.Deferred ||
+                            (useLegacyDateTimeAccepts &&
+                                (type.Kind == DKind.DateTime ||
+                                type.Kind == DKind.Date ||
+                                type.Kind == DKind.Time ||
+                                type.Kind == DKind.DateTimeNoTimeZone)) ||
+                            (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                    }
+
                     break;
 
+                case DKind.Decimal:
                 case DKind.Color:
                 case DKind.Boolean:
                 case DKind.PenImage:
@@ -1950,44 +2007,108 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
 
                 case DKind.Hyperlink:
-                    accepts = (!exact && type.Kind == DKind.String) ||
-                              type.Kind == DKind.Media ||
-                              type.Kind == DKind.Blob ||
-                              type.Kind == DKind.Image ||
-                              type.Kind == DKind.PenImage ||
-                              DefaultReturnValue(type);
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        accepts = DefaultReturnValue(type);
+                    }
+                    else
+                    {
+                        accepts =
+                            (!exact && type.Kind == DKind.String) ||
+                            type.Kind == DKind.Media ||
+                            type.Kind == DKind.Blob ||
+                            type.Kind == DKind.Image ||
+                            type.Kind == DKind.PenImage ||
+                            DefaultReturnValue(type);
+                    }
 
                     break;
                 case DKind.Image:
-                    accepts =
-                        type.Kind == DKind.PenImage || type.Kind == DKind.Blob || (!exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink)) || DefaultReturnValue(type);
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        accepts = DefaultReturnValue(type);
+                    }
+                    else
+                    {
+                        accepts =
+                            type.Kind == DKind.PenImage || type.Kind == DKind.Blob || (!exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink)) || DefaultReturnValue(type);
+                    }
+
                     break;
                 case DKind.Media:
-                    accepts =
-                        type.Kind == DKind.Blob || (!exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink)) || DefaultReturnValue(type);
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        accepts = DefaultReturnValue(type);
+                    }
+                    else
+                    {
+                        accepts =
+                            type.Kind == DKind.Blob || (!exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink)) || DefaultReturnValue(type);
+                    }
+
                     break;
                 case DKind.Blob:
-                    accepts = (!exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink)) || DefaultReturnValue(type);
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        accepts = DefaultReturnValue(type);
+                    }
+                    else
+                    {
+                        accepts = (!exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink)) || DefaultReturnValue(type);
+                    }
+
                     break;
                 case DKind.Currency:
-                    accepts = (!exact && type.Kind == DKind.Number) || DefaultReturnValue(type);
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        accepts = DefaultReturnValue(type);
+                    }
+                    else
+                    {
+                        accepts = (!exact && type.Kind == DKind.Number) || DefaultReturnValue(type);
+                    }
+
                     break;
                 case DKind.DateTime:
-                    accepts = (type.Kind == DKind.Date || type.Kind == DKind.Time || type.Kind == DKind.DateTimeNoTimeZone || (useLegacyDateTimeAccepts && !exact && type.Kind == DKind.Number)) || DefaultReturnValue(type);
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        accepts = DefaultReturnValue(type);
+                    }
+                    else
+                    {
+                        accepts = (type.Kind == DKind.Date || type.Kind == DKind.Time || type.Kind == DKind.DateTimeNoTimeZone || (useLegacyDateTimeAccepts && !exact && type.Kind == DKind.Number)) || DefaultReturnValue(type);
+                    }
+
                     break;
                 case DKind.DateTimeNoTimeZone:
-                    accepts = (type.Kind == DKind.Date || type.Kind == DKind.Time || (useLegacyDateTimeAccepts && !exact && type.Kind == DKind.Number)) ||
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        accepts = DefaultReturnValue(type);
+                    }
+                    else
+                    {
+                        accepts = (type.Kind == DKind.Date || type.Kind == DKind.Time || (useLegacyDateTimeAccepts && !exact && type.Kind == DKind.Number)) ||
                               DefaultReturnValue(type);
+                    }
+
                     break;
                 case DKind.Date:
                 case DKind.Time:
-                    accepts = (!exact && (type.Kind == DKind.DateTime || type.Kind == DKind.DateTimeNoTimeZone || (useLegacyDateTimeAccepts && type.Kind == DKind.Number))) ||
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        accepts = DefaultReturnValue(type);
+                    }
+                    else
+                    {
+                        accepts = (!exact && (type.Kind == DKind.DateTime || type.Kind == DKind.DateTimeNoTimeZone || (useLegacyDateTimeAccepts && type.Kind == DKind.Number))) ||
                               DefaultReturnValue(type);
+                    }
+
                     break;
                 case DKind.Control:
                     throw new NotImplementedException("This should be overriden");
                 case DKind.DataEntity:
-                    accepts = AcceptsEntityType(type);
+                    accepts = AcceptsEntityType(type, usePowerFxV1CompatibilityRules);
                     break;
                 case DKind.Metadata:
                     accepts = (type.Kind == Kind &&
@@ -1998,7 +2119,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.OptionSet:
                 case DKind.OptionSetValue:
                     accepts = (type.Kind == Kind &&
-                                (OptionSetInfo == null || type.OptionSetInfo == null || type.OptionSetInfo == OptionSetInfo)) ||
+                                (OptionSetInfo == null || type.OptionSetInfo == null || type.OptionSetInfo.Equals(OptionSetInfo))) ||
                                type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
                 case DKind.View:
@@ -2018,7 +2139,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                 case DKind.LazyTable:
                 case DKind.LazyRecord:
-                    accepts = LazyTypeAccepts(type, exact);
+                    accepts = LazyTypeAccepts(type, exact, usePowerFxV1CompatibilityRules);
                     break;
                 default:
                     Contracts.Assert(false);
@@ -2035,7 +2156,7 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         // Implements Accepts for Record and Table types.
-        private static bool TreeAccepts(DType parentType, TypeTree treeDst, TypeTree treeSrc, out KeyValuePair<string, DType> schemaDifference, out DType treeSrcSchemaDifferenceType, bool exact = true, bool useLegacyDateTimeAccepts = false)
+        private static bool TreeAccepts(DType parentType, TypeTree treeDst, TypeTree treeSrc, out KeyValuePair<string, DType> schemaDifference, out DType treeSrcSchemaDifferenceType, bool exact = true, bool useLegacyDateTimeAccepts = false, bool usePowerFxV1CompatibilityRules = false)
         {
             treeDst.AssertValid();
             treeSrc.AssertValid();
@@ -2075,7 +2196,7 @@ namespace Microsoft.PowerFx.Core.Types
                     return false;
                 }
 
-                if (!pairDst.Value.Accepts(type, out var recursiveSchemaDifference, out var recursiveSchemaDifferenceType, exact, useLegacyDateTimeAccepts))
+                if (!pairDst.Value.Accepts(type, out var recursiveSchemaDifference, out var recursiveSchemaDifferenceType, exact, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                 {
                     if (!TryGetDisplayNameForColumn(parentType, pairDst.Key, out var colName))
                     {
@@ -2134,7 +2255,7 @@ namespace Microsoft.PowerFx.Core.Types
             return true;
         }
 
-        private static bool IsSuperKind(DKind baseKind, DKind kind)
+        private static bool IsSuperKind(DKind baseKind, DKind kind, bool usePowerFxV1CompatibilityRules)
         {
             Contracts.Assert(baseKind >= DKind._Min && baseKind < DKind._Lim);
             Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
@@ -2154,6 +2275,11 @@ namespace Microsoft.PowerFx.Core.Types
                 return false;
             }
 
+            if (usePowerFxV1CompatibilityRules)
+            {
+                return false;
+            }
+
             DKind kind2Superkind;
 
             while (KindToSuperkindMapping.TryGetValue(kind, out kind2Superkind) && kind2Superkind != baseKind)
@@ -2168,10 +2294,10 @@ namespace Microsoft.PowerFx.Core.Types
         // This method returns true if this type requires such explicit conversion.
         // This method assumes that this type and the destination type are in the
         // same path in the type hierarchy (one is the ancestor of the other).
-        public bool RequiresExplicitCast(DType destType)
+        public bool RequiresExplicitCast(DType destType, bool usePowerFxV1CompatibilityRules)
         {
             Contracts.Assert(destType.IsValid);
-            Contracts.Assert(destType.Accepts(this, exact: false));
+            Contracts.Assert(destType.Accepts(this, exact: false, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             switch (destType.Kind)
             {
@@ -2191,7 +2317,7 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         // Produces the least common supertype of the two specified types.
-        public static DType Supertype(DType type1, DType type2, bool useLegacyDateTimeAccepts = false)
+        public static DType Supertype(DType type1, DType type2, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
         {
             type1.AssertValid();
             type2.AssertValid();
@@ -2203,25 +2329,30 @@ namespace Microsoft.PowerFx.Core.Types
                     return Error;
                 }
 
-                return SupertypeAggregateCore(type1, type2, useLegacyDateTimeAccepts);
+                return SupertypeAggregateCore(type1, type2, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
             }
 
-            return SupertypeCore(type1, type2, useLegacyDateTimeAccepts);
+            return SupertypeCore(type1, type2, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
         }
 
-        private static DType SupertypeCore(DType type1, DType type2, bool useLegacyDateTimeAccepts)
+        private static DType SupertypeCore(DType type1, DType type2, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
         {
             type1.AssertValid();
             type2.AssertValid();
 
-            if (type1.Accepts(type2, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts))
+            if (type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
             {
                 return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
             }
 
-            if (type2.Accepts(type1, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts))
+            if (type2.Accepts(type1, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
             {
                 return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+            }
+
+            if (usePowerFxV1CompatibilityRules)
+            {
+                return Error;
             }
 
             if (!KindToSuperkindMapping.TryGetValue(type1.Kind, out var type1Superkind) || type1Superkind == DKind.Error)
@@ -2229,7 +2360,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return Error;
             }
 
-            while (!IsSuperKind(type1Superkind, type2.Kind))
+            while (!IsSuperKind(type1Superkind, type2.Kind, usePowerFxV1CompatibilityRules))
             {
                 if (!KindToSuperkindMapping.TryGetValue(type1Superkind, out type1Superkind) || type1Superkind == DKind.Error)
                 {
@@ -2249,7 +2380,7 @@ namespace Microsoft.PowerFx.Core.Types
             return type;
         }
 
-        private static DType SupertypeAggregateCore(DType type1, DType type2, bool useLegacyDateTimeAccepts)
+        private static DType SupertypeAggregateCore(DType type1, DType type2, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
         {
             type1.AssertValid();
             type2.AssertValid();
@@ -2275,7 +2406,7 @@ namespace Microsoft.PowerFx.Core.Types
                     var cmp = RedBlackNode<DType>.Compare(ator1.Current.Key, ator2.Current.Key);
                     if (cmp == 0)
                     {
-                        var innerType = Supertype(ator1.Current.Value, ator2.Current.Value, useLegacyDateTimeAccepts);
+                        var innerType = Supertype(ator1.Current.Value, ator2.Current.Value, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
                         if (innerType.IsError)
                         {
                             treeRes = treeRes.RemoveItem(ref fError, ator1.Current.Key);
@@ -2310,7 +2441,7 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(!fError);
             var returnType = new DType(type1.Kind, treeRes, UnionDataSourceInfoMetadata(type1, type2), type1.DisplayNameProvider);
 
-            returnType = type2.DisplayNameProvider == null ? 
+            returnType = type2.DisplayNameProvider == null ?
                 returnType :
                 AttachOrDisableDisplayNameProvider(returnType, type2.DisplayNameProvider);
             return returnType;
@@ -2319,19 +2450,19 @@ namespace Microsoft.PowerFx.Core.Types
         // Produces the union of the two given types.
         // For primitive types, this is the same as the least common supertype.
         // For aggregates, the union is a common subtype that includes fields from both types, assuming no errors.
-        public static DType Union(DType type1, DType type2, bool useLegacyDateTimeAccepts = false)
+        public static DType Union(DType type1, DType type2, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
         {
             var fError = false;
-            return Union(ref fError, type1, type2, useLegacyDateTimeAccepts);
+            return Union(ref fError, type1, type2, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, usePowerFxV1CompatibilityRules);
         }
 
-        public bool CanUnionWith(DType type, bool useLegacyDateTimeAccepts = false)
+        public bool CanUnionWith(DType type, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
         {
             AssertValid();
             type.AssertValid();
 
             var fError = false;
-            Union(ref fError, this, type, useLegacyDateTimeAccepts);
+            Union(ref fError, this, type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
 
             return !fError;
         }
@@ -2386,13 +2517,8 @@ namespace Microsoft.PowerFx.Core.Types
             type.AssertValid();
             Contracts.AssertValueOrNull(connectedDataSourceInfoSet);
 
-            if (connectedDataSourceInfoSet == null || connectedDataSourceInfoSet.Count == 0)
-            {
-                return type;
-            }
-
             var returnType = type;
-            foreach (var cds in connectedDataSourceInfoSet)
+            foreach (var cds in connectedDataSourceInfoSet ?? Enumerable.Empty<IExternalTabularDataSource>())
             {
                 returnType = AttachDataSourceInfo(returnType, cds);
             }
@@ -2565,79 +2691,116 @@ namespace Microsoft.PowerFx.Core.Types
             return false;
         }
 
-        public static DType Union(ref bool fError, DType type1, DType type2, bool useLegacyDateTimeAccepts = false)
+        public static DType Union(ref bool fError, DType leftType, DType rightType, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules, bool allowCoerce = false, bool unionToLeftTypeOnly = false)
         {
-            type1.AssertValid();
-            type2.AssertValid();
-            
+            leftType.AssertValid();
+            rightType.AssertValid();
+
             // For Lazy Types, union operations must expand the current depth
-            if (type1.IsLazyType)
+            if (leftType.IsLazyType)
             {
-                if (type1 == type2)
+                if (leftType == rightType)
                 {
-                    return type1;
+                    return leftType;
                 }
 
-                type1 = type1.LazyTypeProvider.GetExpandedType(type1.IsTable);
+                leftType = leftType.LazyTypeProvider.GetExpandedType(leftType.IsTable);
             }
 
-            if (type2.IsLazyType)
+            if (rightType.IsLazyType)
             {
-                type2 = type2.LazyTypeProvider.GetExpandedType(type2.IsTable);
+                rightType = rightType.LazyTypeProvider.GetExpandedType(rightType.IsTable);
             }
 
-            if (type1.IsAggregate && type2.IsAggregate)
+            if (leftType.IsAggregate && rightType.IsAggregate)
             {
-                if (type1 == ObjNull)
+                if (leftType == ObjNull)
                 {
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(rightType, leftType.AssociatedDataSources, leftType.DisplayNameProvider);
                 }
 
-                if (type2 == ObjNull)
+                if (rightType == ObjNull)
                 {
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(leftType, rightType.AssociatedDataSources, rightType.DisplayNameProvider);
                 }
 
-                if (type1.Kind != type2.Kind)
+                if (leftType.Kind != rightType.Kind)
                 {
                     fError = true;
                     return Error;
                 }
 
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(UnionCore(ref fError, type1, type2, useLegacyDateTimeAccepts), type2.AssociatedDataSources, type2.DisplayNameProvider);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(
+                    UnionCore(ref fError, leftType, rightType, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce, unionToLeftTypeOnly),
+                    rightType.AssociatedDataSources,
+                    rightType.DisplayNameProvider);
             }
 
-            if (type1.Accepts(type2, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts))
+            if (leftType == Unknown)
             {
-                fError |= type1.IsError;
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(rightType, leftType.AssociatedDataSources, leftType.DisplayNameProvider);
             }
 
-            if (type2.Accepts(type1, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts))
+            if (rightType == Unknown)
             {
-                fError |= type2.IsError;
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(leftType, rightType.AssociatedDataSources, rightType.DisplayNameProvider);
             }
 
-            var result = Supertype(type1, type2, useLegacyDateTimeAccepts);
+            if (leftType == ObjNull)
+            {
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(rightType, leftType.AssociatedDataSources, leftType.DisplayNameProvider);
+            }
+
+            if (rightType == ObjNull)
+            {
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(leftType, rightType.AssociatedDataSources, rightType.DisplayNameProvider);
+            }
+
+            if (unionToLeftTypeOnly)
+            {
+                if (leftType.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)
+                    || (allowCoerce && rightType.CoercesTo(leftType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+                {
+                    fError |= leftType.IsError;
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(leftType, rightType.AssociatedDataSources, rightType.DisplayNameProvider);
+                }
+            }
+            else
+            {
+                if (leftType.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)
+                    || (allowCoerce && leftType.CoercesTo(rightType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+                {
+                    fError |= leftType.IsError;
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(leftType, rightType.AssociatedDataSources, rightType.DisplayNameProvider);
+                }
+
+                if (rightType.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                    (allowCoerce && rightType.CoercesTo(leftType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+                {
+                    fError |= rightType.IsError;
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(rightType, leftType.AssociatedDataSources, leftType.DisplayNameProvider);
+                }
+            }
+
+            var result = Supertype(leftType, rightType, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
             fError = result == Error;
             return result;
         }
 
-        private static DType UnionCore(ref bool fError, DType type1, DType type2, bool useLegacyDateTimeAccepts = false)
+        private static DType UnionCore(ref bool fError, DType leftType, DType rightType, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules, bool allowCoerce, bool unionToLeftTypeOnly)
         {
-            type1.AssertValid();
-            Contracts.Assert(type1.IsAggregate);
-            type2.AssertValid();
-            Contracts.Assert(type2.IsAggregate);
+            leftType.AssertValid();
+            Contracts.Assert(leftType.IsAggregate);
+            rightType.AssertValid();
+            Contracts.Assert(rightType.IsAggregate);
 
-            var result = type1;
+            var result = leftType;
 
-            foreach (var pair in type2.GetNames(DPath.Root))
+            foreach (var pair in rightType.GetNames(DPath.Root))
             {
                 var field2Name = pair.Name;
 
-                if (!type1.TryGetType(field2Name, out var field1Type))
+                if (!leftType.TryGetType(field2Name, out var field1Type))
                 {
                     result = result.Add(pair);
                     continue;
@@ -2654,9 +2817,15 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     fieldType = field1Type == ObjNull ? field2Type : field1Type;
                 }
+                else if (usePowerFxV1CompatibilityRules &&
+                    ((field1Type == Polymorphic && field2Type.IsRecord) ||
+                    (field2Type == Polymorphic && field1Type.IsRecord)))
+                {
+                    fieldType = field1Type == Polymorphic ? field2Type : field1Type;
+                }
                 else if (field1Type.IsAggregate && field2Type.IsAggregate)
                 {
-                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts);
+                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce, unionToLeftTypeOnly);
                 }
                 else if (field1Type.IsAggregate || field2Type.IsAggregate)
                 {
@@ -2685,7 +2854,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
                 else
                 {
-                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts);
+                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce, unionToLeftTypeOnly);
                 }
 
                 result = result.SetType(ref fError, DPath.Root.Append(field2Name), fieldType);
@@ -2953,17 +3122,17 @@ namespace Microsoft.PowerFx.Core.Types
                 (n.Type.IsAggregate && n.Type.ContainsControlType(DPath.Root)));
         }
 
-        public bool CoercesTo(DType typeDest, bool aggregateCoercion = true, bool isTopLevelCoercion = false)
+        public bool CoercesTo(DType typeDest, bool aggregateCoercion, bool isTopLevelCoercion, bool usePowerFxV1CompatibilityRules)
         {
-            return CoercesTo(typeDest, out _, aggregateCoercion, isTopLevelCoercion);
+            return CoercesTo(typeDest, out _, aggregateCoercion, isTopLevelCoercion, usePowerFxV1CompatibilityRules);
         }
 
-        public bool CoercesTo(DType typeDest, out bool isSafe, bool aggregateCoercion = true, bool isTopLevelCoercion = false)
+        public bool CoercesTo(DType typeDest, out bool isSafe, bool aggregateCoercion, bool isTopLevelCoercion, bool usePowerFxV1CompatibilityRules)
         {
-            return CoercesTo(typeDest, out isSafe, out _, out _, out _, aggregateCoercion, isTopLevelCoercion);
+            return CoercesTo(typeDest, out isSafe, out _, out _, out _, aggregateCoercion, isTopLevelCoercion, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
         }
 
-        public bool AggregateCoercesTo(DType typeDest, out bool isSafe, out DType coercionType, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, bool aggregateCoercion = true)
+        public bool AggregateCoercesTo(DType typeDest, out bool isSafe, out DType coercionType, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, bool aggregateCoercion = true, bool usePowerFxV1CompatibilityRules = false)
         {
             Contracts.Assert(IsAggregate);
 
@@ -3000,7 +3169,15 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (Kind != typeDest.Kind && Kind == DKind.Record && aggregateCoercion)
             {
-                return ToTable().CoercesTo(typeDest, out isSafe, out coercionType, out schemaDifference, out schemaDifferenceType);
+                return ToTable().CoercesTo(
+                    typeDest,
+                    out isSafe,
+                    out coercionType,
+                    out schemaDifference,
+                    out schemaDifferenceType,
+                    aggregateCoercion: true,
+                    isTopLevelCoercion: false,
+                    usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             }
 
             if (Kind != typeDest.Kind)
@@ -3033,7 +3210,9 @@ namespace Microsoft.PowerFx.Core.Types
                         out var fieldCoercionType,
                         out var fieldSchemaDifference,
                         out var fieldSchemaDifferenceType,
-                        aggregateCoercion);
+                        aggregateCoercion,
+                        isTopLevelCoercion: false,
+                        usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
 
                     // This is the attempted coercion type.  If we fail, we need to know this for error handling
                     coercionType = coercionType.Add(typedName.Name, fieldCoercionType);
@@ -3049,6 +3228,10 @@ namespace Microsoft.PowerFx.Core.Types
 
                     isValid &= isFieldValid;
                 }
+                else if (usePowerFxV1CompatibilityRules)
+                {
+                    coercionType = coercionType.Add(typedName.Name, typedName.Type);
+                }
                 else if (!typeDest.AreFieldsOptional)
                 {
                     isValid = false; // If the name doesn't exist, it is valid only if it is optional
@@ -3063,7 +3246,15 @@ namespace Microsoft.PowerFx.Core.Types
         // Returns true if values of this type may be coerced to the specified type.
         // isSafe is marked false if the resultant coercion could have undesireable results
         // such as returning null or returning an unintuitive outcome.
-        public virtual bool CoercesTo(DType typeDest, out bool isSafe, out DType coercionType, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, bool aggregateCoercion = true, bool isTopLevelCoercion = false)
+        public virtual bool CoercesTo(
+            DType typeDest,
+            out bool isSafe,
+            out DType coercionType,
+            out KeyValuePair<string, DType> schemaDifference,
+            out DType schemaDifferenceType,
+            bool aggregateCoercion,
+            bool isTopLevelCoercion,
+            bool usePowerFxV1CompatibilityRules)
         {
             AssertValid();
             Contracts.Assert(typeDest.IsValid);
@@ -3073,10 +3264,40 @@ namespace Microsoft.PowerFx.Core.Types
 
             isSafe = true;
 
-            if (typeDest.Accepts(this))
+            if (Kind == DKind.Void || typeDest.Kind == DKind.Void)
+            {
+                // No types coerces to a void type, void type doesn't coerce to any type.
+                coercionType = this;
+                return false;
+            }
+
+            if (typeDest.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
             {
                 coercionType = typeDest;
                 return true;
+            }
+
+            if (Kind == DKind.UntypedObject)
+            {
+                isSafe = false;
+                if (typeDest.Kind == DKind.String ||
+                    typeDest.Kind == DKind.Number ||
+                    typeDest.Kind == DKind.Decimal ||
+                    typeDest.Kind == DKind.Boolean ||
+                    typeDest.Kind == DKind.Date ||
+                    typeDest.Kind == DKind.Time ||
+                    typeDest.Kind == DKind.DateTime ||
+                    typeDest.Kind == DKind.Color ||
+                    typeDest.Kind == DKind.Guid)
+                {
+                    coercionType = typeDest;
+                    return true;
+                }
+                else
+                {
+                    coercionType = this;
+                    return false;
+                }
             }
 
             if (Kind == DKind.Error)
@@ -3088,10 +3309,23 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (IsAggregate)
             {
-                return AggregateCoercesTo(typeDest, out isSafe, out coercionType, out schemaDifference, out schemaDifferenceType, aggregateCoercion);
+                return AggregateCoercesTo(
+                    typeDest,
+                    out isSafe,
+                    out coercionType,
+                    out schemaDifference,
+                    out schemaDifferenceType,
+                    aggregateCoercion,
+                    usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             }
 
-            var subtypeCoerces = SubtypeCoercesTo(typeDest, ref isSafe, out coercionType, ref schemaDifference, ref schemaDifferenceType);
+            var subtypeCoerces = SubtypeCoercesTo(
+                typeDest,
+                ref isSafe,
+                out coercionType,
+                ref schemaDifference,
+                ref schemaDifferenceType,
+                usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             if (subtypeCoerces.HasValue)
             {
                 return subtypeCoerces.Value;
@@ -3111,7 +3345,7 @@ namespace Microsoft.PowerFx.Core.Types
                     !typeDest.IsAttachment &&
                     !typeDest.IsMetadata &&
                     !typeDest.IsAggregate &&
-                    typeDest.Accepts(GetEnumSupertype()))
+                    typeDest.Accepts(GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                 {
                     coercionType = typeDest;
                     return true;
@@ -3135,8 +3369,10 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Boolean:
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
-                                 Number.Accepts(this) ||
-                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.IsBooleanValued);
+                                 (usePowerFxV1CompatibilityRules && Currency.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true)) ||
+                                 Number.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 Decimal.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.IsBooleanValued());
                     break;
                 case DKind.DateTime:
                 case DKind.Date:
@@ -3147,43 +3383,141 @@ namespace Microsoft.PowerFx.Core.Types
                     // String to DateTime isn't safe for ill-formatted strings.
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
-                                 Number.Accepts(this) ||
-                                 DateTime.Accepts(this);
+                                 Number.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 Decimal.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 DateTime.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 Time.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 Date.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
                     break;
                 case DKind.Number:
                     // Ill-formatted strings coerce to null; unsafe.
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
-                                 Number.Accepts(this) ||
-                                 Boolean.Accepts(this) ||
-                                 DateTime.Accepts(this);
+                                 (usePowerFxV1CompatibilityRules && Currency.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)) ||
+                                 Number.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 Decimal.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 Boolean.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 DateTime.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 Time.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 Date.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number);
                     break;
                 case DKind.Currency:
                     // Ill-formatted strings coerce to null; unsafe.
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
                                  Kind == DKind.Number ||
-                                 Boolean.Accepts(this);
+                                 Kind == DKind.Decimal ||
+                                 Boolean.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                    break;
+                case DKind.Decimal:
+                    // Ill-formatted strings coerce to null; unsafe.
+                    isSafe = Kind != DKind.String && Kind != DKind.Number;
+                    doesCoerce = Kind == DKind.String ||
+                                 Currency.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 Number.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 Boolean.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 Decimal.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 DateTime.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 Date.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 Time.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number);
                     break;
                 case DKind.String:
                     doesCoerce = Kind != DKind.Color && Kind != DKind.Control && Kind != DKind.DataEntity && Kind != DKind.OptionSet && Kind != DKind.View && Kind != DKind.Polymorphic && Kind != DKind.File && Kind != DKind.LargeImage;
                     break;
+                case DKind.Guid:
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        doesCoerce = String.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
+                    }
+
+                    break;
                 case DKind.Hyperlink:
-                    doesCoerce = Kind != DKind.Guid && String.Accepts(this);
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        doesCoerce = String.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            Image.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            PenImage.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            Hyperlink.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            Media.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            Blob.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
+                    }
+                    else
+                    {
+                        doesCoerce = Kind != DKind.Guid &&
+                            String.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                    }
+
                     break;
                 case DKind.Image:
-                    doesCoerce = Kind != DKind.Media && Kind != DKind.Blob && Kind != DKind.Guid && String.Accepts(this);
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        doesCoerce = String.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            Image.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            Hyperlink.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            Blob.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            PenImage.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
+                    }
+                    else
+                    {
+                        doesCoerce = Kind != DKind.Media &&
+                            Kind != DKind.Blob &&
+                            Kind != DKind.Guid
+                            && String.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                    }
+
                     break;
                 case DKind.Media:
-                    doesCoerce = Kind != DKind.Image && Kind != DKind.PenImage && Kind != DKind.Blob && Kind != DKind.Guid && String.Accepts(this);
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        doesCoerce = String.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            Hyperlink.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            Media.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            Blob.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
+                    }
+                    else
+                    {
+                        doesCoerce = Kind != DKind.Image &&
+                            Kind != DKind.PenImage &&
+                            Kind != DKind.Blob &&
+                            Kind != DKind.Guid &&
+                            String.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: false);
+                    }
+
                     break;
                 case DKind.Blob:
-                    doesCoerce = Kind != DKind.Guid && String.Accepts(this);
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        doesCoerce = String.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            Image.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            PenImage.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            Hyperlink.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            Media.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) ||
+                            Blob.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
+                    }
+                    else
+                    {
+                        doesCoerce = Kind != DKind.Guid &&
+                            String.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                    }
+
+                    break;
+                case DKind.Color:
+                    doesCoerce = Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Color;
                     break;
                 case DKind.Enum:
-                    return CoercesTo(typeDest.GetEnumSupertype(), out isSafe, out coercionType, out schemaDifference, out schemaDifferenceType);
+                    return CoercesTo(
+                        typeDest.GetEnumSupertype(),
+                        out isSafe,
+                        out coercionType,
+                        out schemaDifference,
+                        out schemaDifferenceType,
+                        aggregateCoercion: true,
+                        isTopLevelCoercion: false,
+                        usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
                 case DKind.OptionSetValue:
-                    doesCoerce = (typeDest.OptionSetInfo?.IsBooleanValued ?? false) && Kind == DKind.Boolean && !isTopLevelCoercion;
+                    doesCoerce = (typeDest.OptionSetInfo?.IsBooleanValued() ?? false) && Kind == DKind.Boolean && !isTopLevelCoercion;
                     break;
             }
 
@@ -3199,7 +3533,7 @@ namespace Microsoft.PowerFx.Core.Types
             return doesCoerce;
         }
 
-        protected virtual bool? SubtypeCoercesTo(DType typeDest, ref bool isSafe, out DType coercionType, ref KeyValuePair<string, DType> schemaDifference, ref DType schemaDifferenceType)
+        protected virtual bool? SubtypeCoercesTo(DType typeDest, ref bool isSafe, out DType coercionType, ref KeyValuePair<string, DType> schemaDifference, ref DType schemaDifferenceType, bool usePowerFxV1CompatibilityRules = false)
         {
             coercionType = null;
             return null;
@@ -3208,7 +3542,7 @@ namespace Microsoft.PowerFx.Core.Types
         // Gets the subtype of aggregate type expectedType that this type can coerce to.
         // Checks whether the fields of this type can be coerced to the fields of expectedType
         // and returns the type it should be coerced to in order to be compatible.
-        public bool TryGetCoercionSubType(DType expectedType, out DType coercionType, out bool coercionNeeded, bool safeCoercionRequired = false, bool aggregateCoercion = true)
+        public bool TryGetCoercionSubType(DType expectedType, out DType coercionType, out bool coercionNeeded, bool safeCoercionRequired = false, bool aggregateCoercion = true, bool usePowerFxV1CompatibilityRules = false)
         {
             Contracts.Assert(expectedType.IsValid);
 
@@ -3216,32 +3550,37 @@ namespace Microsoft.PowerFx.Core.Types
             if (!expectedType.IsAggregate || expectedType.IsLargeImage)
             {
                 coercionType = expectedType;
-                coercionNeeded = !expectedType.Accepts(this);
+                coercionNeeded = !expectedType.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
                 if (!coercionNeeded)
                 {
                     return true;
                 }
 
-                if (expectedType.TryGetExpandedEntityTypeWithoutDataSourceSpecificColumns(out var expandedType) && expandedType.Accepts(this))
+                if (expectedType.TryGetExpandedEntityTypeWithoutDataSourceSpecificColumns(out var expandedType) && expandedType.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                 {
                     coercionNeeded = false;
                     return true;
                 }
 
-                return CoercesTo(expectedType, out var coercionIsSafe, aggregateCoercion) && (!safeCoercionRequired || coercionIsSafe);
+                return CoercesTo(
+                    expectedType,
+                    out var coercionIsSafe,
+                    aggregateCoercion,
+                    isTopLevelCoercion: false,
+                    usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && (!safeCoercionRequired || coercionIsSafe);
             }
 
             // LazyTable/Record case
             if (expectedType.IsLazyType)
             {
                 coercionType = expectedType;
-                coercionNeeded = !expectedType.Accepts(this);
+                coercionNeeded = !expectedType.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
                 if (!coercionNeeded)
                 {
                     return true;
                 }
-                
-                if (expectedType.LazyTypeProvider.GetExpandedType(expectedType.IsTable).Accepts(this))
+
+                if (expectedType.LazyTypeProvider.GetExpandedType(expectedType.IsTable).Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                 {
                     coercionNeeded = false;
                     return true;
@@ -3268,7 +3607,13 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 if (TryGetType(typedName.Name, out var thisFieldType))
                 {
-                    if (!thisFieldType.TryGetCoercionSubType(typedName.Type, out var thisFieldCoercionType, out var thisFieldCoercionNeeded, safeCoercionRequired, aggregateCoercion))
+                    if (!thisFieldType.TryGetCoercionSubType(
+                        typedName.Type,
+                        out var thisFieldCoercionType,
+                        out var thisFieldCoercionNeeded,
+                        safeCoercionRequired,
+                        aggregateCoercion,
+                        usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return false;
                     }
@@ -3289,12 +3634,12 @@ namespace Microsoft.PowerFx.Core.Types
             return TypeTree.First().Value;
         }
 
-        internal static bool AreCompatibleTypes(DType type1, DType type2)
+        internal static bool AreCompatibleTypes(DType type1, DType type2, bool usePowerFxV1CompatibilityRules)
         {
             Contracts.Assert(type1.IsValid);
             Contracts.Assert(type2.IsValid);
 
-            return type1.Accepts(type2) || type2.Accepts(type1);
+            return type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || type2.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
         }
 
         internal static string MapKindToStr(DKind kind)
@@ -3377,6 +3722,10 @@ namespace Microsoft.PowerFx.Core.Types
                     return "V";
                 case DKind.UntypedObject:
                     return "O";
+                case DKind.Void:
+                    return "-";
+                case DKind.Decimal:
+                    return "w";
             }
         }
 
@@ -3503,6 +3852,67 @@ namespace Microsoft.PowerFx.Core.Types
             // suggestions.
             return similar != null &&
                    comparer.Distance(similar) < (name.Value.Length / 3) + 3;
+        }
+
+        public bool AggregateHasExpandedType()
+        {
+            var ret = false;
+
+            if (IsAggregate)
+            {
+                var record = ToRecord();
+
+                ret = record.GetAllNames(DPath.Root).Any(name => name.Type.IsExpandEntity);
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Try to union all table child types and checks if any coercion is necessary. Meant to be called from within table type check loop.
+        /// </summary>
+        /// <param name="leftType">Current table child type.</param>
+        /// <param name="rightType">Current table child type.</param>
+        /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
+        /// permissive Accepts relationships).</param>
+        /// <param name="coerceToLeftTypeOnly">If true, the union can only be done from the right type to the left type.
+        /// For example, if <paramref name="leftType"/> is a number and <paramref name="rightType"/> is a numeric
+        /// option set then the union will succeed (numeric option set can coerce to number), but not the other way
+        /// around (number cannot be coerced to a numeric option set).</param>
+        /// <param name="returnType">Composed new type.</param>
+        /// <param name="coercionNeeded">True if union with coercion was called.</param>
+        /// <returns></returns>
+        public static bool TryUnionWithCoerce(DType leftType, DType rightType, bool usePowerFxV1CompatibilityRules, bool coerceToLeftTypeOnly, out DType returnType, out bool coercionNeeded)
+        {
+            var fError = false;
+
+            coercionNeeded = false;
+            returnType = null;
+
+            if (!leftType.IsValid || (leftType.IsRecord && leftType.Equals(DType.EmptyRecord)))
+            {
+                returnType = rightType;
+            }
+            else
+            {
+                // Original union
+                var unionType = Union(ref fError, leftType, rightType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules, allowCoerce: false);
+
+                if (!fError)
+                {
+                    returnType = unionType;
+                }
+                else
+                {
+                    fError = false;
+
+                    // Union with coercion
+                    returnType = Union(ref fError, leftType, rightType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules, allowCoerce: true, unionToLeftTypeOnly: coerceToLeftTypeOnly);
+                    coercionNeeded = !fError;
+                }
+            }
+
+            return !fError;
         }
     }
 }

@@ -6,8 +6,8 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Functions.Library;
 
@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void TabularOverloadListIsOverloadOfSingleFunction()
         {
-            var type = typeof(Microsoft.PowerFx.Functions.Library);
+            var type = typeof(Functions.Library);
             var simpleFunctions = type.GetProperty("SimpleFunctionImplementations", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null)
                 as IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr>;
             Assert.NotNull(simpleFunctions);
@@ -31,6 +31,16 @@ namespace Microsoft.PowerFx.Tests
 
             ValidateOverloads(simpleFunctions, tabularOverloads, isMultiArg: false);
             ValidateOverloads(simpleFunctions, tabularMultiArgsOverloads, isMultiArg: true);
+        }
+
+        [Fact]
+        public void ValidateNoMutation()
+        {
+            int libraryCount = BuiltinFunctionsCore.BuiltinFunctionsLibrary.Count();
+            int testOnlyCount = BuiltinFunctionsCore.TestOnly_AllBuiltinFunctions.Count();
+
+            Assert.Equal(libraryCount, BuiltinFunctionsCore.BuiltinFunctionsLibrary.ToList().Count());
+            Assert.True(testOnlyCount > libraryCount);
         }
 
         private void ValidateOverloads(IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> simpleFunctions, IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> tabularOverloads, bool isMultiArg) 

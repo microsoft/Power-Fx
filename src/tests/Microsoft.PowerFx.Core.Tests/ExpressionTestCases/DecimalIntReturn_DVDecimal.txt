@@ -1,0 +1,87 @@
+#SETUP: disable:NumberIsFloat
+
+// DV Decimal: These tests are compabtible with the SQL compiler used by Dataverse, with a max/min of +/-100,000,000,000 and ten decimal places.  
+// Variants of 10000000000.0000000001 are used which is not representable in floating point (rounds to 10000000000).  
+// These tests are also runnable with the C# semantics for decimal which is why they are included in the Power-Fx repo.  
+// Where possible, unless specifically testing the C# range, should be written in the DV rnage.
+
+// Some functions return integer results, that are typed decimal or float based on NumberIsFloat
+
+>> Len( "abc") + 20000000000.0000000002
+20000000003.0000000002
+
+>> ForAll( Len( ["abc","defg"] ), Value * 10000000000.0000000001 )
+Table({Value:30000000000.0000000003},{Value:40000000000.0000000004})
+
+>> Count( [1,2,3,Blank()] ) + 20000000000.0000000002
+20000000003.0000000002
+
+>> CountA( ["a","b","c",Blank()] ) + 20000000000.0000000002
+20000000003.0000000002
+
+>> CountRows( ["a","b","c",Blank()] ) + 20000000000.0000000002
+20000000004.0000000002
+
+>> CountIf( ["a","b","c","ee",Blank()], Len(Value) = 1 ) + 20000000000.0000000002
+20000000003.0000000002
+
+>> DateDiff( DateTime(1990,11,2,5,20,54), DateTime(2000,2,9,8,30,23), TimeUnit.Years ) + 20000000001.0000000002
+20000000011.0000000002
+
+>> DateDiff( DateTime(1990,11,2,5,20,54), DateTime(2000,2,9,8,30,23), TimeUnit.Months ) + 20000000001.0000000002
+20000000112.0000000002
+
+>> DateDiff( DateTime(1990,11,2,5,20,54), DateTime(2000,2,9,8,30,23), TimeUnit.Quarters ) + 20000000001.0000000002
+20000000038.0000000002
+
+>> DateDiff( DateTime(1990,11,2,5,20,54), DateTime(2000,2,9,8,30,23), TimeUnit.Days ) + 20000000001.0000000002
+20000003387.0000000002
+
+>> DateDiff( DateTime(1990,11,2,5,20,54), DateTime(2000,2,9,8,30,23), TimeUnit.Hours ) + 20000000001.0000000002
+20000081268.0000000002
+
+>> DateDiff( DateTime(1990,11,2,5,20,54), DateTime(2000,2,9,8,30,23), TimeUnit.Minutes ) + 20000000001.0000000002
+20004876031.0000000002
+
+>> DateDiff( DateTime(1990,11,2,5,20,54), DateTime(2000,2,9,8,30,23), TimeUnit.Seconds ) + 20000000001.0000000002
+20292561770.0000000002
+
+// Result of DateDiff is 292561769001 which overflows DV Decimal
+>> DateDiff( DateTime(1990,11,2,5,20,54), DateTime(2000,2,9,8,30,23), TimeUnit.Milliseconds ) + 20000000001.0000000002
+#SKIP until we properly differentiate DV and C# decimal in the test files
+
+>> DateDiff( DateTime(1990,11,2,5,20,54), DateTime(1993,2,9,8,30,23), TimeUnit.Milliseconds ) + 20000000001.0000000002
+91723369001.0000000002
+
+>> Year( DateTime(1990,3,2,5,20,54) ) + 10000000000.0000000001
+10000001990.0000000001
+
+>> Month( DateTime(1990,3,2,5,20,54) ) + 10000000000.0000000001
+10000000003.0000000001
+
+>> Day( DateTime(1990,3,2,5,20,54) ) + 10000000000.0000000001
+10000000002.0000000001
+
+>> Hour( DateTime(1990,3,2,5,20,54) ) + 10000000000.0000000001
+10000000005.0000000001
+
+>> Minute( DateTime(1990,3,2,5,20,54) ) + 10000000000.0000000001
+10000000020.0000000001
+
+>> Second( DateTime(1990,3,2,5,20,54) ) + 10000000000.0000000001
+10000000054.0000000001
+
+>> RandBetween(11,11) + 10000000001.0000000001
+10000000012.0000000001
+
+>> Hex2Dec( "1234BEEF" ) + 10000000000.0000000001
+10305446639.0000000001
+
+>> Hex2Dec( "1234BEEF" ) + 10000000000.9999999999
+10305446639.9999999999
+
+
+
+
+
+

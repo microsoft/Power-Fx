@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         // Typecheck an invocation of Table.
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var isValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             // Ensure that all args (if any) are records with compatible schemas.
@@ -60,26 +60,45 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             for (var i = 0; i < argTypes.Length; i++)
             {
                 var argType = argTypes[i];
+                var isChildTypeAllowedInTable = !argType.IsDeferred && !argType.IsVoid;
+
                 if (!argType.IsRecord)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedRecord);
                     isValid = false;
                 }
-                else if (!rowType.CanUnionWith(argType))
+                else if (!isChildTypeAllowedInTable)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleRecord);
-                    isValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisType);
+                    return false;
                 }
                 else
                 {
-                    var isUnionError = false;
-                    rowType = DType.Union(ref isUnionError, rowType, argType);
-                    Contracts.Assert(!isUnionError);
-                    Contracts.Assert(rowType.IsRecord);
+                    if (DType.TryUnionWithCoerce(
+                        rowType,
+                        argType,
+                        context.Features.PowerFxV1CompatibilityRules,
+                        coerceToLeftTypeOnly: context.Features.StronglyTypedBuiltinEnums || context.Features.PowerFxV1CompatibilityRules,
+                        out var newType,
+                        out bool coercionNeeded))
+                    {
+                        rowType = newType;
+
+                        if (coercionNeeded)
+                        {
+                            CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], rowType);
+                        }
+                    }
+                    else
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisType);
+                        isValid = false;
+                    }
                 }
+
+                Contracts.Assert(rowType.IsRecord);
             }
 
-            Contracts.Assert(rowType.IsRecord);
             returnType = rowType.ToTable();
 
             return isValid;
@@ -103,19 +122,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         // Typecheck an invocation of Table.
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            var isValid = base.CheckTypes(args, argTypes, errors, out _, out nodeToCoercedTypeMap);
+            var isValid = base.CheckTypes(context, args, argTypes, errors, out _, out nodeToCoercedTypeMap);
 
             var rowType = DType.EmptyRecord.Add(new TypedName(DType.UntypedObject, ColumnName_Value));
             returnType = rowType.ToTable();
 
             return isValid;
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_UO");
         }
     }
 }

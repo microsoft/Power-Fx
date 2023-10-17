@@ -1,32 +1,25 @@
-﻿// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-split
+#SETUP: ConsistentOneColumnTableResult
 
-// single column table with "Result" as col name
->> Split("this is a test", " ")
-Table({Result:"this"},{Result:"is"},{Result:"a"},{Result:"test"})
-
-// no delimeter returns each char
->> Split("test", "")
-Table({Result:"t"},{Result:"e"},{Result:"s"},{Result:"t"})
-
-// no delimeter returns each char
->> Split("Hello world", If(1 < 0, ""))
-Table({Result:"H"},{Result:"e"},{Result:"l"},{Result:"l"},{Result:"o"},{Result:" "},{Result:"w"},{Result:"o"},{Result:"r"},{Result:"l"},{Result:"d"})
-
-// two delimeters in a row in source text produces empty string
->> Split( "Hello, World", "l" )
-Table({Result:"He"},{Result:""},{Result:"o, Wor"},{Result:"d"})
-
-// string as delimeter
->> Split( "Hello, World", "ll" )
-Table({Result:"He"},{Result:"o, World"})
-
-// delimeter doesn't exist
->> Split( "Hello, World", "%" )
-Table({Result:"Hello, World"})
-
-// only delimeter is removed
 >> Split( "Hello, World", "," )
-Table({Result:"Hello"},{Result:" World"})
+Table({Value:"Hello"},{Value:" World"})
+
+>> Split("this is a test", " ")
+Table({Value:"this"},{Value:"is"},{Value:"a"},{Value:"test"})
+
+>> Split("test", "")
+Table({Value:"t"},{Value:"e"},{Value:"s"},{Value:"t"})
+
+>> Split("Hello world", If(1 < 0, ""))
+Table({Value:"H"},{Value:"e"},{Value:"l"},{Value:"l"},{Value:"o"},{Value:" "},{Value:"w"},{Value:"o"},{Value:"r"},{Value:"l"},{Value:"d"})
+
+>> Split( "Hello, World", "l" )
+Table({Value:"He"},{Value:""},{Value:"o, Wor"},{Value:"d"})
+
+>> Split( "Hello, World", "ll" )
+Table({Value:"He"},{Value:"o, World"})
+
+>> Split( "Hello, World", "%" )
+Table({Value:"Hello, World"})
 
 >> Split("", "")
 Table()
@@ -36,3 +29,13 @@ Table()
 
 >> Split(Text(1/0), "")
 Error({Kind:ErrorKind.Div0})
+
+// Table comparison ParseJSON
+>> Split("Hello World", "Hello World")
+Table({Value:""},{Value:""})
+
+>> Split(ParseJSON("""Hello World"""), "Hello World")
+Table({Value:""},{Value:""})
+
+>> Split("Hello World", ParseJSON("""Hello World"""))
+Table({Value:""},{Value:""})

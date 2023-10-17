@@ -7,6 +7,7 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public abstract class PowerFxTest
     {
+        // $$$ can't use current culture
         public PowerFxTest()
         {
             // Ensure all tests are run with en-US locale

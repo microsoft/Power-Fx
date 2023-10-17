@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Syntax
         internal NumLitToken(double value, Span span)
             : base(TokKind.NumLit, span)
         {
-            Contracts.Assert(value >= double.MinValue && value < double.MaxValue);
+            Contracts.Assert(value >= double.MinValue && value <= double.MaxValue);
 
             Value = value;
         }
@@ -44,6 +44,7 @@ namespace Microsoft.PowerFx.Syntax
         /// <inheritdoc />
         public override string ToString()
         {
+            // $$$ can't use current culture
             return Value.ToString("R", CultureInfo.CurrentCulture);
         }
 

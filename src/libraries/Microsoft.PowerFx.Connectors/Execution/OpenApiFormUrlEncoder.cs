@@ -16,10 +16,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private readonly Stack<string> _stack;
         private readonly Stack<int> _arrayIndex;
 
-        public OpenApiFormUrlEncoder(bool schemaLessBody)
-            : base(schemaLessBody)
+        public OpenApiFormUrlEncoder(IConvertToUTC utcConverter, bool schemaLessBody)
+            : base(utcConverter, schemaLessBody)
         {
-            _writer = new StringBuilder(1024);    
+            _writer = new StringBuilder(1024);
             _stack = new Stack<string>();
             _arrayIndex = new Stack<int>();
         }
@@ -71,6 +71,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _writer.Append(HttpUtility.UrlEncode(dateTimeValue.ToString("o", CultureInfo.InvariantCulture)));
         }
 
+        protected override void WriteDateValue(DateTime dateValue)
+        {
+            _writer.Append(HttpUtility.UrlEncode(dateValue.Date.ToString("o", CultureInfo.InvariantCulture).Substring(0, 10)));
+        }
+
         protected override void WriteNullValue()
         {
             // Do nothing
@@ -79,6 +84,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
         protected override void WriteNumberValue(double numberValue)
         {
             _writer.Append(numberValue);
+        }
+
+        protected override void WriteDecimalValue(decimal decimalValue)
+        {
+            _writer.Append(decimalValue);
         }
 
         protected override void WritePropertyName(string name)

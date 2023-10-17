@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // for example Table in an invocation Average(Table, valueFunction).
         // Returns true on success, false if the input or its type are invalid with respect to this function's declaration
         // (and populate the error container accordingly).
-        public virtual bool CheckInput(TexlNode inputNode, DType inputSchema, IErrorContainer errors, out DType typeScope)
+        public virtual bool CheckInput(Features features, TexlNode inputNode, DType inputSchema, IErrorContainer errors, out DType typeScope)
         {
             Contracts.AssertValue(inputNode);
             Contracts.Assert(inputSchema.IsValid);
@@ -108,7 +108,10 @@ namespace Microsoft.PowerFx.Core.Functions
             }
             else if (_function.ParamTypes[0].IsTable)
             {
-                if (!typeScope.IsTable)
+                var isBadArgumentType = features.PowerFxV1CompatibilityRules ?
+                    !typeScope.IsTableNonObjNull : // Untyped blank values should not be used to define the scope
+                    !typeScope.IsTable;
+                if (isBadArgumentType)
                 {
                     errors.Error(callNode, TexlStrings.ErrNeedTable_Func, _function.Name);
                     fArgsValid = false;
@@ -140,9 +143,9 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         // Same as the virtual overload, however all typechecks are done quietly, without posting document errors.
-        public virtual bool CheckInput(TexlNode inputNode, DType inputSchema, out DType typeScope)
+        public virtual bool CheckInput(Features features, TexlNode inputNode, DType inputSchema, out DType typeScope)
         {
-            return CheckInput(inputNode, inputSchema, TexlFunction.DefaultErrorContainer, out typeScope);
+            return CheckInput(features, inputNode, inputSchema, TexlFunction.DefaultErrorContainer, out typeScope);
         }
 
         public void CheckLiteralPredicates(TexlNode[] args, IErrorContainer errors)
@@ -158,6 +161,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     {
                         if (args[i].Kind == NodeKind.BoolLit ||
                             args[i].Kind == NodeKind.NumLit ||
+                            args[i].Kind == NodeKind.DecLit ||
                             args[i].Kind == NodeKind.StrLit)
                         {
                             errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.WarnLiteralPredicate);

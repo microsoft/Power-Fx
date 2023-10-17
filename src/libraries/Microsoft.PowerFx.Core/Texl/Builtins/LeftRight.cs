@@ -17,9 +17,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     //  Right(arg:s, count:n)
     internal sealed class LeftRightScalarFunction : BuiltinFunction
     {
-        public override bool IsSelfContained => true;
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
+        {
+            if (index == 1)
+            {
+                return ArgPreprocessor.ReplaceBlankWithFloatZeroAndTruncate;
+            }
 
-        public override bool SupportsParamCoercion => true;
+            return ArgPreprocessor.None;
+        }
+
+        public override bool IsSelfContained => true;
 
         public LeftRightScalarFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeft : TexlStrings.AboutRight, FunctionCategories.Text, DType.String, 0, 2, 2, DType.String, DType.Number)
@@ -39,8 +47,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public LeftRightTableScalarFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.Number)
         {
@@ -49,13 +55,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.LeftRightTArg1, TexlStrings.LeftRightArg2 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            // Disambiguate these from the scalar overloads, so we don't have to
-            // do type checking in the JS (runtime) implementation of Left/Right.
-            return GetUniqueTexlRuntimeName(suffix: "_TS");
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -72,11 +71,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
-            fValid &= CheckStringColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
-
-            returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
-                : argTypes[0];
+            fValid &= CheckStringColumnType(context, args[0], argTypes[0], errors, ref nodeToCoercedTypeMap, out returnType);
 
             return fValid;
         }
@@ -89,8 +84,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public LeftRightTableTableFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.EmptyTable)
         {
@@ -99,13 +92,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.LeftRightTArg1, TexlStrings.LeftRightArg2 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            // Disambiguate these from the scalar overloads, so we don't have to
-            // do type checking in the JS (runtime) implementation of Left/Right.
-            return GetUniqueTexlRuntimeName(suffix: "_TT");
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -122,14 +108,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
-            fValid &= CheckStringColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
+            fValid &= CheckStringColumnType(context, args[0], argTypes[0], errors, ref nodeToCoercedTypeMap, out returnType);
 
             // Typecheck the count table
-            fValid &= CheckNumericColumnType(argTypes[1], args[1], errors, ref nodeToCoercedTypeMap);
-
-            returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
-                : argTypes[0];
+            fValid &= CheckNumericColumnType(context, args[1], argTypes[1], errors, ref nodeToCoercedTypeMap);
 
             return fValid;
         }
@@ -142,8 +124,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public LeftRightScalarTableFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.String, DType.EmptyTable)
         {
@@ -152,13 +132,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.LeftRightArg1, TexlStrings.LeftRightArg2 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            // Disambiguate these from the scalar overloads, so we don't have to
-            // do type checking in the JS (runtime) implementation of Left/Right.
-            return GetUniqueTexlRuntimeName(suffix: "_ST");
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -175,7 +148,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the count table
-            fValid &= CheckNumericColumnType(argTypes[1], args[1], errors, ref nodeToCoercedTypeMap);
+            fValid &= CheckNumericColumnType(context, args[1], argTypes[1], errors, ref nodeToCoercedTypeMap);
 
             // Synthesize a new return type
             returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));

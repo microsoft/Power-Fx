@@ -1,13 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
-{   
+{
     /// <summary>
     /// Storage for slots. Dense assignment. 
     /// </summary>
@@ -22,7 +20,7 @@ namespace Microsoft.PowerFx
         private readonly List<T> _items = new List<T>();
 
         // Total non-null items. 
-        int _count = 0;
+        private int _count = 0;
 
         public bool IsEmpty => _count == 0;
 
@@ -48,7 +46,7 @@ namespace Microsoft.PowerFx
             }
 
             // Fully packed, add to end. 
-            _lowest = _items.Count+1;
+            _lowest = _items.Count + 1;
 
             _count++;
             _items.Add(default(T));

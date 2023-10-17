@@ -3,10 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using static Microsoft.PowerFx.LanguageServerProtocol.LanguageServer;
@@ -28,7 +26,7 @@ namespace Microsoft.PowerFx
             ReadOnlySymbolTable symbols = null)
         {
             return new EditorContextScope(engine, parserOptions, symbols);
-        }
+        }                  
     }
 
     /// <summary>
@@ -37,23 +35,29 @@ namespace Microsoft.PowerFx
     ///  This includes helpers to aide in customizing the editing experience. 
     /// </summary>
     public sealed class EditorContextScope : IPowerFxScope
-    {
-        private readonly Engine _engine;
-        private readonly ParserOptions _parserOptions;
-        private readonly ReadOnlySymbolTable _symbols;
-
+    {        
         // List of handlers to get code-fix suggestions. 
         // Key is CodeFixHandler.HandlerName
         private readonly Dictionary<string, CodeFixHandler> _handlers = new Dictionary<string, CodeFixHandler>();
+
+        // Map string (from formula bar) to a CheckResult.
+        // The checkResult has all other context (parser options, symbols, engine, etc)
+        // This captures the critical invariant: EditorContextScope corresponds to a formula bar where the user just types text, all other context is provided; 
+        private readonly Func<string, CheckResult> _getCheckResult;
 
         internal EditorContextScope(
             Engine engine,
             ParserOptions parserOptions,
             ReadOnlySymbolTable symbols)
+            : this((string expr) => new CheckResult(engine)
+                    .SetText(expr, parserOptions)
+                    .SetBindingInfo(symbols))
+        {            
+        }        
+
+        public EditorContextScope(Func<string, CheckResult> getCheckResult)
         {
-            _engine = engine ?? throw new ArgumentNullException(nameof(engine));
-            _parserOptions = parserOptions ?? new ParserOptions();
-            _symbols = symbols ?? new SymbolTable();
+            _getCheckResult = getCheckResult ?? throw new ArgumentNullException(nameof(getCheckResult));
         }
 
         #region IPowerFxScope
@@ -62,21 +66,54 @@ namespace Microsoft.PowerFx
         // text in the editor. 
         public CheckResult Check(string expression)
         {
-            return _engine.Check(expression, _parserOptions, _symbols);
+            var check = _getCheckResult(expression);
+
+            // By default ...
+            check.ApplyBindingInternal();
+            check.ApplyErrors();
+            check.ApplyDependencyAnalysis();
+
+            return check;
         }
 
         string IPowerFxScope.ConvertToDisplay(string expression)
         {
-            return _engine.GetDisplayExpression(expression, _symbols);
+            var check = _getCheckResult(expression);
+            var symbols = check._symbols;
+            var engine = check.Engine;
+
+            return engine.GetDisplayExpression(expression, symbols, check.ParserCultureInfo);
         }
 
         IIntellisenseResult IPowerFxScope.Suggest(string expression, int cursorPosition)
         {
-            var check = Check(expression);
-            return _engine.Suggest(check, cursorPosition);
+            // Suggestions just need the binding, not other things like Dependency Info or errors. 
+            var check = _getCheckResult(expression);
+
+            return check.Engine.Suggest(check, cursorPosition, this.Services);
         }
 
         #endregion
+
+        /// <summary>
+        /// Services that can be used within intellisense, like http factory for Dynamic intellisense.
+        /// Optional, can be null.
+        /// </summary>
+        public IServiceProvider Services { get; set; }
+         
+        public void AddQuickFixHandlers(params CodeFixHandler[] codeFixHandlers)
+        {
+            this.AddQuickFixHandlers((IEnumerable<CodeFixHandler>)codeFixHandlers);
+        }
+
+        public void AddQuickFixHandlers(IEnumerable<CodeFixHandler> codeFixHandlers)
+        {
+            var list = codeFixHandlers ?? throw new ArgumentNullException(nameof(codeFixHandlers));
+            foreach (var handler in list)
+            {
+                this.AddQuickFixHandler(handler);
+            }
+        }
 
         public void AddQuickFixHandler(CodeFixHandler codeFixHandler)
         {
@@ -95,6 +132,7 @@ namespace Microsoft.PowerFx
             {
                 throw new InvalidOperationException($"Handler '{handlerName}' already exists");
             }
+
             _handlers.Add(handlerName, codeFixHandler);
         }
 
@@ -102,6 +140,7 @@ namespace Microsoft.PowerFx
         internal CodeActionResult[] SuggestFixes(string expression, OnLogUnhandledExceptionHandler logUnhandledExceptionHandler)
         {
             var check = Check(expression);
+            var engine = check.Engine;
 
             var list = new List<CodeActionResult>();
 
@@ -110,7 +149,7 @@ namespace Microsoft.PowerFx
             {
                 try
                 {
-                    var task = handler.Value.SuggestFixesAsync(_engine, check, CancellationToken.None);
+                    var task = handler.Value.SuggestFixesAsync(engine, check, CancellationToken.None);
                     var fixes = task.Result;
 
                     if (fixes != null)
@@ -124,7 +163,7 @@ namespace Microsoft.PowerFx
                 }
                 catch (Exception e)
                 {
-                    var e2 = new Exception($"Handler {handler.Key} threw {e.Message}", e);
+                    var e2 = new Exception($"Handler {handler.Key} threw {e.GetDetailedExceptionMessage()}", e);
                     
                         // Dont' let exceptions from a handler block other handlers. 
                     logUnhandledExceptionHandler?.Invoke(e2);

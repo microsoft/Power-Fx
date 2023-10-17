@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -21,9 +20,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestAccept()
         {
             var t = _customRecordType._type;
-            var ok = t.Accepts(t);
-
-            Assert.True(ok);
+            foreach (var usePFxV1CompatRules in new[] { false, true })
+            {
+                var ok = t.Accepts(t, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules);
+                Assert.True(ok);
+            }
         }
 
         public CustomRecordTypeWithUndefinedFields()
@@ -79,7 +80,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("IsBlank(obj.missing)", true, false)] // fields not defined in RecordType is treated as Blank.
         [InlineData("IsBlank(obj.missing.missing)", true, false)]
         [InlineData("IsBlank(obj.prop_not_defined_in_type)", true, false)] // fields not defined in RecordType is always Blank, regardless of whether it is defined in actual data.
-        [InlineData("IsError(obj.missing + 1)", null, true)] // type checking fails when operating on undefined field.
+        [InlineData("IsError(obj.missing + 1)", false, false)] // undefined field produces blank, which should be coerced to 0.
         public async Task TestCustomRecordType(string expr, object expected, bool hasException)
         {
             var engine = new RecalcEngine();
@@ -131,7 +132,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     }
                     else if (value is int i)
                     {
-                        result = FormulaValue.New(i);
+                        result = FormulaValue.New((double)i);
                     }
 
                     if (!fieldType.Equals(result.Type))
@@ -141,7 +142,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
 
                 return true;
-            }            
+            }
         }
 
         /// <summary>

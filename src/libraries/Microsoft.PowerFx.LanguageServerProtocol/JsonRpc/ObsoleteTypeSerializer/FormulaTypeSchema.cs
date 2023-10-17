@@ -14,6 +14,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         public enum ParamType
         {
             Number,
+            Decimal,
             String,
             Boolean,
             Date,
@@ -32,7 +33,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             EntityTable,
             Unknown,
             Error,
-            Deferred
+            Deferred,
+            Void,
+            Unsupported,
         }
 
         /// <summary>

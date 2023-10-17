@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Uma coluna de valores numéricos a processar.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Converte um "booleano" num valor booleano.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>booleano</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>O valor booleano a converter num valor booleano.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Converte uma coluna de valores booleanos numa coluna de valores booleanos.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Uma coluna de valores booleanos a processar.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Devolve o primeiro argumento que não está em branco</value>
     
@@ -544,6 +566,24 @@
   <data name="AboutConcatenate" xml:space="preserve">
     <value>Associa vários valores de texto a um valor de texto.</value>
     
+  </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Converte um "texto" que representa um número num valor Decimal.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Código de idioma a utilizar ao converter o valor.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Valor de texto a converter em valor Decimal.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Converte um "texto" que representa um número num valor de Vírgula flutuante.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Código de idioma a utilizar ao converter o valor.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Valor de texto a converter em valor de Vírgula flutuante.</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>texto</value>
@@ -738,7 +778,7 @@
     <value>Um valor de texto de substituição.</value>
   </data>
   <data name="AboutReplace_text_column" xml:space="preserve">
-    <value>Uma coluna de valores de textos a processar.</value>
+    <value>Uma coluna de valores de texto a processar.</value>
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>Produz um erro com valores personalizados.</value>
@@ -773,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Valor que é devolvido se for o primeiro argumento sem erros.</value>
+    <value>Valor devolvido se o argumento anterior for um erro.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -817,7 +857,7 @@
     <value>Especifica que ocorrência de determinado texto substituir.</value>
   </data>
   <data name="AboutSubstitute_text_column" xml:space="preserve">
-    <value>Uma coluna de valores de textos a processar.</value>
+    <value>Uma coluna de valores de texto a processar.</value>
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>Ordena a "origem" com base nos resultados da "expressão" avaliada para cada linha, especificando uma ordem "ordem" opcionalmente.</value>
@@ -842,7 +882,8 @@
     <value>Uma expressão que obtém valores em linhas na "origem" e fornece valores para ordenação.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Ascendente ou Descendente</value>
+    <value>SortOrder.Ascending ou SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Ordena a "origem" com base na coluna, especificando a ordem "ordem" opcionalmente.</value>
@@ -867,7 +908,8 @@
     <value>Um nome de coluna único.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Ascendente ou Descendente</value>
+    <value>SortOrder.Ascending ou SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Ordena a "origem" com base no índice de valores correspondentes na coluna especificada.</value>
@@ -979,6 +1021,46 @@
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Um valor de data cujo número da semana ISO será calculado.</value>
+  </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Devolve uma data ajustada por vários meses. O dia do mês permanece o mesmo, mas é limitado pelo número de dias no novo mês.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>meses</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Um valor de data a ajustar pelo número especificado de meses.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Número de meses para alterar a data. Um valor positivo produz uma data futura, um valor negativo produz uma data passada e zero não altera o mês.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Devolve o último dia do mês de uma data especificada, ajustado por um número de meses.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>meses</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Um valor de data a ajustar pelo número especificado de meses.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Número de meses para alterar a data. Um valor positivo produz uma data futura, um valor negativo produz uma data passada e zero não altera o mês.</value>
+         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Trunca "número" arredondando para o infinito negativo.</value>
@@ -1367,6 +1449,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Uma coluna de valores numéricos (em radianos) a processar.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Avalia uma expressão sobre uma ou mais colunas da tabela e devolve uma tabela de uma coluna que contém valores (únicos) distintos para a expressão avaliada.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>origem</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>expressão</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Uma tabela a partir da qual os valores distintos serão extraídos.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Uma expressão avaliada em cada linha na tabela de entrada, que fornece valores para a operação Distinct.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Devolve o arco tangente (em radianos) das coordenadas x e y especificadas.</value>
   </data>
@@ -1404,6 +1503,14 @@
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>entrada</value>
+    
+  </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modificador</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modificador</value>
     
   </data>
   <data name="AboutLeft" xml:space="preserve">
@@ -1675,7 +1782,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>A propriedade de dados personalizados do componente com parâmetros só pode ser acedida a partir de um componente ou de propriedades de saída de componente.</value>
+    <value>Só é possível aceder à propriedade ou ao parâmetro da função do componente a partir de um componente ou das propriedades de saída do componente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>A propriedade ou o parâmetro da função do componente só pode referenciar outras propriedades de função.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1742,20 +1853,8 @@
     <value>O primeiro argumento de "{0}" deve ser uma tabela de uma coluna.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Esquema inválido, era esperada uma coluna de valores de texto para "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Esquema inválido, era esperada uma coluna de valores de data para "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Esquema inválido, era esperada uma coluna de valores numéricos para "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Esquema inválido, era esperada uma coluna de valores de cor para "{0}".</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Esquema inválido, era esperada uma coluna de valores de {0} para "{1}".</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1798,6 +1897,26 @@
     <value>O valor numérico é demasiado grande.</value>
     
   </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Utilização de uma palavra reservada que não é atualmente suportada.</value>
+    
+  </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>A expressão não pode ter mais de {0} carateres. A expressão tem {1} carateres.</value>
+    
+  </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>O tamanho da cadeia do formato não pode ter mais de {0} carateres.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Formato inválido.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>O argumento não representa um valor de data ou hora válido.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Esta Origem de dados é inválida. Corrija o erro no painel "Origens de dados" clicando em "Conteúdo -&gt; Origens de dados" ou em "Visualização -&gt; Opções"</value>
     
@@ -1816,6 +1935,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>O tipo deste argumento "{0}" não corresponde ao tipo esperado "{1}". Tipo encontrado "{2}".</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>O tipo desta expressão não corresponde ao tipo esperado "{0}". Tipo encontrado "{1}".</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -1852,6 +1975,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Não é possível ordenar o tipo de expressão.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Não é possível aplicar distinct no tipo de expressão.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -2240,6 +2367,9 @@
   <data name="MathAndStat" xml:space="preserve">
     <value>Matemática e Estatística</value>
   </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>Definido pelo Utilizador</value>
+  </data>
   <data name="Information" xml:space="preserve">
     <value>Informações</value>
   </data>
@@ -2319,7 +2449,7 @@
     <value>Um número de unidades a adicionar. O número pode ser negativo.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>A unidade a utilizar, que pode ser Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>A unidade a utilizar, que pode ser uma das seguintes: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds ou TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2341,7 +2471,7 @@
     <value>Uma data de fim para a operação diferente.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>A unidade para exprimir o resultado, que pode ser Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>A unidade em que o resultado é indicado, que pode ser uma das seguintes: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds ou TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2591,10 +2721,6 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>O valor para testar.</value>
-  </data>
-  <data name="Post" xml:space="preserve">
-    <value>Publicar</value>
-    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Converte uma data e uma hora sob a forma de texto para um número que representa a data no código de data/hora do Power Apps.</value>
@@ -2876,6 +3002,26 @@
     <value>Globo</value>
     
   </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globo - Não ligado</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globo - Atualizar</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globo - Alterações pendentes</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globo - Aviso</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globo - Erro</value>
+    
+  </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>Círculo meio cheio</value>
     
@@ -3013,7 +3159,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Comboio</value>
+    <value>Preparar</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3266,6 +3412,38 @@
   </data>
   <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
     <value>Tema de contraste</value>
+    
+  </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Adiciona registos a uma origem de dados.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>registo</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Elimina todos os registos de uma coleção. As colunas da coleção permanecerão.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Elimina todos os registos de uma coleção e, em seguida, adiciona um conjunto de registos diferente à mesma coleção.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>registo</value>
     
   </data>
   <data name="AboutPatch" xml:space="preserve">
@@ -3952,96 +4130,8 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Não suportado em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Número inválido de argumentos para a função {0}: recebido {1}, esperado {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>O argumento {0} não é suportado para a função {1} em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Não é possível transmitir este argumento como este tipo em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Não é possível transmitir este argumento com o tipo {0} em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Este argumento só suporta um valor literal.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Não é possível efetuar {0} nesta entrada sem uma conversão de fuso horário, que não é suportada em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Não é possível efetuar esta operação em valores que têm Comportamentos de Data/Hora diferentes.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>As colunas de fórmula só suportam cadeias no formato data e hora abreviada.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>O argumento {0} é uma unidade de tempo inválida/não suportada para a função aritmética de data {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Tokens de formatação específicos da região, como "." e ",", não são suportados em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} não é suportado em colunas de fórmula. Utilize {1} em vez disso.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Não é possível efetuar esta operação no tipo {0} em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>O tipo de resultado {0} não é suportado em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>A referenciação direta de um registo inteiro não é suportada em colunas de fórmula. Referencie um campo de valor no registo.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>É esperado que o tipo de resultado desta fórmula seja {0}, mas o tipo de resultado real é {1}. Não é possível alterar o tipo de resultado de uma coluna de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>As colunas do tipo {0} não são suportadas em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>As colunas do tipo {0} com o formato {1} não são suportadas em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Forçar registos ou tabelas não é suportado em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>As fórmulas não podem ter mais de 1.000 caracteres.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>As tabelas de coluna única não são suportadas em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Não é possível referenciar a tabela virtual {0} em colunas de fórmula.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>Era esperado um operando. A fórmula ou expressão espera um operando válido. Por exemplo, pode adicionar o operando "2" à expressão "1 +_" para que o resultado seja "3". Em alternativa, pode adicionar o operando "dia" à expressão ""Bom" &amp; _" para que o resultado seja "Bom dia".</value>
+    <value>Era esperado um operando. A fórmula ou expressão espera um operando válido. Por exemplo, pode adicionar o operando "2" à expressão "1 +_" para que o resultado seja "3". Em alternativa, pode adicionar o operando "dia" à expressão ""Bom "&amp; _ " para que o resultado seja "Bom dia".</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4142,10 +4232,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Este erro é apresentado quando uma fórmula se refere a propriedades de comportamento do componente com sintaxe inválida. (Por exemplo, Component.OnCustomChange em vez de Component.OnCustomChange())</value>
+    <value>Este erro é apresentado quando uma fórmula referencia propriedades de função do componente com sintaxe inválida. (Por exemplo, Component.CustomFunction em vez de Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Utilize a sintaxe correta para fazer referência à propriedade de comportamento do componente. Por exemplo, Component.OnCustomChange()</value>
+    <value>Utilize a sintaxe correta para referenciar a propriedade de função do componente. Por exemplo, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4335,6 +4425,10 @@
     <value>Certifique-se de que tem texto para o identificador. Este erro ocorre quando o identificador é composto apenas por espaços vazios ou espaços.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Não é possível comparar valores do tipo {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Tipos incompatíveis para comparação. Não é possível comparar estes tipos: {0}, {1}.</value>
     
@@ -4396,6 +4490,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Artigo: referência de fórmulas do Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Tipo incompatível. O item que está a tentar colocar num registo tem um tipo que não é compatível com o registo.</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4642,8 +4740,44 @@
     <value>As não é permitido neste contexto</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Não é possível utilizar objetos sem tipo como primeiro argumento de funções que suportam âmbitos de registo.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>A fórmula com nome tem de terminar com um ponto e vírgula.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>A fórmula com nome tem de ser uma expressão.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>A função definida pelo utilizador tem de ter um corpo.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>A função {0} já está definida.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>O parâmetro {0} é um duplicado.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Tipo desconhecido {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>O tipo de retorno da função indicada não corresponde ao tipo de retorno do corpo da função.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Tipo de retorno da função em falta; por exemplo, ":Number" em "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Tipo de argumento da função em falta; por exemplo, ":Text" em "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4725,6 +4859,257 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Esta funcionalidade foi preterida e já não é suportada.</value>
+    
+  </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>A função {0} foi preterida no espaço de nomes {1}.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>A função {0} não é suportada no espaço de nomes {1}.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Aviso: tipo adiado fornecido.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Nome do identificador esperado</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Esta função é ambígua: contém expressões lambda e identificadores de coluna para o mesmo argumento.</value>
+    
+  </data>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>O valor da opção {0} não é do tipo esperado {1}.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Devolve o nome lógico do valor do conjunto de opções indicado.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>opção</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Um valor de conjunto de opções cujo nome lógico será devolvido.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Obter a região predefinida em runtime.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Codifica uma cadeia de URL, substituindo determinados carateres não alfanuméricos por % e um número hexadecimal.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Um URL a codificar.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>"{0}" é uma função reconhecida, mas não suportada.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Falha ao converter tipo porque o valor indicado era do tipo "{0}" e era esperado o tipo "{1}".</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Esta operação na tabela "{0}" tabela pode não funcionar se tiver mais de {1} linhas.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Esta predição será sempre verdadeira. Pretendia utilizar ThisRecord ou [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Não é possível delegar {0}: só existe suporte para delegação na pesquisa em campos de chave primária "{1}".</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Não é possível delegar {0}: a expressão compara vários campos.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Não é possível delegar {0}: contém uma função de comportamento "{1}".</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Determina se o texto fornecido tem um correspondente do formato do texto fornecido.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>O texto a comparar relativamente ao formato.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>O formato a verificar relativamente ao texto. Pode ser um valor da enumeração TextFormat ou uma expressão regular.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Determina a parte do texto cuja correspondência é pretendida. Pode ser um valor da enumeração MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>formato</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>extensão</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Procura a expressão regular no texto fornecido, devolvendo a primeira correspondência da mesma.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Procura a expressão regular no texto fornecido, devolvendo todas as correspondências da mesma.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>O texto a procurar na expressão regular.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>A expressão regular para verificar o texto. Pode conter capturas (valores entre parênteses) que serão devolvidas em caso de correspondência com êxito.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Determina a parte do texto cuja correspondência é pretendida. Pode ser um valor da enumeração MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>O texto a procurar na expressão regular.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>A expressão regular para verificar o texto. Pode conter capturas (valores entre parênteses) que serão devolvidas em caso de correspondência com êxito.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Determina a parte do texto cuja correspondência é pretendida. Pode ser um valor da enumeração MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>expressão_regular</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>opções</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Atualiza a origem de dados especificada.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>origem_dados_ligada</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Era esperado um valor de tabela ou de registo.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Uma origem de dados ligada a atualizar.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Só é possível atualizar ligações geridas.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>As expressões regulares têm de ser valores constantes.</value>
+    
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Não é possível alterar o valor transmitido para a função "{0}".</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>O nome de captura "{0}" está a ocultar a propriedade predefinida que devolve a correspondência completa da expressão regular. Considere mudar o nome se pretender utilizar essa propriedade com nome para extrair a correspondência completa no texto especificado.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>O nome de captura "{0}" está a ocultar a propriedade predefinida que devolve as correspondências de grupos na expressão regular. Considere mudar o nome se pretender utilizar essa propriedade com nome para extrair todas as subcorrespondências no texto especificado.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>O nome de captura "{0}" está a ocultar a propriedade predefinida que devolve a localização da correspondência da expressão regular. Considere mudar o nome se pretender utilizar essa propriedade com nome para extrair a posição da correspondência completa no texto especificado.</value>
+    
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Remove toda a formatação e devolve um valor de texto simples.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>O texto cujas tags de HTML e XML devem ser removidas.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>As funções de filtro não permitem funções de comportamento como predicados.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Utilize o operador And para combinar vários predicados no segundo argumento.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Não é possível copiar esta tabela. Em vez disso, crie uma tabela inline utilizando a função ForAll e a notação {...} para copiar as colunas individuais pretendidas.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Não é possível copiar este registo. Em vez disso, crie um registo inline utilizando a notação {...} para copiar os campos individuais pretendidos.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>O segundo argumento da função "{0}" só é suportado para valores numéricos e de data/hora.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Definir uma variável com um valor de origem de dados online (tabela ou registo) pode causar vários pedidos ao servidor. Esta ação será bloqueada brevemente.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>A declaração literal do tipo é inválida</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Erro de correspondência de tipo entre os tipos de registo de origem e destino. O tipo fornecido tem campos adicionais: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Erro de correspondência de tipo entre os tipos de registo de origem e destino. O tipo fornecido tem campos em falta: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Erro de correspondência de tipo entre os tipos de registo de origem e destino. O nome de campo {0} não foi encontrado.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Erro de correspondência de tipo entre os tipos de registo de origem e destino. Nome de campo {0} Esperado {1}; Encontrado {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>O tipo {0} fornecido não pode ser forçado para o tipo de origem {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Erro de correspondência de tipo entre os tipos de origem e destino. Esperado {0}; Encontrado {1}.</value>
     
   </data>
 </root>

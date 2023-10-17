@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Text;
-using System.Text.Json;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -35,7 +34,22 @@ namespace Microsoft.PowerFx.Types
 
         double GetDouble();
 
+        decimal GetDecimal();
+
         bool GetBoolean();
+
+        // For providers that do not imply a type for numbers (JSON), GetUntypedNumber is used to access the raw
+        // underlying string representation, likely from the source representation (again in the case of JSON).
+        // It is validated to be in a culture invariant standard format number, possibly with dot decimal separator and "E" exponent.
+        // This method need not be implemetned if ExteranlType.UntypedNumber is not used.
+        // GetDouble and GetDecimal can be called on an ExternalType.UntypedNumber.
+        string GetUntypedNumber();
+
+        /// <summary>
+        /// If the untyped value is an object then this method returns true and the list of available property names in the <paramref name="propertyNames"/> parameter.
+        /// Returns false otherwise, <paramref name="propertyNames"/> will be null in this case.
+        /// </summary>
+        bool TryGetPropertyNames(out IEnumerable<string> propertyNames);
     }
 
     [DebuggerDisplay("UntypedObjectValue({Impl})")]

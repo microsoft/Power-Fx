@@ -28,6 +28,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             {
                 return $"ResolvedObject({slot.DebugName()})";
             }
+
             return $"ResolvedObject({Value})";
         }
     }

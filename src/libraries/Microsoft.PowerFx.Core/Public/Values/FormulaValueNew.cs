@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -29,21 +31,23 @@ namespace Microsoft.PowerFx.Types
             return new BlankValue(IRContext.NotInSource(FormulaType.Number));
         }
 
-        public static NumberValue New(decimal number)
+        public static DecimalValue New(decimal number)
         {
-            // $$$ Is this safe? or loss in precision?
-            return new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)number);
+            return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), number);
         }
 
-        public static NumberValue New(long number)
+        public static DecimalValue New(long number)
         {
-            // $$$ Is this safe? or loss in precision?
-            return new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)number);
+            // it is safe to convert 64-bit Long to Decimal, but not to Float
+            return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), (decimal)number);
         }
 
-        public static NumberValue New(int number)
+        public static DecimalValue New(int number)
         {
-            return new NumberValue(IRContext.NotInSource(FormulaType.Number), number);
+            // Since decimal is a lower type precedence than floating point, if a calculation includes
+            // an int through this mechanism, that is treated as a float, then the entire calculation
+            // is tainted. For example, this is why the CountRows function returns a decimal.
+            return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), number);
         }
 
         public static NumberValue New(float number)
@@ -79,21 +83,11 @@ namespace Microsoft.PowerFx.Types
                 throw new ArgumentException("Invalid DateValue, the provided DateTime contains a non-zero TimeOfDay");
             }
 
-            if (value.Kind == DateTimeKind.Utc)
-            {
-                throw new ArgumentException("Invalid DateValue, the provided DateTime must be local");
-            }
-
             return new DateValue(IRContext.NotInSource(FormulaType.Date), value);
         }
 
         public static DateTimeValue New(DateTime value)
         {
-            if (value.Kind == DateTimeKind.Utc)
-            {
-                throw new ArgumentException("Invalid DateTimeValue, the provided DateTime must be local");
-            }
-
             return new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), value);
         }
 
@@ -122,6 +116,11 @@ namespace Microsoft.PowerFx.Types
             return new ErrorValue(IRContext.NotInSource(type), error);
         }
 
+        public static ErrorValue NewError(IEnumerable<ExpressionError> error, FormulaType type)
+        {
+            return new ErrorValue(IRContext.NotInSource(type), error.ToList());
+        }
+
         public static UntypedObjectValue New(IUntypedObject untypedObject)
         {
             return new UntypedObjectValue(
@@ -132,6 +131,11 @@ namespace Microsoft.PowerFx.Types
         public static ColorValue New(Color value)
         {
             return new ColorValue(IRContext.NotInSource(FormulaType.Color), value);
+        }
+
+        public static VoidValue NewVoid()
+        {
+            return new VoidValue(IRContext.NotInSource(FormulaType.Void));
         }
     }
 }

@@ -2,7 +2,7 @@
 
 ## Connect to the feed
 
-Daily NuGet packages for Power Fx are published to [`Azure Artifacts`](https://dev.azure.com/ConversationalAI/BotFramework/_packaging?_a=feed&feed=SDK) (filter by "PowerFx"). 
+Daily NuGet packages for Power Fx are published to [`Azure Artifacts`](https://dev.azure.com/Power-Fx/Power%20Fx/_artifacts/feed/PowerFx).
 
 Follow the configuration steps below, depending on your case:
 
@@ -14,7 +14,7 @@ Add a nuget.config file to your project in the same folder as your .csproj or .s
 <configuration>
   <packageSources>
     <clear />
-    <add key="SDK" value="https://pkgs.dev.azure.com/ConversationalAI/BotFramework/_packaging/SDK/nuget/v3/index.json" />
+    <add key="SDK" value="https://pkgs.dev.azure.com/Power-Fx/7dd30b4a-31be-4ac9-a649-e6addd4d5b0a/_packaging/PowerFx/nuget/v3/index.json" />
   </packageSources>
 </configuration>
 ```
@@ -33,7 +33,7 @@ SDK
 ```
 Source
 ```
-https://pkgs.dev.azure.com/ConversationalAI/BotFramework/_packaging/SDK/nuget/v3/index.json
+https://pkgs.dev.azure.com/Power-Fx/7dd30b4a-31be-4ac9-a649-e6addd4d5b0a/_packaging/PowerFx/nuget/v3/index.json
 ```
 `Note: You need to do this on every machine that needs access to your packages. Use the command line instructions above if you want to complete the setup once and check it in to your repository.`
 

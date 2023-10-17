@@ -1,0 +1,4 @@
+#SETUP: disable:PowerFxV1CompatibilityRules
+
+>> ForAll([1], If(false, {a:1}, {b:2}))
+Table({})

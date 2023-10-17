@@ -1,0 +1,185 @@
+#SETUP: disable:NumberIsFloat,disable:PowerFxV1CompatibilityRules
+
+>> Float(16) <> "16"
+true
+
+>> Float(16) <> "16.000000000000000000002"
+true
+
+>> Float(16) <> "14"
+true
+
+>> Float(16) <> "18"
+true
+
+>> Float(16) <> "1e20"
+true
+
+>> Float(1e20) <> "1e20"
+true
+
+>> Float(1) <> true
+true
+
+>> Float(1) <> false
+true
+
+>> Float(0) <> true
+true
+
+>> Float(0) <> false
+true
+
+>> Float(2) <> true
+true
+
+>> Float(2) <> false
+true
+
+>> "16" <> Float(16)
+true
+
+>> "16" <> Float(18)
+true
+
+>> "16" <> Float(14)
+true
+
+>> "1e100" <> Float(2)
+true
+
+>> "" <> Float(0)
+true
+
+>> "1" <> true
+true
+
+>> "1e100" <> true
+true
+
+>> "36526" <> Date(2000,1,1)
+true
+
+>> "36526.5" <> DateTime(2000,1,1,12,0,0)
+true
+
+>> "16" <> Time(12,0,0)
+true
+
+>> "2" <> Decimal("2.000000000000000000000002")
+true
+
+>> "1e100" <> Decimal("2.000000000000000000000002")
+true
+
+>> true <> Float(2)
+true
+
+>> true <> Float(1)
+true
+
+>> true <> Float(0)
+true
+
+>> false <> Float(2)
+true
+
+>> false <> Float(1)
+true
+
+>> false <> Float(0)
+true
+
+>> true <> Float("1e100")
+true
+
+>> true <> "1"
+true
+
+>> false <> "0"
+true
+
+>> false <> "1"
+true
+
+>> true <> "1E+100"
+true
+
+// returns false in Excel
+>> true <> "true"
+true
+
+>> false <> "false"
+true
+
+>> true <> Date(1927,5,18)
+true
+
+>> true <> DateTime(1927,5,18,0,0,0)
+true
+
+>> true <> Time(12,0,0)
+true
+
+>> false <> Date(1927,5,18)
+true
+
+>> false <> DateTime(1927,5,18,0,0,0)
+true
+
+>> false <> Time(12,0,0)
+true
+
+>> true <> Decimal("1.000000000000000000000002")
+true
+
+>> true <> Decimal(1)
+true
+
+>> true <> Decimal(0)
+true
+
+>> false <> Decimal("1.000000000000000000000002")
+true
+
+>> false <> Decimal(1)
+true
+
+>> false <> Decimal(0)
+true
+
+>> Date(1900,1,1) <> "2"
+true
+
+>> Date(1900,1,0) <> true
+true
+
+>> DateTime(1900,1,1,12,0,0) <> "2.5"
+true
+
+>> DateTime(2000,1,1,12,0,0) <> true
+true
+
+>> DateTime(2000,1,0,0,0,0) <> true
+true
+
+>> Time(9,0,0) <> "0.375"
+true
+
+>> Time(9,0,0) <> true
+true
+
+>> Time(24,0,0) <> false
+true
+
+>> Time(1,0,0) <> DateTime(1899,12,30,1,0,0)
+true
+
+>> Decimal("16.000000000000000000000001") <> "16"
+true
+
+>> Decimal("1.000000000000000000000001") <> true
+true
+
+>> ParseJSON("""1900-01-01T09:00:01""") <> Date(1900,1,1)
+false

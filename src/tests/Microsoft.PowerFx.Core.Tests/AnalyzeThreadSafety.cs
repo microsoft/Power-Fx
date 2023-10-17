@@ -2,10 +2,14 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -15,6 +19,84 @@ namespace Microsoft.PowerFx.Core.Tests
     /// </summary>
     public class AnalyzeThreadSafety
     {
+        // Return true if safe, false on error. 
+        public static bool VerifyThreadSafeImmutable(Type t)
+        {
+            int errors = 0;
+
+            var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+
+            // Check out all fields and properties. 
+            foreach (var prop in t.GetProperties(flags)) 
+            {
+                var name = prop.Name;
+                if (prop.CanWrite)
+                {
+                    var isInitKeyword = prop.SetMethod.ReturnParameter.GetRequiredCustomModifiers().Contains(typeof(System.Runtime.CompilerServices.IsExternalInit));
+                    if (!isInitKeyword)
+                    {
+                        // No mutable properties allowed. Init only ok. 
+                        Debugger.Log(0, string.Empty, $"{t.Name}.{name} has setter\r\n");
+                        errors++;
+                    }
+                }
+
+                Assert.True(prop.CanRead);
+
+                var propType = prop.PropertyType;
+
+                if (!IsTypeImmutable(propType))
+                {
+                    // valuetypes are copies, so no contention
+                    if (!prop.PropertyType.IsValueType) 
+                    {
+                        // Fail. 
+                        Debugger.Log(0, string.Empty, $"{t.Name}.{name} returns mutable value\r\n");
+                        errors++;
+                    }
+                }
+            }
+            
+            foreach (var field in t.GetFields(flags))
+            {
+                var name = field.Name;
+
+                if (name.StartsWith("<"))
+                {
+                    // Ignore compile generated fields.
+                    continue;
+                }
+
+                // ReadOnly
+                if (!field.IsInitOnly)
+                {
+                    Debugger.Log(0, string.Empty, $"{t.Name}.{name} is not readonly\r\n");
+                    errors++;
+                }
+
+                if (field.GetCustomAttributes<ThreadSafeProtectedByLockAttribute>().Any() ||
+                    IsTypeConcurrent(field.FieldType))
+                {
+                    continue;
+                }
+
+                if (!IsTypeImmutable(field.FieldType))
+                {
+                    // Fail. 
+                    Debugger.Log(0, string.Empty, $"{t.Name}.{name} returns mutable value\r\n");
+                    errors++;
+                }
+            }
+
+            if (errors > 0)
+            {
+                Debugger.Log(0, string.Empty, $"\r\n");
+                return false;
+            }
+
+            return true;
+        }
+
         // Verify there are no "unsafe" static fields that could be threading issues.
         // Bugs - list of field types types that don't work. This should be driven to 0. 
         // BugNames - list of "Type.Field" that don't work. This should be driven to 0. 
@@ -106,6 +188,64 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Empty(errors);
         }
 
+        // $$$ Supersedes ImmutabilityTests.
+        // This is more aggressive (includes private fields), but they don't all pass. So assert is disabled.
+        public static void CheckImmutableTypes(Assembly[] assemblies, bool enableAssert = false)
+        {
+            foreach (var assembly in assemblies)
+            {
+                foreach (Type type in assembly.GetTypes())
+                {
+                    if (type.Name.StartsWith("<", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue; // exclude compiler generated closures. 
+                    }
+
+                    // includes base types 
+                    var attr = type.GetInterfaces().Select(x => x.GetCustomAttributes().OfType<ThreadSafeImmutableAttribute>());
+                    if (attr == null)
+                    {
+                        continue;
+                    }
+
+                    // Common pattern is a writeable derived type (like Dict vs. IReadOnlyDict). 
+                    var attrNotSafe = type.GetCustomAttribute<NotThreadSafeAttribute>(inherit: false);
+                    if (attrNotSafe != null)
+                    {
+                        var attribute = type.GetCustomAttribute<ThreadSafeImmutableAttribute>(inherit: false);
+                        if (attribute != null)
+                        {
+                            Assert.True(false); // Class can't have both safe & unsafe together. 
+                        }
+
+                        continue;
+                    }
+
+                    bool ok = AnalyzeThreadSafety.VerifyThreadSafeImmutable(type);
+
+                    // Enable this, per  https://github.com/microsoft/Power-Fx/issues/1519
+                    if (enableAssert)
+                    {
+                        Assert.True(ok);
+                    }
+                }
+            }
+        }
+
+        private static bool IsTypeConcurrent(Type type)
+        {
+            if (type.IsGenericType)
+            {
+                var genericDef = type.GetGenericTypeDefinition();
+                if (genericDef == typeof(ConcurrentDictionary<,>))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private static bool IsFieldVolatile(FieldInfo field)
         {
             var isVolatile = field
@@ -120,10 +260,21 @@ namespace Microsoft.PowerFx.Core.Tests
             // Primitives
             typeof(object),
             typeof(string),
+            typeof(System.Type),
             typeof(Random),
             typeof(DateTime),
             typeof(System.Text.RegularExpressions.Regex),
             typeof(System.Numerics.BigInteger),
+            typeof(NumberFormatInfo),
+
+            // Generics        
+            typeof(IReadOnlyDictionary<,>),
+            typeof(IReadOnlyCollection<>),
+            typeof(IReadOnlyList<>),
+            typeof(Nullable<>),
+            typeof(IEnumerable<>),
+            typeof(KeyValuePair<,>),
+            typeof(ISet<>)
         };
 
         // If the instance is readonly, is the type itself immutable ?
@@ -135,7 +286,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 return false;
             }
 
-            if (t.IsPrimitive || t.IsEnum)
+            if (t.IsPrimitive || t.IsEnum || t == typeof(decimal))
             {
                 return true;
             }
@@ -150,20 +301,19 @@ namespace Microsoft.PowerFx.Core.Tests
             if (t.IsGenericType)
             {
                 var genericDef = t.GetGenericTypeDefinition();
-                if (genericDef == typeof(IReadOnlyDictionary<,>))
-                {
-                    // For a Dict<key,value>, need to make sure the values are also safe. 
-                    var valueArg = t.GetGenericArguments()[1];
-                    var isValueArgSafe = IsTypeImmutable(valueArg);
-                    return isValueArgSafe;
-                }
+                if (_knownImmutableTypes.Contains(genericDef))
+                { 
+                    var typeArgs = t.GetGenericArguments();
+                    foreach (var arg in typeArgs)
+                    {
+                        var isArgSafe = IsTypeImmutable(arg) || arg.IsValueType;
+                        if (!isArgSafe)
+                        {
+                            return false;
+                        }
+                    }
 
-                if (genericDef == typeof(IEnumerable<>)
-                    || genericDef == typeof(IReadOnlyList<>) || genericDef == typeof(Nullable<>))
-                {
-                    var valueArg = t.GetGenericArguments()[0];
-                    var isValueArgSafe = IsTypeImmutable(valueArg);
-                    return isValueArgSafe;
+                    return true;
                 }
             }
 

@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         Assert.True(Guid.TryParse(header.Value.First(), out _));
                         break;
                     case "x-ms-request-method":
-                        Assert.Equal(request.Method.ToString(), header.Value.First());
+                        Assert.Equal(request.Method.ToString().ToUpperInvariant(), header.Value.First());
                         break;
                     case "Authorization":
                         Assert.Equal($"Bearer {TestAuthToken}", header.Value.First());
@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
         {
             Request = request;
-            return await base.SendAsync(request, cancellationToken);
+            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
     }
 }

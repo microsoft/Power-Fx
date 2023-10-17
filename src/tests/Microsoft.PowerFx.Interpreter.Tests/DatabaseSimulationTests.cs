@@ -3,20 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Entities.Delegation;
-using Microsoft.PowerFx.Core.Entities.QueryOptions;
-using Microsoft.PowerFx.Core.Functions.Delegation;
-using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.UtilityDataStructures;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -32,7 +25,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var databaseTable = DatabaseTable.CreateTestTable(0);
             var symbols = new SymbolTable();
 
-            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType);
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
             symbols.EnableMutationFunctions();
 
             var engine = new RecalcEngine();
@@ -49,7 +42,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             IExpressionEvaluator run = check.GetEvaluator();
 
-            FormulaValue result = await run.EvalAsync(CancellationToken.None, runtimeConfig);
+            FormulaValue result = await run.EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
             Assert.IsType<InMemoryRecordValue>(result);
         }
 
@@ -63,7 +56,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 20000);
             var symbols = new SymbolTable();
 
-            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType);
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
             symbols.EnableMutationFunctions();
 
             var engine = new RecalcEngine();
@@ -78,8 +71,82 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             using (var cts = new CancellationTokenSource(500))
             {
                 // Won't complete - should throw cancellation task 
-                await Assert.ThrowsAsync<TaskCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig));
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig).ConfigureAwait(false)).ConfigureAwait(false);
             }
+        }
+
+        [Theory]
+        [InlineData("Set(x, Table)", "Set(#$PowerFxResolvedObject$#, #$fne$#)")]
+        [InlineData("With({t:Table},t)", "With({ #$fieldname$#:#$fne$# }, #$fne$#)")]
+        [InlineData("ForAll(Table, ThisRecord.Value)", "ForAll(#$fne$#, #$fne$#.#$righthandid$#)")]
+        public async Task TestExpandedStucturalPrint(string expr, string anonymized)
+        {
+            var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 0);
+            var symbols = new SymbolTable();
+
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
+            symbols.EnableMutationFunctions();
+
+            var engine = new RecalcEngine();
+            var runtimeConfig = new SymbolValues(symbols);
+
+            engine.UpdateVariable("x", TableValue.NewTable(RecordType.Empty()));
+            runtimeConfig.Set(slot, databaseTable);
+
+            CheckResult check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
+
+            Assert.Equal(anonymized, check.ApplyGetLogging());
+        }
+
+        [Theory]
+        [InlineData("Set(x, Table)")]
+        public async Task SkipExpandableSetSemanticsFeatureTest(string expr)
+        {
+            var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 0);
+            var symbols = new SymbolTable();
+
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
+            symbols.EnableMutationFunctions();
+
+            // Temporary feature to unblock Cards team
+#pragma warning disable CS0612 // Type or member is obsolete
+            var config = new PowerFxConfig(Features.PowerFxV1AllowSetExpandedTypes);
+#pragma warning restore CS0612 // Type or member is obsolete
+            var engine = new RecalcEngine(config);
+            var runtimeConfig = new SymbolValues(symbols);
+
+            engine.UpdateVariable("x", TableValue.NewTable(RecordType.Empty()));
+            runtimeConfig.Set(slot, databaseTable);
+
+            var check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
+
+            // This will be success due to SkipExpandableSetSemantics feature that loosens some Set semantics conditions.
+            Assert.True(check.IsSuccess);
+            Assert.Contains(check.Errors, err => err.IsWarning && err.MessageKey == "WrnSetExpandableType");
+
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, symbolValues: symbols.CreateValues()).ConfigureAwait(false);
+            Assert.IsType<BooleanValue>(result);
+        }
+
+        [Theory]
+        [InlineData("Set(x, Table)")]
+        public async Task BlockSetExpandableTest(string expr)
+        {
+            var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 0);
+            var symbols = new SymbolTable();
+
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
+            symbols.EnableMutationFunctions();
+
+            var engine = new RecalcEngine();
+            var runtimeConfig = new SymbolValues(symbols);
+
+            engine.UpdateVariable("x", TableValue.NewTable(RecordType.Empty()));
+            runtimeConfig.Set(slot, databaseTable);
+
+            var check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
+            Assert.False(check.IsSuccess);
+            Assert.Contains(check.Errors, err => !err.IsWarning && (err.MessageKey == "ErrSetVariableWithRelationshipNotAllowTable" || err.MessageKey == "ErrSetVariableWithRelationshipNotAllowRecord"));
         }
 
         internal class DatabaseTable : InMemoryTableValue
@@ -107,14 +174,24 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 PatchDelay = patchDelay;
             }
 
+            // Doesn't perform a copy.  Not needed for testing purposes and 
+            // prevents this class from being replaced by a standard InMemoryTableValue
+            public override bool TryShallowCopy(out FormulaValue copy)
+            {
+                copy = null;
+                return false;
+            }
+
+            public override bool CanShallowCopy => false;
+
             protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
             {
                 if (PatchDelay > 0)
                 {
-                    await Task.Delay(PatchDelay, cancellationToken);
+                    await Task.Delay(PatchDelay, cancellationToken).ConfigureAwait(false);
                 }
 
-                return await base.PatchCoreAsync(baseRecord, changeRecord, cancellationToken);
+                return await base.PatchCoreAsync(baseRecord, changeRecord, cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -167,6 +244,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 throw new NotImplementedException("Cannot call TryGetField");
             }
+
+            // Doesn't perform a copy.  Not needed for testing purposes and 
+            // prevents this class from being replaced by a standard InMemoryRecordValue
+            public override bool TryShallowCopy(out FormulaValue copy)
+            {
+                copy = null;
+                return false;
+            }
+
+            public override bool CanShallowCopy => false;
         }
 
         internal class TestEntityType : FormulaType

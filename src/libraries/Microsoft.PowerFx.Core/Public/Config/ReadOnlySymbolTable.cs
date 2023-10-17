@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.App;
+using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
@@ -34,8 +35,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// This can be compared to determine if the symbol table was mutated during an operation. 
         /// </summary>
-        internal virtual VersionHash VersionHash => _parent == null ?
-            _version : _version.Combine(_parent.VersionHash);
+        internal virtual VersionHash VersionHash => _version;
 
         /// <summary>
         /// Notify the symbol table has changed. 
@@ -45,8 +45,6 @@ namespace Microsoft.PowerFx
             _version.Inc();
         }
 
-        private protected ReadOnlySymbolTable _parent;
-
         private protected string _debugName = "SymbolTable";
 
         // Helper in debugging. Useful when we have multiple symbol tables chained. 
@@ -54,26 +52,6 @@ namespace Microsoft.PowerFx
         {
             get => _debugName;
             init => _debugName = value;
-        }
-
-        // Should remove. 
-        // https://github.com/microsoft/Power-Fx/issues/828
-        [Obsolete("Use Composition instead of Parent Pointer")]
-        public ReadOnlySymbolTable Parent => _parent;
-
-        internal virtual IEnumerable<ReadOnlySymbolTable> SubTables
-        {
-            get
-            {
-                if (_parent == null)
-                {
-                    return new ReadOnlySymbolTable[] { this };
-                }
-                else
-                {
-                    return new ReadOnlySymbolTable[] { this, _parent };
-                }
-            }
         }
 
         /// <summary>
@@ -113,7 +91,7 @@ namespace Microsoft.PowerFx
             {
                 if (x.Value.Data is ISymbolSlot slot2)
                 {
-                    if (slot2.SlotIndex == slot.SlotIndex) 
+                    if (slot2.SlotIndex == slot.SlotIndex)
                     {
                         return FormulaType.Build(x.Value.Type);
                     }
@@ -121,6 +99,30 @@ namespace Microsoft.PowerFx
             }
 
             throw NewBadSlotException(slot);
+        }
+
+        // Ensure that newType can be assigned to the given slot. 
+        internal void ValidateAccepts(ISymbolSlot slot, FormulaType newType)
+        {
+            var srcType = this.GetTypeFromSlot(slot);
+
+            if (newType is RecordType)
+            {
+                // Lazy RecordTypes don't validate. 
+                // https://github.com/microsoft/Power-Fx/issues/833
+                return;
+            }
+
+            var ok = srcType._type.Accepts(newType._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
+
+            if (ok)
+            {
+                return;
+            }
+
+            var name = slot.DebugName();
+
+            throw new InvalidOperationException($"Can't change '{name}' from {srcType} to {newType._type}.");
         }
 
         // Helper to call on Get/Set to ensure slot can be used with this value
@@ -139,6 +141,79 @@ namespace Microsoft.PowerFx
             return new InvalidOperationException($"Slot {slot.DebugName()} is not valid on Symbol Table {this.DebugName()}");
         }
 
+        /// <summary>
+        /// Create a symbol table around the DisplayNameProvider. 
+        /// The set of symbols is fixed and determined by the DisplayNameProvider, 
+        /// but their type info is lazily hydrated. 
+        /// </summary>
+        /// <param name="map">Set of all possible symbol names. Callback will be invoked lazily to compute the type. </param>
+        /// <param name="fetchTypeInfo">Callback invoked with (logical,display) name for the symbol. Allow lazily computing the type and getting the slot for setting values.</param>
+        /// <param name="debugName">Optional debug name for this symbol table.</param>
+        /// <returns></returns>
+        public static ReadOnlySymbolTable NewFromDeferred(
+            DisplayNameProvider map,
+            Func<string, string, DeferredSymbolPlaceholder> fetchTypeInfo,
+            string debugName = null)
+        {
+            return NewFromDeferred(map, fetchTypeInfo, FormulaType.Deferred, debugName);
+        }
+
+        /// <summary>
+        /// Create a symbol table around the DisplayNameProvider. 
+        /// The set of symbols is fixed and determined by the DisplayNameProvider, 
+        /// but their type info is lazily hydrated. 
+        /// </summary>
+        /// <param name="map">Set of all possible symbol names. Callback will be invoked lazily to compute the type. </param>
+        /// <param name="fetchTypeInfo">Callback invoked with (logical,display) name for the symbol. Allow lazily computing the type and getting the slot for setting values.</param>
+        /// <param name="placeHolderType">Place holder symbol type till full type is lazily loaded. Useful for Intellisense context.</param>
+        /// <param name="debugName">Optional debug name for this symbol table.</param>
+        /// <returns></returns>
+        public static ReadOnlySymbolTable NewFromDeferred(
+            DisplayNameProvider map,
+            Func<string, string, DeferredSymbolPlaceholder> fetchTypeInfo,
+            FormulaType placeHolderType,
+            string debugName = null)
+        {
+            if (map == null)
+            {
+                throw new ArgumentNullException(nameof(map));
+            }
+
+            if (fetchTypeInfo == null)
+            {
+                throw new ArgumentNullException(nameof(fetchTypeInfo));
+            }
+
+            if (placeHolderType == null)
+            {
+                throw new ArgumentNullException(nameof(placeHolderType));
+            }
+
+            return new DeferredSymbolTable(map, fetchTypeInfo, placeHolderType._type)
+            {
+                DebugName = debugName
+            };
+        }
+
+        public static ReadOnlySymbolTable NewFromDeferred(
+            DisplayNameProvider map,
+            Func<string, string, FormulaType> fetchTypeInfo,
+            string debugName = null)
+        {
+            return NewFromDeferred(map, fetchTypeInfo, FormulaType.Deferred, debugName);
+        }
+
+        public static ReadOnlySymbolTable NewFromDeferred(
+            DisplayNameProvider map,
+            Func<string, string, FormulaType> fetchTypeInfo,
+            FormulaType placeHolderType,
+            string debugName = null)
+        {
+            Func<string, string, DeferredSymbolPlaceholder> fetchTypeInfo2 =
+                (logical, display) => new DeferredSymbolPlaceholder(fetchTypeInfo(logical, display));
+            return NewFromDeferred(map, fetchTypeInfo2, placeHolderType, debugName);
+        }
+
         public static ReadOnlySymbolTable NewFromRecord(
             RecordType type,
             string debugName = null,
@@ -151,14 +226,25 @@ namespace Microsoft.PowerFx
             };
         }
 
+        public static ReadOnlySymbolTable NewFromRecordWithoutImplicitThisRecord(
+            RecordType type,
+            string debugName = null,
+            bool allowMutable = false)
+        {
+            return new SymbolTableOverRecordType(type, parent: null, mutable: allowMutable)
+            {
+                DebugName = debugName ?? "RowScopeNoImplicitThisRecord"
+            };
+        }
+
         public static ReadOnlySymbolTable Compose(params ReadOnlySymbolTable[] tables)
         {
-            return new ComposedReadOnlySymbolTable(new SymbolTableEnumerator(tables));
+            return new ComposedReadOnlySymbolTable(tables);
         }
 
         // Helper to create a ReadOnly symbol table around a set of core functions.
         // Important that this is readonly so that it can be safely shared across engines. 
-        internal static ReadOnlySymbolTable NewDefault(IEnumerable<TexlFunction> coreFunctions)
+        internal static ReadOnlySymbolTable NewDefault(TexlFunctionSet coreFunctions)
         {
             var s = new SymbolTable
             {
@@ -166,12 +252,21 @@ namespace Microsoft.PowerFx
                 DebugName = $"BuiltinFunctions ({coreFunctions.Count()})"
             };
 
-            foreach (var func in coreFunctions)
-            {
-                s.AddFunction(func); // will also add enum. 
-            }
+            s.AddFunctions(coreFunctions);
 
             return s;
+        }
+
+        internal static ReadOnlySymbolTable NewDefault(IEnumerable<TexlFunction> functions)
+        {            
+            TexlFunctionSet tfs = new TexlFunctionSet();
+
+            foreach (TexlFunction function in functions)
+            {
+                tfs.Add(function);
+            }
+
+            return NewDefault(tfs);
         }
 
         /// <summary>
@@ -184,24 +279,18 @@ namespace Microsoft.PowerFx
             var s = new SymbolTable()
             {
                 DebugName = DebugName + " (Functions only)",
-#pragma warning disable CS0618 // Type or member is obsolete
-                Parent = Parent,
-#pragma warning restore CS0618 // Type or member is obsolete
             };
 
-            foreach (var func in _functions)
-            {
-                s.AddFunction(func); 
-            }
+            s.AddFunctions(_functions);
 
             return s;
         }
 
         internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
 
-        internal DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
+        private protected readonly TexlFunctionSet _functions = new TexlFunctionSet();
 
-        private protected readonly List<TexlFunction> _functions = new List<TexlFunction>();
+        public IEnumerable<string> FunctionNames => _functions.FunctionNames;
 
         // Which enums are available. 
         // These do not compose - only bottom one wins. 
@@ -231,10 +320,10 @@ namespace Microsoft.PowerFx
 
         IEnumerable<EnumSymbol> IEnumStore.EnumSymbols => GetEnumSymbolSnapshot;
 
-        internal IEnumerable<TexlFunction> Functions => ((INameResolver)this).Functions;
+        internal TexlFunctionSet Functions => ((INameResolver)this).Functions;
 
-        IEnumerable<TexlFunction> INameResolver.Functions => _functions; 
-        
+        TexlFunctionSet INameResolver.Functions => _functions;
+
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
         /// <summary>
@@ -242,34 +331,26 @@ namespace Microsoft.PowerFx
         /// </summary>
         public IEnumerable<NamedFormulaType> SymbolNames
         {
-            get 
+            get
             {
                 IGlobalSymbolNameResolver globals = this;
-                
+
                 // GlobalSymbols are virtual, so we get derived behavior via that.
                 foreach (var kv in globals.GlobalSymbols)
                 {
                     var type = FormulaType.Build(kv.Value.Type);
-                    yield return new NamedFormulaType(kv.Key, type);
+                    var displayName = kv.Value.DisplayName != default ? kv.Value.DisplayName.Value : null;
+                    yield return new NamedFormulaType(kv.Key, type, displayName);
                 }
             }
         }
 
-        internal bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
+        // Hook from Lookup - Get just variables. 
+        internal virtual bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
         {
-            var lookupName = name;
-
-            if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out displayName))
-            {
-                // do nothing as provided name can be used for lookup with logical name
-            }
-            else if (_environmentSymbolDisplayNameProvider.TryGetLogicalName(name, out var logicalName))
-            {
-                lookupName = logicalName;
-                displayName = name;
-            }
-
-            return _variables.TryGetValue(lookupName, out symbol);
+            symbol = default;
+            displayName = default;
+            return false;
         }
 
         // Derived symbol tables can hook. 
@@ -293,7 +374,7 @@ namespace Microsoft.PowerFx
                 return true;
             }
 
-            var enumValue = GetEnumSymbolSnapshot.FirstOrDefault(symbol => symbol.InvariantName == name);
+            var enumValue = GetEnumSymbolSnapshot.FirstOrDefault(symbol => symbol.EntityName.Value == name);
             if (enumValue != null)
             {
                 nameInfo = new NameLookupInfo(BindKind.Enum, enumValue.EnumType, DPath.Root, 0, enumValue);
@@ -309,47 +390,48 @@ namespace Microsoft.PowerFx
             Contracts.Check(theNamespace.IsValid, "The namespace is invalid.");
             Contracts.CheckNonEmpty(name, "name");
 
-            // See TexlFunctionsLibrary.Lookup
-            // return _functionLibrary.Lookup(theNamespace, name, localeInvariant, null);            
-            var functionLibrary = _functions.Where(func => func.Namespace == theNamespace && name == (localeInvariant ? func.LocaleInvariantName : func.Name)); // Base filter
-            return functionLibrary;
+            return localeInvariant 
+                        ? Functions.WithInvariantName(name, theNamespace) 
+                        : Functions.WithName(name, theNamespace);            
         }
-
+        
         IEnumerable<TexlFunction> INameResolver.LookupFunctionsInNamespace(DPath nameSpace)
         {
             Contracts.Check(nameSpace.IsValid, "The namespace is invalid.");
-
-            return _functions.Where(function => function.Namespace.Equals(nameSpace));
+            
+            return _functions.WithNamespace(nameSpace);
         }
 
-        bool INameResolver.LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value)
+        internal virtual void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts)
         {
-            value = null;
-            var castEnumInfo = enumInfo as EnumSymbol;
-            return castEnumInfo?.TryLookupValueByLocName(locName.Value, out _, out value) ?? false;
-        }
-
-        bool INameResolver.LookupEnumValueByTypeAndLocName(DType enumType, DName locName, out object value)
-        {
-            // Slower O(n) lookup involving a walk over the registered enums...
-            foreach (var info in GetEnumSymbolSnapshot)
+            if (this is IGlobalSymbolNameResolver globals)
             {
-                if (info.EnumType == enumType)
+                foreach (var variable in globals.GlobalSymbols)
                 {
-                    return info.TryLookupValueByLocName(locName.Value, out _, out value);
+                    if (variable.Value.TryToSymbolEntry(out var x))
+                    {
+                        names.Add(x);
+                    }
                 }
             }
-
-            value = null;
-            return false;
         }
+
+        internal class EnumerateNamesOptions
+        {
+        }
+
+        #region INameResolver - only implemented for unit testing for scenarios that use the full name resolver
+
+        internal virtual IExternalEntityScope InternalEntityScope => default;
+
+        IExternalEntityScope INameResolver.EntityScope => InternalEntityScope;
+
+        #endregion
 
         #region INameResolver - not implemented
 
         // Methods from INameResolver that we default / don't implement
         IExternalDocument INameResolver.Document => default;
-
-        IExternalEntityScope INameResolver.EntityScope => default;
 
         IExternalEntity INameResolver.CurrentEntity => default;
 
@@ -393,6 +475,11 @@ namespace Microsoft.PowerFx
             dataControlName = default;
             lookupInfo = default;
             return false;
+        }
+
+        bool INameResolver.LookupExpandedControlType(IExternalControl control, out DType controlType)
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

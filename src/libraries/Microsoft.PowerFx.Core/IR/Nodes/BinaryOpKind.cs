@@ -20,6 +20,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         AddTimeAndNumber, // Time + Number (typically fraction of a day)
         AddTimeAndTime, // Time + Time ==> Time
 
+        AddDecimals,
+
         DateDifference,
         TimeDifference,
 
@@ -29,8 +31,10 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         SubtractNumberAndTime,
 
         MulNumbers,
+        MulDecimals,
 
         DivNumbers,
+        DivDecimals,
 
         EqNumbers,
         EqBoolean,
@@ -49,6 +53,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         EqViewValue,
         EqNamedValue,
         EqNull,
+        EqDecimals,
+        EqNullUntyped,
+        EqPolymorphic,
 
         NeqNumbers,
         NeqBoolean,
@@ -67,11 +74,19 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         NeqViewValue,
         NeqNamedValue,
         NeqNull,
+        NeqDecimals,
+        NeqNullUntyped,
+        NeqPolymorphic,
 
         LtNumbers,
         LeqNumbers,
         GtNumbers,
         GeqNumbers,
+
+        LtDecimals,
+        LeqDecimals,
+        GtDecimals,
+        GeqDecimals,
 
         LtDateTime,
         LeqDateTime,
@@ -101,5 +116,10 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         AddDayAndDate,
         AddNumberAndTime,
         AddDayAndDateTime,
+
+        LtNull,
+        LeqNull,
+        GtNull,
+        GeqNull,
     }
 }

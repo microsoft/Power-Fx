@@ -153,7 +153,7 @@
     
   </data>
   <data name="SwitchExpression" xml:space="preserve">
-    <value>τιμή_εναλλαγής</value>
+    <value>αλλαγή_τιμής</value>
     
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
@@ -161,7 +161,7 @@
     
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
-    <value>τιμή_συμφωνίας</value>
+    <value>column_name</value>
     
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
@@ -169,11 +169,11 @@
     
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
-    <value>Τιμή προς σύγκριση με κάθε τιμή_συμφωνίας.</value>
+    <value>Τιμή προς σύγκριση με κάθε match_value.</value>
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
-    <value>Τιμή προς σύγκριση με την τιμή_εναλλαγής.</value>
+    <value>Τιμή προς αντιστοίχιση με την αλλαγή_τιμής.</value>
     
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Στήλη αριθμητικών τιμών για επεξεργασία.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Μετατρέπει έναν ΄δυαδικό' σε δυαδική τιμή.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>δυαδική τιμή</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Η δυαδική τιμή για μετατροπή σε δυαδική τιμή.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Μετατρέπει μια στήλη δυαδικών τιμών σε στήλη δυαδικών τιμών.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>δεδομένα_εισόδου</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Μια στήλη δυαδικών τιμών για επεξεργασία.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Επιστρέφει το πρώτο μη κενό όρισμα</value>
     
@@ -544,6 +566,24 @@
   <data name="AboutConcatenate" xml:space="preserve">
     <value>Ενώνει διάφορες τιμές κειμένου σε μία τιμή κειμένου.</value>
     
+  </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Μετατρέπει ένα "κείμενο" που αντιπροσωπεύει έναν αριθμό σε δεκαδική τιμή.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Κωδικός γλώσσας για χρήση κατά τη μετατροπή της τιμής.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Η τιμή κειμένου για μετατροπή σε δυαδική τιμή.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Μετατρέπει σε "κείμενο" που αντιπροσωπεύει έναν αριθμό σε τιμή κινητής υποδιαστολής.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Κωδικός γλώσσας για χρήση κατά τη μετατροπή της τιμής.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Η τιμή κειμένου για μετατροπή σε τιμή κινητής υποδιαστολής.</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>κείμενο</value>
@@ -773,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Η τιμή που επιστρέφεται αν πρόκειται για το πρώτο όρισμα που δεν είναι σφάλμα.</value>
+    <value>Η τιμή που επιστρέφεται αν το προηγούμενο όρισμα είναι σφάλμα.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -842,7 +882,8 @@
     <value>Μια παράσταση που αξιολογείται σε σειρές στην "προέλευση" και παρέχει τιμές για ταξινόμηση.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Με αύξουσα ή φθίνουσα σειρά</value>
+    <value>SortOrder.Ascending ή SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Ταξινομεί την "προέλευση" με βάση τη στήλη, προαιρετικά με καθορισμό "σειράς" ταξινόμησης.</value>
@@ -867,7 +908,8 @@
     <value>Μοναδικό όνομα στήλης.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Με αύξουσα ή φθίνουσα σειρά</value>
+    <value>SortOrder.Ascending ή SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Ταξινομεί την "προέλευση" με βάση το δείκτη αντιστοίχισης τιμών στην καθορισμένη στήλη.</value>
@@ -979,6 +1021,46 @@
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Μια τιμή ημερομηνίας για την οποία θα υπολογιστεί ο αριθμός εβδομάδας ISO.</value>
+  </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Επιστρέφει μια ημερομηνία προσαρμοσμένη κατά πολλούς μήνες. Η ημέρα του μήνα παραμένει η ίδια, αλλά με αυτόν τον τρόπο περιλαμβάνει τον αριθμό των ημερών του νέου μήνα.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>ημερομηνία</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>μήνες</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Μια τιμή ημερομηνίας που θα προσαρμοστεί έως τον καθορισμένο αριθμό μηνών.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Αριθμός μηνών με τον οποίο θα αλλάξετε την ημερομηνία. Μια θετική τιμή αποδίδει μια μελλοντική ημερομηνία, μια αρνητική τιμή μια προηγούμενη ημερομηνία και η τιμή μηδέν δεν θα αλλάξει το μήνα.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Επιστρέφει την τελευταία ημέρα του μήνα για μια καθορισμένη ημερομηνία, προσαρμοσμένη κατά σειρά μηνών.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>ημερομηνία</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>μήνες</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Μια τιμή ημερομηνίας που θα προσαρμοστεί έως τον καθορισμένο αριθμό μηνών.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Αριθμός μηνών με τον οποίο θα αλλάξετε την ημερομηνία. Μια θετική τιμή αποδίδει μια μελλοντική ημερομηνία, μια αρνητική τιμή μια προηγούμενη ημερομηνία και η τιμή μηδέν δεν θα αλλάξει το μήνα.</value>
+         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Περικόπτει την τιμή 'number' στρογγυλοποιώντας προς το αρνητικό άπειρο.</value>
@@ -1367,6 +1449,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Μια στήλη αριθμητικών τιμών (σε ακτίνια) προς επεξεργασία.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Αξιολογεί μια παράσταση σε μία ή περισσότερες στήλες του πίνακα και επιστρέφει έναν πίνακα μίας στήλης που περιέχει διακριτές (μοναδικές) τιμές για την αξιολογημένη παράσταση.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>προέλευση</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>παράσταση</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Πίνακας από τον οποίο θα εξαχθούν διακριτές τιμές.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Μια παράσταση που αξιολογείται σε κάθε σειρά στον πίνακα εισαγωγής και παρέχει τιμές για τη λειτουργία διάκρισης.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Επιστρέφει το τόξο εφαπτομένης (σε ακτίνια) των καθορισμένων συντεταγμένων x και y.</value>
   </data>
@@ -1404,6 +1503,14 @@
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>δεδομένα_εισόδου</value>
+    
+  </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>τροποποιητής</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>τροποποιητής</value>
     
   </data>
   <data name="AboutLeft" xml:space="preserve">
@@ -1675,7 +1782,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Η πρόσβαση στην ιδιότητα προσαρμοσμένων δεδομένων στοιχείου με παραμέτρους είναι εφικτή μόνο μέσα από ένα στοιχείο ή από τις ιδιότητες εξόδου στοιχείου.</value>
+    <value>Η πρόσβαση στην ιδιότητα ή την παράμετρο συνάρτησης στοιχείου είναι εφικτή μόνο μέσα από ένα στοιχείο ή από τις ιδιότητες εξόδου στοιχείου.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Η ιδιότητα ή η παράμετρος συνάρτησης στοιχείου μπορεί να αναφέρεται μόνο σε άλλες ιδιότητες συνάρτησης.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1742,20 +1853,8 @@
     <value>Το πρώτο όρισμα του '{0}' θα πρέπει να είναι πίνακας μίας στήλης.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Μη έγκυρο σχήμα, αναμενόταν μια στήλη τιμών κειμένου για '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Μη έγκυρο σχήμα, αναμενόταν μια στήλη τιμών ημερομηνίας για '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Μη έγκυρο σχήμα, αναμενόταν μια στήλη αριθμητικών τιμών για '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Μη έγκυρο σχήμα, αναμενόταν μια στήλη τιμών χρώματος για '{0}'.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Μη έγκυρο σχήμα, αναμενόταν μια στήλη {0} για '{1}'.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1798,6 +1897,26 @@
     <value>Η αριθμητική τιμή είναι υπερβολικά μεγάλη.</value>
     
   </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Χρήση μιας δεσμευμένης λέξης που δεν υποστηρίζεται προς το παρόν.</value>
+    
+  </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Η παράσταση δεν μπορεί να περιέχει περισσότερους από {0} χαρακτήρες. Η παράσταση είναι {1} χαρακτήρων.</value>
+    
+  </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Το μέγεθος συμβολοσειράς μορφής δεν μπορεί να υπερβαίνει τους {0} χαρακτήρες.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Μη έγκυρη μορφή.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Το όρισμα δεν αντιπροσωπεύει έγκυρη τιμή ημερομηνίας ή ώρας.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Αυτή η προέλευση δεδομένων δεν είναι έγκυρη. Διορθώστε το σφάλμα στο παράθυρο "Προελεύσεις δεδομένων" κάνοντας κλικ στην επιλογή "Περιεχόμενο -&gt; Προελεύσεις δεδομένων" ή "Προβολή -&gt; Επιλογές"</value>
     
@@ -1816,6 +1935,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Ο τύπος αυτού του ορίσματος '{0}' δεν συμφωνεί με τον αναμενόμενο τύπο '{1}'. Βρέθηκε ο τύπος '{2}'.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Ο τύπος αυτής της παράστασης δεν συμφωνεί με τον αναμενόμενο τύπο '{0}'. Βρέθηκε ο τύπος '{1}'.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -1852,6 +1975,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Δεν είναι δυνατή η ταξινόμηση στον τύπο της παράστασης.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Δεν είναι δυνατή η εμφάνιση διακριτικών στον τύπο παράστασης.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -2240,6 +2367,9 @@
   <data name="MathAndStat" xml:space="preserve">
     <value>Μαθηματική και στατιστική</value>
   </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>Ορισμός από τον χρήστη</value>
+  </data>
   <data name="Information" xml:space="preserve">
     <value>Πληροφορίες</value>
   </data>
@@ -2319,7 +2449,7 @@
     <value>Ένας αριθμός μονάδων για προσθήκη. Ο αριθμός μπορεί να είναι αρνητικός.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Η μονάδα προς χρήση. Μπορεί να είναι Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Η μονάδα προς χρήση, η οποία μπορεί να είναι μία από τις TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2341,7 +2471,7 @@
     <value>Ημερομηνία λήξης για τη λειτουργία διαφοράς.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Η μονάδα που εκφράζει το αποτέλεσμα. Μπορεί να είναι Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Η μονάδα για την έκφραση του αποτελέσματος το οποίο μπορεί να είναι ένα από τα TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2591,10 +2721,6 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Η τιμή προς δοκιμή.</value>
-  </data>
-  <data name="Post" xml:space="preserve">
-    <value>Δημοσίευση</value>
-    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Μετατρέπει μια ημερομηνία και ώρα στη μορφή κειμένου σε έναν αριθμό που αντιπροσωπεύει την ημερομηνία σε κώδικα ημερομηνίας-ώρας του Power Apps.</value>
@@ -2876,6 +3002,26 @@
     <value>Κόσμος</value>
     
   </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe - Δεν είναι συνδεδεμένο</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe - Ανανέωση</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe - Αλλαγές σε εκκρεμότητα</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe - Προειδοποίηση</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe - Σφάλμα</value>
+    
+  </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>Μισός γεμάτος κύκλος</value>
     
@@ -3013,7 +3159,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Τρένο</value>
+    <value>Εκπαίδευση</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3137,7 +3283,7 @@
     
   </data>
   <data name="LayoutMode_Auto_DisplayName" xml:space="preserve">
-    <value>Αυτόματος</value>
+    <value>Αυτόματο</value>
     
   </data>
   <data name="LayoutDirection_Horizontal_DisplayName" xml:space="preserve">
@@ -3145,7 +3291,7 @@
     
   </data>
   <data name="LayoutDirection_Vertical_DisplayName" xml:space="preserve">
-    <value>Κατακόρυφος</value>
+    <value>Κατακόρυφα</value>
     
   </data>
   <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
@@ -3268,6 +3414,38 @@
     <value>Θέμα αντίθεσης</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Προσθέτει καρτέλες σε μια προέλευση δεδομένων.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>καρτέλα</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Διαγράφει όλες τις καρτέλες μιας συλλογής. Οι στήλες της συλλογής θα παραμείνουν.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Διαγράφει όλες τις καρτέλες από μια συλλογή. Στη συνέχεια, προσθέτει ένα διαφορετικό σύνολο καρτελών στην ίδια συλλογή.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>καρτέλα</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Εφαρμόζει τις ενημερώσεις στην καθορισμένη γραμμή και αλλάζει τη γραμμή στην καθορισμένη προέλευση δεδομένων. Επιστρέφει την ενημερωμένη γραμμή.</value>
     
@@ -3309,7 +3487,7 @@
     
   </data>
   <data name="DateTimeZone_Local_DisplayName" xml:space="preserve">
-    <value>Local</value>
+    <value>Τοπικός</value>
     
   </data>
   <data name="DateTimeZone_UTC_DisplayName" xml:space="preserve">
@@ -3349,7 +3527,7 @@
     
   </data>
   <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
-    <value>Οριζόντια</value>
+    <value>Οριζόντιος</value>
     
   </data>
   <data name="Layout_Vertical_DisplayName" xml:space="preserve">
@@ -3421,7 +3599,7 @@
     
   </data>
   <data name="BarcodeType_DataMatrix_DisplayName" xml:space="preserve">
-    <value>Data Matrix</value>
+    <value>Πίνακας δεδομένων</value>
     
   </data>
   <data name="BarcodeType_Ean_DisplayName" xml:space="preserve">
@@ -3489,7 +3667,7 @@
     
   </data>
   <data name="LoadingSpinner_None_DisplayName" xml:space="preserve">
-    <value>Κανένας</value>
+    <value>Κανένα</value>
     
   </data>
   <data name="NotificationType_Error_DisplayName" xml:space="preserve">
@@ -3952,94 +4130,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Δεν υποστηρίζεται στις στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Μη έγκυρος αριθμός ορισμάτων για {0} τη συνάρτηση: ελήφθη {1}, αναμένεται {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Το όρισμα {0} δεν υποστηρίζεται για τη συνάρτηση {1} στις στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Αυτό το όρισμα δεν μπορεί να διαβιβαστεί καθώς αυτός ο τύπος στις στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Αυτό το όρισμα δεν μπορεί να μεταβιβαστεί ως τύπος {0} σε στήλες τύπων.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Υποστηρίζεται μόνο μια κυριολεκτική τιμή για αυτό το όρισμα.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} δεν μπορεί να εκτελεστεί σε αυτά τα δεδομένα εισόδου χωρίς μετατροπή ζώνης ώρας, η οποία δεν υποστηρίζεται στις στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Αυτή η λειτουργία δεν είναι δυνατό να εκτελεστεί σε τιμές που είναι διαφορετικών συμπεριφορών ημερομηνίας/ώρας.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Μόνο οι συμβολοσειρές μορφής σύντομης ημερομηνίας και ώρας υποστηρίζονται σε στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Το {0} όρισμα είναι μια μη έγκυρη/μη υποστηριζόμενη μονάδα χρόνου για την {1} αριθμητική συνάρτηση date.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Τα διακριτικά μορφοποίησης ειδικά για τοπικές ρυθμίσεις, όπως "." και "," δεν υποστηρίζονται σε στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} δεν υποστηρίζεται σε στήλες τύπου, χρησιμοποιήστε {1} αντ' αυτού.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Αυτή η λειτουργία δεν μπορεί να εκτελεστεί σε τύπο {0} σε στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Ο τύπος αποτελέσματος {0} δεν υποστηρίζεται σε στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Η απευθείας αναφορά σε μια ολόκληρη εγγραφή δεν υποστηρίζεται στις στήλες τύπων. Παρακαλείσθε να αναφέρετε ένα έγκυρο πεδίο στην εγγραφή.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Ο τύπος αποτελέσματος για αυτόν τον τύπο αναμένεται να είναι {0}, αλλά ο πραγματικός τύπος αποτελέσματος είναι {1}. Δεν είναι δυνατή η αλλαγή του τύπου αποτελέσματος μιας στήλης τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Οι στήλες τύπου {0} δεν υποστηρίζονται σε στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Οι στήλες τύπου {0} με μορφή {1} δεν υποστηρίζονται σε στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Ο εξαναγκασμός εγγραφών ή πινάκων δεν υποστηρίζεται σε στήλες τύπων.</value>
-    
-  </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Οι τύποι δεν μπορούν να είναι μεγαλύτεροι από 1000 χαρακτήρες.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Οι πίνακες μίας στήλης δεν υποστηρίζονται σε στήλες τύπων.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Δεν είναι δυνατή η αναφορά εικονικού πίνακα {0} σε στήλες τύπων.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Αναμενόταν τελεστέος. Ο τύπος ή η παράσταση αναμένει έναν έγκυρο τελεστέο. Για παράδειγμα, μπορείτε να προσθέσετε τον τελεστέο "2" στην παράσταση "1 + _" ώστε το αποτέλεσμα να είναι "3". Ή, μπορείτε να προσθέσετε τον τελεστέο "σας" στην παράσταση ""Γεια "&amp; _ " ώστε το αποτέλεσμα να είναι "Γεια σας".</value>
     
@@ -4142,10 +4232,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Αυτό το σφάλμα εμφανίζεται όταν ένας τύπος αναφέρεται σε ιδιότητες συμπεριφοράς στοιχείων με μη έγκυρη σύνταξη. (Για παράδειγμα, Component.OnCustomChange αντί για Component.OnCustomChange())</value>
+    <value>Αυτό το σφάλμα εμφανίζεται όταν ένας τύπος αναφέρεται σε ιδιότητες της συνάρτησης των στοιχείων με μη έγκυρη σύνταξη. (Για παράδειγμα, Component.CustomFunction αντί για Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Χρησιμοποιήστε τη σωστή σύνταξη για να αναφερθείτε στην ιδιότητα συμπεριφοράς στοιχείων. Για παράδειγμα, Component.OnCustomChange()</value>
+    <value>Χρησιμοποιήστε τη σωστή σύνταξη για να αναφερθείτε στην ιδιότητα της συνάρτησης των στοιχείων. Για παράδειγμα, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4335,6 +4425,10 @@
     <value>Βεβαιωθείτε ότι έχετε κείμενο για το αναγνωριστικό. Αυτό το σφάλμα παρουσιάζεται όταν το αναγνωριστικό αποτελείται μόνο από κενά ή διαστήματα.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Δεν είναι δυνατή η σύγκριση τιμών τύπου {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Ασύμβατοι τύποι για σύγκριση. Δεν είναι δυνατή η σύγκριση αυτών των τύπων: {0}, {1}.</value>
     
@@ -4396,6 +4490,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Μη συμβατός τύπος. Το στοιχείο που προσπαθείτε να τοποθετήσετε σε μια καρτέλα έχει τύπο που δεν είναι συμβατός με την καρτέλα.</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4642,8 +4740,44 @@
     <value>Η λέξη-κλειδί As δεν επιτρέπεται σε αυτό το περιβάλλον</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Τα μη τυπολογημένα αντικείμενα δεν μπορούν να χρησιμοποιηθούν ως το πρώτο όρισμα για λειτουργίες που υποστηρίζουν πεδία καρτελών.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Ο καθορισμένος τύπος πρέπει να τελειώνει με ερωτηματικό.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Ο τύπος με όνομα πρέπει να είναι παράσταση.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Η συνάρτηση που ορίζεται από τον χρήστη πρέπει να έχει σώμα.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Η συνάρτηση {0} έχει ήδη οριστεί.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Η παράμετρος {0} είναι διπλότυπη.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Άγνωστος τύπος {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Ο τύπος επιστροφής της συνάρτησης που έχει δηλωθεί δεν συμφωνεί με τον τύπο επιστροφής του σώματος συνάρτησης.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Λείπει ο τύπος επιστροφής συνάρτησης, για παράδειγμα το ":Number" στο στοιχείο "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Λείπει ο τύπος ορίσματος συνάρτησης, για παράδειγμα το ":Text" στο στοιχείο "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4725,6 +4859,257 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Αυτή η δυνατότητα δεν χρησιμοποιείται και δεν υποστηρίζεται πλέον.</value>
+    
+  </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>Στον χώρο ονομάτων {1}, η συνάρτηση {0} δεν χρησιμοποιείται.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>Στο χώρο ονομάτων {1}, η συνάρτηση {0} δεν υποστηρίζεται.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Προειδοποίηση: Παρέχεται τύπος χωρίς αναβολή.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Αναμενόμενο όνομα αναγνωριστικού</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Αυτή η συνάρτηση είναι διφορούμενη, περιέχει παραστάσεις λάμδα και αναγνωριστικά στηλών για το ίδιο όρισμα.</value>
+    
+  </data>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Η τιμή του πεδίου {0} δεν είναι αναμενόμενου τύπου {1}.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Επιστρέφει λογικό όνομα της δεδομένης τιμής συνόλου επιλογών.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>επιλογή</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Μια τιμή συνόλου επιλογών του οποίου το λογικό όνομα θα επιστραφεί.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Αποκτήστε τις προεπιλεγμένες τοπικές ρυθμίσεις που έχουν οριστεί κατά το χρόνο εκτέλεσης.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Κωδικοποιεί μια συμβολοσειρά διεύθυνσης URL, αντικαθιστώντας ορισμένους μη αλφαριθμητικούς χαρακτήρες με % και δεκαεξαδική αρίθμηση.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>Διεύθυνση URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Μια διεύθυνση URL για κωδικοποίηση.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>Το '{0}' είναι μια αναγνωρισμένη αλλά μη υποστηριζόμενη συνάρτηση.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Η μετατροπή τύπου απέτυχε επειδή η δεδομένη τιμή ήταν τύπου «{0}», αναμενόμενου τύπου «{1}».</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Αυτή η λειτουργία στον πίνακα '{0}' ενδέχεται να μην λειτουργεί, εάν έχει περισσότερες από {1} γραμμές.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Αυτό το πρόθεμα θα είναι πάντα αληθές. Θέλατε να χρησιμοποιήσετε το ThisRecord ή το [@ ];</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Δεν είναι δυνατή η ανάθεση {0}: υποστηρίξτε μόνο την ανάθεση για αναζήτηση σε πεδίο πρωτεύοντος κλειδιού '{1}'.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Δεν είναι δυνατή η ανάθεση του {0}: Η έκφραση συγκρίνει πολλαπλά επίπεδα.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Δεν είναι δυνατή η ανάθεση {0}: περιέχει μια συνάρτηση συμπεριφοράς '{1}'.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Προσδιορίζει αν το παρεχόμενο κείμενο διαθέτει αντιστοιχία με την παρεχόμενη μορφή κειμένου.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Το κείμενο που θα συγκριθεί με τη μορφή.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Η μορφή σε σχέση με την οποία θα ελεγχθεί το κείμενο. Μπορεί να είναι μια τιμή της απαρίθμησης TextFormat ή μια κανονική παράσταση.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Προσδιορίζει το μέρος του κειμένου που θέλουμε να αντιστοιχίσουμε. Μπορεί να είναι μια τιμή της απαρίθμησης MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>κείμενο</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>μορφή</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>έκταση</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Αναζητά την καθορισμένη κανονική παράσταση στο παρεχόμενο κείμενο και επιστρέφει την πρώτη αντιστοιχία από αυτό.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Αναζητά την καθορισμένη κανονική παράσταση στο παρεχόμενο κείμενο και επιστρέφει όλες τις αντιστοιχίες από αυτό.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Το κείμενο που θα αναζητηθεί ως προς την κανονική παράσταση.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Η κανονική παράσταση με την οποία θα ελεγχθεί το κείμενο. Μπορεί να περιέχει καταγραφές (τιμές μεταξύ παρενθέσεων) που θα επιστραφούν σε περίπτωση επιτυχημένης συμφωνίας.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Προσδιορίζει το μέρος του κειμένου που θέλουμε να αντιστοιχίσουμε. Μπορεί να είναι μια τιμή της απαρίθμησης MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Το κείμενο που θα αναζητηθεί ως προς την κανονική παράσταση.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Η κανονική παράσταση με την οποία θα ελεγχθεί το κείμενο. Μπορεί να περιέχει καταγραφές (τιμές μεταξύ παρενθέσεων) που θα επιστραφούν σε περίπτωση επιτυχημένης συμφωνίας.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Προσδιορίζει το μέρος του κειμένου που θέλουμε να αντιστοιχίσουμε. Μπορεί να είναι μια τιμή της απαρίθμησης MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>κείμενο</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>τακτική_παράσταση</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>επιλογές</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Ανανεώνει την καθορισμένη προέλευση δεδομένων.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>συνδεδεμένη_προέλευση_δεδομένων</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Αναμενόταν μια τιμή εγγραφής ή πίνακα.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Μια συνδεδεμένη προέλευση δεδομένων για ανανέωση.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Είναι δυνατή η ανανέωση μόνο διαχειριζόμενων συνδέσεων.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Οι κανονικές παραστάσεις πρέπει να είναι τιμές σταθεράς.</value>
+    
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Η τιμή που μεταβιβάστηκε στη συνάρτηση '{0}' δεν είναι δυνατό να αλλάξει.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει την πλήρη αντιστοίχιση της κανονικής παράστασης. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή της πλήρους αντιστοίχισης στο καθορισμένο κείμενο.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει τις αντιστοιχίσεις ομάδας στην κανονική παράσταση. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή όλων των δευτερευουσών αντιστοιχίσεων στο καθορισμένο κείμενο.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει τη θέση της αντιστοίχισης της κανονικής παράστασης. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή της θέσης της πλήρους αντιστοίχισης στο καθορισμένο κείμενο.</value>
+    
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Καταργεί τη μορφοποίηση συνολικά και επιστρέφει μια τιμή απλού κειμένου.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>κείμενο</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Το κείμενο για κατάργηση των ετικετών HTML και XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Οι λειτουργίες φίλτρου δεν επιτρέπουν λειτουργίες συμπεριφοράς ως προκαταρκτικά.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Χρησιμοποιήστε τον τελεστή And για τον συνδυασμό πολλών προκαταρκτικών στο δεύτερο όρισμα.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Δεν είναι δυνατή η αντιγραφή αυτού του πίνακα. Αντιθέτως, δημιουργήστε έναν ενσωματωμένο πίνακα χρησιμοποιώντας τη συνάρτηση ForAll και {...} σημειώσεις για την αντιγραφή των επιμέρους στηλών που επιθυμείτε.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Δεν είναι δυνατή η αντιγραφή αυτής της καρτέλας. Αντιθέτως, δημιουργήστε μια ενσωματωμένη καρτέλα χρησιμοποιώντας {...} σημειώσεις για την αντιγραφή των επιμέρους πεδίων που επιθυμείτε.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Το δεύτερο όρισμα της συνάρτησης '{0}' υποστηρίζεται μόνο για αριθμητικές τιμές και τιμές ημερομηνίας/ώρας.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Εάν ορίσετε μια μεταβλητή με μια τιμή προέλευσης δεδομένων online (πίνακας ή καρτέλα) μπορεί να προκαλέσει πολλαπλές αιτήσεις στον διακομιστή. Σύντομα θα αποκλειστεί.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Η κυριολεκτική δήλωση τύπου δεν ήταν έγκυρη</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Ασυμφωνία τύπων μεταξύ τύπων καρτέλας προέλευσης και προορισμού. Ο δεδομένος τύπος έχει επιπλέον πεδία: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Ασυμφωνία τύπων μεταξύ τύπων καρτέλας προέλευσης και προορισμού. Στον δεδομένο τύπο λείπουν πεδία: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Ασυμφωνία τύπων μεταξύ τύπων καρτέλας προέλευσης και προορισμού. Όνομα πεδίου: {0} βρέθηκε.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Ασυμφωνία τύπων μεταξύ τύπων καρτέλας προέλευσης και προορισμού. Όνομα πεδίου: {0} αναμενόμενο {1}; Βρέθηκε {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Ο δεδομένος τύπος {0} δεν μπορεί να εξαναγκαστεί σε τύπο προέλευσης {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Ασυμφωνία τύπων μεταξύ τύπων προέλευσης και προορισμού. Αναμενόμενες {0}; Βρέθηκε {1}.</value>
     
   </data>
 </root>

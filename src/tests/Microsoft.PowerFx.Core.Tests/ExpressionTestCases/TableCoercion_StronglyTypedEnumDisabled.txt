@@ -1,0 +1,13 @@
+#SETUP: disable:StronglyTypedBuiltinEnums
+
+// Table type enum (square bracket notation) + number
+>> [{a:ErrorKind.Div0}, {a:12}]
+Table({a:13},{a:12})
+
+// Table type enum (square bracket notation, unwrapped) + number
+>> [ErrorKind.Div0, 12]
+Table({Value:13},{Value:12})
+
+// Table type enum (Table function) + number
+>> Table({a:ErrorKind.Div0}, {a:12})
+Table({a:13},{a:12})

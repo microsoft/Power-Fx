@@ -7,27 +7,46 @@ namespace Microsoft.PowerFx.Core.IR
     {
         None,
 
+        DecimalToNumber,
+        NumberToDecimal,
+
         TextToNumber,
         BooleanToNumber,
-        BooleanOptionSetToNumber,
+        OptionSetToNumber,
         DateToNumber,
         TimeToNumber,
         DateTimeToNumber,
+
+        TextToDecimal,
+        BooleanToDecimal,
+        OptionSetToDecimal,
+        DateToDecimal,
+        TimeToDecimal,
+        DateTimeToDecimal,
 
         BlobToHyperlink,
         ImageToHyperlink,
         MediaToHyperlink,
         TextToHyperlink,
+        PenImageToHyperlink,
 
         SingleColumnRecordToLargeImage,
         ImageToLargeImage,
         LargeImageToImage,
         TextToImage,
+        PenImageToImage,
+        BlobToImage,
+        HyperlinkToImage,
 
+        BlobToMedia,
+        HyperlinkToMedia,
         TextToMedia,
+
         TextToBlob,
+        HyperlinkToBlob,
 
         NumberToText,
+        DecimalToText,
         BooleanToText,
         OptionSetToText,
         ViewToText,
@@ -36,16 +55,20 @@ namespace Microsoft.PowerFx.Core.IR
         DateTimeToText,
 
         NumberToBoolean,
+        DecimalToBoolean,
         TextToBoolean,
-        BooleanOptionSetToBoolean,
+        OptionSetToBoolean,
 
         RecordToRecord, // See field mappings
         TableToTable,
         RecordToTable,
 
         NumberToDateTime,
+        DecimalToDateTime,
         NumberToDate,
+        DecimalToDate,
         NumberToTime,
+        DecimalToTime,
         TextToDateTime,
         TextToDate,
         TextToTime,
@@ -58,6 +81,32 @@ namespace Microsoft.PowerFx.Core.IR
         DateToDateTime,
 
         BooleanToOptionSet,
-        AggregateToDataEntity,
+        AggregateToDataEntity,  
+        
+        OptionSetToColor,
+
+        UntypedToText,
+        UntypedToBoolean,
+        UntypedToNumber,
+        UntypedToDecimal,
+        UntypedToDate,
+        UntypedToTime,
+        UntypedToDateTime,
+        UntypedToColor,
+        UntypedToGUID,
+
+        TextToGUID,
+        GUIDToText,
+        BlobToText,
+        ImageToText,
+        MediaToText,
+        PenImageToText,
+
+        CurrencyToNumber,
+        NumberToCurrency,
+        CurrencyToText,
+        TextToCurrency,
+        CurrencyToBoolean,
+        BooleanToCurrency,
     }
 }

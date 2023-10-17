@@ -10,11 +10,13 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -24,9 +26,22 @@ namespace Microsoft.PowerFx.Functions
 
         public override bool RequiresDataSourceScope => true;
 
+        public override bool CanSuggestInputColumns => true;
+
+        public override bool ManipulatesCollections => true;
+
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;
+        }
+
+        public override bool MutatesArg0 => true;
+
+        public override bool IsLazyEvalParam(int index, Features features)
+        {
+            // First argument to mutation functions is Lazy for datasources that are copy-on-write.
+            // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
+            return index == 0;
         }
 
         public RemoveFunctionBase(DPath theNamespace, string name, StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
@@ -62,8 +77,19 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool IsSelfContained => false;
 
+        public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
+        {
+            if (argIndex == 1)
+            {
+                type = default;
+                return false;
+            }
+
+            return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
+        }
+
         public RemoveFunction()
-        : base("Remove", AboutRemove, FunctionCategories.Table | FunctionCategories.Behavior, DType.Boolean, 0, 2, int.MaxValue, DType.EmptyTable, DType.EmptyRecord)
+        : base("Remove", AboutRemove, FunctionCategories.Table | FunctionCategories.Behavior, DType.Unknown, 0, 2, int.MaxValue, DType.EmptyTable, DType.EmptyRecord)
         {
         }
 
@@ -83,7 +109,7 @@ namespace Microsoft.PowerFx.Functions
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -92,9 +118,7 @@ namespace Microsoft.PowerFx.Functions
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-
-            //Contracts.Assert(returnType.IsTable);
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             DType collectionType = argTypes[0];
             if (!collectionType.IsTable)
@@ -113,7 +137,7 @@ namespace Microsoft.PowerFx.Functions
                 if (!argType.IsRecord)
                 {
                     // The last arg may be the optional "ALL" parameter.
-                    if (argCount >= 3 && i == argCount - 1 && DType.String.Accepts(argType))
+                    if (argCount >= 3 && i == argCount - 1 && DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         var strNode = (StrLitNode)args[i];
 
@@ -131,24 +155,31 @@ namespace Microsoft.PowerFx.Functions
                     continue;
                 }
 
-                var collectionAcceptsRecord = collectionType.Accepts(argType.ToTable());
-                var recordAcceptsCollection = argType.ToTable().Accepts(collectionType);
+                var collectionAcceptsRecord = collectionType.Accepts(argType.ToTable(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+                var recordAcceptsCollection = argType.ToTable().Accepts(collectionType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+
+                bool checkAggregateNames = argType.CheckAggregateNames(collectionType, args[i], errors, SupportsParamCoercion);
 
                 // The item schema should be compatible with the collection schema.
-                if (!collectionAcceptsRecord && !recordAcceptsCollection)
+                if (!checkAggregateNames)
                 {
                     fValid = false;
-                    if (!SetErrorForMismatchedColumns(collectionType, argType, args[i], errors))
+                    if (!SetErrorForMismatchedColumns(collectionType, argType, args[i], errors, context.Features))
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], ErrTableDoesNotAcceptThisType);
                     }
                 }
             }
 
-            // Remove returns the new collection, so the return schema is the same as the collection schema.
-            returnType = collectionType;
+            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.ObjNull : collectionType;
 
             return fValid;
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            base.CheckSemantics(binding, args, argTypes, errors);
+            base.ValidateArgumentIsMutable(binding, args[0], errors);
         }
 
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
@@ -160,9 +191,12 @@ namespace Microsoft.PowerFx.Functions
                 return faultyArg;
             }
 
-            if (args[0] is BlankValue)
+            var arg0lazy = (LambdaFormulaValue)args[0];
+            var arg0 = await arg0lazy.EvalAsync().ConfigureAwait(false);
+
+            if (arg0 is BlankValue)
             {
-                return args[0];
+                return arg0;
             }
 
             var argCount = args.Count();
@@ -170,7 +204,7 @@ namespace Microsoft.PowerFx.Functions
             var all = false;
             var toExclude = 1;
 
-            if (argCount >= 3 && DType.String.Accepts(lastArg.Type._type))
+            if (argCount >= 3 && DType.String.Accepts(lastArg.Type._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
             {
                 var lastArgValue = (string)lastArg.ToObject();
 
@@ -181,13 +215,24 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            var datasource = (TableValue)args[0];
+            var datasource = (TableValue)arg0;
             var recordsToRemove = args.Skip(1).Take(args.Length - toExclude);
 
             cancellationToken.ThrowIfCancellationRequested();
-            var ret = await datasource.RemoveAsync(recordsToRemove, all, cancellationToken);
+            var ret = await datasource.RemoveAsync(recordsToRemove, all, cancellationToken).ConfigureAwait(false);
 
-            return ret.ToFormulaValue();
+            // If the result is an error, propagate it up. else return blank.
+            FormulaValue result;
+            if (ret.IsError)
+            {
+                result = FormulaValue.NewError(ret.Error.Errors, FormulaType.Blank);
+            }
+            else
+            {
+                result = FormulaValue.NewBlank();
+            }
+
+            return result;
         }
     }
 }

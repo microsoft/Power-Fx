@@ -5,14 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
@@ -37,6 +35,39 @@ namespace Microsoft.PowerFx.Types
         public bool IsColumn => IRContext.ResultType._type.IsColumn;
 
         public new TableType Type => (TableType)base.Type;
+
+        /// <summary>
+        /// Casts <paramref name="record"/> to the table's record type.
+        /// </summary>
+        /// <param name="record"> Record to cast.</param>
+        /// <param name="cancellationToken"></param>
+        public virtual DValue<RecordValue> CastRecord(RecordValue record, CancellationToken cancellationToken)
+        {
+            if (record.Type == Type.ToRecord())
+            {
+                return DValue<RecordValue>.Of(record);
+            }
+
+            var error = new ErrorValue(IRContext, new ExpressionError()
+            {                
+                Span = IRContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument,                
+                ResourceKey = TexlStrings.InvalidCast,
+                MessageArgs = new object[] { record.Type, Type.ToRecord() }
+            });
+
+            return DValue<RecordValue>.Of(error);
+        }
+
+        public TableValue(RecordType recordType)
+            : this(IRContext.NotInSource(recordType.ToTable()))
+        {
+        }
+
+        public TableValue(TableType type)
+            : this(IRContext.NotInSource(type))
+        {
+        }
 
         internal TableValue(IRContext irContext)
             : base(irContext)
@@ -112,6 +143,11 @@ namespace Microsoft.PowerFx.Types
             return DValue<BooleanValue>.Of(NotImplemented(IRContext));
         }
 
+        public virtual async Task<DValue<BooleanValue>> ClearAsync(CancellationToken cancellationToken)
+        {
+            return DValue<BooleanValue>.Of(NotImplemented(IRContext));
+        }
+
         /// <summary>
         /// Patch implementation for derived classes.
         /// </summary>
@@ -138,7 +174,7 @@ namespace Microsoft.PowerFx.Types
 
             // IR has already resolved to logical names because of 
             // RequiresDataSourceScope, ArgMatchesDatasourceType on function.
-            return await PatchCoreAsync(baseRecord, changeRecord, cancellationToken);
+            return await PatchCoreAsync(baseRecord, changeRecord, cancellationToken).ConfigureAwait(false);
         }
 
         public override object ToObject()
@@ -149,7 +185,7 @@ namespace Microsoft.PowerFx.Types
                 {
                     if (val.IsValue)
                     {
-                        await foreach (var field in val.Value.GetFieldsAsync(CancellationToken.None))
+                        await foreach (var field in val.Value.GetFieldsAsync(CancellationToken.None).ConfigureAwait(false))
                         {
                             return field.Value.ToObject();
                         }
@@ -230,6 +266,11 @@ namespace Microsoft.PowerFx.Types
 
                 sb.Append(")");
             }
+        }
+
+        public virtual int GetRowsHashCode()
+        {
+            throw new NotImplementedException();
         }
     }
 }

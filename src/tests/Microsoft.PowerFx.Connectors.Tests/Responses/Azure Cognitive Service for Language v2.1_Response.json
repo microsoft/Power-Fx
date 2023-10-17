@@ -1,0 +1,74 @@
+{
+  "kind": "ConversationResult",
+  "result": {
+    "prediction": {
+      "entities": [
+        {
+          "category": "Count",
+          "text": "1",
+          "offset": 5,
+          "length": 1,
+          "confidenceScore": 1,
+          "resolutions": [
+            {
+              "resolutionKind": "NumberResolution",
+              "numberKind": "Integer",
+              "value": 1
+            }
+          ],
+          "topResolution": {
+            "resolutionKind": "NumberResolution",
+            "numberKind": "Integer",
+            "value": 1
+          },
+          "extraInformation": [
+            {
+              "extraInformationKind": "EntitySubtype",
+              "value": "quantity.number"
+            }
+          ]
+        },
+        {
+          "category": "When",
+          "text": "tomorrow",
+          "offset": 23,
+          "length": 8,
+          "confidenceScore": 1,
+          "resolutions": [
+            {
+              "resolutionKind": "DateTimeResolution",
+              "dateTimeSubKind": "Date",
+              "timex": "2023-02-25",
+              "value": "2023-02-25"
+            }
+          ],
+          "topResolution": {
+            "resolutionKind": "DateTimeResolution",
+            "dateTimeSubKind": "Date",
+            "timex": "2023-02-25",
+            "value": "2023-02-25"
+          },
+          "extraInformation": [
+            {
+              "extraInformationKind": "EntitySubtype",
+              "value": "datetime.date"
+            }
+          ]
+        }
+      ],
+      "intents": [
+        {
+          "category": "Book me a flight to Paris next week",
+          "confidenceScore": 0.89360607
+        },
+        {
+          "category": "None",
+          "confidenceScore": 0
+        }
+      ],
+      "projectKind": "Conversation",
+      "topIntent": "Book me a flight to Paris next week"
+    },
+    "query": "Book me a flight for Munich"
+  }
+}

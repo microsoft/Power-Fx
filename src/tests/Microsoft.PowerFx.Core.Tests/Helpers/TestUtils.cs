@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -134,28 +136,17 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 yield break;
             }
 
-            public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> coercedArgs)
+            public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> coercedArgs)
             {
-                var isValid = base.CheckTypes(args, argTypes, errors, out returnType, out coercedArgs);
+                var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out coercedArgs);
 
                 // explicitly blocking coercion
-                var wasCoerced = false;
                 if (CheckNumericTableOverload)
                 {
-                    if (CheckColumnType(argTypes[0], args[0], DType.Number, errors, TexlStrings.ErrInvalidSchemaNeedNumCol_Col, ref wasCoerced))
-                    {
-                        if (wasCoerced)
-                        {
-                            CollectionUtils.Add(ref coercedArgs, args[0], DType.EmptyTable.Add(new DName("Value"), DType.Number), allowDupes: true);
-                        }
-                    }
-                    else
+                    if (!CheckNumericColumnType(context, args[0], argTypes[0], errors, ref coercedArgs))
                     {
                         isValid = false;
-                        if (coercedArgs != null)
-                        {
-                            coercedArgs.Clear();
-                        }
+                        coercedArgs?.Clear();
                     }
 
                     return isValid;
@@ -163,32 +154,26 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
                 if (CheckStringTableOverload)
                 {
-                    if (!CheckStringColumnType(argTypes[0], args[0], errors, ref coercedArgs))
+                    if (!CheckStringColumnType(context, args[0], argTypes[0], errors, ref coercedArgs))
                     {
                         isValid = false;
-                        if (coercedArgs != null)
-                        {
-                            coercedArgs.Clear();
-                        }
+                        coercedArgs?.Clear();
                     }
 
                     return isValid;
                 }
 
-                if (!DType.Number.Accepts(argTypes[0]))
+                if (!DType.Number.Accepts(argTypes[0], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     isValid = false;
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberExpected);
-                    if (coercedArgs != null)
-                    {
-                        coercedArgs.Clear();
-                    }
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberExpected);                    
+                    coercedArgs?.Clear();                    
                 }
 
                 return isValid;
             }
 
-            private bool CheckColumnType(DType type, TexlNode arg, DType expectedType, IErrorContainer errors, ErrorResourceKey errKey, ref bool wasCoerced)
+            private bool CheckColumnType(CheckTypesContext context, DType type, TexlNode arg, DType expectedType, IErrorContainer errors, ErrorResourceKey errKey, ref bool wasCoerced)
             {
                 Contracts.Assert(type.IsValid);
                 Contracts.AssertValue(arg);
@@ -201,23 +186,18 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedCol);
                     return false;
                 }
-                else if (!(expectedType.Accepts(columns.Single().Type) || columns.Single().Type.CoercesTo(expectedType)))
+                else if (!(expectedType.Accepts(columns.Single().Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) || columns.Single().Type.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)))
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, errKey, columns.Single().Name.Value);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedTypeCol_Col, expectedType.GetKindString(), columns.Single().Name.Value);
                     return false;
                 }
 
-                if (!expectedType.Accepts(columns.Single().Type))
+                if (!expectedType.Accepts(columns.Single().Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     wasCoerced = true;
                 }
 
                 return true;
-            }
-
-            public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-            {
-                return base.GetUniqueTexlRuntimeName(isPrefetching) + _runtimeFunctionNameSuffix;
             }
         }
 
@@ -253,11 +233,6 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
             {
                 yield break;
             }
-
-            public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-            {
-                return base.GetUniqueTexlRuntimeName() + _runtimeFunctionNameSuffix;
-            }
         }
 
         public sealed class MockFunctionWithScope : FunctionWithTableInput
@@ -285,10 +260,46 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
             {
                 yield break;
             }
+        }
 
-            public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        public sealed class MockSilentDelegableFilterFunction : FilterFunctionBase
+        {
+            private readonly string _runtimeFunctionNameSuffix;
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
             {
-                return base.GetUniqueTexlRuntimeName() + _runtimeFunctionNameSuffix;
+                yield break;
+            }
+
+            public MockSilentDelegableFilterFunction(string name, string runtimeFunctionNameSuffix)
+                : base(name, (l) => "MockFunction", FunctionCategories.Table, DType.EmptyTable, -2, 2, int.MaxValue, DType.EmptyTable)
+            {
+                _runtimeFunctionNameSuffix = runtimeFunctionNameSuffix;
+                ScopeInfo = new FunctionScopeInfo(this, acceptsLiteralPredicates: false);
+            }
+
+            public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
+            {
+                if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out IExternalDataSource dataSource))
+                {
+                    if (dataSource != null && !dataSource.IsDelegatable)
+                    {
+                        return false;
+                    }
+                }
+
+                var args = callNode.Args.Children.VerifyValue();
+
+                if (dataSource != null && dataSource.DelegationMetadata != null)
+                {
+                    var metadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
+                    if (!IsValidDelegatableFilterPredicateNode(args[1], binding, metadata, false))
+                    {
+                        return false;
+                    }
+                }
+
+                return false;
             }
         }
 

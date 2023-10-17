@@ -2,43 +2,109 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
 {
-    [Flags]
-    public enum Features : int
+    public sealed class Features
     {
-        None = 0x0,
-
         /// <summary>
         /// Enable Table syntax to not add "Value:" extra layer.
-        /// Added on 1st July 2022.
         /// </summary>
-        TableSyntaxDoesntWrapRecords = 0x1,
+        internal bool TableSyntaxDoesntWrapRecords { get; set; }
 
         /// <summary>
-        /// Enable functions to consistently return one dimension tables with a "Value" column rather than some other name like "Result"
-        /// Added on 11th July 2022
+        /// Enable functions to consistently return one dimension tables with
+        /// a "Value" column rather than some other name like "Result".
         /// </summary>
-        ConsistentOneColumnTableResult = 0x2,
+        internal bool ConsistentOneColumnTableResult { get; set; }
 
         /// <summary>
         /// Disables support for row-scope disambiguation syntax.
         /// Now,for example user would need to use Filter(A, ThisRecord.Value = 2) or Filter(A As Foo, Foo.Value = 2)
         /// instead of
-        /// Filter(A, A[@Value] = 2)
+        /// Filter(A, A[@Value] = 2).
         /// </summary>
-        DisableRowScopeDisambiguationSyntax = 0x4,
+        internal bool DisableRowScopeDisambiguationSyntax { get; set; }
 
         /// <summary>
-        /// Enable Identifier support for describing column names
-        /// Added on 6th December 2022.
+        /// Enable Identifier support for describing column names.
         /// </summary>
-        SupportColumnNamesAsIdentifiers = 0x8,
-        
-        /// <summary>        
-        /// All features enabled
+        internal bool SupportColumnNamesAsIdentifiers { get; set; }
+
+        /// <summary>
+        /// Enforces strong-typing for builtin enums, rather than treating
+        /// them as aliases for values of string/number/boolean types.
         /// </summary>
-        All = ~0
+        internal bool StronglyTypedBuiltinEnums { get; set; }
+
+        /// <summary>
+        /// Updates the IsEmpty function to only allow table arguments, since it
+        /// does not work properly with other types of arguments.
+        /// </summary>
+        internal bool RestrictedIsEmptyArguments { get; set; }
+
+        /// <summary>
+        /// Allow delegation for async calls (delegate using awaited call result).
+        /// </summary>
+        internal bool AllowAsyncDelegation { get; set; }
+
+        /// <summary>
+        /// Allow delegation for impure nodes.
+        /// </summary>
+        internal bool AllowImpureNodeDelegation { get; set; }
+
+        /// <summary>
+        /// Updates the FirstN/LastN functions to require a second argument, instead of
+        /// defaulting to 1.
+        /// </summary>
+        internal bool FirstLastNRequiresSecondArguments { get; set; }
+
+        internal bool PowerFxV1CompatibilityRules { get; set; }
+
+        internal bool SkipExpandableSetSemantics { get; set; }
+
+        /// <summary>
+        /// Short circuit support in the Coalesce function: Coalesce(1,Collect()) will not run the Collect.
+        /// </summary>
+        internal bool CoalesceShortCircuit { get; set; }
+
+        /// <summary>
+        /// This is specific for Cards team and it is a temporary feature.
+        /// It will be soon deleted.
+        /// </summary>
+        [Obsolete]
+        internal static Features PowerFxV1AllowSetExpandedTypes
+        {
+            get 
+            {
+                var ret = PowerFxV1;
+
+                ret.SkipExpandableSetSemantics = true;
+
+                return ret;
+            }
+        }
+
+        internal static Features None => new Features();
+
+        public static Features PowerFxV1 => new Features
+        {
+            TableSyntaxDoesntWrapRecords = true,
+            ConsistentOneColumnTableResult = true,
+            DisableRowScopeDisambiguationSyntax = true,
+            SupportColumnNamesAsIdentifiers = true,
+            StronglyTypedBuiltinEnums = true,
+            RestrictedIsEmptyArguments = true,
+            FirstLastNRequiresSecondArguments = true,
+            PowerFxV1CompatibilityRules = true,
+            CoalesceShortCircuit = true,
+        };
+
+        internal Features()
+        {
+        }
     }
 }

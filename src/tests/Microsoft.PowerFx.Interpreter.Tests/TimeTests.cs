@@ -3,6 +3,8 @@
 
 using System;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -58,10 +60,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.NotNull(result);
             if (result is DateTimeValue dateResult)
             {
-                Assert.Equal(dateResult.Value.Date, testTime.ToUniversalTime().Date);
-                Assert.Equal(dateResult.Value.TimeOfDay.Hours, testTime.ToUniversalTime().TimeOfDay.Hours);
-                Assert.Equal(dateResult.Value.TimeOfDay.Minutes, testTime.ToUniversalTime().TimeOfDay.Minutes);
-                Assert.Equal(dateResult.Value.TimeOfDay.Seconds, testTime.ToUniversalTime().TimeOfDay.Seconds);
+                var dateResultValue = dateResult.GetConvertedValue(null);
+                Assert.Equal(dateResultValue.Date, testTime.ToUniversalTime().Date);
+                Assert.Equal(dateResultValue.TimeOfDay.Hours, testTime.ToUniversalTime().TimeOfDay.Hours);
+                Assert.Equal(dateResultValue.TimeOfDay.Minutes, testTime.ToUniversalTime().TimeOfDay.Minutes);
+                Assert.Equal(dateResultValue.TimeOfDay.Seconds, testTime.ToUniversalTime().TimeOfDay.Seconds);
             }
             else
             {
@@ -77,15 +80,44 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.NotNull(result);
             if (result is DateTimeValue dateResult)
             {
-                Assert.Equal(dateResult.Value.Date, testTime.ToLocalTime().Date);
-                Assert.Equal(dateResult.Value.TimeOfDay.Hours, testTime.ToLocalTime().TimeOfDay.Hours);
-                Assert.Equal(dateResult.Value.TimeOfDay.Minutes, testTime.ToLocalTime().TimeOfDay.Minutes);
-                Assert.Equal(dateResult.Value.TimeOfDay.Seconds, testTime.ToLocalTime().TimeOfDay.Seconds);
+                var dateResultValue = dateResult.GetConvertedValue(null);
+                Assert.Equal(dateResultValue.Date, testTime.ToLocalTime().Date);
+                Assert.Equal(dateResultValue.TimeOfDay.Hours, testTime.ToLocalTime().TimeOfDay.Hours);
+                Assert.Equal(dateResultValue.TimeOfDay.Minutes, testTime.ToLocalTime().TimeOfDay.Minutes);
+                Assert.Equal(dateResultValue.TimeOfDay.Seconds, testTime.ToLocalTime().TimeOfDay.Seconds);
             }
             else
             {
                 Assert.True(false, "result was not a DateTimeValue");
             }
         }
+
+        public class TestClockService : IClockService
+        {
+            public DateTime UtcNow { get; set; } = new DateTime(2023, 6, 2, 3, 15, 7, DateTimeKind.Utc);
+        }
+
+        // Test Now/Today expressions.
+        // Use explicit clock service to set time and be fully deterministic. 
+        [Theory]
+        [InlineData("Today()", "6/1/2023 12:00:00 AM")]
+        [InlineData("Now()", "6/1/2023 8:15:07 PM")]
+        [InlineData("IsToday(Now())", "True")]
+        [InlineData("IsToday(Date(2023, 6,2))", "False")] // converts to local
+        [InlineData("IsToday(Date(2023, 6,1))", "True")]
+        [InlineData("Day(Now())", "1")]
+        [InlineData("TimeZoneOffset()", "420")]
+        public void TestWithClockService(string expr, string expectedResultStr)
+        {
+            RuntimeConfig rc = new RuntimeConfig();
+            rc.SetTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
+            rc.SetClock(new TestClockService());
+                        
+            var result = _engine.EvalAsync(expr, default, runtimeConfig: rc).Result;
+
+            var actualResultStr = result.ToObject().ToString();
+
+            Assert.Equal(expectedResultStr, actualResultStr);
+        }        
     }
 }

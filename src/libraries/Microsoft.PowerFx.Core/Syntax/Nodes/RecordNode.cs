@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -60,7 +61,7 @@ namespace Microsoft.PowerFx.Syntax
         {
             var children = CloneChildren(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>();
-            for (var i = 0; i < Children.Length; ++i)
+            for (var i = 0; i < Children.Count; ++i)
             {
                 newNodes.Add(Children[i], children[i]);
             }
@@ -80,11 +81,7 @@ namespace Microsoft.PowerFx.Syntax
             Contracts.AssertValue(visitor);
             if (visitor.PreVisit(this))
             {
-                if (SourceRestriction != null)
-                {
-                    SourceRestriction.Accept(visitor);
-                }
-
+                SourceRestriction?.Accept(visitor);
                 AcceptChildren(visitor);
                 visitor.PostVisit(this);
             }
@@ -119,7 +116,21 @@ namespace Microsoft.PowerFx.Syntax
         /// <inheritdoc />
         public override Span GetCompleteSpan()
         {
-            return new Span(GetTextSpan());
+            int lim;
+            if (CurlyClose != null)
+            {
+                lim = CurlyClose.Span.Lim;
+            }
+            else if (Children.Count() == 0)
+            {
+                lim = Token.VerifyValue().Span.Lim;
+            }
+            else
+            {
+                lim = Children.VerifyValue().Last().VerifyValue().GetCompleteSpan().Lim;
+            }
+
+            return new Span(Token.VerifyValue().Span.Min, lim);
         }
     }
 }

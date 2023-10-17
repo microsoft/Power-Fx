@@ -6,10 +6,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
@@ -19,11 +23,12 @@ using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
-{    
+{
     public class TexlTests : PowerFxTest
     {
         private readonly CultureInfo _defaultLocale = new ("en-US");
@@ -48,9 +53,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("-Date(2001,1,1)", "D")]
         [InlineData("-Time(2,1,1)", "T")]
         [InlineData("-DateTimeValue(\"1 Jan 2015\")", "d")]
-        [InlineData("Date(2000,1,1) + 5", "d")]
-        [InlineData("5 + Date(2000,1,1)", "d")]
-        [InlineData("5 - Date(2000,1,1)", "d")]
+        [InlineData("Date(2000,1,1) + 5", "D")]
+        [InlineData("5 + Date(2000,1,1)", "D")]
+        [InlineData("5 - Date(2000,1,1)", "D")]
         [InlineData("Time(20,1,1) + Time(19,1,1)", "T")]
         [InlineData("DateTimeValue(\"1 Jan 2015\") + Time(20,1,1)", "d")]
         [InlineData("Time(20,1,1) + DateTimeValue(\"1 Jan 2015\")", "d")]
@@ -76,20 +81,23 @@ namespace Microsoft.PowerFx.Core.Tests
             // TestBindingErrors(script, DType.Error);
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(script);
-            
-            Assert.Equal(DType.Error, result._binding.ResultType);            
+
+            Assert.Equal(DType.Error, result.Binding.ResultType);
             Assert.False(result.IsSuccess);
         }
 
         [Theory]
-        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:d]")]
-        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:d]")]
-        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[a:d]")]
-        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:d]")]
+        [InlineData("DateAdd(Date(2000,1,1), 1)", "D")]
+        [InlineData("DateAdd(Date(2000,1,1), 1, TimeUnit.Months)", "D")]
+        [InlineData("DateAdd(Date(2000,1,1), \"2\")", "D")] // Coercion on delta argument from string
+        [InlineData("DateAdd(Date(2000,1,1), true)", "D")] // Coercion on delta argument from boolean
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), 2)", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), 2, TimeUnit.Years)", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), \"hello\")", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), \"hello\", 3)", "d")]
+        [InlineData("DateAdd(\"2000-01-01\", 1)", "d")] // Coercion on date argument from string
+        [InlineData("DateAdd(45678, 1)", "d")] // Coercion on date argument from number
+        [InlineData("DateAdd(Time(12,34,56), 1)", "T")] // Coercion on date argument from time
         public void TexlDateAdd(string script, string expectedType)
         {
             Assert.True(DType.TryParse(expectedType, out var type));
@@ -99,49 +107,94 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:d]")]
-        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:d]")]
-        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:d]")]
+        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:D]")]
+        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[a:D]")]
+        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:D]")]
+        [InlineData("DateAdd(\"2021-02-03\",[1])", "*[Result:d]")] // Coercion from string
+        [InlineData("DateAdd(44955,[1])", "*[Result:d]")] // Coercion from number
+        [InlineData("DateAdd(Time(12,0,0),[1])", "*[Result:T]")] // Coercion from time
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],1)", "*[Value:d]")]
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],[3])", "*[Value:d]")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"),[1])", "*[Result:d]")]
+        [InlineData("DateAdd([\"2011-02-03\"],1)", "*[Value:d]")] // Coercion from string
+        [InlineData("DateAdd([44900],1)", "*[Value:d]")] // Coercion from number
+        [InlineData("DateAdd([Time(12,0,0)],1)", "*[Value:T]")] // Coercion from time
         [InlineData("DateDiff([Date(2000,1,1)],[Date(2001,1,1)],\"years\")", "*[Result:n]")]
         [InlineData("DateDiff(Date(2000,1,1),[Date(2001,1,1)],\"years\")", "*[Result:n]")]
         [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Result:n]")]
-        public void TexlDateTableFunctions(string expression, string expectedType)
+        public void TexlDateTableFunctions_Float(string expression, string expectedType)
         {
-            var engine = new Engine(new PowerFxConfig());
-            var result = engine.Check(expression);
+            var engine = new Engine(new PowerFxConfig(Features.None));
+            var options = new ParserOptions() { NumberIsFloat = true };
+            var result = engine.Check(expression, options);
 
             Assert.True(DType.TryParse(expectedType, out var expectedDType));
-            Assert.Equal(expectedDType, result._binding.ResultType);
+            Assert.Equal(expectedDType, result.Binding.ResultType);
             Assert.True(result.IsSuccess);
         }
 
         [Theory]
-        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:d]")]
-        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:d]")]
-        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[Value:d]")]
-        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Value:d]")]
+        [InlineData("DateDiff([Date(2000,1,1)],[Date(2001,1,1)],\"years\")", "*[Result:w]")]
+        [InlineData("DateDiff(Date(2000,1,1),[Date(2001,1,1)],\"years\")", "*[Result:w]")]
+        [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Result:w]")]
+        public void TexlDateTableFunctions(string expression, string expectedType)
+        {
+            var engine = new Engine(new PowerFxConfig(Features.None));
+            var result = engine.Check(expression);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:D]")]
+        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Value:D]")]
+        [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],1)", "*[Value:d]")]
+        [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],[3])", "*[Value:d]")]
+        [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"),[1])", "*[Value:d]")]
+        [InlineData("DateDiff([Date(2000,1,1)],[Date(2001,1,1)],\"years\")", "*[Value:w]")]
+        [InlineData("DateDiff(Date(2000,1,1),[Date(2001,1,1)],\"years\")", "*[Value:w]")]
+        [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Value:w]")]
+        public void TexlDateTableFunctions_ConsistentOneColumnTableResult(string expression, string expectedType)
+        {
+            var engine = new Engine(new PowerFxConfig(new Features { ConsistentOneColumnTableResult = true }));
+            var options = new ParserOptions() { NumberIsFloat = false };
+            var result = engine.Check(expression, options);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:D]")]
+        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Value:D]")]
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],1)", "*[Value:d]")]
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],[3])", "*[Value:d]")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"),[1])", "*[Value:d]")]
         [InlineData("DateDiff([Date(2000,1,1)],[Date(2001,1,1)],\"years\")", "*[Value:n]")]
         [InlineData("DateDiff(Date(2000,1,1),[Date(2001,1,1)],\"years\")", "*[Value:n]")]
         [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Value:n]")]
-        public void TexlDateTableFunctions_ConsistentOneColumnTableResult(string expression, string expectedType)
+        public void TexlDateTableFunctions_ConsistentOneColumnTableResult_Float(string expression, string expectedType)
         {
-            var engine = new Engine(new PowerFxConfig(Features.ConsistentOneColumnTableResult));
-            var result = engine.Check(expression);
+            var engine = new Engine(new PowerFxConfig(new Features { ConsistentOneColumnTableResult = true }));
+            var options = new ParserOptions() { NumberIsFloat = true };
+            var result = engine.Check(expression, options);
 
             Assert.True(DType.TryParse(expectedType, out var expectedDType));
-            Assert.Equal(expectedDType, result._binding.ResultType);
+            Assert.Equal(expectedDType, result.Binding.ResultType);
             Assert.True(result.IsSuccess);
         }
 
         [Theory]
-        [InlineData("DateAdd(Table({v:Date(2022,1,1),s:9},{v:Date(2022,2,2),s:25}), 2, TimeUnit.Days)")]
-        [InlineData("DateAdd(DropColumns([Date(2022,1,1),Date(2022,2,2)],\"Value\"), 2, TimeUnit.Days)")]
+        [InlineData("DateAdd(Table({v:Date(2022,1,1),s:9},{v:Date(2022,2,2),s:25}), 2, TimeUnit.Days)")] // Not a single-column table
+        [InlineData("DateAdd(DropColumns([Date(2022,1,1),Date(2022,2,2)],\"Value\"), 2, TimeUnit.Days)")] // Not a single-column table
         [InlineData("DateDiff(Table({v:Date(2022,1,1),s:9},{v:Date(2022,2,2),s:25}), Date(2022,12,12), TimeUnit.Days)")]
         [InlineData("DateDiff(DropColumns([Date(2022,1,1),Date(2022,2,2)],\"Value\"), Date(2022,2,2), TimeUnit.Days)")]
         public void TexlDateTableFunctions_Negative(string expression)
@@ -187,7 +240,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("T", new TableType(TestUtils.DT("*[Value:n]")));
-            TestSimpleBindingSuccess("Char(T)", TestUtils.DT("*[Value:s]"), symbol, Features.ConsistentOneColumnTableResult);
+            TestSimpleBindingSuccess("Char(T)", TestUtils.DT("*[Value:s]"), symbol, new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -230,7 +283,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Concatenate(ShowColumns(Table,\"B\"), \" ending\")",
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
 
             symbol.RemoveVariable("Table");
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n, B:s, C:b, D:s]")));
@@ -238,7 +291,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Concatenate(ShowColumns(Table,\"B\"), \" ending\", ShowColumns(Table,\"D\"))",
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -280,21 +333,83 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
-        [Fact]
-        public void TexlFunctionTypeSemanticsCountIf()
+        internal class BooleanOptionSet : IExternalOptionSet
+        {
+            public DisplayNameProvider DisplayNameProvider => DisplayNameUtility.MakeUnique(new Dictionary<string, string>
+            {
+                { "Yes", "Yes" },
+                { "No", "No" },
+            });
+
+            public IEnumerable<DName> OptionNames => new[] { new DName("No"), new DName("Yes") };
+
+            public DKind BackingKind => DKind.Boolean;
+
+            public bool IsConvertingDisplayNameMapping => false;
+
+            public DName EntityName => new DName("BoolOptionSet");
+
+            public DType Type => DType.CreateOptionSetType(this);
+
+            public OptionSetValueType OptionSetValueType => new OptionSetValueType(this);
+
+            public bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
+            {
+                if (fieldName.Value == "No" || fieldName.Value == "Yes")
+                {
+                    optionSetValue = new OptionSetValue(fieldName.Value, this.OptionSetValueType, fieldName.Value == "Yes");
+                    return true;
+                }
+
+                optionSetValue = null;
+                return false;
+            }
+        }
+
+        [Theory]
+        [InlineData("CountIf(Table, A < 10)")]
+        [InlineData("CountIf(Table, A < 10, A > 0, A <> 2)")]
+        [InlineData("CountIf([1,2,3], Value) // Coercion from number to boolean")]
+        [InlineData("CountIf([\"false\",\"true\",\"false\"], Value) // Coercion from text to boolean")]
+        [InlineData("CountIf([1,2,3], BoolOptionSet.Yes) // Coercion from 2-valued option set to boolean")]
+        [InlineData("CountIf([1,2,3], If(true, 0 > 1, \"true\"))")]
+        [InlineData("CountIf([{a:\"true\",b:BoolOptionSet.Yes},{a:\"false\",b:BoolOptionSet.No}], a, b) // Coercion from fields in table")]
+        public void TexlFunctionTypeSemanticsCountIf(string expression)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n]")));
 
             TestSimpleBindingSuccess(
-                "CountIf(Table, A < 10)",
+                expression,
                 DType.Number,
-                symbol);
+                symbol,
+                features: Features.PowerFxV1,
+                optionSets: new[] { new BooleanOptionSet() });
+        }
 
-            TestSimpleBindingSuccess(
-                "CountIf(Table, A < 10, A > 0, A <> 2)",
+        [Theory]
+        [InlineData("CountIf(Table, Today() + A)")]
+        [InlineData("CountIf(Table, A > 0, Today() + A)")]
+        [InlineData("CountIf(Table, {Result:A})")]
+        [InlineData("CountIf([1,3,4], NonBoolOptionSet.First")]
+        [InlineData("CountIf(First(Table), true)")]
+        public void TexlFunctionTypeSemanticsCountIf_Negative(string expression)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n]")));
+
+            var nonBoolOptionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
+            {
+                { "First", "One" },
+                { "Second", "Two" },
+                { "Third", "Three" },
+            });
+
+            TestBindingErrors(
+                expression,
                 DType.Number,
-                symbol);
+                symbol,
+                optionSets: new[] { new OptionSet("NonBoolOptionSet", nonBoolOptionSetDisplayNameProvider) });
         }
 
         [Fact]
@@ -439,38 +554,61 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
-        [Fact]
-        public void TexlFunctionTypeSemanticsIfWithArgumentCoercion()
+        [Theory]
+        [InlineData("If(A < 10, 1, \"2\")", "n", true)]
+        [InlineData("If(A < 1, \"one\", A < 2, 2, A < 3, true, false)", "s", true)]
+        [InlineData("If(A < 1, true, A < 2, 2, A < 3, false, \"true\")", "b", true)]
+        [InlineData("If(A < 10, 1, [1,2,3])", "-", true)]
+        [InlineData("If(A < 10, 1, {Value: 2})", "-", true)]
+        [InlineData("If(0 < 1, [1], 2)", "-", true)]
+
+        // negative cases, when if produces void type
+        // If(1 < 0, [1], 2) => V which is void value
+
+        // void type is not allowed in aggregate type.
+        // {test: V}
+        [InlineData("{test: If(1 < 0, [1], 2)}", "![]", false)]
+
+        // [V]
+        [InlineData("[If(1 < 0, [1], 2)]", "*[]", false)]
+
+        // void type can't be consumed.
+        // V + 1 
+        [InlineData("If(1 < 0, [1], 2) + 1", "n", false)]
+
+        // Abs(V)
+        [InlineData("Abs(If(1 < 0, [1], 2))", "n", false)]
+
+        // Len(V)
+        [InlineData("Len(If(1 < 0, [1], 2))", "n", false)]
+
+        // If(V, 0, 1)
+        [InlineData("If(If(1 < 0, [1], 2), 0, 1)", "n", false)]
+
+        // Hour(V)
+        [InlineData("Hour(If(1 < 0, [1], 2))", "n", false)]
+
+        // ForAll([1,2,3], V)
+        [InlineData("ForAll([1,2,3], If(1 < 0, [1], 2))", "-", true)]
+        public void TexlFunctionTypeSemanticsIfWithArgumentCoercion(string expression, string expectedType, bool checkSuccess)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("A", FormulaType.Number);
-            
-            TestSimpleBindingSuccess(
-                "If(A < 10, 1, \"2\")",
-                DType.Number,
-                symbol);
 
-            TestSimpleBindingSuccess(
-                "If(A < 1, \"one\", A < 2, 2, A < 3, true, false)",
-                DType.String,
-                symbol);
-
-            TestSimpleBindingSuccess(
-                "If(A < 1, true, A < 2, 2, A < 3, false, \"true\")",
-                DType.Boolean,
-                symbol);
-
-            // Negative cases -- when args cannot be coerced.
-
-            TestBindingErrors(
-                "If(A < 10, 1, [1,2,3])",
-                DType.Number,
-                symbol);
-
-            TestBindingErrors(
-                "If(A < 10, 1, {Value: 2})",
-                DType.Number,
-                symbol);
+            if (checkSuccess)
+            {
+                TestSimpleBindingSuccess(
+                                    expression,
+                                    TestUtils.DT(expectedType),
+                                    symbol);
+            }
+            else
+            {
+                TestBindingErrors(
+                    expression,
+                    TestUtils.DT(expectedType),
+                    symbol);
+            }
         }
 
         [Fact]
@@ -609,7 +747,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -636,7 +774,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Len(T)",
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -678,7 +816,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Lower(T)",
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -736,7 +874,7 @@ namespace Microsoft.PowerFx.Core.Tests
                script,
                TestUtils.DT("*[Value:s]"),
                symbol,
-               Features.ConsistentOneColumnTableResult);
+               new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -883,7 +1021,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -940,7 +1078,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -967,7 +1105,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Trunc(T)",
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -1039,7 +1177,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 expression,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -1083,7 +1221,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -1127,7 +1265,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -1207,7 +1345,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value: n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -1345,7 +1483,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Text(123, \"$000.000\")")]
         [InlineData("Text(123, \"dddd, mm/dd/yy, at hh:mm:ss am/pm\")")]
         [InlineData("Text(\"hello world\")")]
-        [InlineData("Text(\"hello world\", \"mm/dd/yyyy\")")]
         [InlineData("Text(1.23, \"[$-en-us]0.00\")")]
         [InlineData("Text(1.23, \"[$-fr-fr]0,00\")")]
         [InlineData("Text(123, \"yyyy-mm-dd hh:mm:ss.000\") // 0 is valid if after seconds")]
@@ -1361,6 +1498,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Text(123, \"###.####    dddd, mm/dd/yy, at hh:mm:ss am/pm\")")]
         [InlineData("Text(123, \"###.#### \" & \"   dddd, mm/dd/yy, at hh:mm:ss am/pm\")")]
         [InlineData("Text(Now(), \"yyyy-mm-dd 0 hh:mm:ss.000\") // 0 is only valid after seconds")]
+        [InlineData("Text(\"hello world\", \"mm/dd/yyyy\") // not support format string for a string input")]
         public void TexlFunctionTypeSemanticsText_Negative(string script)
         {
             // Can't use both numeric formatting and date/time formatting within the same format string.
@@ -1392,16 +1530,52 @@ namespace Microsoft.PowerFx.Core.Tests
             var symbol = new SymbolTable();
             symbol.AddVariable("S", FormulaType.Date);
             symbol.AddVariable("R", FormulaType.Number);
+            symbol.AddVariable("W", FormulaType.Decimal);
+
+            TestSimpleBindingSuccess(
+                "WeekNum(S)",
+                DType.Decimal,
+                symbol,
+                numberIsFloat: false);
+
+            TestSimpleBindingSuccess(
+                "WeekNum(S, R)",
+                DType.Decimal,
+                symbol,
+                numberIsFloat: false);
+
+            TestSimpleBindingSuccess(
+                "WeekNum(S, W)",
+                DType.Decimal,
+                symbol,
+                numberIsFloat: false);
+        }
+
+        [Fact]
+        public void TexlFunctionTypeSemanticsWeekNum_Float()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("S", FormulaType.Date);
+            symbol.AddVariable("R", FormulaType.Number);
+            symbol.AddVariable("W", FormulaType.Decimal);
 
             TestSimpleBindingSuccess(
                 "WeekNum(S)",
                 DType.Number,
-                symbol);
+                symbol,
+                numberIsFloat: true);
 
             TestSimpleBindingSuccess(
                 "WeekNum(S, R)",
                 DType.Number,
-                symbol);
+                symbol,
+                numberIsFloat: true);
+
+            TestSimpleBindingSuccess(
+                "WeekNum(S, W)",
+                DType.Number,
+                symbol,
+                numberIsFloat: true);
         }
 
         [Fact]
@@ -1412,8 +1586,22 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TestSimpleBindingSuccess(
                 "ISOWeekNum(S)",
+                DType.Decimal,
+                symbol,
+                numberIsFloat: false);
+        }
+
+        [Fact]
+        public void TexlFunctionTypeSemanticsISOWeekNum_Float()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("S", FormulaType.Date);
+
+            TestSimpleBindingSuccess(
+                "ISOWeekNum(S)",
                 DType.Number,
-                symbol);
+                symbol,
+                numberIsFloat: true);
         }
 
         [Theory]
@@ -1450,7 +1638,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Trim(T)",
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -1479,7 +1667,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "TrimEnds(T)",
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -1508,7 +1696,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Upper(T)",
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -1755,7 +1943,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT(expectedType),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -1841,8 +2029,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Concat([1, 2, 3], Text(Value), \",\")")]
         [InlineData("Concat([1, 2, 3], Text(Value), Text(Today()))")]
         [InlineData("Concat([], 1)")]
-        [InlineData("Concat([1, 2, 3], Value)")]
-        [InlineData("Concat([], 1)")]
+        [InlineData("Concat([1, 2, 3], Value)")]        
         [InlineData("Concat([\"a\", \"b\", \"C\"], Value, 1)")]
         public void TexlFunctionTypeSemanticsConcat(string script)
         {
@@ -1894,7 +2081,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT(expectedType),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -1944,18 +2131,18 @@ namespace Microsoft.PowerFx.Core.Tests
                     var symbol = new SymbolTable();
                     symbol.AddVariable("T1", new TableType(TestUtils.DT(typedGlobal1)));
                     symbol.AddVariable("T2", new TableType(TestUtils.DT(typedGlobal2)));
-                    TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), symbol, Features.ConsistentOneColumnTableResult);
+                    TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), symbol, new Features { ConsistentOneColumnTableResult = true });
                 }
                 else
                 {
                     var symbol = new SymbolTable();
                     symbol.AddVariable("T", new TableType(TestUtils.DT(typedGlobal1)));
-                    TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), symbol, Features.ConsistentOneColumnTableResult);
+                    TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), symbol, new Features { ConsistentOneColumnTableResult = true });
                 }
             }
             else
             {
-                TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), features: Features.ConsistentOneColumnTableResult);
+                TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), features: new Features { ConsistentOneColumnTableResult = true });
             }
         }
 
@@ -2161,6 +2348,91 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData(@"{%%:""hi""}", "![%%:s]", "![_:e]")]
+        [InlineData(@"With( { %%: 3 }, %% )", "w", "?")]
+        [InlineData(@"With( { %%: 3 }, { Value: %% } )", "![Value:w]", "?")]
+        [InlineData(@"AddColumns( [1,2,3], %%, Value*3 )", "*[%%:w, Value:w]", "*[Value:w]")]
+        public void TestReservedWords_Disallowed(string script, string successType, string failType)
+        {
+            // OkToUse should work, all others include As (an existing keyword) should fail
+            string[] words = new string[] { "OkToUse", "As", "This", "blank", "null", "nothing", "undefined", "none", "empty", "Is", "Child", "Children", "Siblings" };
+
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new Engine(config);
+            var opts = new ParserOptions();
+
+            foreach (var word in words)
+            {
+                var scriptWord = script.Replace("%%", word);
+                var successTypeWord = TestUtils.DT(successType.Replace("%%", word));
+                var failTypeWord = TestUtils.DT(failType.Replace("%%", word));
+                var result = engine.Check(scriptWord, opts);
+
+                if (word == "OkToUse")
+                {
+                    Assert.True(result.IsSuccess, $"should succeed: {word}");
+                    Assert.Equal(successTypeWord, result.Binding.ResultType);
+                }
+                else
+                {
+                    Assert.False(result.IsSuccess, $"should fail: {word}");
+                    Assert.Equal(failTypeWord, result.Binding.ResultType);
+                }
+
+                // should always work if enclosed in single quotes
+                scriptWord = script.Replace("%%", $"'{word}'");
+                successTypeWord = TestUtils.DT(successType.Replace("%%", word));
+                failTypeWord = TestUtils.DT(failType.Replace("%%", word));
+                result = engine.Check(scriptWord, opts);
+
+                Assert.True(result.IsSuccess, $"should succeed with single quotes: {word}");
+                Assert.Equal(successTypeWord, result.Binding.ResultType);
+            }
+        }
+
+        [Theory]
+        [InlineData(@"{%%:""hi""}", "![%%:s]", "![_:e]")]
+        [InlineData(@"With( { %%: 3 }, %% )", "w", "?")]
+        [InlineData(@"With( { %%: 3 }, { Value: %% } )", "![Value:w]", "?")]
+        public void TestReservedWords_Allowed(string script, string successType, string failType)
+        {
+            // As should fail (an existing keyword), all others should work
+            string[] words = new string[] { "OkToUse", "As", "This", "blank", "null", "nothing", "undefined", "none", "empty", "Is", "Child", "Children", "Siblings" };
+
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            var opts = new ParserOptions() { DisableReservedKeywords = true };
+
+            foreach (var word in words)
+            {
+                var scriptWord = script.Replace("%%", word);
+                var successTypeWord = TestUtils.DT(successType.Replace("%%", word));
+                var failTypeWord = TestUtils.DT(failType.Replace("%%", word));
+                var result = engine.Check(scriptWord, opts);
+
+                if (word != "As")
+                {
+                    Assert.True(result.IsSuccess, $"should succeed: {word}");
+                    Assert.Equal(successTypeWord, result.Binding.ResultType);
+                }
+                else
+                {
+                    Assert.False(result.IsSuccess, $"should fail: {word}");
+                    Assert.Equal(failTypeWord, result.Binding.ResultType);
+                }
+
+                // should always work if enclosed in single quotes
+                scriptWord = script.Replace("%%", $"'{word}'");
+                successTypeWord = TestUtils.DT(successType.Replace("%%", word));
+                failTypeWord = TestUtils.DT(failType.Replace("%%", word));
+                result = engine.Check(scriptWord, opts);
+
+                Assert.True(result.IsSuccess, $"should succeed with single quotes: {word}");
+                Assert.Equal(successTypeWord, result.Binding.ResultType);
+            }
+        }
+
+        [Theory]
         [InlineData("With({A: 1, B: \"test\"}, B & \" \" & A)", "![A:n, B:s]", "s")]
         [InlineData("With({table: [{name: \"first\"},{name: \"first\"}]}, ForAll(table, Value))", "![table:*[value:s]]", "*[name:s]")]
         [InlineData("With({date: Today()}, date)", "![date:D]", "D")]
@@ -2239,18 +2511,42 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Sum(T, 1)", "n")]
-        [InlineData("Average(T, \"Item\")", "n")]
+        [InlineData("Sum(T, 1)", "w")]
+        [InlineData("Average(T, \"Item\")", "w")]
         [InlineData("Filter(T, true)", "*[Item:n]")]
+        [InlineData("Sum(TW, 1)", "w")]
+        [InlineData("Average(TW, \"Item\")", "w")]
+        [InlineData("Filter(TW, true)", "*[Item:w]")]
         public void TestWarningOnLiteralPredicate(string script, string expectedType)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("T", new TableType(TestUtils.DT("*[Item:n]")));
+            symbol.AddVariable("TW", new TableType(TestUtils.DT("*[Item:w]")));
             TestBindingWarning(
                 script,
                 TestUtils.DT(expectedType),
                 expectedErrorCount: null,
                 symbolTable: symbol);
+        }
+
+        [Theory]
+        [InlineData("Sum(T, 1)", "n")]
+        [InlineData("Average(T, \"Item\")", "n")]
+        [InlineData("Filter(T, true)", "*[Item:n]")]
+        [InlineData("Sum(TW, 1)", "n")]
+        [InlineData("Average(TW, \"Item\")", "n")]
+        [InlineData("Filter(TW, true)", "*[Item:w]")]
+        public void TestWarningOnLiteralPredicate_NumberIsFloat(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Item:n]")));
+            symbol.AddVariable("TW", new TableType(TestUtils.DT("*[Item:w]")));
+            TestBindingWarning(
+                script,
+                TestUtils.DT(expectedType),
+                expectedErrorCount: null,
+                symbolTable: symbol,
+                numberIsFloat: true);
         }
 
         [Theory]
@@ -2300,7 +2596,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2412,6 +2708,33 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("IsEmpty(\"Hello\")", true)]
+        [InlineData("IsEmpty(7)", true)]
+        [InlineData("IsEmpty([1,2,3,4])", false)]
+        [InlineData("IsEmpty({a:3, b:4})", true)]
+        [InlineData("IsEmpty(Blank())", false)]
+        public void TexlFunctionTypeSemanticsIsEmpty(string script, bool expectedError)
+        {
+            TestSimpleBindingSuccess(script, DType.Boolean); // Without restriction, all succeed
+
+            if (expectedError)
+            {
+                TestBindingErrors(
+                    script,
+                    DType.Boolean,
+                    symbolTable: null,
+                    features: new Features { RestrictedIsEmptyArguments = true });
+            }
+            else
+            {
+                TestSimpleBindingSuccess(
+                    script,
+                    DType.Boolean,
+                    features: new Features { RestrictedIsEmptyArguments = true });
+            }
+        }
+
+        [Theory]
         [InlineData("Sequence(20)", "*[Value:n]")]
         [InlineData("Sequence(20, 30)", "*[Value:n]")]
         [InlineData("Sequence(20, 30, 10)", "*[Value:n]")]
@@ -2469,7 +2792,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2499,7 +2822,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2529,7 +2852,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2559,7 +2882,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2589,7 +2912,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2623,7 +2946,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:b]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2658,7 +2981,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:c]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2688,7 +3011,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2718,7 +3041,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2748,7 +3071,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2778,7 +3101,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2808,7 +3131,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2843,7 +3166,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2873,7 +3196,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2911,7 +3234,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2941,7 +3264,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2971,7 +3294,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -3012,7 +3335,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value: s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -3044,6 +3367,72 @@ namespace Microsoft.PowerFx.Core.Tests
             TestSimpleBindingSuccess("If(true, DS, DS)", schema, symbol);
         }
 
+        [Theory]
+        [InlineData("*Filter*(DS, StartsWith(Value, \"d\"))", false)]
+        [InlineData("*Filter*(DS, Left(Value, 1) = \"d\")", true)]
+        [InlineData("*Filter*(DS, Substitute(Value, \"x\", \"y\"))", true)]
+        [InlineData("*Filter*(DS, Value(Value) <= 3 Or Value(Value) > 7)", true)]
+        [InlineData("*Filter*(DS, IsBlank(First(*Filter*(DS, StartsWith(Value, \"d\")))))", true)]
+        public void TestSilentValidDelegatableFilterPredicateNode(string script, bool warnings)
+        {
+            var schema = DType.CreateTable(new TypedName(TestUtils.DT("s"), new DName("Value")));
+
+            var symbol = new DelegatableSymbolTable();
+            symbol.AddEntity(
+                new TestDelegableDataSource(
+                    "DS",
+                    schema,
+                    new TestDelegationMetadata(
+                        DelegationCapability.Filter,
+                        schema,
+                        new FilterOpMetadata(
+                            schema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new DelegationCapability(DelegationCapability.Equal | DelegationCapability.StartsWith),
+                            null))));
+
+            var silentFilterFunction = new TestUtils.MockSilentDelegableFilterFunction("TestSilentFilter", script);
+
+            try
+            {
+                symbol.AddFunction(silentFilterFunction);
+
+                var config = new PowerFxConfig
+                {
+                    SymbolTable = symbol
+                };
+
+                var engine = new Engine(config);
+
+                // first run using the original Filter
+                var filterScript = script.Replace("*Filter*", "Filter");
+                var result = engine.Check(filterScript);
+
+                Assert.True(result.IsSuccess);
+
+                if (warnings)
+                {
+                    Assert.True(result.Errors.Count() > 0, "Expected warnings in original function");
+                }
+                else
+                {
+                    Assert.False(result.Errors.Count() > 0, "No warnings expected in original function");
+                }
+
+                // then run with the mock filter function that does silent delgation checks
+                var silentFilterScript = script.Replace("*Filter*", "TestSilentFilter");
+                result = engine.Check(silentFilterScript);
+
+                Assert.True(result.IsSuccess);
+                Assert.False(result.Errors.Count() > 0, "No warnings expected in silent function");
+            }
+            finally
+            {
+                symbol.RemoveFunction(silentFilterFunction);
+            }
+        }
+
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig
@@ -3054,26 +3443,27 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var result = engine.Check(script);
 
-            Assert.NotNull(result._binding);
+            Assert.NotNull(result.Binding);
         
-            Assert.Equal(isPure, result._binding.IsPure(result.Parse.Root));
+            Assert.Equal(isPure, result.Binding.IsPure(result.Parse.Root));
         }
 
-        private void TestBindingWarning(string script, DType expectedType, int? expectedErrorCount, SymbolTable symbolTable = null)
+        private void TestBindingWarning(string script, DType expectedType, int? expectedErrorCount, SymbolTable symbolTable = null, bool numberIsFloat = false)
         {
-            var config = new PowerFxConfig
+            var config = new PowerFxConfig(Features.None);
+            var parserOptions = new ParserOptions()
             {
-                SymbolTable = symbolTable
+                NumberIsFloat = numberIsFloat
             };
 
             var engine = new Engine(config);
-            var result = engine.Check(script);
+            var result = engine.Check(script, parserOptions, symbolTable);
             
-            Assert.Equal(expectedType, result._binding.ResultType);
-            Assert.True(result._binding.ErrorContainer.HasErrors());
+            Assert.Equal(expectedType, result.Binding.ResultType);
+            Assert.True(result.Binding.ErrorContainer.HasErrors());
             if (expectedErrorCount != null)
             {
-                Assert.Equal(expectedErrorCount, result._binding.ErrorContainer.GetErrors().Count());
+                Assert.Equal(expectedErrorCount, result.Binding.ErrorContainer.GetErrors().Count());
             }
 
             Assert.True(result.IsSuccess);
@@ -3089,27 +3479,38 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var result = engine.Check(script);
 
-            Assert.Equal(expectedType, result._binding.ResultType);
-            Assert.Equal(expectedErrorCount, result._binding.ErrorContainer.GetErrors().Count());
+            Assert.Equal(expectedType, result.Binding.ResultType);
+            Assert.Equal(expectedErrorCount, result.Binding.ErrorContainer.GetErrors().Count());
             Assert.False(result.IsSuccess);
         }
 
-        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null)
+        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, bool numberIsFloat = true, OptionSet[] optionSets = null, Features features = null)
         {
-            var config = new PowerFxConfig
+            features = features ?? Features.None;
+            var config = new PowerFxConfig(features)
             {
                 SymbolTable = symbolTable
             };
 
-            var engine = new Engine(config);
-            var result = engine.Check(script);
+            if (optionSets != null)
+            {
+                foreach (var optionSet in optionSets)
+                {
+                    config.AddOptionSet(optionSet);
+                }
+            }
 
-            Assert.Equal(expectedType, result._binding.ResultType);
+            var engine = new Engine(config);
+            var opts = new ParserOptions() { NumberIsFloat = numberIsFloat };
+            var result = engine.Check(script, opts);
+
+            Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.False(result.IsSuccess);
         }
 
-        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = Features.None)
+        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = null, bool numberIsFloat = true, IExternalOptionSet[] optionSets = null)
         {
+            features ??= Features.None;
             var config = new PowerFxConfig(features)
             {
                 SymbolTable = symbolTable
@@ -3117,12 +3518,19 @@ namespace Microsoft.PowerFx.Core.Tests
 
             if (symbolTable != null)
             {
-                config.AddFunction(new ShowColumnsFunction());
+                if (optionSets != null)
+                {
+                    foreach (var optionSet in optionSets)
+                    {
+                        config.AddEntity(optionSet);
+                    }
+                }
             }
 
             var engine = new Engine(config);
-            var result = engine.Check(script);
-            Assert.Equal(expectedType, result._binding.ResultType);
+            var opts = new ParserOptions() { NumberIsFloat = numberIsFloat };
+            var result = engine.Check(script, opts);
+            Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.True(result.IsSuccess);
         }
     }

@@ -1,27 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Functions;
-using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -81,13 +68,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new Engine(new PowerFxConfig());
 
             var rType = RecordType.Empty()
-                        .Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"))
+                        .Add(new NamedFormulaType("F1", FormulaType.Decimal, "Display1"))
                         .Add(new NamedFormulaType("F0", FormulaType.String, "Display0"))
                         .Add(new NamedFormulaType("F2", FormulaType.Boolean, "Display2"));
 
             var r = FormulaValue.NewRecordFromFields(rType, new List<NamedValue>()
             {
-                new NamedValue("F1", FormulaValue.New(1)),
+                new NamedValue("F1", FormulaValue.New(1m)),
                 new NamedValue("F0", FormulaValue.New("string1")),
                 new NamedValue("F2", FormulaValue.New(true))
             });
@@ -113,6 +100,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
+
         // Collect
         // Primitives + primitives
         [InlineData("Collect({0},{0})")]
@@ -237,6 +225,48 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        // Immutable arguments
+        [Theory]
+        [InlineData("Patch([1,2,3], {Value:1}, {Value:9})")]
+        [InlineData("With({x:[1,2,3]},Patch(x, {Value:1}, {Value:9}))")]
+        [InlineData("Patch(namedFormula, {Value:1}, {Value:9})")]
+
+        [InlineData("Collect([1,2,3], {Value:9})")]
+        [InlineData("With({x:[1,2,3]},Collect(x, {Value:9}))")]
+        [InlineData("Collect(namedFormula, {Value:9})")]
+
+        [InlineData("Remove([1, 2, 3], {Value:1})")]
+        [InlineData("With({x:[1,2,3]}, Remove(x, {Value:1}))")]
+        [InlineData("Remove(namedFormula, {Value:1})")]
+
+        [InlineData("Clear([1, 2, 3])")]
+        [InlineData("With({x:[1,2,3]}, Clear(x))")]
+        [InlineData("Clear(namedFormula)")]
+        public void MutationCheckFailImmutableNodesTests(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            engine.Config.SymbolTable.AddVariable("namedFormula", new TableType(TestUtils.DT("*[Value:n]")), mutable: false);
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            var check = engine.Check(expression, options: _opts);
+            Assert.False(check.IsSuccess);
+        }
+
+        // Taking an immutable tables, storing it into a variable, makes it mutable
+        [Theory]
+        [InlineData("Set(varTable, [\"a\", \"b\", \"c\"]); Patch(varTable, {Value:\"a\"}, {Value:\"z\"})")]
+        [InlineData("Set(varTable, [\"a\", \"b\", \"c\"]); Collect(varTable, {Value:\"z\"})")]
+        [InlineData("Set(varRecord, {x:[\"a\", \"b\", \"c\"]}); Patch(varRecord.x, {Value:\"a\"}, {Value:\"z\"})")]
+        [InlineData("Set(varRecord, {x:[\"a\", \"b\", \"c\"]}); Collect(varRecord.x, {Value:\"z\"})")]
+        public void MutationCheckForWellDefinedVariables(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            engine.Config.SymbolTable.AddVariable("varTable", new TableType(TestUtils.DT("*[Value:s]")), mutable: true);
+            engine.Config.SymbolTable.AddVariable("varRecord", new KnownRecordType(TestUtils.DT("![x:*[Value:s]]")), mutable: true);
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            var check = engine.Check(expression, options: _opts);
+            Assert.True(check.IsSuccess);
+        }
+
         protected void Check(Engine engine, string expression)
         {
             var functionName = expression.Split("(")[0];
@@ -247,6 +277,56 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.False(check.IsSuccess);
             Assert.NotEmpty(check.Errors);
             Assert.True(check.Errors.Where(er => er.Message.Contains(errorMessage)).Any());
+        }
+
+        // Regression test case
+        // https://github.com/microsoft/Power-Fx/issues/1335
+        [Theory]
+        [InlineData("Collect(checktable, {flavor: \"Strawberry\", quantity: 300 })")]
+        public void MutationNumberAsFloatTests(string expr)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig(Features.PowerFxV1));
+            var fv = FormulaValueJSON.FromJson("100", numberIsFloat: true);
+
+            var rType = RecordType.Empty()
+                .Add(new NamedFormulaType("flavor", FormulaType.String))
+                .Add(new NamedFormulaType("quantity", fv.Type));
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("checktable", FormulaValue.NewTable(rType));
+
+            var check = engine.Check(expr, options: new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true });
+
+            var message = string.Empty;
+            if (check.Errors.Any())
+            {
+                message = check.Errors?.First().Message;
+            }
+
+            Assert.True(check.IsSuccess, message);
+        }
+
+        [Theory]
+        [InlineData("Collect(t1, {subject: \"something\", poly: {} })", true, true)]
+        [InlineData("Collect(t1, {subject: \"something\", poly: [] })", false, true)]
+
+        [InlineData("Collect(t1, {subject: \"something\", poly: {} })", false, false)]
+        [InlineData("Collect(t1, {subject: \"something\", poly: [] })", false, false)]
+        public void PolymorphicFieldUnions(string expr, bool isSuccess, bool isPowerFxV1)
+        {
+            var features = isPowerFxV1 ? Features.PowerFxV1 : Features.None;
+            var engine = new RecalcEngine(new PowerFxConfig(features));
+
+            var rType = RecordType.Empty()
+                .Add(new NamedFormulaType("subject", FormulaType.String))
+                .Add(new NamedFormulaType("poly", FormulaType.Build(DType.Polymorphic)));
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("t1", FormulaValue.NewTable(rType));
+
+            var check = engine.Check(expr, options: new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true });
+
+            Assert.Equal(isSuccess, check.IsSuccess);
         }
     }
 }

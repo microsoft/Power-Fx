@@ -1,0 +1,10 @@
+﻿#OVERRIDE: inTable_V1CompatDisabled.txt
+#SETUP: disable:PowerFxV1CompatibilityRules
+
+// Bug in pre-V1, fixed in V1
+>> Blank() in [1, Blank(), 2]
+#skip
+
+// Bug in pre-V1, fixed in V1
+>> Blank() in Table({Value:1},Blank(),{Value:2})
+#skip

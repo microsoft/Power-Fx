@@ -1,4 +1,5 @@
-﻿
+﻿#SETUP: disable:StronglyTypedBuiltinEnums
+
 // Use of DateValue, DateTimeValue
 
 >> DateValue("")
@@ -90,3 +91,174 @@ Error({Kind:ErrorKind.Div0})
 
 >> DateTimeValue(If(Sqrt(-1) < 0, "2022-01-01 12:34:56"))
 Error({Kind:ErrorKind.Numeric})
+
+>> DateTimeValue("2011-01-30T08:00:00.000")
+DateTime(2011,1,30,8,0,0,0)
+
+>> DateTimeValue("2011-01-30T08:00:00.0005")
+DateTime(2011,1,30,8,0,0,0)
+
+>> DateTimeValue("2011-01-30T08:00:00.1234567")
+DateTime(2011,1,30,8,0,0,123)
+
+>> DateTimeValue("12:34:56")
+DateTime(1899,12,30,12,34,56,0)
+
+>> DateValue("12:34:56")
+Date(1899,12,30)
+
+>> DateTimeValue("0001/02/03")
+DateTime(1,2,3,0,0,0,0)
+
+>> DateTimeValue("02/03/0001")
+DateTime(1,2,3,0,0,0,0)
+
+>> DateTimeValue("02/03/01")
+DateTime(2001,2,3,0,0,0,0)
+
+>> DateTimeValue("0001-02-03")
+DateTime(1,2,3,0,0,0,0)
+
+>> DateTimeValue("02-03-0001")
+DateTime(1,2,3,0,0,0,0)
+
+>> DateTimeValue("02-03-01")
+DateTime(2001,2,3,0,0,0,0)
+
+>> DateTimeValue("02 03 0001")
+DateTime(1,2,3,0,0,0,0)
+
+>> DateTimeValue("02 03, 0001")
+DateTime(1,2,3,0,0,0,0)
+
+>> DateTimeValue("0001/2/3 04:56:07")
+DateTime(1,2,3,4,56,7,0)
+
+>> DateTimeValue("02/03/0001 04:56:07")
+DateTime(1,2,3,4,56,7,0)
+
+>> DateTimeValue("02/03/01 04:56:07")
+DateTime(2001,2,3,4,56,7,0)
+
+>> DateTimeValue("02 03 0001 04:56:07")
+DateTime(1,2,3,4,56,7,0)
+
+>> DateTimeValue("02 03, 0001 04:56:07")
+DateTime(1,2,3,4,56,7,0)
+
+>> DateTimeValue("0045/02/03")
+DateTime(45,2,3,0,0,0,0)
+
+>> DateTimeValue("02/03/0045")
+DateTime(45,2,3,0,0,0,0)
+
+>> DateTimeValue("02/03/45")
+DateTime(2045,2,3,0,0,0,0)
+
+>> DateTimeValue("0045-02-03")
+DateTime(45,2,3,0,0,0,0)
+
+>> DateTimeValue("02-03-0045")
+DateTime(45,2,3,0,0,0,0)
+
+>> DateTimeValue("02-03-45")
+DateTime(2045,2,3,0,0,0,0)
+
+>> DateTimeValue("02 03 0045")
+DateTime(45,2,3,0,0,0,0)
+
+>> DateTimeValue("02 03, 0045")
+DateTime(45,2,3,0,0,0,0)
+
+>> DateTimeValue("0045/2/3 04:56:07")
+DateTime(45,2,3,4,56,7,0)
+
+>> DateTimeValue("02/03/0045 04:56:07")
+DateTime(45,2,3,4,56,7,0)
+
+>> DateTimeValue("02/03/45 04:56:07")
+DateTime(2045,2,3,4,56,7,0)
+
+>> DateTimeValue("02 03 0045 04:56:07")
+DateTime(45,2,3,4,56,7,0)
+
+>> DateTimeValue("02 03, 0045 04:56:07")
+DateTime(45,2,3,4,56,7,0)
+
+>> DateValue("0001/02/03")
+Date(1,2,3)
+
+>> DateValue("02/03/0001")
+Date(1,2,3)
+
+>> DateValue("02/03/01")
+Date(2001,2,3)
+
+>> DateValue("0001-02-03")
+Date(1,2,3)
+
+>> DateValue("02-03-0001")
+Date(1,2,3)
+
+>> DateValue("02-03-01")
+Date(2001,2,3)
+
+>> DateValue("02 03 0001")
+Date(1,2,3)
+
+>> DateValue("02 03, 0001")
+Date(1,2,3)
+
+>> DateValue("0001/2/3 04:56:07")
+Date(1,2,3)
+
+>> DateValue("02/03/0001 04:56:07")
+Date(1,2,3)
+
+>> DateValue("02/03/01 04:56:07")
+Date(2001,2,3)
+
+>> DateValue("02 03 0001 04:56:07")
+Date(1,2,3)
+
+>> DateValue("02 03, 0001 04:56:07")
+Date(1,2,3)
+
+>> DateValue("0045/02/03")
+Date(45,2,3)
+
+>> DateValue("02/03/0045")
+Date(45,2,3)
+
+>> DateValue("02/03/45")
+Date(2045,2,3)
+
+>> DateValue("0045-02-03")
+Date(45,2,3)
+
+>> DateValue("02-03-0045")
+Date(45,2,3)
+
+>> DateValue("02-03-45")
+Date(2045,2,3)
+
+>> DateValue("02 03 0045")
+Date(45,2,3)
+
+>> DateValue("02 03, 0045")
+Date(45,2,3)
+
+>> DateValue("0045/2/3 04:56:07")
+Date(45,2,3)
+
+>> DateValue("02/03/0045 04:56:07")
+Date(45,2,3)
+
+>> DateValue("02/03/45 04:56:07")
+Date(2045,2,3)
+
+>> DateValue("02 03 0045 04:56:07")
+Date(45,2,3)
+
+>> DateValue("02 03, 0045 04:56:07")
+Date(45,2,3)

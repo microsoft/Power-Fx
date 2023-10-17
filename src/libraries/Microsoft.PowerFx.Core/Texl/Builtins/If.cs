@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Localization;
@@ -27,8 +26,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool UsesEnumNamespace => true;
 
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public IfFunction()
             : base("If", TexlStrings.AboutIf, FunctionCategories.Logical, DType.Unknown, 0, 2, int.MaxValue)
@@ -55,9 +52,118 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool IsLazyEvalParam(int index)
+        public override bool IsLazyEvalParam(int index, Features features)
         {
             return index >= 1;
+        }
+
+        internal static bool TryDetermineReturnTypePowerFxV1CompatRules(
+            List<(TexlNode node, DType type)> possibleResults,
+            IErrorContainer errors, 
+            ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap,
+            out DType returnType)
+        {
+            returnType = null;
+            var type = possibleResults[0].type;
+            var fArgsValid = true;
+
+            foreach (var (argNode, argType) in possibleResults)
+            {
+                if (argType.IsVoid)
+                {
+                    type = DType.Void;
+                }
+                else if (argType.IsError)
+                {
+                    errors.EnsureError(argNode, TexlStrings.ErrTypeError);
+                    fArgsValid = false;
+                }
+                else if (type.Kind == DKind.ObjNull)
+                {
+                    // Anything goes with null
+                    type = argType;
+                }
+                else if (argType.Kind == DKind.ObjNull)
+                {
+                    // ObjNull can be accepted by the current type
+                }
+                else if (DType.TryUnionWithCoerce(
+                         type,
+                         argType,
+                         usePowerFxV1CompatibilityRules: true,
+                         coerceToLeftTypeOnly: true,
+                         out var unionType,
+                         out var coercionNeeded))
+                {
+                    type = unionType;
+                    if (coercionNeeded)
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, argNode, type);
+                    }
+                }
+                else
+                {
+                    // If types are incompatible, result is Void
+                    type = DType.Void;
+                }
+            }
+
+            returnType = type;
+            return fArgsValid;
+        }
+
+        internal static bool TryDetermineReturnTypePowerFxV1CompatRulesDisabled(
+            List<(TexlNode node, DType type)> possibleResults,
+            IErrorContainer errors,
+            ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap,
+            out DType returnType)
+        {
+            returnType = null;
+            var type = DType.Unknown;
+            var fArgsValid = true;
+
+            foreach (var (nodeArg, typeArg) in possibleResults)
+            {
+                var typeSuper = DType.Supertype(
+                    type,
+                    typeArg,
+                    useLegacyDateTimeAccepts: false,
+                    usePowerFxV1CompatibilityRules: false);
+
+                if (!typeSuper.IsError)
+                {
+                    type = typeSuper;
+                }
+                else if (typeArg.IsVoid)
+                {
+                    type = DType.Void;
+                }
+                else if (typeArg.IsError)
+                {
+                    errors.EnsureError(nodeArg, TexlStrings.ErrTypeError);
+                    fArgsValid = false;
+                }
+                else if (!type.IsError)
+                {
+                    if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: false))
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
+                    }
+                    else
+                    {
+                        // If the types are incompatible, the result type is void.
+                        type = DType.Void;
+                    }
+                }
+                else if (typeArg.Kind != DKind.Unknown)
+                {
+                    type = typeArg;
+                    fArgsValid = false;
+                }
+            }
+
+            returnType = type;
+            return fArgsValid;
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -77,7 +183,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = true;
             for (var i = 0; i < (count & ~1); i += 2)
             {
-                fArgsValid &= CheckType(args[i], argTypes[i], DType.Boolean, errors, true, out bool withCoercion);
+                fArgsValid &= CheckType(context, args[i], argTypes[i], DType.Boolean, errors, true, out bool withCoercion);
 
                 if (withCoercion)
                 {
@@ -85,55 +191,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            var type = ReturnType;
+            var type = context.Features.PowerFxV1CompatibilityRules ? argTypes[1] : ReturnType;
 
-            // Are we on a behavior property?
-            var isBehavior = context.AllowsSideEffects;
-
-            // Compute the result type by joining the types of all non-predicate args.
-            Contracts.Assert(type == DType.Unknown);
+            var possibleResults = new List<(TexlNode node, DType type)>();
             for (var i = 1; i < count;)
             {
-                var nodeArg = args[i];
-                var typeArg = argTypes[i];
-                if (typeArg.IsError)
-                {
-                    errors.EnsureError(args[i], TexlStrings.ErrTypeError);
-                }
-
-                var typeSuper = DType.Supertype(type, typeArg);
-
-                if (!typeSuper.IsError)
-                {
-                    type = typeSuper;
-                }
-                else if (type.Kind == DKind.Unknown)
-                {
-                    type = typeSuper;
-                    fArgsValid = false;
-                }
-                else if (!type.IsError)
-                {
-                    if (typeArg.CoercesTo(type))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
-                    }
-                    else if (!isBehavior || !IsArgTypeInconsequential(nodeArg))
-                    {
-                        errors.EnsureError(
-                            DocumentErrorSeverity.Severe,
-                            nodeArg,
-                            TexlStrings.ErrBadType_ExpectedType_ProvidedType,
-                            type.GetKindString(),
-                            typeArg.GetKindString());
-                        fArgsValid = false;
-                    }
-                }
-                else if (typeArg.Kind != DKind.Unknown)
-                {
-                    type = typeArg;
-                    fArgsValid = false;
-                }
+                possibleResults.Add((args[i], argTypes[i]));
 
                 // If there are an odd number of args, the last arg also participates.
                 i += 2;
@@ -143,9 +206,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
+            // For pre-PowerFxV1, compute the result type by joining the types of all non-predicate args.
+            // For PowerFxV1 compat rules, validate that all non-predicate args can be coerced to the first one
+            if (context.Features.PowerFxV1CompatibilityRules)
+            {
+                if (!TryDetermineReturnTypePowerFxV1CompatRules(possibleResults, errors, ref nodeToCoercedTypeMap, out type))
+                {
+                    fArgsValid = false;
+                }
+            }
+            else
+            {
+                if (!TryDetermineReturnTypePowerFxV1CompatRulesDisabled(possibleResults, errors, ref nodeToCoercedTypeMap, out type))
+                {
+                    fArgsValid = false;
+                }
+            }
+
             // Update the return type based on the specified invocation args.
             returnType = type;
-
             return fArgsValid;
         }
 
@@ -155,92 +234,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex > 1;
-        }
-
-        // When IsArgTypeInconsequential returns true, the runtime result of If may not match the binder's expectation.
-        // So use this helper to skip asserts comparing runtime and bind time types.
-        internal static bool CanCheckIfReturn(TexlFunction func)
-        {
-            return func is not IfFunction;
-        }
-
-        private bool IsArgTypeInconsequential(TexlNode arg)
-        {
-            Contracts.AssertValue(arg);
-            Contracts.Assert(arg.Parent is ListNode);
-            Contracts.Assert(arg.Parent.Parent is CallNode);
-            Contracts.Assert(arg.Parent.Parent.AsCall().Head.Name == Name);
-
-            var call = arg.Parent.Parent.AsCall().VerifyValue();
-
-            // Pattern: OnSelect = If(cond, argT, argF)
-            // Pattern: OnSelect = If(cond, arg1, cond, arg2, ..., argK, argF)
-            // Pattern: OnSelect = If(cond, arg1, If(cond, argT, argF))
-            // Pattern: OnSelect = If(cond, arg1, If(cond, arg2, cond, arg3, ...))
-            // Pattern: OnSelect = If(cond, arg1, cond, If(cond, arg2, cond, arg3, ...), ...)
-            // ...etc.
-            var ancestor = call;
-            while (ancestor.Head.Name == Name)
-            {
-                if (ancestor.Parent == null && ancestor.Args.Children.Length > 0)
-                {
-                    for (var i = 0; i < ancestor.Args.Children.Length; i += 2)
-                    {
-                        // If the given node is part of a condition arg of an outer If invocation,
-                        // then it's NOT inconsequential. Note that the very last arg to an If
-                        // is not a condition -- it's the "else" branch, hence the test below.
-                        if (i != ancestor.Args.Children.Length - 1 && arg.InTree(ancestor.Args.Children[i]))
-                        {
-                            return false;
-                        }
-                    }
-
-                    return true;
-                }
-
-                // Deal with the possibility that the ancestor may be contributing to a chain.
-                // This also lets us cover the following patterns:
-                // Pattern: OnSelect = X; If(cond, arg1, arg2); Y; Z
-                // Pattern: OnSelect = X; If(cond, arg1;arg11;...;arg1k, arg2;arg21;...;arg2k); Y; Z
-                // ...etc.
-                VariadicOpNode chainNode;
-                if ((chainNode = ancestor.Parent.AsVariadicOp()) != null && chainNode.Op == VariadicOp.Chain)
-                {
-                    // Top-level chain in a behavior rule.
-                    if (chainNode.Parent == null)
-                    {
-                        return true;
-                    }
-
-                    // A chain nested within a larger non-call structure.
-                    if (!(chainNode.Parent is ListNode) || !(chainNode.Parent.Parent is CallNode))
-                    {
-                        return false;
-                    }
-
-                    // Only the last chain segment is consequential.
-                    var numSegments = chainNode.Children.Length;
-                    if (numSegments > 0 && !arg.InTree(chainNode.Children[numSegments - 1]))
-                    {
-                        return true;
-                    }
-
-                    // The node is in the last segment of a chain nested within a larger invocation.
-                    ancestor = chainNode.Parent.Parent.AsCall();
-                    continue;
-                }
-
-                // Walk up the parent chain to the outer invocation.
-                if (!(ancestor.Parent is ListNode) || !(ancestor.Parent.Parent is CallNode))
-                {
-                    return false;
-                }
-
-                ancestor = ancestor.Parent.Parent.AsCall();
-            }
-
-            // Exhausted all supported patterns.
-            return false;
         }
 
         // Gets the overloads for the If function for the specified arity.
@@ -322,7 +315,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var args = callNode.Args.Children.VerifyValue();
-            return TryGetDSNodes(binding, args, out dsNodes);
+            return TryGetDSNodes(binding, args.ToArray(), out dsNodes);
         }
 
         public override bool SupportsPaging(CallNode callNode, TexlBinding binding)

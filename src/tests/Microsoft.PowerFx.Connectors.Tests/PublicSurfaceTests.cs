@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Connector.Tests
     public class PublicSurfaceTests
     {
         [Fact]
-        public void Test()
+        public void PublicSurfaceTest_Connectors()
         {
             var asm = typeof(PowerPlatformConnectorClient).Assembly;
 
@@ -26,13 +26,29 @@ namespace Microsoft.PowerFx.Connector.Tests
             var allowed = new HashSet<string>()
             {
               "Microsoft.PowerFx.ConfigExtensions",
-              "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient",
-              "Microsoft.PowerFx.Connectors.ICachingHttpClient",
-              "Microsoft.PowerFx.Connectors.NonCachingClient",
-              "Microsoft.PowerFx.Connectors.CachingHttpClient",
-              "Microsoft.PowerFx.Connectors.OpenApiExtensions",
+              "Microsoft.PowerFx.Connectors.BaseRuntimeConnectorContext",
+              "Microsoft.PowerFx.Connectors.ConnectorCompatibility",
+              "Microsoft.PowerFx.Connectors.ConnectorEnhancedSuggestions",
+              "Microsoft.PowerFx.Connectors.ConnectorFunction",
+              "Microsoft.PowerFx.Connectors.ConnectorLog",
+              "Microsoft.PowerFx.Connectors.ConnectorLogger",
+              "Microsoft.PowerFx.Connectors.ConnectorParameter",
+              "Microsoft.PowerFx.Connectors.ConnectorParameters",              
+              "Microsoft.PowerFx.Connectors.ConnectorParameterWithSuggestions",
+              "Microsoft.PowerFx.Connectors.ConnectorSchema",
+              "Microsoft.PowerFx.Connectors.ConnectorSettings",
+              "Microsoft.PowerFx.Connectors.ConnectorType",
+              "Microsoft.PowerFx.Connectors.Constants",
+              "Microsoft.PowerFx.Connectors.LogCategory",
+              "Microsoft.PowerFx.Connectors.ODataParameters",
               "Microsoft.PowerFx.Connectors.ODataQueryableTableValue",
-              "Microsoft.PowerFx.Connectors.ODataParameters"
+              "Microsoft.PowerFx.Connectors.OpenApiExtensions",              
+              "Microsoft.PowerFx.Connectors.OpenApiParser",
+              "Microsoft.PowerFx.Connectors.PowerFxConnectorException",
+              "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient",
+              "Microsoft.PowerFx.Connectors.RuntimeConfigExtensions",
+              "Microsoft.PowerFx.Connectors.RuntimeConnectorContextExtensions",
+              "Microsoft.PowerFx.Connectors.Visibility"
             };
 
             var sb = new StringBuilder();

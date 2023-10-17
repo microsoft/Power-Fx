@@ -5,17 +5,22 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // RGBA(red, green, blue, alpha)
     internal sealed class RGBAFunction : BuiltinFunction
     {
-        public override bool IsTrackedInTelemetry => false;
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
+        {
+            if (index >= 0 && index <= 2)
+            {
+                return ArgPreprocessor.ReplaceBlankWithFloatZeroAndTruncate;
+            }
 
-        public override bool SupportsParamCoercion => true;
-
-        public override bool SupportsInlining => true;
+            return base.GetGenericArgPreprocessor(index);
+        }
 
         // This is important to set so that calls to RGBA(consts,...) are also considered const
         public override bool IsSelfContained => true;

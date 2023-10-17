@@ -1,0 +1,434 @@
+#SETUP: disable:NumberIsFloat
+
+// DIVIDE
+
+// In these tests, 1E100 or some other very large/small number is used to test floating point results which decimal can not represent, 
+// and a highly precise number is used for decimal, such as 2.00000000000000000000000000002 that would be rounded in floating point.
+// For example, if a decimal test results with 25+ signficant digits results in 2, then an inappropriate conversion to floating point was made.
+
+// The expected results matrix, also in BinderUtils.cs:
+//
+// Non NumberIsFloat (no flag)                     NumberIsFloat
+//  *, /  | n  s  b  N  D  d  T  w  O  (right)       *, / | n  s  b  N  D  d  T  w  O  (right)
+// =======|====================================    =======|====================================
+//      n | n  n  n  n  n  n  n  n  n                   n | n  n  n  n  n  n  n  n  n 
+//      s | n  w  w  w  w  w  w  w  w                   s | n  n  n  n  n  n  n  n  n 
+//      b | n  w  w  w  w  w  w  w  w                   b | n  n  n  n  n  n  n  n  n 
+//      N | n  w  w  w  w  w  w  w  w                   N | n  n  n  n  n  n  n  n  n 
+//      D | n  w  w  w  w  w  w  w  w                   D | n  n  n  n  n  n  n  n  n  
+//      d | n  w  w  w  w  w  w  w  w                   d | n  n  n  n  n  n  n  n  n  
+//      T | n  w  w  w  w  w  w  w  w                   T | n  n  n  n  n  n  n  n  n  
+//      w | n  w  w  w  w  w  w  w  w                   w | n  n  n  n  n  n  n  w  n 
+//      O | n  w  w  w  w  w  w  w  w                   O | n  n  n  n  n  n  n  n  n 
+// (left) |                                        (left) |
+
+// Float
+
+>> Float(16)/Float(2)
+8
+
+>> Float("1e100")/Float(2)
+5E+99
+
+>> Float(16)/"2"
+8
+
+>> Float("1e100")/"2"
+5E+99
+
+>> Float(16)/true
+16
+
+>> Float("1e100")/true
+1E+100
+
+>> Float(16)/Blank()
+Error({Kind:ErrorKind.Div0})
+
+>> Float("1e100")/Blank()
+Error({Kind:ErrorKind.Div0})
+
+>> Value(Date(2000,1,1))
+36526
+
+>> Float(365260000)/Date(2000,1,1)
+10000
+
+>> Value(DateTime(2000,1,1,12,0,0))
+36526.5
+
+>> Float(365265000)/DateTime(2000,1,1,12,0,0)
+10000
+
+>> Value(Time(12,0,0))
+0.5
+
+>> Float(16)/Time(12,0,0)
+32
+
+>> Float(16)/Decimal("2.00000000000000000000000002")
+8
+
+>> Float("1e100")/Decimal("2.00000000000000000000000002")
+5E+99
+
+>> Float(16)/ParseJSON("2")
+8
+
+>> Float(16)/ParseJSON("1e100")
+1.6E-99
+
+>> Float("1e100")/ParseJSON("2")
+5E+99
+
+>> Float("1e100")/ParseJSON("1e100")
+1
+
+>> Float(3)/ParseJSON("null")
+Error({Kind:ErrorKind.Div0})
+
+// Text
+
+>> "16"/Float(2)
+8
+
+>> "1e100"/Float(2)
+5E+99
+
+>> "16"/"2"
+8
+
+>> "16"/"2.00000000000000000000000002"
+7.99999999999999999999999992
+
+>> "1e100"/"2"
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> "16"/true
+16
+
+>> "1e100"/true
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> "16"/Blank()
+Error({Kind:ErrorKind.Div0})
+
+>> "1e100"/Blank()
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> "365260000"/Date(2000,1,1)
+10000
+
+>> "365265000"/DateTime(2000,1,1,12,0,0)
+10000
+
+>> "16"/Time(12,0,0)
+32
+
+>> "16"/Decimal("2.000000000000000000000002")
+7.999999999999999999999992
+
+>> "1e100"/Decimal("2.000000000000000000000002")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> "16"/ParseJSON("2")
+8
+
+>> "1e100"/ParseJSON("1e100")
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
+
+>> "1e100"/ParseJSON("2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Boolean
+
+>> true/Float(2)
+0.5
+
+>> true/Float("1e100")
+1E-100
+
+>> true/"2"
+0.5
+
+>> true/"1E+100"
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> true/true
+1
+
+>> true/Blank()
+Error({Kind:ErrorKind.Div0})
+
+>> true/Date(1927,5,18)
+0.0001
+
+>> true/DateTime(1927,5,18,0,0,0)
+0.0001
+
+>> true/Time(12,0,0)
+2
+
+>> true/Decimal("2.000000000000000000000002")
+0.4999999999999999999999995
+
+>> true/ParseJSON("2")
+0.5
+
+>> true/ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Blank
+
+>> Blank()/Float(2)
+0
+
+>> Blank()/Float("1e100")
+0
+
+>> Blank()/"2"
+0
+
+>> Blank()/"1e100"
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Blank()/true
+0
+
+>> Blank()/Blank()
+Error({Kind:ErrorKind.Div0})
+
+>> Blank()/Date(2000,1,1)
+0
+
+>> Blank()/DateTime(2000,1,1,12,0,0)
+0
+
+>> Blank()/Time(12,0,0)
+0
+
+>> Blank()/Decimal("2.000000000000000000000002")
+0
+
+>> Blank()/Decimal("2.000000000000000000000002")+2.000000000000000000000002
+2.000000000000000000000002
+
+>> Blank()/ParseJSON("2")
+0
+
+>> Blank()/ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Date
+
+>> Date(2000,1,1)/Float(2)
+18263
+
+>> Date(2000,1,1)/"2"
+18263
+
+>> Date(2000,1,1)/true
+36526
+
+>> Date(2000,1,1)/Blank()
+Error({Kind:ErrorKind.Div0})
+
+>> Date(1954,10,3)/Date(1927,5,18)
+2
+
+>> Date(1954,10,3)/Date(1900,1,1)
+10000
+
+>> Date(1954,10,3)/DateTime(1927,5,18,0,0,0)
+2
+
+>> Date(2000,1,1)/Time(12,0,0)
+73052
+
+>> Date(2000,1,1)/Decimal("2.000000000000000000000002")
+18262.999999999999999999981737
+
+>> Date(2000,1,1)/ParseJSON("2")
+18263
+
+>> Date(2000,1,1)/ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// DateTime
+
+>> DateTime(2000,1,1,12,0,0)/Float(2)
+18263.25
+
+>> DateTime(2000,1,1,12,0,0)/"2"
+18263.25
+
+>> DateTime(2000,1,1,12,0,0)/true
+36526.5
+
+>> DateTime(2000,1,1,12,0,0)/Blank()
+Error({Kind:ErrorKind.Div0})
+
+>> DateTime(1954,10,3,0,0,0)/Date(1927,5,18)
+2
+
+>> DateTime(1954,10,3,0,0,0)/Date(1900,1,1)
+10000
+
+>> DateTime(1954,10,3,0,0,0)/DateTime(1927,5,18,0,0,0)
+2
+
+>> DateTime(1954,10,3,0,0,0)/DateTime(1900,1,1,12,0,0)
+8000
+
+>> DateTime(2000,1,1,12,0,0)/Time(12,0,0)
+73053
+
+>> DateTime(2000,1,1,12,0,0)/Decimal("2.0000000000000000000002")
+18263.249999999999999998173675
+
+>> DateTime(2000,1,1,12,0,0)/ParseJSON("2")
+18263.25
+
+>> DateTime(2000,1,1,12,0,0)/ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Time
+
+>> Time(9,0,0)/Float(0.125)
+3
+
+>> Time(9,0,0)/"0.125"
+3
+
+>> Time(9,0,0)/true
+0.375
+
+>> Time(9,0,0)/Blank()
+Error({Kind:ErrorKind.Div0})
+
+>> Time(9,0,0)/Time(6,0,0)
+1.5
+
+>> Time(9,0,0)/Date(1900,1,2)
+0.125
+
+>> 1+(Time(9,0,0)/Date(1900,1,11)/1e20)
+1.0000000000000000000003125
+
+>> Time(9,0,0)/Time(12,0,0)
+0.75
+
+>> 1+(Time(9,0,0)/Time(12,0,0)/1e20)
+1.0000000000000000000075
+
+>> Time(9,0,0)/Decimal("0.125")
+3
+
+>> 1+(Time(9,0,0)/Decimal("0.125")/1e20)
+1.00000000000000000003
+
+>> Time(9,0,0)/Decimal("0.125000000000000000000001")
+2.999999999999999999999976
+
+>> Time(9,0,0)/ParseJSON("2")
+0.1875
+
+>> Time(9,0,0)/ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Decimal
+
+>> Decimal("16.000000000000000000000001")/Float(2)
+8
+
+>> Decimal("16.000000000000000000000001")/"2"
+8.0000000000000000000000005
+
+>> Decimal("16.000000000000000000000001")/true
+16.000000000000000000000001
+
+>> Decimal("16.000000000000000000000001")/Blank()
+Error({Kind:ErrorKind.Div0})
+
+>> Decimal("16.0000000000000000000001")/Date(1900,1,7)
+2.0000000000000000000000125
+
+>> Decimal("16.0000000000000000000001")/DateTime(1900,1,1,12,0,0)
+6.40000000000000000000004
+
+>> Decimal("16.000000000000000000001")/Time(12,0,0)
+32.000000000000000000002
+
+>> Decimal("16.000000000000000000000002")/Decimal("2.000000000000000000000001")
+7.999999999999999999999997
+
+>> Decimal("7.999999999999999999999997")*Decimal("2.000000000000000000000001")
+16.000000000000000000000002
+
+>> Decimal("16.000000000000000000000002")/ParseJSON("2")
+8.000000000000000000000001
+
+>> Decimal("16.000000000000000000000002")/ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Untyped
+
+>> ParseJSON("16.00000000000000000000001")/Float(2)
+8
+
+>> ParseJSON("1e100")/Float(2)
+5E+99
+
+>> ParseJSON("16.00000000000000000000001")/"2"
+8.000000000000000000000005
+
+>> ParseJSON("1e100")/"2"
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000000001")/true
+16.000000000000000000000001
+
+>> ParseJSON("1e100")/true
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000000001")/Blank()
+Error({Kind:ErrorKind.Div0})
+
+>> ParseJSON("1e100")/Blank()
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.0000000000000000000001")/Date(1900,1,7)
+2.0000000000000000000000125
+
+>> ParseJSON("1e100")/Date(1900,1,7)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.0000000000000000000001")/DateTime(1900,1,1,12,0,0)
+6.40000000000000000000004
+
+>> ParseJSON("1e100")/DateTime(1900,1,7,12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000001")/Time(12,0,0)
+32.000000000000000000002
+
+>> ParseJSON("1e100")/Time(12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000000002")/Decimal("2.000000000000000000000000001")
+8.000000000000000000000000996
+
+>> ParseJSON("1e100")/Decimal("2.000000000000000000000000001")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000000002")/ParseJSON("2")
+8.000000000000000000000001
+
+>> ParseJSON("1e100")/ParseJSON("2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000000002")/ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("1e100")/ParseJSON("1e100")
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))

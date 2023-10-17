@@ -28,26 +28,8 @@
 >> Text(30470, "dddd, mmm dd, yyy") 
 "Friday, Jun 03, 1983"
 
->> Text(0, "'longdate'") 
-"Saturday, December 30, 1899"
-
->> Text(0, "'shortdate'") 
-"12/30/1899"
-
->> Text(0, "longdate") 
-"long30ate"
-
->> Text(0, "shortdate") 
-"00ort30ate"
-
 >> Text(0, "short day") 
 "00ort 30a99"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "dddd, mmm "" dd, yyy") 
-"Friday, Jun "" 03, 1983"
-
->> Text(30470, "DDDD, MMM "" DD, YYY") 
-"Friday, Jun "" 03, 1983"
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "dddd, mmm """" dd, yyy") 
 "Friday, Jun  03, 1983"
@@ -157,18 +139,6 @@
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:YYYY:MM") 
 "02:1983:06"
 
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "ha/p") 
-"2a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HA/P") 
-"2a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hha/p") 
-"02a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HHA/P") 
-"02a"
-
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hAM/PM") 
 "2AM"
 
@@ -180,18 +150,6 @@
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HHAM/PM") 
 "02AM"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm a/p") 
-"2:53 a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "H:MM a/p") 
-"2:53 a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm a/p") 
-"02:53 a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:MM a/p") 
-"02:53 a"
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm AM/PM") 
 "2:53 AM"
@@ -355,75 +313,6 @@
 >> Text(423456789003, "0")
 "423456789003"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'longdatetime'") 
-"Thursday, January 1, 1970 2:32:25 PM"
-
->> Text(33333.75, "'longdatetime'") 
-"Friday, April 5, 1991 6:00:00 PM"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'shortdatetime'") 
-"1/1/1970 2:32 PM"
-
->> Text(33333.75, "'shortdatetime'") 
-"4/5/1991 6:00 PM"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'longdatetime24'") 
-"Thursday, January 1, 1970 14:32:25"
-
->> Text(33333.75, "'longdatetime24'") 
-"Friday, April 5, 1991 18:00:00"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'shortdatetime24'") 
-"1/1/1970 14:32"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'longtime24'") 
-"14:32:25"
-
->> Text(0.6875, "'longtime24'") 
-"16:30:00"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'shorttime24'") 
-"14:32"
-
->> Text(0.6875, "'shorttime24'") 
-"16:30"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'longtime'") 
-"2:32:25 PM"
-
->> Text(12345.6875, "'longtime'") 
-"4:30:00 PM"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'shorttime'") 
-"2:32 PM"
-
->> Text(33333.6875, "'shorttime'") 
-"4:30 PM"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longdatetime") 
-"long1ateti1e"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shortdatetime") 
-"2514ort1ateti1e"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longdatetime24") 
-"long1ateti1e24"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shortdatetime24") 
-"2514ort1ateti1e24"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longtime24") 
-"longti1e24"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shorttime24") 
-"2514ortti32e24"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longtime") 
-"longti1e"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shorttime") 
-"2514ortti32e"
-
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), """h"" dddd, mmm dd, yyy") 
 "h Friday, Jun 03, 1983"
 
@@ -484,24 +373,6 @@
 >> Text(30470, "mmm ""[some*]"" dd ""(de)+"" yyyy") 
 "Jun [some*] 03 (de)+ 1983"
 
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ([""][^""]*[""]) dd yyyy") 
-"Jun ([][^]*[""]) 03 1983"
-
->> Text(30470, "mmm ([""][^""]*[""]) dd yyyy") 
-"Jun ([][^]*[""]) 03 1983"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""([""][^""]*[""]) dd yyyy") 
-"Jun ([][^]*[]) 03 1983"
-
->> Text(30470, "mmm ""([""][^""]*[""]) dd yyyy") 
-"Jun ([][^]*[]) 03 1983"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""([""][^""]*[""])"" dd yyyy") 
-"Jun ([][^]*[])"" 03 1983"
-
->> Text(30470, "mmm ""([""][^""]*[""])"" dd yyyy") 
-"Jun ([][^]*[])"" 03 1983"
-
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""[de]+de"" dd yyyy") 
 "Jun [de]+de 03 1983"
 
@@ -523,15 +394,8 @@
 >> Text(30470.01953125, "YYYY-MM-DD HH:MM:SS.000") 
 "1983-06-03 00:28:07.500"
 
->> Text(1, 
-  "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
-Error({Kind:ErrorKind.InvalidArgument})
-
 >> Text(1, "00.00 dd-mm-yyyy")
 Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 8-26: Incorrect format specifier for 'Text'.
-
->> Text(1, "M#")
-Errors: Error 0-13: The function 'Text' has some invalid arguments.|Warning 8-12: Incorrect format specifier for 'Text'.
 
 >> Text(Time(2, 53, 9, 3), "mm:ss.00") 
 "53:09.00"
@@ -542,59 +406,45 @@ Errors: Error 0-13: The function 'Text' has some invalid arguments.|Warning 8-12
 >> Text(Time(18, 0, 0), "0.00")
 "0.75"
 
->> Text(Time(14, 32, 25, 678), "'shorttime24'") 
-"14:32"
-
->> Text(Time(14, 32, 25, 678), DateTimeFormat.ShortTime24)
-"14:32"
-
->> Text(Time(14, 32, 25, 678), "'shorttime'") 
-"2:32 PM"
-
->> Text(Time(14, 32, 25, 678), DateTimeFormat.ShortTime) 
-"2:32 PM"
-
 >> Text(Date(1983, 6, 3), "dddd, mmm dd, yyy") 
 "Friday, Jun 03, 1983"
 
->> Text(Date(1983, 6, 3), "dddd, mmm "" dd, yyy") 
-"Friday, Jun "" 03, 1983"
-
->> Text(Date(1970, 1, 1), "'shortdate'") 
-"1/1/1970"
-
->> Text(Date(1970, 1, 1), DateTimeFormat.ShortDate) 
-"1/1/1970"
-
->> Text(Date(1970, 1, 1), "'shortdatetime'") 
-"1/1/1970 12:00 AM"
-
->> Text(Date(1970, 1, 1), DateTimeFormat.ShortDateTime) 
-"1/1/1970 12:00 AM"
-
->> Text(Date(1970, 1, 1), "'shortdatetime24'") 
-"1/1/1970 0:00"
-
->> Text(Date(1970, 1, 1), DateTimeFormat.ShortDateTime24) 
-"1/1/1970 0:00"
-
->> Text(Date(1970, 1, 1), "'longdate'") 
-"Thursday, January 1, 1970"
-
->> Text(Date(1970, 1, 1), DateTimeFormat.LongDate) 
-"Thursday, January 1, 1970"
-
->> Text(Date(1970, 1, 1), "'longdatetime'") 
-"Thursday, January 1, 1970 12:00:00 AM"
-
->> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime) 
-"Thursday, January 1, 1970 12:00:00 AM"
-
->> Text(Date(1970, 1, 1), "'longdatetime24'") 
-"Thursday, January 1, 1970 0:00:00"
-
->> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime24)
-"Thursday, January 1, 1970 0:00:00"
-
 >> With({format:"0.00 dd/mm/yyyy"},Text(123, format))
 Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(2023,1,3,9,23,45,678), "yyyy-mm-dd hh:mm:ss.000")
+"2023-01-03 09:23:45.678"
+
+>> Text(DateTime(2023,1,3,9,23,45,678), "yyyy-mm-dd hh:mm:ss.0000")
+"2023-01-03 09:23:45.6780"
+
+>> Text(DateTime(2023,1,3,9,23,45,678), "yyyy-mm-dd hh:mm:ss.00000")
+"2023-01-03 09:23:45.67800"
+
+>> Text(DateTime(2023,1,3,9,23,45,678), "yyyy-mm-dd hh:mm:ss.000000")
+"2023-01-03 09:23:45.678000"
+
+>> Text(DateTime(2023,1,3,9,23,45,678), "yyyy-mm-dd hh:mm:ss.0000000")
+"2023-01-03 09:23:45.6780000"
+
+>> Text(DateTime(2023,1,3,9,23,45,678), "yyyy-mm-dd hh:mm:ss.00000000")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(30470.01953125, "YYYY-MM-DD HH:MM:SS.0000") 
+"1983-06-03 00:28:07.5000"
+
+>> Text(30470.01953125, "YYYY-MM-DD HH:MM:SS.00000") 
+"1983-06-03 00:28:07.50000"
+
+>> Text(30470.01953125, "YYYY-MM-DD HH:MM:SS.000000") 
+"1983-06-03 00:28:07.500000"
+
+>> Text(30470.01953125, "YYYY-MM-DD HH:MM:SS.0000000") 
+"1983-06-03 00:28:07.5000000"
+
+>> Text(30470.01953125, "YYYY-MM-DD HH:MM:SS.00000000") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+// C# interpreter can handle up to 7 decimals after the second
+>> Text(DateTimeValue("2023-01-03 00:01:02.3456789"), "yyyy-mm-dd hh:mm:ss.0000000")
+"2023-01-03 00:01:02.3456789"

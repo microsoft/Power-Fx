@@ -11,12 +11,17 @@ using Microsoft.PowerFx.Core.IR;
 namespace Microsoft.PowerFx.Types
 {
     // Represent record backed by known list of values. 
-    internal class InMemoryRecordValue : RecordValue
+    internal class InMemoryRecordValue : RecordValue, IMutationCopyField
     {
-        private readonly IReadOnlyDictionary<string, FormulaValue> _fields;
+        protected readonly IReadOnlyDictionary<string, FormulaValue> _fields;
         private readonly IDictionary<string, FormulaValue> _mutableFields;
 
         public InMemoryRecordValue(IRContext irContext, IEnumerable<NamedValue> fields)
+          : this(irContext, ToDict(fields))
+        {
+        }
+
+        public InMemoryRecordValue(IRContext irContext, params NamedValue[] fields)
           : this(irContext, ToDict(fields))
         {
         }
@@ -32,6 +37,19 @@ namespace Microsoft.PowerFx.Types
             if (_mutableFields.IsReadOnly)
             {
                 _mutableFields = null;
+            }
+        }
+
+        public InMemoryRecordValue(InMemoryRecordValue orig)
+            : this(orig.IRContext, new Dictionary<string, FormulaValue>(orig._mutableFields))
+        {
+        }
+
+        void IMutationCopyField.ShallowCopyFieldInPlace(string fieldName)
+        {
+            if (_fields.TryGetValue(fieldName, out FormulaValue result))
+            {
+                _mutableFields[fieldName] = result.MaybeShallowCopy();
             }
         }
 
@@ -53,23 +71,28 @@ namespace Microsoft.PowerFx.Types
 
         public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord, CancellationToken cancellationToken)
         {
+            return await UpdateAllowedFieldsAsync(changeRecord, _fields, cancellationToken).ConfigureAwait(false);
+        }
+
+        protected async Task<DValue<RecordValue>> UpdateAllowedFieldsAsync(RecordValue changeRecord, IEnumerable<KeyValuePair<string, FormulaValue>> allowedFields, CancellationToken cancellationToken)
+        {
             cancellationToken.ThrowIfCancellationRequested();
 
             if (_mutableFields == null)
             {
-                return await base.UpdateFieldsAsync(changeRecord, cancellationToken);
+                return await base.UpdateFieldsAsync(changeRecord, cancellationToken).ConfigureAwait(false);
             }
 
-            var fields = new List<NamedValue>();
-
-            await foreach (var field in changeRecord.GetFieldsAsync(cancellationToken))
+            await foreach (var field in changeRecord.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
             {
                 _mutableFields[field.Name] = field.Value;
             }
 
-            foreach (var kvp in _fields)
+            var fields = new List<NamedValue>();
+
+            foreach (var kvp in allowedFields)
             {
-                fields.Add(new NamedValue(kvp.Key, kvp.Value));
+                fields.Add(new NamedValue(kvp.Key, _fields[kvp.Key]));
             }
 
             return DValue<RecordValue>.Of(NewRecordFromFields(fields));

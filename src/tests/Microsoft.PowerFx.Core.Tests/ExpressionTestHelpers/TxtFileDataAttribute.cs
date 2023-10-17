@@ -6,6 +6,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -21,12 +25,14 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly string _filePathCommon;
         private readonly string _filePathSpecific;
         private readonly string _engineName;
-        
-        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName)
+        private readonly Dictionary<string, bool> _setup;
+
+        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, string setup)
         {
             _filePathCommon = filePathCommon;
             _filePathSpecific = filePathSpecific;
             _engineName = engineName;
+            _setup = TestRunner.ParseSetupString(setup);
         }
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
@@ -53,7 +59,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
                         foreach (var file in allFiles)
                         {
-                            parser.AddFile(file);
+                            // Skip .md files
+
+                            if (file.EndsWith(".txt", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                parser.AddFile(_setup, file);
+                            }
                         }
                     }
                 }
@@ -80,11 +91,65 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         internal static string GetDefaultTestDir(string filePath)
-        { 
+        {
             var executable = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
             var curDir = Path.GetFullPath(Path.GetDirectoryName(executable));
             var testDir = Path.Combine(curDir, filePath);
             return testDir;
+        }
+    }
+
+    /// <summary>
+    /// Simpler version of TxtFileDataAttribute (above) for the mutation tests.
+    /// The mutation tests need to run tests, one after another, retaining state - they are not independent.
+    /// This attribute just gathers together the directory of test files, rather than pulling the individual tests out of those files.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
+    public class ReplFileSimpleListAttribute : DataAttribute
+    {
+        private readonly string _filePath;
+
+        public ReplFileSimpleListAttribute(string filePath)
+        {
+            _filePath = filePath;
+        }
+
+        public override IEnumerable<object[]> GetData(MethodInfo testMethod)
+        {
+            // This is run in a separate process. To debug, need to call Launch() and attach a debugger.
+            // System.Diagnostics.Debugger.Launch();
+
+            if (testMethod == null)
+            {
+                throw new ArgumentNullException(nameof(testMethod));
+            }
+
+            var list = new List<object[]>();
+
+            try
+            {
+                var path = TxtFileDataAttribute.GetDefaultTestDir(_filePath);
+                var dir = new DirectoryInfo(path);
+                var allFiles = dir.EnumerateFiles("*.txt");      // skip .md files
+
+                foreach (var file in allFiles)
+                {
+                    list.Add(new object[] { file.Name });
+                }
+            }
+            catch (Exception e)
+            {
+                // If this method crashes, then we just get 0 tests. 
+                // The only way to communicate a failure from here back to the developer
+                // is to pass a "fake" test object that always fails and contains the error.
+                // In this case, this will be a bogus file name that won't load.
+
+                var item = $"ERROR: Test discovery failed with: {e}";
+
+                list.Add(new object[] { item });
+            }
+
+            return list;
         }
     }
 }

@@ -56,13 +56,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Properties are renamed. 
             var result1 = engine.Eval("x.FieldDisplay1");
-            Assert.Equal(10.0, ((NumberValue)result1).Value);
+            Assert.Equal(10, ((DecimalValue)result1).Value);
 
             var check1 = engine.Check("x.Field");
             Assert.False(check1.IsSuccess);
 
             var result2 = engine.Eval("x.Field2");
-            Assert.Equal(20.0, ((NumberValue)result2).Value);
+            Assert.Equal(20, ((DecimalValue)result2).Value);
         }
 
         // Scenario for Wrapper<T> objects. Marshal as a T. 
@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(ReferenceEquals(result2.ToObject(), obj));
 
             var result1 = engine.Eval("x.FieldDisplay1");
-            Assert.Equal(10.0, ((NumberValue)result1).Value);
+            Assert.Equal(10, ((DecimalValue)result1).Value);
         }
 
         // Demonstrate how to lazily marshal a property bag to a strongly typed value if we're given the type
@@ -200,7 +200,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     var marshaller = cache.GetMarshaller(kv.Value.GetType());
                     var expectedType = type.GetFieldType(fieldName);
 
-                    Assert.True(expectedType._type.Accepts(marshaller.Type._type, exact: true));
+                    Assert.True(expectedType._type.Accepts(marshaller.Type._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true));
 
                     return (marshaller.Type,
                             (object objSource) =>
@@ -235,11 +235,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             };
 
             var recordTypeTestObj = RecordType.Empty()
-                .Add("Field1", FormulaType.Number)
-                .Add("Field2", FormulaType.Number);
+                .Add("Field1", FormulaType.Decimal)
+                .Add("Field2", FormulaType.Decimal);
 
             var recordType = RecordType.Empty()
-                .Add("int", FormulaType.Number)
+                .Add("int", FormulaType.Decimal)
                 .Add("str", FormulaType.String)
                 .Add("test", recordTypeTestObj)
                 .Add("bool", FormulaType.Boolean);
@@ -256,11 +256,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             d["int"] = 456; // lazy, takes latest values. 
             var result1 = engine.Eval("x.int");
-            Assert.Equal(456.0, ((NumberValue)result1).Value);
+            Assert.Equal(456, ((DecimalValue)result1).Value);
 
             ((TestObj)d["test"]).Field1 = 12;
             var result2 = engine.Eval("x.test.Field1");
-            Assert.Equal(12.0, ((NumberValue)result2).Value);
+            Assert.Equal(12, ((DecimalValue)result2).Value);
 
             // It's strongly typed, so we can give design-time errors for missing fields. 
             var result3 = engine.Check("x.missing");

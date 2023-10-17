@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -27,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             _delegationCapability = isMin ? DelegationCapability.Min : DelegationCapability.Max;
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
@@ -36,31 +37,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             // The return type will be the result type of the expression in the 2nd argument
-            var fArgsValid = true;
             returnType = argTypes[1];
             nodeToCoercedTypeMap = null;
 
             // Coerce everything except date/times to numeric.
-            if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time && CheckType(args[1], argTypes[1], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
+            if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time)
             {
-                returnType = DType.Number;
-                if (matchedWithCoercion)
+                returnType = DetermineNumericFunctionReturnType(true, context.NumberIsFloat, argTypes[1]);
+                if (!CheckType(context, args[1], argTypes[1], returnType, DefaultErrorContainer, ref nodeToCoercedTypeMap))
                 {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Number, allowDupes: true);
-                }
-            }
-            else if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time)
-            {
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
-                fArgsValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
+                    nodeToCoercedTypeMap = null;
+                    return false;
+                }    
             }
 
-            if (!fArgsValid)
-            {
-                nodeToCoercedTypeMap = null;
-            }
-
-            return fArgsValid;
+            return true;
         }
     }
 }

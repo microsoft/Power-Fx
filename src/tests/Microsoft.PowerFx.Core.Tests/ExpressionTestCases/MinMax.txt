@@ -1,4 +1,6 @@
-﻿// ****** Numeric arguments, scalar arguments ******
+﻿#SETUP: DisableMemChecks
+
+// ****** Numeric arguments, scalar arguments ******
 
 >> Max(1)
 1
@@ -84,12 +86,6 @@ Blank()
 >> Max(-1, -2, -3, Blank(), -2, -3)
 -1
 
->> Max(1E+308, 1E+308)
-100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-
->> Min(1E+308, 1E+308)
-100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-
 // ****** Date/time arguments, scalar arguments ******
 
 >> Max(Min(Date(2022,3,8)))
@@ -118,27 +114,6 @@ Time(2,0,0,0)
 
 >> Min(Time(1,50,0),Time(2,0,0))
 Time(1,50,0,0)
-
->> Max(Date(2022,3,8),DateTime(2022,3,8,13,50,0))
-DateTime(2022,3,8,13,50,0,0)
-
->> Min(Date(2022,3,8),DateTime(2022,3,8,13,50,0))
-DateTime(2022,3,8,0,0,0,0)
-
-// ****** Mix and numeric and date/time arguments, scalar arguments (result is numeric) ******
-
-// Date(2022, 9, 9) = 44813
->> Max(Date(2022, 9, 9), 50000)
-50000
-
->> Min(Date(2022, 9, 9), 50000)
-44813
-
->> Max(Date(2022, 9, 9), 40000)
-44813
-
->> Min(Date(2022, 9, 9), 40000)
-40000
 
 // ****** Coercions, scalar arguments ******
 
@@ -275,10 +250,10 @@ Date(1986,10,19)
 Date(1985,3,5)
 
 >> Max(Sequence(10000), DateAdd(Date(2000,1,1), -Value, TimeUnit.Days))
-DateTime(1999,12,31,0,0,0,0)
+Date(1999,12,31)
 
 >> Min(Sequence(10000), DateAdd(Date(2000,1,1), -Value, TimeUnit.Days))
-DateTime(1972,8,15,0,0,0,0)
+Date(1972,8,15)
 
 >> Max(Sequence(10), Date(2000,1,10 + Value))
 Date(2000,1,20)
@@ -320,3 +295,14 @@ Errors: Error 13-16: Expected number. We expect a number at this point in the fo
 >> Max([1,2,3], [1])
 Errors: Error 13-16: Expected number. We expect a number at this point in the formula.|Error 0-17: The function 'Max' has some invalid arguments.
 
+>> Max(Table({a:1},Blank(),{a:3}), If(IsBlank(ThisRecord),100,a))
+100
+
+>> Max([-1, Blank(), -3], If(IsBlank(ThisRecord),100,Value))
+-1
+
+>> Min(Table({a:1},Blank(),{a:3}), If(IsBlank(ThisRecord),-100,a))
+-100
+
+>> Min([1, Blank(), 3], If(IsBlank(ThisRecord),-100,Value))
+1

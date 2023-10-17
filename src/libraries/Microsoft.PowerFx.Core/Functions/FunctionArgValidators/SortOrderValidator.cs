@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             Contracts.AssertValue(order);
 
             validatedSortOrder = string.Empty;
-            order = order.ToLower();
+            order = order.ToLowerInvariant();
             if (order != LanguageConstants.AscendingSortOrderString && order != LanguageConstants.DescendingSortOrderString)
             {
                 return false;
@@ -119,7 +119,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
                 return false;
             }
 
-            if (!binding.NameResolver.TryLookupEnum(new DName(LanguageConstants.SortOrderEnumStringInvariant), out var lookupInfo))
+            if (!binding.NameResolver.TryLookupEnum(new DName(LanguageConstants.SortOrderEnumString), out var lookupInfo))
             {
                 return false;
             }

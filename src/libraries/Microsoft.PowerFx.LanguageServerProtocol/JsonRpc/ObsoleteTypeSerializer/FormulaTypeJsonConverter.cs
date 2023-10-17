@@ -46,6 +46,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             return schema.Type switch
             {
                 FormulaTypeSchema.ParamType.Number => FormulaType.Number,
+                FormulaTypeSchema.ParamType.Decimal => FormulaType.Decimal,
                 FormulaTypeSchema.ParamType.String => FormulaType.String,
                 FormulaTypeSchema.ParamType.Boolean => FormulaType.Boolean,
                 FormulaTypeSchema.ParamType.Date => FormulaType.Date,
@@ -60,6 +61,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 FormulaTypeSchema.ParamType.Record => GetAggregateType(schema.Fields, isTable: false),
                 FormulaTypeSchema.ParamType.Table => GetAggregateType(schema.Fields, isTable: true),
 
+                FormulaTypeSchema.ParamType.Unsupported => throw new NotImplementedException(),
                 FormulaTypeSchema.ParamType.OptionSetValue => throw new NotImplementedException(),
                 FormulaTypeSchema.ParamType.EntityRecord => throw new NotSupportedException(),
                 FormulaTypeSchema.ParamType.EntityTable => throw new NotSupportedException(),

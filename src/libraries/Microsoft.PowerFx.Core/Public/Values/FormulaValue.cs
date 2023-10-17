@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
@@ -41,6 +42,25 @@ namespace Microsoft.PowerFx.Types
 
         public abstract void Visit(IValueVisitor visitor);
 
+        /// <summary>
+        /// Before mutation operations, call MaybeShallowCopy() to make a copy of the value.
+        /// For most values this is a no-op and will not make a copy. Only types which implement
+        /// IMutationCopy will have the opportunity to provide a copy.
+        /// </summary>
+        /// <returns>Shallow copy of FormulaValue.</returns>
+        public FormulaValue MaybeShallowCopy()
+        {
+            return CanShallowCopy && TryShallowCopy(out FormulaValue copy) ? copy : this;
+        }
+
+        public virtual bool TryShallowCopy(out FormulaValue copy)
+        {
+            copy = null;
+            return false;
+        }
+
+        public virtual bool CanShallowCopy => false;
+
         public abstract void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings);
 
         /// <summary>
@@ -57,6 +77,80 @@ namespace Microsoft.PowerFx.Types
             ToExpression(sb, settings);
 
             return sb.ToString();
+        }
+
+        public bool TryGetPrimitiveValue(out object val)
+        {
+            if (Type._type.IsPrimitive)
+            {
+                val = ToObject();
+                return true;
+            }
+
+            val = null;
+            return false;
+        }
+
+        public bool AsBoolean()
+        {
+            if (this is BlankValue)
+            {
+                return default;
+            }
+
+            if (TryGetPrimitiveValue(out object val))
+            {
+                if (val is bool b)
+                {
+                    return b;
+                }
+            }
+
+            throw new InvalidOperationException($"Can't coerce to double from {this.Type._type.GetKindString()})");
+        }
+
+        public double AsDouble()
+        {
+            if (this is BlankValue)
+            {
+                return default;
+            }
+
+            if (TryGetPrimitiveValue(out object val))
+            {
+                if (val is double d1)
+                {
+                    return d1;
+                }
+                else if (val is decimal d2)
+                {
+                    return (double)d2;
+                }
+            }
+
+            throw new InvalidOperationException($"Can't coerce to double from {this.Type._type.GetKindString()})");
+        }
+
+        public decimal AsDecimal()
+        {
+            if (this is BlankValue)
+            {
+                return default;
+            }
+
+            if (TryGetPrimitiveValue(out object val))
+            {
+                if (val is double d1)
+                {
+                    return (decimal)d1;
+                }
+                else if (val is decimal d2)
+                {
+                    return d2;
+                }
+            }
+
+            throw new InvalidOperationException($"Can't coerce to decimal from {this.Type._type.GetKindString()})");
         }
     }
 }

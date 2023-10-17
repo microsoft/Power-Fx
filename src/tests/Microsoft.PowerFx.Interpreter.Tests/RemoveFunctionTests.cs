@@ -43,29 +43,33 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 new NamedValue("f2", FormulaValue.New("mars")),
                 new NamedValue("f3", FormulaValue.New(false)));
 
-            var rRemove = FormulaValue.NewRecordFromFields(
+            var rRemove_error = FormulaValue.NewRecordFromFields(
                 new NamedValue("f3", FormulaValue.New(true)));
 
             var t1 = FormulaValue.NewTable(r1.Type, r1, r2, r3);
 
-            // Remode single
-            var list = new List<RecordValue>() { rRemove };
+            // Remove single
+            var result_error = await t1.RemoveAsync(new List<RecordValue>() { rRemove_error }, false, CancellationToken.None).ConfigureAwait(false);
 
-            await t1.RemoveAsync(list, false, CancellationToken.None);
+            Assert.IsType<ErrorValue>(result_error.ToFormulaValue());
+            Assert.Equal(3, t1.Count());
 
+            var list = new List<RecordValue>() { r1 };
+
+            await t1.RemoveAsync(list, false, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(2, t1.Count());
 
             var t2 = FormulaValue.NewTable(r1.Type, r1, r2, r3);
 
             // Remove all
-            await t2.RemoveAsync(list, true, CancellationToken.None);
+            await t2.RemoveAsync(list, true, CancellationToken.None).ConfigureAwait(false);
 
-            Assert.Equal(1, t2.Count());
+            Assert.Equal(2, t2.Count());
 
             // Immutable
             IEnumerable<RecordValue> source = new RecordValue[] { r1, r2, r3 };
             var t3 = FormulaValue.NewTable(r1.Type, source);
-            var result = await t3.RemoveAsync(list, false, CancellationToken.None);
+            var result = await t3.RemoveAsync(list, false, CancellationToken.None).ConfigureAwait(false);
 
             Assert.True(result.IsError);
             Assert.Equal("RemoveAsync is not supported on this table instance.", result.Error.Errors[0].Message);

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Numerics;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -16,8 +17,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     internal abstract class IsBlankFunctionBase : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Null | DelegationCapability.Filter;
@@ -27,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -35,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            if (!base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
+            if (!base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
             {
                 return false;
             }
@@ -110,7 +109,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (args[0] is not FirstNameNode node)
             {
-                var message = string.Format("Arg1 is not a firstname node, instead it is {0}", args[0].Kind);
+                var message = string.Format(CultureInfo.InvariantCulture, "Arg1 is not a firstname node, instead it is {0}", args[0].Kind);
                 AddSuggestionMessageToTelemetry(message, args[0], binding);
                 return false;
             }
@@ -129,8 +128,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel and DAX function: IsBlank
     internal sealed class IsBlankOptionSetValueFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public IsBlankOptionSetValueFunction()
@@ -141,11 +138,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.IsBlankArg1 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "OptionSetValue");
         }
     }
 }

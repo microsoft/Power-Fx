@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Diagnostics;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
@@ -18,7 +20,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// For telemetry - assembly version stamp. 
         /// </summary>
-        public static string Version { get; } = typeof(PowerPlatformConnectorClient).Assembly.GetName().Version.ToString();
+        public static string Version => typeof(PowerPlatformConnectorClient).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.Split('+')[0];
 
         /// <summary>
         /// Session Id for telemetry.
@@ -34,7 +36,7 @@ namespace Microsoft.PowerFx.Connectors
 
         /// <summary>
         /// Callback to get the auth token.
-        /// Invoke as a callback since token may need to be refreshed. 
+        /// Invoke as a callback since token may need to be refreshed.
         /// </summary>
         public Func<Task<string>> GetAuthToken { get; }
 
@@ -101,7 +103,7 @@ namespace Microsoft.PowerFx.Connectors
             req.Headers.Add("scheme", "https");
             req.Headers.Add("path", "/invoke");
             req.Headers.Add("x-ms-client-session-id", SessionId);
-            req.Headers.Add("x-ms-request-method", method.ToString());
+            req.Headers.Add("x-ms-request-method", method.ToString().ToUpperInvariant());
             req.Headers.Add("authorization", "Bearer " + authToken);
             req.Headers.Add("x-ms-client-environment-id", "/providers/Microsoft.PowerApps/environments/" + EnvironmentId);
             req.Headers.Add("x-ms-user-agent", $"PowerFx/{Version}");

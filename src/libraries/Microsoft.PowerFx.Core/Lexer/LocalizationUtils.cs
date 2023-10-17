@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Syntax
 {
+    // $$$ Dead code, except CurrentLocaleListSeparator (which also needs to be removed)
     internal sealed class LocalizationUtils
     {
         // The following properties/methods are referred to from JS (in Authoring mode) and should NOT be removed:
@@ -19,6 +20,7 @@ namespace Microsoft.PowerFx.Syntax
 
         // references from TS code come via AuthoringCore.d.ts and that needs to be kept current with this file
 
+        // $$$ can't use current culture                
         public static string CurrentLocaleDecimalSeparator => TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorDecimalSeparator;
 
         public static string CurrentLocaleListSeparator => TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator;
@@ -77,8 +79,10 @@ namespace Microsoft.PowerFx.Syntax
             Contracts.AssertNonEmpty(listItems);
 
             var singleQuoteFormat = StringResources.Get("ListItemSingleQuotedFormat");
+
+            // $$$ Need to remove usage of CurrentLocaleListSeparator
             var listSeparator = CurrentLocaleListSeparator + " ";
-            return string.Join(listSeparator, listItems.Select(item => string.Format(singleQuoteFormat, item)));
+            return string.Join(listSeparator, listItems.Select(item => string.Format(CultureInfo.InvariantCulture, singleQuoteFormat, item)));
         }
     }
 }

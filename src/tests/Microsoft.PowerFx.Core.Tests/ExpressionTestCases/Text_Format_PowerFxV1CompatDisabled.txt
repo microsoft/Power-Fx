@@ -1,0 +1,10 @@
+#SETUP: disable:PowerFxV1CompatibilityRules
+
+>> Text(123.466, "[$-en-US]$#0.0M")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1, "M#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR][$-en-US] # ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})

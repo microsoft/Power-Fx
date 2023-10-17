@@ -1,3 +1,5 @@
+#SETUP: TableSyntaxDoesntWrapRecords
+
 >> Index([10, 20, 30, 40, 50], 3)
 {Value:30}
 
@@ -43,7 +45,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Index(LastN([1, 2, 3, 4, 5], 3), 1)
 {Value:3}
 
->> Index([ {a:10, b: "asdf"}, {a: 20, b: "second"}, {a:30, b: "third"}], 1.1).Value.b
+>> Index([ {a:10, b: "asdf"}, {a: 20, b: "second"}, {a:30, b: "third"}], 1.1).b
 "asdf"
 
 >> Index(Error({Kind: 11}), 1)
@@ -51,3 +53,16 @@ Error({Kind:ErrorKind.Validation})
 
 >> Index([1, 2, 3, 4, 5], Error({Kind: 11}))
 Error({Kind:ErrorKind.Validation})
+
+// ********** Coercions ************
+>> Index([1,2,3,4,5], "3")
+{Value:3}
+
+>> Index([1,2,3,4,5], "4").Value
+4
+
+>> Index([1,2,3,4,5], true)
+{Value:1}
+
+>> Index([1,2,3,4,5], false)
+Error({Kind:ErrorKind.InvalidArgument})

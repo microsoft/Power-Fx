@@ -18,6 +18,6 @@ namespace Microsoft.PowerFx.Core.App.Controls
 
         TexlBinding Binding { get; }
 
-        bool HasErrors { get; }
+        bool HasErrorsOrWarnings { get; }
     }
 }

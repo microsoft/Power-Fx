@@ -1,0 +1,71 @@
+{
+  "value": [
+    {
+      "Id": "JTJmY29udGFpbmVyJTJmNTQ5OC50eHQ=",
+      "Name": "5498.txt",
+      "DisplayName": "5498.txt",
+      "Path": "/container/5498.txt",
+      "LastModified": "2023-07-31T13:32:57Z",
+      "Size": 0,
+      "MediaType": "text/plain",
+      "IsFolder": false,
+      "ETag": "\"0x8DB91CAA7105DF1\"",
+      "FileLocator": "JTJmY29udGFpbmVyJTJmNTQ5OC50eHQ=",
+      "LastModifiedBy": null
+    },
+    {
+      "Id": "JTJmY29udGFpbmVyJTJmNTQ5OS50eHQ=",
+      "Name": "5499.txt",
+      "DisplayName": "5499.txt",
+      "Path": "/container/5499.txt",
+      "LastModified": "2023-07-31T13:32:57Z",
+      "Size": 0,
+      "MediaType": "text/plain",
+      "IsFolder": false,
+      "ETag": "\"0x8DB91CAA7182500\"",
+      "FileLocator": "JTJmY29udGFpbmVyJTJmNTQ5OS50eHQ=",
+      "LastModifiedBy": null
+    },
+    {
+      "Id": "JTJmY29udGFpbmVyJTJmNTUudHh0",
+      "Name": "55.txt",
+      "DisplayName": "55.txt",
+      "Path": "/container/55.txt",
+      "LastModified": "2023-07-31T13:28:10Z",
+      "Size": 0,
+      "MediaType": "text/plain",
+      "IsFolder": false,
+      "ETag": "\"0x8DB91C9FBD74BE0\"",
+      "FileLocator": "JTJmY29udGFpbmVyJTJmNTUudHh0",
+      "LastModifiedBy": null
+    },
+    {
+      "Id": "JTJmY29udGFpbmVyJTJmNTUwLnR4dA==",
+      "Name": "550.txt",
+      "DisplayName": "550.txt",
+      "Path": "/container/550.txt",
+      "LastModified": "2023-07-31T13:28:36Z",
+      "Size": 0,
+      "MediaType": "text/plain",
+      "IsFolder": false,
+      "ETag": "\"0x8DB91CA0B411C4E\"",
+      "FileLocator": "JTJmY29udGFpbmVyJTJmNTUwLnR4dA==",
+      "LastModifiedBy": null
+    },
+    {
+      "Id": "JTJmY29udGFpbmVyJTJmNTUwMC50eHQ=",
+      "Name": "5500.txt",
+      "DisplayName": "5500.txt",
+      "Path": "/container/5500.txt",
+      "LastModified": "2023-07-31T13:32:57Z",
+      "Size": 0,
+      "MediaType": "text/plain",
+      "IsFolder": false,
+      "ETag": "\"0x8DB91CAA7201317\"",
+      "FileLocator": "JTJmY29udGFpbmVyJTJmNTUwMC50eHQ=",
+      "LastModifiedBy": null
+    }    
+  ],
+  "nextLink": "https://tip1-shared-002.azure-apim.net/apim/azureblob/d95489a91a5846f4b2c095307d86edd6/v2/datasets/pfxdevstgaccount1/foldersV2/container?nextPageMarker=2!72!MDAwMDA4ITk5OTkudHh0ITAwMDAyOCE5OTk5LTEyLTMxVDIzOjU5OjU5Ljk5OTk5OTlaIQ--&useFlatListing=False",
+  "nextPageMarker": "2!72!MDAwMDA4ITk5OTkudHh0ITAwMDAyOCE5OTk5LTEyLTMxVDIzOjU5OjU5Ljk5OTk5OTlaIQ--"
+}

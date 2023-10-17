@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -24,19 +23,25 @@ namespace Microsoft.PowerFx
 
         // Mapping between slots and logical names on RecordType.
         // name --> Slot; used at design time to ensure same slot per field. 
-        private readonly Dictionary<string, NameSymbol> _map = new Dictionary<string, NameSymbol>(); 
+        [ThreadSafeProtectedByLock("_map")]
+        private readonly Dictionary<string, NameSymbol> _map = new Dictionary<string, NameSymbol>();
+
+        internal RecordType Type => _type;
 
         public SymbolTableOverRecordType(RecordType type, ReadOnlySymbolTable parent = null, bool mutable = false, bool allowThisRecord = false)
         {
             _type = type;
             _debugName = "per-eval";
-            _parent = parent;
             _mutable = mutable;
             _allowThisRecord = allowThisRecord;
 
             if (_allowThisRecord)
             {
-                var data = new NameSymbol(TexlBinding.ThisRecordDefaultName, mutable: false)
+                var data = new NameSymbol(TexlBinding.ThisRecordDefaultName, new SymbolProperties
+                {
+                     CanMutate = false,
+                     CanSet = false
+                })
                 {
                     Owner = this,
                     SlotIndex = int.MaxValue
@@ -51,15 +56,83 @@ namespace Microsoft.PowerFx
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SymbolTableOverRecordType"/> class.
+        /// NOTE: Use this to block implicit ThisRecord.
+        /// </summary>
+        internal SymbolTableOverRecordType(RecordType type, ReadOnlySymbolTable parent = null, bool mutable = false)
+        {
+            _type = RecordType.Empty();
+            _debugName = "per-eval";
+            _mutable = mutable;
+            _allowThisRecord = true;
+
+            var data = new NameSymbol(TexlBinding.ThisRecordDefaultName, new SymbolProperties
+            {
+                CanMutate = false,
+                CanSet = false
+            })
+            {
+                Owner = this,
+                SlotIndex = int.MaxValue
+            };
+
+            _thisRecord = new NameLookupInfo(
+                    BindKind.PowerFxResolvedObject,
+                    type._type,
+                    DPath.Root,
+                    0,
+                    data: data);
+        }
+
+        internal override void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts)
+        {
+            // skip implicit scope. Just add "ThisRecord"
+            if (_allowThisRecord)
+            {
+                this._thisRecord.TryToSymbolEntry(out var x);
+                names.Add(x);
+            } 
+            else
+            {
+                base.EnumerateNames(names, opts);
+            }
+        }
+
         // Key is the logical name. 
         // Display names are in the NameLookupInfo.DisplayName field.
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols
         {
             get
             {
-                foreach (var kv in _type.GetFieldTypes())
+                // Don't build type if row scope has external sources as that can take a lot of time and hang intellisense
+                // https://github.com/microsoft/Power-Fx/issues/1212
+                if (_type._type.AssociatedDataSources.Any())
                 {
-                    yield return new KeyValuePair<string, NameLookupInfo>(kv.Name, Create(kv.Name, kv.Type));
+                    foreach (var field in _type.FieldNames)
+                    {
+                        DType.TryGetDisplayNameForColumn(_type._type, field, out var displayName);
+                        DName dName = default;
+                        if (DName.IsValidDName(displayName))
+                        {
+                            dName = new DName(displayName);
+                        }
+
+                        var info = new NameLookupInfo(BindKind.TypeName, DType.Deferred, DPath.Root, 0, displayName: dName);
+                        yield return new KeyValuePair<string, NameLookupInfo>(field, info);
+                    }
+                }
+                else
+                {
+                    foreach (var kv in _type.GetFieldTypes())
+                    {
+                        yield return new KeyValuePair<string, NameLookupInfo>(kv.Name, Create(kv.Name, kv.Type));
+                    }
+                }
+
+                if (_allowThisRecord)
+                {
+                    yield return new KeyValuePair<string, NameLookupInfo>(TexlBinding.ThisRecordDefaultName, _thisRecord);
                 }
             }
         }
@@ -68,9 +141,17 @@ namespace Microsoft.PowerFx
         {
             return slot.SlotIndex == int.MaxValue;
         }
-
-        internal override bool TryLookup(DName name, out NameLookupInfo nameInfo)
+                
+        bool INameResolver.Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences)
         {
+            if (preferences.HasFlag(NameLookupPreferences.GlobalsOnly))
+            {
+                // Global, specified by [@name]  syntax, mean we skip RowScope. 
+
+                nameInfo = default;
+                return false;
+            }
+        
             if (_allowThisRecord)
             {
                 if (name == TexlBinding.ThisRecordDefaultName)
@@ -132,16 +213,25 @@ namespace Microsoft.PowerFx
         {
             var hasDisplayName = DType.TryGetDisplayNameForColumn(_type._type, logicalName, out var displayName);
 
-            if (!_map.TryGetValue(logicalName, out var data))
-            {                                                
-                var slotIdx = _map.Count;
-
-                data = new NameSymbol(logicalName, _mutable)
+            NameSymbol data;
+            lock (_map)
+            {
+                if (!_map.TryGetValue(logicalName, out data))
                 {
-                    Owner = this,
-                    SlotIndex = slotIdx
-                };
-                _map.Add(logicalName, data);
+                    // Slot is based on map count, so whole operation needs to be under single lock. 
+                    var slotIdx = _map.Count;
+
+                    data = new NameSymbol(logicalName, new SymbolProperties
+                    {
+                        CanSet = _mutable,
+                        CanMutate = false
+                    })
+                    {
+                        Owner = this,
+                        SlotIndex = slotIdx
+                    };
+                    _map.Add(logicalName, data);
+                }
             }
 
             return new NameLookupInfo(

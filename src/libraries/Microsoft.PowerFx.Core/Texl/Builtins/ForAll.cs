@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.ForAllArg1, TexlStrings.ForAllArg2 };
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -46,7 +46,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var fArgsValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            nodeToCoercedTypeMap = null;
+            var fArgsValid = CheckType(context, args[0], argTypes[0], ParamTypes[0], errors, ref nodeToCoercedTypeMap);
 
             if (argTypes[1].IsRecord)
             {
@@ -55,6 +56,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             else if (argTypes[1].IsPrimitive || argTypes[1].IsTable || argTypes[1].IsUntypedObject)
             {
                 returnType = DType.CreateTable(new TypedName(argTypes[1], ColumnName_Value));
+            }
+            else if (argTypes[1].IsVoid)
+            {
+                returnType = argTypes[1];
             }
             else
             {
@@ -70,11 +75,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(index >= 0);
 
             return index == 0;
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: isPrefetching ? "_ParallelPrefetching" : string.Empty);
         }
     }
 
@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.ForAllArg1, TexlStrings.ForAllArg2 };
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -104,7 +104,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var fArgsValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            nodeToCoercedTypeMap = null;
+            var fArgsValid = CheckType(context, args[0], argTypes[0], ParamTypes[0], errors, ref nodeToCoercedTypeMap);
 
             if (argTypes[1].IsRecord)
             {
@@ -113,6 +114,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             else if (argTypes[1].IsPrimitive || argTypes[1].IsTable || argTypes[1].IsUntypedObject)
             {
                 returnType = DType.CreateTable(new TypedName(argTypes[1], ColumnName_Value));
+            }
+            else if (argTypes[1].IsVoid)
+            {
+                returnType = argTypes[1];
             }
             else
             {
@@ -128,11 +133,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(index >= 0);
 
             return index == 0;
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_UO");
         }
     }
 }

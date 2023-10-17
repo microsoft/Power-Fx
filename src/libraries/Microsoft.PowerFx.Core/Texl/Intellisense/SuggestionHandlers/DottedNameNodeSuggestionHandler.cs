@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Intellisense
 
                 var isOneColumnTable = leftType.IsColumn
                                         && leftNode.Kind == NodeKind.DottedName
-                                        && leftType.Accepts(intellisenseData.Binding.GetType(((DottedNameNode)leftNode).Left));
+                                        && leftType.Accepts(intellisenseData.Binding.GetType(((DottedNameNode)leftNode).Left), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
 
                 if (cursorPos < ident.Token.Span.Min)
                 {
@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Intellisense
 
                 return data.TryGetEnumSymbol(firstNameInfo.Name, binding, out enumSymbol);
             }
-
+            
             private static bool TryGetNamespaceFunctions(TexlNode node, TexlBinding binding, out IEnumerable<TexlFunction> functions)
             {
                 Contracts.AssertValue(node);
@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx.Intellisense
                 Contracts.AssertValid(firstNameInfo.Name);
 
                 var namespacePath = new DPath().Append(firstNameInfo.Name);
-                functions = binding.NameResolver.LookupFunctionsInNamespace(namespacePath);
+                functions = binding.NameResolver.LookupFunctionsInNamespace(namespacePath).Where(f => !f.IsDeprecatedOrInternalFunction);
 
                 return functions.Any();
             }

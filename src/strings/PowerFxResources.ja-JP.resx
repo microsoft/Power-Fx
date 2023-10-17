@@ -126,15 +126,15 @@
     
   </data>
   <data name="IfArgCond" xml:space="preserve">
-    <value>論理式</value>
+    <value>論理テスト</value>
     
   </data>
   <data name="IfArgTrueValue" xml:space="preserve">
-    <value>trueの場合の_値</value>
+    <value>true の場合の値</value>
     
   </data>
   <data name="IfArgElseValue" xml:space="preserve">
-    <value>その他の場合の_値</value>
+    <value>その他の場合の値</value>
     
   </data>
   <data name="AboutIf_logical_test" xml:space="preserve">
@@ -153,27 +153,27 @@
     
   </data>
   <data name="SwitchExpression" xml:space="preserve">
-    <value>switch_値</value>
+    <value>スイッチ値</value>
     
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
-    <value>既定の_結果</value>
+    <value>既定の結果</value>
     
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
-    <value>一致した_値</value>
+    <value>一致した値</value>
     
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
-    <value>一致した_結果</value>
+    <value>一致した結果</value>
     
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
-    <value>各 "一致した_値" と比較する値。</value>
+    <value>各 "一致した値" と比較する値。</value>
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
-    <value>switch_値と一致する値。</value>
+    <value>スイッチ値と一致する値です。</value>
     
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
@@ -385,7 +385,7 @@
     
   </data>
   <data name="FilterArg2" xml:space="preserve">
-    <value>論理式</value>
+    <value>論理テスト</value>
     
   </data>
   <data name="AboutFilter_source" xml:space="preserve">
@@ -425,7 +425,7 @@
     
   </data>
   <data name="FirstLastNArg2" xml:space="preserve">
-    <value>カウント</value>
+    <value>件数</value>
     
   </data>
   <data name="AboutFirstN_source" xml:space="preserve">
@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>処理する数値の列。</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>'ブール値' をブール値に変換します。</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>ブール値</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>ブール値に変換するブール値です。</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>ブール値の列をブール値の列に変換します。</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>入力</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>処理するブール値の列です。</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>空でない最初の引数を返します</value>
     
@@ -544,6 +566,24 @@
   <data name="AboutConcatenate" xml:space="preserve">
     <value>複数のテキスト値を 1 つのテキスト値に結合します。</value>
     
+  </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>数値を表す 'テキスト' を10 進値に変換します。</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>値の変換に使う言語コード。</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>10 進値に変換するテキスト値です。</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>数値を表す 'テキスト' を浮動小数値に変換します。</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>値の変換に使う言語コード。</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>浮動小数値に変換するテキスト値です。</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>テキスト</value>
@@ -608,7 +648,7 @@
     
   </data>
   <data name="LenTArg1" xml:space="preserve">
-    <value>テキスト_列</value>
+    <value>テキスト列</value>
     
   </data>
   <data name="AboutUpper" xml:space="preserve">
@@ -698,7 +738,7 @@
     
   </data>
   <data name="StringTFuncArg1" xml:space="preserve">
-    <value>テキスト_列</value>
+    <value>テキスト列</value>
     
   </data>
   <data name="StringFuncArg2" xml:space="preserve">
@@ -773,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>エラーではない最初の引数である場合に返される値です。</value>
+    <value>前の引数がエラーである場合に返される値です。</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -789,7 +829,7 @@
     
   </data>
   <data name="SubstituteTFuncArg1" xml:space="preserve">
-    <value>テキスト_列</value>
+    <value>テキスト列</value>
     
   </data>
   <data name="SubstituteFuncArg2" xml:space="preserve">
@@ -801,7 +841,7 @@
     
   </data>
   <data name="SubstituteFuncArg4" xml:space="preserve">
-    <value>置換</value>
+    <value>インスタンス番号</value>
     
   </data>
   <data name="AboutSubstitute_text" xml:space="preserve">
@@ -842,7 +882,8 @@
     <value>'ソース' 内の行を評価し、並べ替え用の値を提供する式。</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>昇順または降順</value>
+    <value>SortOrder.Ascending または SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>列に基づいて 'ソース' を並べ替えます。並べ替え '順序' を指定することもできます。</value>
@@ -867,7 +908,8 @@
     <value>列の一意の名前。</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>昇順または降順</value>
+    <value>SortOrder.Ascending または SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>指定された列の一致する値のインデックスに基づいて 'ソース' を並べ替えます。</value>
@@ -889,7 +931,7 @@
     <value>並べ替えに使用する値の列。並べ替えは昇順または降順ではなく、この列の一致する値のインデックスに基づいて行われます</value>
   </data>
   <data name="AboutRand" xml:space="preserve">
-    <value>0 以上 1 未満の新しい乱数を返します。</value>
+    <value>均等に分散させた 0 以上 1 未満の新しい乱数を返します。</value>
     
   </data>
   <data name="AboutRandBetween" xml:space="preserve">
@@ -907,7 +949,7 @@
     
   </data>
   <data name="RandBetweenArg2" xml:space="preserve">
-    <value>上位</value>
+    <value>最高</value>
     
   </data>
   <data name="AboutGUID" xml:space="preserve">
@@ -915,7 +957,7 @@
     
   </data>
   <data name="GUIDArg" xml:space="preserve">
-    <value>GUID_文字列</value>
+    <value>GUID 文字列</value>
     
   </data>
   <data name="AboutGUID_GUID_string" xml:space="preserve">
@@ -979,6 +1021,46 @@
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>ISO 週番号を計算する日付の値です。</value>
+  </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>月を変更した日付を返します。日は変わりませんが、変更後の月の最終日以下に制限されます。</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>日付</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>か月</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>指定した月数で変更された日付の値です。</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>日付の変更に適用する月数です。正の値を指定すると未来の日付に、負の値を指定すると過去の日付に変わります。ゼロを指定すると月は変わりません。</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>指定された日付を月数で変更した後の、月の最終日を返します。</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>日付</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>か月</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>指定した月数で変更された日付の値です。</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;日付の変更に適用する月数です。正の値を指定すると未来の日付に、負の値を指定すると過去の日付に変わります。ゼロを指定すると月は変わりません。</value>
+         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>負の無限大に丸めることで、'number' を切り詰めます。</value>
@@ -1111,7 +1193,7 @@
     
   </data>
   <data name="RGBAArg4" xml:space="preserve">
-    <value>アルファ_値</value>
+    <value>アルファ値</value>
     
   </data>
   <data name="AboutRGBA_red_value" xml:space="preserve">
@@ -1152,7 +1234,7 @@
     
   </data>
   <data name="ColorFadeTArg2" xml:space="preserve">
-    <value>フェード_または_列</value>
+    <value>フェードまたは列</value>
     
   </data>
   <data name="AboutColorFade_color_or_column" xml:space="preserve">
@@ -1367,6 +1449,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>処理する数値列の値 (ラジアン単位)。</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>テーブルの 1 つまたは複数の列に対して式を評価し、評価された式の固有 (一意) の値が含まれる 1 列のテーブルを返します。</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>ソース</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>式</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>固有の値を抽出する元となるテーブル。</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>入力テーブルの各行を評価し、DISTINCT 操作の対象となる値を提供する式。</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>指定した X 座標と Y 座標のアークタンジェント (ラジアン単位) を返します。</value>
   </data>
@@ -1404,6 +1503,14 @@
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>入力</value>
+    
+  </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>修飾子</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>修飾子</value>
     
   </data>
   <data name="AboutLeft" xml:space="preserve">
@@ -1445,7 +1552,7 @@
     
   </data>
   <data name="LeftRightTArg1" xml:space="preserve">
-    <value>テキスト_列</value>
+    <value>テキスト列</value>
     
   </data>
   <data name="LeftRightArg2" xml:space="preserve">
@@ -1675,7 +1782,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>パラメーターを持つコンポーネント カスタム データ プロパティには、コンポーネント内またはコンポーネント出力プロパティからのみアクセスできます。</value>
+    <value>コンポーネントの関数プロパティまたはパラメーターには、コンポーネント内またはコンポーネント出力プロパティからのみアクセスできます。</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>コンポーネントの関数プロパティまたはパラメーターは、他の関数プロパティのみを参照できます。</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1742,20 +1853,8 @@
     <value>最初の引数 '{0}' は、1 列のテーブルである必要があります。</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>スキーマが無効です。テキスト値の列が '{0}' に必要です。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>スキーマが無効です。日付の値の列が '{0}' に必要です。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>スキーマが無効です。数値の列が '{0}' に必要です。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>スキーマが無効です。色の値の列が '{0}' に必要です。</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>スキーマが無効です。{0} の列、'{1}' の値が必要です。</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1798,8 +1897,28 @@
     <value>数値が大きすぎます。</value>
     
   </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>現在対応していない予約語を使用しました。</value>
+    
+  </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>式を {0} 文字より長くすることはできません。この式の文字数は {1} です。</value>
+    
+  </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>書式設定の文字列のサイズは {0} 文字以内にしてください。</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>無効な形式です。</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>引数が有効な日付または時刻の値を表していません。</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>このデータ ソースは無効です。[コンテンツ] -&gt; [データ ソース] または [表示] -&gt; [オプション] の順にクリックして、[データ ソース] ウィンドウでエラーを修正してください。</value>
+    <value>このデータ ソースは無効です。[コンテンツ] -&gt; [データ ソース] または [表示] -&gt; [オプション] の順にクリックして、[データ ソース] ウィンドウでエラーを修正してください</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -1816,6 +1935,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>この引数 '{0}' の型は必要な型 '{1}' と一致しません。見つかった型 '{2}'。</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>この式の型が予期される型 '{0}' と一致しません。見つかった型 '{1}'。</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -1854,6 +1977,10 @@
     <value>式の型で並べ替えることはできません。</value>
     
   </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>式の型には distinct を適用できません。</value>
+    
+  </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
     <value>型エラー: {0} には、{1}、または {1} 型のテーブル列が必要です。</value>
     
@@ -1883,7 +2010,7 @@
     
   </data>
   <data name="InfoMessage" xml:space="preserve">
-    <value>メッセージ</value>
+    <value>メッセージ: </value>
     
   </data>
   <data name="InfoNode_Node" xml:space="preserve">
@@ -2141,7 +2268,7 @@
     <value>表示されたテキストの言語コード。</value>
   </data>
   <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
-    <value>動作規則では、サービス機能の自動更新は使用できません。</value>
+    <value>動作ルールでは、サービス機能の自動更新は使用できません。</value>
     
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
@@ -2240,6 +2367,9 @@
   <data name="MathAndStat" xml:space="preserve">
     <value>数学 &amp; 統計</value>
   </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
+  </data>
   <data name="Information" xml:space="preserve">
     <value>情報</value>
   </data>
@@ -2263,7 +2393,7 @@
     
   </data>
   <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
-    <value>属性 '{0}' に無効な GUID 値 '{1}' が含まれています。</value>
+    <value>属性 '{0}' の GUID 値 '{1}' が無効です。</value>
     
   </data>
   <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
@@ -2305,7 +2435,7 @@
     
   </data>
   <data name="DateAddArg2" xml:space="preserve">
-    <value>単位_の_数</value>
+    <value>単位の数</value>
     
   </data>
   <data name="DateAddArg3" xml:space="preserve">
@@ -2319,7 +2449,7 @@
     <value>追加する単位数。数は負にできます。</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>使用する単位。Years、Quarters、Months、Days、Hours、Minutes、Seconds、Milliseconds のいずれかを指定できます。</value>
+    <value>使用する単位。次のいずれか: TimeUnit.Years、TimeUnit.Quarters、TimeUnit.Months、TimeUnit.Days、TimeUnit.Hours、TimeUnit.Minutes、TimeUnit.Seconds、TimeUnit.Milliseconds。</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2341,7 +2471,7 @@
     <value>比較操作の終了日付。</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>結果を表す単位。Years、Quarters、Months、Days、Hours、Minutes、Seconds、Milliseconds のいずれかを指定できます。</value>
+    <value>結果を表す単位。次のいずれか: TimeUnit.Years、TimeUnit.Quarters、TimeUnit.Months、TimeUnit.Days、TimeUnit.Hours、TimeUnit.Minutes、TimeUnit.Seconds、TimeUnit.Milliseconds。</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2357,7 +2487,7 @@
     
   </data>
   <data name="DateAddTArg2" xml:space="preserve">
-    <value>単位_の_数</value>
+    <value>単位の数</value>
     
   </data>
   <data name="DateAddTArg3" xml:space="preserve">
@@ -2530,7 +2660,7 @@
     
   </data>
   <data name="Hide_Calendar_DisplayName" xml:space="preserve">
-    <value>予定表の非表示</value>
+    <value>カレンダーの非表示</value>
     
   </data>
   <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
@@ -2591,10 +2721,6 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>テスト対象の値。</value>
-  </data>
-  <data name="Post" xml:space="preserve">
-    <value>投稿</value>
-    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>テキスト形式の日時を Power Apps の日時コード形式の日付を表す数値に変換します。</value>
@@ -2774,7 +2900,7 @@
     
   </data>
   <data name="StartsWithArg2" xml:space="preserve">
-    <value>先頭のテキスト</value>
+    <value>先頭</value>
     
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
@@ -2792,7 +2918,7 @@
     
   </data>
   <data name="EndsWithArg2" xml:space="preserve">
-    <value>end</value>
+    <value>終了</value>
     
   </data>
   <data name="AboutBlank" xml:space="preserve">
@@ -2874,6 +3000,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>地球</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe - 未接続</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe - 更新</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe - 変更保留中</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe - 警告</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe - エラー</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -3013,7 +3159,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>列車</value>
+    <value>トレーニングする</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3073,7 +3219,7 @@
     
   </data>
   <data name="Icon_Leave_DisplayName" xml:space="preserve">
-    <value>移動</value>
+    <value>終了</value>
     
   </data>
   <data name="Icon_Paste_DisplayName" xml:space="preserve">
@@ -3149,7 +3295,7 @@
     
   </data>
   <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
-    <value>スタート画面</value>
+    <value>先頭</value>
     
   </data>
   <data name="LayoutAlignItems_Center_DisplayName" xml:space="preserve">
@@ -3165,7 +3311,7 @@
     
   </data>
   <data name="AlignInContainer_Start_DisplayName" xml:space="preserve">
-    <value>スタート画面</value>
+    <value>先頭</value>
     
   </data>
   <data name="AlignInContainer_Center_DisplayName" xml:space="preserve">
@@ -3185,7 +3331,7 @@
     
   </data>
   <data name="LayoutJustifyContent_Start_DisplayName" xml:space="preserve">
-    <value>スタート画面</value>
+    <value>先頭</value>
     
   </data>
   <data name="LayoutJustifyContent_Center_DisplayName" xml:space="preserve">
@@ -3268,6 +3414,38 @@
     <value>コントラストのテーマ</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>データ ソースにレコードを追加します。</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>レコード</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>コレクションのすべてのレコードを削除します。コレクションの列は残ります。</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>コレクションからすべてのレコードを削除します。その後、別のレコード セットを同じコレクションに追加します。</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>レコード</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>指定された行に更新を適用し、指定されたデータソースの行を変更します。更新された行を返します。</value>
     
@@ -3333,7 +3511,7 @@
     
   </data>
   <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
-    <value>中央</value>
+    <value>中央揃え</value>
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
@@ -3357,11 +3535,11 @@
     
   </data>
   <data name="TextPosition_Left_DisplayName" xml:space="preserve">
-    <value>左へ移動</value>
+    <value>左</value>
     
   </data>
   <data name="TextPosition_Right_DisplayName" xml:space="preserve">
-    <value>右へ移動</value>
+    <value>右</value>
     
   </data>
   <data name="Transition_Push_DisplayName" xml:space="preserve">
@@ -3433,7 +3611,7 @@
     
   </data>
   <data name="BarcodeType_RssExpanded_DisplayName" xml:space="preserve">
-    <value>RSS Expanded</value>
+    <value>RSS 展開済み</value>
     
   </data>
   <data name="BarcodeType_Upc_DisplayName" xml:space="preserve">
@@ -3721,7 +3899,7 @@
     
   </data>
   <data name="Icon_CalendarBlank_DisplayName" xml:space="preserve">
-    <value>空白の予定表</value>
+    <value>空白のカレンダー</value>
     
   </data>
   <data name="Icon_OfficeBuilding_DisplayName" xml:space="preserve">
@@ -3952,94 +4130,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>計算式列では使用できません。</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>{0} 関数の引数の数が無効です: 受取済み {1}、必要 {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>計算式列に含まれる関数 {1} で引数 {0} を使用することはできません。</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>計算式列で、この引数をこの型で渡すことはできません。</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>数式列では、この引数を {0} 型として渡せません。</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>この引数ではリテラル値のみを使用できます。</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>この入力でタイム ゾーンを変換せずに {0} を実行することは、計算式列でサポートされていないため、可能ではありません。</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>この操作を、日時の動作が同じでない値に対して実行することはできません。</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>計算式列では、短い文字列形式の日時のみを使用できます。</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>{0} 引数の時間の単位は、{1} 日付計算関数で無効またはサポートされていません。</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>計算式列はロケール固有の書式トークン ("." や "," など) をサポートしていません。</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>計算式列は {0} をサポートしていません。代わりに {1} を使用します。</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>数式列では、この操作を {0} 型で実行できません。</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>結果の種類 {0} は、計算式列に対応していません。</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>数式列はレコード全体の直接参照に対応していません。レコードが含む有効なフィールドを参照してください。</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>この計算式の結果タイプは {0} であるはずですが、実際の結果タイプは {1} です。計算式列の結果タイプは変更できません。</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>型が {0} である列は、計算式列に対応していません。</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>型が {0}、形式が {1} である列は、計算式列に対応していません。</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>数式列はレコードやテーブルの強制変換に対応していません。</value>
-    
-  </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>計算式を 1,000 文字より長くすることはできません。</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>数式列は単一列テーブルに対応していません。</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>数式列で仮想テーブル {0} を参照できません。</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>オペランドが必要です。数式または式に有効なオペランドが必要です。たとえば、式 '1 + _' にオペランド '2' を追加すると、結果は '3' になります。または、式 '"Hi "&amp; _ ' にオペランド "there" を追加すると、結果は 'Hi there' になります。</value>
     
@@ -4142,10 +4232,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>このエラーは、構文が無効なコンポーネントの動作プロパティを数式が参照している場合に表示されます (例: Component.OnCustomChange() ではなく Component.OnCustomChange)。</value>
+    <value>このエラーは、式が無効な構文でコンポーネントの関数プロパティを参照している場合 (Component.CustomFunction() ではなく Component.CustomFunction など) に表示されます。</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>正しい構文を使用してコンポーネントの動作プロパティを参照してください。例: Component.OnCustomChange()</value>
+    <value>正しい構文を使用してコンポーネントの関数プロパティを参照してください。例: Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4335,6 +4425,10 @@
     <value>識別子のテキストがあることを確認してください。このエラーは、識別子がすべて空白またはスペースである場合に発生します。</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>型が {0} である値は比較できません。</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>型に互換性がないため比較できません。{0} と {1} の型は比較できません。</value>
     
@@ -4396,6 +4490,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>記事: Power Apps の数式のリファレンス</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>互換性のない型です。レコードに追加しようとしている項目には、レコードと互換性がない型が含まれています。</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4460,15 +4558,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
-    <value>数式を簡単にしてみてください。</value>
+    <value>数式を簡単にしてください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
-    <value>データを別のデータ ソースに移動してみてください。</value>
+    <value>別のデータ ソースにデータを移動してください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
-    <value>記事: キャンバス アプリでの委任を理解する</value>
+    <value>記事: キャンバス アプリでの委任について</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
@@ -4487,15 +4585,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
-    <value>数式を簡単にしてみてください。</value>
+    <value>数式を簡単にしてください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
-    <value>データを別のデータ ソースに移動してみてください。</value>
+    <value>別のデータ ソースにデータを移動してください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
-    <value>記事: キャンバス アプリでの委任を理解する</value>
+    <value>記事: キャンバス アプリでの委任について</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
@@ -4518,15 +4616,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
-    <value>数式を簡単にしてみてください。</value>
+    <value>数式を簡単にしてください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
-    <value>データを別のデータ ソースに移動してみてください。</value>
+    <value>別のデータ ソースにデータを移動してください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
-    <value>記事: キャンバス アプリでの委任を理解する</value>
+    <value>記事: キャンバス アプリでの委任について</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
@@ -4551,15 +4649,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
-    <value>数式を簡単にしてみてください。</value>
+    <value>数式を簡単にしてください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
-    <value>データを別のデータ ソースに移動してみてください。</value>
+    <value>別のデータ ソースにデータを移動してください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
-    <value>記事: キャンバス アプリでの委任を理解する</value>
+    <value>記事: キャンバス アプリでの委任について</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
@@ -4579,15 +4677,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
-    <value>数式を簡単にしてみてください。</value>
+    <value>数式を簡単にしてください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
-    <value>データを別のデータ ソースに移動してみてください。</value>
+    <value>別のデータ ソースにデータを移動してください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
-    <value>記事: キャンバス アプリでの委任を理解する</value>
+    <value>記事: キャンバス アプリでの委任について</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
@@ -4595,7 +4693,7 @@
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
-    <value>1 つのビューのみが必要です。この時点での数式で 1 つのビューのみが含まれるようにする必要があります。</value>
+    <value>1 つのビューのみが必要です。この時点で数式には 1 つのビューのみを含める必要があります。</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
@@ -4642,8 +4740,44 @@
     <value>As はこのコンテキストで許可されていません</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>型指定されていないオブジェクトを、レコード スコープをサポートする関数への第一引数として使用することはできません。</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>名前付き計算式はセミコロンで終わる必要があります。</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>名前付き計算式は式である必要があります。</value>
+    
+  </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>ユーザーが定義した関数には本文が必要です。</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>関数 {0} は既に定義されています。</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>パラメーター {0} が重複しています。</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>不明なタイプ {0}。</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>宣言した関数の戻り値タイプが、関数本文の戻り値タイプと一致しません。</value>
+    
+  </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>関数の戻り値の型 (例: "FindMonth( d:Text ):Number = Month( DateParse( d ));" の ":Number") が見つかりません</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>関数の引数の型 (例: "FindMonth( d:Text ):Number = Month( DateParse( d ))" の ":Text") が見つかりません</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4725,6 +4859,257 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>この機能は廃止されたため、現在はサポートされていません。</value>
+    
+  </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>名前空間 {1}、関数 {0} は廃止されています。</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>名前空間 {1}、関数 {0} はサポートされていません。</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>警告: 未定の型が指定されています。</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>予期される識別子名</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>この関数はあいまいです。Lambda 式と列識別子が同じ引数に含まれています。</value>
+    
+  </data>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>オプション {0} の型が予期された型 {1} ではありません。</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>指定されたオプション セット値の論理名を返します。</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>オプション</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>論理名が返されるオプション セット値です。</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>実行時に設定される既定のロケールを取得します。</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>URL 文字列をエンコードし、特定の英数字以外の文字を % と 16 進数値に置き換えます。</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>エンコードされる URL です。</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' は認識されましたが、サポートされない関数です。</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>必要な種類 '{1}' に対して種類 '{0}' の値を指定したため、種類の変換が失敗しました。</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>テーブル '{0}' の行数が {1} を超える場合、この操作は機能しない可能性があります。</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>この述語は常に true になります。ThisRecord や [@ ] の使用を意図していますか?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>{0} を委任できません: サポートしているのは主キー フィールド '{1}' に対するルックアップの委任のみです。</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>{0} をデリゲートできません: 式が複数のフィールドを比較しています。</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>{0} を委任できません: 動作機能 '{1}' を含みます。</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>指定されたテキストが指定されたテキスト形式に一致しているかどうかを判定します。</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>形式と比較するテキスト。</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>テキストを照合する形式。これは、TextFormat 列挙型の値、または正規表現である場合があります。</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>これにより、照合するテキストの部分が決定します。これは、MatchOptions 列挙型の値である場合があります。</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>テキスト</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>形式</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>範囲</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>指定された正規表現の指定されたテキストを検索します。最初の一致項目が返されます。</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>指定された正規表現の指定されたテキストを検索します。すべての一致項目が返されます。</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>正規表現に対して検索するテキスト。</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>テキストをチェックする正規表現。キャプチャ (かっこ間の値) を含めることができます。その場合、一致項目があると返されます。</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>これにより、照合するテキストの部分が決定します。これは、MatchOptions 列挙型の値である場合があります。</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>正規表現に対して検索するテキスト。</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>テキストをチェックする正規表現。キャプチャ (かっこ間の値) を含めることができます。その場合、一致項目があると返されます。</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>これにより、照合するテキストの部分が決定します。これは、MatchOptions 列挙型の値である場合があります。</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>テキスト</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>正規表現</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>オプション</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>指定したデータ ソースを更新します。</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>接続先データソース</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>レコードまたはテーブルの値が必要です。</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>更新する接続済みのデータ ソース。</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>マネージド接続のみ、最新の情報に更新できます。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>正規表現が無効です。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>正規表現は定数値である必要があります。</value>
+    
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>'{0}' 関数に渡された値は変更できません。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>キャプチャ名 '{0}' は正規表現の完全一致を返す定義済みのプロパティを非表示にします。その名前付きプロパティを使用して、指定したテキストから完全一致を抽出する場合は、名前の変更を検討してください。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>キャプチャ名 '{0}' は正規表現と一致するグループを返す定義済みのプロパティを非表示にします。その名前付きプロパティを使用して、指定したテキストからすべての sub-match を抽出する場合は、名前の変更を検討してください。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>キャプチャ名 '{0}' は正規表現に一致する場所を返す定義済みのプロパティを非表示にします。その名前付きプロパティを使用して、指定したテキストから完全一致の位置を抽出する場合は、名前の変更を検討してください。</value>
+    
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>すべての書式設定を削除し、プレーンテキストの値を返します。</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>テキスト</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>HTML タグと XML タグを削除するテキストです。</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>フィルター関数が予測を行う関数として動作することはできません。</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>複数の予測を第 2 引数に結合するには、And 演算子を使用します。</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>このレコードはコピーできません。ForAll 関数および {...} の表記を使用してインライン テーブルを作成し、必要な列を個別にコピーしてください。</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>このレコードはコピーできません。{...} の表記を使用してインライン レコードを作成し、必要なフィールドを個別にコピーしてください。</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>'{0}' 関数の第 2 引数に指定できるのは、数値と日付/時刻の値のみです。</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>変数をオンラインのデータ ソース値 (テーブルまたはレコード) に設定すると、サーバーへの要求が複数発生する可能性があります。これはすぐにブロックされます。</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>タイプ リテラルの宣言が無効です</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。指定された種類には次の余分なフィールドが存在します: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。指定された型に次のフィールドが見つかりません: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。ファイル名: {0} が見つかりません。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。ファイル名: {0}、予期: {1}、実際: {2}</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>指定された種類 {0} は、ソースの種類 {1} には強制的に変換できません。</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>ソースとターゲットの間で種類が一致しません。予期: {0}、実際: {1}</value>
     
   </data>
 </root>

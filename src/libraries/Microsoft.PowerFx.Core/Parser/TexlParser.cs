@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -24,10 +26,22 @@ namespace Microsoft.PowerFx.Core.Parser
             EnableExpressionChaining = 1 << 0,
 
             // When specified, this is a named formula to be parsed. Mutually exclusive to EnableExpressionChaining.
-            NamedFormulas = 1 << 1
+            NamedFormulas = 1 << 1,
+
+            // When specified, literal numbers are treated as floats.  By default, literal numbers are decimals.
+            NumberIsFloat = 1 << 2,
+
+            // When specified, allows reserved keywords to be used as identifiers.
+            DisableReservedKeywords = 1 << 3,
+
+            // When specified, allows type literals to be parsed.
+            AllowTypeLiteral = 1 << 4,
         }
 
         private bool _hasSemicolon = false;
+
+        // This is used in NamedFormula mode to record startindex of named formula identifier token.
+        private int _startingIndex = 0;
 
         private readonly TokenCursor _curs;
         private readonly Stack<Flags> _flagsMode;
@@ -50,10 +64,11 @@ namespace Microsoft.PowerFx.Core.Parser
         // collected by the next call to ParseTrivia.
         private ITexlSource _extraTrivia;
 
-        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, Features features = Features.None)
+        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, Features features = null)
         {
             Contracts.AssertValue(tokens);
 
+            features ??= Features.None;
             _depth = 0;
             _curs = new TokenCursor(tokens);
             _flagsMode = new Stack<Flags>();
@@ -61,46 +76,26 @@ namespace Microsoft.PowerFx.Core.Parser
             _features = features;
         }
 
-        public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc = null)
+        /// <summary>
+        /// Parses a script with both named formulas, user defined functions and user defined types.
+        /// </summary>
+        /// <param name="script">Script to be parsed.</param>
+        /// <param name="parserOptions">Options for parsing an expression.</param>
+        /// <returns><see cref="ParseUserDefinitionResult"/>.</returns>
+        public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, ParserOptions parserOptions)
         {
-            Contracts.AssertValue(script);
-            Contracts.AssertValueOrNull(loc);
+            Contracts.AssertValue(parserOptions);
+            var flags = (Flags.NamedFormulas | (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0)) | (parserOptions.AllowParseAsTypeLiteral ? Flags.AllowTypeLiteral : 0);
+            var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
+            var parser = new TexlParser(formulaTokens, flags);
 
-            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
-
-            return parser.ParseUDFs(script);
-        }
-
-        private ParseUDFsResult ParseUDFs(string script)
-        {
-            var udfs = new List<UDF>();
-
-            // <root> ::= (<udf> ';')*
-            while (_curs.TokCur.Kind != TokKind.Eof)
-            {
-                ParseTrivia();
-                if (!ParseUDF(udfs))
-                {
-                    return new ParseUDFsResult(udfs, _errors);
-                }
-
-                ParseTrivia();
-                
-                if (TokEat(TokKind.Semicolon) == null)
-                {
-                    break;
-                }
-
-                ParseTrivia();
-            }
-
-            return new ParseUDFsResult(udfs, _errors);
+            return parser.ParseUDFsAndNamedFormulas(script, parserOptions);
         }
 
         private bool ParseUDFArgs(out HashSet<UDFArg> args)
         {
             args = new HashSet<UDFArg>();
+            int argIndex = 0;
             if (TokEat(TokKind.ParenOpen) == null)
             {
                 return false;
@@ -112,19 +107,57 @@ namespace Microsoft.PowerFx.Core.Parser
                 ParseTrivia();
                 var varIdent = TokEat(TokKind.Ident);
                 ParseTrivia();
-                if (TokEat(TokKind.Colon) == null)
+                var colonToken = TokEat(TokKind.Colon, addError: false);
+                if (colonToken == null)
                 {
-                    break;
+                    CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingParamType);
+
+                    if (varIdent != null)
+                    {
+                        // Add incomplete UDFArgs (colon & type are missing) as well, these are needed for intellisense.
+                        args.Add(new UDFArg(varIdent.As<IdentToken>(), typeIdent: null, colonToken: null, argIndex));
+                    }
+
+                    // If the result was an error, keep moving cursor until end of expression
+                    MoveToNextUserDefinition();
+
+                    return false;
                 }
 
                 ParseTrivia();
-                var varType = TokEat(TokKind.Ident);
+
+                var varType = TokEat(TokKind.Ident, addError: false);
+                if (varType == null)
+                {
+                    CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingParamType);
+
+                    // Add incomplete UDFArgs (type is mising) as well, these are needed for intellisense.
+                    args.Add(new UDFArg(varIdent.As<IdentToken>(), typeIdent: null, colonToken, argIndex));
+
+                    // If the result was an error, keep moving cursor until end of expression
+                    MoveToNextUserDefinition();
+
+                    return false;
+                }
+
+                if (varIdent == null)
+                {
+                    // If the result was an error, keep moving cursor until end of expression
+                    MoveToNextUserDefinition();
+
+                    return false;
+                }
+
                 ParseTrivia();
 
-                args.Add(new UDFArg(varIdent.As<IdentToken>(), varType.As<IdentToken>()));
+                args.Add(new UDFArg(varIdent.As<IdentToken>(), varType.As<IdentToken>(), colonToken, argIndex++));
                 if (_curs.TokCur.Kind != TokKind.ParenClose && _curs.TokCur.Kind != TokKind.Comma)
                 {
                     ErrorTid(_curs.TokCur, TokKind.Comma);
+
+                    // If the result was an error, keep moving cursor until end of expression
+                    MoveToNextUserDefinition();
+
                     return false;
                 }
                 else if (_curs.TokCur.Kind == TokKind.Comma)
@@ -139,76 +172,201 @@ namespace Microsoft.PowerFx.Core.Parser
             return true;
         }
 
-        private bool ParseUDF(List<UDF> udfs)
+        private void MoveToNextUserDefinition()
         {
-            // <udf> ::= IDENT '(' <args> ')' ':' IDENT ('=' EXP | <bracs-exp>)
-
-            ParseTrivia();
-            var ident = TokEat(TokKind.Ident);
-            if (ident == null)
-            {
-                return false;
-            }
-
-            ParseTrivia();
-
-            if (!ParseUDFArgs(out HashSet<UDFArg> args))
-            {
-                return false;
-            }
-
-            ParseTrivia();
-
-            if (TokEat(TokKind.Colon) == null)
-            {
-                return false;
-            }
-
-            ParseTrivia();
-
-            var returnType = TokEat(TokKind.Ident);
-            if (returnType == null)
-            {
-                return false;
-            }
-
-            ParseTrivia();
-
-            // <bracs-exp> ::= '{' (((<EXP> ';')+ <EXP>) | <EXP>) (';')? '}'
-
-            ParseTrivia();
-
-            if (_curs.TidCur == TokKind.CurlyOpen)
+            // Move to semicolon
+            while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
             {
                 _curs.TokMove();
-                _hasSemicolon = false;
+            }
+
+            if (_curs.TidCur == TokKind.Semicolon)
+            {
+                // Consume semicolon and any comments
+                _curs.TokMove();
                 ParseTrivia();
-                _flagsMode.Push(Flags.EnableExpressionChaining);
-                var exp_result = ParseExpr(Precedence.None);
-                _flagsMode.Pop();
-                ParseTrivia();
-                if (TokEat(TokKind.CurlyClose) == null)
+            }
+        }
+
+        private TypeLiteralNode ParseTypeLiteral()
+        {
+            var lefterTrivia = ParseTrivia();
+            var parenOpen = TokEat(TokKind.ParenOpen);
+            var leftTrivia = ParseTrivia();
+            var sourceList = new List<ITexlSource>
+            {
+                lefterTrivia,
+                leftTrivia
+            };
+            
+            var expr = ParseExpr(Precedence.None);
+            sourceList.Add(ParseTrivia());
+            TokEat(TokKind.ParenClose);
+            return new TypeLiteralNode(ref _idNext, parenOpen, expr, new SourceList(sourceList));
+        }
+
+        private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, ParserOptions parserOptions)
+        {
+            var udfs = new List<UDF>();
+            var namedFormulas = new List<NamedFormula>();
+            var definedTypes = new List<DefinedType>();
+
+            ParseTrivia();
+
+            while (_curs.TokCur.Kind != TokKind.Eof)
+            {
+                var thisIdentifier = TokEat(TokKind.Ident);
+                if (thisIdentifier == null)
                 {
-                    return false;
+                    CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingValue);
+                    _curs.TokMove();
+                    continue;
                 }
 
-                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon));
+                ParseTrivia();
+                _startingIndex = thisIdentifier.Span.Min;
 
-                return true;
+                if (_curs.TidCur == TokKind.Semicolon)
+                {
+                    CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
+                    _curs.TokMove();
+                    continue;
+                }
+
+                if (_curs.TidCur == TokKind.Equ)
+                {
+                    _curs.TokMove();
+                    ParseTrivia();
+
+                    if (_curs.TidCur == TokKind.Semicolon)
+                    {
+                        CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
+                    }
+
+                    // Extract expression
+                    while (_curs.TidCur != TokKind.Semicolon)
+                    {
+                        // Check if we're at EOF before a semicolon is found
+                        if (_curs.TidCur == TokKind.Eof)
+                        {
+                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
+                            break;
+                        }
+
+                        // Parse expression
+                        var result = ParseExpr(Precedence.None);
+                        if (result is TypeLiteralNode typeLiteralNode)
+                        {
+                            definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode));
+                            continue;
+                        }
+
+                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex));
+
+                        // If the result was an error, keep moving cursor until end of named formula expression
+                        if (result.Kind == NodeKind.Error)
+                        {
+                            while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                            {
+                                _curs.TokMove();
+                            }
+                        }
+                    }
+
+                    _curs.TokMove();
+                    ParseTrivia();
+                }
+                else if (_curs.TidCur == TokKind.ParenOpen)
+                {
+                    if (!ParseUDFArgs(out HashSet<UDFArg> args))
+                    {
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken: null, returnType: null, new HashSet<UDFArg>(args), body: null, _hasSemicolon, parserOptions.NumberIsFloat, isValid: false));
+                        continue;
+                    }
+
+                    ParseTrivia();
+
+                    var colonToken = TokEat(TokKind.Colon, addError: false);
+                    if (colonToken == null)
+                    {
+                        CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingReturnType);
+                        _curs.TokMove();
+                        continue;
+                    }
+
+                    ParseTrivia();
+
+                    var returnType = TokEat(TokKind.Ident, addError: false);
+                    if (returnType == null)
+                    {
+                        CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingReturnType);
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType: null, new HashSet<UDFArg>(args), body: null, _hasSemicolon, parserOptions.NumberIsFloat, isValid: false));
+
+                        // Return type not found, move to next user definition
+                        MoveToNextUserDefinition();
+                        continue;
+                    }
+
+                    // <bracs-exp> ::= '{' (((<EXP> ';')+ <EXP>) | <EXP>) (';')? '}'
+
+                    ParseTrivia();
+                    if (_curs.TidCur == TokKind.CurlyOpen)
+                    {
+                        _curs.TokMove();
+                        _hasSemicolon = false;
+                        ParseTrivia();
+                        _flagsMode.Push(parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : Flags.None);
+                        var exp_result = ParseExpr(Precedence.None);
+                        _flagsMode.Pop();
+                        ParseTrivia();
+                        if (TokEat(TokKind.CurlyClose) == null)
+                        {
+                            break;
+                        }
+
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken,  returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: true));
+                    }
+                    else if (_curs.TidCur == TokKind.Equ)
+                    {
+                        _curs.TokMove();
+                        ParseTrivia();
+                        var result = ParseExpr(Precedence.None);
+                        ParseTrivia();
+
+                        // Check if we're at EOF before a semicolon is found
+                        if (_curs.TidCur == TokKind.Eof)
+                        {
+                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
+                            break;
+                        }
+
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, parserOptions.NumberIsFloat, isValid: true));
+                    }
+                    else
+                    {
+                        CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingFunctionBody);
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), body: null, false, parserOptions.NumberIsFloat, isValid: false));
+                        break;
+                    }
+
+                    ParseTrivia();
+
+                    if (TokEat(TokKind.Semicolon) == null)
+                    {
+                        break;
+                    }
+
+                    ParseTrivia();
+                }
+                else
+                {
+                    // = or ( expected here
+                    ErrorTid(_curs.TokCur, TokKind.Equ);
+                    break;
+                }
             }
-            else if (_curs.TidCur == TokKind.Equ)
-            {
-                _curs.TokMove();
-                ParseTrivia();
-                var result = ParseExpr(Precedence.None);
-                ParseTrivia();
-                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false));
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+
+            return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors, _comments);
         }
 
         // Parse the script
@@ -219,26 +377,26 @@ namespace Microsoft.PowerFx.Core.Parser
             return ParseScript(script, Features.None, loc, flags);
         }
 
-        internal static ParseResult ParseScript(string script, Features features, CultureInfo loc = null, Flags flags = Flags.None)
+        internal static ParseResult ParseScript(string script, Features features, CultureInfo culture = null, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);
-            Contracts.AssertValueOrNull(loc);
+            Contracts.AssertValueOrNull(culture);
 
-            var tokens = TokenizeScript(script, loc, flags);
+            var tokens = TokenizeScript(script, culture, flags);
             var parser = new TexlParser(tokens, flags, features);
             List<TexlError> errors = null;
             var parsetree = parser.Parse(ref errors);
 
-            return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script, loc);
+            return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script, culture);
         }
 
-        public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null)
+        public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
+            var formulaTokens = TokenizeScript(script, loc, flags | Flags.NamedFormulas);
+            var parser = new TexlParser(formulaTokens, flags | Flags.NamedFormulas);
 
             return parser.ParseFormulas(script);
         }
@@ -262,6 +420,11 @@ namespace Microsoft.PowerFx.Core.Parser
                     {
                         ParseTrivia();
 
+                        if (_curs.TidCur == TokKind.Semicolon)
+                        {
+                            CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
+                        }
+
                         // Extract expression
                         while (_curs.TidCur != TokKind.Semicolon)
                         {
@@ -276,18 +439,29 @@ namespace Microsoft.PowerFx.Core.Parser
                             var result = ParseExpr(Precedence.None);
 
                             namedFormulas.Add(new KeyValuePair<IdentToken, TexlNode>(thisIdentifier.As<IdentToken>(), result));
+
+                            // If the result was an error, keep moving cursor until end of named formula expression
+                            if (result.Kind == NodeKind.Error)
+                            {
+                                while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                                {
+                                    _curs.TokMove();
+                                }
+                            }
                         }
 
                         _curs.TokMove();
                     }
                     else
                     {
-                        break;
+                        _curs.TokMove();
+                        continue;
                     }
                 }
                 else
                 {
-                    break;
+                    _curs.TokMove();
+                    continue;
                 }
 
                 ParseTrivia();
@@ -296,15 +470,15 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseFormulasResult(namedFormulas, _errors);
         }
 
-        private static IReadOnlyList<Token> TokenizeScript(string script, CultureInfo loc, Flags flags = Flags.None)
+        private static IReadOnlyList<Token> TokenizeScript(string script, CultureInfo culture, Flags flags)
         {
             Contracts.AssertValue(script);
-            Contracts.AssertValueOrNull(loc);
+            Contracts.AssertValueOrNull(culture);
+            var lexerFlags = (flags.HasFlag(Flags.NumberIsFloat) ? TexlLexer.Flags.NumberIsFloat : 0) |
+                             (flags.HasFlag(Flags.DisableReservedKeywords) ? TexlLexer.Flags.DisableReservedKeywords : 0);
+            culture ??= CultureInfo.CurrentCulture; // $$$ can't use current culture
 
-            var lexerFlags = TexlLexer.Flags.None;
-            loc ??= CultureInfo.CurrentCulture;
-
-            return TexlLexer.GetLocalizedInstance(loc).LexSource(script, lexerFlags);
+            return TexlLexer.GetLocalizedInstance(culture).LexSource(script, lexerFlags);
         }
 
         private TexlNode Parse(ref List<TexlError> errors)
@@ -634,11 +808,19 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         case TokKind.Ident:
                         case TokKind.NumLit:
+                        case TokKind.DecLit:
                         case TokKind.StrLit:
                         case TokKind.True:
                         case TokKind.False:
                             PostError(_curs.TokCur, TexlStrings.ErrOperatorExpected);
                             tok = _curs.TokMove();
+
+                            // Stop recursing if we reach a semicolon
+                            if (_curs.TidCur == TokKind.Semicolon && _flagsMode.Peek().HasFlag(Flags.NamedFormulas))
+                            {
+                                return node;
+                            }
+
                             rightTrivia = ParseTrivia();
                             right = ParseExpr(Precedence.Error);
                             node = MakeBinary(BinaryOp.Error, node, leftTrivia, tok, rightTrivia, right);
@@ -708,8 +890,8 @@ namespace Microsoft.PowerFx.Core.Parser
                             {
                                 goto default;
                             }
-                            
-                            if (_features.HasFlag(Features.DisableRowScopeDisambiguationSyntax))
+
+                            if (_features.DisableRowScopeDisambiguationSyntax)
                             {
                                 PostError(_curs.TokCur, errKey: TexlStrings.ErrDeprecated);
                             }
@@ -824,6 +1006,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 // Literals
                 case TokKind.NumLit:
                     return new NumLitNode(ref _idNext, _curs.TokMove().As<NumLitToken>());
+                case TokKind.DecLit:
+                    return new DecLitNode(ref _idNext, _curs.TokMove().As<DecLitToken>());
                 case TokKind.True:
                 case TokKind.False:
                     return new BoolLitNode(ref _idNext, _curs.TokMove());
@@ -840,7 +1024,13 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (AfterSpaceTokenId() == TokKind.ParenOpen)
                     {
+                        if (ident.Token.As<IdentToken>().Name.Value == "Type" && _flagsMode.Peek().HasFlag(Flags.AllowTypeLiteral))
+                        {
+                            return ParseTypeLiteral();
+                        }
+
                         trivia = ParseTrivia();
+
                         return ParseInvocation(ident, trivia, null);
                     }
 
@@ -861,6 +1051,9 @@ namespace Microsoft.PowerFx.Core.Parser
                     return new SelfNode(ref _idNext, _curs.TokMove());
 
                 case TokKind.Eof:
+                    return CreateError(_curs.TokCur, TexlStrings.ErrOperandExpected);
+
+                case TokKind.Semicolon:
                     return CreateError(_curs.TokCur, TexlStrings.ErrOperandExpected);
 
                 case TokKind.Error:
@@ -1494,8 +1687,12 @@ namespace Microsoft.PowerFx.Core.Parser
             return err;
         }
 
-        // Eats a token of the given kind.
-        // If the token is not the right kind, reports an error and leaves it.
+        /// <summary>
+        /// Eats a token of the given kind.
+        /// If the token is not the right kind, reports an error and leaves it.
+        /// </summary>
+        /// <param name="tid">TokenKind.</param>
+        /// <returns>True if the token is of given kind.</returns>
         private bool EatTid(TokKind tid)
         {
             if (_curs.TidCur == tid)
@@ -1508,16 +1705,25 @@ namespace Microsoft.PowerFx.Core.Parser
             return false;
         }
 
-        // Returns the current token if it's of the given kind and moves to the next token.
-        // If the token is not the right kind, reports an error, leaves the token, and returns null.
-        private Token TokEat(TokKind tid)
+        /// <summary>
+        /// Returns the current token if it's of the given kind and moves to the next token.
+        /// If the token is not the right kind, reports an error, leaves the token, and returns null.
+        /// </summary>
+        /// <param name="tid">TokenKind.</param>
+        /// <param name="addError">Will not add token mis-match error when false.</param>
+        /// <returns>Returns the current token or null.</returns>
+        private Token TokEat(TokKind tid, bool addError = true)
         {
             if (_curs.TidCur == tid)
             {
                 return _curs.TokMove();
             }
 
-            ErrorTid(_curs.TokCur, tid);
+            if (addError)
+            {
+                ErrorTid(_curs.TokCur, tid);
+            }
+
             return null;
         }
 
@@ -1586,11 +1792,17 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        public static string Format(string text)
+        /// <summary>
+        /// Formats/Pretty Print the given expression text to more a readable form.
+        /// </summary>
+        /// <param name="text">Expression text to format.</param>
+        /// <param name="flags">Optional flags to customize the behavior of underlying lexer and parser. By default, expression chaining is enabled.</param>
+        /// <returns>Formatted expression text.</returns>
+        public static string Format(string text, Flags flags = Flags.EnableExpressionChaining)
         {
             var result = ParseScript(
                 text,
-                flags: Flags.EnableExpressionChaining);
+                flags: flags);
 
             // Can't pretty print a script with errors.
             if (result.HasError)

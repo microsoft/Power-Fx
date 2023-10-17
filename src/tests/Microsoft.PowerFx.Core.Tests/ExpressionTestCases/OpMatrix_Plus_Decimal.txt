@@ -1,0 +1,398 @@
+#SETUP: disable:NumberIsFloat
+
+// PLUS
+
+// In these tests, 1E100 or some other very large/small number is used to test floating point results which decimal can not represent, 
+// and a highly precise number is used for decimal, such as 2.00000000000000000000000000002 that would be rounded in floating point.
+// For example, if a decimal test results with 25+ signficant digits results in 2, then an inappropriate conversion to floating point was made.
+
+// The expected results matrix, also in BinderUtils.cs:
+//
+// Non NumberIsFloat (no flag)                     NumberIsFloat
+//    +   | n  s  b  N  D  d  T  w  O  (right)        +   | n  s  b  N  D  d  T  w  O  (right)
+// =======|====================================    =======|====================================
+//      n | n  n  n  n  D  d  T  n  n                   n | n  n  n  n  D  d  T  n  n 
+//      s | n  w  w  w  D  d  T  w  w                   s | n  n  n  n  D  d  T  n  n 
+//      b | n  w  w  w  D  d  T  w  w                   b | n  n  n  n  D  d  T  n  n 
+//      N | n  w  w  w  D  d  T  w  w                   N | n  n  n  n  D  d  T  n  n 
+//      D | D  D  D  D  e  e  d  D  D                   D | D  D  D  D  e  e  d  D  D 
+//      d | d  d  d  d  e  e  d  d  d                   d | d  d  d  d  e  e  d  d  d 
+//      T | T  T  T  T  d  d  T  T  T                   T | T  T  T  T  d  d  T  T  T 
+//      w | n  w  w  w  D  d  T  w  w                   w | n  n  n  n  D  d  T  w  n 
+//      O | n  w  w  w  D  d  T  w  w                   O | n  n  n  n  D  d  T  n  n 
+// (left) |                                        (left) |
+
+// Float
+
+>> Float(16)+Float(2)
+18
+
+>> Float("1e100")+Float(2)
+1E+100
+
+>> Float(16)+"2"
+18
+
+>> Float("1e100")+"2"
+1E+100
+
+>> Float(16)+true
+17
+
+>> Float("1e100")+true
+1E+100
+
+>> Float(16)+Blank()
+16
+
+>> Float("1e100")+Blank()
+1E+100
+
+>> Float(16)+Date(2000,1,1)
+Date(2000,1,17)
+
+>> Float(16)+DateTime(2000,1,1,12,0,0)
+DateTime(2000,1,17,12,0,0,0)
+
+>> Float(16)+Time(12,0,0)
+Time(12,0,0,0)
+
+>> Float(16)+Decimal("2.00000000000000000000000000002")
+18
+
+>> Float("1e100")+Decimal("2.00000000000000000000000000002")
+1E+100
+
+>> Float(16)+ParseJSON("2")
+18
+
+>> Float(16)+ParseJSON("1e100")
+1E+100
+
+>> Float("1e100")+ParseJSON("2")
+1E+100
+
+>> Float("1e100")+ParseJSON("1e100")
+2E+100
+
+// Text
+
+>> "16"+Float(2)
+18
+
+>> "1e100"+Float(2)
+1E+100
+
+>> "16"+"2"
+18
+
+>> "1e100"+"2"
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> "16"+true
+17
+
+>> "1e100"+true
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> "16"+Blank()
+16
+
+>> "1e100"+Blank()
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> "16"+Date(2000,1,1)
+Date(2000,1,17)
+
+>> "16"+DateTime(2000,1,1,12,0,0)
+DateTime(2000,1,17,12,0,0,0)
+
+>> "16"+Time(12,0,0)
+Time(12,0,0,0)
+
+>> "16"+Decimal("2.000000000000000000000002")
+18.000000000000000000000002
+
+>> "1e100"+Decimal("2.000000000000000000000002")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> "16"+ParseJSON("2")
+18
+
+>> "1e100"+ParseJSON("1e100")
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
+
+>> "1e100"+ParseJSON("2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Boolean
+
+>> true+Float(2)
+3
+
+>> true+Float("1e100")
+1E+100
+
+>> true+"2"
+3
+
+>> true+"1E+100"
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> true+true
+2
+
+>> true+Blank()
+1
+
+>> true+Date(2000,1,1)
+Date(2000,1,2)
+
+>> true+DateTime(2000,1,1,12,0,0)
+DateTime(2000,1,2,12,0,0,0)
+
+>> true+Time(12,0,0)
+Time(12,0,0,0)
+
+>> true+Decimal("2.000000000000000000000002")
+3.000000000000000000000002
+
+>> true+ParseJSON("2")
+3
+
+>> true+ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Blank
+
+>> Blank()+Float(2)
+2
+
+>> Blank()+Float("1e100")
+1E+100
+
+>> Blank()+"2"
+2
+
+>> Blank()+"1e100"
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Blank()+true
+1
+
+>> Blank()+Blank()
+0
+
+>> Blank()+Date(2000,1,1)
+Date(2000,1,1)
+
+>> Blank()+DateTime(2000,1,1,12,0,0)
+DateTime(2000,1,1,12,0,0,0)
+
+>> Blank()+Time(12,0,0)
+Time(12,0,0,0)
+
+>> Blank()+Decimal("2.000000000000000000000002")
+2.000000000000000000000002
+
+>> Blank()+ParseJSON("2")
+2
+
+>> Blank()+ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Date
+
+>> Date(2000,1,1)+Float(2)
+Date(2000,1,3)
+
+>> Date(2000,1,1)+"2"
+Date(2000,1,3)
+
+>> Date(2000,1,1)+true
+Date(2000,1,2)
+
+>> Date(2000,1,1)+Blank()
+Date(2000,1,1)
+
+>> Date(2000,1,1)+Date(2000,1,1)
+Errors: Error 14-15: This operation isn't valid on these types: Date, Date.
+
+>> Date(2001,2,2)+Date(2000,1,1)
+Errors: Error 14-15: This operation isn't valid on these types: Date, Date.
+
+>> Date(2000,1,1)+DateTime(2000,1,1,12,0,0)
+Errors: Error 14-15: This operation isn't valid on these types: Date, DateTime.
+
+>> Date(2000,1,1)+Time(12,0,0)
+DateTime(2000,1,1,12,0,0,0)
+
+>> Date(2000,1,1)+Decimal("2.000000000000000000000002")
+Date(2000,1,3)
+
+>> Date(2000,1,1)+ParseJSON("2")
+Date(2000,1,3)
+
+>> Date(2000,1,1)+ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// DateTime
+
+>> DateTime(2000,1,1,12,0,0)+Float(2)
+DateTime(2000,1,3,12,0,0,0)
+
+>> DateTime(2000,1,1,12,0,0)+"2"
+DateTime(2000,1,3,12,0,0,0)
+
+>> DateTime(2000,1,1,12,0,0)+true
+DateTime(2000,1,2,12,0,0,0)
+
+>> DateTime(2000,1,1,12,0,0)+Blank()
+DateTime(2000,1,1,12,0,0,0)
+
+>> DateTime(2000,1,1,12,0,0)+Date(2000,1,1)
+Errors: Error 25-26: This operation isn't valid on these types: DateTime, Date.
+
+>> DateTime(2000,1,1,12,0,0)+DateTime(2000,1,1,9,0,0)
+Errors: Error 25-26: This operation isn't valid on these types: DateTime, DateTime.
+
+>> DateTime(2000,1,1,12,0,0)+Time(12,0,0)
+DateTime(2000,1,2,0,0,0,0)
+
+>> DateTime(2000,1,1,12,0,0)+Decimal("2.000000000000000000000002")
+DateTime(2000,1,3,12,0,0,0)
+
+>> DateTime(2000,1,1,12,0,0)+ParseJSON("2")
+DateTime(2000,1,3,12,0,0,0)
+
+>> DateTime(2000,1,1,12,0,0)+ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Time
+
+>> Time(9,0,0)+Float(0.125)
+Time(12,0,0,0)
+
+>> Time(9,0,0)+"0.125"
+Time(12,0,0,0)
+
+>> Text(Time(9,0,0)+true)
+"9:00 AM"
+
+>> Time(9,0,0)+Blank()
+Time(9,0,0,0)
+
+>> Time(9,0,0)+Time(6,0,0)
+Time(15,0,0,0)
+
+>> Time(9,0,0)+Date(2000,1,1)
+DateTime(2000,1,1,9,0,0,0)
+
+>> Time(9,0,0)+DateTime(2000,1,1,12,0,0)
+DateTime(2000,1,1,21,0,0,0)
+
+>> Time(9,0,0)+Time(12,0,0)
+Time(21,0,0,0)
+
+>> Time(9,0,0)+Decimal("0.125")
+Time(12,0,0,0)
+
+>> Text(Time(9,0,0)+ParseJSON("2"))
+"9:00 AM"
+
+>> Time(9,0,0)+ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Decimal
+
+>> Decimal("16.000000000000000000000001")+Float(2)
+18
+
+>> Decimal("16.000000000000000000000001")+"2"
+18.000000000000000000000001
+
+>> Decimal("16.000000000000000000000001")+true
+17.000000000000000000000001
+
+>> Decimal("16.000000000000000000000001")+Blank()
+16.000000000000000000000001
+
+>> Decimal("16.000000000000000000000001")+Date(2000,1,1)
+Date(2000,1,17)
+
+>> Decimal("16.000000000000000000000001")+DateTime(2000,1,1,12,0,0)
+DateTime(2000,1,17,12,0,0,0)
+
+>> Decimal("16.000000000000000000000001")+Time(12,0,0)
+Time(12,0,0,0)
+
+>> Decimal("16.000000000000000000000002")+Decimal("2.000000000000000000000001")
+18.000000000000000000000003
+
+>> Decimal("16.000000000000000000000002")+ParseJSON("2")
+18.000000000000000000000002
+
+>> Decimal("16.000000000000000000000002")+ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Untyped
+
+>> ParseJSON("16.00000000000000000000001")+Float(2)
+18
+
+>> ParseJSON("1e100")+Float(2)
+1E+100
+
+>> ParseJSON("16.00000000000000000000001")+"2"
+18.00000000000000000000001
+
+>> ParseJSON("1e100")+"2"
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000000001")+true
+17.000000000000000000000001
+
+>> ParseJSON("1e100")+true
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000000001")+Blank()
+16.000000000000000000000001
+
+>> ParseJSON("1e100")+Blank()
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000000001")+Date(2000,1,1)
+Date(2000,1,17)
+
+>> ParseJSON("1e100")+Date(2000,1,1)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000000001")+DateTime(2000,1,1,12,0,0)
+DateTime(2000,1,17,12,0,0,0)
+
+>> ParseJSON("1e100")+DateTime(2000,1,1,12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000000001")+Time(12,0,0)
+Time(12,0,0,0)
+
+>> ParseJSON("1e100")+Time(12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000000002")+Decimal("2.000000000000000000000000001")
+18.000000000000000000000002001
+
+>> ParseJSON("1e100")+Decimal("2.000000000000000000000000001")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000000002")+ParseJSON("2")
+18.000000000000000000000002
+
+>> ParseJSON("1e100")+ParseJSON("2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000000002")+ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("1e100")+ParseJSON("1e100")
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))

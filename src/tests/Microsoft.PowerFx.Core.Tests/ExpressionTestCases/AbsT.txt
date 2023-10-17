@@ -1,0 +1,22 @@
+#SETUP: ConsistentOneColumnTableResult
+
+>> Abs([-1, 0, 123456.789, -123456.789])
+Table({Value:1},{Value:0},{Value:123456.789},{Value:123456.789})
+
+>> Abs([true, false])
+Table({Value:1},{Value:0})
+
+>> Abs(["10", "-10.123"])
+Table({Value:10},{Value:10.123})
+
+>> Abs([])
+Errors: Error 0-7: The function 'Abs' has some invalid arguments.|Error 4-6: Invalid schema, expected a one-column table.
+
+>> Abs(If(1<0,[1]))
+Blank()
+
+>> Abs(Table({a:-1},{a:0},{a:123456.789},{a:-123456.789}))
+Table({Value:1},{Value:0},{Value:123456.789},{Value:123456.789})
+
+>> Abs(Table({a:1/0},{a:Power(-3,2)}))
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:9})

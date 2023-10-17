@@ -3,11 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    [ThreadSafeImmutable]
     internal class OpenApiHelperFunctions
     {
         private static readonly Regex NotAnXsdNCNameCharRegex = new Regex(@"[^a-zA-Z0-9_-]+", RegexOptions.Compiled);
@@ -15,6 +17,11 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string NormalizeOperationId(string operationId)
         {
+            if (operationId == null)
+            {
+                return null;
+            }
+
             return MakeValidXsdNCName(Regex.Replace(operationId, @"[^A-Za-z0-9]", string.Empty));
         }
         
@@ -52,11 +59,11 @@ namespace Microsoft.PowerFx.Connectors
                 }
                 else if (c <= 255)
                 {
-                    sb.Append("_ux" + ((int)c).ToString("X2"));
+                    sb.Append("_ux" + ((int)c).ToString("X2", CultureInfo.InvariantCulture));
                 }
                 else
                 {
-                    sb.Append("_Ux" + ((int)c).ToString("X4"));
+                    sb.Append("_Ux" + ((int)c).ToString("X4", CultureInfo.InvariantCulture));
                 }
             }
 

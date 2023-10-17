@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Intellisense
     // Represents an intellisense suggestion.
     // Implements IComparable as Suggestion will be used in a List that will be sorted.
     // List.Sort() calls CompareTo.
-    internal sealed class IntellisenseSuggestion : IComparable<IntellisenseSuggestion>, IEquatable<IntellisenseSuggestion>, IIntellisenseSuggestion
+    internal sealed class IntellisenseSuggestion : IEquatable<IntellisenseSuggestion>, IIntellisenseSuggestion
     {
         private readonly List<IIntellisenseSuggestion> _overloads;
         private int _argIndex;
@@ -167,6 +167,8 @@ namespace Microsoft.PowerFx.Intellisense
             {
                 var count = 0;
                 var argumentSeparator = string.Empty;
+
+                // $$$ can't use current culture
                 var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
                 var funcDisplayString = new StringBuilder(Text);
                 funcDisplayString.Append('(');
@@ -186,7 +188,7 @@ namespace Microsoft.PowerFx.Intellisense
         // For debugging.
         public override string ToString()
         {
-            return string.Format("{0}: {1}", Text, Kind);
+            return string.Format(CultureInfo.InvariantCulture, "{0}: {1}", Text, Kind);
         }
 
         // For debugging.
@@ -195,43 +197,19 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValue(sb);
             if (Kind == SuggestionKind.Function)
             {
-                sb.AppendLine(string.Format("Function {0}, arg index {1}", Text, ArgIndex));
+                sb.AppendLine(string.Format(CultureInfo.InvariantCulture, "Function {0}, arg index {1}", Text, ArgIndex));
                 sb.AppendLine("Overloads:");
                 foreach (var overload in _overloads)
                 {
-                    sb.AppendLine(string.Format(overload.DisplayText.ToString()));
+                    sb.AppendLine(string.Format(CultureInfo.InvariantCulture, overload.DisplayText.ToString()));
                 }
             }
             else
             {
-                sb.AppendFormat("{0}: {1}", Text, Kind);
+                sb.AppendFormat(CultureInfo.InvariantCulture, "{0}: {1}", Text, Kind);
             }
 
             sb.AppendLine();
-        }
-
-        public int CompareTo(IntellisenseSuggestion other)
-        {
-            Contracts.AssertValueOrNull(other);
-
-            if (other == null)
-            {
-                return -1;
-            }
-
-            var thisIsExactMatch = IsExactMatch(Text, ExactMatch);
-            var otherIsExactMatch = IsExactMatch(other.Text, other.ExactMatch);
-
-            if (thisIsExactMatch && !otherIsExactMatch)
-            {
-                return -1;
-            }
-            else if (!thisIsExactMatch && otherIsExactMatch)
-            {
-                return 1;
-            }
-
-            return SortPriority == other.SortPriority ? Text.CompareTo(other.Text) : (int)(other.SortPriority - SortPriority);
         }
 
         public bool Equals(IntellisenseSuggestion other)
@@ -327,13 +305,6 @@ namespace Microsoft.PowerFx.Intellisense
         internal void SetTypematch()
         {
             IsTypeMatch = true;
-        }
-
-        private bool IsExactMatch(string input, string match)
-        {
-            Contracts.AssertValue(input);
-            Contracts.AssertValue(match);
-            return input.Equals(match, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

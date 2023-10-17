@@ -1,4 +1,4 @@
-//ROUNDDOWN(NUMBER, NUMBER_OF_DIGITS)
+//ROUNDDOWN(NUMBER, NUMBER_OF_DIGITS), towards zero
 
 // ******** INTEGER PARAMETERS ********
 
@@ -230,4 +230,11 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> RoundDown("true","false")
 Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
+>> RoundDown(1e28,2)
+1E+28
 
+>> RoundDown(14.123456,1e28)
+14.123456
+
+>> RoundDown(-1e28,2)
+-1E+28

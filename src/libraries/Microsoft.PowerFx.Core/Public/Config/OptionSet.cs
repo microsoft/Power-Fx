@@ -80,10 +80,10 @@ namespace Microsoft.PowerFx
 
         DisplayNameProvider IExternalOptionSet.DisplayNameProvider => _displayNameProvider;
         
-        bool IExternalOptionSet.IsBooleanValued => false;
-
         bool IExternalOptionSet.IsConvertingDisplayNameMapping => false;
 
         DType IExternalEntity.Type => _type;
+
+        DKind IExternalOptionSet.BackingKind => DKind.String;
     }
 }

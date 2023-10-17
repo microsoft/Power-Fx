@@ -31,6 +31,8 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
                     return TryGetDsNodes(argNode.AsCall(), binding, out dsNodes);
                 case NodeKind.DottedName:
                     return TryGetDsNode(argNode.AsDottedName(), binding, out dsNodes);
+                case NodeKind.As:
+                    return TryGetValidValue(argNode.AsAsNode().Left, binding, out dsNodes);
             }
 
             return dsNodes.Count > 0;

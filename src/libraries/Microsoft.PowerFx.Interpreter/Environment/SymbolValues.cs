@@ -19,10 +19,7 @@ namespace Microsoft.PowerFx
         // Index by Slot.SlotIndex. This could be optimized to be a dense array. 
         private readonly Dictionary<int, Tuple<ISymbolSlot, FormulaValue>> _symbolValues = new Dictionary<int, Tuple<ISymbolSlot, FormulaValue>>();
 
-        // Services for runtime functions. Lazy created.
-        private Dictionary<Type, object> _services;
-
-        private readonly SymbolTable _symTable;
+        private readonly ReadOnlySymbolTable _symTable;
 
         /// <summary>
         /// Register an event to invoke when <see cref="Set(ISymbolSlot, FormulaValue)"/> is called.
@@ -45,17 +42,13 @@ namespace Microsoft.PowerFx
             DebugName = table.DebugName;
         }
 
-        public SymbolValues AddService<T>(T data)
+        // Limit which kinds of SymbolTables this handles.
+        internal SymbolValues(DeferredSymbolTable table)
+            : base(table)
         {
-            // this changes the symbols.            
-            if (_services == null)
-            {
-                _services = new Dictionary<Type, object>();
-            }
+            _symTable = table ?? throw new ArgumentNullException(nameof(table));
 
-            // Can't already exist. 
-            _services.Add(typeof(T), data);
-            return this;
+            DebugName = table.DebugName;
         }
 
         /// <summary>
@@ -66,20 +59,15 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public SymbolValues Add(string name, FormulaValue value)
         {
-            var slot = _symTable.AddVariable(name, value.Type, mutable: true);
-            Set(slot, value);
-
-            return this;
-        }
-
-        public override object GetService(Type serviceType)
-        {
-            if (_services != null && _services.TryGetValue(serviceType, out var data))
+            if (_symTable is SymbolTable symTableEditable)
             {
-                return data;
+                var slot = symTableEditable.AddVariable(name, value.Type, mutable: true);
+                Set(slot, value);
+
+                return this;
             }
 
-            return null;
+            throw new InvalidOperationException($"SymbolTable instance is not mutable: {_symTable.DebugName()}");
         }
 
         public override void Set(ISymbolSlot slot, FormulaValue value)

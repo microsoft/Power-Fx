@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 
@@ -40,9 +38,27 @@ namespace Microsoft.PowerFx
         {
             symbolTable.AddFunction(new RecalcEngineSetFunction());
             symbolTable.AddFunction(new CollectFunction());
-            symbolTable.AddFunction(new PatchRecordFunction());
             symbolTable.AddFunction(new PatchFunction());
             symbolTable.AddFunction(new RemoveFunction());
+            symbolTable.AddFunction(new ClearFunction());
+            symbolTable.AddFunction(new ClearCollectFunction());
+        }
+
+        [Obsolete("RegEx is still in preview. Grammar may change.")]
+        public static void EnableRegExFunctions(this PowerFxConfig config, TimeSpan regExTimeout = default, int regexCacheSize = -1)
+        {
+            RegexTypeCache regexTypeCache = new (regexCacheSize);
+
+            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in Library.RegexFunctions(regExTimeout, regexTypeCache))
+            {
+                if (config.SymbolTable.Functions.AnyWithName(func.Key.Name))
+                {
+                    throw new InvalidOperationException("Cannot add RegEx functions more than once.");
+                }
+
+                config.SymbolTable.AddFunction(func.Key);
+                config.AdditionalFunctions.Add(func.Key, func.Value);
+            }
         }
     }
 }

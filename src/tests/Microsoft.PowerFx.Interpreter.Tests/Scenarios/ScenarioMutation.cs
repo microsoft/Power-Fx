@@ -70,9 +70,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 throw new XunitException($"FormulaValue is ErrorValue: {string.Join("\r\n", ev.Errors)}");
             }
 
-            Assert.IsType<NumberValue>(x);
-            Assert.Equal(456, ((NumberValue)x).Value);
-            Assert.Equal(456, ((NumberValue)d["prop"]).Value);                      
+            Assert.IsType<DecimalValue>(x);
+            Assert.Equal(456, ((DecimalValue)x).Value);
+            Assert.Equal(456, ((DecimalValue)d["prop"]).Value);                      
         }
 
         [Fact]
@@ -89,14 +89,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private class Assert2Function : ReflectionFunction
         {
             public Assert2Function()
-                : base("Assert2", FormulaType.Number, new UntypedObjectType(), FormulaType.Number)
+                : base("Assert2", FormulaType.Decimal, new UntypedObjectType(), FormulaType.Decimal)
             {
             }
 
-            public NumberValue Execute(UntypedObjectValue obj, NumberValue val)
+            public DecimalValue Execute(UntypedObjectValue obj, DecimalValue val)
             {
                 var impl = obj.Impl;
-                var actual = impl.GetDouble();
+                var actual = impl.GetDecimal();
                 var expected = val.Value;
 
                 if (actual != expected)
@@ -104,14 +104,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     throw new InvalidOperationException($"Mismatch");
                 }
 
-                return new NumberValue(IRContext.NotInSource(FormulaType.Number), actual);
+                return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), actual);
             }
         }
 
         private class Set2Function : ReflectionFunction
         {
             public Set2Function()
-                : base("Set2", FormulaType.Blank, new UntypedObjectType(), FormulaType.String, FormulaType.Number)
+                : base("Set2", FormulaType.Blank, new UntypedObjectType(), FormulaType.String, FormulaType.Decimal)
             {
             }
 
@@ -133,8 +133,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 var impl = (MutableObject)obj.Impl;
                 impl.TryGetProperty(propName2.Value, out var propValue);
-                var val = propValue.GetDouble();                
-                impl.Set(propName.Value, new NumberValue(IRContext.NotInSource(FormulaType.Number), val));
+                var val = propValue.GetDecimal();                
+                impl.Set(propName.Value, new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), val));
             }
         }
 
@@ -166,6 +166,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return ((NumberValue)_value).Value;
             }
 
+            public decimal GetDecimal()
+            {
+                return ((DecimalValue)_value).Value;
+            }
+
+            public string GetUntypedNumber()
+            {
+                return ((StringValue)_value).Value;
+            }
+
             public string GetString()
             {
                 return ((StringValue)_value).Value;
@@ -174,6 +184,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             public bool TryGetProperty(string value, out IUntypedObject result)
             {
                 throw new NotImplementedException();
+            }
+
+            public bool TryGetPropertyNames(out IEnumerable<string> result)
+            {
+                result = null;
+                return false;
             }
         }
 
@@ -214,6 +230,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 throw new NotImplementedException();
             }
+            
+            public decimal GetDecimal()
+            {
+                throw new NotImplementedException();
+            }
+
+            public string GetUntypedNumber()
+            {
+                throw new NotImplementedException();
+            }
 
             public string GetString()
             {
@@ -228,6 +254,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return true;
                 }
 
+                result = null;
+                return false;
+            }
+
+            public bool TryGetPropertyNames(out IEnumerable<string> result)
+            {
                 result = null;
                 return false;
             }

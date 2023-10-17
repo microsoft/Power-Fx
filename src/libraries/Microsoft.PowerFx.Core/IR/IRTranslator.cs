@@ -3,12 +3,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -27,6 +33,12 @@ using UnaryOpNode = Microsoft.PowerFx.Core.IR.Nodes.UnaryOpNode;
 
 namespace Microsoft.PowerFx.Core.IR
 {
+    internal class IRResult
+    {
+        public IntermediateNode TopNode;
+        public ScopeSymbol RuleScopeSymbol;
+    }
+
     internal class IRTranslator
     {
         private const string DeferredNotSupportedExceptionMsg = "Deferred(Unknown) is not supported in expressions to be evaluated. This is always an error, deferred is only valid when calling Check";
@@ -85,6 +97,16 @@ namespace Microsoft.PowerFx.Core.IR
                 return MaybeInjectCoercion(node, new NumberLiteralNode(context.GetIRContext(node), value), context);
             }
 
+            public override IntermediateNode Visit(DecLitNode node, IRTranslatorContext context)
+            {
+                Contracts.AssertValue(node);
+                Contracts.AssertValue(context);
+
+                // I think node.DecValue might be dead code, this could be cleaned up (copied comment from NumLitNode overload)
+                var value = node.Value?.Value ?? node.DecValue;
+                return MaybeInjectCoercion(node, new DecimalLiteralNode(context.GetIRContext(node), value), context);
+            }
+
             public override IntermediateNode Visit(TexlRecordNode node, IRTranslatorContext context)
             {
                 Contracts.AssertValue(node);
@@ -112,8 +134,13 @@ namespace Microsoft.PowerFx.Core.IR
 
                 var children = node.Children.Select(child => child.Accept(this, context)).ToArray();
                 var irContext = context.GetIRContext(node);
+                var childrenAreRecords = node.ChildNodes.Any(c =>
+                {
+                    var childType = context.Binding.GetType(c);
+                    return childType.Kind != DKind.ObjNull && childType.IsRecord;
+                });
 
-                if (!context.Binding.CheckTypesContext.Features.HasTableSyntaxDoesntWrapRecords() || (children.Any() && children.First() is not RecordNode))
+                if (!context.Binding.CheckTypesContext.Features.TableSyntaxDoesntWrapRecords || !childrenAreRecords)
                 {
                     // Let's add "Value:" here                    
                     children = children.Select(childNode =>
@@ -137,18 +164,27 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(context);
 
                 var child = node.Child.Accept(this, context);
+                var irc = context.GetIRContext(node);
 
                 IntermediateNode result;
                 switch (node.Op)
                 {
                     case UnaryOp.Not:
-                        result = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Not, child);
+                        result = new CallNode(irc, BuiltinFunctionsCore.Not, child);
                         break;
                     case UnaryOp.Minus:
-                        result = new UnaryOpNode(context.GetIRContext(node), UnaryOpKind.Negate, child);
+                        UnaryOpKind unaryOpKind = irc.ResultType._type.Kind switch
+                        {
+                            DKind.Decimal => UnaryOpKind.NegateDecimal,
+                            DKind.Date => UnaryOpKind.NegateDate,
+                            DKind.DateTime => UnaryOpKind.NegateDateTime,
+                            DKind.Time => UnaryOpKind.NegateTime,
+                            _ => UnaryOpKind.Negate
+                        };
+                        result = new UnaryOpNode(irc, unaryOpKind, child);
                         break;
                     case UnaryOp.Percent:
-                        result = new UnaryOpNode(context.GetIRContext(node), UnaryOpKind.Percent, child);
+                        result = new UnaryOpNode(irc, irc.ResultType == FormulaType.Decimal ? UnaryOpKind.PercentDecimal : UnaryOpKind.Percent, child);
                         break;
                     default:
                         throw new NotSupportedException();
@@ -173,10 +209,15 @@ namespace Microsoft.PowerFx.Core.IR
                 {
                     // Call Node Replacements:
                     case BinaryOpKind.Power:
-                        binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, left, right);
+                        var args = new List<IntermediateNode> { left, right };
+
+                        // Since we are directly injecting Power Function and Power function delegates arg preprocessing to IR.
+                        // we need to make sure that the arguments are attached with preprocessor e.g. Blank to Zero.
+                        args = AttachArgPreprocessor(args, BuiltinFunctionsCore.Power, node, 2, context);
+                        binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, args);
                         break;
                     case BinaryOpKind.Concatenate:
-                        binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Concatenate, left, right);
+                        binaryOpResult = ConcatenateArgs(left, right, context.GetIRContext(node));
                         break;
                     case BinaryOpKind.Or:
                     case BinaryOpKind.And:
@@ -219,27 +260,25 @@ namespace Microsoft.PowerFx.Core.IR
 
                     // Date Diff pulls from nested unary op
                     case BinaryOpKind.DateDifference:
-                        // Validated in Matrix + Binder
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate)
-                        {
-                            throw new NotSupportedException();
-                        }
-
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DateDifference, left, unaryNegate.Child);
-                        break;
-
                     case BinaryOpKind.TimeDifference:
                         // Validated in Matrix + Binder
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate2)
+                        if (right is UnaryOpNode unaryNegate)
                         {
-                            throw new NotSupportedException();
+                            if (unaryNegate.Op == UnaryOpKind.Negate ||
+                                unaryNegate.Op == UnaryOpKind.NegateDecimal ||
+                                unaryNegate.Op == UnaryOpKind.NegateDate ||
+                                unaryNegate.Op == UnaryOpKind.NegateDateTime ||
+                                unaryNegate.Op == UnaryOpKind.NegateTime)
+                            {
+                                binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, unaryNegate.Child);
+                                break;
+                            }
                         }
 
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.TimeDifference, left, unaryNegate2.Child);
-                        break;
+                        throw new NotSupportedException();
 
                     case BinaryOpKind.AddDateAndTime:
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate3)
+                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate or UnaryOpKind.NegateTime } unaryNegate3)
                         {
                             binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, right);
                         }
@@ -253,23 +292,37 @@ namespace Microsoft.PowerFx.Core.IR
                     case BinaryOpKind.SubtractNumberAndDate:
                     case BinaryOpKind.SubtractNumberAndDateTime:
                         // Validated in Matrix + Binder
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate4)
+                        if (right is UnaryOpNode unaryNegate4)
                         {
-                            throw new NotSupportedException();
+                            if (unaryNegate4.Op == UnaryOpKind.Negate ||
+                                unaryNegate4.Op == UnaryOpKind.NegateDecimal ||
+                                unaryNegate4.Op == UnaryOpKind.NegateDate ||
+                                unaryNegate4.Op == UnaryOpKind.NegateDateTime ||
+                                unaryNegate4.Op == UnaryOpKind.NegateTime)
+                            {
+                                binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndDate, left, unaryNegate4.Child);
+                                break;
+                            }
                         }
 
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndDate, left, unaryNegate4.Child);
-                        break;
+                        throw new NotSupportedException();
 
                     case BinaryOpKind.SubtractNumberAndTime:
                         // Validated in Matrix + Binder
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate5)
+                        if (right is UnaryOpNode unaryNegate5)
                         {
-                            throw new NotSupportedException();
+                            if (unaryNegate5.Op == UnaryOpKind.Negate ||
+                                unaryNegate5.Op == UnaryOpKind.NegateDecimal ||
+                                unaryNegate5.Op == UnaryOpKind.NegateDate ||
+                                unaryNegate5.Op == UnaryOpKind.NegateDateTime ||
+                                unaryNegate5.Op == UnaryOpKind.NegateTime)
+                            {
+                                binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndTime, left, unaryNegate5.Child);
+                                break;
+                            }
                         }
 
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndTime, left, unaryNegate5.Child);
-                        break;
+                        throw new NotSupportedException();
 
                     // All others used directly
                     default:
@@ -289,8 +342,6 @@ namespace Microsoft.PowerFx.Core.IR
                 var carg = node.Args.Count;
                 var func = (TexlFunction)info.Function;
 
-                var resultType = context.Binding.GetType(node);
-
                 if (func == null || carg < func.MinArity || carg > func.MaxArity)
                 {
                     throw new NotImplementedException();
@@ -306,8 +357,9 @@ namespace Microsoft.PowerFx.Core.IR
                 for (var i = 0; i < carg; ++i)
                 {
                     var arg = node.Args.Children[i];
+                    var argContext = i == 0 && func.MutatesArg0 ? new IRTranslatorContext(context, isMutation: true) : context;
 
-                    var supportColumnNamesAsIdentifiers = _features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
+                    var supportColumnNamesAsIdentifiers = _features.SupportColumnNamesAsIdentifiers;
                     if (supportColumnNamesAsIdentifiers && func.IsIdentifierParam(i))
                     {
                         var identifierNode = arg.AsFirstName();
@@ -315,25 +367,211 @@ namespace Microsoft.PowerFx.Core.IR
 
                         // Transform the identifier node as a string literal
                         var nodeName = context.Binding.TryGetReplacedIdentName(identifierNode.Ident, out var newIdent) ? new DName(newIdent) : identifierNode.Ident.Name;
-                        args.Add(new TextLiteralNode(context.GetIRContext(arg, DType.String), nodeName.Value));
+                        args.Add(new TextLiteralNode(argContext.GetIRContext(arg, DType.String), nodeName.Value));
                     }
-                    else if (func.IsLazyEvalParam(i))
+                    else if (func.IsLazyEvalParam(i, _features))
                     {
-                        var child = arg.Accept(this, scope != null ? context.With(scope) : context);
-                        args.Add(new LazyEvalNode(context.GetIRContext(arg), child));
+                        var child = arg.Accept(this, scope != null && func.ScopeInfo.AppliesToArgument(i) ? argContext.With(scope) : argContext);
+                        args.Add(new LazyEvalNode(argContext.GetIRContext(arg), child));
                     }
                     else
                     {
-                        args.Add(arg.Accept(this, context));
+                        args.Add(arg.Accept(this, argContext));
                     }
                 }
 
-                if (scope != null)
+                // This can add pre-processing to arguments, such as BlankToZero, Truncate etc...
+                // based on the function.
+                args = AttachArgPreprocessor(args, func, node, node.Args.Count, context);
+
+                // this can rewrite the entire call node to any intermediate node.
+                // e.g. For Boolean(true), Instead of IR as Call(Boolean, true) it can be rewritten directly to emit true.
+                var irNode = func.CreateIRCallNode(node, context, args, scope);
+
+                return MaybeInjectCoercion(node, irNode, context);
+            }
+
+            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func, TexlNode node, int argCount, IRTranslatorContext context)
+            {
+                var len = args.Count;
+                List<IntermediateNode> convertedArgs = new List<IntermediateNode>(len);
+
+                for (var i = 0; i < len; i++)
                 {
-                    return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), func, scope, args), context);
+                    IntermediateNode convertedNode;
+                    var argPreprocessor = func.GetArgPreprocessor(i, argCount);
+
+                    switch (argPreprocessor)
+                    {
+                        case ArgPreprocessor.ReplaceBlankWithFloatZero:
+                            convertedNode = ReplaceBlankWithFloatZero(args[i]);
+                            break;
+                        case ArgPreprocessor.ReplaceBlankWithDecimalZero:
+                            convertedNode = ReplaceBlankWithDecimalZero(args[i]);
+                            break;
+                        case ArgPreprocessor.ReplaceBlankWithFloatZeroAndTruncate:
+                            convertedNode = ReplaceBlankWithFloatZeroAndTruncatePreProcessor(args[i]);
+                            break;
+                        case ArgPreprocessor.ReplaceBlankWithDecimalZeroAndTruncate:
+                            convertedNode = ReplaceBlankWithDecimalZeroAndTruncatePreProcessor(args[i]);
+                            break;
+                        case ArgPreprocessor.ReplaceBlankWithEmptyString:
+                            convertedNode = BlankToEmptyString(args[i]);
+                            break;
+                        case ArgPreprocessor.ReplaceBlankWithCallZero_Scalar:
+                            var callIRContext_Scalar = context.GetIRContext(node);
+                            convertedNode = ReplaceBlankWithCallTypedZero_Scalar(args[i], callIRContext_Scalar.ResultType);
+                            break;
+                        case ArgPreprocessor.ReplaceBlankWithCallZero_SingleColumnTable:
+                            var callIRContext_SCT = context.GetIRContext(node);
+                            convertedNode = ReplaceBlankWithCallTypedZero_Scalar(args[i], ((TableType)callIRContext_SCT.ResultType).SingleColumnFieldType);
+                            break;
+                        case ArgPreprocessor.UntypedStringToUntypedNumber:
+                            if (context.Binding.BindingConfig.NumberIsFloat)
+                            {
+                                convertedNode = new UnaryOpNode(IRContext.NotInSource(FormulaType.UntypedObject), UnaryOpKind.UntypedStringToUntypedFloat, args[i]);
+                            }
+                            else
+                            {
+                                convertedNode = new UnaryOpNode(IRContext.NotInSource(FormulaType.UntypedObject), UnaryOpKind.UntypedStringToUntypedDecimal, args[i]);
+                            }
+
+                            break;
+                        default:
+                            convertedNode = args[i];
+                            break;
+                    }
+
+                    convertedArgs.Add(convertedNode);
                 }
 
-                return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), func, args), context);
+                return convertedArgs;
+            }
+
+            /// <summary>
+            /// Wraps node arg => Coalesce(arg , 0) when arg is not Number Literal.
+            /// </summary>
+            private static IntermediateNode ReplaceBlankWithFloatZero(IntermediateNode arg)
+            {
+                if (arg is NumberLiteralNode)
+                {
+                    return arg;
+                }
+
+                // need a new context since when arg is Blank IRContext.ResultType is not a Number but a Blank.
+                var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
+                var zeroLitNode = new NumberLiteralNode(convertedIRContext, 0d);
+                var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
+                return convertedNode;
+            }
+
+            /// <summary>
+            /// Wraps node arg => Coalesce(arg , 0) when arg is not Number Literal.
+            /// </summary>
+            private static IntermediateNode ReplaceBlankWithDecimalZero(IntermediateNode arg)
+            {
+                if (arg is DecimalLiteralNode)
+                {
+                    return arg;
+                }
+
+                // need a new context since when arg is Blank IRContext.ResultType is not a Number but a Blank.
+                var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Decimal);
+                var zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m);
+                var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
+                return convertedNode;
+            }
+
+            /// <summary>
+            /// Wraps node arg => Coalesce(arg , 0) when arg is not Number Literal.
+            /// </summary>
+            private static IntermediateNode ReplaceBlankWithCallTypedZero_Scalar(IntermediateNode arg, FormulaType returnType)
+            {
+                IntermediateNode zeroLitNode;
+                IRContext convertedIRContext;
+
+                if (arg is NumberLiteralNode || arg is DecimalLiteralNode)
+                {
+                    return arg;
+                }
+
+                // need a new context since when arg is Blank IRContext.ResultType is not a Number but a Blank.
+                if (returnType == FormulaType.Number)
+                {
+                    convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
+                    zeroLitNode = new NumberLiteralNode(convertedIRContext, 0d);
+                }
+                else if (returnType == FormulaType.Decimal)
+                {
+                    convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Decimal);
+                    zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m);
+                }
+                else
+                {
+                    throw new NotImplementedException("Unexpected type");
+                }
+
+                var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
+                return convertedNode;
+            }
+
+            /// <summary>
+            /// Wraps node arg => Trunc(Coalesce(arg , Float(0))).
+            /// </summary>
+            private static IntermediateNode ReplaceBlankWithFloatZeroAndTruncatePreProcessor(IntermediateNode arg)
+            {
+                var blankToZeroNode = ReplaceBlankWithFloatZero(arg);
+                var truncateNode = new CallNode(blankToZeroNode.IRContext, BuiltinFunctionsCore.Trunc, blankToZeroNode);
+                return truncateNode;
+            }
+
+            /// <summary>
+            /// Wraps node arg => Trunc(Coalesce(arg , Decimal(0))).
+            /// </summary>
+            private static IntermediateNode ReplaceBlankWithDecimalZeroAndTruncatePreProcessor(IntermediateNode arg)
+            {
+                var blankToZeroNode = ReplaceBlankWithDecimalZero(arg);
+                var truncateNode = new CallNode(blankToZeroNode.IRContext, BuiltinFunctionsCore.Trunc, blankToZeroNode);
+                return truncateNode;
+            }
+
+            /// <summary>
+            /// Wraps node arg => UnaryOp(BlankToEmptyString, arg).
+            /// </summary>
+            private static IntermediateNode BlankToEmptyString(IntermediateNode arg)
+            {
+                // need a new context since when arg is Blank IRContext.ResultType is not a String but a Blank.
+                var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.String);
+
+                // We are not using coalesce, because coalesce doesn't considers empty string as blank.
+                return new UnaryOpNode(convertedIRContext, UnaryOpKind.BlankToEmptyString, arg);
+            }
+
+            /// <summary>
+            /// This is not a generic arg concatenate function, but a special case for the Concatenate function,
+            /// used for Binary Concatenate operator.
+            /// </summary>
+            private static IntermediateNode ConcatenateArgs(IntermediateNode arg1, IntermediateNode arg2, IRContext irContext)
+            {
+                var concatenateArgs = new List<IntermediateNode>();
+                foreach (var arg in new[] { arg1, arg2 })
+                {
+                    // if arg is call node to Concatenate unpack it, and pass it as arg to outer Concatenate
+                    if (arg is CallNode maybeConcatenate && maybeConcatenate.Function is ConcatenateFunction concatenateFunction)
+                    {
+                        foreach (var argC in maybeConcatenate.Args)
+                        {
+                            concatenateArgs.Add(argC);
+                        }
+                    }
+                    else
+                    {
+                        concatenateArgs.Add(arg);
+                    }
+                }
+
+                var concatenatedNode = new CallNode(irContext, BuiltinFunctionsCore.Concatenate, concatenateArgs);
+                return concatenatedNode;
             }
 
             public override IntermediateNode Visit(FirstNameNode node, IRTranslatorContext context)
@@ -393,6 +631,15 @@ namespace Microsoft.PowerFx.Core.IR
                             break;
                         }
 
+                    case BindKind.Enum:
+                        {
+                            // If StronglyTypedEnums is disabled, this should have been handled by the DottedName visitor.
+                            Contracts.Assert(context.Binding.Features.StronglyTypedBuiltinEnums);
+
+                            result = new ResolvedObjectNode(context.GetIRContext(node), info.Data);
+                            break;
+                        }
+
                     default:
                         Contracts.Assert(false, "Unsupported Bindkind");
                         throw new NotImplementedException();
@@ -416,21 +663,21 @@ namespace Microsoft.PowerFx.Core.IR
                 {
                     var value = context.Binding.GetInfo(node).VerifyValue().Data;
                     Contracts.Assert(value != null);
+                    var usePFxV1CompatRules = context.Binding.Features.PowerFxV1CompatibilityRules;
 
-                    if (DType.Color.Accepts(resultType))
+                    if (DType.Color.Accepts(resultType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules))
                     {
-                        Contracts.Assert(value is uint);
-                        result = new ColorLiteralNode(context.GetIRContext(node), (uint)value);
-                    }
-                    else if (DType.Number.Accepts(resultType))
+                        result = new ColorLiteralNode(context.GetIRContext(node), ConvertToColor((double)value));
+                    } 
+                    else if (DType.Number.Accepts(resultType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules))
                     {
                         result = new NumberLiteralNode(context.GetIRContext(node), (double)value);
                     }
-                    else if (DType.String.Accepts(resultType))
+                    else if (DType.String.Accepts(resultType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules))
                     {
                         result = new TextLiteralNode(context.GetIRContext(node), (string)value);
                     }
-                    else if (DType.Boolean.Accepts(resultType))
+                    else if (DType.Boolean.Accepts(resultType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules))
                     {
                         result = new BooleanLiteralNode(context.GetIRContext(node), (bool)value);
                     }
@@ -477,37 +724,25 @@ namespace Microsoft.PowerFx.Core.IR
                 {
                     // Field access within a record.
                     Contracts.Assert(typeLhs.IsRecord);
-
-                    if (typeLhs.TryGetType(nameRhs, out var typeRhs) &&
-                        typeRhs.IsExpandEntity &&
-                        context.Binding.TryGetEntityInfo(node, out var expandInfo) &&
-                        expandInfo.IsTable)
+                    typeLhs.TryGetType(nameRhs, out var typeRhs);
+                    if (node.Left is FirstNameNode namespaceNode && context.Binding.GetInfo(namespaceNode)?.Kind == BindKind.QualifiedValue)
                     {
-                        // No relationships in PFX yet
-                        Contracts.Assert(false, "Relationships not yet supported");
+                        Contracts.Assert(false, "QualifiedValues not yet supported by PowerFx");
                         throw new NotSupportedException();
+                    }
+
+                    if (typeRhs.IsDeferred)
+                    {
+                        throw new NotSupportedException(DeferredNotSupportedExceptionMsg);
+                    }
+
+                    if (left is ScopeAccessNode valueAccess && valueAccess.Value is ScopeSymbol scope)
+                    {
+                        result = new ScopeAccessNode(context.GetIRContext(node), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(nameRhs)));
                     }
                     else
                     {
-                        if (node.Left is FirstNameNode namespaceNode && context.Binding.GetInfo(namespaceNode)?.Kind == BindKind.QualifiedValue)
-                        {
-                            Contracts.Assert(false, "QualifiedValues not yet supported by PowerFx");
-                            throw new NotSupportedException();
-                        }
-
-                        if (typeRhs.IsDeferred)
-                        {
-                            throw new NotSupportedException(DeferredNotSupportedExceptionMsg);
-                        }
-
-                        if (left is ScopeAccessNode valueAccess && valueAccess.Value is ScopeSymbol scope)
-                        {
-                            result = new ScopeAccessNode(context.GetIRContext(node), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(nameRhs)));
-                        }
-                        else
-                        {
-                            result = new RecordFieldAccessNode(context.GetIRContext(node), left, nameRhs);
-                        }
+                        result = new RecordFieldAccessNode(context.GetIRContext(node), left, nameRhs);
                     }
                 }
                 else if (typeLhs.IsUntypedObject)
@@ -533,7 +768,7 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
-                if (node.Children.Length == 1)
+                if (node.Children.Count == 1)
                 {
                     return MaybeInjectCoercion(node, node.Children[0].Accept(this, context), context);
                 }
@@ -552,7 +787,12 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
-                if (node.Children.Length == 1)
+                if (node.Children.Count == 0)
+                {
+                    return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), string.Empty);
+                }
+
+                if (node.Children.Count == 1)
                 {
                     return MaybeInjectCoercion(node, node.Children[0].Accept(this, context), context);
                 }
@@ -630,13 +870,13 @@ namespace Microsoft.PowerFx.Core.IR
                 var scope = GetNewScope();
                 foreach (var fromField in fromType.GetNames(DPath.Root))
                 {
-                    if (!toType.TryGetType(fromField.Name, out var toFieldType) || toFieldType.Accepts(fromField.Type))
+                    if (!toType.TryGetType(fromField.Name, out var toFieldType) || toFieldType.Accepts(fromField.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: _features.PowerFxV1CompatibilityRules))
                     {
                         continue;
                     }
                     else
                     {
-                        var coercionKind = CoercionMatrix.GetCoercionKind(fromField.Type, toFieldType);
+                        var coercionKind = CoercionMatrix.GetCoercionKind(fromField.Type, toFieldType, _features.PowerFxV1CompatibilityRules);
                         if (coercionKind == CoercionKind.None)
                         {
                             continue;
@@ -672,17 +912,30 @@ namespace Microsoft.PowerFx.Core.IR
 
             private IntermediateNode InjectCoercion(IntermediateNode child, IRTranslatorContext context, DType fromType, DType toType)
             {
-                var coercionKind = CoercionMatrix.GetCoercionKind(fromType, toType);
+                var coercionKind = CoercionMatrix.GetCoercionKind(fromType, toType, context.Binding.Features.PowerFxV1CompatibilityRules);
                 UnaryOpKind unaryOpKind;
                 switch (coercionKind)
                 {
                     case CoercionKind.TextToNumber:
-                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Value, child);
+                        return new CallNode(
+                            IRContext.NotInSource(FormulaType.Build(toType)),
+                            context.Binding.BindingConfig.NumberIsFloat ? BuiltinFunctionsCore.Value : BuiltinFunctionsCore.Float,
+                            child);
+                    case CoercionKind.TextToDecimal:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Decimal, child);
+
+                    case CoercionKind.DecimalToNumber:
+                        return new CallNode(
+                            IRContext.NotInSource(FormulaType.Build(toType)),
+                            context.Binding.BindingConfig.NumberIsFloat ? BuiltinFunctionsCore.Value : BuiltinFunctionsCore.Float,
+                            child);
+                    case CoercionKind.NumberToDecimal:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Decimal, child);
 
                     case CoercionKind.DateToText:
                     case CoercionKind.TimeToText:
                     case CoercionKind.DateTimeToText:
-                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text, child, GetDateTimeToTextLiteralNode(context, coercionKind));
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text, child);
 
                     case CoercionKind.TextToDateTime:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.DateTimeValue, child);
@@ -700,17 +953,35 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.BooleanToNumber:
                         unaryOpKind = UnaryOpKind.BooleanToNumber;
                         break;
-                    case CoercionKind.BooleanOptionSetToNumber:
-                        unaryOpKind = UnaryOpKind.BooleanOptionSetToNumber;
+                    case CoercionKind.BooleanToDecimal:
+                        unaryOpKind = UnaryOpKind.BooleanToDecimal;
+                        break;
+                    case CoercionKind.OptionSetToNumber:
+                        unaryOpKind = UnaryOpKind.OptionSetToNumber;
+                        break;
+                    case CoercionKind.OptionSetToColor:
+                        unaryOpKind = UnaryOpKind.OptionSetToColor;
+                        break;
+                    case CoercionKind.OptionSetToDecimal:
+                        unaryOpKind = UnaryOpKind.OptionSetToDecimal;
                         break;
                     case CoercionKind.DateToNumber:
                         unaryOpKind = UnaryOpKind.DateToNumber;
                         break;
+                    case CoercionKind.DateToDecimal:
+                        unaryOpKind = UnaryOpKind.DateToDecimal;
+                        break;
                     case CoercionKind.TimeToNumber:
                         unaryOpKind = UnaryOpKind.TimeToNumber;
                         break;
+                    case CoercionKind.TimeToDecimal:
+                        unaryOpKind = UnaryOpKind.TimeToDecimal;
+                        break;
                     case CoercionKind.DateTimeToNumber:
                         unaryOpKind = UnaryOpKind.DateTimeToNumber;
+                        break;
+                    case CoercionKind.DateTimeToDecimal:
+                        unaryOpKind = UnaryOpKind.DateTimeToDecimal;
                         break;
                     case CoercionKind.BlobToHyperlink:
                         unaryOpKind = UnaryOpKind.BlobToHyperlink;
@@ -724,6 +995,9 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.TextToHyperlink:
                         unaryOpKind = UnaryOpKind.TextToHyperlink;
                         break;
+                    case CoercionKind.PenImageToHyperlink:
+                        unaryOpKind = UnaryOpKind.PenImageToHyperlink;
+                        break;
                     case CoercionKind.SingleColumnRecordToLargeImage:
                         unaryOpKind = UnaryOpKind.SingleColumnRecordToLargeImage;
                         break;
@@ -736,14 +1010,35 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.TextToImage:
                         unaryOpKind = UnaryOpKind.TextToImage;
                         break;
+                    case CoercionKind.HyperlinkToImage:
+                        unaryOpKind = UnaryOpKind.HyperlinkToImage;
+                        break;
+                    case CoercionKind.PenImageToImage:
+                        unaryOpKind = UnaryOpKind.PenImageToImage;
+                        break;
+                    case CoercionKind.BlobToImage:
+                        unaryOpKind = UnaryOpKind.BlobToImage;
+                        break;
                     case CoercionKind.TextToMedia:
                         unaryOpKind = UnaryOpKind.TextToMedia;
+                        break;
+                    case CoercionKind.BlobToMedia:
+                        unaryOpKind = UnaryOpKind.BlobToMedia;
+                        break;
+                    case CoercionKind.HyperlinkToMedia:
+                        unaryOpKind = UnaryOpKind.HyperlinkToMedia;
                         break;
                     case CoercionKind.TextToBlob:
                         unaryOpKind = UnaryOpKind.TextToBlob;
                         break;
+                    case CoercionKind.HyperlinkToBlob:
+                        unaryOpKind = UnaryOpKind.HyperlinkToBlob;
+                        break;
                     case CoercionKind.NumberToText:
                         unaryOpKind = UnaryOpKind.NumberToText;
+                        break;
+                    case CoercionKind.DecimalToText:
+                        unaryOpKind = UnaryOpKind.DecimalToText;
                         break;
                     case CoercionKind.BooleanToText:
                         unaryOpKind = UnaryOpKind.BooleanToText;
@@ -757,11 +1052,14 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.NumberToBoolean:
                         unaryOpKind = UnaryOpKind.NumberToBoolean;
                         break;
+                    case CoercionKind.DecimalToBoolean:
+                        unaryOpKind = UnaryOpKind.DecimalToBoolean;
+                        break;
                     case CoercionKind.TextToBoolean:
                         unaryOpKind = UnaryOpKind.TextToBoolean;
                         break;
-                    case CoercionKind.BooleanOptionSetToBoolean:
-                        unaryOpKind = UnaryOpKind.BooleanOptionSetToBoolean;
+                    case CoercionKind.OptionSetToBoolean:
+                        unaryOpKind = UnaryOpKind.OptionSetToBoolean;
                         break;
                     case CoercionKind.RecordToTable:
                         unaryOpKind = UnaryOpKind.RecordToTable;
@@ -769,17 +1067,29 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.NumberToDateTime:
                         unaryOpKind = UnaryOpKind.NumberToDateTime;
                         break;
+                    case CoercionKind.DecimalToDateTime:
+                        unaryOpKind = UnaryOpKind.DecimalToDateTime;
+                        break;
                     case CoercionKind.NumberToDate:
                         unaryOpKind = UnaryOpKind.NumberToDate;
                         break;
+                    case CoercionKind.DecimalToDate:
+                        unaryOpKind = UnaryOpKind.DecimalToDate;
+                        break;
                     case CoercionKind.NumberToTime:
                         unaryOpKind = UnaryOpKind.NumberToTime;
+                        break;
+                    case CoercionKind.DecimalToTime:
+                        unaryOpKind = UnaryOpKind.DecimalToTime;
                         break;
                     case CoercionKind.DateTimeToDate:
                         unaryOpKind = UnaryOpKind.DateTimeToDate;
                         break;
                     case CoercionKind.DateToDateTime:
                         unaryOpKind = UnaryOpKind.DateToDateTime;
+                        break;
+                    case CoercionKind.DateTimeToTime:
+                        unaryOpKind = UnaryOpKind.DateTimeToTime;
                         break;
                     case CoercionKind.DateToTime:
                         unaryOpKind = UnaryOpKind.DateToTime;
@@ -796,6 +1106,63 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.AggregateToDataEntity:
                         unaryOpKind = UnaryOpKind.AggregateToDataEntity;
                         break;
+                    case CoercionKind.TextToGUID:
+                        unaryOpKind = UnaryOpKind.TextToGUID;
+                        break;
+                    case CoercionKind.GUIDToText:
+                        unaryOpKind = UnaryOpKind.GUIDToText;
+                        break;
+                    case CoercionKind.NumberToCurrency:
+                        unaryOpKind = UnaryOpKind.NumberToCurrency;
+                        break;
+                    case CoercionKind.TextToCurrency:
+                        unaryOpKind = UnaryOpKind.TextToCurrency;
+                        break;
+                    case CoercionKind.CurrencyToNumber:
+                        unaryOpKind = UnaryOpKind.CurrencyToNumber;
+                        break;
+                    case CoercionKind.CurrencyToBoolean:
+                        unaryOpKind = UnaryOpKind.CurrencyToBoolean;
+                        break;
+                    case CoercionKind.BooleanToCurrency:
+                        unaryOpKind = UnaryOpKind.BooleanToCurrency;
+                        break;
+                    case CoercionKind.CurrencyToText:
+                        unaryOpKind = UnaryOpKind.CurrencyToText;
+                        break;
+                    case CoercionKind.MediaToText:
+                        unaryOpKind = UnaryOpKind.MediaToText;
+                        break;
+                    case CoercionKind.ImageToText:
+                        unaryOpKind = UnaryOpKind.ImageToText;
+                        break;
+                    case CoercionKind.BlobToText:
+                        unaryOpKind = UnaryOpKind.BlobToText;
+                        break;
+                    case CoercionKind.PenImageToText:
+                        unaryOpKind = UnaryOpKind.PenImageToText;
+                        break;
+                    case CoercionKind.UntypedToText:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text_UO, child);
+                    case CoercionKind.UntypedToNumber:
+                        return new CallNode(
+                            IRContext.NotInSource(FormulaType.Build(toType)),
+                            context.Binding.BindingConfig.NumberIsFloat ? BuiltinFunctionsCore.Value_UO : BuiltinFunctionsCore.Float_UO,
+                            child);
+                    case CoercionKind.UntypedToDecimal:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Decimal_UO, child);
+                    case CoercionKind.UntypedToBoolean:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Boolean_UO, child);
+                    case CoercionKind.UntypedToDate:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.DateValue_UO, child);
+                    case CoercionKind.UntypedToTime:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.TimeValue_UO, child);
+                    case CoercionKind.UntypedToDateTime:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.DateTimeValue_UO, child);
+                    case CoercionKind.UntypedToColor:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.ColorValue_UO, child);
+                    case CoercionKind.UntypedToGUID:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.GUID_UO, child);
                     case CoercionKind.None:
                         // No coercion needed, return the child node
                         return child;
@@ -805,26 +1172,46 @@ namespace Microsoft.PowerFx.Core.IR
 
                 return new UnaryOpNode(IRContext.NotInSource(FormulaType.Build(toType)), unaryOpKind, child);
             }
+
+            private static System.Drawing.Color ConvertToColor(double input)
+            {
+                var value = (uint)input;
+                return System.Drawing.Color.FromArgb(
+                            (byte)((value >> 24) & 0xFF),
+                            (byte)((value >> 16) & 0xFF),
+                            (byte)((value >> 8) & 0xFF),
+                            (byte)(value & 0xFF));
+            }
         }
 
         internal class IRTranslatorContext
         {
             public readonly TexlBinding Binding;
             public ScopeSymbol[] Scopes;
+            public bool IsMutation;
 
-            public IRTranslatorContext(TexlBinding binding, ScopeSymbol baseScope)
+            public IRTranslatorContext(TexlBinding binding, ScopeSymbol baseScope, bool isMutation = false)
             {
                 Contracts.AssertValue(binding);
                 Contracts.AssertValue(baseScope);
 
                 Binding = binding;
                 Scopes = new ScopeSymbol[] { baseScope };
+                IsMutation = isMutation;
             }
 
-            private IRTranslatorContext(IRTranslatorContext context, ScopeSymbol newScope)
+            private IRTranslatorContext(IRTranslatorContext context, ScopeSymbol newScope, bool isMutation = false)
             {
                 Binding = context.Binding;
                 Scopes = context.Scopes.Concat(new List<ScopeSymbol>() { newScope }).ToArray();
+                IsMutation = isMutation;
+            }
+
+            public IRTranslatorContext(IRTranslatorContext context, bool isMutation)
+            {
+                Binding = context.Binding;
+                Scopes = context.Scopes;
+                IsMutation = isMutation;
             }
 
             public IRTranslatorContext With(ScopeSymbol scope)
@@ -834,12 +1221,12 @@ namespace Microsoft.PowerFx.Core.IR
 
             public IRContext GetIRContext(TexlNode node)
             {
-                return new IRContext(node.GetTextSpan(), FormulaType.Build(Binding.GetType(node)));
+                return new IRContext(node.GetTextSpan(), FormulaType.Build(Binding.GetType(node)), isMutation: IsMutation);
             }
 
             public IRContext GetIRContext(TexlNode node, DType type)
             {
-                return new IRContext(node.GetTextSpan(), FormulaType.Build(type));
+                return new IRContext(node.GetTextSpan(), FormulaType.Build(type), isMutation: IsMutation);
             }
         }
     }

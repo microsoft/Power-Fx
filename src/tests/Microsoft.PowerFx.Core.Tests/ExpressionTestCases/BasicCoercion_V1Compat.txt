@@ -1,0 +1,123 @@
+﻿#SETUP: PowerFxV1CompatibilityRules
+
+>> GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF") & " is a GUID"
+"aaaaaaaa-bbbb-cccc-dddd-eeeeffffffff is a GUID"
+
+>> If(1<0, GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF"), "11111111-2222-3333-4444-555566666666")
+GUID("11111111-2222-3333-4444-555566666666")
+
+>> If(1<0, Time(1,2,3), Date(2000,1,1))
+Time(0,0,0,0)
+
+>> If(1<0, Time(1,2,3), DateTime(2000,1,1,12,34,56,789))
+Time(12,34,56,789)
+
+>> If(1<0, Date(2000,1,1), Time(12,0,0))
+Date(1899,12,30)
+
+>> If(1<0, Date(2000,1,1), DateTime(2134,5,6,12,0,0))
+Date(2134,5,6)
+
+>> If(1<0, DateTime(2000,1,1,1,1,1), Time(12,34,56,789))
+DateTime(1899,12,30,12,34,56,789)
+
+>> If(1<0, DateTime(2000,1,1,1,1,1), Date(2023,3,27))
+DateTime(2023,3,27,0,0,0,0)
+
+// ************** Blank value coercion **************
+
+// Boolean to number
+>> If(1<0, 1, If(1<0,false))
+Blank()
+
+// Boolean to text
+>> If(1<0, "A", If(1<0,false))
+Blank()
+
+// Number to boolean
+>> If(1<0, 1, If(1<0,1))
+Blank()
+
+// Number to text
+>> If(1<0, "A", If(1<0,1))
+Blank()
+
+// Number to datetime
+>> If(1<0, DateTime(2023,1,1,3,4,5), If(1<0,1))
+Blank()
+
+// Number to date
+>> If(1<0, Date(2023,1,1), If(1<0,1))
+Blank()
+
+// Number to time
+>> If(1<0, Time(1,2,3), If(1<0,1))
+Blank()
+
+// Text to booleam
+>> If(1<0, false, If(1<0,"a"))
+Blank()
+
+// Text to number
+>> If(1<0, 1, If(1<0,"a"))
+Blank()
+
+// Text to datetime
+>> If(1<0, DateTime(2023,1,1,3,4,5), If(1<0,"a"))
+Blank()
+
+// Text to date
+>> If(1<0, Date(2023,1,1), If(1<0,"a"))
+Blank()
+
+// Text to time
+>> If(1<0, Time(1,2,3), If(1<0,"a"))
+Blank()
+
+// Date to number
+>> If(1<0, 1, If(1<0,Date(2000,1,1)))
+Blank()
+
+// Date to text
+>> If(1<0, "A", If(1<0,Date(2000,1,1)))
+Blank()
+
+// Date to datetime
+>> If(1<0, DateTime(2023,1,1,3,4,5), If(1<0,Date(2000,1,1)))
+Blank()
+
+// Date to time
+>> If(1<0, Time(1,2,3), If(1<0,Date(2000,1,1)))
+Blank()
+
+// DateTime to number
+>> If(1<0, 1, If(1<0,DateTime(2023,1,1,3,4,5)))
+Blank()
+
+// DateTime to text
+>> If(1<0, "A", If(1<0,DateTime(2023,1,1,3,4,5)))
+Blank()
+
+// DateTime to date
+>> If(1<0, Date(2023,1,1), If(1<0,DateTime(2023,1,1,3,4,5)))
+Blank()
+
+// DateTime to time
+>> If(1<0, Time(1,2,3), If(1<0,DateTime(2023,1,1,3,4,5)))
+Blank()
+
+// Time to number
+>> If(1<0, 1, If(1<0,Time(1,2,3)))
+Blank()
+
+// Time to text
+>> If(1<0, "A", If(1<0,Time(1,2,3)))
+Blank()
+
+// Time to datetime
+>> If(1<0, DateTime(2023,1,1,3,4,5), If(1<0,Time(1,2,3)))
+Blank()
+
+// Time to date
+>> If(1<0, Date(2023,1,1), If(1<0,Time(1,2,3)))
+Blank()

@@ -16,13 +16,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // scalar arguments.
     internal abstract class StatisticalFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
-        public StatisticalFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
+        private readonly bool _nativeDecimal = false;
+
+        public StatisticalFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
             : base(name, description, fc, DType.Number, 0, 1, int.MaxValue, DType.Number)
         {
+            _nativeDecimal = nativeDecimal;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -42,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -51,20 +52,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType == DType.Number);
+            var fValid = true;
+
+            nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
+
+            returnType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, argTypes[0]);
+            Contracts.Assert(returnType == DType.Number || (_nativeDecimal && returnType == DType.Decimal));
 
             // Ensure that all the arguments are numeric/coercible to numeric.
             for (var i = 0; i < argTypes.Length; i++)
             {
-                if (CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
-                {
-                    if (matchedWithCoercion)
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
-                    }
-                }
-                else
+                if (!CheckType(context, args[i], argTypes[i], returnType, DefaultErrorContainer, ref nodeToCoercedTypeMap))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
                     fValid = false;

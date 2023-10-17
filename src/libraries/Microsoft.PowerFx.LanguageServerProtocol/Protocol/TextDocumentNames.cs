@@ -12,5 +12,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         public const string PublishDiagnostics = "textDocument/publishDiagnostics";
         public const string SignatureHelp = "textDocument/signatureHelp";
         public const string CodeAction = "textDocument/codeAction";
+        public const string FullDocumentSemanticTokens = "textDocument/semanticTokens/full";
+        public const string RangeDocumentSemanticTokens = "textDocument/semanticTokens/range";
     }
 }

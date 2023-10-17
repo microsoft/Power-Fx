@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx
     /// See <see cref="SymbolValues"/> for a mutable derived class. 
     /// </summary>
     [DebuggerDisplay("{this.GetType().Name}({DebugName})")]
-    public abstract class ReadOnlySymbolValues : IServiceProvider
+    public abstract class ReadOnlySymbolValues
     {
         private readonly ReadOnlySymbolTable _symbolTable;
 
@@ -25,22 +25,6 @@ namespace Microsoft.PowerFx
         /// Get the symbol table that these values correspond to.
         /// </summary>
         public ReadOnlySymbolTable SymbolTable => _symbolTable;
-
-        /// <summary>
-        /// Expose services to functions. For example, this can provide TimeZone information to the 
-        /// Now()/TimeZoneInfo()/etc. Or current culture to the various text parsing functions. 
-        /// </summary>
-        /// <param name="serviceType">type of service requested.</param>
-        /// <returns>Return null if service is not provided.</returns>
-        public virtual object GetService(Type serviceType)
-        {
-            return null;
-        }
-
-        public T GetService<T>()
-        {
-            return (T)GetService(typeof(T));
-        }
 
         protected ReadOnlySymbolValues(ReadOnlySymbolTable symbolTable)
         {

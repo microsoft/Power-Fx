@@ -16,11 +16,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Dec2Hex(number:n, [places:n])
     internal sealed class Dec2HexFunction : BuiltinFunction
     {
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
+
         public override bool IsSelfContained => true;
 
         public override bool IsStateless => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public override bool HasPreciseErrors => true;
 
@@ -41,8 +44,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public override bool IsStateless => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public override bool HasPreciseErrors => true;
 
@@ -68,17 +69,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.IsTable);
+            Contracts.Assert(returnType.IsTableNonObjNull);
             Contracts.Assert(!fValid || returnType.IsColumn);
             if (argTypes.Length == 1)
             {
                 var type = argTypes[0];
                 var arg = args[0];
-                if (!type.IsTable)
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTypeError);
-                    return false;
-                }
+                fValid &= CheckNumericColumnType(context, arg, type, errors, ref nodeToCoercedTypeMap);
             }
             else if (argTypes.Length == 2)
             {
@@ -87,7 +84,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var arg1 = args[0];
                 var arg2 = args[0];
 
-                if (!type0.IsTable && !type1.IsTable)
+                if (!type0.IsTableNonObjNull && !type1.IsTableNonObjNull)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg1, TexlStrings.ErrTypeError);
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg2, TexlStrings.ErrTypeError);
@@ -97,19 +94,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var otherType = DType.Invalid;
                 TexlNode otherArg = null;
 
-                if (type0.IsTable)
+                if (type0.IsTableNonObjNull)
                 {
                     // Ensure we have a one-column table of numerics
-                    fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckNumericColumnType(context, args[0], type0, errors, ref nodeToCoercedTypeMap);
 
                     // Check arg1 below.
                     otherArg = args[1];
                     otherType = type1;
                 }
-                else if (type1.IsTable)
+                else if (type1.IsTableNonObjNull)
                 {
                     // Ensure we have a one-column table of numerics
-                    fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckNumericColumnType(context, args[1], type1, errors, ref nodeToCoercedTypeMap);
 
                     // Check arg0 below.
                     otherArg = args[0];
@@ -119,14 +116,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 Contracts.Assert(otherType.IsValid);
                 Contracts.AssertValue(otherArg);
 
-                if (otherType.IsTable)
+                if (otherType.IsTableNonObjNull)
                 {
                     // Ensure we have a one-column table of numerics
-                    fValid &= CheckNumericColumnType(otherType, otherArg, errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckNumericColumnType(context, otherArg, otherType, errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!DType.Number.Accepts(otherType))
+                else if (!DType.Number.Accepts(otherType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
-                    if (otherType.CoercesTo(DType.Number))
+                    if (otherType.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, otherArg, DType.Number);
                     }

@@ -4,8 +4,12 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Syntax;
 using Xunit;
 
@@ -45,10 +49,50 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("-123456789")]
         [InlineData("123456789.987654321", "123456789.98765433")]
         [InlineData("-123456789.987654321", "-123456789.98765433")]
+        [InlineData("1.00000000000000000000001", "1")]
         [InlineData("2.E5", "200000")]
         public void TexlParseNumericLiterals(string script, string expected = null)
         {
-            TestRoundtrip(script, expected);
+            TestRoundtrip(script, expected, NodeKind.Error, null, TexlParser.Flags.NumberIsFloat);
+        }
+
+        [Theory]
+        [InlineData("0")]
+        [InlineData("-0")]
+        [InlineData("1")]
+        [InlineData("-1")]
+        [InlineData("1.0", "1")]
+        [InlineData("-1.0", "-1")]
+        [InlineData("1.123456789")]
+        [InlineData("-1.123456789")]
+        [InlineData("0.0", "0")]
+        [InlineData("0.000000", "0")]
+        [InlineData("0.000001", "1E-06")]
+        [InlineData("0.123456789")]
+        [InlineData("-0.0", "-0")]
+        [InlineData("-0.000000", "-0")]
+        [InlineData("-0.000001", "-1E-06")]
+        [InlineData("-0.123456789")]
+        [InlineData("0.99999999")]
+        [InlineData("9.99999999")]
+        [InlineData("-0.99999999")]
+        [InlineData("-9.99999999")]
+        [InlineData("-100")]
+        [InlineData("10e4", "100000")]
+        [InlineData("10e-4", "0.001")]
+        [InlineData("10e+4", "100000")]
+        [InlineData("-10e4", "-100000")]
+        [InlineData("-10e-4", "-0.001")]
+        [InlineData("-10e+4", "-100000")]
+        [InlineData("123456789")]
+        [InlineData("-123456789")]
+        [InlineData("123456789.987654321", "123456789.987654321")]
+        [InlineData("-123456789.987654321", "-123456789.987654321")]
+        [InlineData("1.00000000000000000000001", "1.00000000000000000000001")]
+        [InlineData("2.E5", "200000")]
+        public void TexlParseDecimalLiterals(string script, string expected = null)
+        {
+            TestRoundtrip(script, expected, NodeKind.Error, null, TexlParser.Flags.None);
         }
 
         [Theory]
@@ -381,7 +425,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             // The language does not / no longer supports a null constant.
             // Out-of-context nulls are parsed as unbound identifiers.
-            TestRoundtrip(script, expectedNodeKind: expectedNodeKind);
+            TestRoundtrip(script, expectedNodeKind: expectedNodeKind, flags: TexlParser.Flags.DisableReservedKeywords);
         }
 
         [Theory]
@@ -518,6 +562,27 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("1234+6789+1234")] // Valid parse
+        [InlineData("1234+6789+++++")] // Invalid parse
+        public void MaxExpressionLength(string expr)
+        {
+            var opts = new ParserOptions
+            {
+                 MaxExpressionLength = 10
+            };
+
+            var parseResult = Engine.Parse(expr, options: opts);
+            Assert.False(parseResult.IsSuccess);
+            Assert.True(parseResult.HasError);
+
+            // Only 1 error for being too long.
+            // Any other errors indicate additional work that we shouldn't have done. 
+            var errors = parseResult.Errors;
+            Assert.Single(errors);
+            Assert.Equal("Error 0-14: Expression can't be more than 10 characters. The expression is 14 characters.", errors.First().ToString());
+        }
+
+        [Theory]
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("//LineComment")]
@@ -626,6 +691,21 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("[{A]", 0, 4)]
+        [InlineData("[{A:2}]", 0, 7)]
+        [InlineData("With({A:2", 0, 9)]
+        [InlineData("Filter(CDS, {A:2", 0, 16)]
+        [InlineData("{", 0, 1)]
+        [InlineData("Filter(CDS, {", 0, 13)]
+        public void TestParseRecordNodesSpan(string script, int min, int lim)
+        {
+            var result = TexlParser.ParseScript(script);
+            var span = result.Root.GetCompleteSpan();
+            Assert.Equal(min, span.Min);
+            Assert.Equal(lim, span.Lim);
+        }
+
+        [Theory]
         [InlineData("[]", "[  ]")]
         [InlineData("[  ]")]
         [InlineData("[ 1, 2, 3, 4, 5 ]")]
@@ -669,6 +749,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("a = 10")]
+        [InlineData("a = ;")]
+        [InlineData("b=10;a = ;c=3;")]
+        [InlineData("/*b=10*/;a = ;c=3;")]
         [InlineData("Formul@ = 10; b = 20;")]
         [InlineData("a;")]
         [InlineData(";")]
@@ -734,16 +817,118 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal void TestFormulasParseRoundtrip(string script)
         {
-            var result = TexlParser.ParseFormulasScript(script, new CultureInfo("en-US"));
-
-            Assert.False(result.HasError);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+            Assert.False(userDefinitionResult.HasErrors);
         }
 
         internal void TestFormulasParseError(string script)
         {
-            var result = TexlParser.ParseFormulasScript(script, new CultureInfo("en-US"));
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+            Assert.True(userDefinitionResult.HasErrors);
+        }
 
-            Assert.True(result.HasError);
+        [Theory]
+        [InlineData("a = 10ads; b = 123; c = 20;", "c")]
+        [InlineData("a = (; b = 123; c = 20;", "c")]
+        [InlineData("a = (; b = 123; c = );", "b")]
+        [InlineData("a = 10; b = 123; c = 10);", "b")]
+        [InlineData("3r(09 = 10; b = 123; c = 10;", "b")]
+        [InlineData("a = 10; b = (123 ; c = 20;", "c")]
+        [InlineData("a = 10; b = in'valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in(valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in)valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in{valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in}valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in'valid", "a")]
+        [InlineData("a = 10; b = 3213d 123123asdf", "a")]
+        [InlineData("a = 10; b = 3213d 123123asdf; c = 23;", "c")]
+        [InlineData("a = 10; b = 3213d 123123asdf;; c = 23;", "c")]
+        [InlineData("a = 10; b = 321;3;d ;;;123123asdf;; c = 23;", "c")]
+        [InlineData("a = 10; b = in'valid ; c = 20; d = also(invalid; e = 44;", "e")]
+        [InlineData("a = 10; b = 30; c = in'valid ; d = (10; e = 42;", "e")]
+        public void TestFormulaParseRestart(string script, string key)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+            Assert.True(userDefinitionResult.HasErrors);
+
+            // Parser restarted, and found 'c' correctly
+            Assert.Contains(userDefinitionResult.NamedFormulas, kvp => kvp.Ident.Name.ToString() == key);
+        }
+
+        [Theory]
+        [InlineData("a = 10;; b = in'valid ;; c = 20", "c")]
+        [InlineData("a = 10;; b = in'valid ;; c = 20;; d = also(invalid;; e = 44;;", "e")]
+        public void TestFormulaParseRestart2(string script, string key)
+        {
+            var formulasResult = TexlParser.ParseFormulasScript(script, new CultureInfo("fr-FR"));
+            Assert.True(formulasResult.HasError);
+
+            // Parser restarted, and found 'c' correctly
+            Assert.Contains(formulasResult.NamedFormulas, kvp => kvp.Key.Name.Value == key);
+        }
+
+        [Theory]
+        [InlineData("a = 10; b = in'valid ; c = 20;", 0, 3, true)]
+        [InlineData("a = 10; b = in(valid ; c = 20;", 0, 3, true)]
+        [InlineData("a = 10; b = in)valid ; c = 20;", 0, 3, true)]
+        [InlineData("a = 10; b = in{valid ; c = 20;", 0, 3, true)]
+        [InlineData("a = 10; b = in}valid ; c = 20;", 0, 3, true)]
+        [InlineData("Foo(x: Number): Number = Abs(x);", 1, 0, false)]
+        [InlineData("x = 1; Foo(x: Number): Number = Abs(x); y = 2;", 1, 2, false)]
+        [InlineData("Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, false)]
+        [InlineData("Add(x: Number, y:Number): Number = x + y;;; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, true)]
+        [InlineData(@"F2(b: Text): Text  = ""Test"";", 1, 0, false)]
+        [InlineData(@"F2(b: Text): Text  = ""Test;", 0, 0, true)]
+        [InlineData("Add(x: Number, y:Number): Number = (x + y;;; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, true)]
+        public void TestUDFNamedFormulaCountsRestart(string script, int udfCount, int namedFormulaCount, bool expectErrors)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+
+            Assert.Equal(udfCount, userDefinitionResult.UDFs.Count());
+            Assert.Equal(namedFormulaCount, userDefinitionResult.NamedFormulas.Count());
+            Assert.Equal(expectErrors, userDefinitionResult.Errors?.Any() ?? false);
+        }
+
+        [Theory]
+
+        [InlineData("a = 10; b = a + c ; c = 20;", 3, false, new int[] { 0, 8, 20 })]
+        [InlineData("a = 10; b = in(valid ; c = 20;", 3, true, new int[] { 0, 8, 23 })]
+        public void TestNamedFormulaStarIndex(string script, int namedFormulaCount, bool expectErrors, int[] expectedStartingIndex)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+
+            var nfs = userDefinitionResult.NamedFormulas;
+            Assert.Equal(namedFormulaCount, nfs.Count());
+            Assert.Equal(expectErrors, userDefinitionResult.Errors?.Any() ?? false);
+
+            int i = 0;
+            foreach (var nf in nfs)
+            {
+                Assert.Equal(expectedStartingIndex[i], nf.StartingIndex);
+                i++;
+            }
         }
     }
 }

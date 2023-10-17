@@ -2,10 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Microsoft.PowerFx
 {
@@ -24,6 +20,15 @@ namespace Microsoft.PowerFx
                 elementType = null;
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Get a service from the <paramref name="serviceProvider"/>,
+        /// Returns null if not present.
+        /// </summary>
+        public static T GetService<T>(this IServiceProvider serviceProvider)
+        {
+            return (T)serviceProvider.GetService(typeof(T));
         }
     }
 }

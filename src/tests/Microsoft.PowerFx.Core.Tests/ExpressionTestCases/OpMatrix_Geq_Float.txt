@@ -1,0 +1,773 @@
+#SETUP: NumberIsFloat
+
+// Float() has been replaced with Value() for PA client compatibility.  
+// When in NumberIsFloat mode, Value and Float functions are effectively the same.
+
+// GREATER THAN OR EQUAL
+
+// In these tests, 1E100 or some other very large/small number is used to test floating point results which decimal can not represent, 
+// and a highly precise number is used for decimal, such as 2.00000000000000000000000000002 that would be rounded in floating point.
+// For example, if a decimal test results with 25+ signficant digits results in 2, then an inappropriate conversion to floating point was made.
+
+// Basic Float and Decimal without constructors
+
+>> 1 >= 1
+true
+
+>> 1 >= 2
+false
+
+>> 1 >= 0
+true
+
+>> 1.00000000000000000000000001 >= 1.00000000000000000000000001
+true
+
+>> 1.00000000000000000000000001 >= 1.00000000000000000000000002
+true
+
+>> 1.00000000000000000000000001 >= 1.00000000000000000000000000
+true
+
+>> 1E100 >= 1E100
+true
+
+>> 1E100 >= 1.1E100
+false
+
+>> 1E100 >= 9.9E99
+true
+
+>> 1E-100 >= 1E-100
+true
+
+>> 1E-100 >= 1.1E-100
+false
+
+>> 1E-100 >= 9.9E-101
+true
+
+// Float
+
+>> Value(16) >= Value(14)
+true
+
+>> Value(16) >= Value(16)
+true
+
+>> Value(16) >= Value("1e100")
+false
+
+>> Value(16) >= Value(18)
+false
+
+>> Value(16) >= "16"
+Errors: Error 13-17: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Value(16) >= "16.000000000000000000002"
+Errors: Error 13-39: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Value(16) >= "14"
+Errors: Error 13-17: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Value(16) >= "18"
+Errors: Error 13-17: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Value(16) >= "1e20"
+Errors: Error 13-19: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Value(1e20) >= "1e20"
+Errors: Error 15-21: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Value(1) >= true
+Errors: Error 12-16: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Value(1) >= false
+Errors: Error 12-17: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Value(0) >= true
+Errors: Error 12-16: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Value(0) >= false
+Errors: Error 12-17: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Value(2) >= true
+Errors: Error 12-16: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Value(2) >= false
+Errors: Error 12-17: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+// >, <, <=, and >= comparisons between number and blank are done with numbers, with the blank being interpreted as a 0
+// = and <> comparisons are comparing the value against null, since a number can be a blank value.
+>> Value(0) >= Blank()
+true
+
+>> Value(1) >= Blank()
+true
+
+>> Value(2) >= Blank()
+true
+
+>> If(1<0,Value(1)) >= Blank()
+true
+
+>> Value(2) >= Date(1900,1,1)
+true
+
+>> Value(Date(2000,1,1))
+36526
+
+>> Value(36526) >= Date(2000,1,1)
+true
+
+>> Value(36526) >= Date(2001,12,12)
+false
+
+>> Value(DateTime(2000,1,1,12,0,0))
+36526.5
+
+>> Value(36526.5) >= DateTime(2000,1,1,12,0,0)
+true
+
+>> Value(36526.5) >= DateTime(2020,12,20,0,0,0)
+false
+
+>> Value(Time(12,0,0))
+0.5
+
+>> Value(0.5) >= Time(12,0,0)
+true
+
+>> Value(0.5) >= Time(9,0,0)
+true
+
+>> Value(16) >= ParseJSON("16")
+true
+
+// comparison done in floating point, decimal rounded
+>> Value(16) >= ParseJSON("16.0000000000000000000002")
+true
+
+// comparison done in floating point, decimal rounded
+>> Value("16.0000000000000000000002") >= ParseJSON("16.0000000000000000000002")
+true
+
+>> Value(16) >= ParseJSON("1e100")
+false
+
+>> Value("1e100") >= ParseJSON("2")
+true
+
+>> Value("1e100") >= ParseJSON("1e100")
+true
+
+// Text - Text can only be compared with other text
+
+>> "16" >= Value(16)
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "16" >= Value(18)
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "16" >= Value(14)
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "1e100" >= Value(2)
+Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "" >= Value(0)
+Errors: Error 0-2: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "16" >= "16"
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 8-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "16" >= "18"
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 8-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "16" >= "14"
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 8-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "16" >= "16.00000000000000000000000002"
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 8-39: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "1e100" >= "2"
+Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 11-14: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "1" >= true
+Errors: Error 0-3: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 7-11: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "1e100" >= true
+Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 11-15: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "16" >= Blank()
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "1" >= Blank()
+Errors: Error 0-3: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "0" >= Blank()
+Errors: Error 0-3: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "" >= Blank()
+Errors: Error 0-2: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "1e100" >= Blank()
+Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "36526" >= Date(2000,1,1)
+Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "36526.5" >= DateTime(2000,1,1,12,0,0)
+Errors: Error 0-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "16" >= Time(12,0,0)
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "16" >= ParseJSON("16")
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "16" >= ParseJSON("14")
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "16" >= ParseJSON("18")
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "16" >= ParseJSON("""16""")
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "16" >= ParseJSON("""14""")
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "16" >= ParseJSON("""18""")
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "1e100" >= ParseJSON("1e100")
+Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "true" >= ParseJSON("true")
+Errors: Error 0-6: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "true" >= ParseJSON("false")
+Errors: Error 0-6: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "false" >= ParseJSON("false")
+Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "false" >= ParseJSON("true")
+Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "1e100" >= ParseJSON("2")
+Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+// Boolean
+
+>> true >= Value(2)
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= Value(1)
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= Value(0)
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= Value(2)
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= Value(1)
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= Value(0)
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= Value("1e100")
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= "1"
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= "0"
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= "1"
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= "1E+100"
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+// returns false in Excel
+>> true >= "true"
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= "false"
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= true
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= false
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= Blank()
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= Blank()
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= Date(1927,5,18)
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= DateTime(1927,5,18,0,0,0)
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= Time(12,0,0)
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= Date(1927,5,18)
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= DateTime(1927,5,18,0,0,0)
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= Time(12,0,0)
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= ParseJSON("2")
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= ParseJSON("1")
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= ParseJSON("0")
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= ParseJSON("true")
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= ParseJSON("false")
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= ParseJSON("2")
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= ParseJSON("1")
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= ParseJSON("0")
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= ParseJSON("true")
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= ParseJSON("false")
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= ParseJSON("1e100")
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= ParseJSON("null")
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+// Blank
+
+>> Blank() >= Value(2)
+false
+
+>> Blank() >= Value("1e100")
+false
+
+>> Blank() >= "2"
+Errors: Error 11-14: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Blank() >= Value(0)
+true
+
+>> Blank() >= "1e100"
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Blank() >= true
+Errors: Error 11-15: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Blank() >= Blank()
+true
+
+>> Blank() >= Date(2000,1,1)
+false
+
+>> Blank() >= DateTime(2000,1,1,12,0,0)
+false
+
+>> Blank() >= Time(12,0,0)
+false
+
+>> Blank() >= ParseJSON("2")
+false
+
+>> Blank() >= ParseJSON("1e100")
+false
+
+>> Blank() >= ParseJSON("null")
+true
+
+>> Blank() >= ParseJSON("0")
+true
+
+// Date
+
+>> Date(2000,1,1) >= Value(2)
+true
+
+>> Date(1900,1,1) >= Value(2)
+true
+
+>> Date(1900,1,0) >= Value(2)
+false
+
+>> Date(1900,1,2) >= Value(2)
+true
+
+>> Date(1900,1,1) >= "2"
+Errors: Error 18-21: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Date(1900,1,0) >= true
+Errors: Error 18-22: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Date(2000,1,1) >= Blank()
+true
+
+>> Date(1954,10,3) >= Date(1927,5,18)
+true
+
+>> Date(1927,5,18) >= Date(1954,10,3)
+false
+
+>> Date(1954,10,3) >= Date(1954,10,3)
+true
+
+>> Date(1954,10,3) >= Date(1900,1,1)
+true
+
+>> Date(1954,10,3) >= DateTime(1954,10,3,0,0,0)
+true
+
+>> Date(1954,10,3) >= DateTime(1954,10,3,1,0,0)
+false
+
+>> Date(1954,10,3) >= Now()
+false
+
+>> Date(1954,10,3) >= Today()
+false
+
+>> Date(2000,1,1) >= Time(12,0,0)
+true
+
+// comparison done on floating point due to Date/DateTime/Time
+>> Date(1900,1,1) >= Value("1.999999999999999999999999")
+true
+
+>> Date(1900,1,1) >= ParseJSON("2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Date(2000,1,1) >= ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Date(2000,1,1) >= ParseJSON("""2000-01-01""")
+true
+
+>> Date(2000,1,1) >= ParseJSON("""2000-01-02""")
+false
+
+>> Date(2000,1,1) >= ParseJSON("""1999-12-31""")
+true
+
+// DateTime
+
+>> DateTime(1900,1,1,12,0,0) >= Value(2.5)
+true
+
+>> DateTime(1900,1,1,12,0,0) >= Value(2)
+true
+
+>> DateTime(1900,1,1,12,0,1) >= Value(2.5)
+true
+
+>> DateTime(1900,1,1,12,0,0) >= "2.5"
+Errors: Error 29-34: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> DateTime(2000,1,1,12,0,0) >= true
+Errors: Error 29-33: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> DateTime(2000,1,0,0,0,0) >= true
+Errors: Error 28-32: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> DateTime(2000,1,1,12,0,0) >= Blank()
+true
+
+>> DateTime(1927,5,18,0,0,0) >= Date(1927,5,18)
+true
+
+>> DateTime(1927,5,18,0,0,1) >= Date(1927,5,18)
+true
+
+>> DateTime(1927,5,17,23,0,1) >= Date(1927,5,18)
+false
+
+>> DateTime(1900,1,1,0,0,0) >= Date(1900,1,1)
+true
+
+>> DateTime(1900,1,1,12,0,0) >= Date(1900,1,1)
+true
+
+>> DateTime(1927,5,18,1,2,3) >= DateTime(1927,5,18,1,2,3)
+true
+
+// comparison done on floating point due to Date/DateTime/Time
+>> DateTime(2000,1,1,12,0,0) >= ParseJSON("2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateTime(2000,1,1,12,0,0) >= ParseJSON("2.5")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateTime(2000,1,1,12,0,0) >= ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateTime(2000,1,1,12,0,0) >= ParseJSON("""2000-01-01T12:00:00""")
+true
+
+>> DateTime(2000,1,1,12,0,1) >= ParseJSON("""2000-01-01T12:00:01""")
+true
+
+>> DateTime(2000,1,1,12,0,0) >= ParseJSON("""2000-01-01T12:00:01""")
+false
+
+>> DateTime(2000,1,1,12,0,2) >= ParseJSON("""2000-01-01T12:00:01""")
+true
+
+// Time
+
+>> Time(9,0,0) >= Value(0.375)
+true
+
+>> Time(9,0,0) >= "0.375"
+Errors: Error 15-22: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Time(9,0,0) >= true
+Errors: Error 15-19: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Time(24,0,0) >= false
+Errors: Error 16-21: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Time(24,0,0) >= 0
+true
+
+>> Time(24,0,0) >= 1
+true
+
+>> Time(9,0,0) >= Blank()
+true
+
+>> If(1<0,Time(9,0,0)) >= Blank()
+true
+
+>> Time(9,0,0) >= Time(9,0,0)
+true
+
+>> Time(9,0,1) >= Time(9,0,0)
+true
+
+>> Time(9,0,0) >= Time(9,0,1)
+false
+
+>> Time(9,0,0) >= Date(1900,1,2)
+false
+
+// comparison done on floating point due to Date/DateTime/Time
+>> Time(3,0,0) >= ParseJSON("2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(3,0,0) >= ParseJSON("0.125")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(3,0,0) >= ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(3,0,0) >= ParseJSON("""03:00:00""")
+true
+
+>> Time(3,0,0) >= ParseJSON("""03:00:01""")
+false
+
+>> Time(3,0,2) >= ParseJSON("""03:00:01""")
+true
+
+// Untyped
+
+>> ParseJSON("16.00000000000000000000001") >= Value(2)
+true
+
+// comparisons with float are done in float
+>> ParseJSON("16.00000000000000000000001") >= Value(16)
+true
+
+>> ParseJSON("1e100") >= Value(2)
+true
+
+>> ParseJSON("16.00000000000000000000001") >= "2"
+Errors: Error 43-46: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("16.00000000000000000000001") >= "16"
+Errors: Error 43-47: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("16.00000000000000000000001") >=  "16.00000000000000000000001"
+Errors: Error 44-72: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("16.00000000000000000000001") >=  16 + ".00000000000000000000001"
+true
+
+>> ParseJSON("16.00000000000000000000001") >=  16 + ".00000000000000000000000"
+true
+
+// comparison done on floating point due to Date/DateTime/Time
+>> ParseJSON("16.00000000000000000000001") >=  16 + ".00000000000000000000002"
+true
+
+>> ParseJSON("16") >= "16"
+Errors: Error 19-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("1e100") >= "2"
+Errors: Error 22-25: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("16.000000000000000000000001") >= true
+Errors: Error 44-48: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("1.000000000000000000000001") >= true
+Errors: Error 43-47: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("0") >= true
+Errors: Error 18-22: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("0") >= false
+Errors: Error 18-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("1") >= true
+Errors: Error 18-22: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("1") >= false
+Errors: Error 18-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("true") >= true
+Errors: Error 21-25: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("false") >= false
+Errors: Error 22-27: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("false") >= true
+Errors: Error 22-26: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("true") >= false
+Errors: Error 21-26: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("1e100") >= true
+Errors: Error 22-26: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> ParseJSON("16.000000000000000000000001") >= Blank()
+true
+
+>> ParseJSON("0") >= Blank()
+true
+
+>> ParseJSON("null") >= Blank()
+true
+
+>> ParseJSON("1e100") >= Blank()
+true
+
+>> ParseJSON("2") >= Date(1900,1,1)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.0000000000000000000001") >= Date(1900,1,15)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("""1900-01-01""") >= Date(1900,1,1)
+true
+
+>> ParseJSON("""1900-01-02""") >= Date(1900,1,1)
+true
+
+>> ParseJSON("""1899-12-31""") >= Date(1900,1,1)
+false
+
+>> ParseJSON("""1990-07-01""") >= Date(1990,7,1)
+true
+
+>> ParseJSON("""1990-07-02""") >= Date(1990,7,1)
+true
+
+>> ParseJSON("""1990-06-30""") >= Date(1990,7,1)
+false
+
+>> ParseJSON("""1900-01-01T09:00:01""") >= Date(1900,1,1)
+true
+
+>> ParseJSON("16") >= Date(1900,1,15)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("1e100") >= Date(1900,1,15)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("null") >= Date(1900,1,15)
+false
+
+>> ParseJSON("16.500000000000000000001") >= DateTime(1900,1,15,12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.5") >= DateTime(1900,1,15,12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("""1900-01-01T12:00:00""") >= DateTime(1900,1,1,12,0,0)
+true
+
+>> ParseJSON("""1900-01-01T09:00:00""") >= DateTime(1900,1,1,12,0,0)
+false
+
+>> ParseJSON("""1900-01-01T15:00:00""") >= DateTime(1900,1,1,12,0,0)
+true
+
+>> ParseJSON("1e100") >= DateTime(1900,1,7,12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000001") >= Time(12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("1") >= Time(24,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("""12:00:01""") >= Time(12,0,1)
+true
+
+>> ParseJSON("""12:00:02""") >= Time(12,0,1)
+true
+
+>> ParseJSON("0.250000000000000000000001") >= Time(6,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("0.25") >= Time(6,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("1e100") >= Time(12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("2.000000000000000000000000001") >= ParseJSON("2.000000000000000000000000001")
+Errors: Error 43-45: This operation isn't valid on these types: UntypedObject, UntypedObject.
+
+>> ParseJSON("2.000000000000000000000002") >= ParseJSON("2")
+Errors: Error 40-42: This operation isn't valid on these types: UntypedObject, UntypedObject.
+
+>> ParseJSON("1e100") >= ParseJSON("2")
+Errors: Error 19-21: This operation isn't valid on these types: UntypedObject, UntypedObject.
+
+>> ParseJSON("16.000000000000000000000002") >= ParseJSON("1e100")
+Errors: Error 41-43: This operation isn't valid on these types: UntypedObject, UntypedObject.
+
+>> ParseJSON("1e100") >= ParseJSON("1e100")
+Errors: Error 19-21: This operation isn't valid on these types: UntypedObject, UntypedObject.

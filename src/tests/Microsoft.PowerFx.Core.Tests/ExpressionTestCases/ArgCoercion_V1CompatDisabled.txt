@@ -1,0 +1,17 @@
+#SETUP: disable:PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult,TableSyntaxDoesntWrapRecords
+
+>> Last([ {a:2}, {a:true, b:true, c:20}, {a:2, b:2, c:true} ]).c
+true
+
+// Without PowerFxV1CompatibilityRules feature, the following coercions will fail
+>> Len(GUID())
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> GUID() & GUID() <> ""
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
+
+>> Len(Lower(GUID()))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Len(GUID() & GUID())
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))

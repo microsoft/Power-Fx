@@ -17,6 +17,11 @@ namespace Microsoft.PowerFx.Core.Binding
     internal enum NameLookupPreferences
     {
         None = 0,
+        
+        /// <summary>
+        /// An identifier with [@name] notation. This means ignore all symbols in RowScope.
+        /// Used to specify a global that may be overshadoweded by a local.
+        /// </summary>
         GlobalsOnly = 0x1,
         HasDottedNameParent = 0x2,
     }
@@ -34,7 +39,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         DPath CurrentEntityPath { get; }
 
-        IEnumerable<TexlFunction> Functions { get; }
+        TexlFunctionSet Functions { get; }
 
         // This advertises whether the INameResolver instance will suggest unqualified enums ("Hours")
         // or only qualified enums ("TimeUnit.Hours").
@@ -58,14 +63,17 @@ namespace Microsoft.PowerFx.Core.Binding
         /// </returns>
         IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace);
 
-        // Return true if the specified boxed enum info contains a value for the given locale-specific name.
-        bool LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value);
-
-        // Return true if the specified enum type contains a value for the given locale-specific name.
-        bool LookupEnumValueByTypeAndLocName(DType enumType, DName locName, out object value);
-
         // Looks up the parent control for the current context.
         bool LookupParent(out NameLookupInfo lookupInfo);
+
+        /// <summary>
+        /// In Power Apps specifically, this is used to retrieve the full, derived, type
+        /// of a control object where the output schema may be dependent on a control inputs and hierarchy. 
+        /// All Non-Power Apps hosts should not implement this method.
+        /// </summary>
+        /// <param name="control">The control to get the full type of.</param>
+        /// <param name="controlType">output: the expanded control type.</param>
+        bool LookupExpandedControlType(IExternalControl control, out DType controlType);
 
         // Looks up the current control for the current context.
         bool LookupSelf(out NameLookupInfo lookupInfo);

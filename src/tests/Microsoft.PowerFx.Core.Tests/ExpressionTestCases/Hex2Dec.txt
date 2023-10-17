@@ -1,4 +1,6 @@
-﻿>> Hex2Dec("0")
+﻿#SETUP: ConsistentOneColumnTableResult
+
+>> Hex2Dec("0")
 0
 
 // Positive Integer Parameters
@@ -81,3 +83,23 @@ Error({Kind:ErrorKind.Numeric})
 >> Hex2Dec(["3","E","I","B"])
 Table({Value:3},{Value:14},{Value:Error({Kind:ErrorKind.Numeric})},{Value:11})
 
+>> Hex2Dec(Table({a:"A"}))
+Table({Value:10})
+
+>> Hex2Dec(Table({a:"A"},{a:"12"},{a:"FFFF"}))
+Table({Value:10},{Value:18},{Value:65535})
+
+>> Hex2Dec(Table({a:"A",b:"B"}))
+Errors: Error 0-29: The function 'Hex2Dec' has some invalid arguments.|Error 8-28: Invalid schema, expected a one-column table.
+
+>> Hex2Dec(Table({a:1},{a:10},{a:100}))
+Table({Value:1},{Value:16},{Value:256})
+
+>> Hex2Dec(["a", 10, "b"])
+Table({Value:10},{Value:16},{Value:11})
+
+>> Hex2Dec(Table({a:[1]},{a:[2]}))
+Errors: Error 0-31: The function 'Hex2Dec' has some invalid arguments.|Error 8-30: Invalid schema, expected a column of Text values for 'a'.
+
+>> Hex2Dec(Table({a:{b:1}},{a:{b:2}}))
+Errors: Error 0-35: The function 'Hex2Dec' has some invalid arguments.|Error 8-34: Invalid schema, expected a column of Text values for 'a'.

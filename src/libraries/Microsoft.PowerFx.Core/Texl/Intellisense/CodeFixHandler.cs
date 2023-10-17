@@ -13,20 +13,19 @@ namespace Microsoft.PowerFx.Intellisense
     /// Register a handle for providing code-fix results. 
     /// This object must be stateless - a new instance can be created each time.
     /// </summary>
-    abstract public class CodeFixHandler
+    public abstract class CodeFixHandler
     {
         /// <summary>
         /// Invoked by user when there are errors present - offers possible fixes for the errors. 
         /// </summary>
         /// <param name="engine">The engine that that the result was for. This can be useful for gathering broader context for the fix.</param>
-        /// <param name="checkResult">An attempt at parsing and binding. This is likely unsuccessful (hence the request for the codefix) </param>
+        /// <param name="checkResult">An attempt at parsing and binding. This is likely unsuccessful (hence the request for the codefix).</param>
         /// <param name="cancel"></param>
         /// <returns></returns>
         public abstract Task<IEnumerable<CodeFixSuggestion>> SuggestFixesAsync(
             Engine engine,
             CheckResult checkResult,
             CancellationToken cancel);
-
 
         /// <summary>
         /// Callback invoke if the user applies the handler. 

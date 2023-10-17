@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
@@ -27,7 +28,7 @@ namespace Microsoft.PowerFx.Intellisense
         {
             Contracts.AssertValue(suggestionHandlers);
 
-            _config = config;
+            _config = config;            
             _enumStore = enumStore;
             _suggestionHandlers = suggestionHandlers;
         }
@@ -38,38 +39,23 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.CheckValue(binding, "binding");
             Contracts.CheckValue(formula, "formula");
 
-            // TODO: Hoist scenario tracking out of language module.
-            // Guid suggestScenarioGuid = Common.Telemetry.Log.Instance.StartScenario("IntellisenseSuggest");
+            IEnumerable<TexlFunction> allFunctionOverloads = null;
 
-            try
+            if (!TryInitializeIntellisenseContext(context, binding, formula, out var intellisenseData))
             {
-                if (!TryInitializeIntellisenseContext(context, binding, formula, out var intellisenseData))
-                {
-                    return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>());
-                }
-
-                foreach (var handler in _suggestionHandlers)
-                {
-                    if (handler.Run(intellisenseData))
-                    {
-                        break;
-                    }
-                }
-
-                return Finalize(context, intellisenseData);
-            }
-            catch (Exception ex)
-            {
-                // If there is any exception, we don't need to crash. Instead, Suggest() will simply 
-                // return an empty result set along with exception for client use.
-                return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>(), ex);
+                allFunctionOverloads = GetFunctionOverloads(intellisenseData.Binding.NameResolver, intellisenseData.CurFunc);
+                return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>(), allFunctionOverloads);
             }
 
-            // TODO: Hoist scenario tracking out of language module.
-            // finally
-            // {
-            //     Common.Telemetry.Log.Instance.EndScenario(suggestScenarioGuid);
-            // }
+            foreach (var handler in _suggestionHandlers)
+            {
+                if (handler.Run(intellisenseData))
+                {
+                    break;
+                }
+            }
+
+            return Finalize(context, intellisenseData, formula.Loc);
         }
 
         public static bool TryGetExpectedTypeForBinaryOp(TexlBinding binding, TexlNode curNode, int cursorPos, out DType expectedType)
@@ -188,7 +174,7 @@ namespace Microsoft.PowerFx.Intellisense
             return false;
         }
 
-        protected static void TypeMatchPriority(DType type, IList<IntellisenseSuggestion> suggestions)
+        protected static void TypeMatchPriority(DType type, IList<IntellisenseSuggestion> suggestions, bool usePowerFxV1CompatibilityRules)
         {
             Contracts.Assert(type.IsValid);
             Contracts.AssertValue(suggestions);
@@ -204,10 +190,10 @@ namespace Microsoft.PowerFx.Intellisense
                 if (!suggestion.Type.IsUnknown && 
 
                     // Most type acceptance is straightforward
-                    (type.Accepts(suggestion.Type) ||
+                    (type.Accepts(suggestion.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
 
                     // Option Set expected types should also include the option set base as a reccomendation.
-                    (suggestion.Type.IsOptionSet && type.Accepts(DType.CreateOptionSetValueType(suggestion.Type.OptionSetInfo)))))
+                    (suggestion.Type.IsOptionSet && type.Accepts(DType.CreateOptionSetValueType(suggestion.Type.OptionSetInfo), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))))
                 {
                     suggestion.SortPriority++;
                 }
@@ -259,21 +245,18 @@ namespace Microsoft.PowerFx.Intellisense
             }
         }
 
-        private IIntellisenseResult Finalize(IIntellisenseContext context, IntellisenseData.IntellisenseData intellisenseData)
+        private IIntellisenseResult Finalize(IIntellisenseContext context, IntellisenseData.IntellisenseData intellisenseData, CultureInfo culture)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValue(intellisenseData);
-
             var expectedType = intellisenseData.ExpectedType;
 
-            TypeMatchPriority(expectedType, intellisenseData.Suggestions);
-            TypeMatchPriority(expectedType, intellisenseData.SubstringSuggestions);
-            intellisenseData.Suggestions.Sort();
-            intellisenseData.SubstringSuggestions.Sort();
-            var resultSuggestions = intellisenseData.Suggestions.Distinct().ToList();
-            var resultSubstringSuggestions = intellisenseData.SubstringSuggestions.Distinct();
-            resultSuggestions.AddRange(resultSubstringSuggestions);
+            TypeMatchPriority(expectedType, intellisenseData.Suggestions, _config.Features.PowerFxV1CompatibilityRules);
+            TypeMatchPriority(expectedType, intellisenseData.SubstringSuggestions, _config.Features.PowerFxV1CompatibilityRules);
+            List<IntellisenseSuggestion> resultSuggestions = intellisenseData.Suggestions.Distinct().ToList();
+            IEnumerable<IntellisenseSuggestion> resultSubstringSuggestions = intellisenseData.SubstringSuggestions.Distinct();
 
+            resultSuggestions.AddRange(resultSubstringSuggestions);
             TypeFilter(expectedType, intellisenseData.MatchingStr, ref resultSuggestions);
 
             foreach (var handler in intellisenseData.CleanupHandlers)
@@ -281,7 +264,23 @@ namespace Microsoft.PowerFx.Intellisense
                 handler.Run(context, intellisenseData, resultSuggestions);
             }
 
-            return new IntellisenseResult(intellisenseData, resultSuggestions);
+            intellisenseData.Suggestions.Sort(culture);
+            intellisenseData.SubstringSuggestions.Sort(culture);
+            resultSuggestions.Sort(new IntellisenseSuggestionComparer(culture));
+
+            var allFunctionsOverloads = GetFunctionOverloads(intellisenseData.Binding.NameResolver, intellisenseData.CurFunc);
+            return new IntellisenseResult(intellisenseData, resultSuggestions, allFunctionsOverloads);
+        }
+
+        public static IEnumerable<TexlFunction> GetFunctionOverloads(INameResolver resolver, TexlFunction function)
+        {
+            if (resolver == null || function == null)
+            {
+                return null;
+            }
+
+            // Default to input function, because if the function was a control property name-space won't be found in lookup. 
+            return resolver.LookupFunctions(function.Namespace, function.Name).DefaultIfEmpty(function);
         }
     }
 

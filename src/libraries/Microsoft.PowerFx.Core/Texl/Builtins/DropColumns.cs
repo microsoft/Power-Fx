@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -53,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fArgsValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             if (!argTypes[0].IsTable)
@@ -66,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 returnType = argTypes[0];
             }
 
-            var supportColumnNamesAsIdentifiers = context.Features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
+            var supportColumnNamesAsIdentifiers = context.Features.SupportColumnNamesAsIdentifiers;
 
             // The result type has N fewer columns, as specified by (args[1],args[2],args[3],...)
             var count = args.Length;

@@ -173,7 +173,7 @@
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
-    <value>Arvo, joka täsmätään switch-arvo-kohteeseen.</value>
+    <value>Arvo, joka täsmätään kytkimen_arvo-arvoon.</value>
     
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Käsiteltävien numeroarvojen sarake.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Muuntaa totuusarvotyypin totuusarvoksi.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>totuusarvo</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Totuusarvoksi muunnettava totuusarvo.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Muuntaa totuusarvojen sarakkeen totuusarvojen sarakkeeksi.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>syöte</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Käsiteltävä totuusarvosarake.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Palauttaa ensimmäisen muun kuin tyhjän argumentin</value>
     
@@ -544,6 +566,24 @@
   <data name="AboutConcatenate" xml:space="preserve">
     <value>Liittää useita tekstiarvoja yhdeksi tekstiarvoksi.</value>
     
+  </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Muuntaa lukua edustavan text-merkkijonon desimaaliarvoksi.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Arvon muuntamisessa käytettävä kielikoodi.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Desimaaliarvoksi muunnettava tekstiarvo.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Muuntaa lukua edustavan text-merkkijonon liukulukuarvoksi.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Arvon muuntamisessa käytettävä kielikoodi.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Liukulukuarvoksi muunnettava tekstiarvo.</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>teksti</value>
@@ -773,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Palautettava arvo, jos se on ensimmäinen muu kuin virheargumentti.</value>
+    <value>Arvo, joka palautetaan, jos edellinen argumentti on virhe.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -842,7 +882,8 @@
     <value>Lauseke, joka arvioidaan source-kohteen riveille ja antaa arvot lajittelua varten.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Nouseva tai laskeva</value>
+    <value>SortOrder.Ascending tai SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Lajittelee source-lähteen sarakkeen perusteella määrittäen valinnaisesti lajittelun order-järjestyksen.</value>
@@ -867,7 +908,8 @@
     <value>Yksilöivä sarakkeen nimi.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Nouseva tai laskeva</value>
+    <value>SortOrder.Ascending tai SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Lajittelee source-lähteen määritetyn sarakkeen vastaavien arvojen indeksin perusteella.</value>
@@ -979,6 +1021,46 @@
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Päivämääräarvo, jolle ISO-viikon numero lasketaan.</value>
+  </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Palauttaa päivämäärän mukautettuna kuukausien määrällä. Kuukauden päivä pysyy samana, mutta sitä rajoittaa uuden kuukauden päivien lukumäärä.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>päivämäärä</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>kuukautta</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Päivämääräarvo, jota oikaistaan määritetyllä kuukausien määrällä.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Kuukausien lukumäärä, joihin mennessä päivämäärää muutetaan. Positiivinen arvo antaa tulevan päivämäärän, negatiivinen arvo menneen päivämäärän, ja nolla ei muuta kuukautta.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Palauttaa kuukauden viimeisen päivän määritettynä päivänä, korjattuna kuukausien määrällä.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>päivämäärä</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>kuukautta</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Päivämääräarvo, jota oikaistaan määritetyllä kuukausien määrällä.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Kuukausien lukumäärä, joihin mennessä päivämäärää muutetaan. Positiivinen arvo antaa tulevan päivämäärän, negatiivinen arvo menneen päivämäärän, ja nolla ei muuta kuukautta.</value>
+         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Katkaisee luvun pyöristämällä negatiivista ääretöntä kohti.</value>
@@ -1367,6 +1449,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Käsiteltävien numeroarvojen (radiaaneina) sarake.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Arvioi lausekkeen taulukon yhden usean sarakkeen suhteen ja palauttaa yksisarakkeisen taulukon, joka sisältää erilaisia (yksilöiviä) arvoja arvioidulle lausekkeelle.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>lähde</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>lauseke</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Taulukko, josta erilaiset arvot poimitaan.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Syötetaulukon kullekin riville arvioitava lauseke, joka antaa arvot Distinct-toiminnolle.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Palauttaa määritettyjen x- ja y-koordinaattien arkustagentin (radiaaneina).</value>
   </data>
@@ -1404,6 +1503,14 @@
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>syöte</value>
+    
+  </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>määrite</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>määrite</value>
     
   </data>
   <data name="AboutLeft" xml:space="preserve">
@@ -1611,7 +1718,7 @@
     <value>Entiteettitaulukko, joka edustaa tyyppiä, jona toivomme arvoa käytettävän.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
-    <value>Suorittaa toisessa parametrina annetun kaavan käyttäen ensimmäisen parametrin antamaa vaikutusaluetta.</value>
+    <value>Suorittaa toisena parametrina annetun kaavan käyttäen ensimmäisen parametrin antamaa vaikutusaluetta.</value>
     
   </data>
   <data name="WithArg1" xml:space="preserve">
@@ -1675,7 +1782,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Komponentin mukautetut tieto-ominaisuudet ja parametrit ovat käytettävissä vain komponentin sisällä tai komponentin tulosominaisuuksien kautta.</value>
+    <value>Komponenttifunktio-ominaisuutta tai parametria voi käyttää vain komponentin sisältä tai komponentin tulostusominaisuuksista.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponenttitoiminnon ominaisuus tai parametri voi viitata vain muihin funktion ominaisuuksiin.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1742,20 +1853,8 @@
     <value>Kohteen {0} ensimmäisen argumentin tulee olla yksisarakkeinen taulukko.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Virheellinen rakenne, odotettiin tekstiarvojen saraketta kohteelle {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Virheellinen rakenne, odotettiin päivämääräarvojen saraketta kohteelle {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Virheellinen rakenne, odotettiin numeeristen arvojen saraketta kohteelle {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Virheellinen rakenne, odotettiin väriarvojen saraketta kohteelle {0}.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Virheellinen rakenne, odotettiin saraketta, jossa on {0} arvoa kohteelle {1}.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1767,7 +1866,7 @@
     
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
-    <value>Tätä tietuetta ei voi käyttää. Se voi sisältää kenttiä, joiden tyypit ovat yhteenopimattoma.</value>
+    <value>Tätä tietuetta ei voi käyttää. Se voi sisältää kenttiä, joiden tyypit ovat yhteensopimattomia.</value>
     
   </data>
   <data name="ErrNeedRecord_Func" xml:space="preserve">
@@ -1798,6 +1897,26 @@
     <value>Numeerinen arvo on liian suuri.</value>
     
   </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Käytetään varattua sanaa, jota ei tueta tällä hetkellä.</value>
+    
+  </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Lausekkeessa ei saa olla yli {0} merkkiä. Lauseke on {1} merkkiä pitkä.</value>
+    
+  </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Muodon merkkijonon koko voi olla enintään {0} merkkiä.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Virheellinen muoto.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argumentti ei vastaa kelvollista päivämäärä- tai aika-arvoa.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Tämä tietolähde on virheellinen. Korjaa virhe Tietolähteet-ruudussa valitsemalla Sisältö -&gt; Tietolähteet tai Näytä -&gt; Asetukset</value>
     
@@ -1816,6 +1935,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Tämän argumentin {0} tyyppi ei vastaa odotettua tyyppiä {1}. Löytyi tyyppi {2}.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Tämän lausekkeen tyyppi ei vastaa odotettua tyyppiä {0}. Löytyi tyyppi {1}.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -1852,6 +1975,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Lausekkeen tyypin mukaan ei voi lajitella.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Tälle lauseketyypille ei voi käyttää distinct-toimintoa.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -1960,7 +2087,7 @@
     <value>Millisekuntikomponentti.</value>
   </data>
   <data name="AboutDateTime" xml:space="preserve">
-    <value>Luo arvon, joka edustaa ajanhenkeä ilmaistuna päivämääränä ja aikana.</value>
+    <value>Luo arvon, joka edustaa hetkeä ilmaistuna päivämääränä ja aikana.</value>
     
   </data>
   <data name="AboutDateTime_year" xml:space="preserve">
@@ -2149,7 +2276,7 @@
     
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
-    <value>Sarake {0} määritettiin useammin kuin kerran.</value>
+    <value>Sarake nimeltä {0} määritettiin useammin kuin kerran.</value>
     
   </data>
   <data name="WarnLiteralPredicate" xml:space="preserve">
@@ -2240,6 +2367,9 @@
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematiikka ja tilastot</value>
   </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
+  </data>
   <data name="Information" xml:space="preserve">
     <value>Tiedot</value>
   </data>
@@ -2319,7 +2449,7 @@
     <value>Lisättävien yksiköiden määrä. Luku voi olla negatiivinen.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Käytettävä yksikkö. Se voi olla jokin seuraavista: Years, Quarters, Months, Days, Hours, Minutes, Seconds ja Milliseconds.</value>
+    <value>Käytettävä yksikkö, joka voi olla jokin seuraavista: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2341,7 +2471,7 @@
     <value>Eri toiminnon päättymispäivämäärä.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Yksikkö, jota käyttäen tulos ilmaistaan. Se voi olla jokin seuraavista: Years, Quarters, Months, Days, Hours, Minutes, Seconds ja Milliseconds.</value>
+    <value>Tuloksen ilmaiseva yksikkö, joka voi olla jokin seuraavista: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2386,7 +2516,7 @@
     <value>Eroavaisuustoiminnon päättymispäivämäärien sarake.</value>
   </data>
   <data name="AboutChar" xml:space="preserve">
-    <value>Palauttaa alustasi merkistön koodin numeron määrittämän merkin.</value>
+    <value>Palauttaa ympäristön merkistön koodinumeron määrittämän merkin.</value>
     
   </data>
   <data name="CharArg1" xml:space="preserve">
@@ -2397,7 +2527,7 @@
     <value>Alustasi merkistön koodin numero.</value>
   </data>
   <data name="AboutCharT" xml:space="preserve">
-    <value>Palauttaa taulukon merkkejä, jotka alustasi merkistön koodin numerot määrittävät.</value>
+    <value>Palauttaa taulukon merkkejä, jotka alustasi merkistön koodinumerot määrittävät.</value>
     
   </data>
   <data name="CharTArg1" xml:space="preserve">
@@ -2592,10 +2722,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Testattava arvo.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Julkaise</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Muuntaa tekstimuotoisen päivämäärän ja ajan luvuksi, joka edustaa päivämäärää Power Appsin päivämäärä- ja aikakoodissa.</value>
     
@@ -2655,7 +2781,7 @@
     
   </data>
   <data name="AboutIsUTCToday" xml:space="preserve">
-    <value>Tarkistaa, onko annettu päivämäärä tämä päivä UTC-muodossa, ja palauttaa arvon tosi vai epätosi.</value>
+    <value>Tarkistaa, onko annettu päivämäärä tämä päivä UTC-muodossa, ja palauttaa arvon tosi tai epätosi.</value>
     
   </data>
   <data name="AboutIsUTCToday_date" xml:space="preserve">
@@ -2702,7 +2828,7 @@
     
   </data>
   <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
-    <value>Tiedosto</value>
+    <value>Asiakirja</value>
     
   </data>
   <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
@@ -2876,6 +3002,26 @@
     <value>Pallo</value>
     
   </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe - Ei yhteyttä</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe - Päivitä</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe - Odottavia muutoksia</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe - Varoitus</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe - Virhe</value>
+    
+  </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>Puoliksi täytetty ympyrä</value>
     
@@ -3013,7 +3159,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Harjoittaa</value>
+    <value>Kouluta</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3089,7 +3235,7 @@
     
   </data>
   <data name="Icon_EmojiHappy_DisplayName" xml:space="preserve">
-    <value>Emoji - Tyytyväinen</value>
+    <value>Hymiö - Tyytyväinen</value>
     
   </data>
   <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
@@ -3268,6 +3414,38 @@
     <value>Kontrasti-teema</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Lisää tietueet tietolähteeseen.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>record</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Poistaa kaikki kokoelman tietueet. Kokoelman sarakkeet säilyvät.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Poistaa kaikki tietueet kokoelmasta. Lisää sitten toisen tietuejoukon samaan kokoelmaan.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>record</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Ottaa päivitykset käyttöön määritetylle riville ja muuttaa rivin määritetyssä tietolähteessä. Palauttaa päivitetyn rivin.</value>
     
@@ -3333,7 +3511,7 @@
     
   </data>
   <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
-    <value>Keskellä</value>
+    <value>Keskitä</value>
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
@@ -3625,7 +3803,7 @@
     
   </data>
   <data name="Icon_Waffle_DisplayName" xml:space="preserve">
-    <value>Waffle</value>
+    <value>Vohveli</value>
     
   </data>
   <data name="Icon_ChevronLeft_DisplayName" xml:space="preserve">
@@ -3673,7 +3851,7 @@
     
   </data>
   <data name="Icon_Document_DisplayName" xml:space="preserve">
-    <value>Tiedosto</value>
+    <value>Asiakirja</value>
     
   </data>
   <data name="Icon_DockCheckProperties_DisplayName" xml:space="preserve">
@@ -3685,7 +3863,7 @@
     
   </data>
   <data name="Icon_Journal_DisplayName" xml:space="preserve">
-    <value>Kirjausraportti</value>
+    <value>Kirjauskansio</value>
     
   </data>
   <data name="Icon_ForkKnife_DisplayName" xml:space="preserve">
@@ -3829,7 +4007,7 @@
     
   </data>
   <data name="Icon_Tablet_DisplayName" xml:space="preserve">
-    <value>Tablet</value>
+    <value>Taulutietokone</value>
     
   </data>
   <data name="Icon_Tag_DisplayName" xml:space="preserve">
@@ -3873,19 +4051,19 @@
     
   </data>
   <data name="Icon_EmojiFrown_DisplayName" xml:space="preserve">
-    <value>Emoji – harmistus</value>
+    <value>Hymiö – harmistus</value>
     
   </data>
   <data name="Icon_EmojiSmile_DisplayName" xml:space="preserve">
-    <value>Emoji – hymy</value>
+    <value>Hymiö – hymy</value>
     
   </data>
   <data name="Icon_EmojiSad_DisplayName" xml:space="preserve">
-    <value>Emoji – surullinen</value>
+    <value>Hymiö – surullinen</value>
     
   </data>
   <data name="Icon_EmojiNeutral_DisplayName" xml:space="preserve">
-    <value>Emoji – neutraali</value>
+    <value>Hymiö – neutraali</value>
     
   </data>
   <data name="Icon_Warning_DisplayName" xml:space="preserve">
@@ -3950,94 +4128,6 @@
   </data>
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
-    
-  </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Kaavasarakkeet eivät tue tätä.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Virheellinen argumenttien määrä funktiolle {0}: vastaanotettu {1}, odotettu {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argumenttia {0} ei tueta kaavasarakkeiden funktiolle {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Tätä argumenttia ei voi siirtää annettuna tyyppinä kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Tätä argumenttia ei voi välittää tyyppinä {0} kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Tämä argumentti tukee vain literaaliarvoa.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Toimintoa {0} ei voi suorittaa tällä syötteellä ilman aikavyöhykemuunnosta, jota kaavasarakkeet eivät tue.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Tätä toimintoa ei voi suorittaa arvoille, joilla on eri päivämäärän ja ajan toimintatapa.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Kaavasarakkeet tukevat vain lyhyitä päivämäärä- ja aikamuotoisia merkkijonoja.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argumentti {0} on virheellinen ajan yksikkö tai sitä ei tueta {1} päivämäärän aritmetiikkafunktiolle.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Kielikohtaiset muotoilutunnukset, kuten "." ja ",", eivät ole tuettuja kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} ei tueta kaavasarakkeissa. Käytä sen sijaan {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Tätä toimintoa ei voi suorittaa tyypille {0} kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Tulostyyppiä {0} ei tueta kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Kaavasarakkeet eivät tue koko tietueeseen viittaamista suoraan. Viittaa kelvolliseen tietueen kenttään.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Tämän kaavan tuloksen tyypin odotetaan olevan {0}, mutta tuloksen todellinen tyyppi on {1}. Kaavasarakkeen tulostyyppiä ei voi muuttaa.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Sarakkeita, joiden tyyppi on {0}, ei tueta kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Tyypin {0} sarakkeet, joiden muoto on {1}, ei tueta kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Kaavasarakkeet eivät tue tietueiden tai taulukoiden coercing-tietueita.</value>
-    
-  </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Kaavat voivat olla enintään 1 000 merkkiä pitkiä.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Yksisarakkeista taulukoita ei tueta kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Virtuaalitaulukkoon {0} ei voi viitata kaavasarakkeissa.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4142,10 +4232,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Tämä virhe tulee näkyviin, kun kaava viittaa osan käyttäytymisen ominaisuuksiin, joiden syntaksi on virheellinen. (Esimerkiksi Component.OnCustomChange kohteen Component.OnCustomChange() sijaan)</value>
+    <value>Tämä virhe tulee näkyviin, kun kaava viittaa osan käyttäytymisen ominaisuuksiin, joiden syntaksi on virheellinen. (Esimerkiksi Component.CustomFunction kohteen Component.CustomFunction() sijaan)</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Viittaa osan käyttäytymisen ominaisuuteen oikean syntaksin avulla. Esimerkki: Component.OnCustomChange()</value>
+    <value>Viittaa osan käyttäytymisen ominaisuuteen oikean syntaksin avulla. Esimerkki: Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4257,7 +4347,7 @@
     <value>Toimintafunktiot muuttavat sovelluksen tilaa muuttamalla arvoja muualla sovelluksessa. Navigate, Patch, UpdateContext ja Collect ovat yleisiä toimintafunktioita. OnSelect, OnVisible ja muut On...-ominaisuudet ovat yleisiä toimintaan perustuvia ominaisuuksia.</value>
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
-    <value>Siirrä käyttäytymisfunktion käyttäytymiseen perustuvaan ominaisuuteen.</value>
+    <value>Siirrä käyttäytymisfunktio käyttäytymiseen perustuvaan ominaisuuteen.</value>
     
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
@@ -4335,6 +4425,10 @@
     <value>Varmista, että sinulla on teksti tunnisteellesi. Tämä virhe tapahtuu, kun tunniste on kokonaan tyhjä tai koostuu vain välilyönneistä.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Tyypin {0} arvoja ei voi vertailla.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Yhteensopimattomat vertailtavat tyypit. Näitä tyyppejä ei voi verrata: {0}, {1}.</value>
     
@@ -4396,6 +4490,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Artikkeli: Power Appsin kaavojen viiteopas</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Yhteensopimaton tyyppi. Kohteella, jonka yrität sijoittaa tietueeseen, on tyyppi, joka ei ole yhteensopiva tietueen kanssa.</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4642,8 +4740,44 @@
     <value>As-kohde ei ole sallittu tässä kontekstissa</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Tyypittämättömiä objekteja ei voi käyttää ensimmäisenä argumenttina funktioille, jotka tukevat tietueiden vaikutusalueita.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Nimetyn kaavan täytyy päättyä puolipisteeseen.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Nimetyn kaavan on oltava lauseke.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Käyttäjän määrittämässä funktiossa on oltava teksti.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Toiminto {0} on jo määritetty.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parametri {0} on kaksoiskappale.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Tuntematon tyyppi {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Ilmoitettu toiminnon palautustyyppi ei vastaa toiminnon rungon palautustyyppiä.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Puuttuva funktion palautustyyppi, esimerkiksi ":Number" funktiossa "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Puuttuva funktion argumenttityyppi, esimerkiksi ":Text" funktiossa "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4725,6 +4859,257 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Tämä ominaisuus on vanhentunut, eikä sitä enää tueta.</value>
+    
+  </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>Nimitilan {1} funktio {0} on vanhentunut.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>Nimitilan {1} funktiota {0} ei tueta.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Varoitus: lykätty tyyppi annettu.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Odotettu tunnuksen nimi</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Tämä funktio on epäselvä, se sisältää Lambda-lausekkeita ja saraketunnisteita samalle argumentille.</value>
+    
+  </data>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Vaihtoehdon {0} arvo ei ole odotettu tyyppi {1}.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Palauttaa annetun asetusjoukon arvon loogisen nimen.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>asetus</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Asetusjoukon arvo, jonka looginen nimi palautetaan.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Hanki oletusarvoinen kieliasetus, joka määritetään suorituksen aikana.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Koodaa URL-merkkijonon, joka korvaa tietyt muut kuin aakkosnumeeriset merkit %:lla ja heksadesimaalinumerolla.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL-osoite</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Koodattava URL-osoite.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>{0} on tunnistettu toiminto, mutta sitä ei tueta.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Tyypin muuntaminen epäonnistui, koska annettu arvo oli tyypiltään {0}, odotettiin tyyppiä {1}.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Tämä toiminto taulukossa {0} ei ehkä toimi, jos sillä on yli {1} riviä.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Tämä predikaatti on aina tosi. Oliko sinun tarkoitus käyttää kohdetta ThisRecord tai [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Ei voi delegoida kohdetta {0}: kohde tukee vain ensisijaisen avaimen kentän {1} haun delegointia.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Ei voi delegoida {0}: Lauseke vertaa useita kenttiä.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Ei voida delegoida kohdetta {0}: kohde sisältää käyttäytymisfunktion {1}.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Määrittää, onko annetulla tekstillä annetun tekstimuodon vastaavuus.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Teksti, jota verrataan muotoon.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Muoto, jota vasten teksti tarkistetaan. Se voi olla TextFormat-luetteloinnin arvo tai säännöllinen lauseke.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Tämä määrittää, mille tekstin osalle vastaavuus halutaan. Se voi olla MatchOptions-luetteloinnin arvo.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>teksti</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>muoto</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>laajuus</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Hakee määritettyä säännönmukaista lauseketta annetusta testistä ja palauttaa siitä ensimmäisen vastaavuuden.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Hakee määritettyä säännönmukaista lauseketta annetusta testistä ja palauttaa siitä kaikki vastaavuudet.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Teksti, jota haetaan säännönmukaisesta lausekkeesta.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Säännöllinen lauseke, jota vasten teksti tarkistetaan. Se voi sisältää sieppauksia (sulkeiden sisällä olevia arvoja), jotka palautetaan, jos vastaavuus löytyy.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Tämä määrittää, mille tekstin osalle vastaavuus halutaan. Se voi olla MatchOptions-luetteloinnin arvo.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Teksti, jota haetaan säännönmukaisesta lausekkeesta.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Säännöllinen lauseke, jota vasten teksti tarkistetaan. Se voi sisältää sieppauksia (sulkeiden sisällä olevia arvoja), jotka palautetaan, jos vastaavuus löytyy.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Tämä määrittää, mille tekstin osalle vastaavuus halutaan. Se voi olla MatchOptions-luetteloinnin arvo.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>teksti</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>säännönmukainen_lauseke</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>asetukset</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Päivittää määritetyn tietolähteen.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>yhdistetty_tietolähde</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Odotettiin tietue- tai taulukkoarvoa.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Yhdistetty päivitettävä tietolähde.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Vain hallitut yhteydet voidaan päivittää.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännöllinen lauseke.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Säännönmukaisten lausekkeiden on oltava vakioarvoja.</value>
+    
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Funktiolle {0} välitettyä arvoa ei voi muuttaa.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Sieppausnimi {0} piilottaa säännönmukaisen lausekkeen koko vastaavuuden palauttavan esimääritetyn ominaisuuden. Harkitse sen nimeämistä uudelleen, jos haluat käyttää kyseistä nimettyä ominaisuutta määritetyn tekstin koko vastaavuuden poimimiseen.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Sieppausnimi {0} piilottaa säännönmukaisen lausekkeen ryhmävastaavuudet palauttavan esimääritetyn ominaisuuden. Harkitse sen nimeämistä uudelleen, jos haluat käyttää kyseistä nimettyä ominaisuutta määritetyn tekstin kaikkien alivastaavuuksien poimimiseen.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Sieppausnimi {0} piilottaa säännönmukaisen lausekkeen vastaavuuden sijainnin palauttavan esimääritetyn ominaisuuden. Harkitse sen nimeämistä uudelleen, jos haluat käyttää kyseistä nimettyä ominaisuutta määritetyn tekstin koko vastaavuuden sijainnin poimimiseen.</value>
+    
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Poistaa kaiken muotoilun ja palauttaa pelkkä teksti -arvon.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>teksti</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Teksti, jonka HTML- ja XML-tunnisteet poistetaan.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Suodatustoiminnot eivät salli käyttäytymisfunktioita predikaatteina.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Voit yhdistää useita predikaatteja toiseen argumenttiin And-operaattorin avulla.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Tätä tietuetta ei voi kopioida. Luo sen sijaan sisäinen tietue käyttämällä ForAll-funktiota ja {...} -notaatiota, kun haluat kopioida haluamasi yksittäiset sarakkeet.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Tätä tietuetta ei voi kopioida. Luo sen sijaan sisäinen tietue käyttämällä {...} -notaatiota, kun haluat kopioida haluamasi yksittäiset kentät.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>{0}-funktion toista argumenttia tuetaan vain numeerisille ja päivämäärä/aika-arvoille.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Muuttujan, jolla on online-tietolähteen arvo (taulukko tai tietue), määrittäminen voi aiheuttaa useita pyyntöjä palvelimelle. Tämä estetään pian.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Tyyppiliteraalin esittely oli virheellinen</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Lähde- ja kohdetietuetyyppien välinen tyyppiristiriita. Annetulla tyypillä on ylimääräisiä kenttiä: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Lähde- ja kohdetietuetyyppien välinen tyyppiristiriita. Annetusta tyypistä puuttuu kenttiä: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Lähde- ja kohdetietuetyyppien välinen tyyppiristiriita. Kentän nimi: {0} ei löydy.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Lähde- ja kohdetietuetyyppien välinen tyyppiristiriita. Kentän nimi: {0} odotettu {1}; Löytyi {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Annettua tyyppiä {0} ei voi muuttaa lähdetyypiksi {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Lähteen ja kohdetyyppien välinen tyyppiristiriita. Odotettu {0}; Löytyi {1}.</value>
     
   </data>
 </root>

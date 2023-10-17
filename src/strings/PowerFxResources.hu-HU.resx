@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>A feldolgozandó számértékeket tartalmazó oszlop.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Átalakít egy "logikai adatot" logikai értékké.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>logikai</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>A logikai értékké alakítandó logikai érték.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Logikai értékekből álló oszlopot logikai értékek oszlopává alakít át.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>bevitel</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>A feldolgozandó logikai értékeket tartalmazó oszlop.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Az első nem üres argumentumot adja vissza</value>
     
@@ -544,6 +566,24 @@
   <data name="AboutConcatenate" xml:space="preserve">
     <value>Több szöveges értéket egyesít egyetlen szöveges értékben.</value>
     
+  </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Számértékké alakítja a számot jelölő decimális értéket.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Az érték átalakítása során használandó nyelvkód.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>A decimális értékké alakítandó szöveges érték.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Számértékké alakítja a számot jelölő lebegő értéket.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Az érték átalakítása során használandó nyelvkód.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>A lebegő értékké alakítandó szöveges érték.</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>szöveg</value>
@@ -773,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>A visszaadott érték, ha az az első nem-hiba argumentum.</value>
+    <value>A visszaadott érték, ha az előző argumentum hiba volt.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -842,7 +882,8 @@
     <value>Egy kifejezés, amelynek kiértékelése a megadott „forrás” sorain történik, és a rendezéshez használt értékeket biztosítja.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Ascending (növekvő) vagy Descending (csökkenő) lehet.</value>
+    <value>SortOrder.Ascending vagy SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Az oszlop alapján rendezi a forrást; a nem kötelező „sorrend” argumentum is megadható.</value>
@@ -867,7 +908,8 @@
     <value>Egy egyedi oszlopnév.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Ascending (növekvő) vagy Descending (csökkenő) lehet.</value>
+    <value>SortOrder.Ascending vagy SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>A megadott oszlopban szereplő megfelelő értékek indexe alapján rendezi a forrást.</value>
@@ -979,6 +1021,46 @@
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>A dátumérték, amelyhez a rendszer kiszámítja az ISO szerinti hétszámot.</value>
+  </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>A hónapok száma által helyesbített dátumot adja vissza. A hónap napja változatlan marad, de az új hónap napjainak száma jelenti a felső határértéket.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>dátum</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>hónap</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Ezt a dátumot kell módosítani a megadott számú hónappal.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Azon hónapok száma, amelyekkel a dátumot módosítani kell. A pozitív érték jövőbeli dátumot, a negatív érték múltbeli dátumot eredményez, a nulla pedig nem módosítja a hónapot.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>A hónap utolsó napját adja vissza egy adott dátumra vonatkozóan, amelyet több hónappal módosított.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>dátum</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>hónap</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Ezt a dátumot kell módosítani a megadott számú hónappal.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Azon hónapok száma, amelyekkel a dátumot módosítani kell. A pozitív érték jövőbeli dátumot, a negatív érték múltbeli dátumot eredményez, a nulla pedig nem módosítja a hónapot.</value>
+         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>A szám csonkolása a negatív végtelen felé kerekítéssel.</value>
@@ -1367,6 +1449,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>A feldolgozandó, számértékeket (radiánban) tartalmazó oszlop.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Kiértékel egy kifejezést egy tábla egy vagy több oszlopán, és egy egyoszlopos táblázatot ad vissza, amely a kiértékelt kifejezés egyedi (egymástól különböző) értékeit tábla.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>forrás</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>kifejezés</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Az a tábla, amelyből a függvény kinyeri az egyedi értékeket.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>A bemeneti tábla minden során kiértékelt kifejezés, amely az értékeket szolgáltatja a Distinct műveletnek.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>A megadott x és y koordináták arkusztangensértékét adja eredményül (radiánban).</value>
   </data>
@@ -1404,6 +1503,14 @@
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>bemenet</value>
+    
+  </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>módosító</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>módosító</value>
     
   </data>
   <data name="AboutLeft" xml:space="preserve">
@@ -1675,7 +1782,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Az összetevő paraméterekkel rendelkező egyéni adatokra vonatkozó tulajdonság csak egy összetevőn belülről vagy az összetevő kimeneti tulajdonságaiból férhető hozzá.</value>
+    <value>Az összetevő függvény tulajdonsága vagy paramétere csak egy összetevőn belülről vagy az összetevő kimeneti tulajdonságaiból férhető hozzá.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Az összetevő függvény tulajdonsága vagy paramétere csak más függvénytulajdonságokra hivatkozhat.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1742,20 +1853,8 @@
     <value>A(z) {0} első argumentumának egyoszlopos táblának kell lennie.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Érvénytelen séma. A(z) {0} esetében egy szöveges értékeket tartalmazó oszlopot kell megadni.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Érvénytelen séma. A(z) {0} esetében egy dátumértékeket tartalmazó oszlopot kell megadni.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Érvénytelen séma. A(z) {0} esetében egy számértékeket tartalmazó oszlopot kell megadni.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Érvénytelen séma. A(z) {0} esetében egy színértékeket tartalmazó oszlopot kell megadni.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Érvénytelen séma. A(z) {1} értékei esetében egy {0} oszlopot kell megadni.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1798,6 +1897,26 @@
     <value>A számérték túl nagy.</value>
     
   </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>A foglalt szó használata jelenleg nem támogatott.</value>
+    
+  </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>A kifejezés nem lehet hosszabb {0} karakternél. A kifejezés {1} karakter.</value>
+    
+  </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>A formátum sztringmérete nem lehet hosszabb {0} karakternél.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Érvénytelen formátum.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Az argumentum nem érvényes dátum- vagy időpontértéket jelent.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Az adatforrás érvénytelen. Javítsa ki a hibát az „Adatforrások” panelen. Ehhez kattintson a „Tartalom -&gt; Adatforrások” vagy a „Nézet -&gt; Beállítások” parancsra</value>
     
@@ -1816,6 +1935,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>A(z) {0} argumentum típusa nem felel meg az elvárt {1} típusnak. A talált típus {2}.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>A kifejezés típusa nem felel meg az elvárt {0} típusnak. A talált típus {1}.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -1852,6 +1975,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>A kifejezés típusa alapján nem lehet rendezni.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>A kifejezés típusa alapján nem lehet egyedit alkalmazni.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -2240,6 +2367,9 @@
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematikai és statisztikai</value>
   </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
+  </data>
   <data name="Information" xml:space="preserve">
     <value>Információ</value>
   </data>
@@ -2319,7 +2449,7 @@
     <value>A hozzáadandó egységek száma. Negatív szám is lehet.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>A használandó egység. Ez lehet év, negyedév, hónap, nap, óra, perc, másodperc vagy milliszekundum (Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds).</value>
+    <value>A használni kívánt egység, amely a következő lehet: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2341,7 +2471,7 @@
     <value>A befejező dátum a különbséget kiszámító művelethez.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Ebben az egységben kell kifejezni az eredményt. Ez lehet év, negyedév, hónap, nap, óra, perc, másodperc vagy milliszekundum (Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds).</value>
+    <value>Az eredmény kifejezésére használt egység, amely a következő lehet: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2591,10 +2721,6 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>A vizsgálandó érték.</value>
-  </data>
-  <data name="Post" xml:space="preserve">
-    <value>Közzététel</value>
-    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Átalakítja a szöveges formátumú dátumot és időpontot azzá a számmá, amely a dátumot jelöli a Power Apps dátum- és időpontkódjában.</value>
@@ -2876,6 +3002,26 @@
     <value>Földgömb</value>
     
   </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe – Nincs kapcsolat</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe – Frissítés</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe – Módosítások függőben</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe – Figyelmeztetés</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe – Hiba</value>
+    
+  </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>Félig kitöltött kör</value>
     
@@ -3013,7 +3159,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Vonat</value>
+    <value>Betanítás</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3266,6 +3412,38 @@
   </data>
   <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
     <value>Kontrasztos téma</value>
+    
+  </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Rekordokat ad hozzá egy adatforráshoz.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>rekord</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Törli a gyűjtemény összes rekordját. A gyűjtemény oszlopai megmaradnak.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Törli az összes rekordot egy gyűjteményből. Ezután különböző rekordhalmazokat ad hozzá ugyanahhoz a gyűjteményhez.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>rekord</value>
     
   </data>
   <data name="AboutPatch" xml:space="preserve">
@@ -3952,94 +4130,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Nem támogatott a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Érvénytelen számú argumentum a(z) {0} függvényhez: fogadott {1}, várt {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>A(z) {0} argumentum nem támogatott a(z) {1} képlet esetén a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Ez az argumentum nem adható át ilyen típusúként a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Ez az argumentum nem adható át {0} típusúként a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Ehhez az argumentumhoz csak konstansérték támogatott.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} nem végezhető el ezen a bevitelen időzóna-konverzió nélkül, amely nem támogatott a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Ez a művelet nem hajtható végre olyan értékeken, amelyek eltérő dátum-/időviselkedéssel rendelkeznek.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Csak a rövid dátum- és időformátumú sztringek támogatottak a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Az {0} argumentum a dátum aritmetikai {1} függvény érvénytelen/nem támogatott időegysége.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>A területibeállítás-specifikus formázási tokenek, mint például a "." és a ",", nem támogatottak a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>A(z) {0} nem támogatott a képletoszlopokban. Használja inkább a következőt: {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Ez a művelet nem hajtható végre {0} típusú képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Az eredménytípus ("{0}") nem támogatott a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>A képletoszlopok nem támogatják a teljes rekordra való közvetlen hivatkozást. Hivatkozzon egy érvényes mezőre a rekordban.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>A képlet várt eredménytípusa {0}, de a tényleges eredménytípus {1}. A képletoszlop eredménytípusa nem módosítható.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>A(z) {0} típusú oszlopok nem használhatók képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>A(z) {0} típusú, {1} formátumú oszlopok nem használhatók képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>A rekordok vagy táblák kényszerítése nem támogatott a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>A képletek nem lehetnek hosszabbak 1000 karakternél.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Az egyoszlopos táblák nem támogatottak a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Nem hivatkozhat virtuális táblára {0} képletoszlopokban.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>A rendszer operandust várt. A képlet vagy kifejezés egy érvényes operandust várt. Hozzáadhatja például a 2 operandust az „1 +” kifejezéshez, hogy az eredmény 3 legyen, vagy hozzáadhatja a "!" operandust az "Üdvözöljük" kifejezéshez, hogy az eredmény "Üdvözöljük!" legyen.</value>
     
@@ -4142,10 +4232,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Ez a hibaüzenet akkor jelenik meg, ha egy képlet érvénytelen szintaxissal hivatkozik az összetevő viselkedési tulajdonságaira (például a Component.OnCustomChange() függvényhívás helyett a következőt használja: Component.OnCustomChange)</value>
+    <value>Ez a hibaüzenet akkor jelenik meg, ha egy képlet érvénytelen szintaxissal hivatkozik az összetevő függvénytulajdonságaira (például a Component.CustomFunction() függvényhívás helyett a következőt használja: Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>A helyes szintaxis használatával hivatkozzon az összetevő viselkedési tulajdonságára. Példa: Component.OnCustomChange()</value>
+    <value>A helyes szintaxis használatával hivatkozzon az összetevő függvénytulajdonságára. Példa: Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4261,7 +4351,7 @@
     
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
-    <value>Cikk: A Power Apps-beli vászonalkalmazások viselkedési képleteinek ismertetése</value>
+    <value>Cikk: A Power Apps-beli vászonalapú alkalmazások viselkedési képleteinek ismertetése</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -4335,6 +4425,10 @@
     <value>Győződjön meg arról, hogy az azonosító szöveget tartalmaz. Ez a hiba akkor fordul elő, ha az azonosító csak üres vagy szóközkarakterekből áll.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Nem lehet {0} típusú értékeket összehasonlítani.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Nem kompatibilis típusok az összehasonlításhoz. A következő típusok nem hasonlíthatók össze: {0}, {1}.</value>
     
@@ -4396,6 +4490,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Inkompatibilis típus. A rekordhoz hozzáadni kívánt elem típusa nem kompatibilis a rekorddal.</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4642,8 +4740,44 @@
     <value>Az As nem engedélyezett ebben a környezetben</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Nem használhatók be nem írt objektumok a rekord hatókörét támogató függvények első argumentumaként.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>A megnevezett képletnek pontosvesszővel kell végződnie.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>A megnevezett képletnek kifejezésnek kell lennie.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>A felhasználó által definiált függvénynek rendelkeznie kell egy törzzsel.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>A(z) {0} funkció már meg van határozva.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>A {0} paraméter duplikált elem.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Ismeretlen típusú {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>A funkció visszaadott típusa nem egyezik meg a függvénytest visszaküldési típusával.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Hiányzó függvény-visszaküldési típus, például ":Number" itt: "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Hiányzó függvény argumentumtípus, például ":Text" itt: "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4725,6 +4859,257 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Ez a funkció elavult, és már nem támogatott.</value>
+    
+  </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>A(z) {1} névtérben a(z) {0} függvény elavult.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>A(z) {1} névtérben a(z) {0} függvény nem támogatott.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Figyelmeztetés: Késleltetett típus van megadva.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Várt azonosítónév</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Ez a függvény nem egyértelmű, azonos argumentumhoz tartalmaz lambda kifejezéseket és oszlopazonosítókat.</value>
+    
+  </data>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>A beírt {0} értéke nem a(z) {1} várt típusú.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Az adott beállításkészlet értékének logikai nevét adja vissza.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>beállítás</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Olyan értékkészlet-érték, amelynek a logikai neve vissza lesz állítva.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Kérje le a futásidőben beállított alapértelmezett területi beállítást.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Kódol egy URL-sztringet úgy, hogy bizonyos nem alfanumerikus karaktereket %-ra és hexadecimális számra cseréli.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL-cím</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>A kódolandó URL-cím.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>A(z) '{0}' egy felismert, de nem támogatott függvény.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>A típus átalakítása nem sikerült, mert a megadott érték „{0}” típusú, a várt érték pedig „{1}” típusú.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Ez a művelet a(z) '{0}' táblán adott esetben nem működik, ha több mint {1} sorral rendelkezik.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Ez a predikátum mindig igaz lesz. A ThisRecord vagy [@ ] lehetőséget akarta használni?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>A(z) {0} nem delegálható: csak a(z) '{1}' elsődleges kulcsmezőre történő keresés delegálásának támogatása.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Az alábbiak nem hatalmazhatók meg {0}: A kifejezés több mezőt is összehasonlít.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>A(z) {0} nem delegálható: '{1}' viselkedési függvényt tartalmaz.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Azt határozza meg, hogy a megadott szöveg megfelel-e a megadott szövegformátumnak.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>A szöveg, melyet össze kell hasonlítani a formátummal.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>A formátum, amely alapján ellenőrizni kell a szöveget. Ez a TextFormat felsorolás értéke vagy egy reguláris kifejezés lehet.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Ez határozza meg, hogy az egyezést a szöveg mely részében kell keresni. Ez a MatchOptions felsorolás értéke is lehet.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>szöveg</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>formátum</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>mérték</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>A megadott reguláris kifejezés keresése a megadott szövegben, és az első egyezés visszaadása.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>A megadott reguláris kifejezés keresése a megadott szövegben, és az összes egyezés visszaadása.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Az a szöveg, amelyben a reguláris kifejezés alapján való keresést végre kell hajtani.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>A szövegbeli egyezés alapjául szolgáló reguláris kifejezés. Olyan befoglalásokat (zárójelbe tett értékeket) tartalmazhat, amelyeket sikeres egyezés esetén ad vissza a függvény.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Ez határozza meg, hogy az egyezést a szöveg mely részében kell keresni. Ez a MatchOptions felsorolás értéke is lehet.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Az a szöveg, amelyben a reguláris kifejezés alapján való keresést végre kell hajtani.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>A szövegbeli egyezés alapjául szolgáló reguláris kifejezés. Olyan befoglalásokat (zárójelbe tett értékeket) tartalmazhat, amelyeket sikeres egyezés esetén ad vissza a függvény.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Ez határozza meg, hogy az egyezést a szöveg mely részében kell keresni. Ez a MatchOptions felsorolás értéke is lehet.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>szöveg</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>reguláris_kifejezés</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>lehetőségek</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Frissíti a megadott adatforrást.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>csatlakoztatott_adatforrás</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>A rendszer egy rekord- vagy táblaértéket várt.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Csatlakoztatott adatforrás a frissítéshez.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Csak a felügyelt kapcsolatok frissíthetők.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>A reguláris kifejezéseknek konstans értékeknek kell lenniük.</value>
+    
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>A függvénynek átadott '{0}' érték nem módosítható.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>A(z) {0} rögzítésnév elrejti az előre definiált tulajdonságot, amely a reguláris kifejezéssel való teljes egyezést adja vissza. Fontolja meg annak átnevezését, ha ki szeretné nyerni a megadott szövegben található teljes egyezést az elnevezett tulajdonsággal.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>A(z) {0} rögzítésnév elrejti az előre definiált tulajdonságot, amely a reguláris kifejezésben található csoporttalálatokat adja vissza. Fontolja meg annak átnevezését, ha ki szeretné nyerni a megadott szövegben található résztalálatokat az elnevezett tulajdonsággal.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>A(z) {0} rögzítésnév elrejti az előre definiált tulajdonságot, amely a reguláris kifejezéssel való egyezés helyét adja vissza. Fontolja meg annak átnevezését, ha ki szeretné nyerni a megadott szövegben található teljes egyezés helyét az elnevezett tulajdonsággal.</value>
+    
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Eltávolítja az összes formázást, és egyszerű szöveges értéket ad vissza.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>szöveg</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>A szöveg, amelyből el szeretné távolítani a HTML-kódot és az XML-címkéket.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>A szűrőfüggvények nem engedélyezik a viselkedési függvényeket predikátumként.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Használja az And operátor több predikátum összevonására a második argumentumban.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Ez a rekord nem másolható. Ehelyett hozzon létre egy beágyazott rekordot a ForAll függvény és a(z) {...} jegyzet segítségével a kívánt egyéni oszlopok másolására.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Ez a rekord nem másolható. Ehelyett hozzon létre egy beágyazott rekordot a(z) {...} jegyzet segítségével a kívánt egyéni mezők másolására.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Az '{0}' függvény második argumentuma csak numerikus és dátum-/időértékek esetén támogatott.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Ha egy online adatforrásértékkel (tábla vagy rekord) rendelkező változót akar beállítani, az több kérést hozhat létre a kiszolgálón. Ez hamarosan tiltott lesz.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>A szó szerinti deklaráció típusa érvénytelen volt</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Típuseltérés a forrás- és célrekordtípusok között. A megadott típus további mezőket tartalmaz: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Típuseltérés a forrás- és célrekordtípusok között. A megadott típusnak hiányzó mezői vannak: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Típuseltérés a forrás- és célrekordtípusok között. Mezőnév: {0} található.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Típuseltérés a forrás- és célrekordtípusok között. Mezőnév: {0} Várt {1}; Talált {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Az adott {0} típus nem kényszeríthető a(z) {1} forrástípusra.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Típuseltérés a forrás- és céltípusok között. Várt {0}; Talált {1}.</value>
     
   </data>
 </root>

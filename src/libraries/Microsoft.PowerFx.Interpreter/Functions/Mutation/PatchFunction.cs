@@ -10,7 +10,6 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -23,6 +22,10 @@ namespace Microsoft.PowerFx.Functions
     internal abstract class PatchAndValidateRecordFunctionBase : BuiltinFunction
     {
         public override bool RequiresDataSourceScope => true;
+
+        public override bool CanSuggestInputColumns => true;
+
+        public override bool ManipulatesCollections => true;
 
         public override bool ArgMatchesDatasourceType(int argNum)
         {
@@ -39,7 +42,7 @@ namespace Microsoft.PowerFx.Functions
         {
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -47,9 +50,15 @@ namespace Microsoft.PowerFx.Functions
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var isValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             return isValid;
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            base.CheckSemantics(binding, args, argTypes, errors);
+            base.ValidateArgumentIsMutable(binding, args[0], errors);
         }
 
         protected static bool CheckArgs(FormulaValue[] args, out FormulaValue faultyArg)
@@ -86,7 +95,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else if (arg is RecordValue record)
                 {
-                    await foreach (var field in record.GetFieldsAsync(cancellationToken))
+                    await foreach (var field in record.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
                     {
                         retFields[field.Name] = field.Value;
                     }
@@ -113,51 +122,30 @@ namespace Microsoft.PowerFx.Functions
         }
     }
 
-    // Patch( Record1, Record2 [, …] )
-    internal class PatchRecordFunction : PatchAndValidateRecordFunctionBase, IAsyncTexlFunction
-    {
-        public override bool IsSelfContained => false;
-
-        public PatchRecordFunction()
-            : base("Patch", AboutPatch, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyRecord, 0, 2, int.MaxValue, DType.EmptyRecord, DType.EmptyRecord)
-        {
-        }
-
-        public override IEnumerable<StringGetter[]> GetSignatures()
-        {
-            yield return new[] { PatchBaseRecordArg, PatchChangeRecordsArg };
-            yield return new[] { PatchBaseRecordArg, PatchChangeRecordsArg, PatchChangeRecordsArg };
-        }
-
-        public override IEnumerable<StringGetter[]> GetSignatures(int arity)
-        {
-            if (arity > 2)
-            {
-                return GetGenericSignatures(arity, PatchBaseRecordArg, PatchChangeRecordsArg);
-            }
-
-            return base.GetSignatures(arity);
-        }
-
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
-        {
-            var validArgs = CheckArgs(args, out FormulaValue faultyArg);
-
-            if (!validArgs)
-            {
-                return faultyArg;
-            }
-
-            return FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 0, cancellationToken));
-        }
-
-        public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Create | RequiredDataSourcePermissions.Update;
-    }
-
     // Patch( DataSource, BaseRecord, ChangeRecord1 [, ChangeRecord2, … ])
     internal class PatchFunction : PatchAndValidateRecordFunctionBase, IAsyncTexlFunction
     {
         public override bool IsSelfContained => false;
+
+        public override bool MutatesArg0 => true;
+
+        public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
+        {
+            if (argIndex == 1 || argIndex == 2)
+            {
+                type = default;
+                return false;
+            }
+
+            return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
+        }
+
+        public override bool IsLazyEvalParam(int index, Features features)
+        {
+            // First argument to mutation functions is Lazy for datasources that are copy-on-write.
+            // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
+            return index == 0;
+        }
 
         public PatchFunction()
             : base("Patch", AboutPatch, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyRecord, 0, 3, int.MaxValue, DType.EmptyTable, DType.EmptyRecord, DType.EmptyRecord)
@@ -181,7 +169,7 @@ namespace Microsoft.PowerFx.Functions
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -189,7 +177,7 @@ namespace Microsoft.PowerFx.Functions
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var isValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             DType dataSourceType = argTypes[0];
 
@@ -209,6 +197,7 @@ namespace Microsoft.PowerFx.Functions
             for (var i = 1; i < args.Length; i++)
             {
                 DType curType = argTypes[i];
+                bool isSafeToUnion = true;
 
                 if (!curType.IsRecord)
                 {
@@ -217,39 +206,15 @@ namespace Microsoft.PowerFx.Functions
                     continue;
                 }
 
-                var isSafeToUnion = true;
+                // Checks if all record names exist against table type and if its possible to coerce.
+                bool checkAggregateNames = curType.CheckAggregateNames(dataSourceType, args[i], errors, SupportsParamCoercion, context.Features.PowerFxV1CompatibilityRules);
 
-                foreach (var typedName in curType.GetNames(DPath.Root))
+                isValid = isValid && checkAggregateNames;
+                isSafeToUnion = checkAggregateNames;
+
+                if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
-                    DName name = typedName.Name;
-                    DType type = typedName.Type;
-
-                    if (!dataSourceType.TryGetType(name, out DType dsNameType))
-                    {
-                        dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, typedName.Name, args[i]);
-                        isValid = isSafeToUnion = false;
-                        continue;
-                    }
-
-                    if (!type.Accepts(dsNameType, out var schemaDifference, out var schemaDifferenceType) &&
-                        (!SupportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false) || !coercionIsSafe))
-                    {
-                        if (dsNameType.Kind == type.Kind)
-                        {
-                            errors.Errors(args[i], type, schemaDifference, schemaDifferenceType);
-                        }
-                        else
-                        {
-                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
-                        }
-
-                        isValid = isSafeToUnion = false;
-                    }
-                }
-
-                if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType))
-                {
-                    if (!curType.TryGetCoercionSubType(dataSourceType, out DType coercionType, out var coercionNeeded))
+                    if (!curType.TryGetCoercionSubType(dataSourceType, out DType coercionType, out var coercionNeeded, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         isValid = false;
                     }
@@ -260,12 +225,12 @@ namespace Microsoft.PowerFx.Functions
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
                         }
 
-                        retType = DType.Union(retType, coercionType);
+                        retType = DType.Union(retType, coercionType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
                     }
                 }
                 else if (isSafeToUnion)
                 {
-                    retType = DType.Union(retType, curType);
+                    retType = DType.Union(retType, curType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
                 }
             }
 
@@ -282,24 +247,32 @@ namespace Microsoft.PowerFx.Functions
                 return faultyArg;
             }
 
-            if (args[0] is BlankValue)
+            var arg0lazy = (LambdaFormulaValue)args[0];
+            var arg0 = await arg0lazy.EvalAsync().ConfigureAwait(false);
+            var arg1 = args[1];
+
+            if (arg0 is BlankValue)
             {
-                return args[0];
+                return arg0;
+            }
+            else if (arg0 is ErrorValue)
+            {
+                return arg0;
             }
 
-            if (args[1] is BlankValue)
+            if (arg1 is BlankValue)
             {
-                return args[1];
+                return arg1;
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            var changeRecord = FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 2, cancellationToken));
+            var changeRecord = FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 2, cancellationToken).ConfigureAwait(false));
 
-            var datasource = (TableValue)args[0];
-            var baseRecord = (RecordValue)args[1];
+            var datasource = (TableValue)arg0;
+            var baseRecord = (RecordValue)arg1;
 
             cancellationToken.ThrowIfCancellationRequested();
-            var ret = await datasource.PatchAsync(baseRecord, changeRecord, cancellationToken);
+            var ret = await datasource.PatchAsync(baseRecord, changeRecord, cancellationToken).ConfigureAwait(false);
 
             return ret.ToFormulaValue();
         }

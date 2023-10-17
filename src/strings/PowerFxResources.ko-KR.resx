@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>처리할 숫자 값 열입니다.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>'부울'을 부울 값으로 변환합니다.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>부울</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>부울 값으로 변환할 부울 값입니다.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>부울 값 열을 부울 값 열로 변환합니다.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>입력</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>처리할 부울 값의 열입니다.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>공백이 아닌 첫 번째 인수를 반환함</value>
     
@@ -544,6 +566,24 @@
   <data name="AboutConcatenate" xml:space="preserve">
     <value>여러 텍스트 값을 하나의 텍스트 값으로 결합합니다.</value>
     
+  </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>숫자를 나타내는 '텍스트'를 10진수 값으로 변환합니다.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>값을 변환할 때 사용할 언어 코드입니다.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>10진수 값으로 변환할 텍스트 값입니다.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>숫자를 나타내는 '텍스트'를 float 값으로 변환합니다.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>값을 변환할 때 사용할 언어 코드입니다.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>float 값으로 변환할 텍스트 값입니다.</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>텍스트</value>
@@ -773,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>오류가 아닌 첫 번째 인수인 경우 반환되는 값입니다.</value>
+    <value>이전 인수가 오류인 경우 반환되는 값입니다.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -842,7 +882,8 @@
     <value>'원본'의 행에 대해 평가되는 식으로, 정렬에 필요한 값을 제공합니다.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>오름차순 또는 내림차순</value>
+    <value>SortOrder.Ascending 또는 SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>열을 기준으로 '원본'을 정렬합니다(경우에 따라 정렬 '순서' 지정).</value>
@@ -867,7 +908,8 @@
     <value>고유한 열 이름입니다.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>오름차순 또는 내림차순</value>
+    <value>SortOrder.Ascending 또는 SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>지정된 열에서 일치하는 값 인덱스를 기준으로 '원본'을 정렬합니다.</value>
@@ -979,6 +1021,46 @@
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>ISO 주 번호를 계산할 날짜 값입니다.</value>
+  </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>개월 수만큼 조정된 날짜를 반환합니다. 월의 날짜는 동일하게 유지되지만 새 월의 일 수로 제한됩니다.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>날짜</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>개월</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>지정된 월 수만큼 조정할 날짜 값입니다.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>날짜를 변경할 개월 수입니다. 양수 값은 미래 날짜, 음수 값은 과거 날짜가 되며 0은 월을 그대로 유지합니다.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>지정된 날짜의 월 마지막 날을 월 단위로 조정하여 반환합니다.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>날짜</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>개월</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>지정된 개월 수만큼 조정할 날짜 값입니다.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;날짜를 변경할 개월 수입니다. 양수 값은 미래 날짜, 음수 값은 과거 날짜가 되며 0은 월을 그대로 유지합니다.</value>
+         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>음의 무한대로 반올림하여 '숫자'를 자릅니다.</value>
@@ -1095,7 +1177,7 @@
     
   </data>
   <data name="AboutRGBA" xml:space="preserve">
-    <value>색의 빨간색, 녹색, 파란색 및 알파 구성 요소에 대한 숫자 값을 가져오고 특정 색을 생성합니다. R, G, B 는 0 ~007E; 255 사이의 숫자이고 알파는 0 ~007E; 1사이의 소수입니다.</value>
+    <value>색의 빨간색, 녹색, 파란색 및 알파 구성 요소에 대한 숫자 값을 가져오고 특정 색을 생성합니다. R, G, B 는 0 ~ 255 사이의 숫자이고 알파는 0 ~ 1사이의 소수입니다.</value>
     
   </data>
   <data name="RGBAArg1" xml:space="preserve">
@@ -1162,11 +1244,11 @@
     <value>색(또는 색 값의 열)이 페이드되는 비율(또는 비율 값의 열)입니다. 음수 비율은 어두운 음영을 만들고 양수 비율은 밝은 음영을 만듭니다.</value>
   </data>
   <data name="AboutAbs" xml:space="preserve">
-    <value>숫자의 절댓값(부호 없이 숫자만)을 반환합니다.</value>
+    <value>숫자의 절대값(부호 없이 숫자만)을 반환합니다.</value>
     
   </data>
   <data name="AboutAbsT" xml:space="preserve">
-    <value>숫자 열의 절댓값(부호 없이 숫자만)을 반환합니다.</value>
+    <value>숫자 열의 절대값(부호 없이 숫자만)을 반환합니다.</value>
     
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
@@ -1367,6 +1449,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>처리할 숫자 값(라디안 단위)의 열입니다.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>테이블의 하나 이상의 열에 대해 식을 평가하고 평가된 식에 대해 고유한 값을 포함하는 단일 열 테이블을 반환합니다.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>원본</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>식</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>고유한 값이 추출되는 테이블입니다.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>입력 테이블의 각 행에 대해 평가된 식이며, Distinct 연산에 대한 값을 제공합니다.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>지정된 X좌표 및 Y좌표의 아크탄젠트 값(라디안 단위)을 반환합니다.</value>
   </data>
@@ -1404,6 +1503,14 @@
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>입력</value>
+    
+  </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>한정자</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>한정자</value>
     
   </data>
   <data name="AboutLeft" xml:space="preserve">
@@ -1565,7 +1672,7 @@
     
   </data>
   <data name="AboutSplit_text" xml:space="preserve">
-    <value>Text 하위 문자열로 분할될 텍스트입니다.</value>
+    <value>하위 문자열로 분할될 텍스트입니다.</value>
     
   </data>
   <data name="AboutSplit_separator" xml:space="preserve">
@@ -1577,7 +1684,7 @@
     
   </data>
   <data name="SplitArg2" xml:space="preserve">
-    <value>구분기호</value>
+    <value>구분 기호</value>
     
   </data>
   <data name="AboutIsType" xml:space="preserve">
@@ -1639,7 +1746,7 @@
     
   </data>
   <data name="AboutSequence_records" xml:space="preserve">
-    <value>이름이 "Value"인 단일 열 테이블의 레코드 수입니다. 최대 50,000입니다.</value>
+    <value>이름이 "값"인 단일 열 테이블의 레코드 수입니다. 최대 50,000입니다.</value>
     
   </data>
   <data name="SequenceArg2" xml:space="preserve">
@@ -1647,7 +1754,7 @@
     
   </data>
   <data name="AboutSequence_start" xml:space="preserve">
-    <value>선택사항입니다. 시퀀스의 첫 번째 번호입니다. 기본값은 1입니다.</value>
+    <value>선택 사항입니다. 시퀀스의 첫 번째 번호입니다. 기본값은 1입니다.</value>
     
   </data>
   <data name="SequenceArg3" xml:space="preserve">
@@ -1655,11 +1762,11 @@
     
   </data>
   <data name="AboutSequence_step" xml:space="preserve">
-    <value>선택사항. 테이블에서 각 후속 값을 증가시키는 양입니다. 기본값은 1입니다.</value>
+    <value>선택 사항입니다. 테이블에서 각 후속 값을 증가시키는 양입니다. 기본값은 1입니다.</value>
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>'.'을 잘못 사용했습니다.</value>
+    <value>'.'을 잘못 사용했습니다</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -1675,7 +1782,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>매개 변수가 있는 구성 요소 사용자 지정 데이터 속성은 구성 요소 또는 구성 요소 출력 속성에서만 액세스할 수 있습니다.</value>
+    <value>구성 요소 함수 속성 또는 매개 변수는 구성 요소 내부 또는 구성 요소 출력 속성에서만 액세스할 수 있습니다.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>구성 요소 함수 속성 또는 매개 변수는 다른 함수 속성만 참조할 수 있습니다.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1699,7 +1810,7 @@
     
   </data>
   <data name="ErrBadOperatorTypes" xml:space="preserve">
-    <value>이 작업은 {0}, {1} 유향에 유효하지 않습니다.</value>
+    <value>이 작업은 {0}, {1} 형식에 유효하지 않습니다.</value>
     
   </data>
   <data name="ErrGuidStrictComparison" xml:space="preserve">
@@ -1715,7 +1826,7 @@
     
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
-    <value>잘못된 인수 형식입니다({1}). 대신 {0} 값이 필요합니다.</value>
+    <value>잘못된 인수 형식({1})입니다. 대신 {0} 값이 필요합니다.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -1742,20 +1853,8 @@
     <value>'{0}'의 첫 번째 인수는 단일 열 테이블이어야 합니다.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>잘못된 스키마입니다. '{0}'에 대해 텍스트 값의 열이 필요합니다.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>잘못된 스키마입니다. '{0}'에 대해 날짜 값의 열이 필요합니다.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>잘못된 스키마입니다. '{0}'에 대해 숫자 값의 열이 필요합니다.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>잘못된 스키마입니다. '{0}'에 대해 색 값의 열이 필요합니다.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>잘못된 스키마입니다. '{1}'에 대해 {0} 값의 열이 필요합니다.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1798,8 +1897,28 @@
     <value>숫자 값이 너무 큽니다.</value>
     
   </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>현재 지원되지 않는 예약어 사용.</value>
+    
+  </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>식은 {0}자를 초과할 수 없습니다. 현재 식은 {1}자입니다.</value>
+    
+  </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>형식 문자열 크기는 {0}자를 초과할 수 없습니다.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>잘못된 형식.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>인수는 유효한 날짜 또는 시간 값을 나타내지 않습니다.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>이 데이터 원본은 잘못되었습니다. "내용 -&gt; 데이터 원본" 또는 "보기 -&gt; 옵션"을 클릭하여 "데이터 원본" 창에서 오류를 수정하세요.</value>
+    <value>이 데이터 원본은 잘못되었습니다. "내용 -&gt; 데이터 원본" 또는 "보기 -&gt; 옵션"을 클릭하여 "데이터 원본" 창에서 오류를 수정하세요</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -1815,7 +1934,11 @@
     
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
-    <value>인수 '{0}'의 형식이 필요한 형식인 '{1}'과(와) 일치하지 않습니다. 검색된 형식: '{2}'</value>
+    <value>인수 '{0}'의 형식이 필요한 형식인 '{1}'과(와) 일치하지 않습니다. 검색된 형식: '{2}'.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>이 식의 형식이 필요한 형식인 '{0}'과(와) 일치하지 않습니다. '{1}' 형식을 찾았습니다.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -1852,6 +1975,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>식 형식을 정렬할 수 없습니다.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>식 형식에 distinct 함수를 적용할 수 없습니다.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -2025,7 +2152,7 @@
     <value>일 구성 요소가 추출되는 날짜 값입니다.</value>
   </data>
   <data name="AboutHour" xml:space="preserve">
-    <value>시간은 0(12:00:00AM) ~ 23(11:00:00PM) 사이의 숫자로 시간을 반환합니다.</value>
+    <value>시간은 0(12:00:00 AM) ~ 23(11:00:00 PM) 사이의 숫자로 시간을 반환합니다.</value>
     
   </data>
   <data name="HourArg1" xml:space="preserve">
@@ -2058,7 +2185,7 @@
     <value>초 구성 요소가 추출되는 날짜 또는 시간 값입니다.</value>
   </data>
   <data name="AboutWeekday" xml:space="preserve">
-    <value>날짜시간 값의 요일을 반환합니다. 기본적으로 이 결과 범위는 1(일요일) ~007E; 7(토요일)입니다. StartOfWeek 열거 값이나 Microsoft Excel Weekday 함수 코드를 사용하여 다른 범위를 지정할 수 있습니다.</value>
+    <value>날짜시간 값의 요일을 반환합니다. 기본적으로 이 결과 범위는 1(일요일) ~ 7(토요일)입니다. StartOfWeek 열거 값이나 Microsoft Excel Weekday 함수 코드를 사용하여 다른 범위를 지정할 수 있습니다.</value>
     
   </data>
   <data name="WeekdayArg1" xml:space="preserve">
@@ -2240,6 +2367,9 @@
   <data name="MathAndStat" xml:space="preserve">
     <value>수학 및 통계</value>
   </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
+  </data>
   <data name="Information" xml:space="preserve">
     <value>정보</value>
   </data>
@@ -2319,7 +2449,7 @@
     <value>추가할 단위 수입니다. 숫자는 음수일 수 있습니다.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>사용할 단위로 Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds 중 하나가 될 수 있습니다.</value>
+    <value>사용할 단위는 TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds 중 하나일 수 있습니다.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2341,7 +2471,7 @@
     <value>difference 연산의 종료 날짜입니다.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>결과를 표시할 단위로 Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds 중 하나가 될 수 있습니다.</value>
+    <value>결과를 표현하는 단위로 TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds 중 하나일 수 있습니다.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2514,7 +2644,7 @@
     
   </data>
   <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
-    <value>표준 시간대</value>
+    <value>날짜/시간 표준 시간대</value>
     
   </data>
   <data name="DatePicker_Format_DisplayName" xml:space="preserve">
@@ -2562,7 +2692,7 @@
     
   </data>
   <data name="text_Clear_DisplayName" xml:space="preserve">
-    <value>지우기 단추</value>
+    <value>지우기 버튼</value>
     
   </data>
   <data name="Align_Left_DisplayName" xml:space="preserve">
@@ -2591,10 +2721,6 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>테스트할 값입니다.</value>
-  </data>
-  <data name="Post" xml:space="preserve">
-    <value>게시</value>
-    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>텍스트 형식의 날짜 및 시간을 Power Apps 날짜-시간 코드로 날짜를 나타내는 숫자로 변환합니다.</value>
@@ -2792,7 +2918,7 @@
     
   </data>
   <data name="EndsWithArg2" xml:space="preserve">
-    <value>end</value>
+    <value>종료</value>
     
   </data>
   <data name="AboutBlank" xml:space="preserve">
@@ -2874,6 +3000,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>글로브</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe - 연결되어 있지 않음</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe - 새로 고침</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe - 변경 내용 보류 중</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe - 경고</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe - 오류</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -3013,7 +3159,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>기차</value>
+    <value>학습</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3073,7 +3219,7 @@
     
   </data>
   <data name="Icon_Leave_DisplayName" xml:space="preserve">
-    <value>나뭇잎</value>
+    <value>나가기</value>
     
   </data>
   <data name="Icon_Paste_DisplayName" xml:space="preserve">
@@ -3266,6 +3412,38 @@
   </data>
   <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
     <value>대비 테마</value>
+    
+  </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>데이터 원본에 레코드를 추가합니다.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>데이터_원본</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>레코드</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>컬렉션의 모든 레코드를 삭제합니다. 컬렉션의 열은 그대로 남아 있습니다.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>컬렉션에서 모든 레코드를 삭제합니다. 그런 다음 동일한 컬렉션에 다른 레코드 집합을 추가합니다.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>데이터_원본</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>데이터_원본</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>레코드</value>
     
   </data>
   <data name="AboutPatch" xml:space="preserve">
@@ -3773,7 +3951,7 @@
     
   </data>
   <data name="Icon_Laptop_DisplayName" xml:space="preserve">
-    <value>랩톱</value>
+    <value>노트북</value>
     
   </data>
   <data name="Icon_ComputerDesktop_DisplayName" xml:space="preserve">
@@ -3952,94 +4130,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>수식 열에는 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>{0} 함수에 대한 잘못된 인수 수: {1} 수신, 예상 {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>{0} 인수는 수식 열의 {1} 함수에 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>이 인수는 수식 열에서 이 형식으로 전달할 수 없습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>이 인수는 수식 열에서 {0} 형식으로 전달할 수 없습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>이 인수에는 리터럴 값만 지원됩니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>표준 시간대 변환 없이 이 입력에 {0}을(를) 수행할 수 없으며, 이는 수식 열에 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>이 작업은 날짜/시간 동작이 다른 값에 대해 수행할 수 없습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>수식 열에는 짧은 날짜 및 시간 형식 문자열만 지원됩니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>{0} 인수는 {1} 날짜 연산 함수에 대해 유효하지 않거나 지원되지 않는 시간 단위입니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>"." 및 "," 등의 로캘별 서식 토큰은 수식 열에 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0}은(는) 수식 열에 지원되지 않습니다. 대신 {1}을(를) 사용하세요.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>이 작업은 수식 열의 {0} 유형에 대해 수행할 수 없습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>{0} 결과 유형은 수식 열에 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>전체 레코드를 직접 참조하는 것은 수식 열에서 지원되지 않습니다. 레코드에서 유효한 필드를 참조하세요.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>이 수식에 기대되는 결과 유형은 {0}이지만, 실제 결과 유형은 {1}입니다. 수식 열의 결과 유형을 변경할 수 없습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>{0} 유형의 열은 수식 열에 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>형식이 {1}인 {0} 유형의 열은 수식 열에 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>수식 열에서는 레코드 또는 테이블 강제 변환이 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>수식은 1,000자를 초과할 수 없습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>단일 열 테이블은 수식 열에서 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>수식 열에서 가상 테이블 {0}을(를) 참조할 수 없습니다.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>피연산자가 필요합니다. 수식 또는 식에는 유효한 피연산자가 필요합니다. 예를 들어, 식 ' 1 +_'에 피연산자 '2'를 추가하여 결과 값이 '3'이 되게 만들 수 있습니다. 또는 식 '"Hi "&amp; _ '에 피연산자 "there"를 추가하여 'Hi there' 결과를 얻을 수 있습니다.</value>
     
@@ -4142,10 +4232,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>이 오류는 수식에서 잘못된 구문이 있는 구성 요소 동작 속성을 참조하는 경우에 표시됩니다(예: Component.OnCustomChange() 대신 Component.OnCustomChange).</value>
+    <value>이 오류는 수식에서 잘못된 구문이 있는 구성 요소 함수 속성을 참조하는 경우에 표시됩니다. (예: Component.CustomFunction() 대신 Component.CustomFunction)</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>올바른 구문을 사용하여 구성 요소 동작 속성을 참조하세요(예: Component.OnCustomChange()).</value>
+    <value>올바른 구문을 사용하여 구성 요소 함수 속성을 참조하세요. 예: Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4335,6 +4425,10 @@
     <value>식별자의 텍스트가 있는지 확인합니다. 식별자가 모두 비어 있거나 공백이면 이 오류가 발생합니다.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>{0} 유형의 값을 비교할 수 없습니다.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>비교할 수 없는 유형입니다. {0} 및 {1} 유형은 비교할 수 없습니다.</value>
     
@@ -4371,7 +4465,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
-    <value>호환되지 않는 형식입니다. 업데이트하려는 데이터 소스의 '{0}' 열은 '{1}' 형식이어야 하는데 '{2}' 형식을 사용 중입니다.</value>
+    <value>호환되지 않는 형식입니다. 업데이트하려는 데이터 원본의 '{0}' 열은 '{1}' 형식이어야 하는데 '{2}' 형식을 사용 중입니다.</value>
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
@@ -4396,6 +4490,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>문서: Power Apps에 대한 수식 참조</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>호환되지 않는 형식입니다. 레코드에 넣으려는 항목에 레코드와 호환되지 않는 형식이 있습니다.</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4642,8 +4740,44 @@
     <value>이 컨텍스트에서는 As가 허용되지 않음</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>형식화되지 않은 개체는 레코드 범위를 지원하는 함수에 대한 첫 번째 인수로 사용할 수 없습니다.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>이름이 지정된 수식은 세미콜론으로 끝나야 합니다.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>이름이 지정된 수식은 식이어야 합니다.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>사용자 정의 함수에는 본문이 있어야 합니다.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>함수 {0}이(가) 이미 정의되어 있습니다.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>매개 변수 {0}이(가) 중복됩니다.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>알 수 없는 형식 {0}입니다.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>명시된 함수 반환 형식이 함수 본문의 반환 형식과 일치하지 않습니다.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>함수 반환 유형이 누락되었습니다(예: "FindMonth( d:Text ):Number = Month( DateParse( d ));"의 ":Number").</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>함수 인수 유형이 누락되었습니다(예: "FindMonth( d:Text ):Number = Month( DateParse( d ))"의 ":Text").</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4725,6 +4859,257 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>이 기능은 사용되지 않으며 더 이상 지원되지 않습니다.</value>
+    
+  </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>네임스페이스 {1}에서 {0} 함수가 더 이상 사용되지 않습니다.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>네임스페이스 {1}에서 {0} 함수가 지원되지 않습니다.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>경고: 지연된 유형이 제공되지 않습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>예상 식별자 이름</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>이 함수는 모호하며 동일한 인수에 대한 람다 식과 열 식별자를 포함합니다.</value>
+    
+  </data>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>{0} 옵션의 값이 예상 유형 {1}이(가) 아닙니다.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>주어진 옵션 집합 값의 논리적 이름을 반환합니다.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>옵션</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>논리적 이름이 반환될 옵션 집합 값입니다.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>런타임에 설정된 기본 로캘을 가져옵니다.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>URL 문자열을 인코딩하여 영숫자가 아닌 특정 문자를 % 및 16진수로 바꿉니다.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>인코딩할 URL입니다.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}'은(는) 인식되었지만 지원되지 않는 함수입니다.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>지정된 값이 '{0}' 형식이었으므로 형식을 변환하지 못했습니다. 필요한 형식은 '{1}'입니다.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>'{0}' 테이블에 {1}개 이상의 행이 있는 경우 이 작업이 작동하지 않을 수 있습니다.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>이 조건자는 항상 참입니다. ThisRecord 또는 [@]을(를) 사용했습니까?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>{0}을(를) 위임할 수 없음: 기본 키 필드 '{1}' 조회에 대한 위임만 지원합니다.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>{0}을(를) 위임할 수 없음: 식은 여러 필드를 비교합니다.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>{0}을(를) 위임할 수 없음: 동작 함수 '{1}'을(를) 포함합니다.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>입력한 텍스트가 입력한 텍스트 형식과 일치하는지 결정합니다.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>형식과 비교할 텍스트입니다.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>텍스트에 대해 확인할 형식이며, 이는 TextFormat 열거형의 값 또는 정규식일 수 있습니다.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>일치하기 원하는 텍스트의 부분을 결정하며, 이는 MatchOptions 열거형의 값일 수 있습니다.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>텍스트</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>형식</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>범위</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>제공된 텍스트에서 지정된 정규식을 검색하고 첫 번째 일치 항목을 반환합니다.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>제공된 텍스트에서 지정된 정규식을 검색하고 모든 일치 항목을 반환합니다.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>정규식에 대해 검색할 텍스트입니다.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>텍스트를 검사할 정규식입니다. 일치하는 경우 반환되는 캡처(괄호 사이의 값)가 포함됩니다.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>일치하기 원하는 텍스트의 부분을 결정하며, 이는 MatchOptions 열거형의 값일 수 있습니다.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>정규식에 대해 검색할 텍스트입니다.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>텍스트를 검사할 정규식입니다. 일치하는 경우 반환되는 캡처(괄호 사이의 값)가 포함됩니다.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>일치하기 원하는 텍스트의 부분을 결정하며, 이는 MatchOptions 열거형의 값일 수 있습니다.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>텍스트</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>정규식</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>옵션</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>지정된 데이터 원본을 새로 고칩니다.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>서비스_데이터_원본</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>레코드나 테이블 값이 필요합니다.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>새로 고칠 연결된 데이터 원본입니다.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>관리되는 연결만 새로 고칠 수 있습니다.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>정규식이 잘못되었습니다.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>정규식은 상수 값이어야 합니다.</value>
+    
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>'{0}' 함수에 전달된 값은 변경할 수 없습니다.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>캡처 이름 '{0}'이(가) 정규식의 전체 일치를 반환하는 미리 정의된 속성을 숨깁니다. 이 명명된 속성을 사용하여 지정된 텍스트에서 전체 일치를 추출하려면 이름을 변경하는 것이 좋습니다.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>캡처 이름 '{0}'이(가) 정규식에서 그룹 일치를 반환하는 미리 정의된 속성을 숨깁니다. 이 명명된 속성을 사용하여 지정된 텍스트에서 하위 일치를 추출하려면 이름을 변경하는 것이 좋습니다.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>캡처 이름 '{0}'이(가) 정규식에서 일치 위치를 반환하는 미리 정의된 속성을 숨깁니다. 이 명명된 속성을 사용하여 지정된 텍스트에서 전체 일치의 위치를 추출하려면 이름을 변경하는 것이 좋습니다.</value>
+    
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>모든 서식 지정을 제거하고 일반 텍스트 값을 반환합니다.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>텍스트</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>HTML 및 XML 태그를 제거할 텍스트입니다.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>필터 함수는 동작 함수를 조건자로 허용하지 않습니다.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>And 연산자를 사용하여 여러 조건자를 두 번째 인수로 결합합니다.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>이 테이블은 복사할 수 없습니다. 대신 ForAll 함수와 {...} 표기법으로 인라인 테이블을 생성하여 원하는 개별 열을 복사하세요.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>이 레코드는 복사할 수 없습니다. 대신 {...} 표기법으로 인라인 레코드를 생성하여 원하는 개별 필드를 복사하세요.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>'{0}' 함수의 두 번째 인수는 숫자 및 날짜/시간 값에 대해서만 지원됩니다.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>온라인 데이터 소스 값(테이블 또는 레코드)으로 변수를 설정하면 서버에 여러 요청이 발생할 수 있습니다. 이 기능은 곧 차단될 예정입니다.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>유형 리터럴 선언이 유효하지 않습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>원본 레코드 종류와 대상 레코드 종류가 일치하지 않습니다. 지정된 형식에 {0} 필드가 추가로 있습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>원본 레코드 종류와 대상 레코드 종류가 일치하지 않습니다. 지정된 형식에 {0} 필드가 빠져 있습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>원본 레코드 종류와 대상 레코드 종류가 일치하지 않습니다. 필드 이름인 {0}을(를) 찾을 수 없습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>원본 레코드 종류와 대상 레코드 종류가 일치하지 않습니다. 필드 이름: {0} 예상 {1}, 발견 {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>주어진 {0} 형식을 원본 형식 {1}(으)로 강제 변경할 수 없습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>원본 형식과 대상 형식이 일치하지 않습니다. 예상 {0}, 발견 {1}.</value>
     
   </data>
 </root>

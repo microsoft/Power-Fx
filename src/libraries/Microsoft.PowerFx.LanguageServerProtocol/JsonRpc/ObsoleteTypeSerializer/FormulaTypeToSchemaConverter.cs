@@ -38,6 +38,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Number };
             }
 
+            public void Visit(DecimalType type)
+            {
+                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Decimal };
+            }
+
             public void Visit(StringType type)
             {
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.String };
@@ -83,7 +88,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.UntypedObject };
             }
 
-            public void Visit(UnsupportedType type) => throw new NotImplementedException();
+            public void Visit(UnsupportedType type)
+            {
+                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Unsupported };
+            }
 
             public void Visit(UnknownType type)
             {
@@ -98,6 +106,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             public void Visit(BindingErrorType type)
             {
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Error };
+            }
+
+            public void Visit(Types.Void type)
+            {
+                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Void };
             }
 
             #endregion
@@ -133,6 +146,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             private Dictionary<string, FormulaTypeSchema> GetChildren(AggregateType type)
             {
                 var fields = new Dictionary<string, FormulaTypeSchema>(StringComparer.Ordinal);
+
+                if (type.TableSymbolName != null)
+                {
+                    // Doesn't support cycles. Just terminate. 
+                    return fields;
+                }
+
                 foreach (var child in type.GetFieldTypes())
                 {
                     child.Type.Visit(this);

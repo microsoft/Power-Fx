@@ -20,8 +20,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public NotFunction()
             : base("Not", TexlStrings.AboutNot, FunctionCategories.Logical, DType.Boolean, 0, 1, 1, DType.Boolean)
         {
@@ -34,9 +32,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Not | DelegationCapability.Filter;
 
-        // For binary op node args, we need to use filter delegation strategy. Hence we override this method here.
-        public override IOpDelegationStrategy GetOpDelegationStrategy(BinaryOp op, BinaryOpNode opNode)
-        {
+        // For binary op node args, we need to use filter delegation strategy. Hence we override this method here.        
+        public override IOpDelegationStrategy GetOpDelegationStrategy(BinaryOp op, PowerFx.Syntax.BinaryOpNode opNode)
+        {            
             Contracts.AssertValueOrNull(opNode);
 
             if (op == BinaryOp.In)

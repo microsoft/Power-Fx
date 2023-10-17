@@ -28,3 +28,5 @@ Blank()
 >> Shuffle([])
 Table()
 
+>> Shuffle({a:1,b:2})
+Errors: Error 8-17: Invalid argument type (Record). Expecting a Table value instead.|Error 0-18: The function 'Shuffle' has some invalid arguments.

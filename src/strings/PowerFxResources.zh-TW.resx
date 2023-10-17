@@ -483,7 +483,7 @@
     <value>要轉換為數值的文字值。</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>在轉換為值時要使用的語言代碼。</value>
+    <value>轉換值時要使用的語言代碼。</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>要處理的數字值資料行。</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>將「布林值」轉換為布林值。</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>布林值</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>要轉換為布林值的布林值。</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>將布林值資料行轉換為布林值資料行。</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>輸入</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>要處理的布林值資料行。</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>傳回第一個非空白的引數</value>
     
@@ -544,6 +566,24 @@
   <data name="AboutConcatenate" xml:space="preserve">
     <value>將數個文字值聯結成單一文字值。</value>
     
+  </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>將代表數字的 'text' 轉換為十進位值。</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>轉換值時要使用的語言代碼。</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>要轉換為十進位值的文字值。</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>將代表數字的 'text' 轉換為浮點值。</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>轉換值時要使用的語言代碼。</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>要轉換為浮點值的文字值。</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>文字</value>
@@ -773,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>若為第一個非錯誤引數，即為傳回的值。</value>
+    <value>上一個引數錯誤時傳回的值。</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -842,7 +882,8 @@
     <value>對 'source' 中的資料列評估運算式，並為排序提供值。</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>遞增或遞減</value>
+    <value>SortOrder.Ascending 或 SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>依資料行排序 'source'，可選擇性地指定排序 'order'。</value>
@@ -867,7 +908,8 @@
     <value>不重複的資料行名稱。</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>遞增或遞減</value>
+    <value>SortOrder.Ascending 或 SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>根據指定資料行中相符值的索引，排序 'source'。</value>
@@ -979,6 +1021,46 @@
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>將計算 ISO 週數的日期值。</value>
+  </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>傳回依月份數調整的日期。該月的日期仍然相同，但上限為新月份的天數。</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>日期</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>個月</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>要依指定月份數調整的日期值。</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>用以變更日期的月份數。正值會得出未來的日期，負值會得出過去的日期，零則不會變更月份。</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>傳回指定日期當月的最後一天 (依月份數調整)。</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>日期</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>個月</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>要依指定月份數調整的日期值。</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;用以變更日期的月份數。正值會產生未來的日期，負值會產生過去的日期，零則不會變更月份。</value>
+         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>通過向負無限大捨入來截斷「數字」。</value>
@@ -1367,6 +1449,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>要處理的數值資料行 (以弧度為單位)。</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>對資料表的一或多個資料行評估運算式，並傳回單一資料行的資料表，其內含評估運算式的相異 (不重複) 值。</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>來源</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>運算式</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>擷取其相異值的資料表。</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>對輸入資料表中的每一個資料列進行評估，並為 Distinct 作業提供值的運算式。</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>傳回指定之 x 及 y 座標的反正切值 (以弧度為單位)。</value>
   </data>
@@ -1404,6 +1503,14 @@
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>輸入</value>
+    
+  </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>修飾元</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>修飾元</value>
     
   </data>
   <data name="AboutLeft" xml:space="preserve">
@@ -1675,7 +1782,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>只能從元件或元件輸出屬性存取包含參數的元件自訂資料屬性。</value>
+    <value>只能從元件或元件輸出屬性存取元件函式屬性或參數。</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>元件函式屬性或參數只能參考其他函式屬性。</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1742,20 +1853,8 @@
     <value>'{0}' 的第一個引數應為單一資料行的資料表。</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>結構描述無效，應為 '{0}' 的文字值資料行。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>結構描述無效，應為 '{0}' 的日期值資料行。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>結構描述無效，應為 '{0}' 的數值資料行。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>結構描述無效，應為 '{0}' 的色彩值資料行。</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>結構描述無效，應為 '{1}' 的 {0} 值資料行。</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1798,6 +1897,26 @@
     <value>數值太大。</value>
     
   </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>使用目前不受支援的保留字。</value>
+    
+  </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>運算式不能超過 {0} 個字元。此運算式包含 {1} 個字元。</value>
+    
+  </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>格式字串大小不能超過 {0} 個字元。</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>無效的格式。</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>引數不代表有效的日期或時間值。</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>此資料來源無效。請在 [資料來源] 窗格中按一下 [內容] -&gt; [資料來源] 或 [檢視] -&gt; [選項]，以修正錯誤。</value>
     
@@ -1816,6 +1935,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>此引數的類型 '{0}' 不符合應有的類型 '{1}'。找到的類型為 '{2}'。</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>此運算式的類型不符合應有的類型 '{0}'。找到的類型為 '{1}'。</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -1852,6 +1975,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>無法排序運算式類型。</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>無法對運算式類型套用 Distinct。</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -2240,6 +2367,9 @@
   <data name="MathAndStat" xml:space="preserve">
     <value>數學與統計</value>
   </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
+  </data>
   <data name="Information" xml:space="preserve">
     <value>資訊</value>
   </data>
@@ -2319,7 +2449,7 @@
     <value>要新增的單位數。數字可以是負數。</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>要使用的單位，其可以是 Years、Quarters、Months、Days、Hours、Minutes、Seconds、Milliseconds 的其中之一。</value>
+    <value>要使用的單位，可以是 TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds。</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2341,7 +2471,7 @@
     <value>比較差異運算的結束日期。</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>表示結果的單位，其可以是 Years、Quarters、Months、Days、Hours、Minutes、Seconds、Milliseconds 的其中之一。</value>
+    <value>用於表示結果的單位，可以是 TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds。</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2592,10 +2722,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>要測試的值。</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>張貼</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>將文字格式的日期與時間，轉換為在 Power Apps 日期時間代碼中代表日期的數字。</value>
     
@@ -2833,7 +2959,7 @@
     
   </data>
   <data name="Icon_Bookmark_DisplayName" xml:space="preserve">
-    <value>書簽</value>
+    <value>書籤</value>
     
   </data>
   <data name="Icon_Bug_DisplayName" xml:space="preserve">
@@ -2874,6 +3000,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>全球</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>全域 - 未連線</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>全域 - 重新整理</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>全域 - 變更擱置中</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>全域 - 警告</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>全域 - 錯誤</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -3013,7 +3159,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>火車</value>
+    <value>訓練</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3153,7 +3299,7 @@
     
   </data>
   <data name="LayoutAlignItems_Center_DisplayName" xml:space="preserve">
-    <value>中心</value>
+    <value>置中</value>
     
   </data>
   <data name="LayoutAlignItems_End_DisplayName" xml:space="preserve">
@@ -3169,7 +3315,7 @@
     
   </data>
   <data name="AlignInContainer_Center_DisplayName" xml:space="preserve">
-    <value>中心</value>
+    <value>置中</value>
     
   </data>
   <data name="AlignInContainer_End_DisplayName" xml:space="preserve">
@@ -3189,7 +3335,7 @@
     
   </data>
   <data name="LayoutJustifyContent_Center_DisplayName" xml:space="preserve">
-    <value>中心</value>
+    <value>置中</value>
     
   </data>
   <data name="LayoutJustifyContent_End_DisplayName" xml:space="preserve">
@@ -3268,6 +3414,38 @@
     <value>對比佈景主題</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>新增記錄至資料來源。</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>記錄</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>刪除集合的所有記錄。將保留集合的資料行。</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>刪除集合中的所有記錄。然後新增其他記錄集至同一個集合。</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>記錄</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>將更新套用至指定的資料列，並變更指定資料來源中的資料列。傳回更新後的資料列。</value>
     
@@ -3297,7 +3475,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>如果提供，最後一個引數必須是「RemoveFlags.All」。是否有錯別字?</value>
+    <value>如果提供，最後一個引數必須是 'RemoveFlags.All"。是否有錯別字?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -3333,7 +3511,7 @@
     
   </data>
   <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
-    <value>中央</value>
+    <value>置中</value>
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
@@ -3345,7 +3523,7 @@
     
   </data>
   <data name="VerticalAlign_Bottom_DisplayName" xml:space="preserve">
-    <value>下</value>
+    <value>底部</value>
     
   </data>
   <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
@@ -3701,7 +3879,7 @@
     
   </data>
   <data name="Icon_Bus_DisplayName" xml:space="preserve">
-    <value>匯流排</value>
+    <value>公共汽車</value>
     
   </data>
   <data name="Icon_Cars_DisplayName" xml:space="preserve">
@@ -3753,7 +3931,7 @@
     
   </data>
   <data name="Icon_Bell_DisplayName" xml:space="preserve">
-    <value>鈴</value>
+    <value>鐘</value>
     
   </data>
   <data name="Icon_ShoppingCart_DisplayName" xml:space="preserve">
@@ -3952,94 +4130,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>公式資料行不支援。</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>{0} 函式的引數數量無效: 收到 {1} 個，預期為 {2} 個</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>公式資料行中的 {1} 函數不支援 {0} 引數。</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>此引數不能在公式資料行中以此類型傳遞。</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>此引數不能在公式資料行中以類型 {0} 傳遞。</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>此引數僅支援常值。</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>如果沒有時區轉換，則無法對此輸入執行 {0}，公式資料行不支援時區轉換。</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>無法對具有不同日期時間行為的值執行此作業。</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>公式資料行只支援簡短日期和時間格式字串。</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>{0} 引數對 {1} 日期算術函式而言是無效/不受支援的時間單位。</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>特定地區設定格式化權杖，例如公式欄中不支援「。」和「，」。</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>公式欄不支援 {0}，請改用 {1}。</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>無法對公式資料行中的類型 {0} 執行此作業。</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>公式欄不支援結果類型 {0}。</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>公式資料行不支援直接參考整份記錄。請參考記錄中的有效欄位。</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>此公式的結果類型預期為{0}，但實際結果類型{1}。無法變更公式欄的結果類型。</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>公式欄不支援類型為 {0} 的資料行。</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>公式欄不支援 {1} 格式的資料行 {0}。</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>公式資料行中不支援強制記錄或資料表。</value>
-    
-  </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>公式不能超過 1000 個字元。</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>公式資料行不支援單欄資料表。</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>無法在公式資料行中參考虛擬表格 {0}。</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>必須是運算元。公式或運算式必須包含有效的運算元。例如，您可以為運算式 '1 + _' 新增運算元 '2'，以得出結果 '3'。您也可以在運算式 '"Hi "&amp; _ ' 中新增 "there"，以得出結果 'Hi there'。</value>
     
@@ -4142,10 +4232,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>當公式參考了含有無效語法的元件行為屬性時，就會發生此錯誤。(例如把 Component.OnCustomChange() 寫成 Component.OnCustomChange)</value>
+    <value>當公式參考了含有無效語法的元件函式屬性時，就會發生此錯誤。(例如把 Component.CustomFunction() 寫成 Component.CustomFunction)</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>使用正確的語法來參考元件行為屬性。例如 Component.OnCustomChange()</value>
+    <value>使用正確的語法來參考元件函式屬性。例如 Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4335,6 +4425,10 @@
     <value>請確認您為識別碼提供了文字。若識別碼完全為空白或空格，就會發生此錯誤。</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>無法比較類型 {0} 的值。</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>比較不相容的類型。這些類型無法比較: {0}、{1}。</value>
     
@@ -4396,6 +4490,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>文章: Power Apps 的公式參考</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>不相容的類型。您所嘗試置入記錄的物件包含與記錄不相容的類型。</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4546,7 +4644,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>若您的資料集超過了 500 個記錄的限制，但包含的記錄少於 2,000 個，請嘗試重設限制。
+    <value>若您的資料集超過了 500 個記錄的限制，但包含的記錄少於 2,000 個，請嘗試重新設定限制。
       </value>
     
   </data>
@@ -4642,8 +4740,44 @@
     <value>在此內容中不允許 As</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>非類型化物件無法用做支援記錄範圍之函式的第一個引數。</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>命名公式必須以分號結尾。</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>命名公式必須是運算式。</value>
+    
+  </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>使用者定義的函式必須有主體。</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>函式 {0} 已經定義。</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>參數 {0} 重複。</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>未知的類型 {0}。</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>指定的函式傳回類型與函式主體的傳回類型不相符。</value>
+    
+  </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>缺少函式傳回類型，例如 "FindMonth( d:Text ):Number = Month( DateParse( d ));" 中的 ":Number"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>缺少函式引數類型，例如 "FindMonth( d:Text ):Number = Month( DateParse( d ))" 中的 ":Text"</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4725,6 +4859,257 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>此功能已淘汰，不再受支援。</value>
+    
+  </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>在命名空間 {1} 中，函式 {0} 已被取代。</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>在命名空間 {1} 中，不支援函式 {0}。</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>警告: 已提供延期類型。</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>預期的識別碼名稱</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>此函式不明確，其包含同一個引數的 Lambda 運算式和資料行識別碼。</value>
+    
+  </data>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>選項 {0} 的值不是預期的類型 {1}。</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>傳回給定選項組值的邏輯名稱。</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>選項</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>邏輯名稱將被傳回的選項組值。</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>取得執行階段的預設地區設定。</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>對 URL 字串進行編碼，以 % 和十六進位數字取代特定非英數字元。</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>要編碼的 URL。</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' 是可識別但不受支援的函式。</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>類型轉換失敗，因為指定值的類型為 '{0}'，必須是 '{1}' 類型。</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>資料表 '{0}' 如果超過 {1} 列，則此作業可能無法運作。</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>此述詞將永遠為 true。您要使用 ThisRecord 還是 [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>無法委派 {0}: 僅支援委派對主索引鍵欄位 '{1}' 的查詢。</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>無法委派 {0}: 運算式比較了多個欄位。</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>無法委派 {0}: 包含行為函式 '{1}'。</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>決定提供的文字是否與提供的格式相符。</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>要與格式進行比對的文字。</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>要據以檢查文字的格式。可以是 TextFormat 列舉值或規則運算式。</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>這會決定我們想要比對文字的哪個部分。可能是 MatchOptions 列舉的值。</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>文字</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>格式</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>延伸區</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>在提供的文字中搜尋指定的規則運算式，並傳回第一個相符的結果。</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>在提供的文字中搜尋指定的規則運算式，並傳回所有相符的項目。</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>要根據規則運算式搜尋的文字。</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>用於核對文字的規則運算式。其中可包含會在比對成功時傳回的擷取 (括號之間的值)。</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>這會決定我們想要比對文字的哪個部分。可能是 MatchOptions 列舉的值。</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>要根據規則運算式搜尋的文字。</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>用於核對文字的規則運算式。其中可包含會在比對成功時傳回的擷取 (括號之間的值)。</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>這會決定我們想要比對文字的哪個部分。可能是 MatchOptions 列舉的值。</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>文字</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>規則運算式</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>選項</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>重新整理指定的資料來源。</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>連接的資料來源</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>應為記錄或資料表值。</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>要重新整理的連線資料來源。</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>只有受控的連線才可重新整理。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>規則運算式必須是常數值。</value>
+    
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>無法變更傳遞至 '{0}' 函式的值。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>擷取名稱 '{0}' 已隱藏傳回規則運算式完全相符項目的預先定義屬性。如果您要使用該具名屬性擷取指定文字中的完全相符項目，建議將它重新命名。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>擷取名稱 '{0}' 已隱藏傳回規則運算式中群組相符項目的預先定義屬性。如果您要使用該具名屬性擷取指定文字中的所有子相符項目，建議將它重新命名。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>擷取名稱 '{0}' 已隱藏傳回規則運算式相符項目之位置的預先定義屬性。如果您要使用該具名屬性擷取指定文字中完全相符項目的位置，建議將它重新命名。</value>
+    
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>移除所有格式設定，並傳回純文字值。</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>文字</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>要移除其 HTML 和 XML 標籤的文字。</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>篩選函式不允許以行為函式為述詞。</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>使用 And 運算子，將多個述詞組合為第二個引數。</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>無法複製此資料表。請改用 ForAll 函式和 {...} 標記法來建立內嵌資料表，以複製需要的個別資料行。</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>無法複製此記錄。請改用 {...} 標記法來建立內嵌記錄，以複製需要的個別欄位。</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>'{0}' 函式的第二個引數僅支援數字與日期/時間值。</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>使用線上資料來源值 (資料表或記錄) 來設定變數可能導致向伺服器提出多個要求。這很快就會被封鎖。</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>類型常值宣告無效</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。給定類型包含額外欄位: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。給定類型缺少欄位: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。找不到欄位名稱: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。欄位名稱: {0} 應為 {1}; 找到 {2}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>給定的 {0} 類型無法強制變更為來源類型 {1}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>來源與目標記錄類型之間類型不相符。應為 {0}; 找到 {1}。</value>
     
   </data>
 </root>

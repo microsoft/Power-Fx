@@ -1,0 +1,13 @@
+{
+  "@odata.context": "https://sql-dfwus.azconn-dfwus-001.p.azurewebsites.net/v2/$metadata#datasets('pfxdev-sql.database.windows.net%2Cconnectortest')/procedures",
+  "value": [
+    {
+      "Name": "[dbo].[sp_1]",
+      "DisplayName": "[dbo].[sp_1]"
+    },
+    {
+      "Name": "[dbo].[sp_2]",
+      "DisplayName": "[dbo].[sp_2]"
+    }
+  ]
+}

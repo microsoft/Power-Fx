@@ -31,9 +31,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.EditorEngineExtensions",
                 "Microsoft.PowerFx.EditorContextScope",
                 "Microsoft.PowerFx.Core.IPowerFxScopeFactory",
-                "Microsoft.PowerFx.Core.IPowerFxScopeQuickFix",
 
                 "Microsoft.PowerFx.LanguageServerProtocol.LanguageServer",
+
+                "Microsoft.PowerFx.LanguageServerProtocol.NLHandler",
+                "Microsoft.PowerFx.LanguageServerProtocol.NL2FxParameters",
 
                 // Internal
                 "Microsoft.PowerFx.LanguageServerProtocol.JsonRpcHelper",
@@ -55,11 +57,19 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionTriggerKind",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomProtocolNames",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomGetCapabilitiesParams",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomGetCapabilitiesResult",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomFx2NLParams",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomFx2NLResult",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomNL2FxParams",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomNL2FxResult",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomNL2FxResultItem",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.Diagnostic",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.DiagnosticSeverity",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.DidChangeTextDocumentParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.DidOpenTextDocumentParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.InitialFixupParams",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.LanguageServerRequestBaseParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.ParameterInformation",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.Position",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.PublishDiagnosticsParams",
@@ -78,7 +88,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextDocumentPositionParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextEdit",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.VersionedTextDocumentIdentifier",
-                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.WorkspaceEdit",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.WorkspaceEdit"
             };
 
             var sb = new StringBuilder();

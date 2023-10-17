@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Tests
         /// <exception cref="TimeZoneNotFoundException">Will throw if timeZoneId is not found.</exception>
         /// <exception cref="ArgumentException">When timeZoneId is null or made of spaces.</exception>
         /// <exception cref="ArgumentNullException">When symbols is null.</exception>
-        public static void SetTimeZoneById(this SymbolValues symbols, string timeZoneId)
+        public static void SetTimeZoneById(this RuntimeConfig symbols, string timeZoneId)
         {
             if (symbols == null)
             {
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Tests
         /// <exception cref="ArgumentException">When timeZoneDisplayName is null or made of spaces.</exception>
         /// <exception cref="ArgumentNullException">When symbols is null.</exception>
         /// <remarks>If the TimeZone DisplayName is not valid, the TimeZoneInfo will not be set.</remarks>
-        public static void SetTimeZoneByDisplayName(this SymbolValues symbols, string timeZoneDisplayName)
+        public static void SetTimeZoneByDisplayName(this RuntimeConfig symbols, string timeZoneDisplayName)
         {
             if (symbols == null)
             {

@@ -29,8 +29,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel and DAX function: IsBlank
     internal sealed class IsBlankOrErrorOptionSetValueFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public IsBlankOrErrorOptionSetValueFunction()
@@ -41,11 +39,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.IsBlankOrErrorArg1 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "OptionSetValue");
         }
     }
 }

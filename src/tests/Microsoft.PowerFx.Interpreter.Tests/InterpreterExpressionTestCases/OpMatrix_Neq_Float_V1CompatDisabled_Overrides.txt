@@ -1,0 +1,6 @@
+#override: OpMatrix_Neq_Float_V1CompatDisabled.txt
+#SETUP: disable:PowerFxV1CompatibilityRules
+
+// Bug in pre-V1, fixed in V1
+>> Time(1,0,0) <> DateTime(1899,12,30,1,0,0)
+#skip

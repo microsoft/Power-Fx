@@ -2,9 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
@@ -32,14 +30,14 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("X + 1", "X")]
         [InlineData("X + \"1\"", "X")]
         [InlineData("X + DateTime(2022, 11, 10, 0, 0, 0)", "d")]
-        [InlineData("X + Date(2022, 11, 10)", "d")]
+        [InlineData("X + Date(2022, 11, 10)", "D")]
         [InlineData("X + Time(0, 0, 0)", "T")]
         [InlineData("1 + X", "X")]
         [InlineData("DateTime(2022, 11, 10, 0, 0, 0) + X", "d")]
-        [InlineData("Date(2022, 11, 10) + X", "d")]
+        [InlineData("Date(2022, 11, 10) + X", "D")]
         [InlineData("Time(0, 0, 0) + X", "T")]
 
-        [InlineData("X * 1", "n")]
+        [InlineData("X * 1", "X")]
         [InlineData("And(X, 1=1)", "b")]
         [InlineData("X&\"test\"", "s")]
         [InlineData("X = 1", "b")]
@@ -89,7 +87,7 @@ namespace Microsoft.PowerFx.Interpreter
             symbolTable.AddVariable("N", FormulaType.Number, mutable: true);
             symbolTable.AddVariable("XM", FormulaType.Deferred, mutable: true);
 
-            TestDeferredTypeBindingWarning(script, Features.None, TestUtils.DT(expectedReturnType), symbolTable);
+            TestDeferredTypeBindingWarning(script, Features.None, TestUtils.DT(expectedReturnType), symbolTable, numberIsFloat: true);
         }
 
         [Theory]
@@ -132,7 +130,7 @@ namespace Microsoft.PowerFx.Interpreter
             Assert.Throws<NotSupportedException>(() => TableType.Empty().Add(new NamedFormulaType("someName", FormulaType.Deferred)));
         }
 
-        private void TestDeferredTypeBindingWarning(string script, Features features, DType expected, SymbolTable symbolTable = null)
+        private void TestDeferredTypeBindingWarning(string script, Features features, DType expected, SymbolTable symbolTable = null, bool numberIsFloat = false)
         {
             var config = new PowerFxConfig(features)
             {
@@ -140,15 +138,14 @@ namespace Microsoft.PowerFx.Interpreter
             };
 
             config.EnableSetFunction();
+            config.EnableJsonFunctions();
 
             var engine = new RecalcEngine(config);
-            var result = engine.Check(script, options: new ParserOptions() { AllowsSideEffects = true });
+            var result = engine.Check(script, options: new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = numberIsFloat });
             
             Assert.True(result.IsSuccess);
 
-            var returnType = FormulaType.Build(result._binding.ResultType);
-
-            Assert.Equal(expected, result._binding.ResultType);
+            Assert.Equal(expected, result.ReturnType._type);
 
             Assert.True(result.Errors.Count() > 0);
 

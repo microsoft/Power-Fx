@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Data;
 using System.Threading;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -19,10 +21,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.EnableSetFunction();
             var engine = new RecalcEngine(config);
 
-            engine.UpdateVariable("x", FormulaValue.New(12));
+            engine.UpdateVariable("x", FormulaValue.New(12m));
 
             var r1 = engine.Eval("x", null, _opts); // 12
-            Assert.Equal(12.0, r1.ToObject());
+            Assert.Equal(12m, r1.ToObject());
 
             var r2 = engine.Eval("Set(x, 15)", null, _opts);
 
@@ -30,10 +32,51 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(true, r2.ToObject());
 
             r1 = engine.Eval("x"); // 15
-            Assert.Equal(15.0, r1.ToObject());
+            Assert.Equal(15m, r1.ToObject());
 
             r1 = engine.GetValue("x");
-            Assert.Equal(15.0, r1.ToObject());          
+            Assert.Equal(15m, r1.ToObject());          
+        }
+
+        [Theory]
+        [InlineData("Set(x, Float(15))", true, true)]
+        [InlineData("Set(x, Decimal(15))", true, true)]
+        [InlineData("Set(x, 15)", true, true)]
+
+        [InlineData("Set(x, Float(15))", true, false)]
+        [InlineData("Set(x, Decimal(15))", true, false)]
+        [InlineData("Set(x, 15)", true, false)]
+
+        // Set() only coerces Numeric values.
+        [InlineData("Set(x, \"15\")", false, true)]
+        [InlineData("Set(x, \"15\")", false, false)]
+        public void SetVarNumberCoercion(string expression, bool isCheckSuccess, bool isFloat)
+        {
+            var option = new ParserOptions { NumberIsFloat = isFloat, AllowsSideEffects = true };
+            FormulaValue value = isFloat ? FormulaValue.New(12.0) : FormulaValue.New(12m);
+            var expectedValue = isFloat ? (object)15.0 : (object)15m;
+
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+            engine.UpdateVariable("x", value);
+
+            var x = engine.Eval("x", null, option);
+            Assert.Equal(value.ToObject(), x.ToObject());
+
+            var check = engine.Check(expression, option);
+            Assert.Equal(isCheckSuccess, check.IsSuccess);
+
+            if (isCheckSuccess)
+            {
+                var isSuccess = check.GetEvaluator().Eval();
+
+                // Set() returns constant true;
+                Assert.Equal(true, isSuccess.ToObject());
+
+                var result = engine.Eval("x");
+                Assert.Equal(expectedValue, result.ToObject());
+            }
         }
 
         [Fact]
@@ -43,11 +86,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.EnableSetFunction();
             var engine = new RecalcEngine(config);
 
-            engine.UpdateVariable("x", FormulaValue.NewBlank(FormulaType.Number));
+            engine.UpdateVariable("x", FormulaValue.NewBlank(FormulaType.Decimal));
 
             // Circular reference ok
             var r3 = engine.Eval("Set(x, 1);Set(x,x+1);x", null, _opts);
-            Assert.Equal(2.0, r3.ToObject());
+            Assert.Equal(2.0m, r3.ToObject());
         }
 
         [Fact]
@@ -61,7 +104,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("y", FormulaValue.New(7));
 
             var r1 = engine.Eval("Set(y, x*2);y", null, _opts);
-            Assert.Equal(10.0, r1.ToObject());
+            Assert.Equal(10m, r1.ToObject());
         }
 
         // Work with records
@@ -73,16 +116,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(config);
 
             var cache = new TypeMarshallerCache();
-            var obj = cache.Marshal(new { X = 10, Y = 20 });
+            var obj = cache.Marshal(new { X = 10m, Y = 20m });
 
             engine.UpdateVariable("obj", obj);
             
             // Can update record
             var r1 = engine.Eval("Set(obj, {X: 11, Y: 21}); obj.X", null, _opts);
-            Assert.Equal(11.0, r1.ToObject());
+            Assert.Equal(11m, r1.ToObject());
 
             // But SetField fails 
             var r2 = engine.Check("Set(obj.X, 31); obj.X", null, _opts);
+            Assert.False(r2.IsSuccess);
+        }
+
+        [Fact]
+        public void SetRecordFloat()
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            var cache = new TypeMarshallerCache();
+            var obj = cache.Marshal(new { X = 10f, Y = 20f });
+
+            engine.UpdateVariable("obj", obj);
+
+            // Can update record
+            var r1 = engine.Eval("Set(obj, {X: Float(11), Y: Float(21)}); obj.X", null, _opts);
+            Assert.Equal(11.0, r1.ToObject());
+
+            // But SetField fails 
+            var r2 = engine.Check("Set(obj.X, Float(31)); obj.X", null, _opts);
             Assert.False(r2.IsSuccess);
         }
 
@@ -133,15 +197,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var slotX = symTable.AddVariable("x", FormulaType.Number, mutable: true);
 
             var sym = symTable.CreateValues();            
-            sym.Set(slotX, FormulaValue.New(12));
+            sym.Set(slotX, FormulaValue.New(12.0));
 
             var config = new PowerFxConfig();
             config.EnableSetFunction();
             var engine = new RecalcEngine(config);
 
             var expr = "Set(x, x+1);x";
-            
-            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: sym).Result;
+
+            var runtimeConfig = new RuntimeConfig(sym);
+            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
             Assert.Equal(13.0, result.ToObject());
 
             result = sym.Get(slotX);
@@ -153,10 +218,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
+        public void UpdateSimple_Decimal()
+        {
+            var symTable = new SymbolTable();
+            var slotX = symTable.AddVariable("x", FormulaType.Decimal, mutable: true);
+
+            var sym = symTable.CreateValues();
+            sym.Set(slotX, FormulaValue.New(12));
+
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            var expr = "Set(x, x+1);x";
+
+            var runtimeConfig = new RuntimeConfig(sym);
+            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
+            Assert.Equal(13m, result.ToObject());
+
+            result = sym.Get(slotX);
+            Assert.Equal(13m, result.ToObject());
+
+            var found = sym.TryGetValue("x", out var result2);
+            Assert.True(found);
+            Assert.Equal(13m, result2.ToObject());
+        }
+
+        [Fact]
         public void MutableByDefault()
         {            
             var sym = new SymbolValues();
-            sym.Add("x", FormulaValue.New(12)); // mutable by default
+            sym.Add("x", FormulaValue.New(12m)); // mutable by default
 
             var config = new PowerFxConfig();
             config.EnableSetFunction();
@@ -174,7 +266,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void UpdateFailsOnReadOnlyValue()
         {
             var symTable = new SymbolTable();
-            var slotX = symTable.AddVariable("x", FormulaType.Number, mutable: true);
+            var slotX = symTable.AddVariable("x", FormulaType.Decimal, mutable: true);
 
             var sym = symTable.CreateValues();
             sym.Set(slotX, FormulaValue.New(12));
@@ -202,7 +294,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void UpdateFailsOnReadOnlyValue2()
         {
             var symTable = new SymbolTable();
-            var slotX = symTable.AddVariable("x", FormulaType.Number, mutable: false);
+            var slotX = symTable.AddVariable("x", FormulaType.Decimal, mutable: false);
 
             var sym = symTable.CreateValues();
             sym.Set(slotX, FormulaValue.New(12)); // Ok 
@@ -252,6 +344,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Create multiple values that share a symbol table.
             var symValues1 = symTable.CreateValues();
+            symValues1.Set(slot, FormulaValue.New(10.0));
+
+            var symValues2 = symTable.CreateValues();
+            symValues2.Set(slot, FormulaValue.New(20.0));
+
+            var check = engine.Check("Set(num, num+5)", options: _opts, symbolTable: symTable);
+            check.ThrowOnErrors();
+            var eval = check.GetEvaluator();
+
+            foreach (var symValue in new[] { symValues1, symValues2 })
+            {
+                var runtimeConfig = new RuntimeConfig(symValue);
+                var result = eval.EvalAsync(CancellationToken.None, runtimeConfig: runtimeConfig);
+            }
+
+            AssertValue(symValues1, "num", 15.0);
+            AssertValue(symValues2, "num", 25.0);
+        }
+
+        [Fact]
+        public void Update3_Decimal()
+        {
+            var symTable = new SymbolTable();
+            var slot = symTable.AddVariable("num", FormulaType.Decimal, mutable: true);
+
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            // Create multiple values that share a symbol table.
+            var symValues1 = symTable.CreateValues();
             symValues1.Set(slot, FormulaValue.New(10));
 
             var symValues2 = symTable.CreateValues();
@@ -263,11 +386,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var symValue in new[] { symValues1, symValues2 })
             {
-                var result = eval.EvalAsync(CancellationToken.None, runtimeConfig: symValue);
+                var runtimeConfig = new RuntimeConfig(symValue);
+                var result = eval.EvalAsync(CancellationToken.None, runtimeConfig: runtimeConfig);
             }
 
-            AssertValue(symValues1, "num", 15.0);
-            AssertValue(symValues2, "num", 25.0);
+            AssertValue(symValues1, "num", 15m);
+            AssertValue(symValues2, "num", 25m);
         }
 
         [Fact]
@@ -282,7 +406,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 new NamedValue("num", FormulaValue.New(11)),
                 new NamedValue("str", FormulaValue.New("abc")));
 
-            var expr = "Set(displayNum, 12); displayNum";
+            var expr = "Set(displayNum, Float(12)); displayNum";
                         
             var sym = NewMutableFromRecord(record);
             
@@ -290,7 +414,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.EnableSetFunction();
             var engine = new RecalcEngine(config);
 
-            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: sym).Result;
+            var runtimeConfig = new RuntimeConfig(sym);
+            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
 
             Assert.Equal(12.0, result.ToObject());
 
@@ -298,7 +423,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Can get invariant form.
             var invariant = engine.GetInvariantExpression(expr, recordType);
-            Assert.Equal("Set(num, 12); num", invariant);
+            Assert.Equal("Set(num, Float(12)); num", invariant);
         }
 
         // Expression from 2 row scopes!
@@ -311,7 +436,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var record1 = FormulaValue.NewRecordFromFields(
                 recordType1,
-                new NamedValue("num", FormulaValue.New(10)),
+                new NamedValue("num", FormulaValue.New(10.0)),
                 new NamedValue("str", FormulaValue.New("abc")));
 
             var recordType2 = RecordType.Empty()
@@ -319,7 +444,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var record2 = FormulaValue.NewRecordFromFields(
                 recordType2,
-                new NamedValue("num2", FormulaValue.New(20)));
+                new NamedValue("num2", FormulaValue.New(20.0)));
 
             var expr = "Set(displayNum, displayNum2+5); displayNum";
                         
@@ -344,7 +469,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(check1.IsSuccess);
 
             // Verify evaluation. 
-            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: sym).Result;
+            var runtimeConfig = new RuntimeConfig(sym);
+            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
 
             Assert.Equal(25.0, result.ToObject());
 
@@ -381,6 +507,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var symTable = ReadOnlySymbolTable.NewFromRecord(type, allowMutable: true);
             return symTable;
+        }
+
+        [Fact]
+        public void NewErrorMessageWithTypes()
+        {
+            // Create an engine with variable and enable mutation functions
+            var engine = new RecalcEngine(new PowerFxConfig());
+            engine.UpdateVariable("testDoubleVariable", 2.0);
+            engine.Config.SymbolTable.EnableMutationFunctions();
+
+            // Run compliation check
+            var check = engine.Check("Set(testDoubleVariable, true)", options: _opts);
+
+            // Verify check
+            Assert.False(check.IsSuccess);
+            Assert.Contains(check.Errors, d => d.Message.Contains("Invalid argument type (Boolean). Expecting a Number value instead."));
         }
     }
 }

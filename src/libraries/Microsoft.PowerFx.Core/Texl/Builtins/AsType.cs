@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 var tableDsInfo = tableArgType.AssociatedDataSources.Single();
 
-                if (context.IsEnhancedDelegationEnabled && (tableDsInfo is IExternalCdsDataSource) && argTypes[0].HasPolymorphicInfo)
+                if ((tableDsInfo is IExternalCdsDataSource) && argTypes[0].HasPolymorphicInfo)
                 {
                     var expandInfo = argTypes[0].PolymorphicInfo.TryGetExpandInfo(tableDsInfo.TableMetadata.Name);
                     if (expandInfo != null)
@@ -88,17 +88,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Check if table arg referrs to a connected data source.
             var tableArg = args[1];
+            var ads = argTypes[1].AssociatedDataSources?.FirstOrDefault();
+
             if (!binding.TryGetFirstNameInfo(tableArg.Id, out var tableInfo) ||
-                tableInfo.Data is not IExternalDataSource tableDsInfo ||
-                !(tableDsInfo is IExternalTabularDataSource))
+                !(IsExternalSource(ads) ||
+                IsExternalSource(tableInfo.Data)))
             {
                 errors.EnsureError(tableArg, TexlStrings.ErrAsTypeAndIsTypeExpectConnectedDataSource);
             }
         }
 
+        private static bool IsExternalSource(object externalDataSource)
+        {
+            return externalDataSource is IExternalDataSource tDsInfo &&
+                tDsInfo is IExternalTabularDataSource; 
+        }
+
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
         {
-            return binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled && metadata.IsDelegationSupportedByTable(DelegationCapability.AsType);
+            return metadata.IsDelegationSupportedByTable(DelegationCapability.AsType);
         }
 
         protected override bool RequiresPagedDataForParamCore(TexlNode[] args, int paramIndex, TexlBinding binding)
@@ -111,6 +119,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // For the second argument, we need only metadata. No actual data from datasource is required.
             return paramIndex != 1;
+        }
+
+        public override ICallNodeDelegatableNodeValidationStrategy GetCallNodeDelegationStrategy()
+        {
+            return new AsTypeCallNodeDelegationStrategy(this);
+        }
+    }
+
+    internal sealed class AsTypeCallNodeDelegationStrategy : DelegationValidationStrategy
+    {
+        public AsTypeCallNodeDelegationStrategy(TexlFunction function)
+            : base(function)
+        {
+        }
+
+        protected override bool IsValidAsyncOrImpureNode(TexlNode node, TexlBinding binding, TexlFunction trackingFunction = null)
+        {
+            // AsType should always be marked as valid regardless of it being async and impure.
+            return true;
         }
     }
 }

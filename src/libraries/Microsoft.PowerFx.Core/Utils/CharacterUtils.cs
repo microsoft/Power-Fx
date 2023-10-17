@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
                 else
                 {
-                    UpdateEscapeInternals("_" + ((uint)ch).ToString("X"), name, estimatedLength, i, ref charsToAdd, ref sb);
+                    UpdateEscapeInternals("_" + ((uint)ch).ToString("X", CultureInfo.InvariantCulture), name, estimatedLength, i, ref charsToAdd, ref sb);
                 }
             }
 
@@ -179,9 +179,11 @@ namespace Microsoft.PowerFx.Core.Utils
                         if (isValueAnInterpolatedString)
                         {
                             UpdateEscapeInternals($"{value[i]}{value[i]}", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                            break;
                         }
 
-                        break;
+                        // fall through since we want to add the character as a "regular" one
+                        goto default;
                     default:
                         charsToAdd++;
                         break;

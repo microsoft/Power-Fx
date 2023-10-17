@@ -46,6 +46,9 @@ namespace Microsoft.PowerFx
 
         internal SourceList After { get; }
 
+        // Options used ot create these results.
+        public ParserOptions Options { get; internal set; }
+
         /// <summary>
         /// Locale that error messages (if any) will be translated to.
         /// </summary>
@@ -55,13 +58,33 @@ namespace Microsoft.PowerFx
         // All the spans in the tokens are relative to this. 
         public string Text { get; }
 
-        internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text, CultureInfo errorMessageLocale)
-            : this(root, errors, hasError, comments, before, after, text)
+        /// <summary>
+        /// If string is too large, don't even attempt to lex or parse it. 
+        /// Just create a parse result directly encapsulating the error. 
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="maxAllowed">Maximum number of characters allowed. </param>
+        /// <returns></returns>
+        internal static ParseResult ErrorTooLarge(string text, int maxAllowed)
         {
-            ErrorMessageLocale = errorMessageLocale;
+            Token tok = new ErrorToken(new Span(0, text.Length));
+
+            var errKey = Core.Localization.TexlStrings.ErrTextTooLarge;
+            var err = new TexlError(tok, DocumentErrorSeverity.Critical, errKey, maxAllowed, text.Length);
+
+            List<TexlError> errors = new List<TexlError>()
+            {
+                err
+            };
+
+            int id = 0;
+            TexlNode root = new ErrorNode(ref id, tok, err.ShortMessage);
+            var comments = new List<CommentToken>();
+
+            return new ParseResult(root, errors, true, comments, null, null, text);         
         }
 
-        internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text)
+        internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text, CultureInfo errorMessageLocale = null)           
         {
             Contracts.AssertValue(root);
             Contracts.AssertValue(comments);
@@ -77,6 +100,8 @@ namespace Microsoft.PowerFx
             After = after;
 
             Text = text;
+
+            ErrorMessageLocale = errorMessageLocale ?? CultureInfo.CurrentCulture; // $$$ can't use current culture
         }
 
         internal string ParseErrorText => !HasError ? string.Empty : string.Join("\r\n", _errors.Select((err, i) =>

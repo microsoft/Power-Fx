@@ -15,20 +15,14 @@ namespace Microsoft.PowerFx.Core
 {
     internal class ExpressionLocalizationHelper
     {
-        [Obsolete("Use ConvertExpression with PowerFxConfig parameter instead of CultureInfo", false)]
-        internal static string ConvertExpression(string expressionText, RecordType parameters, BindingConfig bindingConfig, INameResolver resolver, IBinderGlue binderGlue, CultureInfo culture, bool toDisplay)
+        internal static string ConvertExpression(string expressionText, RecordType parameters, BindingConfig bindingConfig, INameResolver resolver, IBinderGlue binderGlue, CultureInfo culture, Features flags, bool toDisplay)
         {
-            return ConvertExpression(expressionText, parameters, bindingConfig, resolver, binderGlue, new PowerFxConfig(culture), toDisplay);
-        }
-
-        internal static string ConvertExpression(string expressionText, RecordType parameters, BindingConfig bindingConfig, INameResolver resolver, IBinderGlue binderGlue, PowerFxConfig fxConfig, bool toDisplay)
-        {
-            var targetLexer = toDisplay ? TexlLexer.GetLocalizedInstance(fxConfig.CultureInfo) : TexlLexer.InvariantLexer;
-            var sourceLexer = toDisplay ? TexlLexer.InvariantLexer : TexlLexer.GetLocalizedInstance(fxConfig.CultureInfo);
+            var targetLexer = toDisplay ? TexlLexer.GetLocalizedInstance(culture) : TexlLexer.InvariantLexer;
+            var sourceLexer = toDisplay ? TexlLexer.InvariantLexer : TexlLexer.GetLocalizedInstance(culture);
 
             var worklist = GetLocaleSpecificTokenConversions(expressionText, sourceLexer, targetLexer);
 
-            var formula = new Formula(expressionText, toDisplay ? CultureInfo.InvariantCulture : fxConfig.CultureInfo);
+            var formula = new Formula(expressionText, toDisplay ? CultureInfo.InvariantCulture : culture);
             formula.EnsureParsed(TexlParser.Flags.None);
 
             var binding = TexlBinding.Run(
@@ -41,7 +35,7 @@ namespace Microsoft.PowerFx.Core
                 ruleScope: parameters?._type,
                 updateDisplayNames: toDisplay,
                 forceUpdateDisplayNames: toDisplay,
-                features: fxConfig.Features);
+                features: flags);
 
             foreach (var token in binding.NodesToReplace)
             {
@@ -77,8 +71,9 @@ namespace Microsoft.PowerFx.Core
                         replacement = targetLexer.LocalizedPunctuatorChainingSeparator;
                         break;
                     case TokKind.NumLit:
+                    case TokKind.DecLit:
                         var numLit = token.Span.GetFragment(script);
-                        var decimalSeparatorIndex = numLit.IndexOf(sourceDecimalSeparator);
+                        var decimalSeparatorIndex = numLit.IndexOf(sourceDecimalSeparator, StringComparison.Ordinal);
                         if (decimalSeparatorIndex >= 0)
                         {
                             var newMin = span.Min + decimalSeparatorIndex;

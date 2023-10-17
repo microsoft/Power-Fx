@@ -2,34 +2,23 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // RandBetween()
     // Equivalent DAX/Excel function: RandBetween
-    internal sealed class RandBetweenFunction : BuiltinFunction
+    internal sealed class RandBetweenFunction : MathTwoArgFunction
     {
         // Multiple invocations may produce different return values.
         public override bool IsStateless => false;
 
-        public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
-
         public RandBetweenFunction()
-            : base(
-                "RandBetween",
-                TexlStrings.AboutRandBetween,
-                FunctionCategories.MathAndStat,
-                returnType: DType.Number,
-                maskLambdas: 0,
-                arityMin: 2,
-                arityMax: 2,
-                DType.Number,
-                DType.Number)
+            : base("RandBetween", TexlStrings.AboutRandBetween, minArity: 2, nativeDecimal: true)
         {
         }
 

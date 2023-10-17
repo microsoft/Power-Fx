@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>İşlenecek sayı değerlerini içeren bir sütun.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Bir "boole"yi boole değerine dönüştürür.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>boole</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Boole değerine dönüştürülecek boole değeri.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Boole değerleri sütununu boole değerleri sütununa dönüştürür.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>giriş</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>İşlenecek boole değerleri sütunu.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Boş olmayan ilk bağımsız değişkeni döndürür</value>
     
@@ -544,6 +566,24 @@
   <data name="AboutConcatenate" xml:space="preserve">
     <value>Birçok metin değerini tek bir metin değeri olarak birleştirir.</value>
     
+  </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Sayı temsil eden bir "metin" değerini ondalık bir değere dönüştürür.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Değer dönüştürme işleminde kullanılacak dil kodu.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Ondalık değerine dönüştürülecek metin değeri.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Sayı temsil eden bir "metin" değerini kayan bir değere dönüştürür.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Değer dönüştürme işleminde kullanılacak dil kodu.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Kayan değere dönüştürülecek metin değeri.</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>metin</value>
@@ -773,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Hata olmayan ilk bağımsız değişkense döndürülecek değer.</value>
+    <value>Önceki bağımsız değişken hataysa döndürülecek değer.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -842,7 +882,8 @@
     <value>'source' içindeki satırlarda değerlendirilen ve sıralama için değerler sağlayan bir ifade.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Artan veya Azalan</value>
+    <value>SortOrder.Ascending veya SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>İsteğe bağlı bir sıralama 'order' değeri belirterek 'source' öğesini sütuna göre sıralar.</value>
@@ -867,7 +908,8 @@
     <value>Benzersiz bir sütun adı.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Artan veya Azalan</value>
+    <value>SortOrder.Ascending veya SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>'source' öğesini belirtilen sütundaki eşleşen değerler dizinine göre sıralar.</value>
@@ -979,6 +1021,46 @@
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>ISO hafta numarasının hesaplanacağı tarih değeri.</value>
+  </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Ay sayısına göre ayarlanmış bir tarih döndürür. Ayın günü aynı kalır ancak yeni ay içindeki gün sayısıyla sınırlı olur.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>tarih</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>ay</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Belirtilen ay sayısına göre ayarlanacak tarih değeri.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Tarihin değiştirileceği ay sayısı. Pozitif değer gelecek bir tarihi, negatif değer geçmiş bir tarihi verir ve sıfır değeri ayı değiştirmez.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Belirli bir tarih için ayın son gününü, ay sayısına göre ayarlanmış olarak döndürür.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>tarih</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>ay</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Belirtilen ay sayısına göre ayarlanacak tarih değeri.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Tarihin değiştirileceği ay sayısı. Pozitif değer gelecek bir tarihi, negatif değer geçmiş bir tarihi verir ve sıfır değeri ayı değiştirmez.</value>
+         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Eksi sonsuza doğru yuvarlayarak "sayıyı" kısaltır.</value>
@@ -1367,6 +1449,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>İşlenecek bir sayısal değerler (radyan cinsinde) sütunu.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Bir ifadeyi tablonun bir veya daha fazla sütunu üzerinde değerlendirir ve değerlendirilen ifade için ayrı (benzersiz) değerleri içeren tek sütunlu bir tablo döndürür.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>ifade</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Ayrı değerlerin ayıklanacağı bir tablo.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Giriş tablosunun her satırında değerlendirilen ve Distinct işlemi için değerler sağlayan bir ifade.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Belirtilen x ve y koordinatlarının ark tanjantını (radyan cinsinde) döndürür.</value>
   </data>
@@ -1404,6 +1503,14 @@
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>giriş</value>
+    
+  </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>değiştirici</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>değiştirici</value>
     
   </data>
   <data name="AboutLeft" xml:space="preserve">
@@ -1675,7 +1782,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Parametrelere sahip bileşen özel veri özelliğine yalnızca bir bileşenin içinden veya bileşen çıktı özelliklerinden erişilebilir.</value>
+    <value>Bileşen işlevi özelliği veya parametresine yalnızca bir bileşenin içinden veya bileşen çıktı özelliklerinden erişilebilir.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Bileşen işlevi özelliği veya parametresi yalnızca diğer işlev özelliklerine başvurabilir.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1742,20 +1853,8 @@
     <value>'{0}' öğesinin ilk bağımsız değişkeninin tek sütunlu bir tablo olması gerekir.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Geçersiz şema, '{0}' öğesine ilişkin bir metin değerleri sütunu bekleniyor.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Geçersiz şema, '{0}' öğesine ilişkin bir tarih değerleri sütunu bekleniyor.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Geçersiz şema, '{0}' öğesine ilişkin bir sayısal değerler sütunu bekleniyor.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Geçersiz şema, '{0}' öğesine ilişkin bir renk değerleri sütunu bekleniyor.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Geçersiz şema, '{1}' öğesine ilişkin bir {0} değerleri sütunu bekleniyor.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1798,6 +1897,26 @@
     <value>Sayısal değer çok büyük.</value>
     
   </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Şu anda desteklenmeyen özel amaçlı bir sözcüğün kullanımı.</value>
+    
+  </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>İfade {0} karakterden uzun olamaz. İfade {1} karakter.</value>
+    
+  </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Biçim dizesi boyutu {0} karakterden fazla olamaz.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Geçersiz biçim.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Bağımsız değişken, geçerli bir tarih veya saat değerini temsil etmiyor.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Bu Veri kaynağı geçersiz. Lütfen sırasıyla şunlara tıklayarak "Veri kaynakları" bölmesindeki hatayı düzeltin: "İçerik -&gt; Veri kaynakları" veya "Görünüm -&gt; Seçenekler"</value>
     
@@ -1816,6 +1935,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>'{0}' bağımsız değişkeninin türü, beklenen '{1}' türüyle eşleşmiyor. Bulunan tür: '{2}'.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Bu ifadenin türü, beklenen '{0}' türüyle eşleşmiyor. Bulunan tür: '{1}'.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -1852,6 +1975,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Bu ifade türünde sıralama yapılamaz.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Bu ifade türüne ayrı işlem uygulanamaz.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -2240,6 +2367,9 @@
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematik ve İstatistik</value>
   </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
+  </data>
   <data name="Information" xml:space="preserve">
     <value>Bilgi</value>
   </data>
@@ -2319,7 +2449,7 @@
     <value>Eklenecek birim sayısı. Sayı negatif olabilir.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Kullanılacak birim (Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds seçeneklerinden biri).</value>
+    <value>Kullanılacak birim. TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds değerlerinden biri olabilir.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2341,7 +2471,7 @@
     <value>Fark alma işlemi için bitiş tarihi.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Sonucun ifade edileceği birim (Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds seçeneklerinden biri).</value>
+    <value>Sonucun ifade edileceği birim. TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds değerlerinden biri olabilir.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2591,10 +2721,6 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Test edilecek değer.</value>
-  </data>
-  <data name="Post" xml:space="preserve">
-    <value>Yayımla</value>
-    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Metin biçimindeki tarih ve saat değerini, Power Apps tarih-saat kodunda tarihi temsil eden bir sayıya dönüştürür.</value>
@@ -2876,6 +3002,26 @@
     <value>Dünya</value>
     
   </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Küre - Bağlı değil</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Küre - Yenile</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Küre - Değişiklikler beklemede</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Küre - Uyarı</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Küre - Hata</value>
+    
+  </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>Yarım dolu daire</value>
     
@@ -3013,7 +3159,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Tren</value>
+    <value>Eğit</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3073,7 +3219,7 @@
     
   </data>
   <data name="Icon_Leave_DisplayName" xml:space="preserve">
-    <value>Ayrılma</value>
+    <value>Çık</value>
     
   </data>
   <data name="Icon_Paste_DisplayName" xml:space="preserve">
@@ -3266,6 +3412,38 @@
   </data>
   <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
     <value>Karşıtlık teması</value>
+    
+  </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Bir veri kaynağına kayıt ekler.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>kayıt</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Bir koleksiyondaki tüm kayıtları siler. Koleksiyonun sütunları kalır.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Bir koleksiyondaki tüm kayıtları siler. Daha sonra aynı koleksiyona farklı bir kayıt kümesi ekler.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>kayıt</value>
     
   </data>
   <data name="AboutPatch" xml:space="preserve">
@@ -3952,94 +4130,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Formül sütunlarında desteklenmez.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>{0} işleviyle ilgili geçersiz bağımsız değişken sayısı: {1} alındı, {2} bekleniyordu</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>{0} bağımsız değişkeni, formül sütunlarında {1} işlevi için desteklenmiyor.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Bu bağımsız değişken, formül sütunlarında bu tür olarak geçirilemez.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Bu bağımsız değişken, formül sütunlarında tür {0} olarak geçirilemez.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Bu bağımsız değişken için yalnızca bir değişmez değer desteklenir.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0}, formül sütunlarında desteklenmeyen bir saat dilimi dönüşümü olmadan bu girişte gerçekleştirilemez.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Bu işlem, farklı Tarih Saat Davranışlarında bulunan değerlerde gerçekleştirilemez.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Formül sütunlarında yalnızca kısa tarih ve saat biçimi dizeleri desteklenmektedir.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>{1} tarih aritmetik işlevi için {0} bağımsız değişkeni geçersiz/desteklenmeyen bir zaman birimidir.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Formül sütunlarında "." ve "," gibi yerel ayara özel biçimlendirme belirteçleri desteklenmiyor.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0}, formül sütunlarında desteklenmiyor, bunun yerine {1} kullanın.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Bu işlem, formül sütunlarında {0} türü üzerinde gerçekleştirilemez.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Sonuç türü {0}, formül sütunlarında desteklenmiyor.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Formül sütunlarında tüm bir kayda referansta bulunma desteklenmez. Lütfen kayıtta geçerli bir alana referansta bulunun.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Bu formül için sonuç türünün {0} olması bekleniyordu ancak gerçek sonuç türü {1}. Formül sütununun sonuç türü değiştirilemez.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>{0} türündeki sütunlar, formül sütunlarında desteklenmiyor.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>{1} biçimindeki {0} türündeki sütunlar, formül sütunlarında desteklenmiyor.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Formül sütunlarında kayıt veya tabloların zorlanması desteklenmez.</value>
-    
-  </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formüller 1000 karakterden uzun olamaz.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Formül sütunlarında tek sütunlu tablolar desteklenmez.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Formül sütunlarında {0} sanal tablosuna referansta bulunamazsınız.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>İşlenen bekleniyordu. Formül veya ifade geçerli bir işlenen bekliyor. Örneğin, sonucun '3' olması için '2' işlenenini '1 + _' ifadesine ekleyebilirsiniz. Veya sonucun "Hoş geldiniz" olması için "geldiniz" işlenenini '"Hoş "&amp; _ ' işlenenine ekleyebilirsiniz.</value>
     
@@ -4142,10 +4232,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Bu hata, bir formül geçersiz söz dizimine sahip bileşen davranışı özelliklerine başvurduğunda görüntülenir. (ör. Component.OnCustomChange()) yerine Component.OnCustomChange())</value>
+    <value>Bu hata, bir formül geçersiz söz dizimine sahip bileşen işlevi özelliklerine başvurduğunda görüntülenir. (ör. Component.CustomFunction()) yerine Component.CustomFunction</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Bileşen davranışı özelliğine başvurmak için doğru söz dizimini kullanın. Örneğin, Component.OnCustomChange()</value>
+    <value>Bileşen işlevi özelliğine başvurmak için doğru söz dizimini kullanın. Örneğin, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4335,6 +4425,10 @@
     <value>Tanımlayıcınız için metne sahip olduğunuzdan emin olun. Bu hata, tanımlayıcı yalnızca boşluklardan oluştuğunda oluşur.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>{0} türündeki değerler karşılaştırılamıyor.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Karşılaştırma için uyumsuz türler. Bu türler karşılaştıramaz: {0}, {1}.</value>
     
@@ -4396,6 +4490,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Uyumsuz tür. Bir kayda koymaya çalıştığınız öğe, kayıtla uyumlu olmayan bir türe sahip.</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4642,8 +4740,44 @@
     <value>bu bağlamda As'e izin verilmiyor</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Türü belirtilmemiş nesneler, kayıt kapsamlarını destekleyen işlevlerin ilk bağımsız değişkeni olarak kullanılamaz.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Adlandırılmış formül, noktalı virgülle sona ermelidir.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Adlandırılmış formül bir ifade olmalı.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Kullanıcı tanımlı işlevin gövdesi olmalı.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>{0} işlevi zaten tanımlandı.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>{0} parametresi yinelenen bir öğe.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>{0} türü bilinmiyor.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Belirtilen işlev dönüş türü, işlev gövdesinin dönüş türüyle eşleşmiyor.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>İşlev dönüşü türü eksik. Örneğin "FindMonth( d:Text ):Number = Month( DateParse( d ));" içindeki ":Number"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>İşlev bağımsız değişken türü eksik. Örneğin, "FindMonth( d:Text ):Number = Month( DateParse( d ))" içindeki ":Text"</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4725,6 +4859,257 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Bu özellik kullanım dışı bırakıldı ve artık desteklenmiyor.</value>
+    
+  </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>{1} ad alanında {0} işlevi kullanım dışı.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>{1} ad alanında {0} işlevi desteklenmiyor.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Uyarı: Ertelenmiş tür sağlandı.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Beklenen tanımlayıcı adı</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Bu işlev belirsiz, aynı bağımsız değişken için Lambda ifadesi ve sütun tanımlayıcıları içeriyor.</value>
+    
+  </data>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>{0} seçeneğinin değeri, beklenen {1} türünde değil.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Belirtilen seçenek kümesi değerinin mantıksal adını döndürür.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>seçenek</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Mantıksal adı döndürülecek bir seçenek kümesi değeri.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Çalışma zamanında ayarlanan varsayılan yerel ayarı alın.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Bir URL dizesini kodlayarak alfasayısal olmayan bazı karakterleri % ve onaltılık sayıyla değiştirir.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Kodlanacak bir URL.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' tanınan fakat desteklenmeyen bir işlev.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Verilen değer '{0}' türünde olduğu için tür dönüşümü başarısız oldu; '{1}' türü bekleniyor.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>'{0}' tablosu üzerindeki bu işlem, {1} üzeri sayıda satıra sahipse çalışmayabilir.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Bu koşul her zaman doğru olacak. ThisRecord öğesini mi yoksa [@ ] öğesini mi kullanmak istiyorsunuz?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>{0} atanamıyor: yalnızca '{1}' birincil anahtar alanında arama için atamayı destekliyor.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>{0} öğesi atanamıyor: İfade, birden fazla alanı kıyaslıyor.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>{0} atanamıyor: '{1}' davranış işlevini içeriyor.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Sağlanan metnin, sağlanan metin biçimi ile eşleşip eşleşmediğini belirler.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Biçimle karşılaştırılacak metin.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Metnin kontrol edileceği biçim. TextFormat sabit listesi veya normal ifade değeri olabilir.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Bu, metnin hangi bölümünü eşleştirmek istediğimizi belirler. MatchOptions sabit listesi değerlerinden biri olabilir.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>biçim</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>kapsam</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Belirtilen normal ifadeyi verilen metinde arar ve ilk eşleşmeyi döndürür.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Belirtilen normal ifadeyi verilen metinde arar ve tüm eşleşmeleri döndürür.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Normal ifadede aranacak olan metin.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Metni denetlerken kullanılacak normal ifade. Başarılı eşleşme durumunda döndürülecek olan yakalamaları (parantez arasındaki değerler) içerebilir.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Bu, metnin hangi bölümünü eşleştirmek istediğimizi belirler. MatchOptions sabit listesi değerlerinden biri olabilir.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Normal ifadede aranacak olan metin.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Metni denetlerken kullanılacak normal ifade. Başarılı eşleşme durumunda döndürülecek olan yakalamaları (parantez arasındaki değerler) içerebilir.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Bu, metnin hangi bölümünü eşleştirmek istediğimizi belirler. MatchOptions sabit listesi değerlerinden biri olabilir.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>normal_ifade</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>seçenekler</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Belirtilen veri kaynağını yeniler.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>bağlı_veri_kaynağı</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Bir kayıt veya tablo değeri bekleniyor.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Yenilenecek bağlı bir veri kaynağı.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Yalnızca yönetilen bağlantılar yenilenebilir.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Normal ifadeler sabit değer olmalıdır.</value>
+    
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>'{0}' işlevine aktarılan değer değiştirilemez.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Yakalama adı '{0}', normal ifadenin tam eşleşmesini döndüren önceden tanımlanmış özelliğini gizliyor. Belirtilen metinde tam eşleşmeyi ayıklamak için bu adlandırılan özelliği kullanmak istiyorsanız yeniden adlandırmanız yararlı olabilir.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Yakalama adı '{0}', normal ifadedeki grup eşleşmelerini döndüren önceden tanımlanmış özelliğini gizliyor. Belirtilen metinde tam eşleşmeyi ayıklamak için bu adlandırılan özelliği kullanmak istiyorsanız yeniden adlandırmanız yararlı olabilir.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Yakalama adı '{0}', normal ifade eşleşmesinin konumunu döndüren önceden tanımlanmış özelliğini gizliyor. Belirtilen metinde tam eşleşmeyi ayıklamak için bu adlandırılan özelliği kullanmak istiyorsanız yeniden adlandırmanız yararlı olabilir.</value>
+    
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Tüm biçimlendirmeyi kaldırır ve bir düz metin değeri döndürür.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>HTML ve XML etiketleri kaldırılacak metin.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filtre işlevleri, davranış işlevlerinin fonksiyon olarak kullanılmasına izin vermez.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Birden fazla yüklemi ikinci bağımsız değişkende birleştirmek için And işlecini kullanın.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Bu tablo kopyalanamaz. Bunun yerine, istediğiniz sütunları tek tek kopyalamak için ForAll işlevini ve {...} gösterimini kullanarak bir satır içi tablo oluşturun.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Bu kayıt kopyalanamaz. Bunun yerine, istediğiniz alanları tek tek kopyalamak için {...} gösterimini kullanarak bir satır içi kayıt oluşturun.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>'{0}' işlevinin ikinci bağımsız değişkeni yalnızca sayısal değerler ve tarih/saat değerleri için desteklenir.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Çevrimiçi bir veri kaynağı değerine (tablo veya kayıt) değişken ayarlamak, sunucuya birden fazla istek gönderilmesine neden olabilir. Bu, yakında engellenecektir.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Tür değişmez bildirimi geçersiz</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Kaynak ve hedef kayıt türleri arasında tür uyuşmazlığı. Belirtilen türde ekstra alanlar var: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Kaynak ve hedef kayıt türleri arasında tür uyuşmazlığı. Belirtilen türde eksik alanlar var: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Kaynak ve hedef kayıt türleri arasında tür uyuşmazlığı. Alan adı: {0} bulunamadı.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Kaynak ve hedef kayıt türleri arasında tür uyuşmazlığı. Alan adı: {0} {1} bekleniyordu, {2} bulundu.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Belirtilen {0} türü, {1} kaynak türüyle birleştirilemez.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Kaynak ve hedef türler arasında tür uyuşmazlığı. {0} bekleniyordu; {1} bulundu.</value>
     
   </data>
 </root>

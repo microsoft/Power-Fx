@@ -11,6 +11,17 @@ namespace Microsoft.PowerFx.Syntax
     public abstract class TexlFunctionalVisitor<TResult, TContext>
     {
         /// <summary>
+        /// Visit <see cref="TypeLiteralNode"/> leaf node.
+        /// </summary>
+        /// <param name="node">The visited node.</param>
+        /// <param name="context">The context passed to the node.</param>
+        /// <returns>The node visit result.</returns>
+        public virtual TResult Visit(TypeLiteralNode node, TContext context)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
         /// Visit <see cref="ErrorNode" /> leaf node.
         /// </summary>
         /// <param name="node">The visited node.</param>
@@ -49,6 +60,14 @@ namespace Microsoft.PowerFx.Syntax
         /// <param name="context">The context passed to the node.</param>
         /// <returns>The node visit result.</returns>
         public abstract TResult Visit(NumLitNode node, TContext context);
+
+        /// <summary>
+        /// Visit <see cref="DecLitNode" /> leaf node.
+        /// </summary>
+        /// <param name="node">The visited node.</param>
+        /// <param name="context">The context passed to the node.</param>
+        /// <returns>The node visit result.</returns>
+        public abstract TResult Visit(DecLitNode node, TContext context);
 
         /// <summary>
         /// Visit <see cref="FirstNameNode" /> leaf node.

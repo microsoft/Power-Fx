@@ -1,10 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
 using System.Data;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -23,7 +20,7 @@ namespace Microsoft.PowerFx.Tests
             var robinTable = new DataTableValue(table);
             var robinScope = new RobinExecutionContext(robinTable);
             var result1 = engine.Eval("Index(robintable, 2).Scores", robinScope); // 20
-            Assert.Equal(20.0, result1.ToObject());
+            Assert.Equal(20m, result1.ToObject());
             Assert.Equal(1, robinTable.TryGetIndexNumberOfCalls);
             Assert.Equal(0, robinTable.MarshalNumberOfCalls);
         }
@@ -37,10 +34,10 @@ namespace Microsoft.PowerFx.Tests
             using var table = CreateDataTable();
 
             var robinTable = new DataTableValue(table);
-            engine.UpdateVariable("robintable", robinTable);
+            engine._symbolValues.Add("robintable", robinTable);
 
             var result1 = engine.Eval("Index(robintable, 2).Scores"); // 20
-            Assert.Equal(20.0, result1.ToObject());
+            Assert.Equal(20m, result1.ToObject());
             Assert.Equal(1, robinTable.TryGetIndexNumberOfCalls);
             Assert.Equal(0, robinTable.MarshalNumberOfCalls);
         }

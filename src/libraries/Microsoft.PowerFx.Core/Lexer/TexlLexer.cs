@@ -24,7 +24,13 @@ namespace Microsoft.PowerFx.Syntax
         [Flags]
         public enum Flags
         {
-            None,
+            None = 0,
+
+            // When specified, literal numbers are treated as floats.  By default, literal numbers are decimals.
+            NumberIsFloat = 1 << 0,
+
+            // Enable the the use of reserved keywords as identifiers, for Canvas short term.
+            DisableReservedKeywords = 2 << 0
         }
 
         // Locale-invariant syntax.
@@ -81,6 +87,19 @@ namespace Microsoft.PowerFx.Syntax
         public const string FourSpaces = "    ";
         public const string LineBreakAndfourSpaces = "\n    ";
 
+        // Reserved but currently unused keywords
+        public const string ReservedBlank = "blank";
+        public const string ReservedNull = "null";
+        public const string ReservedEmpty = "empty";
+        public const string ReservedNone = "none";
+        public const string ReservedNothing = "nothing";
+        public const string ReservedUndefined = "undefined";
+        public const string ReservedThis = "This";
+        public const string ReservedIs = "Is";
+        public const string ReservedChild = "Child";
+        public const string ReservedChildren = "Children";
+        public const string ReservedSiblings = "Siblings";
+
         // Keywords are not locale-specific, populate keyword dictionary statically
         private static readonly IReadOnlyDictionary<string, TokKind> _keywords = new Dictionary<string, TokKind>()
         {
@@ -94,6 +113,24 @@ namespace Microsoft.PowerFx.Syntax
             { KeywordOr, TokKind.KeyOr },
             { KeywordNot, TokKind.KeyNot },
             { KeywordAs, TokKind.As },
+        };
+
+        // Reserved keywords are not locale-specific, populate keyword dictionary statically
+        // This list includes things we might want to use and other common keywords from other languages
+        // that have no meaning here to avoid confusion
+        private static readonly IReadOnlyCollection<string> _reservedKeywords = new HashSet<string>()
+        {
+            { ReservedBlank },
+            { ReservedNull },
+            { ReservedEmpty },
+            { ReservedNone },
+            { ReservedNothing },
+            { ReservedUndefined },
+            { ReservedIs },
+            { ReservedThis },
+            { ReservedChild },
+            { ReservedChildren },
+            { ReservedSiblings },
         };
 
         // Limits the StringBuilderCache TLS memory usage for LexerImpl.
@@ -198,9 +235,13 @@ namespace Microsoft.PowerFx.Syntax
 
         public static TexlLexer GetLocalizedInstance(CultureInfo culture)
         {
+            // this is a safe default value as we only use this value for determining the decimal separator at next line
             culture ??= CultureInfo.InvariantCulture;
+
+            // Number decimal separator can be a dot (.), comma (,), arabic comma (Unicode 0x66B) 
+            // .Net core 3.1 doesn't support arabic comma and defines '/' as decimal separator for Persian/Farsi (fa, fa-IR) which is probably a bug
             return culture.NumberFormat.NumberDecimalSeparator == PunctuatorDecimalSeparatorInvariant ? InvariantLexer : CommaDecimalSeparatorLexer;
-        }
+        }        
 
         public static IReadOnlyList<string> GetKeywords()
         {
@@ -335,12 +376,12 @@ namespace Microsoft.PowerFx.Syntax
             return tokens;
         }
 
-        public List<Token> GetTokens(string text)
+        public List<Token> GetTokens(string text, Flags flags = Flags.None)
         {
             Contracts.AssertValue(text);
 
             Token tok;
-            var impl = new LexerImpl(this, text, new StringBuilder(), Flags.None);
+            var impl = new LexerImpl(this, text, new StringBuilder(), flags);
             var tokens = new List<Token>();
             while ((tok = impl.GetNextToken()) != null)
             {
@@ -456,6 +497,12 @@ namespace Microsoft.PowerFx.Syntax
         public static bool IsKeyword(string str, out TokKind tid)
         {
             return _keywords.TryGetValue(str, out tid);
+        }
+
+        // Returns true if the specified string is a reserved keyword.
+        public static bool IsReservedKeyword(string str)
+        {
+            return _reservedKeywords.Contains(str);
         }
 
         // Returns true and set 'tid' if the specified string is a punctuator.
@@ -848,8 +895,11 @@ namespace Microsoft.PowerFx.Syntax
             private readonly int _charCount;
             private readonly StringBuilder _sb; // Used while building a token.
             private readonly Stack<LexerMode> _modeStack;
+            private readonly bool _numberIsFloat;
+            private readonly bool _disableReservedKeywords;
 
             private int _currentTokenPos; // The start of the current token.
+            private int _lastCommentTokenPos; // The last seen comment token position.
 
             public LexerImpl(TexlLexer lex, string text, StringBuilder sb, Flags flags)
             {
@@ -861,6 +911,9 @@ namespace Microsoft.PowerFx.Syntax
                 _text = text;
                 _charCount = _text.Length;
                 _sb = sb;
+
+                _numberIsFloat = flags.HasFlag(TexlLexer.Flags.NumberIsFloat);
+                _disableReservedKeywords = flags.HasFlag(TexlLexer.Flags.DisableReservedKeywords);
 
                 _modeStack = new Stack<LexerMode>();
                 _modeStack.Push(LexerMode.Normal);
@@ -1177,15 +1230,30 @@ namespace Microsoft.PowerFx.Syntax
                     }
                 }
 
-                // Parsing in the current culture, to allow the CLR to correctly parse non-arabic numerals.
-                if (!double.TryParse(_sb.ToString(), NumberStyles.Float, _lex._numberFormatInfo, out var value) || double.IsNaN(value) || double.IsInfinity(value))
+                if (_numberIsFloat)
                 {
-                    return isCorrect ?
-                        new ErrorToken(GetTextSpan(), TexlStrings.ErrNumberTooLarge) :
-                        new ErrorToken(GetTextSpan());
-                }
+                    // Parsing in the current culture, to allow the CLR to correctly parse non-arabic numerals.
+                    if (!double.TryParse(_sb.ToString(), NumberStyles.Float, _lex._numberFormatInfo, out var value) || double.IsNaN(value) || double.IsInfinity(value))
+                    {
+                        return isCorrect ?
+                            new ErrorToken(GetTextSpan(), TexlStrings.ErrNumberTooLarge) :
+                            new ErrorToken(GetTextSpan());
+                    }
 
-                return new NumLitToken(value, GetTextSpan());
+                    return new NumLitToken(value, GetTextSpan());
+                }
+                else
+                {
+                    // Parsing in the current culture, to allow the CLR to correctly parse non-arabic numerals.
+                    if (!decimal.TryParse(_sb.ToString(), NumberStyles.Float, _lex._numberFormatInfo, out var value))
+                    {
+                        return isCorrect ?
+                            new ErrorToken(GetTextSpan(), TexlStrings.ErrNumberTooLarge) :
+                            new ErrorToken(GetTextSpan());
+                    }
+
+                    return new DecLitToken(value, GetTextSpan());
+                }
             }
 
             private bool IsSign(char ch)
@@ -1212,6 +1280,12 @@ namespace Microsoft.PowerFx.Syntax
                     }
 
                     return new KeyToken(tid, spanTok);
+                }
+
+                // Reserved words under a Features gate
+                if (!_disableReservedKeywords && IsReservedKeyword(str) && !fDelimiterStart)
+                {
+                    return new ErrorToken(GetTextSpan(), TexlStrings.ErrReservedKeyword);
                 }
 
                 return new IdentToken(str, spanTok, fDelimiterStart, fDelimiterEnd);
@@ -1241,6 +1315,7 @@ namespace Microsoft.PowerFx.Syntax
                 // Delimited identifier.
                 NextChar();
                 var ichStrMin = CurrentPos;
+                var semicolonIndex = -1;
 
                 // Accept any characters up to the next unescaped identifier delimiter.
                 // String will be corrected in the IdentToken if needed.
@@ -1248,6 +1323,18 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     if (Eof)
                     {
+                        // Ident was never closed, tokenize ident up to semicolon
+                        if (semicolonIndex != -1)
+                        {
+                            CurrentPos = ichStrMin;
+                            _sb.Length = 0;
+                            while (CurrentPos < semicolonIndex)
+                            {
+                                _sb.Append(CurrentChar);
+                                NextChar();
+                            }
+                        }
+
                         break;
                     }
 
@@ -1274,6 +1361,25 @@ namespace Microsoft.PowerFx.Syntax
                         // Don't include the new line in the identifier
                         fDelimiterEnd = false;
                         break;
+                    }
+                    else if (CurrentChar.ToString() == PunctuatorSemicolonInvariant)
+                    {
+                        // This is to enable parser restarting
+                        // Don't know if semicolon is end of identifier so we will store for fallback
+                        // Some locales use ;;, so we check for match and move shift 2 characters instead of 1
+                        if (_lex.TryGetPunctuator(CurrentChar.ToString(), out TokKind tid) && tid == TokKind.Semicolon)
+                        {
+                            semicolonIndex = semicolonIndex == -1 ? CurrentPos : semicolonIndex;
+                        }
+                        else if (_lex.TryGetPunctuator(CurrentChar.ToString() + _text[Math.Min(CurrentPos + 1, _charCount - 1)].ToString(), out tid) && tid == TokKind.Semicolon)
+                        {
+                            semicolonIndex = semicolonIndex == -1 ? CurrentPos : semicolonIndex;
+                            _sb.Append(CurrentChar);
+                            NextChar();
+                        }
+
+                        _sb.Append(CurrentChar);
+                        NextChar();
                     }
                     else
                     {
@@ -1468,8 +1574,8 @@ namespace Microsoft.PowerFx.Syntax
                     _sb.Append(NextChar());
                 }
 
-                Contracts.Assert(_sb.ToString().Equals("/*") || _sb.ToString().Equals("//"));
-                var commentEnd = _sb.ToString().StartsWith("/*") ? "*/" : "\n";
+                Contracts.Assert(_sb.ToString().Equals("/*", StringComparison.Ordinal) || _sb.ToString().Equals("//", StringComparison.Ordinal));
+                var commentEnd = _sb.ToString().StartsWith("/*", StringComparison.Ordinal) ? "*/" : "\n";
 
                 // Comment initiation takes up two chars, so must - 1 to get start
                 var startingPosition = CurrentPos - 1;
@@ -1481,7 +1587,7 @@ namespace Microsoft.PowerFx.Syntax
 
                     // "str.Length >= commentLength + commentEnd.Length"  ensures block comment of "/*/"
                     // does not satisfy starts with "/*" and ends with "*/" conditions
-                    if (str.EndsWith(commentEnd) && str.Length >= commentLength + commentEnd.Length)
+                    if (str.EndsWith(commentEnd, StringComparison.Ordinal) && str.Length >= commentLength + commentEnd.Length)
                     {
                         break;
                     }
@@ -1507,8 +1613,8 @@ namespace Microsoft.PowerFx.Syntax
                     }
                 }
 
-                // Preceding,
-                while (startingPosition > 0)
+                // Preceding to check whitespace or newline characters after the last seen commment.
+                while (startingPosition > _lastCommentTokenPos)
                 {
                     var previousChar = _text[startingPosition - 1];
                     if (!char.IsWhiteSpace(previousChar))
@@ -1527,10 +1633,12 @@ namespace Microsoft.PowerFx.Syntax
                 }
 
                 var commentToken = new CommentToken(_sb.ToString(), GetTextSpan());
-                if (_sb.ToString().Trim().StartsWith("/*") && !_sb.ToString().Trim().EndsWith("*/"))
+                if (_sb.ToString().Trim().StartsWith("/*", StringComparison.Ordinal) && !_sb.ToString().Trim().EndsWith("*/", StringComparison.Ordinal))
                 {
                     commentToken.IsOpenBlock = true;
                 }
+
+                _lastCommentTokenPos = commentToken.Span.Lim; // Set last seen comment token position.
 
                 return commentToken;
             }
@@ -1541,7 +1649,7 @@ namespace Microsoft.PowerFx.Syntax
                 if (CurrentChar > 255)
                 {
                     var position = CurrentPos;
-                    var unexpectedChar = Convert.ToUInt16(CurrentChar).ToString("X4");
+                    var unexpectedChar = Convert.ToUInt16(CurrentChar).ToString("X4", CultureInfo.InvariantCulture);
                     NextChar();
                     return new ErrorToken(GetTextSpan(), TexlStrings.UnexpectedCharacterToken, string.Concat("U+", unexpectedChar), position);
                 }

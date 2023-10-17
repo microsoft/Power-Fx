@@ -62,10 +62,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fArgsValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // The first arg determines the scope type for the lambda params, and the return type.
-            fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);
+            fArgsValid &= ScopeInfo.CheckInput(context.Features, args[0], argTypes[0], errors, out var typeScope);
             Contracts.Assert(typeScope.IsRecord);
 
             // The result type has N additional columns, as specified by (args[1],args[2]), (args[3],args[4]), ... etc.
@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0].Parent.CastList().Parent.CastCall(), TexlStrings.ErrBadArityOdd, count);
             }
 
-            var supportColumnNamesAsIdentifiers = context.Features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
+            var supportColumnNamesAsIdentifiers = context.Features.SupportColumnNamesAsIdentifiers;
 
             for (var i = 1; i < count; i += 2)
             {
@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     if (nameArgType.Kind != DKind.String || strLitNode == null)
                     {
-                        fArgsValid = false; 
+                        fArgsValid = false;
 
                         // Argument '{0}' is invalid, expected a text literal.
                         errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());

@@ -1,0 +1,17 @@
+#SETUP: FirstLastNRequiresSecondArguments
+
+// ######### FirstN ##########
+
+>> FirstN([1, 2, 3, 4, 5])
+Errors: Error 0-23: The function 'FirstN' has some invalid arguments.|Error 0-23: Invalid number of arguments: received 1, expected 2.
+
+>> FirstN(Blank())
+Errors: Error 0-15: The function 'FirstN' has some invalid arguments.|Error 0-15: Invalid number of arguments: received 1, expected 2.
+
+// ######### LastN ##########
+
+>> LastN([1, 2, 3, 4, 5])
+Errors: Error 0-22: The function 'LastN' has some invalid arguments.|Error 0-22: Invalid number of arguments: received 1, expected 2.
+
+>> LastN(Blank())
+Errors: Error 0-14: The function 'LastN' has some invalid arguments.|Error 0-14: Invalid number of arguments: received 1, expected 2.

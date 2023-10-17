@@ -14,13 +14,14 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
+    [NotThreadSafe]
     internal class DefinedTypeSymbolTable : TypeSymbolTable, IGlobalSymbolNameResolver
     {
         private readonly BidirectionalDictionary<string, FormulaType> _definedTypes = new ();
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _definedTypes.ToDictionary(kvp => kvp.Key, kvp => ToLookupInfo(kvp.Value));
 
-        internal void RegisterType(string typeName, AggregateType type)
+        internal void RegisterType(string typeName, FormulaType type)
         {
             Inc();            
 

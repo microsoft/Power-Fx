@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
@@ -13,17 +14,17 @@ using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests.IntellisenseTests;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Abstractions;
+using static Microsoft.PowerFx.Tests.CustomFunctions;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class InterpreterSuggestTests : IntellisenseTestBase
-    {        
+    {
         private string[] SuggestStrings(string expression, PowerFxConfig config, RecordType parameterType)
         {
             Assert.NotNull(expression);
 
-            var intellisense = Suggest(expression, config, parameterType);
+            var intellisense = Suggest(expression, config, culture: null, parameterType);
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
@@ -45,11 +46,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Option|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
         [InlineData("Opt|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
         [InlineData("Opti|on", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
-        [InlineData("TopOptionSetField <> |", "OptionSet", "OtherOptionSet")]
+        [InlineData("TopOptionSetField <> |", "TopOptionSetField", "XXX")]
         [InlineData("TopOptionSetField <> Opt|", "OptionSet", "TopOptionSetField", "OtherOptionSet")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
-        {            
-            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder());
+        {
+            var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder());
 
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -80,7 +81,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var actualSuggestions = SuggestStrings(expression, engine, parameterType);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-            
+
             // Now try with Globals instead of RowScope
             foreach (var field in parameterType.GetFieldTypes())
             {
@@ -96,7 +97,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Dis|", "DisplayOpt", "DisplayRowScope")] // Match to row scope       
         public void TestSuggestOptionSetsDisplayName(string expression, params string[] expectedSuggestions)
         {
-            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+            var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder(), new TexlFunctionSet());
 
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -154,7 +155,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Null(s.FunctionName);
             Assert.Equal(SuggestionIconKind.Other, s.IconKind);
             Assert.Equal(SuggestionKind.Global, s.Kind);
-            Assert.Equal(DType.Number, s.Type);
+            Assert.Equal(DType.Decimal, s.Type);
 
             var resolver = (IGlobalSymbolNameResolver)recalcEngine.TestCreateResolver();
 
@@ -169,6 +170,165 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(b);
             Assert.Equal(BindKind.PowerFxResolvedObject, nameInfo.Kind);
             Assert.IsType<NameSymbol>(nameInfo.Data);
+        }
+
+        [Theory]
+        [InlineData("Collect|", "Collect", "ClearCollect")]
+        [InlineData("Patc|", "Patch")]
+        [InlineData("Collect(Table({a:1, b:2}), {|", "a:", "b:")]
+        [InlineData("Collect(Table({a:1, 'test space': \"test\"), {|", "a:", "'test space':")]
+        [InlineData("Patch(Table({a:1, b:2}), {|", "a:", "b:")]
+        [InlineData("Patch({a:1, b:2}, {|", "a:", "b:")]
+        [InlineData("ClearCollect(Table({a:1, b:2}), {|", "a:", "b:")]
+        [InlineData("Remove(Table({a:1, b:2}), {|", "a:", "b:")]
+        public void TestSuggestMutationFunctions(string expression, params string[] expectedSuggestions)
+        {
+            var config = SuggestTests.Default;
+            config.SymbolTable.EnableMutationFunctions();
+
+            var actualSuggestions = SuggestStrings(expression, config, null);
+            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+        }
+
+        [Theory]
+        [InlineData("Collect(|", "Entity1", "Entity2", "Table1", "table2")]
+        [InlineData("Patch(|", "Entity1", "Entity2", "Table1", "table2")]
+        [InlineData("Remove(|", "Entity1", "Entity2", "Table1", "table2")]
+
+        // doesn't suggest Irrelevant global variables if type1 is non empty aggregate.
+        [InlineData("Collect(table2,|", "record2")]
+        [InlineData("Patch(table2,|", "record2")]
+        [InlineData("Patch(table2, record2, |", "record2")]
+        [InlineData("Remove(table2, |", "record2")]
+
+        [InlineData("Collect(|, record1", "Entity1", "Entity2", "Table1", "table2")]
+        [InlineData("Sum(|", "num", "str")]
+        [InlineData("Text(|", "num", "str")]
+        [InlineData("Language(|")]
+        [InlineData("Filter([1,2], |", "ThisRecord", "Value")]
+
+        // Suggests Enum.
+        [InlineData("Text(Now(), |", "DateTimeFormat.LongDate", "DateTimeFormat.LongDateTime", "DateTimeFormat.LongDateTime24", "DateTimeFormat.LongTime", "DateTimeFormat.LongTime24", "DateTimeFormat.ShortDate", "DateTimeFormat.ShortDateTime", "DateTimeFormat.ShortDateTime24", "DateTimeFormat.ShortTime", "DateTimeFormat.ShortTime24", "DateTimeFormat.UTC", "num", "str")]
+
+        // Custom Function has arg with signature of tableType2, So only suggest table2
+        [InlineData("RecordsTest(|", "table2")]
+
+        // No suggestion if function is not in binder.
+        [InlineData("InvalidFunction(|")]
+
+        // Binary Op Suggestions.
+        [InlineData("1 = |", "num")]
+        [InlineData("1 + |", "num", "str")]
+        public void TestArgSuggestion(string expression, params string[] expectedSuggestions)
+        {
+            var map = new SingleSourceDisplayNameProvider(new Dictionary<DName, DName>
+            {
+                { new DName("dv_entity1"), new DName("Entity1") },
+                { new DName("dv_entity2"), new DName("Entity2") }
+            });
+
+            // It is important to put TableType as Place Holder for intellisense to work.
+            var dataverseMock = ReadOnlySymbolTable.NewFromDeferred(
+                map, 
+                (disp, logical) => TableType.Empty().Add(new NamedFormulaType("f1", FormulaType.String)), 
+                TableType.Empty());
+
+            var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet());
+
+            config.SymbolTable.EnableMutationFunctions();
+
+            config.SymbolTable.AddHostObject("User", RecordType.Empty(), (sp) => RecordValue.NewRecordFromFields());
+            
+            var tableType1 = TableType.Empty();
+            config.SymbolTable.AddVariable("table1", tableType1, displayName: "Table1");
+
+            var tableType2 = TableType.Empty().Add(new NamedFormulaType("f1", FormulaType.String));
+            config.SymbolTable.AddVariable("table2", tableType2);
+
+            // Do not suggest Deferred.
+            config.SymbolTable.AddVariable("deferred", FormulaType.Deferred);
+
+            config.SymbolTable.AddVariable("record1", tableType1.ToRecord());
+            config.SymbolTable.AddVariable("record2", tableType2.ToRecord());
+
+            config.SymbolTable.AddVariable("num", FormulaType.Number);
+            config.SymbolTable.AddVariable("str", FormulaType.String);
+
+            var customFunction = new TestAggregateIdentityCustomFunction<TableType, TableValue>(tableType2);
+            config.AddFunction(customFunction);
+
+            var engine = new RecalcEngine(config);
+            var check = engine.Check(expression, null, dataverseMock);
+
+            var cursorPos = expression.IndexOf('|');
+            var result = engine.Suggest(check, cursorPos);
+
+            Assert.Equal(expectedSuggestions, result.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray());
+        }
+
+        [Theory]
+
+        // record fields.
+        [InlineData(
+            "RecordInputTest( {|",
+            "field1:")]
+        [InlineData(
+            "RecordInputTest( {field1 : 1}, \"test\", {|",
+            "id:", 
+            "name:")]
+        [InlineData(
+            "RecordInputTest( {field1 : 2}, \"test\", { id: 1, name: \"test\"}, {|", 
+            "nested:",
+            "nested2:")]
+
+        // nested record field.
+        [InlineData(
+            "RecordInputTest( {field1 : 3}, \"test\", { id: 1, name: \"test\"}, { nested:{|", 
+            "field1:")]
+        [InlineData(
+            "RecordInputTest( {field1 : 4}, \"test\", { id: 1, name: \"test\"}, { nested2:{|", 
+            "id:", 
+            "name:")]
+        [InlineData(
+            "RecordInputTest( {field1 : 3}, \"test\", { id: 1, name: \"test\"}, { nested:{ field1: 1}, nested2: {|",
+            "id:",
+            "name:")]
+
+        [InlineData(
+            "RecordInputTest({field1:1}, \"test\", {id:1,name:\"test\"}, {nested2:{id:1,name:\"test\"}},[{nested:{field1:1}}], {topNested:{nested2:{|",
+            "id:",
+            "name:")]
+
+        // No suggestion, if there is no curly brace open.
+        [InlineData(
+            "RecordInputTest( {field1 : 3}, \"test\", { id: 1, name: \"test\"}, { nested:{ field1: 1}, nested2: |")]
+
+        // table type arg.
+        [InlineData(
+            "RecordInputTest( {field1 : 5}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 1, name: \"test\"} }, [{|",
+            "nested:",
+            "nested2:")]
+
+        // table type arg with nested record field.
+        [InlineData(
+            "RecordInputTest( {field1 : 6}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 1, name: \"test\"} }, [ { nested: {|",
+            "field1:")]
+
+        [InlineData(
+            "RecordInputTest( {field1 : 7}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 1, name: \"test\"} }, [ { nested2: {|",
+            "id:",
+            "name:")]
+        public void TestCustomFunctionSuggestion(string expression, params string[] expectedSuggestions)
+        {
+            var config = SuggestTests.Default;
+
+            config.SymbolTable.EnableMutationFunctions();
+
+            // With Input record type param
+            config.AddFunction(new TestRecordInputCustomFunction());
+
+            var actualSuggestions = SuggestStrings(expression, config, null);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
         }
     }
 }

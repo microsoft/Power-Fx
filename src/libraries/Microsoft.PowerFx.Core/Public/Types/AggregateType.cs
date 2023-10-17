@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Types;
@@ -20,12 +19,12 @@ namespace Microsoft.PowerFx.Types
         /// Override to add a more specific user-visible type name when this type shows up
         /// in error messages, suggestions, etc..
         /// </summary>
-        public virtual string UserVisibleTypeName => null; 
+        public virtual string UserVisibleTypeName => null;
 
         internal AggregateType(DType type)
             : base(type)
         {
-            Contracts.Assert(type.IsAggregate);
+            Contracts.Assert(type.IsAggregate || type.IsPolymorphic);
         }
 
         public AggregateType(bool isTable)
@@ -42,7 +41,7 @@ namespace Microsoft.PowerFx.Types
 
         public FormulaType GetFieldType(string fieldName)
         {
-            return TryGetFieldType(fieldName, out var type) ? 
+            return TryGetFieldType(fieldName, out var type) ?
                 type :
                 throw new InvalidOperationException($"No field {fieldName}");
         }
@@ -59,19 +58,24 @@ namespace Microsoft.PowerFx.Types
             return true;
         }
 
-        // Check for field existence, avoids the overhead of actually building the return type. 
-        internal bool HasFieldLogical(string logicalName)
+        internal bool TryGetBackingDType(string fieldName, out DType type)
         {
-            return _type.TryGetType(new DName(logicalName), out _);
-        }
-
-        internal bool HasField(string displayOrLogicalName)
-        {
-            Contracts.CheckNonEmpty(displayOrLogicalName, nameof(displayOrLogicalName));
-
-            return DType.TryGetDisplayNameForColumn(_type, displayOrLogicalName, out _) ||
-                   DType.TryGetLogicalNameForColumn(_type, displayOrLogicalName, out _) ||
-                   _type.TryGetType(new DName(displayOrLogicalName), out _);
+            if (_type == null)
+            {
+                // if the backing _type is null, maybe we have a derived type that can provide the type
+                if (TryGetFieldType(fieldName, out var formulaType))
+                {
+                    type = formulaType._type;
+                    return true;
+                }
+                else
+                {
+                    type = default;
+                    return false;
+                }
+            }
+            
+            return _type.TryGetType(new DName(fieldName), out type);
         }
 
         /// <summary>
@@ -116,17 +120,27 @@ namespace Microsoft.PowerFx.Types
 
         public IEnumerable<NamedFormulaType> GetFieldTypes()
         {
-            return FieldNames.Select(field => new NamedFormulaType(field, GetFieldType(field)));
+            return FieldNames.Select(field =>
+            {
+                var displayName = DType.TryGetDisplayNameForColumn(_type, field, out var dName)
+                    ? dName
+                    : null;
+
+                if (this.TryGetBackingDType(field, out var backingDType))
+                {
+                    var t = new TypedName(backingDType, new DName(field));
+                    return new NamedFormulaType(t, displayName);
+                }
+
+                var fieldType = GetFieldType(field);
+                
+                return new NamedFormulaType(field, GetFieldType(field), displayName);
+            });
         }
 
         private protected DType AddFieldToType(NamedFormulaType field)
         {
-            var displayNameProvider = _type.DisplayNameProvider;
-            if (displayNameProvider == null)
-            {
-                displayNameProvider = new SingleSourceDisplayNameProvider();
-            }
-
+            var displayNameProvider = _type.DisplayNameProvider ?? new SingleSourceDisplayNameProvider();
             if (displayNameProvider is SingleSourceDisplayNameProvider singleSourceDisplayNameProvider)
             {
                 if (field.DisplayName != default)
@@ -165,7 +179,7 @@ namespace Microsoft.PowerFx.Types
                 var ds = _type.AssociatedDataSources.FirstOrDefault();
 
                 if (ds != null)
-                { 
+                {
                     return ds.EntityName.Value;
                 }
 

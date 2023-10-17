@@ -18,8 +18,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public StringTwoArgFunction(string name, TexlStrings.StringGetter description)
             : this(name, description, DType.Boolean)
         {
@@ -44,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var args = callNode.Args.Children.VerifyValue();
-            Contracts.Assert(args.Length == MinArity);
+            Contracts.Assert(args.Count == MinArity);
 
             if (binding.IsRowScope(args[1]))
             {

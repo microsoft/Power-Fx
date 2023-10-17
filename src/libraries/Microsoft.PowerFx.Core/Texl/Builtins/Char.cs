@@ -19,9 +19,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding Excel function: Char
     internal sealed class CharFunction : BuiltinFunction
     {
-        public override bool IsSelfContained => true;
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
 
-        public override bool SupportsParamCoercion => true;
+        public override bool IsSelfContained => true;
 
         public CharFunction()
             : base("Char", TexlStrings.AboutChar, FunctionCategories.Text, DType.String, 0, 1, 1, DType.Number)
@@ -39,8 +42,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public CharTFunction()
             : base("Char", TexlStrings.AboutCharT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
@@ -49,11 +50,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.CharTArg1 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -69,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
-            fValid &= CheckNumericColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
+            fValid &= CheckNumericColumnType(context, args[0], argTypes[0], errors, ref nodeToCoercedTypeMap);
 
             // Synthesize a new return type
             returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));

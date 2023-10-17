@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Drawing;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -21,8 +22,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class CoalesceFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => false;
 
         public CoalesceFunction()
             : base("Coalesce", TexlStrings.AboutCoalesce, FunctionCategories.Information, DType.Unknown, 0, 1, int.MaxValue)
@@ -46,7 +45,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool IsLazyEvalParam(int index, Features features)
+        {
+            if (features.CoalesceShortCircuit)
+            {
+                return index > 0;
+            }
+
+            return false;
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
@@ -55,6 +64,83 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
 
             nodeToCoercedTypeMap = null;
+            if (context.Features.PowerFxV1CompatibilityRules)
+            {
+                return CheckTypesLatest(context, args, argTypes, errors, out returnType, ref nodeToCoercedTypeMap);
+            }
+            else
+            {
+                return CheckTypesLegacy(context, args, argTypes, errors, out returnType, ref nodeToCoercedTypeMap);
+            }
+        }
+
+        private bool CheckTypesLatest(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var fArgsValid = true;
+            var possibleResults = new List<(TexlNode node, DType type)>();
+            for (var i = 0; i < args.Length; i++)
+            {
+                possibleResults.Add((args[i], argTypes[i]));
+            }
+
+            returnType = null;
+            var type = possibleResults[0].type;
+
+            foreach (var (argNode, argType) in possibleResults)
+            {
+                if (argType.IsVoid)
+                {
+                    fArgsValid = false;
+                }
+                else if (argType.IsError)
+                {
+                    errors.EnsureError(argNode, TexlStrings.ErrTypeError);
+                    fArgsValid = false;
+                }
+                else if (type.Kind == DKind.ObjNull)
+                {
+                    // Anything goes with null
+                    type = argType;
+                }
+                else if (argType.Kind == DKind.ObjNull)
+                {
+                    // ObjNull can be accepted by the current type
+                }
+                else if (DType.TryUnionWithCoerce(
+                         type,
+                         argType,
+                         usePowerFxV1CompatibilityRules: true,
+                         coerceToLeftTypeOnly: true,
+                         out var unionType,
+                         out var coercionNeeded))
+                {
+                    type = unionType;
+                    if (coercionNeeded)
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, argNode, type);
+                    }
+                }
+                else
+                {
+                    errors.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        argNode,
+                        TexlStrings.ErrBadType_ExpectedType_ProvidedType,
+                        type.GetKindString(),
+                        argType.GetKindString());
+                    fArgsValid = false;
+                }
+            }
+
+            returnType = type;
+            return fArgsValid;
+        }
+
+        private bool CheckTypesLegacy(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.Assert(
+                !context.Features.PowerFxV1CompatibilityRules,
+                "This method can only be called wtih PowerFxV1CompatibilityRules disabled");
 
             var count = args.Length;
             var fArgsValid = true;
@@ -77,7 +163,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     errors.EnsureError(args[i], TexlStrings.ErrTypeError);
                 }
 
-                var typeSuper = DType.Supertype(type, typeArg);
+                var typeSuper = DType.Supertype(
+                    type, 
+                    typeArg, 
+                    useLegacyDateTimeAccepts: false, 
+                    usePowerFxV1CompatibilityRules: false);
 
                 if (!typeSuper.IsError)
                 {
@@ -92,7 +182,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else if (!type.IsError)
                 {
                     // Types don't resolve normally, coercion needed
-                    if (typeArg.CoercesTo(type))
+                    if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: false))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
                     }

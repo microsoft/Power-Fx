@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Annotations;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -24,41 +26,49 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var bugNames = new HashSet<string>
             {
+                // Threading.InterlockedIncrement.
+                "VersionHash._hashStarter",
+
                 // readonly arrays / dictionary - is there an IReadOnly type to changes these too instead? 
-                "LazyList`1.Empty",
+                "ArgumentSuggestions._languageCodeSuggestions",
+                "BuiltinFunctionsCore._featureGateFunctions",
+                "BuiltinFunctionsCore._library",
+                "BuiltinFunctionsCore._testOnlyLibrary",
+                "DateAddFunction.SubDayStringList",
+                "DelegationCapability._binaryOpToDelegationCapabilityMap",
+                "DelegationCapability._operatorToDelegationCapabilityMap",
+                "DelegationCapability._unaryOpToDelegationCapabilityMap",
                 "DType._kindToSuperkindMapping",
                 "DTypeSpecParser._types",
-                "BuiltinFunctionsCore._library",
-                "BuiltinFunctionsCore._featureGateFunctions",
-                "ArgumentSuggestions._languageCodeSuggestions",
-                "IntellisenseProvider.SuggestionHandlers",
-                "DateAddFunction.SubDayStringList",
-                "PrettyPrintVisitor.BinaryPrecedence",
                 "ErrorResource.ErrorResourceTagToReswSuffix",
-                "DelegationCapability._binaryOpToDelegationCapabilityMap",
-                "DelegationCapability._unaryOpToDelegationCapabilityMap",
-                "DelegationCapability._operatorToDelegationCapabilityMap",
+                "IntellisenseProvider.SuggestionHandlers",
+                "JsonFunction._unsupportedTopLevelTypes",
+                "JsonFunction._unsupportedTypes",
+                "LazyList`1.Empty",
                 "ODataFunctionMappings.BinaryOpToOperatorMap",
                 "ODataFunctionMappings.UnaryOpToOperatorMap",
+                "PrettyPrintVisitor.BinaryPrecedence",
                        
                 // Potential bugs, Need more review...
                 "ArgumentSuggestions.CustomFunctionSuggestionProviders",
                 "TrackingProvider.Instance",
 
-                "DataTypeInfo.NoValidFormat", // returns arrays 
-                "DataTypeInfo.AllowedValuesOnly",
                 "DataTypeInfo._validDataFormatsPerDKind",
+                "DataTypeInfo.AllowedValuesOnly",
+                "DataTypeInfo.NoValidFormat", // returns arrays 
 
-                "FeatureFlags._stringInterpolation",                
-                "FeatureFlags._inTests",
-                "EmptyEnumerator`1._instance",
+                "BuiltinFunctionsCore.OtherKnownFunctions",
                 "Contracts._assertFailExCtor",
+                "CurrentLocaleInfo.<CurrentLCID>k__BackingField",
                 "CurrentLocaleInfo.<CurrentLocaleName>k__BackingField",
                 "CurrentLocaleInfo.<CurrentUILanguageName>k__BackingField",
-                "CurrentLocaleInfo.<CurrentLCID>k__BackingField",
+                "DelegationCapability.maxSingleCapabilityValue",
+                "EmptyEnumerator`1._instance",
+                "FeatureFlags._inTests",
+                "FeatureFlags._stringInterpolation",
                 "StringResources.<ExternalStringResources>k__BackingField",
                 "StringResources.<ShouldThrowIfMissing>k__BackingField",
-                "DelegationCapability.maxSingleCapabilityValue",
+                "StringResources.ResourceManagers",
             };
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);

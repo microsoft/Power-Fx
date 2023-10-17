@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
@@ -19,7 +20,7 @@ namespace Microsoft.PowerFx.Functions
     {
         private static bool IsValidDateTimeUO(string s)
         {
-            return Regex.IsMatch(s, @"^[0-9]{4,4}-[0-1][0-9]-[0-3][0-9](T[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]{3,3})?Z?)?$");
+            return Regex.IsMatch(s, @"^[0-9]{4,4}-[0-1][0-9]-[0-3][0-9](T[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]{0,7})?Z?)?$");
         }
 
         public static FormulaValue Index_UO(IRContext irContext, FormulaValue[] args)
@@ -41,7 +42,7 @@ namespace Microsoft.PowerFx.Functions
                 // Map null to blank
                 if (result == null || result.Type == FormulaType.Blank)
                 {
-                    return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                    return new BlankValue(IRContext.NotInSource(irContext.ResultType));
                 }
 
                 return new UntypedObjectValue(irContext, result);
@@ -52,7 +53,145 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        public static FormulaValue First_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var arg0 = (UntypedObjectValue)args[0];
+            var element = arg0.Impl;
+            var len = element.GetArrayLength();
+
+            if (len == 0)
+            {
+                return new BlankValue(irContext);
+            }
+
+            var result = element[0];
+
+            return new UntypedObjectValue(irContext, result);
+        }
+
+        public static FormulaValue Last_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var arg0 = (UntypedObjectValue)args[0];
+            var element = arg0.Impl;
+            var len = element.GetArrayLength();
+
+            if (len == 0)
+            {
+                return new BlankValue(irContext);
+            }
+
+            var result = element[len - 1];
+
+            // Map null to blank
+            if (result == null || result.Type == FormulaType.Blank)
+            {
+                return new BlankValue(IRContext.NotInSource(irContext.ResultType));
+            }
+
+            return new UntypedObjectValue(irContext, result);
+        }
+
+        public static FormulaValue FirstN_UO(IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (UntypedObjectValue)args[0];
+            var arg1 = (NumberValue)args[1];
+
+            var element = arg0.Impl;
+            var len = element.GetArrayLength();
+
+            var list = new List<IUntypedObject>();
+            for (int i = 0; i < (int)arg1.Value && i < len; i++)
+            {
+                list.Add(element[i]);
+            }
+
+            var result = new ArrayUntypedObject(list);
+
+            return new UntypedObjectValue(irContext, result);
+        }
+
+        public static FormulaValue LastN_UO(IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (UntypedObjectValue)args[0];
+            var arg1 = (NumberValue)args[1];
+
+            var element = arg0.Impl;
+            var len = element.GetArrayLength();
+
+            var list = new List<IUntypedObject>();
+            var takeCount = (int)arg1.Value;
+            for (int i = 0; i < takeCount; i++)
+            {
+                var takeIndex = len - takeCount + i;
+                if (takeIndex >= 0)
+                {
+                    list.Add(element[takeIndex]);
+                }
+            }
+
+            var result = new ArrayUntypedObject(list);
+
+            return new UntypedObjectValue(irContext, result);
+        }
+
         public static FormulaValue Value_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var uo = args[0] as UntypedObjectValue;
+            var impl = uo.Impl;
+            bool numberIsFloat = irContext.ResultType == FormulaType.Number;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
+                if (args.Length > 1)
+                {
+                    return Value(runner, context, irContext, new FormulaValue[] { str, args[1] });
+                }
+
+                return Value(runner, context, irContext, new FormulaValue[] { str });
+            }
+            else if ((impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber && numberIsFloat) ||
+                     impl.Type == FormulaType.Number)
+            {
+                var number = impl.GetDouble();
+                if (IsInvalidDouble(number))
+                {
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+                }
+
+                return Value(runner, context, irContext, new FormulaValue[] { new NumberValue(IRContext.NotInSource(FormulaType.Number), number) });
+            }
+            else if ((impl.Type is ExternalType et2 && et2.Kind == ExternalTypeKind.UntypedNumber && !numberIsFloat) ||
+                     impl.Type == FormulaType.Decimal)
+            {
+                try
+                {
+                    var dec = impl.GetDecimal();
+                    return Value(runner, context, irContext, new FormulaValue[] { new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), dec) });
+                }
+                catch (FormatException)
+                {
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+                }
+            }
+            else if (impl.Type == FormulaType.Boolean)
+            {
+                var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
+
+                if (numberIsFloat)
+                {
+                    return BooleanToNumber(irContext, new BooleanValue[] { b });
+                }
+                else
+                {
+                    return BooleanToDecimal(irContext, new BooleanValue[] { b });
+                }
+            }
+
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Value_UO.Name, DType.Number.GetKindString(), impl);
+        }
+
+        public static FormulaValue Decimal_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var uo = args[0] as UntypedObjectValue;
             var impl = uo.Impl;
@@ -62,9 +201,28 @@ namespace Microsoft.PowerFx.Functions
                 var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
                 if (args.Length > 1)
                 {
-                    return Value(runner, context, irContext, new FormulaValue[] { str, args[1] });
+                    return Decimal(runner, context, irContext, new FormulaValue[] { str, args[1] });
                 }
-                return Value(runner, context, irContext, new FormulaValue[] { str });
+
+                return Decimal(runner, context, irContext, new FormulaValue[] { str });
+            }
+            else if ((impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber) ||
+                     impl.Type == FormulaType.Decimal)
+            {
+                try
+                {
+                    var dec = impl.GetDecimal();
+                    return new DecimalValue(irContext, dec);
+                }
+                catch
+                {
+                    return new ErrorValue(irContext, new ExpressionError()
+                    {
+                        Message = "Untyped number is not a valid Decimal value, possible overflow",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.InvalidArgument
+                    });
+                }
             }
             else if (impl.Type == FormulaType.Number)
             {
@@ -74,38 +232,122 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }
 
-                return new NumberValue(irContext, number);
+                return Decimal(runner, context, irContext, new FormulaValue[] { new NumberValue(IRContext.NotInSource(FormulaType.Number), number) });
             }
             else if (impl.Type == FormulaType.Boolean)
             {
                 var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
+
+                return BooleanToDecimal(irContext, new BooleanValue[] { b });
+            }
+
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Decimal_UO.Name, DType.Number.GetKindString(), impl);
+        }
+
+        public static FormulaValue Float_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var uo = args[0] as UntypedObjectValue;
+            var impl = uo.Impl;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
+                if (args.Length > 1)
+                {
+                    return Float(runner, context, irContext, new FormulaValue[] { str, args[1] });
+                }
+
+                return Float(runner, context, irContext, new FormulaValue[] { str });
+            }
+            else if ((impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber) ||
+                      impl.Type == FormulaType.Number)
+            {
+                var number = impl.GetDouble();
+                if (IsInvalidDouble(number))
+                {
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+                }
+
+                return new NumberValue(irContext, number);
+            }
+            else if (impl.Type == FormulaType.Decimal)
+            {
+                try
+                {
+                    var dec = impl.GetDecimal();
+                    return Float(runner, context, irContext, new FormulaValue[] { new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), dec) });
+                }
+                catch
+                {
+                    return new ErrorValue(irContext, new ExpressionError()
+                    {
+                        Message = "Untyped number is not a valid Decimal value, possible overflow",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.InvalidArgument
+                    });
+                }
+            }
+            else if (impl.Type == FormulaType.Boolean)
+            {
+                var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
+
                 return BooleanToNumber(irContext, new BooleanValue[] { b });
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Value_UO.Name, DType.Number.GetKindString(), impl);
         }
 
-        public static FormulaValue Text_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Text_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var impl = args[0].Impl;
+            if (args.Length == 1 && args[0].IsBlank())
+            {
+                // When used as a pure conversion function (single argument, no format string), this function propagates null values
+                return new BlankValue(irContext);
+            }
 
+            foreach (var arg in args)
+            {
+                if (arg.IsBlank())
+                {
+                    return new StringValue(irContext, string.Empty);
+                }
+            }
+
+            var arg0 = (UntypedObjectValue)args[0];
+            var impl = arg0.Impl;
+
+            FormulaValue newArg0 = null;
             if (impl.Type == FormulaType.String)
             {
                 var str = impl.GetString();
-                return new StringValue(irContext, str);
+                newArg0 = new StringValue(irContext, str);
+            }
+            else if (impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber)
+            {
+                var str = impl.GetUntypedNumber();
+                newArg0 = new StringValue(irContext, str);
             }
             else if (impl.Type == FormulaType.Number)
             {
-                var n = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
-                return Text(runner, context, irContext, new FormulaValue[] { n });
+                newArg0 = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
+            }
+            else if (impl.Type == FormulaType.Decimal)
+            {
+                newArg0 = new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), impl.GetDecimal());
             }
             else if (impl.Type == FormulaType.Boolean)
             {
                 var b = impl.GetBoolean();
-                return new StringValue(irContext, PowerFxBooleanToString(b));
+                newArg0 = new StringValue(irContext, PowerFxBooleanToString(b));
+            }
+            else
+            {
+                return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Text_UO.Name, DType.String.GetKindString(), impl);
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Text_UO.Name, DType.String.GetKindString(), impl);
+            var newArgs = new List<FormulaValue>() { newArg0 };
+            newArgs.AddRange(args.Skip(1));
+            return Text(runner, context, irContext, newArgs.ToArray());
         }
 
         public static FormulaValue Table_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -139,7 +381,7 @@ namespace Microsoft.PowerFx.Functions
                     return new BlankValue(irContext);
                 }
 
-                if (!(cov.Impl.Type is ExternalType et && et.Kind == ExternalTypeKind.Array))
+                if (!(cov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Array || et.Kind == ExternalTypeKind.ArrayAndObject)))
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
@@ -162,8 +404,9 @@ namespace Microsoft.PowerFx.Functions
                 var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
                 return TextToBoolean(irContext, new StringValue[] { str });
             }
-            else if (impl.Type == FormulaType.Number)
+            else if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.UntypedNumber)
             {
+                // OK to use only Float here before conversion to Boolean, as all Decimal values can be represented in Float
                 var n = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
                 return NumberToBoolean(irContext, new NumberValue[] { n });
             }
@@ -196,11 +439,14 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime datetime))
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
                 {
-                    datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
+                    var timeZoneInfo = runner.TimeZoneInfo;
+                    datetime = MakeValidDateTime(runner, datetime, timeZoneInfo);
 
-                    return new DateValue(irContext, datetime);
+                    datetime = DateTimeValue.GetConvertedDateTimeValue(datetime, timeZoneInfo);
+
+                    return new DateValue(irContext, datetime.Date);
                 }
 
                 return CommonErrors.InvalidDateTimeParsingError(irContext);
@@ -216,7 +462,9 @@ namespace Microsoft.PowerFx.Functions
             if (impl.Type == FormulaType.String)
             {
                 var s = impl.GetString();
-                if (TimeSpan.TryParseExact(s, @"hh\:mm\:ss\.FFF", CultureInfo.InvariantCulture, TimeSpanStyles.None, out TimeSpan res))
+
+                if (TimeSpan.TryParseExact(s, @"hh\:mm\:ss\.FFFFFFF", CultureInfo.InvariantCulture, TimeSpanStyles.None, out var res) ||
+                    TimeSpan.TryParseExact(s, @"hh\:mm\:ss", CultureInfo.InvariantCulture, TimeSpanStyles.None, out res))
                 {
                     return new TimeValue(irContext, res);
                 }
@@ -235,9 +483,11 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime datetime))
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
                 {
-                    datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
+                    datetime = MakeValidDateTime(runner, datetime, runner.TimeZoneInfo);
+
+                    datetime = DateTimeValue.GetConvertedDateTimeValue(datetime, runner.TimeZoneInfo);
 
                     return new DateTimeValue(irContext, datetime);
                 }
@@ -255,7 +505,7 @@ namespace Microsoft.PowerFx.Functions
             if (impl.Type == FormulaType.String)
             {
                 var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
-                return Guid(irContext, new StringValue[] { str });
+                return GuidPure(irContext, new StringValue[] { str });
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.GUID_UO.Name, DType.String.GetKindString(), impl);
@@ -292,7 +542,14 @@ namespace Microsoft.PowerFx.Functions
 
             var rowsAsync = LazyForAll(runner, context, items, arg1);
 
-            var rows = await Task.WhenAll(rowsAsync);
+            var rows = new List<FormulaValue>();
+
+            foreach (var row in rowsAsync)
+            {
+                runner.CheckCancel();
+
+                rows.Add(await row.ConfigureAwait(false));
+            }
 
             var errorRows = rows.OfType<ErrorValue>();
             if (errorRows.Any())
@@ -300,7 +557,12 @@ namespace Microsoft.PowerFx.Functions
                 return ErrorValue.Combine(irContext, errorRows);
             }
 
-            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows, forceSingleColumn: false));
+            if (irContext.ResultType is Types.Void)
+            {
+                return new VoidValue(irContext);
+            }
+
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
         }
 
         public static FormulaValue ColorValue_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -322,6 +584,34 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.ColorValue_UO.Name, DType.String.GetKindString(), impl);
+        }
+
+        public static FormulaValue UntypedStringToUntypedFloat(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
+        {
+            return UntypedStringToUntypedNumber<NumberValue>(runner, context, irContext, args, FormulaType.Number, nv => new FloatUntypedObject(nv.Value));
+        }
+
+        public static FormulaValue UntypedStringToUntypedDecimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
+        {
+            return UntypedStringToUntypedNumber<DecimalValue>(runner, context, irContext, args, FormulaType.Decimal, nv => new DecimalUntypedObject(nv.Value));
+        }
+
+        public static FormulaValue UntypedStringToUntypedNumber<T>(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args, FormulaType numberType, Func<T, IUntypedObject> constructUO)
+            where T : ValidFormulaValue
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber)
+            {
+                var valueRes = Value_UO(runner, context, IRContext.NotInSource(numberType), new UntypedObjectValue[] { args[0] });
+
+                if (valueRes is T nv)
+                {
+                    return new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), constructUO(nv));
+                }
+            }
+
+            return args[0];
         }
     }
 }

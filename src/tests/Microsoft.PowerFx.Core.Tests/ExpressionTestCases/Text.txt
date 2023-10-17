@@ -4,9 +4,6 @@
 >> Text(123.4, "#.000")
 "123.400"
 
->> Text(Blank(), "#.000")
-""
-
 // ******** NUMBER PARAMETERS ********
 
 //Excel needs two parameters for Text function
@@ -41,10 +38,6 @@
 >> Text(123456789, "0,00.0")
 "123,456,789.0"
 
-//Excel returns "123457"
->> Text(123456789, "0,")
-"123456789,"
-
 >> Text(1234.59, "####.#")
 "1234.6"
 
@@ -72,10 +65,6 @@
 >> Text(123456789, "#,###")
 "123,456,789"
 
-//Excel throws error: "Value used in the formula is of the wrong data type"
->> Text(100, "#%‰'eE:")
-"100%‰'eE:"
-
 >> Text(567, "!#!#!#!#!")
 "!!5!6!7!"
 
@@ -88,10 +77,6 @@
 //Excel needs two parameters for Text function
 >> Text("HELLO")
 "HELLO"
-
-// Calling Text on a string value returns that value
->> Text("abc", "0.00")
-"abc"
 
 // ******** BOOLEAN PARAMETERS ********
 
@@ -121,10 +106,7 @@
 
 //Excel needs two parameters for Text function
 >> Text(Blank())
-""
-
->> Text(Blank(), Blank())
-""
+Blank()
 
 //Excel needs two parameters for Text function
 >> Text("")
@@ -134,21 +116,7 @@
 >> Text(Blank()*Blank())
 "0"
 
-//Excel returns "$"
->> Text(Blank(), "$ #,###")
-""
-
->> Text(Blank(), "#,#")
-""
-
->> Text(Blank(), "#,###")
-""
-
 >> Text(123.4, Blank())
-""
-
-//Excel throws error
->> Text(DateTimeValue(Blank()), DateTimeFormat.LongDate)
 ""
 
 //Excel throws error
@@ -158,31 +126,13 @@
 >> Text(Date(2016,1,31), "pqr")
 "pqr"
 
-
 >> Text(1/0, "#.000")
 Error({Kind:ErrorKind.Div0})
 
+>> Text(If(1<0,2))
+Blank()
+
 // ******** DATE/TIME PARAMETERS ********
-
-//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongDate)
-"Wednesday, March 30, 2022"
-
-//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongDateTime)
-"Wednesday, March 30, 2022 5:30:00 PM"
-
-//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongTime)
-"5:30:00 PM"
-
-//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortDate)
-"3/30/2022"
-
-//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortTime)
-"5:30 PM"
 
 //Excel doesn't support DateTimeValue function. Hence replaced it with DateValue function to compare the behavior
 >> Text(DateTimeValue("March 30, 2022 5:30 PM"), "dd")
@@ -213,3 +163,107 @@ Error({Kind:ErrorKind.Div0})
 //Excel needs two parameters for Text function
 >> Text(DateTimeValue("01/04/2003"))
 "1/4/2003 12:00 AM"
+
+//Test Date, Time and Datetime to Text
+>> Text(DateTime(2023,2,5,0,0,0))
+"2/5/2023 12:00 AM"
+
+>> Text(Date(2023,2,5))
+"2/5/2023"
+
+>> Text(Time(2,4,5))
+"2:04 AM"
+
+>> Text(Time(17,2,3))
+"5:02 PM"
+
+>> Text(DateValue("02/05/2023"))
+"2/5/2023"
+
+>> Text(DateTimeValue("02/05/2023"))
+"2/5/2023 12:00 AM"
+
+>> Text(TimeValue("15:06"))
+"3:06 PM"
+
+>> Text(GUID("0f8fad5bd9cb469fa16570867728950e"))
+"0f8fad5b-d9cb-469f-a165-70867728950e"
+
+//Excel doesnt support three arguments
+>> Text(Date(2016,1,31), "dddd mmmm d", "")
+"Sunday January 31"
+
+>> Text(Date(2016,1,31), "xyz")
+"x16z"
+
+//Error message: Language code not supported
+>> Text(Date(2016,1,31), "dddd mmmm d", "fsdff")
+Error({Kind:ErrorKind.BadLanguageCode})
+
+//Excel doesn't support DateTimeValue function. Hence replaced it with DateValue function to compare the behavior
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "m")
+"3" 
+
+//Excel doesn't support DateTimeValue function. Hence replaced it with DateValue function to compare the behavior
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "mm")
+"03"
+
+//Excel doesn't support DateTimeValue function. Hence replaced it with DateValue function to compare the behavior
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "mmm")
+"Mar"
+
+//Excel doesn't support DateTimeValue function. Hence replaced it with DateValue function to compare the behavior
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "mmmm")
+"March"
+
+//Excel doesn't support DateTimeValue function. Hence replaced it with DateValue function to compare the behavior
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "d")
+"30"
+
+//Excel doesn't support DateTimeValue function. Hence replaced it with TimeValue function to compare the behavior
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "h")
+"17"
+
+//Excel doesn't support DateTimeValue function. Hence replaced it with TimeValue function to compare the behavior
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "hh")
+"17"
+
+//Excel doesn't support DateTimeValue function. Hence replaced it with TimeValue function to compare the behavior
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "hh:m")
+"17:30"
+
+//Excel doesn't support DateTimeValue function. Hence replaced it with TimeValue function to compare the behavior
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "hh:mm")
+"17:30"
+
+//Excel doesn't support DateTimeValue function. Hence replaced it with TimeValue function to compare the behavior
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "s")
+"0"
+
+//Excel doesn't support DateTimeValue function. Hence replaced it with TimeValue function to compare the behavior
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "ss")
+"00"
+
+//Excel doesn't support DateTimeValue function. Hence replaced it with DateValue/TimeValue function to compare the behavior
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "d-mmm-yy")
+"30-Mar-22"
+
+//Excel doesn't support DateTimeValue function. Hence replaced it with DateValue/TimeValue function to compare the behavior
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "dd mmmm yyyy, dddd, hh:mm:ss AM/PM ")
+"30 March 2022, Wednesday, 05:30:00 PM "
+
+//Excel doesn't support DateTimeValue function. Hence replaced it with DateValue/TimeValue function to compare the behavior
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "dd mmmm yyyy, dddd, hh:mm:ss")
+"30 March 2022, Wednesday, 17:30:00"
+
+// ******** GLOBAL APPS ********
+
+>> Text(Date(2016,1,31), "dddd mmmm d")
+"Sunday January 31"
+
+//Excel doesn't support three arguments
+>> Text(Date(2016,1,31), "dddd mmmm d", "es-ES")
+"domingo enero 31"
+
+>> Text(DateTimeValue("12:34:56"),"yyyy-mm-dd hh:mm:ss")
+"1899-12-30 12:34:56"

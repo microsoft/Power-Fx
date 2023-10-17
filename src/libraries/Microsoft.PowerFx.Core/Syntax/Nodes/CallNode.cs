@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Microsoft.PowerFx.Core.Binding;
@@ -79,7 +80,7 @@ namespace Microsoft.PowerFx.Syntax
             // We need to generate a globally unique name for this function invocation, so we use
             // a new (hardcoded) guid as well as the unique counter to avoid colliding with any
             // other data sources that may be imported by the user.
-            UniqueInvocationId = string.Format("Inv_7339A45FDB3141D49CB36063B712F5E0_{0}", invocationId);
+            UniqueInvocationId = string.Format(CultureInfo.InvariantCulture, "Inv_7339A45FDB3141D49CB36063B712F5E0_{0}", invocationId);
         }
 
         internal override TexlNode Clone(ref int idNext, Span ts)
@@ -177,10 +178,20 @@ namespace Microsoft.PowerFx.Syntax
         // Check 1..N arguments to identify if there is an AsyncWithNoSideEffects expression.
         internal bool HasArgumentAsyncWithNoSideEffects(TexlBinding binding, int firstArgument = 0)
         {
-            // check if the CallNode has any async arguments.
+            // check if the CallNode has any async arguments with no side effects.
             // some functions don't need to look at all
             // arguments (e.g. Filter and LookUp where the first arg is a data source)
             return Args.Children.Skip(firstArgument).Any(x => binding.IsAsyncWithNoSideEffects(x));
+        }
+
+        // Does the CallNode have an argument/expression that is async
+        // Check 1..N arguments to identify if there is an Async expression.
+        internal bool HasAsyncArgument(TexlBinding binding, int firstArgument = 0)
+        {
+            // check if the CallNode has any async arguments.
+            // some functions don't need to look at all
+            // arguments (e.g. Filter and LookUp where the first arg is a data source)
+            return Args.Children.Skip(firstArgument).Any(x => binding.IsAsync(x));
         }
     }
 }

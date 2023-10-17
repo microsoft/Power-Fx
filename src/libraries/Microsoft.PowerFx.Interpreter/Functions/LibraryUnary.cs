@@ -3,15 +3,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Exceptions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
-    internal partial class Library
+    internal static partial class Library
     {
         #region Standard Error Handling Wrappers for Unary Operators
         public static IReadOnlyDictionary<UnaryOpKind, AsyncFunctionPtr> UnaryOps { get; } = new Dictionary<UnaryOpKind, AsyncFunctionPtr>()
@@ -21,22 +23,77 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     "-",
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: DateNumberTimeOrDateTime,
+                    replaceBlankValues: ReplaceBlankWithFloatZero,
+                    checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: NumericNegate)
+            },
+            {
+                UnaryOpKind.NegateDecimal,
+                StandardErrorHandling<DecimalValue>(
+                    "-",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
+                    checkRuntimeTypes: ExactValueType<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: DecimalNegate)
+            },
+            {
+                UnaryOpKind.NegateDate,
+                StandardErrorHandling<FormulaValue>(
+                    "-",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
+                    checkRuntimeTypes: DateNumberTimeOrDateTime,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: DateTimeNegate)
+            },
+            {
+                UnaryOpKind.NegateDateTime,
+                StandardErrorHandling<FormulaValue>(
+                    "-",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
+                    checkRuntimeTypes: DateNumberTimeOrDateTime,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: DateTimeNegate)
+            },
+            {
+                UnaryOpKind.NegateTime,
+                StandardErrorHandling<TimeValue>(
+                    "-",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
+                    checkRuntimeTypes: DateNumberTimeOrDateTime,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: TimeNegate)
             },
             {
                 UnaryOpKind.Percent,
                 StandardErrorHandling<NumberValue>(
                     "%",
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: ReplaceBlankWithFloatZero,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: NumericPercent)
+            },
+            {
+                UnaryOpKind.PercentDecimal,
+                StandardErrorHandling<DecimalValue>(
+                    "%",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
+                    checkRuntimeTypes: ExactValueType<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: DecimalPercent)
             },
             {
                 UnaryOpKind.NumberToText,
@@ -50,6 +107,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: NumberToText)
             },
             {
+                UnaryOpKind.DecimalToText,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToText)
+            },
+            {
                 UnaryOpKind.NumberToBoolean,
                 StandardErrorHandling<NumberValue>(
                     functionName: null, // internal function, no user-facing name
@@ -59,6 +127,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: NumberToBoolean)
+            },
+            {
+                UnaryOpKind.DecimalToBoolean,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToBoolean)
             },
             {
                 UnaryOpKind.BooleanToText,
@@ -83,6 +162,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: BooleanToNumber)
             },
             {
+                UnaryOpKind.BooleanToDecimal,
+                StandardErrorHandling<BooleanValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<BooleanValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: BooleanToDecimal)
+            },
+            {
                 UnaryOpKind.TextToBoolean,
                 StandardErrorHandling<StringValue>(
                     functionName: null, // internal function, no user-facing name
@@ -105,6 +195,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: DateToNumber)
             },
             {
+                UnaryOpKind.DateToDecimal,
+                StandardErrorHandling<FormulaValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DateOrDateTime,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DateToDecimal)
+            },
+            {
                 UnaryOpKind.NumberToDate,
                 StandardErrorHandling<NumberValue>(
                     functionName: null, // internal function, no user-facing name
@@ -114,6 +215,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: NumberToDate)
+            },
+            {
+                UnaryOpKind.DecimalToDate,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToDate)
             },
             {
                 UnaryOpKind.DateTimeToNumber,
@@ -127,6 +239,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: DateToNumber)
             },
             {
+                UnaryOpKind.DateTimeToDecimal,
+                StandardErrorHandling<FormulaValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DateOrDateTime,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DateToDecimal)
+            },
+            {
                 UnaryOpKind.NumberToDateTime,
                 StandardErrorHandling<NumberValue>(
                     functionName: null, // internal function, no user-facing name
@@ -136,6 +259,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: NumberToDateTime)
+            },
+            {
+                UnaryOpKind.DecimalToDateTime,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToDateTime)
             },
             {
                 UnaryOpKind.DateToDateTime,
@@ -171,6 +305,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: TimeToNumber)
             },
             {
+                UnaryOpKind.TimeToDecimal,
+                StandardErrorHandling<TimeValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TimeValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: TimeToDecimal)
+            },
+            {
                 UnaryOpKind.NumberToTime,
                 StandardErrorHandling<NumberValue>(
                     functionName: null, // internal function, no user-facing name
@@ -180,6 +325,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: NumberToTime)
+            },
+            {
+                UnaryOpKind.DecimalToTime,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToTime)
             },
             {
                 UnaryOpKind.DateTimeToTime,
@@ -268,7 +424,106 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: OptionSetValueToString)
-            }
+            },
+            {
+                UnaryOpKind.OptionSetToNumber,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: OptionSetValueToNumber)
+            },
+            {
+                UnaryOpKind.OptionSetToDecimal,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: OptionSetValueToDecimal)
+            },
+            {
+                UnaryOpKind.OptionSetToBoolean,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: OptionSetValueToBoolean)
+            },
+            {
+                UnaryOpKind.OptionSetToColor,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: OptionSetValueToColor)
+            },
+            {
+                UnaryOpKind.BlankToEmptyString,
+                StandardErrorHandling<FormulaValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<FormulaValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: BlankToEmptyString)
+            },
+            {
+                UnaryOpKind.TextToGUID,
+                StandardErrorHandling<StringValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: GuidPure)
+            },
+            {
+                UnaryOpKind.GUIDToText,
+                StandardErrorHandling<GuidValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<GuidValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Text)
+            },
+            {
+                UnaryOpKind.UntypedStringToUntypedFloat,
+                StandardErrorHandling<UntypedObjectValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: UntypedStringToUntypedFloat)
+            },
+            {
+                UnaryOpKind.UntypedStringToUntypedDecimal,
+                StandardErrorHandling<UntypedObjectValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: UntypedStringToUntypedDecimal)
+            },
         };
         #endregion
 
@@ -279,10 +534,94 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, result);
         }
 
+        private static DecimalValue DecimalNegate(IRContext irContext, DecimalValue[] args)
+        {
+            var result = -args[0].Value;
+            return new DecimalValue(irContext, result);
+        }
+
+        private static TimeValue TimeNegate(IRContext irContext, TimeValue[] args)
+        {
+            var result = -args[0].Value;
+            return new TimeValue(irContext, result);
+        }
+
+        private static FormulaValue DateTimeNegate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var numericValue = DateToNumber(runner, context, IRContext.NotInSource(FormulaType.Number), args);
+            if (numericValue is NumberValue nv)
+            {
+                if (irContext.ResultType == FormulaType.Date)
+                {
+                    return NumberToDate(irContext, new[] { new NumberValue(IRContext.NotInSource(FormulaType.Number), -nv.Value) });
+                }
+                else
+                {
+                    return NumberToDateTime(runner, context, irContext, new[] { new NumberValue(IRContext.NotInSource(FormulaType.Number), -nv.Value) });
+                }
+            }
+
+            return numericValue; // error
+        }
+
         private static NumberValue NumericPercent(IRContext irContext, NumberValue[] args)
         {
             var result = args[0].Value / 100.0;
             return new NumberValue(irContext, result);
+        }
+
+        private static DecimalValue DecimalPercent(IRContext irContext, DecimalValue[] args)
+        {
+            var result = args[0].Value / 100m;
+            return new DecimalValue(irContext, result);
+        }
+
+        public static FormulaValue NumberToDecimal(IRContext irContext, NumberValue[] args)
+        {
+            return NumberToDecimal(irContext, args[0]);
+        }
+
+        public static FormulaValue NumberToDecimal(IRContext irContext, NumberValue value)
+        {
+            try
+            {
+                return new DecimalValue(irContext, (decimal)value.Value);
+            }
+            catch (OverflowException)
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+        }
+
+        private static (decimal, ConvertionStatus) ConvertNumberToDecimal(double value)
+        {
+            decimal result;
+
+            try
+            {
+                result = (decimal)value;
+            }
+            catch (OverflowException)
+            {
+                return (0m, ConvertionStatus.InvalidNumber);
+            }
+
+            return (result, ConvertionStatus.Ok);
+        }
+
+        public static NumberValue DecimalToNumber(IRContext irContext, DecimalValue[] args)
+        {
+            return DecimalToNumber(irContext, args[0]);
+        }
+
+        public static NumberValue DecimalToNumber(IRContext irContext, DecimalValue value)
+        {
+            return new NumberValue(irContext, (double)value.Value);
+        }
+
+        public static FormulaValue DecimalToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DecimalValue[] args)
+        {
+            return Text(runner, context, irContext, args);
         }
 
         public static FormulaValue NumberToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
@@ -294,6 +633,34 @@ namespace Microsoft.PowerFx.Functions
         {
             var n = args[0].Value;
             return new BooleanValue(irContext, n != 0.0);
+        }
+
+        public static BooleanValue DecimalToBoolean(IRContext irContext, DecimalValue[] args)
+        {
+            var n = args[0].Value;
+            return new BooleanValue(irContext, n != 0m);
+        }
+
+        public static FormulaValue DateToDecimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            return DateToDecimal(runner.GetFormattingInfo(), irContext, args[0]);
+        }
+
+        public static DecimalValue DateToDecimal(FormattingInfo formatInfo, IRContext irContext, FormulaValue value)
+        {
+            DateTime dateTime = GetNormalizedDateTimeLibrary(value, formatInfo.TimeZoneInfo);
+            return new DecimalValue(irContext, (decimal)dateTime.Subtract(_epoch).TotalDays);
+        }
+
+        public static DecimalValue DateTimeToDecimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DateTimeValue[] args)
+        {
+            return DateTimeToDecimal(runner.GetFormattingInfo(), irContext, args[0]);
+        }
+
+        public static DecimalValue DateTimeToDecimal(FormattingInfo formatInfo, IRContext irContext, DateTimeValue value)
+        {
+            var d = value.GetConvertedValue(formatInfo.TimeZoneInfo);
+            return new DecimalValue(irContext, (decimal)d.Subtract(_epoch).TotalDays);
         }
 
         public static StringValue BooleanToText(IRContext irContext, BooleanValue[] args)
@@ -309,56 +676,112 @@ namespace Microsoft.PowerFx.Functions
 
         public static NumberValue BooleanToNumber(IRContext irContext, BooleanValue[] args)
         {
-            var b = args[0].Value;
-            return new NumberValue(irContext, b ? 1.0 : 0.0);
+            return BooleanToNumber(irContext, args[0]);
+        }
+
+        public static NumberValue BooleanToNumber(IRContext irContext, BooleanValue value)
+        {
+            return new NumberValue(irContext, value.Value ? 1.0 : 0.0);
+        }
+
+        public static DecimalValue BooleanToDecimal(IRContext irContext, BooleanValue[] args)
+        {
+            return BooleanToDecimal(irContext, args[0]);
+        }
+
+        public static DecimalValue BooleanToDecimal(IRContext irContext, BooleanValue value)
+        {
+            return new DecimalValue(irContext, value.Value ? 1m : 0m);
         }
 
         public static FormulaValue TextToBoolean(IRContext irContext, StringValue[] args)
         {
-            var val = args[0].Value;
-
-            if (string.IsNullOrEmpty(val))
+            if (string.IsNullOrEmpty(args[0].Value))
             {
                 return new BlankValue(irContext);
             }
 
-            var lower = val.ToLowerInvariant();
+            bool isBoolean = TryTextToBoolean(irContext, args[0], out BooleanValue result);
+
+            return isBoolean ? result : CommonErrors.InvalidBooleanFormatError(irContext);
+        }
+
+        public static bool TryTextToBoolean(IRContext irContext, StringValue value, out BooleanValue result)
+        {
+            result = null;
+            var lower = value.Value.ToLowerInvariant();
+
             if (lower == "true")
             {
-                return new BooleanValue(irContext, true);
+                result = new BooleanValue(irContext, true);
             }
             else if (lower == "false")
             {
-                return new BooleanValue(irContext, false);
+                result = new BooleanValue(irContext, false);
             }
 
-            return CommonErrors.InvalidBooleanFormatError(irContext);
+            return result != null;
         }
 
-        public static FormulaValue DateToNumber(IRContext irContext, FormulaValue[] args)
+        public static bool TryGetBoolean(IRContext irContext, FormulaValue value, out BooleanValue result)
         {
-            DateTime arg0;
-            switch (args[0])
+            result = null;
+            switch (value)
+            {
+                case StringValue sv:
+                    if (string.IsNullOrEmpty(sv.Value))
+                    {
+                        return false;
+                    }
+
+                    return TryTextToBoolean(irContext, sv, out result);
+                case NumberValue num:
+                    result = NumberToBoolean(irContext, new NumberValue[] { num });
+                    break;
+                case BooleanValue boolVal:
+                    result = boolVal;
+                    break;
+                case DecimalValue dec:
+                    result = DecimalToBoolean(irContext, new DecimalValue[] { dec });
+                    break;
+            }
+
+            return result != null;
+        }
+
+        public static DateTime GetNormalizedDateTimeLibrary(FormulaValue value, TimeZoneInfo timeZoneInfo)
+        {
+            switch (value)
             {
                 case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
+                    return dtv.GetConvertedValue(timeZoneInfo);
                 case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
+                    return dv.GetConvertedValue(timeZoneInfo);
                 default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                    throw CommonExceptions.RuntimeMisMatch;
             }
-
-            var diff = arg0.Subtract(_epoch).TotalDays;
-            return new NumberValue(irContext, diff);
         }
 
-        public static NumberValue DateTimeToNumber(IRContext irContext, DateTimeValue[] args)
+        public static FormulaValue DateToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var d = args[0].Value;
-            var diff = d.Subtract(_epoch).TotalDays;
-            return new NumberValue(irContext, diff);
+            return DateToNumber(runner.GetFormattingInfo(), irContext, args[0]);
+        }
+
+        public static NumberValue DateToNumber(FormattingInfo formatInfo, IRContext irContext, FormulaValue value)
+        {
+            DateTime dateTime = GetNormalizedDateTimeLibrary(value, formatInfo.TimeZoneInfo);
+            return new NumberValue(irContext, dateTime.Subtract(_epoch).TotalDays);
+        }
+
+        public static NumberValue DateTimeToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DateTimeValue[] args)
+        {
+            return DateTimeToNumber(runner.GetFormattingInfo(), irContext, args[0]);
+        }
+
+        public static NumberValue DateTimeToNumber(FormattingInfo formatInfo, IRContext irContext, DateTimeValue value)
+        {
+            var d = value.GetConvertedValue(formatInfo.TimeZoneInfo);
+            return new NumberValue(irContext, d.Subtract(_epoch).TotalDays);
         }
 
         public static DateValue NumberToDate(IRContext irContext, NumberValue[] args)
@@ -368,35 +791,93 @@ namespace Microsoft.PowerFx.Functions
             return new DateValue(irContext, date);
         }
 
-        public static DateTimeValue NumberToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
+        public static DateValue DecimalToDate(IRContext irContext, DecimalValue[] args)
         {
             var n = args[0].Value;
-            var date = _epoch.AddDays(n);
-
-            date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>() ?? LocalTimeZone);            
-
-            return new DateTimeValue(irContext, date);
+            var date = _epoch.AddDays((double)n);
+            return new DateValue(irContext, date);
         }
 
-        public static FormulaValue DateToDateTime(IRContext irContext, FormulaValue[] args)
+        public static DateTimeValue NumberToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
+            return NumberToDateTime(runner.GetFormattingInfo(), irContext, args[0]);
+        }
+
+        public static DateTimeValue DecimalToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DecimalValue[] args)
+        {
+            return DecimalToDateTime(runner.GetFormattingInfo(), irContext, args[0]);
+        }
+
+        public static DateTimeValue DecimalToDateTime(FormattingInfo formatInfo, IRContext irContext, DecimalValue value)
+        {
+            return NumberToDateTime(formatInfo, irContext, new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)value.Value));
+        }
+
+        public static DateTimeValue NumberToDateTime(FormattingInfo formatInfo, IRContext irContext, NumberValue value)
+        {
+            try
+            {
+                var n = value.Value;
+                var date = _epoch.AddDays(n);
+
+                date = MakeValidDateTime(formatInfo.TimeZoneInfo, date);
+
+                return new DateTimeValue(irContext, date);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                (var shortMessage, _) = ErrorUtils.GetLocalizedErrorContent(TexlStrings.ErrTextInvalidArgDateTime, formatInfo.CultureInfo, out _);
+
+                throw new CustomFunctionErrorException(shortMessage, ErrorKind.InvalidArgument);
+            }          
+        }
+
+        public static FormulaValue DateToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var timeZoneInfo = runner.TimeZoneInfo;
             switch (args[0])
             {
                 case DateTimeValue dtv:
                     return dtv;
                 case DateValue dv:
-                    return new DateTimeValue(irContext, dv.Value);
+                    return new DateTimeValue(irContext, dv.GetConvertedValue(timeZoneInfo));
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
         }
 
-        public static FormulaValue DateTimeToDate(IRContext irContext, FormulaValue[] args)
+        public static bool TryGetDateTime(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, out DateTimeValue result)
         {
+            result = null;
+
+            switch (value)
+            {
+                case StringValue st:
+                    return TryDateTimeParse(formatInfo, irContext, st, out result);
+                case NumberValue num:
+                    result = NumberToDateTime(formatInfo, irContext, num);
+                    break;
+                case DecimalValue dec:
+                    result = DecimalToDateTime(formatInfo, irContext, dec);
+                    break;
+                case DateValue dv:
+                    result = new DateTimeValue(irContext, dv.GetConvertedValue(formatInfo.TimeZoneInfo));
+                    break;
+                case DateTimeValue dtv:
+                    result = dtv;
+                    break;
+            }
+
+            return result != null;
+        }
+
+        public static FormulaValue DateTimeToDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var timeZoneInfo = runner.TimeZoneInfo;
             switch (args[0])
             {
                 case DateTimeValue dtv:
-                    var startOfDate = dtv.Value.Date;
+                    var startOfDate = dtv.GetConvertedValue(timeZoneInfo).Date;
                     return new DateValue(irContext, startOfDate);
                 case DateValue dv:
                     return dv;
@@ -411,6 +892,12 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, t.TotalDays);
         }
 
+        public static DecimalValue TimeToDecimal(IRContext irContext, TimeValue[] args)
+        {
+            var t = args[0].Value;
+            return new DecimalValue(irContext, (decimal)t.TotalDays);
+        }
+
         public static TimeValue NumberToTime(IRContext irContext, NumberValue[] args)
         {
             var n = args[0].Value;
@@ -418,22 +905,19 @@ namespace Microsoft.PowerFx.Functions
             return new TimeValue(irContext, days);
         }
 
-        public static FormulaValue DateTimeToTime(IRContext irContext, FormulaValue[] args)
+        public static TimeValue DecimalToTime(IRContext irContext, DecimalValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var n = args[0].Value;
+            var days = TimeSpan.FromDays((double)n);
+            return new TimeValue(irContext, days);
+        }
 
-            var time = arg0.TimeOfDay;
+        public static FormulaValue DateTimeToTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            TimeZoneInfo timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
+
+            var time = arg0.Subtract(_epoch);
             return new TimeValue(irContext, time);
         }
 
@@ -452,20 +936,98 @@ namespace Microsoft.PowerFx.Functions
 
         public static DateTimeValue TimeToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, TimeValue[] args)
         {
-            var t = args[0].Value;
+            return TimeToDateTime(runner.GetFormattingInfo(), irContext, args[0]);
+        }
+
+        public static DateTimeValue TimeToDateTime(FormattingInfo formatInfo, IRContext irContext, TimeValue value)
+        {
+            var t = value.Value;
             var date = _epoch.Add(t);
 
-            date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>() ?? LocalTimeZone);
+            date = MakeValidDateTime(formatInfo.TimeZoneInfo, date);
 
             return new DateTimeValue(irContext, date);
         }
 
-        public static FormulaValue OptionSetValueToString(IRContext irContext, OptionSetValue[] args)
+        public static StringValue OptionSetValueToString(IRContext irContext, OptionSetValue[] args)
         {
             var optionSet = args[0];
-            var displayName = optionSet.DisplayName;
-            return new StringValue(irContext, displayName);
+            if (optionSet.ExecutionValue is string evalValue)
+            {                
+                return new StringValue(IRContext.NotInSource(FormulaType.String), evalValue);
+            }
+
+            return new StringValue(irContext, optionSet.DisplayName);
         }
-        #endregion
+        
+        public static FormulaValue OptionSetValueToNumber(IRContext irContext, OptionSetValue[] args)
+        {
+            var optionSet = args[0];
+            if (optionSet.ExecutionValue is double evalValue)
+            {                
+                return new NumberValue(IRContext.NotInSource(FormulaType.Number), evalValue);
+            }
+
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Number._type.GetKindString());
+            return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Number), errorMessage);
+        }
+
+        public static FormulaValue OptionSetValueToDecimal(IRContext irContext, OptionSetValue[] args)
+        {
+            var optionSet = args[0];
+            if (optionSet.ExecutionValue is double evalValue)
+            {
+                return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), (decimal)evalValue);
+            }
+
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Decimal._type.GetKindString());
+            return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Number), errorMessage);
+        }
+
+        public static FormulaValue OptionSetValueToBoolean(IRContext irContext, OptionSetValue[] args)
+        {
+            var optionSet = args[0];
+            if (optionSet.ExecutionValue is bool evalValue)
+            {                
+                return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), evalValue);
+            }
+
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Boolean._type.GetKindString());
+            return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Boolean), errorMessage);
+        }
+
+        public static FormulaValue OptionSetValueToColor(IRContext irContext, OptionSetValue[] args)
+        {
+            var optionSet = args[0];
+            if (optionSet.ExecutionValue is double evalValue)
+            {
+                // Color enums are backed by a double
+                return new ColorValue(IRContext.NotInSource(FormulaType.Color), ToColor(evalValue));
+            }
+
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Color._type.GetKindString());
+            return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Color), errorMessage);
+        }
+
+        private static System.Drawing.Color ToColor(double doubValue)
+        {
+            var value = Convert.ToUInt32(doubValue);
+            return System.Drawing.Color.FromArgb(
+                        (byte)((value >> 24) & 0xFF),
+                        (byte)((value >> 16) & 0xFF),
+                        (byte)((value >> 8) & 0xFF),
+                        (byte)(value & 0xFF));
+        }
+
+        public static FormulaValue BlankToEmptyString(IRContext irContext, FormulaValue[] args)
+        {
+            if (args[0] is BlankValue)
+            {
+                return new StringValue(irContext, string.Empty);
+            }
+
+            return args[0];
+        }
+#endregion
     }
 }

@@ -1,15 +1,21 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Intellisense.Intellisense;
+using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 
 namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 {
@@ -54,7 +60,14 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             MissingTypes = missingTypes;
             BoundTo = string.Empty;
             CleanupHandlers = new List<ISpecialCaseHandler>();
+            Services = (context as IntellisenseContext)?.Services;
+            ExpectedExpressionReturnType = context.ExpectedExpressionReturnType ?? DType.Unknown;
         }
+
+        // can be null
+        internal IServiceProvider Services { get; set; }
+
+        public DType ExpectedExpressionReturnType { get; }
 
         internal DType ExpectedType { get; }
 
@@ -156,11 +169,11 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// <returns>
         /// True if the provided name collides with an existing name or identifier, false otherwise.
         /// </returns>
-        internal virtual bool DoesNameCollide(string name)
+        internal virtual bool DoesUnqualifiedEnumNameCollide(string name)
         {
-            return (from enumSymbol in _enumStore.EnumSymbols
-                    where (from localizedEnum in enumSymbol.LocalizedEnumValues where localizedEnum == name select localizedEnum).Any()
-                    select enumSymbol).Count() > 1;
+            return _enumStore.EnumSymbols
+                .Where(enumSymbol => enumSymbol.OptionNames.Any(member => member == name))
+                .Any();
         }
 
         ///// <summary>
@@ -190,7 +203,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         {
             Contracts.AssertValue(name);
 
-            symbol = EnumSymbols.Where(symbol => symbol.Name == name).FirstOrDefault();
+            symbol = EnumSymbols.Where(symbol => symbol.EntityName.Value == name).FirstOrDefault();
             return symbol != null;
         }
 
@@ -280,7 +293,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             Contracts.AssertValue(function);
             Contracts.AssertValue(scopeType);
 
-            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol,  SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
+            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol, SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
         }
 
         /// <summary>
@@ -312,15 +325,8 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// </summary>
         internal virtual void AddCustomSuggestionsForGlobals()
         {
-            foreach (var global in _powerFxConfig.GetSuggestableSymbolName())
-            {
-                DType type = default;
-                if(_powerFxConfig.GetSymbols(global, out var nameInfo))
-                {
-                    type = nameInfo.Type;
-                }
-                IntellisenseHelper.AddSuggestion(this, global, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: true);
-            }
+            AddSuggestionForCurrentFunction();
+            AddSuggestionForCurrentBinaryOp();
         }
 
         /// <summary>
@@ -452,6 +458,14 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// </summary>
         internal virtual void AddAlternativeTopLevelSuggestionsForErrorNode()
         {
+            var parentNode = CurNode?.Parent;
+            if (parentNode != null &&
+                parentNode.Kind == NodeKind.Record &&
+                CurFunc == null && 
+                ExpectedExpressionReturnType.IsRecord) 
+            {
+                FunctionRecordNameSuggestionHandler.AddSuggestionForAggregateAndParentRecord(parentNode, ExpectedExpressionReturnType, this);
+            }
         }
 
         /// <summary>
@@ -491,6 +505,150 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             MatchingStr = TexlLexer.UnescapeName(Script.Substring(startIndex, MatchingLength));
 
             return true;
+        }
+
+        internal void AddSuggestionsForGlobals()
+        {
+            if (Binding.NameResolver is IGlobalSymbolNameResolver nr2)
+            {
+                //NOTE: suggesting the user info symbol here is fine.
+                var globalSymbols = nr2.GlobalSymbols;
+
+                if (globalSymbols != null)
+                {
+                    foreach (var symbol in globalSymbols)
+                    {
+                        var suggestableName = symbol.Key;
+                        if (symbol.Value.DisplayName.IsValid)
+                        {
+                            suggestableName = symbol.Value.DisplayName.Value;
+                        }
+
+                        IntellisenseHelper.AddSuggestion(this, suggestableName, SuggestionKind.Global, SuggestionIconKind.Other, symbol.Value.Type, true);
+                    }
+                }
+            }
+        }
+
+        internal void AddSuggestionForCurrentFunction()
+        {
+            var function = CurFunc;
+            var argIndex = ArgIndex;
+
+            if (this.Binding.NameResolver is not IGlobalSymbolNameResolver globalResolver
+                || function == null
+                || argIndex < 0)
+            {
+                return;
+            }
+
+            var maxArgIndex = (function?.ParamTypes?.Count() ?? 0) - 1;
+
+            var symbols = globalResolver.GlobalSymbols;
+
+            var parentCallNode = IntellisenseHelper.GetNearestCallNode(CurNode);
+            var argType = FunctionRecordNameSuggestionHandler.GetAggregateType(function, parentCallNode, this);
+
+            if (CurNode?.Parent?.Kind == NodeKind.Record)
+            {
+                FunctionRecordNameSuggestionHandler.AddSuggestionForAggregateAndParentRecord(CurNode, argType, this);
+            }
+
+            var usePowerFxV1CompatibilityRules = this.Binding.Features.PowerFxV1CompatibilityRules;
+            foreach (var symbol in symbols)
+            {
+                var symbolType = symbol.Value.Type;
+
+                var suggestable = IsSymbolSuggestableForFunctionArg(function, argIndex, argType, symbolType, usePowerFxV1CompatibilityRules);
+
+                if (suggestable)
+                {
+                    IntellisenseHelper.AddSuggestion(this, symbol, SuggestionKind.Global, SuggestionIconKind.Other, argType, requiresSuggestionEscaping: true);
+                }
+            }
+        }
+
+        private bool IsSymbolSuggestableForFunctionArg(TexlFunction function, int argIndex, DType argType, DType symbolType, bool usePowerFxV1CompatibilityRules)
+        {
+            // Check for invalid symbol types and return false if found.
+            if (IsSuggestionTypeInvalid(symbolType))
+            {
+                return false;
+            }
+
+            bool isSuggestable;
+            if (argType.IsAggregate && argType.ChildCount != 0)
+            {
+                // Case 1: Aggregate type with non-zero children.
+                isSuggestable = argType.Kind == symbolType.Kind &&
+                    argType.CheckAggregateNames(symbolType, CurNode, new ErrorContainer(), false, usePowerFxV1CompatibilityRules);
+            }
+            else if (argType.IsAggregate && (function.ManipulatesCollections || function.ScopeInfo != null))
+            {
+                // Case 2: Aggregate type with function manipulations or scope info.
+                isSuggestable = symbolType.CoercesTo(argType, false, false, usePowerFxV1CompatibilityRules);
+            }
+            else if (!argType.IsAggregate && function.SupportCoercionForArg(argIndex))
+            {
+                // Case 3: Non-aggregate type with support for coercion.
+                isSuggestable = symbolType.CoercesTo(argType, false, false, usePowerFxV1CompatibilityRules);
+            }
+            else if (!argType.IsAggregate)
+            {
+                // Case 4: Non-aggregate type without support for coercion.
+                isSuggestable = symbolType == argType;
+            }
+            else
+            {
+                isSuggestable = false;
+            }
+
+            return isSuggestable;
+        }
+
+        private void AddSuggestionForCurrentBinaryOp()
+        {
+            var binaryOp = CurNode?.Parent?.AsBinaryOp();
+            if (binaryOp == null || this.Binding.NameResolver is not IGlobalSymbolNameResolver globalResolver)
+            {
+                return;
+            }
+
+            var usePowerFxV1CompatibilityRules = this.Binding.Features.PowerFxV1CompatibilityRules;
+
+            var symbols = globalResolver.GlobalSymbols;
+
+            var nonErrorNode = binaryOp.Right.AsError() == null ? binaryOp.Right : binaryOp.Left;
+            var nonErrorNodeType = Binding.GetType(nonErrorNode);
+
+            foreach (var symbol in symbols)
+            {
+                var symbolType = symbol.Value.Type;
+
+                // Check for invalid symbol types and skip if found.
+                if (IsSuggestionTypeInvalid(symbolType))
+                {
+                    continue;
+                }
+
+                var errors = new ErrorContainer();
+                BinderUtils.CheckBinaryOpCore(errors, binaryOp, usePowerFxV1CompatibilityRules, nonErrorNodeType, symbolType, true);
+
+                if (!errors.HasErrors())
+                {
+                    IntellisenseHelper.AddSuggestion(this, symbol, SuggestionKind.Global, SuggestionIconKind.Other, symbolType, requiresSuggestionEscaping: true);
+                }
+            }
+        }
+
+        private static bool IsSuggestionTypeInvalid(DType symbolType)
+        {
+            if (symbolType.IsError || symbolType.IsDeferred || symbolType.IsVoid || symbolType.IsUnknown || symbolType.Kind == DKind.ObjNull)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -1,0 +1,17 @@
+﻿>> Set(t1, Table({a:1},{a:2}))
+Table({a:1},{a:2})
+
+>> Clear(t1)
+true
+
+>> t1
+Table()
+
+>> Set(t2, [1,2,3])
+Table({Value:1},{Value:2},{Value:3})
+
+>> Clear(t2)
+true
+
+>> t2
+Table()

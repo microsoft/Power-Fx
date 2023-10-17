@@ -10,6 +10,7 @@ namespace Microsoft.PowerFx.Intellisense
     {
         /// <summary>
         /// Enumerates suggestions for the current position in some specified input.
+        /// The order of this result should be respected.
         /// </summary>
         IEnumerable<IIntellisenseSuggestion> Suggestions { get; }
 
@@ -39,11 +40,6 @@ namespace Microsoft.PowerFx.Intellisense
         /// This is empty when IsFunctionScope = False.
         /// </summary>
         IEnumerable<IIntellisenseSuggestion> FunctionOverloads { get; }
-
-        /// <summary>
-        /// Exception information in event of error.
-        /// </summary>
-        Exception Exception { get; }
 
         /// <summary>
         /// Function signature help for this result, complies to Language Server Protocol.

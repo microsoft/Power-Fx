@@ -1,10 +1,4 @@
-﻿>> Concatenate("777", ["abc"], ["1", "2"])
-Table({Result:"777abc1"},{Result:Error({Kind:ErrorKind.NotApplicable})})
-
->> Concatenate("777", Filter(["empty table"], Value <> Value), ["1", "2"])
-Table({Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
-
-// ******** VALID STRING PARAMETERS ********
+﻿// ******** VALID STRING PARAMETERS ********
 
 >> Concatenate("Jane")
 "Jane"
@@ -70,3 +64,22 @@ Error({Kind:ErrorKind.Div0})
 >> Concatenate("This is really very long string This is really very long string This is really very long string" ,"This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string")
 "This is really very long string This is really very long string This is really very long stringThis is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string"
 
+// ******** SCENARIO: CREATING JSON ********
+
+>> With(
+     { records: [ { Name: "Scooby Doo", Age: 7, IsHuman: false }, { Name: "Shaggy Rogers", Age: 17, IsHuman: true } ] },
+     "[" &
+     Concat(
+       records,
+       Concatenate(
+         "{",
+         """Name"":""",
+         ThisRecord.Name,
+         """,""Age"":",
+         ThisRecord.Age,
+         ",""IsHuman"":",
+         ThisRecord.IsHuman,
+         "}"),
+       ",") &
+     "]")
+"[{""Name"":""Scooby Doo"",""Age"":7,""IsHuman"":false},{""Name"":""Shaggy Rogers"",""Age"":17,""IsHuman"":true}]"

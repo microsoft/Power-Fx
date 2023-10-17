@@ -19,8 +19,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public LenFunction()
             : base("Len", TexlStrings.AboutLen, FunctionCategories.Text, DType.Number)
         {
@@ -37,14 +35,24 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             return base.IsRowScopedServerDelegatable(callNode, binding, metadata);
         }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out _, out nodeToCoercedTypeMap);
+
+            // As this is an integer returning function, it can be either a number or a decimal depending on NumberIsFloat.
+            // We do this to preserve decimal precision if this function is used in a calculation
+            // since returning Float would promote everything to Float and precision could be lost
+            returnType = context.NumberIsFloat ? DType.Number : DType.Decimal;
+
+            return fValid;
+        }
     }
 
     // Len(arg:*[s])
     internal sealed class LenTFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public LenTFunction()
             : base("Len", TexlStrings.AboutLenT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
@@ -54,11 +62,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.LenTArg1 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -74,10 +77,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
-            fValid &= CheckStringColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
+            fValid &= CheckStringColumnType(context, args[0], argTypes[0], errors, ref nodeToCoercedTypeMap);
 
             // Synthesize a new return type
-            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features)));
+            // As this is an integer returning function, it can be either a number or a decimal depending on NumberIsFloat.
+            // We do this to preserve decimal precision if this function is used in a calculation
+            // since returning Float would promote everything to Float and precision could be lost
+            var returnScalarType = context.NumberIsFloat ? DType.Number : DType.Decimal;
+            returnType = DType.CreateTable(new TypedName(returnScalarType, GetOneColumnTableResultName(context.Features)));
 
             return fValid;
         }

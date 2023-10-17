@@ -1,0 +1,4 @@
+#SETUP: SupportColumnNamesAsIdentifiers
+
+>> AddColumns(If(1/0<2,[1]),Square,Value^2)
+Error({Kind:ErrorKind.Div0})

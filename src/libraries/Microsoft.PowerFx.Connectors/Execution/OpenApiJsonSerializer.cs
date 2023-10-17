@@ -16,8 +16,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private bool _topPropertyWritten = false;
         private bool _wasDisposed;
 
-        public OpenApiJsonSerializer(bool schemaLessBody)
-            : base(schemaLessBody)
+        public OpenApiJsonSerializer(IConvertToUTC utcConverter, bool schemaLessBody)
+            : base(utcConverter, schemaLessBody)
         {
             _stream = new MemoryStream();
             _writer = new Utf8JsonWriter(_stream, new JsonWriterOptions());
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
         }
 
         protected override void WritePropertyName(string name)
-        {         
+        {
             if (!_schemaLessBody || _topPropertyWritten)
             {
                 _topPropertyWritten = true;
@@ -48,6 +48,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _writer.WriteNumberValue(numberValue);
         }
 
+        protected override void WriteDecimalValue(decimal decimalValue)
+        {
+            _writer.WriteNumberValue(decimalValue);
+        }
+
         protected override void WriteBooleanValue(bool booleanValue)
         {
             _writer.WriteBooleanValue(booleanValue);
@@ -55,8 +60,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void WriteDateTimeValue(DateTime dateTimeValue)
         {
-            // ISO 8601
+            // ISO 8601            
             _writer.WriteStringValue(dateTimeValue.ToString("o", CultureInfo.InvariantCulture));
+        }
+
+        protected override void WriteDateValue(DateTime dateValue)
+        {
+            _writer.WriteStringValue(dateValue.Date.ToString("o", CultureInfo.InvariantCulture).AsSpan(0, 10));
         }
 
         protected override void WriteStringValue(string stringValue)
@@ -130,16 +140,16 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 if (disposing)
                 {
+                    _writer?.Dispose();
                     _stream?.Dispose();
-                    _writer?.Dispose();                    
                 }
 
                 _wasDisposed = true;
             }
         }
-       
+
         public void Dispose()
-        {            
+        {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }

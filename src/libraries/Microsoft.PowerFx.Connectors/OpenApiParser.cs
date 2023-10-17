@@ -3,122 +3,458 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
-using System.Numerics;
-using Microsoft.AppMagic.Authoring.Texl.Builtins;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
+using static Microsoft.PowerFx.Connectors.Constants;
 using static Microsoft.PowerFx.Connectors.OpenApiHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class OpenApiParser
+    public class OpenApiParser
     {
-        // Parse an OpenApiDocument and return functions. 
-        public static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null)
+        public static IEnumerable<ConnectorFunction> GetFunctions(string @namespace, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
         {
+            try
+            {
+                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}");
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(new ConnectorSettings(@namespace), openApiDocument, configurationLogger);
+                configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}, returning {functions.Count()} functions");
+                return functions;
+            }
+            catch (Exception ex)
+            {
+                configurationLogger?.LogException(ex, $"Exception in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, {nameof(ConnectorSettings)} Namespace {@namespace}, {LogException(ex)}");
+                throw;
+            }
+        }
+
+        public static IEnumerable<ConnectorFunction> GetFunctions(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
+        {
+            try
+            {
+                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger);
+                configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, returning {functions.Count()} functions");
+                return functions;
+            }
+            catch (Exception ex)
+            {
+                configurationLogger?.LogException(ex, $"Exception in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, {LogException(ex)}");
+                throw;
+            }
+        }
+
+        internal static IEnumerable<ConnectorFunction> GetFunctionsInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
+        {
+            bool connectorIsSupported = true;
+            string connectorNotSupportedReason = string.Empty;
+            List<ConnectorFunction> functions = new ();
+
+            if (connectorSettings == null)
+            {
+                configurationLogger?.LogError($"{nameof(connectorSettings)} is null");
+                return functions;
+            }
+
+            if (connectorSettings.Namespace == null)
+            {
+                configurationLogger?.LogError($"{nameof(connectorSettings)}.{nameof(connectorSettings.Namespace)} is null");
+                return functions;
+            }
+
+            if (!DName.IsValidDName(connectorSettings.Namespace))
+            {
+                configurationLogger?.LogError($"{nameof(connectorSettings)}.{nameof(connectorSettings.Namespace)} is not a valid DName");
+                return functions;
+            }
+
             if (openApiDocument == null)
             {
-                throw new ArgumentNullException(nameof(openApiDocument));
+                configurationLogger?.LogError($"{nameof(openApiDocument)} is null");
+                return functions;
             }
 
-            if (string.IsNullOrWhiteSpace(functionNamespace))
+            if (!ValidateSupportedOpenApiDocument(openApiDocument, ref connectorIsSupported, ref connectorNotSupportedReason, connectorSettings.IgnoreUnknownExtensions, configurationLogger))
             {
-                throw new ArgumentException(nameof(functionNamespace));
+                return functions;
             }
 
-            var newFunctions = new List<ServiceFunction>();
-            var basePath = openApiDocument.GetBasePath();
-            DPath theNamespace = DPath.Root.Append(new DName(functionNamespace));
+            string basePath = openApiDocument.GetBasePath();
 
-            if (openApiDocument.Paths == null)
+            foreach (KeyValuePair<string, OpenApiPathItem> kv in openApiDocument.Paths)
             {
-                throw new InvalidOperationException($"OpenApiDocument is invalid - has null paths");
-            }
+                string path = kv.Key;
+                OpenApiPathItem ops = kv.Value;
+                bool isSupportedForPath = true;
+                string notSupportedReasonForPath = string.Empty;
 
-            foreach (var kv in openApiDocument.Paths)
-            {
-                var path = kv.Key;
-                var ops = kv.Value;
-
-                foreach (var kv2 in ops.Operations)
+                // Skip Webhooks
+                if (ops.Extensions.Any(kvp => kvp.Key == "x-ms-notification-content"))
                 {
-                    var verb = kv2.Key.ToHttpMethod(); // "GET", "POST"
-                    var op = kv2.Value;
+                    configurationLogger?.LogInformation($"Skipping Webhook {path} {ops.Description}");
+                    continue;
+                }
 
-                    if (op.IsTrigger())
+                ValidateSupportedOpenApiPathItem(ops, ref isSupportedForPath, ref notSupportedReasonForPath, connectorSettings.IgnoreUnknownExtensions, configurationLogger);
+
+                foreach (KeyValuePair<OperationType, OpenApiOperation> kv2 in ops.Operations)
+                {
+                    bool isSupportedForOperation = true;
+                    string notSupportedReasonForOperation = string.Empty;
+
+                    HttpMethod verb = kv2.Key.ToHttpMethod(); // "GET", "POST"...
+                    OpenApiOperation op = kv2.Value;
+
+                    if (op == null)
                     {
+                        configurationLogger?.LogError($"Operation {verb} {path} is null");
                         continue;
                     }
 
-                    // We need to remove invalid chars to be consistent with Power Apps
-                    var operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
-                    var returnType = op.GetReturnType();
-                    var opPath = basePath != null ? basePath + path : path;                    
-
-                    var argMapper = new ArgumentMapper(op.Parameters, op);
-
-                    IAsyncTexlFunction invoker = null;
-                    if (httpClient != null)
+                    // We only want to keep "actions", triggers are always ignored
+                    if (op.IsTrigger())
                     {
-                        var httpInvoker = new HttpFunctionInvoker(httpClient, verb, opPath, returnType, argMapper, cache);
-                        invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(functionNamespace, out _)), operationName, functionNamespace, httpInvoker);
+                        configurationLogger?.LogInformation($"Operation {verb} {path} is trigger");
+                        continue;
                     }
 
-                    // Parameter (name,type) --> list of options. 
-                    var parameterOptions = new Dictionary<TypedName, List<string>>();
-                    var parameterDefaultValues = new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal);
+                    ValidateSupportedOpenApiOperation(op, ref isSupportedForOperation, ref notSupportedReasonForOperation, connectorSettings.IgnoreUnknownExtensions, configurationLogger);
+                    ValidateSupportedOpenApiParameters(op, ref isSupportedForOperation, ref notSupportedReasonForOperation, connectorSettings.IgnoreUnknownExtensions, configurationLogger);
 
-                    var isBehavior = !IsSafeHttpMethod(verb);
-                    var isDynamic = false;
-                    var isAutoRefreshable = false;
+                    string operationName = NormalizeOperationId(op.OperationId ?? path);
 
-                    var isCacheEnabled = false;
-                    var cacheTimeoutMs = 10000;
-                    var isHidden = false;
-
-                    var description = op.Description ?? $"Invoke {operationName}";
-
-                    var sfunc = new ServiceFunction(
-                        null,
-                        theNamespace,
-                        operationName,
-                        operationName,
-                        description, // Template.GetFunctionDescription(funcTemplate.Name),
-                        returnType._type,
-                        BigInteger.Zero,
-                        argMapper.ArityMin,
-                        argMapper.ArityMax,
-                        isBehavior,
-                        isAutoRefreshable,
-                        isDynamic,
-                        isCacheEnabled,
-                        cacheTimeoutMs,
-                        isHidden,
-                        parameterOptions,
-                        argMapper.OptionalParamInfo,
-                        argMapper.RequiredParamInfo,
-                        parameterDefaultValues,
-                        "action", //  funcTemplate.ActionName,??
-                        argMapper._parameterTypes)
+                    if (string.IsNullOrEmpty(operationName))
                     {
-                        _invoker = invoker
-                    };
+                        configurationLogger?.LogError($"Operation {verb} {path}, OperationId {op.OperationId} has a null or empty operationName");
+                        continue;
+                    }
 
-                    newFunctions.Add(sfunc);
+                    string opPath = basePath != null && basePath != "/" ? basePath + path : path;
+
+                    if (string.IsNullOrEmpty(opPath))
+                    {
+                        configurationLogger?.LogError($"Operation {verb} {path}, OperationId {op.OperationId} has a null or empty operation path");
+                        continue;
+                    }
+
+                    bool isSupported = isSupportedForPath && connectorIsSupported && isSupportedForOperation;
+                    string notSupportedReason = !string.IsNullOrEmpty(connectorNotSupportedReason)
+                                              ? connectorNotSupportedReason
+                                              : !string.IsNullOrEmpty(notSupportedReasonForPath)
+                                              ? notSupportedReasonForPath
+                                              : notSupportedReasonForOperation;
+
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings, functions, configurationLogger) { Servers = openApiDocument.Servers };
+                    functions.Add(connectorFunction);
                 }
             }
 
-            return newFunctions;
+            configurationLogger?.LogInformation($"Namespace {connectorSettings.Namespace}: '{openApiDocument.Info.Title}' version {openApiDocument.Info.Version} - {functions.Count} functions found");
+            configurationLogger?.LogDebug($"Functions found: {string.Join(", ", functions.Select(f => f.Name))}");
+
+            return functions;
         }
-       
-        private static bool IsSafeHttpMethod(HttpMethod httpMethod)
+
+        private static bool ValidateSupportedOpenApiDocument(OpenApiDocument openApiDocument, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions, ConnectorLogger logger = null)
         {
-            // HTTP/1.1 spec states that only GET and HEAD requests are 'safe' by default.
-            // https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
-            return httpMethod == HttpMethod.Get ||
-                httpMethod == HttpMethod.Head;
+            // OpenApiDocument - https://learn.microsoft.com/en-us/dotnet/api/microsoft.openapi.models.openapidocument?view=openapi-dotnet
+            // AutoRest Extensions for OpenAPI 2.0 - https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md            
+
+            if (openApiDocument.Paths == null)
+            {
+                logger?.LogError($"OpenApiDocument is invalid, it has no Path");
+                return false;
+            }
+
+            if (!ignoreUnknownExtensions)
+            {
+                // All these Info properties can be ignored
+                // openApiDocument.Info.Description 
+                // openApiDocument.Info.Version
+                // openApiDocument.Info.Title
+                // openApiDocument.Info.Contact
+                // openApiDocument.Info.License
+                // openApiDocument.Info.TermsOfService            
+                List<string> infoExtensions = openApiDocument.Info.Extensions.Keys.ToList();
+
+                // Undocumented but safe to ignore
+                infoExtensions.Remove("x-ms-deployment-version");
+
+                // Used for versioning and life cycle management of an operation.
+                // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions
+                infoExtensions.Remove("x-ms-api-annotation");
+
+                // The name of the API
+                // https://www.ibm.com/docs/en/api-connect/5.0.x?topic=reference-api-connect-context-variables
+                infoExtensions.Remove("x-ibm-name");
+
+                // Custom logo image to your API reference documentation
+                // https://redocly.com/docs/api-reference-docs/specification-extensions/x-logo/
+                infoExtensions.Remove("x-logo");
+
+                // Undocumented but safe to ignore
+                infoExtensions.Remove("x-ms-connector-name");
+                infoExtensions.Remove("x-ms-keywords");
+
+                if (infoExtensions.Any())
+                {
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiDocument Info contains unsupported extensions {string.Join(", ", infoExtensions)}";
+                    logger?.LogWarning($"Unsupported document: {notSupportedReason}");
+                }
+            }
+
+            // openApiDocument.ExternalDocs - may contain URL pointing to doc
+
+            if (openApiDocument.Components != null)
+            {
+                if (isSupported && openApiDocument.Components.Callbacks.Any())
+                {
+                    // Callback Object: A map of possible out-of band callbacks related to the parent operation.
+                    // https://learn.microsoft.com/en-us/dotnet/api/microsoft.openapi.models.openapicallback
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiDocument Components contains Callbacks";
+                    logger?.LogWarning($"Unsupported document: {notSupportedReason}");
+                }
+
+                // openApiDocument.Examples can be ignored
+
+                if (isSupported && !ignoreUnknownExtensions)
+                {
+                    if (openApiDocument.Components.Extensions.Any())
+                    {
+                        isSupported = false;
+                        notSupportedReason = $"OpenApiDocument Components contains Extensions {string.Join(", ", openApiDocument.Components.Extensions.Keys)}";
+                        logger?.LogWarning($"Unsupported document: {notSupportedReason}");
+                    }
+                }
+
+                if (isSupported && openApiDocument.Components.Headers.Any())
+                {
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiDocument Components contains Headers";
+                    logger?.LogWarning($"Unsupported document: {notSupportedReason}");
+                }
+
+                if (isSupported && openApiDocument.Components.Links.Any())
+                {
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiDocument Components contains Links";
+                    logger?.LogWarning($"Unsupported document: {notSupportedReason}");
+                }
+
+                // openApiDocument.Components.Parameters is ok                
+                // openApiDocument.Components.RequestBodies is ok
+                // openApiDocument.Components.Responses contains references from "path" definitions
+                // openApiDocument.Components.Schemas contains global "definitions"
+                // openApiDocument.Components.SecuritySchemes are critical but as we don't manage them at all, we'll ignore this parameter                
+            }
+
+            if (isSupported && !ignoreUnknownExtensions)
+            {
+                List<string> extensions = openApiDocument.Extensions.Where(e => !((e.Value is OpenApiArray oaa && oaa.Count == 0) || (e.Value is OpenApiObject oao && oao.Count == 0))).Select(e => e.Key).ToList();
+
+                // Only metadata that can be ignored
+                // https://learn.microsoft.com/en-us/connectors/custom-connectors/certification-submission
+                extensions.Remove("x-ms-connector-metadata");
+
+                // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-capabilities
+                extensions.Remove("x-ms-capabilities");
+
+                // Undocumented but only contains URL and description
+                extensions.Remove("x-ms-docs");
+
+                if (extensions.Any())
+                {
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiDocument contains unsupported Extensions {string.Join(", ", extensions)}";
+                    logger?.LogWarning($"Unsupported document: {notSupportedReason}");
+                }
+            }
+
+            // openApiDocument.ExternalDocs - can be ignored
+            // openApiDocument.SecurityRequirements - can be ignored as we don't manage this part        
+            // openApiDocument.Tags - can be ignored
+
+            if (isSupported && openApiDocument.Workspace != null)
+            {
+                isSupported = false;
+                notSupportedReason = $"OpenApiDocument contains unsupported Workspace";
+                logger?.LogWarning($"Unsupported document: {notSupportedReason}");
+            }
+
+            return true;
+        }
+
+        private static void ValidateSupportedOpenApiPathItem(OpenApiPathItem ops, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions, ConnectorLogger logger = null)
+        {
+            if (!ignoreUnknownExtensions)
+            {
+                List<string> pathExtensions = ops.Extensions.Keys.ToList();
+
+                // Can safely be ignored
+                pathExtensions.Remove("x-summary");
+
+                if (pathExtensions.Any())
+                {
+                    // x-swagger-router-controller not supported - https://github.com/swagger-api/swagger-inflector#development-lifecycle                                
+                    // x-ms-notification - https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-notification-content
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiPathItem contains unsupported Extensions {string.Join(", ", ops.Extensions.Keys)}";
+                    logger?.LogWarning($"Unsupported path '{ops.Description}': {notSupportedReason}");
+                }
+            }
+        }
+
+        private static void ValidateSupportedOpenApiOperation(OpenApiOperation op, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions, ConnectorLogger logger = null)
+        {
+            if (!isSupported)
+            {
+                return;
+            }
+
+            if (op.Callbacks.Any())
+            {
+                isSupported = false;
+                notSupportedReason = $"OpenApiOperation contains unsupported Callbacks";
+                logger?.LogWarning($"Unsupported operationId {op.OperationId}: {notSupportedReason}");
+            }
+
+            if (isSupported && op.Deprecated)
+            {
+                isSupported = false;
+                notSupportedReason = $"OpenApiOperation is deprecated";
+                logger?.LogWarning($"OperationId {op.OperationId} is deprecated");
+            }
+
+            if (!ignoreUnknownExtensions)
+            {
+                List<string> opExtensions = op.Extensions.Keys.ToList();
+
+                // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions
+                opExtensions.Remove(XMsVisibility);
+                opExtensions.Remove(XMsSummary);
+                opExtensions.Remove(XMsExplicitInput);
+                opExtensions.Remove(XMsDynamicValues);
+                opExtensions.Remove(XMsDynamicSchema);
+                opExtensions.Remove(XMsDynamicProperties);
+                opExtensions.Remove(XMsDynamicList);
+                opExtensions.Remove(XMsRequireUserConfirmation);
+                opExtensions.Remove("x-ms-api-annotation");
+                opExtensions.Remove("x-ms-no-generic-test");
+
+                // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-capabilities
+                opExtensions.Remove("x-ms-capabilities");
+
+                // https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md#x-ms-pageable
+                opExtensions.Remove(XMsPageable);
+
+                opExtensions.Remove("x-ms-test-value");
+                opExtensions.Remove(XMsUrlEncoding);
+                opExtensions.Remove("x-ms-openai-data");
+
+                // Not supported x-ms-no-generic-test - Present in https://github.com/microsoft/PowerPlatformConnectors but not documented
+                // Other not supported extensions:
+                //   x-components, x-generator, x-ms-openai-data, x-ms-docs, x-servers
+
+                if (isSupported && opExtensions.Any())
+                {
+                    isSupported = false;
+
+                    // x-ms-pageable not supported - https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md#x-ms-pageable
+                    notSupportedReason = $"OpenApiOperation contains unsupported Extensions {string.Join(", ", opExtensions)}";
+                    logger?.LogWarning($"OperationId {op.OperationId}: {notSupportedReason}");
+                }
+            }
+        }
+
+        private static void ValidateSupportedOpenApiParameters(OpenApiOperation op, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions, ConnectorLogger logger = null)
+        {
+            foreach (OpenApiParameter param in op.Parameters)
+            {
+                // param.AllowEmptyValue unused
+
+                if (param == null)
+                {
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiParameter is null";
+                    logger?.LogWarning($"OperationId {op.OperationId} has a null OpenApiParameter");
+                    return;
+                }
+
+                if (param.Deprecated)
+                {
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiParameter {param.Name} is deprecated";
+                    logger?.LogWarning($"OperationId {op.OperationId}, parameter {param.Name} is deprecated");
+                    return;
+                }
+
+                if (param.AllowReserved)
+                {
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiParameter {param.Name} contains unsupported AllowReserved";
+                    logger?.LogWarning($"OperationId {op.OperationId}, parameter {param.Name}: {notSupportedReason}");
+                    return;
+                }
+
+                if (param.Content.Any())
+                {
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiParameter {param.Name} contains unsupported Content {string.Join(", ", param.Content.Keys)}";
+                    logger?.LogWarning($"OperationId {op.OperationId}, parameter {param.Name}: {notSupportedReason}");
+                    return;
+                }
+
+                // param.Explode
+
+                if (param.Style != null && param.Style != ParameterStyle.Simple && param.Style != ParameterStyle.Form)
+                {
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiParameter {param.Name} contains unsupported Style";
+                    logger?.LogWarning($"OperationId {op.OperationId}, parameter {param.Name}: {notSupportedReason}");
+                    return;
+                }
+            }
+        }
+
+        // Parse an OpenApiDocument and return functions. 
+        internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) ParseInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
+        {
+            List<ConnectorFunction> cFunctions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger).ToList();
+            List<ConnectorTexlFunction> tFunctions = cFunctions.Select(f => new ConnectorTexlFunction(f)).ToList();
+
+            return (cFunctions, tFunctions);
+        }
+
+        internal static string GetServer(IEnumerable<OpenApiServer> openApiServers, HttpMessageInvoker httpClient)
+        {
+            if (httpClient != null && httpClient is HttpClient hc)
+            {
+                if (hc.BaseAddress != null)
+                {
+                    string path = hc.BaseAddress.AbsolutePath;
+
+                    if (path.EndsWith("/", StringComparison.Ordinal))
+                    {
+                        path = path.Substring(0, path.Length - 1);
+                    }
+
+                    return path;
+                }
+
+                if (hc.BaseAddress == null && openApiServers.Any())
+                {
+                    // descending order to prefer https
+                    return openApiServers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault()?.OriginalString;
+                }
+            }
+
+            return null;
         }
     }
 }

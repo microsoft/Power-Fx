@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 #pragma warning disable SA1402 // File may only contain a single type
 #pragma warning disable SA1649 // File name should match first type name
@@ -28,8 +29,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             ScopeInfo = new FunctionScopeInfo(this, acceptsLiteralPredicates: false);
         }
-
-        public override bool SupportsParamCoercion => true;
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -49,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
@@ -57,10 +56,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             nodeToCoercedTypeMap = null;
 
-            var fArgsValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+
+            // Only a small percentage of makers use the multi-argument version of Filter in Canvas.
+            // The C# interpreter never supported it.  Blocking this and pushing makers to the more readable
+            // use of "And" to tie multiple predicates together, consistent with LookUp, and freeing up the 
+            // third argument to perform an efficient projection as is also done for LookUp.
+            if (args.Length > 2 && context.Features.PowerFxV1CompatibilityRules)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrFilterFunction_OnlyTwoArgs);
+                fArgsValid = false;
+            }
 
             // The first Texl function arg determines the cursor type, the scope type for the lambda params, and the return type.
-            fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);
+            fArgsValid &= ScopeInfo.CheckInput(context.Features, args[0], argTypes[0], errors, out var typeScope);
 
             Contracts.Assert(typeScope.IsRecord);
             returnType = typeScope.ToTable();
@@ -73,6 +82,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var viewCount = 0;
 
             var dataSourceVisitor = new ViewFilterDataSourceVisitor(binding);
+
+            base.CheckSemantics(binding, args, argTypes, errors);
 
             // Ensure that all the args starting at index 1 are booleans or view
             for (var i = 1; i < args.Length; i++)
@@ -113,11 +124,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     continue;
                 }
-                else if (DType.Boolean.Accepts(argTypes[i]))
+                else if (DType.Boolean.Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules))
                 {
                     continue;
                 }
-                else if (!argTypes[i].CoercesTo(DType.Boolean))
+                else if (!argTypes[i].CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
                     continue;
@@ -142,8 +153,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             FilterOpMetadata metadata = null;
             if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
             {
-                if (!binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled ||
-                    !TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.ArrayLookup, out _))
+                if (!TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.ArrayLookup, out _))
                 {
                     SuggestDelegationHint(callNode, binding);
                     return false;
@@ -164,7 +174,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var args = callNode.Args.Children.VerifyValue();
 
             // Validate for each predicate node.
-            for (var i = 1; i < args.Length; i++)
+            for (var i = 1; i < args.Count; i++)
             {
                 if (!IsValidDelegatableFilterPredicateNode(args[i], binding, metadata))
                 {

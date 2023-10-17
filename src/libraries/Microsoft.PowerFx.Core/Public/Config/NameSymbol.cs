@@ -20,18 +20,19 @@ namespace Microsoft.PowerFx
     /// NameInfo data to associate a symbol at bind time with a runtime config at runtime. 
     /// Object provided by resolver data in <see cref="NameLookupInfo.Data"/>.
     /// IR then recognizes this and will look these values up via ReadOnlySymbolValues.TryGetValue.
+    /// Public facing class for this is <see cref="SymbolEntry"/>.
     /// </summary>
     [DebuggerDisplay("{Name} ({Owner.DebugName}:{SlotIndex})")]
     internal class NameSymbol : ISymbolSlot
     {
-        public NameSymbol(string name, bool mutable)
+        public NameSymbol(string name, SymbolProperties props)
         {
             Name = name;
-            IsMutable = mutable;
+            Props = props ?? throw new ArgumentNullException(nameof(props));
         }
 
-        public NameSymbol(DName name, bool mutable)
-            : this(name.Value, mutable)
+        public NameSymbol(DName name, SymbolProperties props)
+            : this(name.Value, props)
         {
         }
 
@@ -40,7 +41,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Can this variable be passed to Set(). If not, then this is a binding failure. 
         /// </summary>
-        public bool IsMutable { get; private set; }
+        public SymbolProperties Props { get; private set; }
 
         public ReadOnlySymbolTable Owner { get; set; }
 

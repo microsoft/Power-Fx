@@ -14,12 +14,101 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void DisplayNameTest_DropColumns()
         {
-            var pfxConfig = new PowerFxConfig(Features.SupportColumnNamesAsIdentifiers);
+            var pfxConfig = new PowerFxConfig(new Features { SupportColumnNamesAsIdentifiers = true });
             var engine = new RecalcEngine(pfxConfig);
 
             var recordType = RecordType.Empty()
                 .Add(new NamedFormulaType("logicalA", FormulaType.Number, displayName: "displayName"))
                 .Add(new NamedFormulaType("logicalB", FormulaType.Number, displayName: "displayName2"));
+
+            var rv1 = RecordValue.NewRecordFromFields(
+                new NamedValue("logicalA", FormulaValue.New(1.0)),
+                new NamedValue("logicalB", FormulaValue.New(4.0)));
+            var rv2 = RecordValue.NewRecordFromFields(
+                new NamedValue("logicalA", FormulaValue.New(2.0)),
+                new NamedValue("logicalB", FormulaValue.New(5.0)));
+            var rv3 = RecordValue.NewRecordFromFields(
+                new NamedValue("logicalA", FormulaValue.New(3.0)),
+                new NamedValue("logicalB", FormulaValue.New(6.0)));
+
+            var tv = TableValue.NewTable(recordType, rv1, rv2, rv3);
+
+            var parameters = RecordValue.NewRecordFromFields(
+                new NamedValue("myTable", tv));
+
+            var result = engine.Eval("DropColumns(myTable, displayName)", parameters);
+
+            Assert.Equal("*[logicalB`displayName2:n]", result.Type.ToStringWithDisplayNames());
+
+            var output = result.ToExpression();
+
+            Assert.Equal("Table({logicalB:Float(4)},{logicalB:Float(5)},{logicalB:Float(6)})", output);
+
+            var displayExpression = engine.GetDisplayExpression("DropColumns(myTable, displayName)", parameters.Type);
+            var invariantExpression = engine.GetInvariantExpression("DropColumns(myTable, displayName)", parameters.Type);
+
+            Assert.Equal("DropColumns(myTable, displayName)", displayExpression);
+            Assert.Equal("DropColumns(myTable, logicalA)", invariantExpression);
+
+            var resultD = engine.Eval(displayExpression, parameters);
+            var resultI = engine.Eval(invariantExpression, parameters);
+
+            Assert.Equal("*[logicalB`displayName2:n]", resultD.Type.ToStringWithDisplayNames());
+            Assert.Equal("*[logicalB`displayName2:n]", resultI.Type.ToStringWithDisplayNames());
+        }
+
+        [Fact]
+        public void DisplayNameTest_AddColumns()
+        {
+            var pfxConfig = new PowerFxConfig(new Features { SupportColumnNamesAsIdentifiers = true });
+            var engine = new RecalcEngine(pfxConfig);
+
+            var recordType = RecordType.Empty()
+                .Add(new NamedFormulaType("logicalA", FormulaType.Number, displayName: "displayName"))
+                .Add(new NamedFormulaType("logicalB", FormulaType.Number, displayName: "displayName2"));
+
+            var rv1 = RecordValue.NewRecordFromFields(
+                new NamedValue("logicalA", FormulaValue.New(1.0)),
+                new NamedValue("logicalB", FormulaValue.New(4.0)));
+            var rv2 = RecordValue.NewRecordFromFields(
+                new NamedValue("logicalA", FormulaValue.New(2.0)),
+                new NamedValue("logicalB", FormulaValue.New(5.0)));
+            var rv3 = RecordValue.NewRecordFromFields(
+                new NamedValue("logicalA", FormulaValue.New(3.0)),
+                new NamedValue("logicalB", FormulaValue.New(6.0)));
+
+            var tv = TableValue.NewTable(recordType, rv1, rv2, rv3);
+            var parameters = RecordValue.NewRecordFromFields(new NamedValue("myTable", tv));
+            var result = engine.Eval("AddColumns(myTable, newColumn, displayName * logicalB)", parameters);
+
+            Assert.Equal("*[logicalA`displayName:n, logicalB`displayName2:n, newColumn:n]", result.Type.ToStringWithDisplayNames());
+
+            var output = result.ToExpression();
+
+            Assert.Equal("Table({logicalA:Float(1),logicalB:Float(4),newColumn:Float(4)},{logicalA:Float(2),logicalB:Float(5),newColumn:Float(10)},{logicalA:Float(3),logicalB:Float(6),newColumn:Float(18)})", output);
+
+            var displayExpression = engine.GetDisplayExpression("AddColumns(myTable, newColumn, displayName * logicalB)", parameters.Type);
+            var invariantExpression = engine.GetInvariantExpression("AddColumns(myTable, newColumn, displayName * logicalB)", parameters.Type);
+
+            Assert.Equal("AddColumns(myTable, newColumn, displayName * displayName2)", displayExpression);
+            Assert.Equal("AddColumns(myTable, newColumn, logicalA * logicalB)", invariantExpression);
+
+            var resultD = engine.Eval(displayExpression, parameters);
+            var resultI = engine.Eval(invariantExpression, parameters);
+
+            Assert.Equal("*[logicalA`displayName:n, logicalB`displayName2:n, newColumn:n]", resultD.Type.ToStringWithDisplayNames());
+            Assert.Equal("*[logicalA`displayName:n, logicalB`displayName2:n, newColumn:n]", resultI.Type.ToStringWithDisplayNames());
+        }
+
+        [Fact]
+        public void DisplayNameTest_DropColumns_Decimal()
+        {
+            var pfxConfig = new PowerFxConfig(new Features { SupportColumnNamesAsIdentifiers = true });
+            var engine = new RecalcEngine(pfxConfig);
+
+            var recordType = RecordType.Empty()
+                .Add(new NamedFormulaType("logicalA", FormulaType.Decimal, displayName: "displayName"))
+                .Add(new NamedFormulaType("logicalB", FormulaType.Decimal, displayName: "displayName2"));
 
             var rv1 = RecordValue.NewRecordFromFields(
                 new NamedValue("logicalA", FormulaValue.New(1)),
@@ -38,11 +127,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var result = engine.Eval("DropColumns(myTable, displayName)", parameters);
 
-            Assert.Equal("*[logicalB`displayName2:n]", result.Type.ToStringWithDisplayNames());
+            Assert.Equal("*[logicalB`displayName2:w]", result.Type.ToStringWithDisplayNames());
 
             var output = result.ToExpression();
 
-            Assert.Equal("Table({logicalB:4},{logicalB:5},{logicalB:6})", output);
+            Assert.Equal("Table({logicalB:Decimal(4)},{logicalB:Decimal(5)},{logicalB:Decimal(6)})", output);
 
             var displayExpression = engine.GetDisplayExpression("DropColumns(myTable, displayName)", parameters.Type);
             var invariantExpression = engine.GetInvariantExpression("DropColumns(myTable, displayName)", parameters.Type);
@@ -53,19 +142,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var resultD = engine.Eval(displayExpression, parameters);
             var resultI = engine.Eval(invariantExpression, parameters);
 
-            Assert.Equal("*[logicalB`displayName2:n]", resultD.Type.ToStringWithDisplayNames());
-            Assert.Equal("*[logicalB`displayName2:n]", resultI.Type.ToStringWithDisplayNames());
+            Assert.Equal("*[logicalB`displayName2:w]", resultD.Type.ToStringWithDisplayNames());
+            Assert.Equal("*[logicalB`displayName2:w]", resultI.Type.ToStringWithDisplayNames());
         }
 
         [Fact]
-        public void DisplayNameTest_AddColumns()
+        public void DisplayNameTest_AddColumns_Decimal()
         {
-            var pfxConfig = new PowerFxConfig(Features.SupportColumnNamesAsIdentifiers);
+            var pfxConfig = new PowerFxConfig(new Features { SupportColumnNamesAsIdentifiers = true });
             var engine = new RecalcEngine(pfxConfig);
 
             var recordType = RecordType.Empty()
-                .Add(new NamedFormulaType("logicalA", FormulaType.Number, displayName: "displayName"))
-                .Add(new NamedFormulaType("logicalB", FormulaType.Number, displayName: "displayName2"));
+                .Add(new NamedFormulaType("logicalA", FormulaType.Decimal, displayName: "displayName"))
+                .Add(new NamedFormulaType("logicalB", FormulaType.Decimal, displayName: "displayName2"));
 
             var rv1 = RecordValue.NewRecordFromFields(
                 new NamedValue("logicalA", FormulaValue.New(1)),
@@ -81,11 +170,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var parameters = RecordValue.NewRecordFromFields(new NamedValue("myTable", tv));
             var result = engine.Eval("AddColumns(myTable, newColumn, displayName * logicalB)", parameters);
 
-            Assert.Equal("*[logicalA`displayName:n, logicalB`displayName2:n, newColumn:n]", result.Type.ToStringWithDisplayNames());
+            Assert.Equal("*[logicalA`displayName:w, logicalB`displayName2:w, newColumn:w]", result.Type.ToStringWithDisplayNames());
 
             var output = result.ToExpression();
 
-            Assert.Equal("Table({logicalA:1,logicalB:4,newColumn:4},{logicalA:2,logicalB:5,newColumn:10},{logicalA:3,logicalB:6,newColumn:18})", output);
+            Assert.Equal("Table({logicalA:Decimal(1),logicalB:Decimal(4),newColumn:Decimal(4)},{logicalA:Decimal(2),logicalB:Decimal(5),newColumn:Decimal(10)},{logicalA:Decimal(3),logicalB:Decimal(6),newColumn:Decimal(18)})", output);
 
             var displayExpression = engine.GetDisplayExpression("AddColumns(myTable, newColumn, displayName * logicalB)", parameters.Type);
             var invariantExpression = engine.GetInvariantExpression("AddColumns(myTable, newColumn, displayName * logicalB)", parameters.Type);
@@ -96,8 +185,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var resultD = engine.Eval(displayExpression, parameters);
             var resultI = engine.Eval(invariantExpression, parameters);
 
-            Assert.Equal("*[logicalA`displayName:n, logicalB`displayName2:n, newColumn:n]", resultD.Type.ToStringWithDisplayNames());
-            Assert.Equal("*[logicalA`displayName:n, logicalB`displayName2:n, newColumn:n]", resultI.Type.ToStringWithDisplayNames());
+            Assert.Equal("*[logicalA`displayName:w, logicalB`displayName2:w, newColumn:w]", resultD.Type.ToStringWithDisplayNames());
+            Assert.Equal("*[logicalA`displayName:w, logicalB`displayName2:w, newColumn:w]", resultI.Type.ToStringWithDisplayNames());
         }
     }
 }

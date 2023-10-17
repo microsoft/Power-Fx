@@ -1,0 +1,324 @@
+#SETUP: disable:NumberIsFloat
+
+// UNARY
+
+// In these tests, 1E100 or some other very large/small number is used to test floating point results which decimal can not represent, 
+// and a highly precise number is used for decimal, such as 2.00000000000000000000000000002 that would be rounded in floating point.
+// For example, if a decimal test results with 25+ signficant digits results in 2, then an inappropriate conversion to floating point was made.
+
+// The expected results matrix, also in BinderUtils.cs:
+//
+// Non NumberIsFloat (no flag)                     NumberIsFloat
+//   op   | n  s  b  N  D  d  T  w  O                 op  | n  s  b  N  D  d  T  w  O
+// =======|====================================    =======|====================================
+//      - | n  w  w  w  w  w  w  w  w                   - | n  n  n  n  n  n  n  w  n 
+//      % | n  w  w  w  w  w  w  w  w                   % | n  n  n  n  n  n  n  w  n 
+//      ! | b  b  b  b  e  e  e  b  b                   ! | b  b  b  b  e  e  e  b  b
+
+// -
+
+>> -Float(16)
+-16
+
+>> -Float(16) + 1.000000000000000000000002
+-15
+
+>> -Float("1e100")
+-1E+100
+
+>> -Float("-1e100")
+1E+100
+
+>> -"2"
+-2
+
+>> -"2" + 1.000000000000000000000002
+-0.999999999999999999999998
+
+>> -"1e100"
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> -true
+-1
+
+>> -true + 2.000000000000000000000002
+1.000000000000000000000002
+
+>> -false
+0
+
+>> -false + 2.000000000000000000000002
+2.000000000000000000000002
+
+>> -Blank()
+0
+
+>> -Blank() + 2.000000000000000000000002
+2.000000000000000000000002
+
+>> -Date(2000,1,1)
+Date(1799,12,28)
+
+// This shows why the previous test has the result it does
+>> [Value(Date(2000,1,1)), Value(-Date(2000,1,1)),Value(Date(1799,12,28))]
+Table({Value:36526},{Value:-36526},{Value:-36526})
+
+>> -DateTime(2000,1,1,12,0,0)
+DateTime(1799,12,27,12,0,0,0)
+
+// This shows why the previous test has the result it does
+>> [Value(DateTime(2000,1,1,12,0,0)), Value(-DateTime(2000,1,1,12,0,0)), Value(DateTime(1799,12,27,12,0,0,0))]
+Table({Value:36526.5},{Value:-36526.5},{Value:-36526.5})
+
+// The value of the time will be 6am on the day before the 'date 0' - but the default representation only shows the time portion
+>> -Time(18,0,0)
+Time(6,0,0,0)
+
+// This shows why the previous test has the result it does
+>> [Value(-Time(18,0,0)), Value(Time(6,0,0)-1)]
+Table({Value:-0.75},{Value:-0.75})
+
+>> -Decimal("2.000000000000000000000002")
+-2.000000000000000000000002
+
+>> -2.000000000000000000000002
+-2.000000000000000000000002
+
+>> -2.000000000000000000000002 + 6.000000000000000000000006
+4.000000000000000000000004
+
+>> -(-2.000000000000000000000002)
+2.000000000000000000000002
+
+>> -ParseJSON("2")
+-2
+
+>> -ParseJSON("2") + 6.000000000000000000000006
+4.000000000000000000000006
+
+>> -ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> -ParseJSON("2.000000000000000000000002") 
+-2.000000000000000000000002
+
+>> -ParseJSON("2.000000000000000000000002") + 6.000000000000000000000006
+4.000000000000000000000004
+
+>> -ParseJSON("-2.000000000000000000000002")
+2.000000000000000000000002
+
+// %
+
+>> Float(16)%
+0.16
+
+>> Float("1e100")%
+1E+98
+
+>> Float("-1e100")%
+-1E+98
+
+>> "2"%
+0.02
+
+>> "1e100"%
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> true%
+0.01
+
+>> false%
+0
+
+>> Blank()%
+0
+
+>> Date(2000,1,1)%
+365.26
+
+>> Date(2000,1,1)% + 2.000000000000000000000002
+367.260000000000000000000002
+
+>> DateTime(2000,1,1,12,0,0)% 
+365.265
+
+>> DateTime(2000,1,1,12,0,0)% + 2.000000000000000000000002
+367.265000000000000000000002
+
+>> Time(12,0,0)%
+0.005
+
+>> Time(12,0,0)% + 2.000000000000000000000002
+2.005000000000000000000002
+
+>> Decimal("2.000000000000000000000002")%
+0.02000000000000000000000002
+
+>> 2.000000000000000000000002%
+0.02000000000000000000000002
+
+>> (2.0000000000000000000002%)%
+0.00020000000000000000000002
+
+>> ParseJSON("2")%
+0.02
+
+>> ParseJSON("1e100")%
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("2.000000000000000000000002")%
+0.02000000000000000000000002
+
+>> ParseJSON("-2.000000000000000000000002")%
+-0.02000000000000000000000002
+
+// !
+
+>> !Float(16)
+false
+
+>> !Float("1e100")
+false
+
+>> !Float(0)
+true
+
+>> !"2"
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> !"0"
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> !"true"
+false
+
+>> !"false"
+true
+
+>> !"1e100"
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> !Blank()
+true
+
+>> !Date(2000,1,1)
+Errors: Error 1-15: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, OptionSetValue, UntypedObject.
+
+>> !DateTime(2000,1,1,12,0,0)
+Errors: Error 1-26: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, OptionSetValue, UntypedObject.
+
+>> !Time(12,0,0)
+Errors: Error 1-13: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, OptionSetValue, UntypedObject.
+
+>> !Decimal("2.000000000000000000000002")
+false
+
+>> !Decimal("0")
+true
+
+>> !Decimal("0.000000000000000000000002")
+false
+
+>> !ParseJSON("2")
+false
+
+>> !ParseJSON("0")
+true
+
+>> !ParseJSON("true")
+false
+
+>> !ParseJSON("false")
+true
+
+>> !ParseJSON("""2""")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> !ParseJSON("""0""")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> !ParseJSON("""true""")
+false
+
+>> !ParseJSON("""false""")
+true
+
+// double is used to interpret this number, which is fine even with a decimal for the ! determination, which makes this ok not to return an error
+>> !ParseJSON("1e100")
+false
+
+// Not (for good measure and to compare to the above)
+
+>> Not(Float(16))
+false
+
+>> Not(Float("1e100"))
+false
+
+>> Not(Float(0))
+true
+
+>> Not("2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Not("0")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Not("true")
+false
+
+>> Not("false")
+true
+
+>> Not("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Not(Blank())
+true
+
+>> Not(Date(2000,1,1))
+Errors: Error 4-18: Invalid argument type (Date). Expecting a Boolean value instead.|Error 0-19: The function 'Not' has some invalid arguments.
+
+>> Not(DateTime(2000,1,1,12,0,0))
+Errors: Error 4-29: Invalid argument type (DateTime). Expecting a Boolean value instead.|Error 0-30: The function 'Not' has some invalid arguments.
+
+>> Not(Time(12,0,0))
+Errors: Error 4-16: Invalid argument type (Time). Expecting a Boolean value instead.|Error 0-17: The function 'Not' has some invalid arguments.
+
+>> Not(Decimal("2.000000000000000000000002"))
+false
+
+>> Not(Decimal("0"))
+true
+
+>> Not(Decimal("0.000000000000000000000002"))
+false
+
+>> Not(ParseJSON("2"))
+false
+
+>> Not(ParseJSON("0"))
+true
+
+>> Not(ParseJSON("true"))
+false
+
+>> Not(ParseJSON("false"))
+true
+
+>> Not(ParseJSON("""2"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Not(ParseJSON("""0"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Not(ParseJSON("""true"""))
+false
+
+>> Not(ParseJSON("""false"""))
+true
+
+>> Not(ParseJSON("1e100"))
+false
+

@@ -10,15 +10,9 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
-using Microsoft.PowerFx.Tests.IntellisenseTests;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -35,10 +29,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var locals = new SymbolValues()
                 .Add("local", FormulaValue.New(3));
 
-            var result = await engine.EvalAsync(
-                "local+global",
-                CancellationToken.None,
-                runtimeConfig: locals);
+            var result = await engine.EvalAsync("local+global", CancellationToken.None, runtimeConfig: locals).ConfigureAwait(false);
 
             Assert.Equal(5.0, result.ToObject());
         }
@@ -55,10 +46,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Per expression.
             var engine = new RecalcEngine();
-            var result = await engine.EvalAsync(
-                "Func1(3)",
-                CancellationToken.None,
-                symbolTable: s1);
+            var result = await engine.EvalAsync("Func1(3)", CancellationToken.None, symbolTable: s1).ConfigureAwait(false);
             Assert.Equal(6.0, result.ToObject());
         }
 
@@ -80,12 +68,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("displayVariable + 1", "logicalVariable + 1", "displayVariable + 1", 2)]
         [InlineData("logicalVariable + 1", "logicalVariable + 1", "displayVariable + 1", 2)]
         [InlineData("If(true, logicalVariable)", "If(true, logicalVariable)", "If(true, displayVariable)", 1)]
-        public async void TopLevelVariableDisplayName(string expression, string expectedInvariantExpression,string expectedDisplayExpression, double expected)
+        public async void TopLevelVariableDisplayName(string expression, string expectedInvariantExpression, string expectedDisplayExpression, double expected)
         {
             var symbol = new SymbolTable();
 
             // Adds display name for a variable.
-            var logicalVariableSlot = symbol.AddVariable("logicalVariable", FormulaType.Number, displayName: "displayVariable");
+            var logicalVariableSlot = symbol.AddVariable("logicalVariable", FormulaType.Decimal, displayName: "displayVariable");
             var r1 = new SymbolValues(symbol);
             r1.Set(logicalVariableSlot, FormulaValue.New(1));
 
@@ -96,15 +84,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
 
-            var eval = await engine.EvalAsync(expression,CancellationToken.None, runtimeConfig: r1);
-            Assert.Equal(expected, eval.ToObject());
+            var eval = await engine.EvalAsync(expression, CancellationToken.None, runtimeConfig: r1).ConfigureAwait(false);
+            Assert.Equal((decimal)expected, eval.ToObject());
 
             var actualInvariantExpression = engine.GetInvariantExpression(expression, null);
             Assert.Equal(expectedInvariantExpression, actualInvariantExpression);
 
             var actualDisplayExpression = engine.GetDisplayExpression(expression, RecordType.Empty());
             Assert.Equal(expectedDisplayExpression, actualDisplayExpression);
-
         }
 
         // Bind a function, eval it separately.
@@ -126,7 +113,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Functions are already captured from the symbols 
             // don't need to be re-added.
-            var result = await run.EvalAsync(CancellationToken.None);
+            var result = await run.EvalAsync(CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(6.0, result.ToObject());
         }
 
@@ -182,7 +169,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             s1.RemoveFunction("Multiply");
             var expr = check.GetEvaluator();
 
-            var result = await expr.EvalAsync(CancellationToken.None);
+            var result = await expr.EvalAsync(CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(6.0, result.ToObject());
 
             // Rebinding  fails because we removed the func. 
@@ -193,11 +180,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             s1.AddFunction(new MultiplyFunction(4));
 
             // Executing old expression is *still* unaffected (does not pickup new function with same name)
-            result = await expr.EvalAsync(CancellationToken.None);
+            result = await expr.EvalAsync(CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(6.0, result.ToObject());
 
             // But rebinding will pickup new ... 
-            result = await engine.EvalAsync("Multiply(2)", CancellationToken.None, symbolTable: s1);
+            result = await engine.EvalAsync("Multiply(2)", CancellationToken.None, symbolTable: s1).ConfigureAwait(false);
             Assert.Equal(8.0, result.ToObject());
         }
 
@@ -215,11 +202,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine();
 
             // Multiply was shadowed
-            var result = await engine.EvalAsync("Multiply(2)", CancellationToken.None, symbolTable: s21);
+            var result = await engine.EvalAsync("Multiply(2)", CancellationToken.None, symbolTable: s21).ConfigureAwait(false);
             Assert.Equal(2 * 4.0, result.ToObject());
 
             // Func1 was not shadowed, so inherit. 
-            result = await engine.EvalAsync("Func1(2)", CancellationToken.None, symbolTable: s21);
+            result = await engine.EvalAsync("Func1(2)", CancellationToken.None, symbolTable: s21).ConfigureAwait(false);
             Assert.Equal(2 * 2.0, result.ToObject());
         }
 
@@ -251,42 +238,36 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine();
             var expr = "Func1(1) & Multiply(2)";
 
-            var result3 = await engine.EvalAsync(
-                expr,
-                CancellationToken.None,
-                symbolTable: s3Common); // 1*2 & 2*3  = "26"
+            var result3 = await engine.EvalAsync(expr, CancellationToken.None, symbolTable: s3Common).ConfigureAwait(false); // 1*2 & 2*3  = "26"
             Assert.Equal("26", result3.ToObject());
 
-            var result4 = await engine.EvalAsync(
-                expr,
-                CancellationToken.None,
-                symbolTable: s4Common); // 1*2 & 2*4  = "28"            
+            var result4 = await engine.EvalAsync(expr, CancellationToken.None, symbolTable: s4Common).ConfigureAwait(false); // 1*2 & 2*4  = "28"            
             Assert.Equal("28", result4.ToObject());
         }
 
         [Fact]
-        public void RecalcEngine_Symbol_CultureInfo()
+        public async void RecalcEngine_Symbol_CultureInfo()
         {
-            var us_Symbols = new SymbolValues();
+            var us_Symbols = new RuntimeConfig();
             var us_Culture = new CultureInfo("en-US");
             us_Symbols.AddService(us_Culture);
             var us_ParserOptions = new ParserOptions() { Culture = us_Culture };
 
-            var fr_Symbols = new SymbolValues();
+            var fr_Symbols = new RuntimeConfig();
             var fr_Culture = new CultureInfo("fr-FR");
             fr_Symbols.AddService(fr_Culture);
             var fr_ParserOptions = new ParserOptions() { Culture = fr_Culture };
 
-            var fa_Symbols = new SymbolValues();
+            var fa_Symbols = new RuntimeConfig();
             var fa_Culture = new CultureInfo("fa-IR");
             fa_Symbols.AddService(fa_Culture);
 
             var engine = new RecalcEngine();
 
-            Assert.Equal(1.0, engine.EvalAsync("1.0", CancellationToken.None, options: us_ParserOptions, runtimeConfig: us_Symbols).Result.ToObject());
-            Assert.ThrowsAsync<InvalidOperationException>(() => engine.EvalAsync("1.0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols));
-            Assert.ThrowsAsync<InvalidOperationException>(() => engine.EvalAsync("2,0", CancellationToken.None, options: us_ParserOptions, runtimeConfig: us_Symbols));
-            Assert.Equal(2.0, engine.EvalAsync("2,0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols).Result.ToObject());
+            Assert.Equal(1.0m, engine.EvalAsync("1.0", CancellationToken.None, options: us_ParserOptions, runtimeConfig: us_Symbols).Result.ToObject());
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("1.0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("2,0", CancellationToken.None, options: us_ParserOptions, runtimeConfig: us_Symbols).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Equal(2.0m, engine.EvalAsync("2,0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols).Result.ToObject());
 
             Assert.Equal("2/01", engine.EvalAsync("Text(2,01)", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fa_Symbols).Result.ToObject());
         }
@@ -295,12 +276,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo2()
         {
-            var us_Symbols = new SymbolValues();
+            var us_Symbols = new RuntimeConfig();
             var us_Culture = new CultureInfo("en-US");
             us_Symbols.AddService(us_Culture);
             var us_ParserOptions = new ParserOptions() { Culture = us_Culture };
 
-            var fr_Symbols = new SymbolValues();
+            var fr_Symbols = new RuntimeConfig();
             var fr_Culture = new CultureInfo("fr-FR");
             fr_Symbols.AddService(fr_Culture);
             var fr_ParserOptions = new ParserOptions() { Culture = fr_Culture };
@@ -321,11 +302,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo3()
         {
-            var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+            var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
 
-            var tr_symbols = new SymbolValues();
-
+            var tr_symbols = new RuntimeConfig();
             tr_symbols.AddService(new CultureInfo("tr-TR"));
 
             var textExpression = "Upper(\"indigo\")";
@@ -338,7 +318,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             check = engine.Check(datetimeExpression).GetEvaluator();
 
-            Assert.Equal("10/06/2022 14:19", (check.Eval() as StringValue).Value);
+            Assert.Equal("10/6/2022 2:19 PM", (check.Eval() as StringValue).Value);
             Assert.Equal("6.10.2022 14:19", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
         }
 
@@ -346,12 +326,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo4()
         {
-            var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+            var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
 
-            var us_symbols = new SymbolValues();
-
+            var us_symbols = new RuntimeConfig();
             us_symbols.AddService(new CultureInfo("en-US"));
+
+            var tr_symbols = new RuntimeConfig();
+            tr_symbols.AddService(new CultureInfo("tr-TR"));
 
             var textExpression = "Upper(\"indigo\")";
             var datetimeExpression = "Text(DateTimeValue(\"Perşembe 06 Ekim 2022 14:19:06\", \"tr-TR\"))";
@@ -359,74 +341,60 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check(textExpression).GetEvaluator();
 
             Assert.Equal("INDIGO", (check.Eval() as StringValue).Value);
+            Assert.Equal("İNDİGO", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
             Assert.Equal("INDIGO", (check.Eval(runtimeConfig: us_symbols) as StringValue).Value);
 
             check = engine.Check(datetimeExpression).GetEvaluator();
 
-            Assert.Equal("10/06/2022 14:19", (check.Eval() as StringValue).Value);
+            Assert.Equal("10/6/2022 2:19 PM", (check.Eval() as StringValue).Value);
+            Assert.Equal("6.10.2022 14:19", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
             Assert.Equal("10/6/2022 2:19 PM", (check.Eval(runtimeConfig: us_symbols) as StringValue).Value);
         }
 
         // Verify if text is transformed using the correct culture info (PowerFxConfig and global settings)
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo5()
+        {            
+            RunOnIsolatedThread(new CultureInfo("tr-TR"), RecalcEngine_Symbol_CultureInfo5_ThreadProc);
+        }
+
+        private void RecalcEngine_Symbol_CultureInfo5_ThreadProc(CultureInfo culture)
         {
-            Exception exception = null;
+            var config = new PowerFxConfig();
 
-            var t = new Thread(() =>
-            {
-                Thread.CurrentThread.CurrentCulture = new CultureInfo("tr-TR");
+            var upperExpression = "Upper(\"INDIGO inDigo\")";
+            var lowerExpression = "Lower(\"INDIGO inDigo\")";
+            var properExpression = "Proper(\"INDIGO inDigo\")";
 
-                var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+            var datetimeExpression = "Text(DateTimeValue(\"Perşembe 6 Ekim 2022 14:19:06\", \"tr-TR\"))";
 
-                var upperExpression = "Upper(\"INDIGO inDigo\")";
-                var lowerExpression = "Lower(\"INDIGO inDigo\")";
-                var properExpression = "Proper(\"INDIGO inDigo\")";
+            // Engine will use custom locale (invariant)
+            var engine = new RecalcEngine(config);
 
-                var datetimeExpression = "Text(DateTimeValue(\"Perşembe 6 Ekim 2022 14:19:06\", \"tr-TR\"))";
+            var result = engine.Eval(upperExpression, options: new ParserOptions(CultureInfo.InvariantCulture));
+            Assert.Equal("INDIGO INDIGO", (result as StringValue).Value);
 
-                try
-                {
-                    // Engine will use custom locale (invariant)
-                    var engine = new RecalcEngine(config);
+            result = engine.Eval(lowerExpression, options: new ParserOptions(CultureInfo.InvariantCulture));
+            Assert.Equal("indigo indigo", (result as StringValue).Value);
 
-                    var result = engine.Eval(upperExpression);
-                    Assert.Equal("INDIGO INDIGO", (result as StringValue).Value);
+            result = engine.Eval(properExpression, options: new ParserOptions(CultureInfo.InvariantCulture));
+            Assert.Equal("Indigo Indigo", (result as StringValue).Value);
 
-                    result = engine.Eval(lowerExpression);
-                    Assert.Equal("indigo indigo", (result as StringValue).Value);
+            result = engine.Eval(datetimeExpression, options: new ParserOptions(CultureInfo.InvariantCulture));
+            Assert.Equal("10/06/2022 14:19", (result as StringValue).Value);
 
-                    result = engine.Eval(properExpression);
-                    Assert.Equal("Indigo Indigo", (result as StringValue).Value);
+            // Engine will use specified locale (tr-TR)
+            // Threading shouldn't matter
+            var engine2 = new RecalcEngine(new PowerFxConfig());
 
-                    result = engine.Eval(datetimeExpression);
-                    Assert.Equal("10/06/2022 14:19", (result as StringValue).Value);
+            result = engine2.Eval(upperExpression, options: new ParserOptions(culture));
+            Assert.Equal("INDIGO İNDİGO", (result as StringValue).Value);
 
-                    // Engine will use thread locale (tr-TR)
-                    var engine2 = new RecalcEngine(new PowerFxConfig());
+            result = engine2.Eval(lowerExpression, options: new ParserOptions(culture));
+            Assert.Equal("ındıgo indigo", (result as StringValue).Value);
 
-                    result = engine2.Eval(upperExpression);
-                    Assert.Equal("INDIGO İNDİGO", (result as StringValue).Value);
-
-                    result = engine2.Eval(lowerExpression);
-                    Assert.Equal("ındıgo indigo", (result as StringValue).Value);
-
-                    result = engine2.Eval(properExpression);
-                    Assert.Equal("Indıgo İndigo", (result as StringValue).Value);
-                }
-                catch (Exception ex)
-                {
-                    exception = ex;
-                }
-            });
-
-            t.Start();
-            t.Join();
-
-            if (exception != null)
-            {
-                throw exception;
-            }
+            result = engine2.Eval(properExpression, options: new ParserOptions(culture));
+            Assert.Equal("Indıgo İndigo", (result as StringValue).Value);
         }
 
         // Verify if text is transformed using the correct culture info (PowerFxConfig and global settings)
@@ -434,35 +402,137 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo6()
         {
-            Exception exception = null;
+            RunOnIsolatedThread(new CultureInfo("bg-BG"), RecalcEngine_Symbol_CultureInfo6_ThreadProc);
+        }
 
-            var t = new Thread(() =>
+        private void RecalcEngine_Symbol_CultureInfo6_ThreadProc(CultureInfo culture)
+        {
+            const string formula = "Concatenate(\"Hello\", \" World!\")";
+            var defaultCulture = CultureInfo.CreateSpecificCulture("en");
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var result = engine.Eval(formula, options: new ParserOptions(defaultCulture));
+
+            var helloWorld = Assert.IsType<string>(result.ToObject());
+            Assert.Equal("Hello World!", helloWorld);
+        }
+
+        // Verify DoNotUseCulture object indeed fails when accessed.
+        [Fact]
+        public void TestDoNotUseCulture()
+        {
+            // Ignore thread's current culture. 
+            RunOnIsolatedThread(new DoNotUseCulture(), (CultureInfo culture) =>
             {
-                Thread.CurrentThread.CurrentCulture = new CultureInfo("bg-BG");
+                var engine = new Engine();
+                var check = new CheckResult(engine);
+                check.SetText("1+2", new ParserOptions(culture)); // will pull from local var
 
-                try
-                {
-                    const string formula = "Concatenate(\"Hello\", \" World!\")";
-                    var defaultCulture = CultureInfo.CreateSpecificCulture("en");
-                    var engine = new RecalcEngine(new PowerFxConfig(defaultCulture));
-                    var result = engine.Eval(formula);
-
-                    var helloWorld = Assert.IsType<string>(result.ToObject());
-                    Assert.Equal("Hello World!", helloWorld);
-                }
-                catch (Exception ex)
-                {
-                    exception = ex;
-                }
+                // Verify DoNotUseCulture works.
+                Assert.Throws<NotImplementedException>(() => check.ApplyParse());
             });
+        }
 
-            t.Start();
-            t.Join();
+        private static readonly CultureInfo _doNotUseCulture = new DoNotUseCulture();
 
-            if (exception != null)
+        // Test explicitly setting cultures at each level:
+        // - parser 
+        // - compile-time errors 
+        // - runtime evaluation 
+        // These ignore the Threads's / Config / Engine's current culture.
+        [Fact]
+        private void MultiCulture1()
+        {
+            RunOnIsolatedThread(_doNotUseCulture, MultiCulture1ThreadProc);
+        }
+
+        [Fact]
+        private void MultiCultureWithCurrentUICulture()
+        {
+            // $$$ Don't use CurrentUICulture
+            CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+            RunOnIsolatedThread(_doNotUseCulture, MultiCulture1ThreadProc);
+        }
+
+        // Test Parse and errors 
+        private void MultiCulture1ThreadProc(CultureInfo culture)
+        {
+            var cultureParse = new CultureInfo("fr-FR"); // has commas as decimal separator
+
+            var engine = new RecalcEngine();
+
+            var check = new CheckResult(engine);
+            check.SetText("1+2,4 + missing", new ParserOptions { Culture = cultureParse });
+            check.SetBindingInfo();
+
+            // Very significant that we can get through parse phase without acccessing Thread.CurrrentCulture. 
+            check.ApplyParse();
+            
+            var errors = check.ApplyErrors();
+
+            void AssertErrors(CultureInfo culture, string expectedMessage)
             {
-                throw exception;
+                var errors = check.GetErrorsInLocale(culture).ToArray();
+                var count = errors.Count();
+                Assert.Equal(1, count);
+
+                if (culture != null)
+                {
+                    Assert.Same(culture, errors[0].MessageLocale);
+                }
+
+                var msg = errors.First().Message;
+                Assert.Equal(expectedMessage, msg);
             }
+
+            // null, defaults to Parse Culture
+            AssertErrors(null, "Le nom n’est pas valide. « missing » n’est pas reconnu.");
+            AssertErrors(CultureInfo.InvariantCulture, "Name isn't valid. 'missing' isn't recognized.");
+            AssertErrors(new CultureInfo("bg-BG"), "Името не е валидно. „missing“ не е разпознато.");
+        }
+
+        [Fact]
+        private void MultiCulture2()
+        {
+            RunOnIsolatedThread(_doNotUseCulture, MultiCulture2ThreadProc);
+        }
+
+        private void MultiCulture2ThreadProc(CultureInfo culture)
+        {
+            var cultureParse = new CultureInfo("fr-FR"); // has commas as decimal separator
+
+            var engine = new RecalcEngine();
+
+            // Runtime. 
+            // Some interesting runtime culture behavior:
+            //   Value("12.345") // parsing             
+            //   Upper("indigo") // casing
+            var check = new CheckResult(engine);
+            check.SetText("Upper(\"indigo\") & \" \" &  Text(12,345)", new ParserOptions { Culture = cultureParse });
+            check.SetBindingInfo();
+
+            // The same expression can be re-run in different cultures. 
+            var run = check.GetEvaluator();
+
+            void AssertRun(CultureInfo culture, string expectedResult)
+            {
+                var runtimeConfig = new RuntimeConfig();
+                if (culture != null)
+                {
+                    // Set the culture an expression will run in. 
+                    // If not set, defaults to culture it was parsed in. 
+                    runtimeConfig.SetCulture(culture);
+                }
+
+                var result = run.Eval(runtimeConfig: runtimeConfig);
+
+                var actual = (result as StringValue).Value;
+                Assert.Equal(expectedResult, actual); // default, uses Parser. 
+            }
+
+            AssertRun(null, "INDIGO 12,345"); // uses Parser culture, French  
+            AssertRun(new CultureInfo("fr-FR"), "INDIGO 12,345"); // french
+            AssertRun(new CultureInfo("tr-TR"), "İNDİGO 12,345"); // turkish I 
+            AssertRun(new CultureInfo("en-US"), "INDIGO 12.345"); // en-US
         }
 
         // Verify that an engine with a specific culture can evaluate an invariant formula
@@ -472,10 +542,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var fr_culture = new CultureInfo("fr-FR");
             var invariant_culture = CultureInfo.InvariantCulture;
 
-            var engine = new RecalcEngine(new PowerFxConfig(fr_culture));
+            var engine = new RecalcEngine(new PowerFxConfig());
 
             var fr_formula = "Concatenate(\"My \";\"french \";\"formula\")";
-            var invariant_formula = engine.GetInvariantExpression(fr_formula, RecordType.Empty());
+            var invariant_formula = engine.GetInvariantExpression(fr_formula, RecordType.Empty(), fr_culture);
 
             var fr_ParserOptions = new ParserOptions() { Culture = fr_culture };
             var invariant_ParserOptions = new ParserOptions() { Culture = invariant_culture };
@@ -562,9 +632,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var name in new string[] { "Bill", "Steve", "Satya" })
             {
-                var runtime = new SymbolValues()
-                    .AddService(new UserFunction.Runtime { _name = name });
-                var result = await expr.EvalAsync(CancellationToken.None, runtime);
+                var runtime = new RuntimeConfig();
+                runtime.AddService(new UserFunction.Runtime { _name = name });
+                var result = await expr.EvalAsync(CancellationToken.None, runtime).ConfigureAwait(false);
 
                 var expected = name + "3";
                 var actual = result.ToObject();
@@ -603,17 +673,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var s1 = new SymbolTable();
             s1.AddFunction(new UserFunction());
 
-            var runtime = new SymbolValues()
-                .AddService(new UserFunction.Runtime { _name = "Bill" });
+            var runtime = new RuntimeConfig();
+            runtime.AddService(new UserFunction.Runtime { _name = "Bill" });
 
             var engine = new RecalcEngine();
 
             // Pass RuntimeConfig directly through eval.
-            var result = await engine.EvalAsync(
-                "User(3)",
-                CancellationToken.None,
-                symbolTable: s1,
-                runtimeConfig: runtime);
+            var result = await engine.EvalAsync("User(3)", CancellationToken.None, symbolTable: s1, runtimeConfig: runtime).ConfigureAwait(false);
 
             Assert.Equal("Bill3", result.ToObject());
         }
@@ -624,26 +690,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var s1 = new SymbolTable();
             s1.AddFunction(new UserFunction());
-
-            var r1 = new SymbolValues
-            {
-                DebugName = "Runtime-AddUserService"
-            }.AddService(new UserFunction.Runtime { _name = "Bill" });
-
+            
             var r2 = new SymbolValues
             {
-                DebugName = "Runtime-X",                
+                DebugName = "Runtime-X",
             }.Add("x", FormulaValue.New(3));
-            var r12 = ReadOnlySymbolValues.Compose(r2, r1);
+
+            var r12 = new RuntimeConfig
+            {
+                 Values = r2
+            };
+            r12.AddService(new UserFunction.Runtime { _name = "Bill" });
 
             var engine = new RecalcEngine();
 
             // Pass RuntimeConfig directly through eval.
-            var result = await engine.EvalAsync(
-                "User(x)",
-                CancellationToken.None,
-                symbolTable: s1,
-                runtimeConfig: r12);
+            var result = await engine.EvalAsync("User(x)", CancellationToken.None, symbolTable: s1, runtimeConfig: r12).ConfigureAwait(false);
 
             Assert.Equal("Bill3", result.ToObject());
         }
@@ -658,9 +720,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check("p1", symbolTable: s1);
 
             var eval = check.GetEvaluator();
-            var result = await eval.EvalAsync(CancellationToken.None);
+            var result = await eval.EvalAsync(CancellationToken.None).ConfigureAwait(false);
 
-            Assert.Equal(12.0, result.ToObject());
+            Assert.Equal(12m, result.ToObject());
         }
 
         // Bind global parameters without running them
@@ -673,7 +735,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new Engine(new PowerFxConfig());
             var check = engine.Check("p1", symbolTable: s1);
             Assert.True(check.IsSuccess);
-            Assert.Equal(FormulaType.Number, check.ReturnType);
+            Assert.Equal(FormulaType.Decimal, check.ReturnType);
         }
 
         // Bind global parameters and ensure lookup works by display name 
@@ -748,9 +810,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(check.IsSuccess);
 
             var eval = check.GetEvaluator();
-            var result = await eval.EvalAsync(CancellationToken.None);
+            var result = await eval.EvalAsync(CancellationToken.None).ConfigureAwait(false);
 
-            Assert.Equal(33.0, result.ToObject());
+            Assert.Equal(33m, result.ToObject());
         }
 
         [Theory]
@@ -775,6 +837,41 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Contains(checkFalse.Errors, e => e.MessageKey == "ErrUnknownFunction" && e.Message.Contains($"'{functionName}' is an unknown or unsupported function."));
         }
 
+        [Theory]
+        [InlineData(300, "Text(DateTimeValue(\"2023-12-21T12:34:56.789Z\"), DateTimeFormat.UTC)", true)]
+        [InlineData(10, "Text(DateTimeValue(\"2023-12-21T12:34:56.789Z\"), DateTimeFormat.UTC)", false)]
+        [InlineData(200, "Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3)))", false)]
+        [InlineData(500, "Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3)))", true)]
+        public void AllowedMaxExpressionLengthTest(int maxLength, string expression, bool isSucceeded)
+        {
+            var config = new PowerFxConfig
+            {
+                MaximumExpressionLength = maxLength
+            };
+
+            var engine = new Engine(config);            
+            var opt = engine.GetDefaultParserOptionsCopy();
+            var check = engine.Check(expression);
+
+            if (isSucceeded)
+            {
+                Assert.True(check.IsSuccess);
+                Assert.True(expression.Length < opt.MaxExpressionLength);
+            }
+            else
+            {
+                Assert.False(check.IsSuccess);
+                Assert.False(expression.Length < opt.MaxExpressionLength);
+            }
+        }
+
+        [Fact]
+        public void MaxExpressionLenghthTest()
+        {
+            var config = new PowerFxConfig();
+            Assert.Equal(1000, config.MaximumExpressionLength);
+        }
+
         private static SymbolTable AddDataverse(string valueName, FormulaValue value)
         {
             var symbolTable = new DataverseSymbolTable
@@ -783,6 +880,33 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 _value = value,
             };
             return symbolTable;
+        }
+
+        // Run on an isolated thread.
+        // Useful for testing per-thread properties
+        internal static void RunOnIsolatedThread(CultureInfo culture, Action<CultureInfo> worker)
+        {
+            Exception exception = null;
+
+            var t = new Thread(() =>
+            {
+                try
+                {                    
+                    worker(culture);
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }
+            });
+
+            t.Start();
+            t.Join();
+
+            if (exception != null)
+            {
+                throw exception;
+            }
         }
     }
 

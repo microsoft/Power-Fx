@@ -5,8 +5,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -20,6 +22,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class ValueTests
     {
         private static readonly TypeMarshallerCache _cache = new TypeMarshallerCache();
+        private static int _count = 0;
 
         [Theory]
         [InlineData(true, "true")]
@@ -93,7 +96,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Explicit field lookup 
             var numField = r.GetField("Num");
-            Assert.Equal(15.0, ((NumberValue)numField).Value);
+            Assert.Equal(15m, ((DecimalValue)numField).Value);
 
             // Get json runtime representation
             var resultStr = r.Dump();
@@ -222,11 +225,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Users first type 
 
             var result1 = ((RecordValue)val.Index(2).Value).GetField("a").ToObject();
-            Assert.Equal(11.0, result1);
+            Assert.Equal(11m, result1);
 
             var result2 = ((RecordValue)val.Index(2).Value).GetField("b");
             Assert.IsType<BlankValue>(result2);
-            Assert.IsType<NumberType>(result2.Type);
+            Assert.IsType<DecimalType>(result2.Type);
         }
 
         [Fact]
@@ -251,8 +254,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void TableFromPrimitive()
         {
-            NumberValue r1 = FormulaValue.New(10);
-            NumberValue r2 = FormulaValue.New(20);
+            NumberValue r1 = FormulaValue.New(10.0);
+            NumberValue r2 = FormulaValue.New(20.0);
             TableValue val = FormulaValue.NewSingleColumnTable(r1, r2);
 
             dynamic d = val.ToObject();
@@ -270,21 +273,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void SingleColumnTable()
         {
-            TableValue value = (TableValue)FormulaValue.FromJson("[1,2,3]");
+            TableValue value = (TableValue)FormulaValueJSON.FromJson("[1,2,3]");
 
             TableType type = (TableType)value.Type;
 
             TableType typeExpected = TableType.Empty()
-                .Add(new NamedFormulaType("Value", FormulaType.Number));
+                .Add(new NamedFormulaType("Value", FormulaType.Decimal));
             Assert.Equal(typeExpected, type);
 
             // Another way to compare
             var field1 = type.GetFieldTypes().First();
             Assert.Equal("Value", field1.Name);
-            Assert.Equal(FormulaType.Number, field1.Type);
+            Assert.Equal(FormulaType.Decimal, field1.Type);
 
             RecordValue row0 = value.Rows.First().Value;
-            Assert.Equal(1.0, row0.GetField("Value").ToObject());
+            Assert.Equal(1m, row0.GetField("Value").ToObject());
 
             var len = value.Rows.Count();
             Assert.Equal(3, len);
@@ -292,7 +295,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Converts to single column 
             var obj = value.ToObject();
 
-            Assert.Equal(new[] { 1.0, 2.0, 3.0 }, (ICollection)obj);
+            Assert.Equal(new[] { 1m, 2m, 3m }, (ICollection)obj);
 
             var resultStr = value.Dump();
             Assert.Equal("Table({Value:1},{Value:2},{Value:3})", resultStr);
@@ -340,6 +343,131 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     Assert.True(set.Contains(type), $"Type {type.FullName} should derive from {typeof(ValidFormulaValue).FullName}, not FormulaValue.");
                 }
             }
+        }
+
+        [Fact]
+        public void NewError()
+        {
+            IEnumerable<ExpressionError> errors = new List<ExpressionError>()
+            {
+                new ExpressionError { Kind = ErrorKind.Custom, Message = "test1" },
+                new ExpressionError { Kind = ErrorKind.Custom, Message = "test2" },
+                new ExpressionError { Kind = ErrorKind.Custom, Message = "test3" }
+            };
+
+            var combinedError = FormulaValue.NewError(errors, FormulaType.Number);
+
+            Assert.Equal(3, combinedError.Errors.Count);
+            Assert.All(combinedError.Errors, (e) => e.Kind = ErrorKind.Custom);
+            Assert.Equal("test1", combinedError.Errors.First().Message);
+        }
+
+        // Ensure the enumeration is only traversed one.
+        [Fact]
+        public void NewRecordFromFieldsTest()
+        {
+            _count = 0;
+            RecordValue record = FormulaValue.NewRecordFromFields(CreateFields());
+
+            Assert.Equal(1, _count);
+        }
+
+        [Fact]
+        public void NamedValueTest()
+        {
+            var fields = CreateFields();
+            Assert.All(fields, field => Assert.False(field.IsExpandEntity));
+
+            var field1 = fields.First();
+            Assert.Equal("Num", field1.Name);
+            Assert.Equal(12m, field1.Value.ToObject());
+        }
+
+        private IEnumerable<NamedValue> CreateFields()
+        {
+            _count++;
+
+            yield return new NamedValue("Num", FormulaValue.New(12));            
+            yield return new NamedValue("Str", FormulaValue.New("test string"));
+            yield return new NamedValue("Bool", FormulaValue.New(true));
+        }
+
+        [Fact]
+        public void VoidValueTest()
+        {
+            var formulaValue = FormulaValue.NewVoid();
+            Assert.Throws<InvalidOperationException>(() => formulaValue.ToObject());
+
+            Assert.Equal(FormulaType.Void, formulaValue.Type);
+
+            var resultStr = formulaValue.Dump();
+            Assert.Equal("If(true, {test:1}, \"Mismatched args (result of the expression can't be used).\")", resultStr);
+        }
+
+        [Theory]
+        [InlineData(12, 12.34, "test", 12, true)]
+        [InlineData(-2, -2.34, "string", -2, true)]
+        [InlineData(2147483649, 2147483649.12, "test string", int.MaxValue, false)]
+        [InlineData(-2147483649, -2147483649.12, "test", int.MinValue, false)]
+        public void TryGetIntTest(double doubleValue, decimal decimalValue, string stringValue, int expectedIntValue, bool inBound)
+        {
+            var num = NumberValue.New(doubleValue);
+            var dec = DecimalValue.New(decimalValue);
+            var str = StringValue.New(stringValue);
+
+            Assert.Equal(inBound, Library.TryGetInt(num, out int outputNumberToInt));
+            Assert.Equal(expectedIntValue, outputNumberToInt);
+            
+            Assert.Equal(inBound, Library.TryGetInt(dec, out int outputDecimalToInt));
+            Assert.Equal(expectedIntValue, outputDecimalToInt);
+
+            Assert.False(Library.TryGetInt(str, out int outputStringToInt));
+        }
+
+        [Fact]
+        public void AsNumberTests()
+        {
+            NumberValue num = FormulaValue.New((double)1.2);
+            DecimalValue dec = FormulaValue.New(1.2m);
+
+            Assert.Equal(1.2, num.AsDouble());
+            Assert.Equal(1.2, dec.AsDouble());
+
+            Assert.Equal(1.2m, num.AsDecimal());
+            Assert.Equal(1.2m, dec.AsDecimal());
+        }
+
+        [Fact]
+        public void AsNumberTestsBlank()
+        {
+            BlankValue num = FormulaValue.NewBlank(FormulaType.Number);
+            BlankValue dec = FormulaValue.NewBlank(FormulaType.Decimal);
+
+            Assert.Equal(0, num.AsDouble());
+            Assert.Equal(0m, dec.AsDecimal());
+        }
+
+        [Fact]
+        public void AsBooleanTests()
+        {
+            var x = FormulaValue.New(true);
+
+            bool b = x.AsBoolean();
+            Assert.True(x.AsBoolean());
+
+            var x2 = FormulaValue.NewBlank(FormulaType.Boolean);
+            bool b2 = x2.AsBoolean();
+            Assert.False(x2.AsBoolean());
+        }
+
+        [Fact]
+        public void AsNumberFailTests()
+        {
+            StringValue num = FormulaValue.New("1.2");
+
+            Assert.Throws<InvalidOperationException>(() => num.AsDouble());
+            Assert.Throws<InvalidOperationException>(() => num.AsDecimal());
+            Assert.Throws<InvalidOperationException>(() => num.AsBoolean());
         }
     }
 

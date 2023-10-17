@@ -23,8 +23,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         internal readonly bool _isAnd;
 
         public VariadicLogicalFunction(bool isAnd)
@@ -33,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             _isAnd = isAnd;
         }
 
-        public override bool IsLazyEvalParam(int index)
+        public override bool IsLazyEvalParam(int index, Features features)
         {
             return index > 0;
         }
@@ -59,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -75,7 +73,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = true;
             for (var i = 0; i < count; i++)
             {
-                fArgsValid &= CheckType(args[i], argTypes[i], DType.Boolean, errors, out var matchedWithCoercion);
+                fArgsValid &= CheckType(context, args[i], argTypes[i], DType.Boolean, errors, out var matchedWithCoercion);
                 if (matchedWithCoercion)
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean);
@@ -101,7 +99,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var args = callNode.Args.Children.VerifyValue();
-            Contracts.Assert(args.Length >= MinArity);
+            Contracts.Assert(args.Count >= MinArity);
 
             var funcDelegationCapability = FunctionDelegationCapability | (_isAnd ? DelegationCapability.And : DelegationCapability.Or);
             if (!metadata.IsDelegationSupportedByTable(funcDelegationCapability))

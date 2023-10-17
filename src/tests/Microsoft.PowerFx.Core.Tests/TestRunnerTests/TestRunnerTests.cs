@@ -14,6 +14,32 @@ namespace Microsoft.PowerFx.Core.Tests
     public class TestRunnerTests : PowerFxTest
     {
         [Fact]
+        public void Directive()
+        {
+            var setup = TestRunner.ParseSetupString("PowerFxV1CompatibilityRules,disable:NumberIsFloat");
+            Assert.True(setup["PowerFxV1CompatibilityRules"]);
+            Assert.False(setup["NumberIsFloat"]);
+            Assert.Equal(2, setup.Count);
+        }
+
+        [Fact]
+        public void Directive2()
+        {
+            var setup = TestRunner.ParseSetupString("PowerFxV1CompatibilityRules");
+            Assert.True(setup["PowerFxV1CompatibilityRules"]);
+            Assert.Single(setup);
+        }
+
+        [Fact]
+        public void Directive3()
+        {
+            var setup = TestRunner.ParseSetupString("PowerFxV1CompatibilityRules,NumberIsFloat");
+            Assert.True(setup["PowerFxV1CompatibilityRules"]);
+            Assert.True(setup["NumberIsFloat"]);
+            Assert.Equal(2, setup.Count);
+        }
+
+        [Fact]
         public void Test1()
         {
             var runner = new TestRunner();
@@ -352,7 +378,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var test = new TestCase
             {
-                Expected = "Errors: Error X"
+                Expected = "Errors: Error: X"
             };
             var (result, message) = runner.RunTestCase(test);
 
@@ -431,7 +457,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         "IsError(1)" => FormulaValue.New(true),
                         _ => throw new InvalidOperationException()
                     },
-                _isError = (value) => value is NumberValue
+                _isError = (value) => value is DecimalValue
             };
 
             var test = new TestCase
@@ -463,7 +489,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         "IsError(1)" => FormulaValue.New(false), // expects true, should cause failure
                         _ => throw new InvalidOperationException()
                     },
-                _isError = (value) => value is NumberValue
+                _isError = (value) => value is DecimalValue
             };
 
             var test = new TestCase
@@ -510,7 +536,7 @@ namespace Microsoft.PowerFx.Core.Tests
         private static void AddFile(TestRunner runner, string filename)
         {
             var test1 = Path.GetFullPath(filename, TxtFileDataAttribute.GetDefaultTestDir("TestRunnerTests"));
-            runner.AddFile(test1);
+            runner.AddFile(TestRunner.ParseSetupString(string.Empty), test1);
         }
     }
 }

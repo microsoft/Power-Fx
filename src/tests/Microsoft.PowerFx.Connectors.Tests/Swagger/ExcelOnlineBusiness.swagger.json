@@ -1,0 +1,4155 @@
+﻿{
+      "swagger": "2.0",
+      "info": {
+        "version": "1.0",
+        "title": "Excel Online (Business)",
+        "description": "Excel Online (Business) connector lets you work with Excel files in document libraries supported by Microsoft Graph (OneDrive for Business, SharePoint Sites, and Office 365 Groups).",
+        "x-ms-api-annotation": { "status": "Production" },
+        "contact": { "name": "Microsoft" }
+      },
+      "host": "tip1-shared.azure-apim.net",
+      "schemes": [ "https" ],
+      "paths": {
+        "/{connectionId}/$metadata.json/datasets": {
+          "get": {
+            "tags": [ "ExcelOnlineDataSetsMetadata" ],
+            "summary": "Get datasets metadata",
+            "description": "Get datasets metadata.",
+            "operationId": "GetDataSetsMetadata",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/DataSetsMetadata" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": true,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "GetDataSetsMetadata",
+              "revision": 1
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-datasets-metadata-%5bdeprecated%5d" },
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              }
+            ]
+          }
+        },
+        "/{connectionId}/v2/$metadata.json/datasets": {
+          "get": {
+            "tags": [ "ExcelOnlineDataSetsMetadata" ],
+            "summary": "Get datasets metadata (V2)",
+            "description": "Get datasets metadata.",
+            "operationId": "GetDataSetsMetadataV2",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/DataSetsMetadata" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "GetDataSetsMetadata",
+              "revision": 2
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-datasets-metadata-(v2)" },
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              }
+            ]
+          }
+        },
+        "/{connectionId}/$metadata.json/datasets/{dataset}/tables/{table}": {
+          "get": {
+            "tags": [ "ExcelTableMetadata" ],
+            "summary": "Get table metadata",
+            "description": "Retrieves metadata for an Excel Online table.",
+            "operationId": "GetTableTabular",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "dataset",
+                "in": "path",
+                "description": "Dataset.",
+                "required": true,
+                "x-ms-summary": "Dataset",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Table name.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Table name",
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/TableMetadata" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": true,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "GetTableTabular",
+              "revision": 1
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-table-metadata-%5bdeprecated%5d" }
+          }
+        },
+        "/{connectionId}/v2/$metadata.json/datasets/{dataset}/tables/{table}": {
+          "get": {
+            "tags": [ "ExcelTableMetadata" ],
+            "summary": "Get table metadata (V2)",
+            "description": "Retrieves metadata for an Excel Online table.",
+            "operationId": "GetTableTabularV2",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "dataset",
+                "in": "path",
+                "description": "Dataset.",
+                "required": true,
+                "x-ms-summary": "Dataset",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Table name.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Table name",
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/TableMetadata" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "GetTableTabular",
+              "revision": 2
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-table-metadata-(v2)" }
+          }
+        },
+        "/{connectionId}/testconnection": {
+          "get": {
+            "tags": [ "ExcelOnlineDiagnostic" ],
+            "operationId": "TestConnection",
+            "consumes": [],
+            "produces": [],
+            "responses": {
+              "200": { "description": "OK" },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              }
+            ]
+          }
+        },
+        "/{connectionId}/officescripting/api/unattended/run/{drive}/{file}": {
+          "post": {
+            "tags": [ "officescripting" ],
+            "summary": "Run script",
+            "operationId": "RunScriptProd",
+            "description": "Runs an Office Script against an Excel workbook.",
+            "consumes": [],
+            "produces": [],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              { "$ref": "#/parameters/source" },
+              { "$ref": "#/parameters/drive" },
+              {
+                "name": "file",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "description": "Select an Excel file through File Browse.",
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "File",
+                "x-ms-dynamic-values": {
+                  "capability": "file-picker",
+                  "parameters": {
+                    "isFolder": false,
+                    "fileFilter": [ "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel.sheet.macroEnabled.12", "application/vnd.ms-excel.sheet.binary.macroEnabled.12" ],
+                    "drive": { "parameter": "drive" }
+                  },
+                  "value-path": "id"
+                },
+                "x-ms-dynamic-tree": {
+                  "settings": {
+                    "canSelectParentNodes": false,
+                    "canSelectLeafNodes": true
+                  },
+                  "open": {
+                    "operationId": "ListRootFolder",
+                    "parameters": {
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.macroEnabled.12' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  },
+                  "browse": {
+                    "operationId": "ListFolder",
+                    "parameters": {
+                      "id": { "selectedItemValuePath": "Id" },
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.macroEnabled.12' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  }
+                }
+              },
+              {
+                "name": "scriptId",
+                "in": "query",
+                "description": "Select the Office Script you want to run from the drop-down.",
+                "required": true,
+                "type": "string",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetScripts",
+                  "value-title": "name",
+                  "value-path": "id"
+                },
+                "x-ms-summary": "Script"
+              },
+              {
+                "name": "ScriptParameters",
+                "in": "body",
+                "description": "Provide the Office Script's parameters.",
+                "required": true,
+                "schema": { "$ref": "#/definitions/ScriptParameters" }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/ScriptReturnValues" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "x-ms-visibility": "important",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "RunScriptProd",
+              "revision": 1
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#run-script" }
+          }
+        },
+        "/{connectionId}/officescripting/api/storage": {
+          "get": {
+            "tags": [ "officescripting" ],
+            "summary": "Gets scripts",
+            "description": "Gets all my scripts.",
+            "operationId": "GetScripts",
+            "consumes": [ "application/json" ],
+            "produces": [ "application/json" ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "name": { "type": "string" }
+                    }
+                  }
+                }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "x-ms-visibility": "internal",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#gets-scripts" },
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              }
+            ]
+          }
+        },
+        "/{connectionId}/officescripting/api/storage/script": {
+          "get": {
+            "tags": [ "officescripting" ],
+            "summary": "Gets one script",
+            "description": "Gets one of my scripts.",
+            "operationId": "GetSingleScript",
+            "consumes": [ "application/json" ],
+            "produces": [ "application/json" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "scriptId",
+                "in": "query",
+                "required": true,
+                "type": "string",
+                "description": "Script chosen to use.",
+                "x-ms-summary": "Chosen script"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "parameterInfo": {
+                      "type": "object",
+                      "properties": {
+                        "parameterSchema": { "type": "object" },
+                        "returnSchema": { "type": "object" }
+                      }
+                    }
+                  }
+                }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "x-ms-visibility": "internal",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#gets-one-script" }
+          }
+        },
+        "/{connectionId}/drives/{drive}/files/{file}/tables": {
+          "post": {
+            "tags": [ "ExcelOnlineTable" ],
+            "summary": "Create table",
+            "description": "Create a new table in the Excel workbook.",
+            "operationId": "CreateTable",
+            "consumes": [ "application/json", "text/json", "application/xml", "text/xml", "application/x-www-form-urlencoded" ],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "source",
+                "in": "query",
+                "description": "Select from the drop-down or specify one of the following:\r\n            - \"me\"\r\n            - \"SharePoint Site URL\"\r\n            - \"users/someone's UPN\"\r\n            - \"groups/group Id\"\r\n            - \"sites/SharePoint Site URL:/teams/team name:\" (the colons are required).",
+                "required": true,
+                "x-ms-summary": "Location",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetSources",
+                  "parameters": {
+                    "$select": "id,displayName",
+                    "$top": "999"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "displayName"
+                },
+                "type": "string"
+              },
+              {
+                "name": "drive",
+                "in": "path",
+                "description": "Select a document library from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Document Library",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetDrives",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "$select": "id,name"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "name"
+                },
+                "type": "string"
+              },
+              {
+                "name": "file",
+                "in": "path",
+                "description": "Select an Excel file through File Browse.",
+                "x-ms-url-encoding": "double",
+                "required": true,
+                "x-ms-summary": "File",
+                "x-ms-dynamic-values": {
+                  "capability": "file-picker",
+                  "parameters": {
+                    "drive": { "parameter": "drive" },
+                    "isFolder": false,
+                    "fileFilter": [ "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel.sheet.binary.macroEnabled.12" ],
+                    "dataset": null
+                  },
+                  "value-path": "Id"
+                },
+                "x-ms-dynamic-tree": {
+                  "settings": {
+                    "canSelectParentNodes": false,
+                    "canSelectLeafNodes": true
+                  },
+                  "open": {
+                    "operationId": "ListRootFolder",
+                    "parameters": {
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  },
+                  "browse": {
+                    "operationId": "ListFolder",
+                    "parameters": {
+                      "id": { "selectedItemValuePath": "Id" },
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  }
+                },
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "body",
+                "description": "Excel table.",
+                "required": true,
+                "schema": { "$ref": "#/definitions/TableToCreate" },
+                "x-ms-summary": "Table"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/TableMetadata" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "advanced",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#create-table" }
+          }
+        },
+        "/{connectionId}/drives/{drive}/files/{file}/tables/{table}/createIdColumn": {
+          "post": {
+            "tags": [ "ExcelOnlineTable" ],
+            "summary": "Add a key column to a table",
+            "description": "Add a key column to an Excel table. The new column will be appended to the right.",
+            "operationId": "CreateIdColumn",
+            "consumes": [],
+            "produces": [],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "source",
+                "in": "query",
+                "description": "Select from the drop-down or specify one of the following:\r\n            - \"me\"\r\n            - \"SharePoint Site URL\"\r\n            - \"users/someone's UPN\"\r\n            - \"groups/group Id\"\r\n            - \"sites/SharePoint Site URL:/teams/team name:\" (the colons are required).",
+                "required": true,
+                "x-ms-summary": "Location",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetSources",
+                  "parameters": {
+                    "$select": "id,displayName",
+                    "$top": "999"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "displayName"
+                },
+                "type": "string"
+              },
+              {
+                "name": "drive",
+                "in": "path",
+                "description": "Select a document library from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Document Library",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetDrives",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "$select": "id,name"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "name"
+                },
+                "type": "string"
+              },
+              {
+                "name": "file",
+                "in": "path",
+                "description": "Select an Excel file through File Browse.",
+                "x-ms-url-encoding": "double",
+                "required": true,
+                "x-ms-summary": "File",
+                "x-ms-dynamic-values": {
+                  "capability": "file-picker",
+                  "parameters": {
+                    "drive": { "parameter": "drive" },
+                    "isFolder": false,
+                    "fileFilter": [ "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel.sheet.binary.macroEnabled.12" ],
+                    "dataset": null
+                  },
+                  "value-path": "Id"
+                },
+                "x-ms-dynamic-tree": {
+                  "settings": {
+                    "canSelectParentNodes": false,
+                    "canSelectLeafNodes": true
+                  },
+                  "open": {
+                    "operationId": "ListRootFolder",
+                    "parameters": {
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  },
+                  "browse": {
+                    "operationId": "ListFolder",
+                    "parameters": {
+                      "id": { "selectedItemValuePath": "Id" },
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  }
+                },
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Select a table from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Table",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetTables",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "drive": { "parameter": "drive" },
+                    "file": { "parameter": "file" },
+                    "$select": "id,name"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "name"
+                },
+                "type": "string"
+              },
+              {
+                "name": "idColumn",
+                "in": "query",
+                "description": "Provide the key column name.",
+                "required": false,
+                "x-ms-summary": "Key Column",
+                "type": "string",
+                "default": "__PowerAppsId__"
+              },
+              {
+                "name": "populateColumn",
+                "in": "query",
+                "required": false,
+                "x-ms-summary": "Populate Column",
+                "x-ms-visibility": "internal",
+                "type": "boolean",
+                "default": false
+              }
+            ],
+            "responses": {
+              "200": { "description": "OK" },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "advanced",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#add-a-key-column-to-a-table" }
+          }
+        },
+        "/{connectionId}/drives({drive})/files({file})/tables({table})/items": {
+          "get": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "List rows present in a table (V2)",
+            "description": "List rows present in a table.",
+            "operationId": "ODataStyleGetItemsV2",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "source",
+                "in": "query",
+                "description": "Select from the drop-down or specify one of the following:\r\n            - \"me\"\r\n            - \"SharePoint Site URL\"\r\n            - \"users/someone's UPN\"\r\n            - \"groups/group Id\"\r\n            - \"sites/SharePoint Site URL:/teams/team name:\" (the colons are required)",
+                "required": true,
+                "x-ms-summary": "Location",
+                "type": "string"
+              },
+              {
+                "name": "drive",
+                "in": "path",
+                "description": "Select a document library from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Document Library",
+                "type": "string"
+              },
+              {
+                "name": "file",
+                "in": "path",
+                "description": "Select an Excel file through File Browse.",
+                "required": true,
+                "x-ms-summary": "File",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Select a table from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Table",
+                "type": "string"
+              },
+              {
+                "name": "$filter",
+                "in": "query",
+                "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+                "required": false,
+                "x-ms-summary": "Filter Query",
+                "x-ms-visibility": "advanced",
+                "type": "string"
+              },
+              {
+                "name": "$orderby",
+                "in": "query",
+                "description": "An ODATA orderBy query for specifying the order of entries.",
+                "required": false,
+                "x-ms-summary": "Order By",
+                "x-ms-visibility": "advanced",
+                "type": "string"
+              },
+              {
+                "name": "$top",
+                "in": "query",
+                "description": "Total number of entries to retrieve (default = all).",
+                "required": false,
+                "x-ms-summary": "Top Count",
+                "x-ms-visibility": "advanced",
+                "type": "integer",
+                "format": "int32"
+              },
+              {
+                "name": "$skip",
+                "in": "query",
+                "description": "The number of entries to skip (default = 0).",
+                "required": false,
+                "x-ms-summary": "Skip Count",
+                "x-ms-visibility": "advanced",
+                "type": "integer",
+                "format": "int32"
+              },
+              {
+                "name": "$select",
+                "in": "query",
+                "description": "Specific fields to retrieve from entries (default = all).",
+                "required": false,
+                "x-ms-summary": "Select Query",
+                "x-ms-visibility": "advanced",
+                "type": "string"
+              },
+              {
+                "name": "idColumn",
+                "in": "query",
+                "description": "Select a column from the drop-down.",
+                "required": false,
+                "x-ms-summary": "Key Column",
+                "x-ms-visibility": "internal",
+                "type": "string"
+              },
+              {
+                "name": "dateTimeFormat",
+                "in": "query",
+                "description": "DateTime Format.",
+                "required": false,
+                "x-ms-summary": "DateTime Format",
+                "x-ms-visibility": "advanced",
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/ItemsList" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "x-ms-pageable": { "nextLinkName": "@odata.nextLink" },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#list-rows-present-in-a-table-(v2)" }
+          },
+          "post": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Update or insert a row (V2)",
+            "description": "Update or insert a row using a key column.",
+            "operationId": "ODataStylePostItemV2",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "source",
+                "in": "query",
+                "description": "Select from the drop-down or specify one of the following:\r\n            - \"me\"\r\n            - \"SharePoint Site URL\"\r\n            - \"users/someone's UPN\"\r\n            - \"groups/group Id\"\r\n            - \"sites/SharePoint Site URL:/teams/team name:\" (the colons are required)",
+                "required": true,
+                "x-ms-summary": "Location",
+                "type": "string"
+              },
+              {
+                "name": "drive",
+                "in": "path",
+                "description": "Select a document library from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Document Library",
+                "type": "string"
+              },
+              {
+                "name": "file",
+                "in": "path",
+                "description": "Select an Excel file through File Browse.",
+                "required": true,
+                "x-ms-summary": "File",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Select a table from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Table",
+                "type": "string"
+              },
+              {
+                "name": "idColumn",
+                "in": "query",
+                "description": "Select a column from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Key Column",
+                "type": "string"
+              },
+              {
+                "name": "item",
+                "in": "body",
+                "description": "Provide the item properties.",
+                "required": true,
+                "schema": { "$ref": "#/definitions/Item" },
+                "x-ms-summary": "Provide the item properties"
+              },
+              {
+                "name": "mode",
+                "in": "query",
+                "description": "Mode of the operation.",
+                "required": false,
+                "x-ms-summary": "Mode",
+                "x-ms-visibility": "internal",
+                "type": "string",
+                "default": "Upsert",
+                "enum": [ "Add", "AddV2", "AddWithGeneratedId", "AddWithCustomId", "Upsert" ]
+              },
+              {
+                "name": "dateTimeFormat",
+                "in": "query",
+                "description": "DateTime Format.",
+                "required": false,
+                "x-ms-summary": "DateTime Format",
+                "x-ms-visibility": "advanced",
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/Item" }
+              },
+              "201": {
+                "description": "Created",
+                "schema": { "$ref": "#/definitions/Item" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#update-or-insert-a-row-(v2)" }
+          }
+        },
+        "/{connectionId}/drives/{drive}/files/{file}/tables/{table}/items": {
+          "get": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "List rows present in a table",
+            "description": "List rows present in a table.",
+            "operationId": "GetItems",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "source",
+                "in": "query",
+                "description": "Select from the drop-down or specify one of the following:\r\n            - \"me\"\r\n            - \"SharePoint Site URL\"\r\n            - \"users/someone's UPN\"\r\n            - \"groups/group Id\"\r\n            - \"sites/SharePoint Site URL:/teams/team name:\" (the colons are required)",
+                "required": true,
+                "x-ms-summary": "Location",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetSources",
+                  "parameters": {
+                    "$select": "id,displayName",
+                    "$top": "999"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "displayName"
+                },
+                "type": "string"
+              },
+              {
+                "name": "drive",
+                "in": "path",
+                "description": "Select a document library from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Document Library",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetDrives",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "$select": "id,name"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "name"
+                },
+                "type": "string"
+              },
+              {
+                "name": "file",
+                "in": "path",
+                "description": "Select an Excel file through File Browse.",
+                "x-ms-url-encoding": "double",
+                "required": true,
+                "x-ms-summary": "File",
+                "x-ms-dynamic-values": {
+                  "capability": "file-picker",
+                  "parameters": {
+                    "isFolder": false,
+                    "fileFilter": [ "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel.sheet.binary.macroEnabled.12" ],
+                    "drive": { "parameter": "drive" },
+                    "dataset": null
+                  },
+                  "value-path": "Id"
+                },
+                "x-ms-dynamic-tree": {
+                  "settings": {
+                    "canSelectParentNodes": false,
+                    "canSelectLeafNodes": true
+                  },
+                  "open": {
+                    "operationId": "ListRootFolder",
+                    "parameters": {
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  },
+                  "browse": {
+                    "operationId": "ListFolder",
+                    "parameters": {
+                      "id": { "selectedItemValuePath": "Id" },
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  }
+                },
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Select a table from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Table",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetTables",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "drive": { "parameter": "drive" },
+                    "file": { "parameter": "file" },
+                    "$select": "id,name"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "name"
+                },
+                "type": "string"
+              },
+              {
+                "name": "$filter",
+                "in": "query",
+                "description": "An ODATA filter query to restrict the entries returned.",
+                "required": false,
+                "x-ms-summary": "Filter Query",
+                "x-ms-visibility": "advanced",
+                "type": "string"
+              },
+              {
+                "name": "$orderby",
+                "in": "query",
+                "description": "An ODATA orderBy query for specifying the order of entries.",
+                "required": false,
+                "x-ms-summary": "Order By",
+                "x-ms-visibility": "advanced",
+                "type": "string"
+              },
+              {
+                "name": "$top",
+                "in": "query",
+                "description": "Total number of entries to retrieve (default = all).",
+                "required": false,
+                "x-ms-summary": "Top Count",
+                "x-ms-visibility": "advanced",
+                "type": "integer",
+                "format": "int32"
+              },
+              {
+                "name": "$skip",
+                "in": "query",
+                "description": "The number of entries to skip (default = 0).",
+                "required": false,
+                "x-ms-summary": "Skip Count",
+                "x-ms-visibility": "advanced",
+                "type": "integer",
+                "format": "int32"
+              },
+              {
+                "name": "$select",
+                "in": "query",
+                "description": "Comma-separated list of columns to retrieve (first 500 by default).",
+                "required": false,
+                "x-ms-summary": "Select Query",
+                "x-ms-visibility": "advanced",
+                "type": "string"
+              },
+              {
+                "name": "idColumn",
+                "in": "query",
+                "description": "Select a column from the drop-down.",
+                "required": false,
+                "x-ms-summary": "Key Column",
+                "x-ms-visibility": "internal",
+                "type": "string"
+              },
+              {
+                "name": "dateTimeFormat",
+                "in": "query",
+                "description": "DateTime Format.",
+                "required": false,
+                "x-ms-summary": "DateTime Format",
+                "x-ms-visibility": "advanced",
+                "type": "string",
+                "enum": [ "Serial Number", "ISO 8601" ]
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/ItemsList" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "important",
+            "x-ms-pageable": { "nextLinkName": "@odata.nextLink" },
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "GetItems",
+              "revision": 1
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#list-rows-present-in-a-table" }
+          },
+          "post": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Update or insert a row",
+            "description": "Update or insert a row using a key column.",
+            "operationId": "PostItem",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "source",
+                "in": "query",
+                "description": "Select from the drop-down or specify one of the following:\r\n            - \"me\"\r\n            - \"SharePoint Site URL\"\r\n            - \"users/someone's UPN\"\r\n            - \"groups/group Id\"\r\n            - \"sites/SharePoint Site URL:/teams/team name:\" (the colons are required)",
+                "required": true,
+                "x-ms-summary": "Location",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetSources",
+                  "parameters": {
+                    "$select": "id,displayName",
+                    "$top": "999"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "displayName"
+                },
+                "type": "string"
+              },
+              {
+                "name": "drive",
+                "in": "path",
+                "description": "Select a document library from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Document Library",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetDrives",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "$select": "id,name"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "name"
+                },
+                "type": "string"
+              },
+              {
+                "name": "file",
+                "in": "path",
+                "description": "Select an Excel file through File Browse.",
+                "x-ms-url-encoding": "double",
+                "required": true,
+                "x-ms-summary": "File",
+                "x-ms-dynamic-values": {
+                  "capability": "file-picker",
+                  "parameters": {
+                    "isFolder": false,
+                    "fileFilter": [ "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel.sheet.binary.macroEnabled.12" ],
+                    "drive": { "parameter": "drive" },
+                    "dataset": null
+                  },
+                  "value-path": "Id"
+                },
+                "x-ms-dynamic-tree": {
+                  "settings": {
+                    "canSelectParentNodes": false,
+                    "canSelectLeafNodes": true
+                  },
+                  "open": {
+                    "operationId": "ListRootFolder",
+                    "parameters": {
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  },
+                  "browse": {
+                    "operationId": "ListFolder",
+                    "parameters": {
+                      "id": { "selectedItemValuePath": "Id" },
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  }
+                },
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Select a table from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Table",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetTables",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "drive": { "parameter": "drive" },
+                    "file": { "parameter": "file" },
+                    "$select": "id,name"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "name"
+                },
+                "type": "string"
+              },
+              {
+                "name": "idColumn",
+                "in": "query",
+                "description": "Select a column from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Key Column",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetColumns",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "drive": { "parameter": "drive" },
+                    "file": { "parameter": "file" },
+                    "table": { "parameter": "table" }
+                  },
+                  "value-collection": "value",
+                  "value-path": "name",
+                  "value-title": "displayName"
+                },
+                "type": "string"
+              },
+              {
+                "name": "item",
+                "in": "body",
+                "description": "Provide the item properties.",
+                "required": true,
+                "schema": { "$ref": "#/definitions/Item" },
+                "x-ms-summary": "Provide the item properties"
+              },
+              {
+                "name": "mode",
+                "in": "query",
+                "description": "Mode of the operation.",
+                "required": false,
+                "x-ms-summary": "Mode",
+                "x-ms-visibility": "internal",
+                "type": "string",
+                "default": "Upsert",
+                "enum": [ "Add", "AddV2", "AddWithGeneratedId", "AddWithCustomId", "Upsert" ]
+              },
+              {
+                "name": "dateTimeFormat",
+                "in": "query",
+                "description": "DateTime Format.",
+                "required": false,
+                "x-ms-summary": "DateTime Format",
+                "x-ms-visibility": "advanced",
+                "type": "string",
+                "enum": [ "Serial Number", "ISO 8601" ]
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/Item" }
+              },
+              "201": {
+                "description": "Created",
+                "schema": { "$ref": "#/definitions/Item" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "PostItem",
+              "revision": 1
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#update-or-insert-a-row" }
+          }
+        },
+        "/{connectionId}/drives({drive})/files({file})/tables({table})/items({id})": {
+          "get": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Get a row (V2)",
+            "description": "Get a row using a key column. This action will retrieve all the values of the specified row given a column and key column.",
+            "operationId": "ODataStyleGetItemV2",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "source",
+                "in": "query",
+                "description": "Select from the drop-down or specify one of the following:\r\n            - \"me\"\r\n            - \"SharePoint Site URL\"\r\n            - \"users/someone's UPN\"\r\n            - \"groups/group Id\"\r\n            - \"sites/SharePoint Site URL:/teams/team name:\" (the colons are required)",
+                "required": true,
+                "x-ms-summary": "Location",
+                "type": "string"
+              },
+              {
+                "name": "drive",
+                "in": "path",
+                "description": "Select a document library from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Document Library",
+                "type": "string"
+              },
+              {
+                "name": "file",
+                "in": "path",
+                "description": "Select an Excel file through File Browse.",
+                "required": true,
+                "x-ms-summary": "File",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Select a table from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Table",
+                "type": "string"
+              },
+              {
+                "name": "idColumn",
+                "in": "query",
+                "description": "Select a column from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Key Column",
+                "type": "string"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Enter the key value.",
+                "required": true,
+                "x-ms-summary": "Key Value",
+                "type": "string"
+              },
+              {
+                "name": "dateTimeFormat",
+                "in": "query",
+                "description": "DateTime Format.",
+                "required": false,
+                "x-ms-summary": "DateTime Format",
+                "x-ms-visibility": "advanced",
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/Item" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-a-row-(v2)" }
+          },
+          "delete": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Delete a row",
+            "description": "Delete a row using a key column.",
+            "operationId": "ODataStyleDeleteItem",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "source",
+                "in": "query",
+                "description": "Select from the drop-down or specify one of the following:\r\n            - \"me\"\r\n            - \"SharePoint Site URL\"\r\n            - \"users/someone's UPN\"\r\n            - \"groups/group Id\"\r\n            - \"sites/SharePoint Site URL:/teams/team name:\" (the colons are required)",
+                "required": true,
+                "x-ms-summary": "Location",
+                "type": "string"
+              },
+              {
+                "name": "drive",
+                "in": "path",
+                "description": "Select a document library from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Document Library",
+                "type": "string"
+              },
+              {
+                "name": "file",
+                "in": "path",
+                "description": "Select an Excel file through File Browse.",
+                "required": true,
+                "x-ms-summary": "File",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Select a table from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Table",
+                "type": "string"
+              },
+              {
+                "name": "idColumn",
+                "in": "query",
+                "description": "Select a column from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Key Column",
+                "type": "string"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Enter the key value.",
+                "required": true,
+                "x-ms-summary": "Key Value",
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": { "description": "OK" },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#delete-a-row" }
+          },
+          "patch": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Update a row (V2)",
+            "description": "Update a row using a key column.",
+            "operationId": "ODataStylePatchItemV2",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "source",
+                "in": "query",
+                "description": "Select from the drop-down or specify one of the following:\r\n            - \"me\"\r\n            - \"SharePoint Site URL\"\r\n            - \"users/someone's UPN\"\r\n            - \"groups/group Id\"\r\n            - \"sites/SharePoint Site URL:/teams/team name:\" (the colons are required)",
+                "required": true,
+                "x-ms-summary": "Location",
+                "type": "string"
+              },
+              {
+                "name": "drive",
+                "in": "path",
+                "description": "Select a document library from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Document Library",
+                "type": "string"
+              },
+              {
+                "name": "file",
+                "in": "path",
+                "description": "Select an Excel file through File Browse.",
+                "required": true,
+                "x-ms-summary": "File",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Select a table from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Table",
+                "type": "string"
+              },
+              {
+                "name": "idColumn",
+                "in": "query",
+                "description": "Select a column from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Key Column",
+                "type": "string"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Enter the key value.",
+                "required": true,
+                "x-ms-summary": "Key Value",
+                "type": "string"
+              },
+              {
+                "name": "item",
+                "in": "body",
+                "description": "Provide the item properties.",
+                "required": true,
+                "schema": { "$ref": "#/definitions/Item" },
+                "x-ms-summary": "Provide the item properties"
+              },
+              {
+                "name": "mode",
+                "in": "query",
+                "description": "Mode of the operation.",
+                "required": false,
+                "x-ms-summary": "Update Mode",
+                "x-ms-visibility": "internal",
+                "type": "string",
+                "enum": [ "Update", "UpdateWithGeneratedId", "UpdateWithCustomId" ]
+              },
+              {
+                "name": "dateTimeFormat",
+                "in": "query",
+                "description": "DateTime Format.",
+                "required": false,
+                "x-ms-summary": "DateTime Format",
+                "x-ms-visibility": "advanced",
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/Item" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#update-a-row-(v2)" }
+          }
+        },
+        "/{connectionId}/drives/{drive}/files/{file}/tables/{table}/items/{id}": {
+          "get": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Get a row",
+            "description": "Get a row using a key column.",
+            "operationId": "GetItem",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "source",
+                "in": "query",
+                "description": "Select from the drop-down or specify one of the following:\r\n            - \"me\"\r\n            - \"SharePoint Site URL\"\r\n            - \"users/someone's UPN\"\r\n            - \"groups/group Id\"\r\n            - \"sites/SharePoint Site URL:/teams/team name:\" (the colons are required)",
+                "required": true,
+                "x-ms-summary": "Location",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetSources",
+                  "parameters": {
+                    "$select": "id,displayName",
+                    "$top": "999"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "displayName"
+                },
+                "type": "string"
+              },
+              {
+                "name": "drive",
+                "in": "path",
+                "description": "Select a document library from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Document Library",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetDrives",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "$select": "id,name"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "name"
+                },
+                "type": "string"
+              },
+              {
+                "name": "file",
+                "in": "path",
+                "description": "Select an Excel file through File Browse.",
+                "x-ms-url-encoding": "double",
+                "required": true,
+                "x-ms-summary": "File",
+                "x-ms-dynamic-values": {
+                  "capability": "file-picker",
+                  "parameters": {
+                    "isFolder": false,
+                    "fileFilter": [ "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel.sheet.binary.macroEnabled.12" ],
+                    "drive": { "parameter": "drive" },
+                    "dataset": null
+                  },
+                  "value-path": "Id"
+                },
+                "x-ms-dynamic-tree": {
+                  "settings": {
+                    "canSelectParentNodes": false,
+                    "canSelectLeafNodes": true
+                  },
+                  "open": {
+                    "operationId": "ListRootFolder",
+                    "parameters": {
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  },
+                  "browse": {
+                    "operationId": "ListFolder",
+                    "parameters": {
+                      "id": { "selectedItemValuePath": "Id" },
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  }
+                },
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Select a table from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Table",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetTables",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "drive": { "parameter": "drive" },
+                    "file": { "parameter": "file" },
+                    "$select": "id,name"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "name"
+                },
+                "type": "string"
+              },
+              {
+                "name": "idColumn",
+                "in": "query",
+                "description": "Select a column from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Key Column",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetColumns",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "drive": { "parameter": "drive" },
+                    "file": { "parameter": "file" },
+                    "table": { "parameter": "table" }
+                  },
+                  "value-collection": "value",
+                  "value-path": "name",
+                  "value-title": "displayName"
+                },
+                "type": "string"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Enter the key value.",
+                "required": true,
+                "x-ms-summary": "Key Value",
+                "x-ms-url-encoding": "double",
+                "type": "string"
+              },
+              {
+                "name": "dateTimeFormat",
+                "in": "query",
+                "description": "DateTime Format.",
+                "required": false,
+                "x-ms-summary": "DateTime Format",
+                "x-ms-visibility": "advanced",
+                "type": "string",
+                "enum": [ "Serial Number", "ISO 8601" ]
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/Item" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "important",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "GetItem",
+              "revision": 1
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-a-row" }
+          },
+          "delete": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Delete a row",
+            "description": "Delete a row using a key column.",
+            "operationId": "DeleteItem",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "source",
+                "in": "query",
+                "description": "Select from the drop-down or specify one of the following:\r\n            - \"me\"\r\n            - \"SharePoint Site URL\"\r\n            - \"users/someone's UPN\"\r\n            - \"groups/group Id\"\r\n            - \"sites/SharePoint Site URL:/teams/team name:\" (the colons are required)",
+                "required": true,
+                "x-ms-summary": "Location",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetSources",
+                  "parameters": {
+                    "$select": "id,displayName",
+                    "$top": "999"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "displayName"
+                },
+                "type": "string"
+              },
+              {
+                "name": "drive",
+                "in": "path",
+                "description": "Select a document library from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Document Library",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetDrives",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "$select": "id,name"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "name"
+                },
+                "type": "string"
+              },
+              {
+                "name": "file",
+                "in": "path",
+                "description": "Select an Excel file through File Browse.",
+                "x-ms-url-encoding": "double",
+                "required": true,
+                "x-ms-summary": "File",
+                "x-ms-dynamic-values": {
+                  "capability": "file-picker",
+                  "parameters": {
+                    "isFolder": false,
+                    "fileFilter": [ "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel.sheet.binary.macroEnabled.12" ],
+                    "drive": { "parameter": "drive" },
+                    "dataset": null
+                  },
+                  "value-path": "Id"
+                },
+                "x-ms-dynamic-tree": {
+                  "settings": {
+                    "canSelectParentNodes": false,
+                    "canSelectLeafNodes": true
+                  },
+                  "open": {
+                    "operationId": "ListRootFolder",
+                    "parameters": {
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  },
+                  "browse": {
+                    "operationId": "ListFolder",
+                    "parameters": {
+                      "id": { "selectedItemValuePath": "Id" },
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  }
+                },
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Select a table from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Table",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetTables",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "drive": { "parameter": "drive" },
+                    "file": { "parameter": "file" },
+                    "$select": "id,name"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "name"
+                },
+                "type": "string"
+              },
+              {
+                "name": "idColumn",
+                "in": "query",
+                "description": "Select a column from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Key Column",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetColumns",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "drive": { "parameter": "drive" },
+                    "file": { "parameter": "file" },
+                    "table": { "parameter": "table" }
+                  },
+                  "value-collection": "value",
+                  "value-path": "name",
+                  "value-title": "displayName"
+                },
+                "type": "string"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Enter the key value.",
+                "required": true,
+                "x-ms-summary": "Key Value",
+                "x-ms-url-encoding": "double",
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": { "description": "OK" },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "important",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#delete-a-row" }
+          },
+          "patch": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Update a row",
+            "description": "Update a row using a key column. The input value will overwrite the specified cells and columns left blank will not be updated. In order to append (instead of overwrite) a value, use the \"Get a row\" action to retrieve the content first.",
+            "operationId": "PatchItem",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "source",
+                "in": "query",
+                "description": "Select from the drop-down or specify one of the following:\r\n            - \"me\"\r\n            - \"SharePoint Site URL\"\r\n            - \"users/someone's UPN\"\r\n            - \"groups/group Id\"\r\n            - \"sites/SharePoint Site URL:/teams/team name:\" (the colons are required)",
+                "required": true,
+                "x-ms-summary": "Location",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetSources",
+                  "parameters": {
+                    "$select": "id,displayName",
+                    "$top": "999"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "displayName"
+                },
+                "type": "string"
+              },
+              {
+                "name": "drive",
+                "in": "path",
+                "description": "Select a document library from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Document Library",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetDrives",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "$select": "id,name"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "name"
+                },
+                "type": "string"
+              },
+              {
+                "name": "file",
+                "in": "path",
+                "description": "Select an Excel file through File Browse.",
+                "x-ms-url-encoding": "double",
+                "required": true,
+                "x-ms-summary": "File",
+                "x-ms-dynamic-values": {
+                  "capability": "file-picker",
+                  "parameters": {
+                    "isFolder": false,
+                    "fileFilter": [ "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel.sheet.binary.macroEnabled.12" ],
+                    "drive": { "parameter": "drive" },
+                    "dataset": null
+                  },
+                  "value-path": "Id"
+                },
+                "x-ms-dynamic-tree": {
+                  "settings": {
+                    "canSelectParentNodes": false,
+                    "canSelectLeafNodes": true
+                  },
+                  "open": {
+                    "operationId": "ListRootFolder",
+                    "parameters": {
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  },
+                  "browse": {
+                    "operationId": "ListFolder",
+                    "parameters": {
+                      "id": { "selectedItemValuePath": "Id" },
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)",
+                    "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+                  }
+                },
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Select a table from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Table",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetTables",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "drive": { "parameter": "drive" },
+                    "file": { "parameter": "file" },
+                    "$select": "id,name"
+                  },
+                  "value-collection": "value",
+                  "value-path": "id",
+                  "value-title": "name"
+                },
+                "type": "string"
+              },
+              {
+                "name": "idColumn",
+                "in": "query",
+                "description": "Select a column from the drop-down.",
+                "required": true,
+                "x-ms-summary": "Key Column",
+                "x-ms-dynamic-values": {
+                  "operationId": "GetColumns",
+                  "parameters": {
+                    "source": { "parameter": "source" },
+                    "drive": { "parameter": "drive" },
+                    "file": { "parameter": "file" },
+                    "table": { "parameter": "table" }
+                  },
+                  "value-collection": "value",
+                  "value-path": "name",
+                  "value-title": "displayName"
+                },
+                "type": "string"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Enter the key value.",
+                "required": true,
+                "x-ms-summary": "Key Value",
+                "x-ms-url-encoding": "double",
+                "type": "string"
+              },
+              {
+                "name": "item",
+                "in": "body",
+                "description": "Provide the item properties.",
+                "required": true,
+                "schema": { "$ref": "#/definitions/Item" },
+                "x-ms-summary": "Provide the item properties"
+              },
+              {
+                "name": "mode",
+                "in": "query",
+                "description": "Mode of the operation.",
+                "required": false,
+                "x-ms-summary": "Update Mode",
+                "x-ms-visibility": "internal",
+                "type": "string",
+                "enum": [ "Update", "UpdateWithGeneratedId", "UpdateWithCustomId" ]
+              },
+              {
+                "name": "dateTimeFormat",
+                "in": "query",
+                "description": "DateTime Format.",
+                "required": false,
+                "x-ms-summary": "DateTime Format",
+                "x-ms-visibility": "advanced",
+                "type": "string",
+                "enum": [ "Serial Number", "ISO 8601" ]
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/Item" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "important",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "PatchItem",
+              "revision": 1
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#update-a-row" }
+          }
+        },
+        "/{connectionId}/codeless/v1.0/sources": {
+          "get": {
+            "summary": "Get sources",
+            "description": "Get a list of sources.",
+            "operationId": "GetSources",
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              { "$ref": "#/parameters/$top" },
+              { "$ref": "#/parameters/$select" }
+            ],
+            "responses": {
+              "200": {
+                "description": "Operation is successful.",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Id.",
+                            "x-ms-summary": "Id",
+                            "title": "Id"
+                          },
+                          "displayName": {
+                            "type": "string",
+                            "description": "Name.",
+                            "x-ms-summary": "Name",
+                            "title": "Name"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "x-ms-visibility": "internal",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-sources" }
+          }
+        },
+        "/{connectionId}/codeless/v1.0/drives": {
+          "get": {
+            "summary": "Get drives",
+            "description": "Get a list of drives.",
+            "operationId": "GetDrives",
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              { "$ref": "#/parameters/source" },
+              { "$ref": "#/parameters/$select" }
+            ],
+            "responses": {
+              "200": {
+                "description": "Operation is successful.",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Drive Id.",
+                            "x-ms-summary": "Id",
+                            "title": "Id"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Drive name.",
+                            "x-ms-summary": "Name",
+                            "title": "Name"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "x-ms-visibility": "internal",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-drives" }
+          }
+        },
+        "/{connectionId}/codeless/v1.0/drives/{drive}/root/children": {
+          "get": {
+            "summary": "List the root folder",
+            "description": "List the root folder.",
+            "operationId": "ListRootFolder",
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              { "$ref": "#/parameters/source" },
+              { "$ref": "#/parameters/drive" }
+            ],
+            "responses": {
+              "200": {
+                "description": "Operation is successful.",
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/BlobMetadata" }
+                }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "x-ms-visibility": "internal",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#list-the-root-folder" }
+          }
+        },
+        "/{connectionId}/codeless/v1.0/drives/{drive}/items/{id}/children": {
+          "get": {
+            "summary": "List blobs under a given folder",
+            "description": "List blobs under a given folder.",
+            "operationId": "ListFolder",
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              { "$ref": "#/parameters/source" },
+              { "$ref": "#/parameters/drive" },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Folder Id.",
+                "required": true,
+                "x-ms-summary": "Folder",
+                "x-ms-dynamic-values": {
+                  "capability": "file-picker",
+                  "parameters": {
+                    "drive": { "parameter": "drive" },
+                    "isFolder": true,
+                    "fileFilter": []
+                  },
+                  "value-path": "Id"
+                },
+                "x-ms-dynamic-tree": {
+                  "settings": {
+                    "canSelectParentNodes": true,
+                    "canSelectLeafNodes": false
+                  },
+                  "open": {
+                    "operationId": "ListRootFolder",
+                    "parameters": {
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)"
+                  },
+                  "browse": {
+                    "operationId": "ListFolder",
+                    "parameters": {
+                      "id": { "selectedItemValuePath": "Id" },
+                      "drive": { "parameterReference": "drive" },
+                      "source": { "parameterReference": "source" }
+                    },
+                    "itemValuePath": "Id",
+                    "itemTitlePath": "DisplayName",
+                    "itemFullTitlePath": "Path",
+                    "itemIsParent": "(IsFolder eq true)"
+                  }
+                },
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Operation is successful.",
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/BlobMetadata" }
+                }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "x-ms-visibility": "internal",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#list-blobs-under-a-given-folder" }
+          }
+        },
+        "/{connectionId}/codeless/v1.0/drives/{drive}/items/{file}/workbook/worksheets": {
+          "get": {
+            "summary": "Get worksheets",
+            "description": "Get a list of worksheets in the Excel workbook.",
+            "operationId": "GetAllWorksheets",
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              { "$ref": "#/parameters/source" },
+              { "$ref": "#/parameters/drive" },
+              { "$ref": "#/parameters/file" }
+            ],
+            "responses": {
+              "200": {
+                "description": "Operation is successful.",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "array",
+                      "items": { "$ref": "#/definitions/WorksheetMetadata" }
+                    }
+                  }
+                }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "x-ms-visibility": "important",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-worksheets" }
+          },
+          "post": {
+            "summary": "Create worksheet",
+            "description": "Create a new worksheet in the Excel workbook.",
+            "operationId": "CreateWorksheet",
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              { "$ref": "#/parameters/source" },
+              { "$ref": "#/parameters/drive" },
+              { "$ref": "#/parameters/file" },
+              {
+                "name": "body",
+                "in": "body",
+                "required": true,
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Worksheet name.",
+                      "x-ms-summary": "Name",
+                      "title": "Name",
+                      "x-ms-visibility": "important"
+                    }
+                  }
+                },
+                "x-ms-visibility": "important"
+              }
+            ],
+            "responses": {
+              "201": {
+                "description": "Operation is successful.",
+                "schema": { "$ref": "#/definitions/WorksheetMetadata" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "x-ms-visibility": "advanced",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#create-worksheet" }
+          }
+        },
+        "/{connectionId}/codeless/v1.0/drives/{drive}/items/{file}/workbook/tables": {
+          "get": {
+            "summary": "Get tables",
+            "description": "Get a list of tables in the Excel workbook.",
+            "operationId": "GetTables",
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              { "$ref": "#/parameters/source" },
+              { "$ref": "#/parameters/drive" },
+              { "$ref": "#/parameters/file" },
+              { "$ref": "#/parameters/$select" }
+            ],
+            "responses": {
+              "200": {
+                "description": "Operation is successful.",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Table Id.",
+                            "x-ms-summary": "Id",
+                            "title": "Id",
+                            "x-ms-visibility": "important"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Table name.",
+                            "x-ms-summary": "Name",
+                            "title": "Name",
+                            "x-ms-visibility": "important"
+                          },
+                          "showBandedColumns": {
+                            "type": "boolean",
+                            "description": "Show banded columns.",
+                            "x-ms-summary": "Show banded columns",
+                            "title": "Show banded columns",
+                            "x-ms-visibility": "advanced"
+                          },
+                          "highlightFirstColumn": {
+                            "type": "boolean",
+                            "description": "Highlight first column.",
+                            "x-ms-summary": "Highlight first column",
+                            "title": "Highlight first column",
+                            "x-ms-visibility": "advanced"
+                          },
+                          "highlightLastColumn": {
+                            "type": "boolean",
+                            "description": "Highlight last column.",
+                            "x-ms-summary": "Highlight last column",
+                            "title": "Highlight last column",
+                            "x-ms-visibility": "advanced"
+                          },
+                          "showBandedRows": {
+                            "type": "boolean",
+                            "description": "Show banded rows.",
+                            "x-ms-summary": "Show banded rows",
+                            "title": "Show banded rows",
+                            "x-ms-visibility": "advanced"
+                          },
+                          "showFilterButton": {
+                            "type": "boolean",
+                            "description": "Show filter button.",
+                            "x-ms-summary": "Show filter button",
+                            "title": "Show filter button",
+                            "x-ms-visibility": "advanced"
+                          },
+                          "showHeaders": {
+                            "type": "boolean",
+                            "description": "Show headers.",
+                            "x-ms-summary": "Show headers",
+                            "title": "Show headers",
+                            "x-ms-visibility": "advanced"
+                          },
+                          "showTotals": {
+                            "type": "boolean",
+                            "description": "Show totals.",
+                            "x-ms-summary": "Show totals",
+                            "title": "Show totals",
+                            "x-ms-visibility": "advanced"
+                          },
+                          "style": {
+                            "type": "string",
+                            "description": "Table style.",
+                            "x-ms-summary": "Style",
+                            "title": "Style",
+                            "x-ms-visibility": "advanced"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "x-ms-visibility": "advanced",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-tables" }
+          }
+        },
+        "/{connectionId}/codeless/v1.0/drives/{drive}/items/{file}/workbook/tables/{table}/metadata": {
+          "get": {
+            "summary": "Get metadata of a table",
+            "description": "Get metadata of a table.",
+            "operationId": "GetTable",
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              { "$ref": "#/parameters/source" },
+              { "$ref": "#/parameters/drive" },
+              { "$ref": "#/parameters/file" },
+              { "$ref": "#/parameters/table" }
+            ],
+            "responses": {
+              "200": {
+                "description": "Operation is successful.",
+                "schema": { "$ref": "#/definitions/TableMetadata" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "x-ms-visibility": "internal",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-metadata-of-a-table" }
+          }
+        },
+        "/{connectionId}/codeless/v1.0/drives/{drive}/items/{file}/workbook/tables/{table}/rawandformattedtablemetadata": {
+          "get": {
+            "summary": "Get raw and formatted metadata of a table",
+            "description": "Get raw and formatted metadata of a table.",
+            "operationId": "GetRawAndFormattedTable",
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              { "$ref": "#/parameters/source" },
+              { "$ref": "#/parameters/drive" },
+              { "$ref": "#/parameters/file" },
+              { "$ref": "#/parameters/table" },
+              { "$ref": "#/parameters/formattedPostfix" }
+            ],
+            "responses": {
+              "200": {
+                "description": "Operation is successful.",
+                "schema": { "$ref": "#/definitions/TableMetadata" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "x-ms-visibility": "internal",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-raw-and-formatted-metadata-of-a-table" }
+          }
+        },
+        "/{connectionId}/codeless/v1.0/drives/{drive}/items/{file}/workbook/tables/{table}/columns": {
+          "get": {
+            "summary": "Get table columns",
+            "description": "Get table columns.",
+            "operationId": "GetColumns",
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              { "$ref": "#/parameters/source" },
+              { "$ref": "#/parameters/drive" },
+              { "$ref": "#/parameters/file" },
+              { "$ref": "#/parameters/table" }
+            ],
+            "responses": {
+              "200": {
+                "description": "Operation is successful.",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "Column name.",
+                            "x-ms-summary": "Name",
+                            "title": "Name"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "x-ms-visibility": "internal",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-table-columns" }
+          }
+        },
+        "/{connectionId}/codeless/v1.0/drives/{drive}/items/{file}/workbook/tables/{table}/rows": {
+          "post": {
+            "summary": "Add a row into a table",
+            "description": "Add a new row into the Excel table.",
+            "operationId": "AddRow",
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              { "$ref": "#/parameters/source" },
+              { "$ref": "#/parameters/drive" },
+              { "$ref": "#/parameters/file" },
+              { "$ref": "#/parameters/table" },
+              {
+                "name": "item",
+                "in": "body",
+                "description": "Row to insert into the specified Excel table.",
+                "required": true,
+                "schema": { "$ref": "#/definitions/Item" },
+                "x-ms-summary": "Row"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Operation is successful.",
+                "schema": {}
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": true,
+            "x-ms-visibility": "advanced",
+            "x-ms-api-annotation": {
+              "status": "Preview",
+              "family": "AddRow",
+              "revision": 1
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#add-a-row-into-a-table-%5bdeprecated%5d" }
+          }
+        },
+        "/{connectionId}/codeless/v1.2/drives/{drive}/items/{file}/workbook/tables/{table}/rows": {
+          "post": {
+            "summary": "Add a row into a table",
+            "description": "Add a new row into the Excel table.",
+            "operationId": "AddRowV2",
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              { "$ref": "#/parameters/source" },
+              { "$ref": "#/parameters/drive" },
+              { "$ref": "#/parameters/file" },
+              { "$ref": "#/parameters/table" },
+              {
+                "name": "item",
+                "in": "body",
+                "description": "Row to add into the specified Excel table.",
+                "required": true,
+                "schema": { "$ref": "#/definitions/Item" },
+                "x-ms-summary": "Row"
+              },
+              {
+                "name": "dateTimeFormat",
+                "in": "query",
+                "description": "DateTime Format.",
+                "required": false,
+                "x-ms-summary": "DateTime Format",
+                "x-ms-visibility": "advanced",
+                "type": "string",
+                "enum": [ "Serial Number", "ISO 8601" ]
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/Item" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "AddRow",
+              "revision": 2
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#add-a-row-into-a-table" }
+          }
+        },
+        "/{connectionId}/codeless/v1.0/drives/{drive}/items/{file}/workbook/tables/{table}/augmentedtableschema": {
+          "get": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Get raw and formatted table schema",
+            "description": "Get raw and formatted table schema.",
+            "operationId": "GetRawAndFormattedTableSchema",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              { "$ref": "#/parameters/source" },
+              { "$ref": "#/parameters/drive" },
+              { "$ref": "#/parameters/file" },
+              { "$ref": "#/parameters/table" },
+              { "$ref": "#/parameters/formattedPostfix" }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/RawAndFormattedTableSchema" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-raw-and-formatted-table-schema" }
+          }
+        },
+        "/{connectionId}/datasets/{dataset}/tables": {
+          "get": {
+            "tags": [ "ExcelOnlineTableTabular" ],
+            "operationId": "GetTablesTabular",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "dataset",
+                "in": "path",
+                "description": "Dataset.",
+                "required": true,
+                "x-ms-summary": "Dataset",
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/TablesList" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": true,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "GetTablesTabular",
+              "revision": 1
+            }
+          }
+        },
+        "/{connectionId}/v2/datasets/{dataset}/tables": {
+          "get": {
+            "tags": [ "ExcelOnlineTableTabular" ],
+            "operationId": "GetTablesTabularV2",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "dataset",
+                "in": "path",
+                "description": "Dataset.",
+                "required": true,
+                "x-ms-summary": "Dataset",
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/TablesList" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "GetTablesTabular",
+              "revision": 2
+            }
+          }
+        },
+        "/{connectionId}/datasets/{dataset}/tables/{table}/items": {
+          "get": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Get rows",
+            "description": "Retrieves rows from an Excel table",
+            "operationId": "GetItemsTabular",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "dataset",
+                "in": "path",
+                "description": "Dataset.",
+                "required": true,
+                "x-ms-summary": "Dataset",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Table name.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Table name",
+                "type": "string"
+              },
+              {
+                "name": "pkColumn",
+                "in": "query",
+                "description": "PK column name.",
+                "required": true,
+                "x-ms-summary": "PK column name",
+                "type": "string"
+              },
+              {
+                "name": "isGeneratedColumn",
+                "in": "query",
+                "description": "Is PK column generated.",
+                "required": true,
+                "x-ms-summary": "Is generated column",
+                "type": "boolean"
+              },
+              {
+                "name": "$filter",
+                "in": "query",
+                "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+                "required": false,
+                "x-ms-summary": "Filter Query",
+                "x-ms-visibility": "internal",
+                "type": "string"
+              },
+              {
+                "name": "$orderby",
+                "in": "query",
+                "description": "An ODATA orderBy query for specifying the order of entries.",
+                "required": false,
+                "x-ms-summary": "Order By",
+                "x-ms-visibility": "internal",
+                "type": "string"
+              },
+              {
+                "name": "$top",
+                "in": "query",
+                "description": "Total number of entries to retrieve (default = all).",
+                "required": false,
+                "x-ms-summary": "Top Count",
+                "x-ms-visibility": "advanced",
+                "type": "integer",
+                "format": "int32"
+              },
+              {
+                "name": "$skip",
+                "in": "query",
+                "description": "The number of entries to skip (default = 0).",
+                "required": false,
+                "x-ms-summary": "Skip Count",
+                "x-ms-visibility": "advanced",
+                "type": "integer",
+                "format": "int32"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/TabularItemsList" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": true,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "GetItemsTabular",
+              "revision": 1
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-rows-%5bdeprecated%5d" }
+          },
+          "post": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Insert row",
+            "description": "Inserts a new row into an Excel Online table",
+            "operationId": "PostItemTabular",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "dataset",
+                "in": "path",
+                "description": "Dataset.",
+                "required": true,
+                "x-ms-summary": "Dataset",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Table name.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Table name",
+                "type": "string"
+              },
+              {
+                "name": "pkColumn",
+                "in": "query",
+                "description": "PK column name.",
+                "required": true,
+                "x-ms-summary": "PK column name",
+                "type": "string"
+              },
+              {
+                "name": "isGeneratedColumn",
+                "in": "query",
+                "description": "Is PK column generated.",
+                "required": true,
+                "x-ms-summary": "Is generated column",
+                "type": "boolean"
+              },
+              {
+                "name": "item",
+                "in": "body",
+                "description": "Row to insert into the specified Excel Online table",
+                "required": true,
+                "schema": { "$ref": "#/definitions/TabularItem" },
+                "x-ms-summary": "Row"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/TabularItem" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": true,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "PostItemTabular",
+              "revision": 1
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#insert-row-%5bdeprecated%5d" }
+          }
+        },
+        "/{connectionId}/v2/datasets/{dataset}/tables/{table}/items": {
+          "get": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Get rows (V2)",
+            "description": "Retrieves rows from an Excel table",
+            "operationId": "GetItemsTabularV2",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "dataset",
+                "in": "path",
+                "description": "Dataset.",
+                "required": true,
+                "x-ms-summary": "Dataset",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Table name.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Table name",
+                "type": "string"
+              },
+              {
+                "name": "pkColumn",
+                "in": "query",
+                "description": "PK column name.",
+                "required": true,
+                "x-ms-summary": "PK column name",
+                "type": "string"
+              },
+              {
+                "name": "isGeneratedColumn",
+                "in": "query",
+                "description": "Is PK column generated.",
+                "required": true,
+                "x-ms-summary": "Is generated column",
+                "type": "boolean"
+              },
+              {
+                "name": "$filter",
+                "in": "query",
+                "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+                "required": false,
+                "x-ms-summary": "Filter Query",
+                "x-ms-visibility": "internal",
+                "type": "string"
+              },
+              {
+                "name": "$orderby",
+                "in": "query",
+                "description": "An ODATA orderBy query for specifying the order of entries.",
+                "required": false,
+                "x-ms-summary": "Order By",
+                "x-ms-visibility": "internal",
+                "type": "string"
+              },
+              {
+                "name": "$top",
+                "in": "query",
+                "description": "Total number of entries to retrieve (default = all).",
+                "required": false,
+                "x-ms-summary": "Top Count",
+                "x-ms-visibility": "advanced",
+                "type": "integer",
+                "format": "int32"
+              },
+              {
+                "name": "$skip",
+                "in": "query",
+                "description": "The number of entries to skip (default = 0).",
+                "required": false,
+                "x-ms-summary": "Skip Count",
+                "x-ms-visibility": "advanced",
+                "type": "integer",
+                "format": "int32"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/TabularItemsList" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "GetItemsTabular",
+              "revision": 2
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-rows-(v2)" }
+          },
+          "post": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Insert row (V2)",
+            "description": "Inserts a new row into an Excel Online table",
+            "operationId": "PostItemTabularV2",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "dataset",
+                "in": "path",
+                "description": "Dataset.",
+                "required": true,
+                "x-ms-summary": "Dataset",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Table name.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Table name",
+                "type": "string"
+              },
+              {
+                "name": "pkColumn",
+                "in": "query",
+                "description": "PK column name.",
+                "required": true,
+                "x-ms-summary": "PK column name",
+                "type": "string"
+              },
+              {
+                "name": "isGeneratedColumn",
+                "in": "query",
+                "description": "Is PK column generated.",
+                "required": true,
+                "x-ms-summary": "Is generated column",
+                "type": "boolean"
+              },
+              {
+                "name": "item",
+                "in": "body",
+                "description": "Row to insert into the specified Excel Online table",
+                "required": true,
+                "schema": { "$ref": "#/definitions/TabularItem" },
+                "x-ms-summary": "Row"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/TabularItem" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "PostItemTabular",
+              "revision": 2
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#insert-row-(v2)" }
+          }
+        },
+        "/{connectionId}/datasets/{dataset}/tables/{table}/items/{id}": {
+          "get": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Get row",
+            "description": "Retrieves a single row from an Excel Online table.",
+            "operationId": "GetItemTabular",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "dataset",
+                "in": "path",
+                "description": "Dataset.",
+                "required": true,
+                "x-ms-summary": "Dataset",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Table name.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Table name",
+                "type": "string"
+              },
+              {
+                "name": "pkColumn",
+                "in": "query",
+                "description": "PK column name.",
+                "required": true,
+                "x-ms-summary": "PK column name",
+                "type": "string"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Unique identifier of row to retrieve.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Row id",
+                "type": "string"
+              },
+              {
+                "name": "isGeneratedColumn",
+                "in": "query",
+                "description": "Is PK column generated.",
+                "required": true,
+                "x-ms-summary": "Is generated column",
+                "type": "boolean"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/TabularItem" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": true,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "GetItemTabular",
+              "revision": 1
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-row-%5bdeprecated%5d" }
+          },
+          "delete": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Delete row",
+            "description": "Deletes a row from an Excel Online table.",
+            "operationId": "DeleteItemTabular",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "dataset",
+                "in": "path",
+                "description": "Dataset.",
+                "required": true,
+                "x-ms-summary": "Dataset",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Table name.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Table name",
+                "type": "string"
+              },
+              {
+                "name": "pkColumn",
+                "in": "query",
+                "description": "PK column name.",
+                "required": true,
+                "x-ms-summary": "PK column name",
+                "type": "string"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Unique identifier of the row to delete.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Row id",
+                "type": "string"
+              },
+              {
+                "name": "isGeneratedColumn",
+                "in": "query",
+                "description": "Is PK column generated.",
+                "required": true,
+                "x-ms-summary": "Is generated column",
+                "type": "boolean"
+              }
+            ],
+            "responses": {
+              "200": { "description": "OK" },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": true,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "DeleteItemTabular",
+              "revision": 1
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#delete-row-%5bdeprecated%5d" }
+          },
+          "patch": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Update row",
+            "description": "Updates an existing row in an Excel Online table.",
+            "operationId": "PatchItemTabular",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "dataset",
+                "in": "path",
+                "description": "Dataset.",
+                "required": true,
+                "x-ms-summary": "Dataset",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Table name.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Table name",
+                "type": "string"
+              },
+              {
+                "name": "pkColumn",
+                "in": "query",
+                "description": "PK column name.",
+                "required": true,
+                "x-ms-summary": "PK column name",
+                "type": "string"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Unique identifier of the row to update.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Row id",
+                "type": "string"
+              },
+              {
+                "name": "isGeneratedColumn",
+                "in": "query",
+                "description": "Is PK column generated.",
+                "required": true,
+                "x-ms-summary": "Is generated column",
+                "type": "boolean"
+              },
+              {
+                "name": "item",
+                "in": "body",
+                "description": "Row with updated values.",
+                "required": true,
+                "schema": { "$ref": "#/definitions/TabularItem" },
+                "x-ms-summary": "Row"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/TabularItem" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": true,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "PatchItemTabular",
+              "revision": 1
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#update-row-%5bdeprecated%5d" }
+          }
+        },
+        "/{connectionId}/v2/datasets/{dataset}/tables/{table}/items/{id}": {
+          "get": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Get row (V2)",
+            "description": "Retrieves a single row from an Excel Online table.",
+            "operationId": "GetItemTabularV2",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "dataset",
+                "in": "path",
+                "description": "Dataset.",
+                "required": true,
+                "x-ms-summary": "Dataset",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Table name.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Table name",
+                "type": "string"
+              },
+              {
+                "name": "pkColumn",
+                "in": "query",
+                "description": "PK column name.",
+                "required": true,
+                "x-ms-summary": "PK column name",
+                "type": "string"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Unique identifier of row to retrieve.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Row id",
+                "type": "string"
+              },
+              {
+                "name": "isGeneratedColumn",
+                "in": "query",
+                "description": "Is PK column generated.",
+                "required": true,
+                "x-ms-summary": "Is generated column",
+                "type": "boolean"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/TabularItem" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "GetItemTabular",
+              "revision": 2
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#get-row-(v2)" }
+          },
+          "delete": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Delete row",
+            "description": "Deletes a row from an Excel Online table.",
+            "operationId": "DeleteItemTabularV2",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "dataset",
+                "in": "path",
+                "description": "Dataset.",
+                "required": true,
+                "x-ms-summary": "Dataset",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Table name.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Table name",
+                "type": "string"
+              },
+              {
+                "name": "pkColumn",
+                "in": "query",
+                "description": "PK column name.",
+                "required": true,
+                "x-ms-summary": "PK column name",
+                "type": "string"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Unique identifier of the row to delete.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Row id",
+                "type": "string"
+              },
+              {
+                "name": "isGeneratedColumn",
+                "in": "query",
+                "description": "Is PK column generated.",
+                "required": true,
+                "x-ms-summary": "Is generated column",
+                "type": "boolean"
+              }
+            ],
+            "responses": {
+              "200": { "description": "OK" },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "DeleteItemTabular",
+              "revision": 2
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#delete-row" }
+          },
+          "patch": {
+            "tags": [ "ExcelOnlineTableData" ],
+            "summary": "Update row (V2)",
+            "description": "Updates an existing row in an Excel Online table.",
+            "operationId": "PatchItemTabularV2",
+            "consumes": [],
+            "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+            "parameters": [
+              {
+                "name": "connectionId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "x-ms-visibility": "internal"
+              },
+              {
+                "name": "dataset",
+                "in": "path",
+                "description": "Dataset.",
+                "required": true,
+                "x-ms-summary": "Dataset",
+                "type": "string"
+              },
+              {
+                "name": "table",
+                "in": "path",
+                "description": "Table name.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Table name",
+                "type": "string"
+              },
+              {
+                "name": "pkColumn",
+                "in": "query",
+                "description": "PK column name.",
+                "required": true,
+                "x-ms-summary": "PK column name",
+                "type": "string"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Unique identifier of the row to update.",
+                "required": true,
+                "x-ms-url-encoding": "double",
+                "x-ms-summary": "Row id",
+                "type": "string"
+              },
+              {
+                "name": "isGeneratedColumn",
+                "in": "query",
+                "description": "Is PK column generated.",
+                "required": true,
+                "x-ms-summary": "Is generated column",
+                "type": "boolean"
+              },
+              {
+                "name": "item",
+                "in": "body",
+                "description": "Row with updated values.",
+                "required": true,
+                "schema": { "$ref": "#/definitions/TabularItem" },
+                "x-ms-summary": "Row"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": { "$ref": "#/definitions/TabularItem" }
+              },
+              "default": { "description": "Operation Failed." }
+            },
+            "deprecated": false,
+            "x-ms-visibility": "internal",
+            "x-ms-api-annotation": {
+              "status": "Production",
+              "family": "PatchItemTabular",
+              "revision": 2
+            },
+            "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#update-row-(v2)" }
+          }
+        }
+      },
+      "definitions": {
+        "DataSetsMetadata": {
+          "description": "Dataset metadata",
+          "type": "object",
+          "properties": {
+            "tabular": { "$ref": "#/definitions/TabularDataSetsMetadata" },
+            "blob": { "$ref": "#/definitions/BlobDataSetsMetadata" }
+          }
+        },
+        "TabularDataSetsMetadata": {
+          "description": "Tabular dataset metadata",
+          "type": "object",
+          "properties": {
+            "source": {
+              "description": "Dataset source",
+              "type": "string"
+            },
+            "displayName": {
+              "description": "Dataset display name",
+              "type": "string"
+            },
+            "urlEncoding": {
+              "description": "Dataset url encoding",
+              "type": "string"
+            },
+            "tableDisplayName": {
+              "description": "Table display name",
+              "type": "string"
+            },
+            "tablePluralName": {
+              "description": "Table plural display name",
+              "type": "string"
+            }
+          }
+        },
+        "BlobDataSetsMetadata": {
+          "description": "Blob dataset metadata",
+          "type": "object",
+          "properties": {
+            "source": {
+              "description": "Blob dataset source",
+              "type": "string"
+            },
+            "displayName": {
+              "description": "Blob dataset display name",
+              "type": "string"
+            },
+            "urlEncoding": {
+              "description": "Blob dataset url encoding",
+              "type": "string"
+            }
+          }
+        },
+        "TablesList": {
+          "description": "Represents a list of tables.",
+          "type": "object",
+          "properties": {
+            "value": {
+              "description": "List of Tables",
+              "type": "array",
+              "items": { "$ref": "#/definitions/Table" }
+            }
+          }
+        },
+        "Table": {
+          "description": "Represents a table.",
+          "type": "object",
+          "properties": {
+            "Name": {
+              "description": "The name of the table. The name is used at runtime.",
+              "type": "string"
+            },
+            "DisplayName": {
+              "description": "The display name of the table.",
+              "type": "string"
+            },
+            "DynamicProperties": {
+              "description": "Additional table properties provided by the connector to the clients.",
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" },
+              "readOnly": true
+            }
+          }
+        },
+        "TableToCreate": {
+          "description": "Table to create.",
+          "required": [ "Range" ],
+          "type": "object",
+          "properties": {
+            "TableName": {
+              "description": "Enter the Excel table name.",
+              "type": "string",
+              "x-ms-summary": "Table name"
+            },
+            "Range": {
+              "description": "Enter the table address using A1 notation.",
+              "type": "string",
+              "x-ms-summary": "Table range"
+            },
+            "ColumnsNames": {
+              "description": "Enter the columns names separated by ';' or ','.",
+              "type": "string",
+              "x-ms-summary": "Columns names"
+            }
+          }
+        },
+        "TableMetadata": {
+          "description": "Table metadata",
+          "type": "object",
+          "properties": {
+            "name": {
+              "description": "Table name",
+              "type": "string"
+            },
+            "title": {
+              "description": "Table title",
+              "type": "string"
+            },
+            "x-ms-permission": {
+              "description": "Table permission",
+              "type": "string"
+            },
+            "x-ms-capabilities": { "$ref": "#/definitions/TableCapabilitiesMetadata" },
+            "schema": { "$ref": "#/definitions/Object" },
+            "referencedEntities": { "$ref": "#/definitions/Object" },
+            "webUrl": {
+              "description": "Url link",
+              "type": "string"
+            }
+          }
+        },
+        "TableCapabilitiesMetadata": {
+          "description": "Metadata for a table (capabilities)",
+          "type": "object",
+          "properties": {
+            "sortRestrictions": { "$ref": "#/definitions/TableSortRestrictionsMetadata" },
+            "filterRestrictions": { "$ref": "#/definitions/TableFilterRestrictionsMetadata" },
+            "selectRestrictions": { "$ref": "#/definitions/TableSelectRestrictionsMetadata" },
+            "isOnlyServerPagable": {
+              "description": "Server paging restrictions",
+              "type": "boolean"
+            },
+            "filterFunctionSupport": {
+              "description": "List of supported filter capabilities",
+              "type": "array",
+              "items": {
+                "enum": [ "eq", "ne", "gt", "ge", "lt", "le", "and", "or", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat", "year", "month", "day", "hour", "minute", "second", "date", "time", "now", "totaloffsetminutes", "totalseconds", "floor", "ceiling", "round", "not", "negate", "add", "sub", "mul", "div", "mod", "sum", "min", "max", "average", "countdistinct", "null" ],
+                "type": "string"
+              }
+            },
+            "serverPagingOptions": {
+              "description": "List of supported server-driven paging capabilities",
+              "type": "array",
+              "items": {
+                "enum": [ "top", "skiptoken" ],
+                "type": "string"
+              }
+            }
+          }
+        },
+        "Object": {
+          "type": "object",
+          "properties": {}
+        },
+        "TableSortRestrictionsMetadata": {
+          "description": "Metadata for a table (sort restrictions)",
+          "type": "object",
+          "properties": {
+            "sortable": {
+              "description": "Indicates whether this table has sortable columns",
+              "type": "boolean"
+            },
+            "unsortableProperties": {
+              "description": "List of unsortable properties",
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "ascendingOnlyProperties": {
+              "description": "List of properties which support ascending order only",
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "TableFilterRestrictionsMetadata": {
+          "description": "Metadata for a table (filter restrictions)",
+          "type": "object",
+          "properties": {
+            "filterable": {
+              "description": "Indicates whether this table has filterable columns",
+              "type": "boolean"
+            },
+            "nonFilterableProperties": {
+              "description": "List of non filterable properties",
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "requiredProperties": {
+              "description": "List of required properties",
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "TableSelectRestrictionsMetadata": {
+          "description": "Metadata for a table (select restrictions)",
+          "type": "object",
+          "properties": {
+            "selectable": {
+              "description": "Indicates whether this table has selectable columns",
+              "type": "boolean"
+            }
+          }
+        },
+        "ItemsList": {
+          "description": "List of Items",
+          "type": "object",
+          "properties": {
+            "value": {
+              "description": "List of Items",
+              "type": "array",
+              "items": { "$ref": "#/definitions/Item" }
+            }
+          }
+        },
+        "Item": {
+          "description": "Table item entity",
+          "type": "object",
+          "properties": {
+            "dynamicProperties": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "additionalProperties": { "$ref": "#/definitions/Object" },
+          "x-ms-dynamic-schema": {
+            "operationId": "GetTable",
+            "parameters": {
+              "source": { "parameter": "source" },
+              "drive": { "parameter": "drive" },
+              "file": { "parameter": "file" },
+              "table": { "parameter": "table" }
+            },
+            "value-path": "Schema/Items"
+          }
+        },
+        "TabularItemsList": {
+          "description": "List of Items",
+          "type": "object",
+          "properties": {
+            "value": {
+              "description": "List of Items",
+              "type": "array",
+              "items": { "$ref": "#/definitions/TabularItem" }
+            }
+          }
+        },
+        "TabularItem": {
+          "description": "Table item entity",
+          "type": "object",
+          "properties": {
+            "dynamicProperties": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "additionalProperties": { "$ref": "#/definitions/Object" },
+          "x-ms-dynamic-schema": {
+            "operationId": "GetTableTabular",
+            "parameters": {
+              "dataset": { "parameter": "dataset" },
+              "table": { "parameter": "table" }
+            },
+            "value-path": "Schema/Items"
+          }
+        },
+        "ScriptParameters": {
+          "description": "Information about a single script's parameter schema.",
+          "type": "object",
+          "x-ms-dynamic-schema": {
+            "operationId": "GetSingleScript",
+            "parameters": { "scriptId": { "parameter": "scriptId" } },
+            "value-path": "parameterInfo/parameterSchema"
+          }
+        },
+        "ScriptReturnValues": {
+          "description": "Information about a single script's return schema.",
+          "type": "object",
+          "x-ms-dynamic-schema": {
+            "operationId": "GetSingleScript",
+            "parameters": { "scriptId": { "parameter": "scriptId" } },
+            "value-path": "parameterInfo/returnSchema"
+          }
+        },
+        "RawAndFormattedTableSchema": {
+          "description": "Raw and formatted table schema",
+          "type": "object",
+          "properties": {
+            "dynamicProperties": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "x-ms-dynamic-schema": {
+            "operationId": "GetRawAndFormattedTable",
+            "parameters": {
+              "source": { "parameter": "source" },
+              "drive": { "parameter": "drive" },
+              "file": { "parameter": "file" },
+              "table": { "parameter": "table" },
+              "formattedPostfix": "Formatted"
+            },
+            "value-path": "Schema/Items"
+          }
+        },
+        "BlobMetadata": {
+          "type": "object",
+          "properties": {
+            "Id": {
+              "description": "The unique id of the file or folder.",
+              "type": "string"
+            },
+            "Name": {
+              "description": "The name of the file or folder.",
+              "type": "string"
+            },
+            "DisplayName": {
+              "description": "The display name of the file or folder.",
+              "type": "string"
+            },
+            "Path": {
+              "description": "The path of the file or folder.",
+              "type": "string"
+            },
+            "MediaType": {
+              "description": "The media type of the file or folder.",
+              "type": "string"
+            },
+            "IsFolder": {
+              "description": "A boolean value (true, false) to indicate whether or not the blob is a folder.",
+              "type": "boolean"
+            }
+          }
+        },
+        "WorksheetMetadata": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Worksheet Id.",
+              "x-ms-summary": "Id",
+              "title": "Id"
+            },
+            "name": {
+              "type": "string",
+              "description": "Worksheet name.",
+              "x-ms-summary": "Name",
+              "title": "Name"
+            },
+            "position": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Worksheet position.",
+              "x-ms-summary": "Position",
+              "title": "Position"
+            },
+            "visibility": {
+              "type": "string",
+              "description": "Worksheet visibility.",
+              "x-ms-summary": "Visibility",
+              "title": "Visibility"
+            }
+          }
+        }
+      },
+      "x-ms-capabilities": {
+        "file-picker": {
+          "open": {
+            "operationId": "ListRootFolder",
+            "parameters": {
+              "drive": { "parameter": "drive" },
+              "source": { "parameter": "source" }
+            }
+          },
+          "browse": {
+            "operationId": "ListFolder",
+            "parameters": {
+              "drive": { "parameter": "drive" },
+              "id": { "value-property": "Id" },
+              "source": { "parameter": "source" }
+            }
+          },
+          "value-title": "DisplayName",
+          "value-folder-property": "IsFolder",
+          "value-media-property": "MediaType"
+        },
+        "testConnection": {
+          "operationId": "TestConnection",
+          "parameters": {}
+        }
+      },
+      "parameters": {
+        "source": {
+          "name": "source",
+          "in": "query",
+          "required": true,
+          "type": "string",
+          "x-ms-summary": "Location",
+          "description": "Select from the drop-down or specify one of the following:\r\n              - \"me\"\r\n              - \"SharePoint Site URL\"\r\n              - \"users/someone's UPN\"\r\n              - \"groups/group Id\"\r\n              - \"sites/SharePoint Site URL:/teams/team name:\" (colons are required).",
+          "x-ms-dynamic-values": {
+            "operationId": "GetSources",
+            "value-path": "id",
+            "value-collection": "value",
+            "value-title": "displayName",
+            "parameters": {
+              "$select": "id,displayName",
+              "$top": "999"
+            }
+          }
+        },
+        "drive": {
+          "name": "drive",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "description": "Select a document library from the drop-down.",
+          "x-ms-summary": "Document Library",
+          "x-ms-dynamic-values": {
+            "operationId": "GetDrives",
+            "value-path": "id",
+            "value-collection": "value",
+            "value-title": "name",
+            "parameters": {
+              "source": { "parameter": "source" },
+              "$select": "id,name"
+            }
+          }
+        },
+        "file": {
+          "name": "file",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "description": "Select an Excel file through File Browse.",
+          "x-ms-url-encoding": "double",
+          "x-ms-summary": "File",
+          "x-ms-dynamic-values": {
+            "capability": "file-picker",
+            "parameters": {
+              "isFolder": false,
+              "fileFilter": [ "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel.sheet.binary.macroEnabled.12" ],
+              "drive": { "parameter": "drive" }
+            },
+            "value-path": "id"
+          },
+          "x-ms-dynamic-tree": {
+            "settings": {
+              "canSelectParentNodes": false,
+              "canSelectLeafNodes": true
+            },
+            "open": {
+              "operationId": "ListRootFolder",
+              "parameters": {
+                "drive": { "parameterReference": "drive" },
+                "source": { "parameterReference": "source" }
+              },
+              "itemValuePath": "Id",
+              "itemTitlePath": "DisplayName",
+              "itemFullTitlePath": "Path",
+              "itemIsParent": "(IsFolder eq true)",
+              "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+            },
+            "browse": {
+              "operationId": "ListFolder",
+              "parameters": {
+                "id": { "selectedItemValuePath": "Id" },
+                "drive": { "parameterReference": "drive" },
+                "source": { "parameterReference": "source" }
+              },
+              "itemValuePath": "Id",
+              "itemTitlePath": "DisplayName",
+              "itemFullTitlePath": "Path",
+              "itemIsParent": "(IsFolder eq true)",
+              "selectableFilter": "(MediaType eq 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or MediaType eq 'application/vnd.ms-excel.sheet.binary.macroEnabled.12')"
+            }
+          }
+        },
+        "table": {
+          "name": "table",
+          "in": "path",
+          "description": "Select a table from the drop-down.",
+          "required": true,
+          "x-ms-summary": "Table",
+          "type": "string",
+          "x-ms-dynamic-values": {
+            "operationId": "GetTables",
+            "parameters": {
+              "source": { "parameter": "source" },
+              "drive": { "parameter": "drive" },
+              "file": { "parameter": "file" },
+              "$select": "id,name"
+            },
+            "value-collection": "value",
+            "value-path": "id",
+            "value-title": "name"
+          }
+        },
+        "formattedPostfix": {
+          "name": "formattedPostfix",
+          "in": "query",
+          "required": false,
+          "type": "string",
+          "default": "Formatted",
+          "x-ms-visibility": "internal",
+          "x-ms-localizeDefaultValue": true
+        },
+        "$select": {
+          "name": "$select",
+          "in": "query",
+          "required": false,
+          "type": "string",
+          "x-ms-summary": "Select",
+          "description": "Select.",
+          "x-ms-visibility": "internal"
+        },
+        "$top": {
+          "name": "$top",
+          "in": "query",
+          "required": false,
+          "type": "string",
+          "x-ms-summary": "Top",
+          "description": "Top.",
+          "default": "",
+          "x-ms-visibility": "advanced"
+        }
+      },
+      "x-ms-connector-metadata": [
+        {
+          "propertyName": "Website",
+          "propertyValue": "https://products.office.com/excel"
+        }
+      ],
+      "externalDocs": { "url": "https://docs.microsoft.com/connectors/excelonlinebusiness" },
+      "basePath": "/apim/excelonlinebusiness"
+    }

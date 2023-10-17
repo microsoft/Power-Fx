@@ -11,8 +11,6 @@ namespace Microsoft.PowerFx.Core.App
     /// </summary>
     internal interface IExternalEnabledFeatures
     {
-        bool IsEnhancedDelegationEnabled { get; }
-
         bool IsProjectionMappingEnabled { get; }
 
         bool IsEnableRowScopeOneToNExpandEnabled { get; }
@@ -20,12 +18,14 @@ namespace Microsoft.PowerFx.Core.App
         bool IsUseDisplayNameMetadataEnabled { get; }
 
         bool IsDynamicSchemaEnabled { get; }
+
+        bool IsEnhancedComponentFunctionPropertyEnabled { get; }
+
+        bool IsComponentFunctionPropertyDataflowEnabled { get; }
     }
 
     internal sealed class DefaultEnabledFeatures : IExternalEnabledFeatures
     {
-        public bool IsEnhancedDelegationEnabled => true;
-
         public bool IsProjectionMappingEnabled => true;
 
         public bool IsEnableRowScopeOneToNExpandEnabled => true;
@@ -33,5 +33,9 @@ namespace Microsoft.PowerFx.Core.App
         public bool IsUseDisplayNameMetadataEnabled => true;
 
         public bool IsDynamicSchemaEnabled => true;
+
+        public bool IsEnhancedComponentFunctionPropertyEnabled => true;
+
+        public bool IsComponentFunctionPropertyDataflowEnabled => true;
     }
 }

@@ -18,8 +18,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public SubstituteFunction()
             : base("Substitute", TexlStrings.AboutSubstitute, FunctionCategories.Text, DType.String, 0, 3, 4, DType.String, DType.String, DType.String, DType.Number)
         {
@@ -37,8 +35,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public SubstituteTFunction()
             : base("Substitute", TexlStrings.AboutSubstituteT, FunctionCategories.Table, DType.EmptyTable, 0, 3, 4)
         {
@@ -48,11 +44,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.SubstituteTFuncArg1, TexlStrings.SubstituteFuncArg2, TexlStrings.SubstituteFuncArg3 };
             yield return new[] { TexlStrings.SubstituteTFuncArg1, TexlStrings.SubstituteFuncArg2, TexlStrings.SubstituteFuncArg3, TexlStrings.SubstituteFuncArg4 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -72,21 +63,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Arg0 should be either a string or a column of strings.
             // Its type dictates the function return type.
-            if (type0.IsTable)
+            if (type0.IsTableNonObjNull)
             {
                 // Ensure we have a one-column table of strings
-                fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
-
-                returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                    ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
-                    : type0;
+                fValid &= CheckStringColumnType(context, args[0], type0, errors, ref nodeToCoercedTypeMap, out returnType);
             }
             else
             {
                 returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
-                if (!DType.String.Accepts(type0))
+                if (!DType.String.Accepts(type0, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
-                    if (type0.CoercesTo(DType.String))
+                    if (type0.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.String);
                     }
@@ -99,13 +86,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // Arg1 should be either a string or a column of strings.
-            if (type1.IsTable)
+            if (type1.IsTableNonObjNull)
             {
-                fValid &= CheckStringColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckStringColumnType(context, args[1], type1, errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.String.Accepts(type1))
+            else if (!DType.String.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type1.CoercesTo(DType.String))
+                if (type1.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.String);
                 }
@@ -117,13 +104,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // Arg2 should be either a string or a column of strings.
-            if (type2.IsTable)
+            if (type2.IsTableNonObjNull)
             {
-                fValid &= CheckStringColumnType(type2, args[2], errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckStringColumnType(context, args[2], type2, errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.String.Accepts(type2))
+            else if (!DType.String.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type2.CoercesTo(DType.String))
+                if (type2.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[2], DType.String);
                 }
@@ -140,26 +127,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var type3 = argTypes[3];
 
                 // Arg3 should be either a number or a column of numbers.
-                if (type3.IsTable)
+                if (type3.IsTableNonObjNull)
                 {
-                    fValid &= CheckNumericColumnType(type3, args[3], errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckNumericColumnType(context, args[3], type3, errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!DType.Number.Accepts(type3))
+                else if (!CheckType(context, args[3], type3, DType.Number, errors, ref nodeToCoercedTypeMap))
                 {
-                    if (type3.CoercesTo(DType.Number))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[3], DType.Number);
-                    }
-                    else
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[3], TexlStrings.ErrNumberExpected);
-                    }
+                    fValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[3], TexlStrings.ErrNumberExpected);
                 }
             }
 
             // At least one arg has to be a table.
-            if (!(type0.IsTable || type1.IsTable || type2.IsTable) && (!hasCount || !argTypes[3].IsTable))
+            if (!(type0.IsTableNonObjNull || type1.IsTableNonObjNull || type2.IsTableNonObjNull) && (!hasCount || !argTypes[3].IsTableNonObjNull))
             {
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTypeError);

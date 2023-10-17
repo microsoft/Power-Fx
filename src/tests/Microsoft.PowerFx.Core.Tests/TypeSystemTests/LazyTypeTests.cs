@@ -7,6 +7,7 @@ using System.Text;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -119,30 +120,33 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void AcceptsSimple()
         {
-            // Error accepts all
-            Assert.True(DType.Error.Accepts(_lazyRecord1._type));
-            Assert.True(DType.Error.Accepts(_lazyTable1._type));
+            foreach (var usePFxV1CompatRules in new[] { false, true })
+            {
+                // Error accepts all
+                Assert.True(DType.Error.Accepts(_lazyRecord1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.True(DType.Error.Accepts(_lazyTable1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-            // All accept Unknown
-            Assert.True(_lazyRecord1._type.Accepts(DType.Unknown));
-            Assert.True(_lazyTable1._type.Accepts(DType.Unknown));
-            
-            // No primitive accepts
-            Assert.False(DType.Number.Accepts(_lazyRecord1._type));
-            Assert.False(DType.Boolean.Accepts(_lazyRecord1._type));
-            Assert.False(DType.String.Accepts(_lazyRecord1._type));
-            Assert.False(DType.Color.Accepts(_lazyRecord1._type));
-            Assert.False(DType.Date.Accepts(_lazyRecord1._type));
-            Assert.False(DType.Time.Accepts(_lazyRecord1._type));
-            Assert.False(DType.Guid.Accepts(_lazyRecord1._type));
+                // All accept Unknown
+                Assert.True(_lazyRecord1._type.Accepts(DType.Unknown, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.True(_lazyTable1._type.Accepts(DType.Unknown, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-            Assert.False(DType.Number.Accepts(_lazyTable1._type));
-            Assert.False(DType.Boolean.Accepts(_lazyTable1._type));
-            Assert.False(DType.String.Accepts(_lazyTable1._type));
-            Assert.False(DType.Color.Accepts(_lazyTable1._type));
-            Assert.False(DType.Date.Accepts(_lazyTable1._type));
-            Assert.False(DType.Time.Accepts(_lazyTable1._type));
-            Assert.False(DType.Guid.Accepts(_lazyTable1._type));
+                // No primitive accepts
+                Assert.False(DType.Number.Accepts(_lazyRecord1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(DType.Boolean.Accepts(_lazyRecord1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(DType.String.Accepts(_lazyRecord1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(DType.Color.Accepts(_lazyRecord1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(DType.Date.Accepts(_lazyRecord1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(DType.Time.Accepts(_lazyRecord1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(DType.Guid.Accepts(_lazyRecord1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+
+                Assert.False(DType.Number.Accepts(_lazyTable1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(DType.Boolean.Accepts(_lazyTable1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(DType.String.Accepts(_lazyTable1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(DType.Color.Accepts(_lazyTable1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(DType.Date.Accepts(_lazyTable1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(DType.Time.Accepts(_lazyTable1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(DType.Guid.Accepts(_lazyTable1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+            }
             
             // Hasn't callled field getter
             Assert.Equal(0, _getter1CalledCount);
@@ -152,55 +156,64 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void AcceptsAggregate()
         {
-            Assert.True(DType.EmptyRecord.Accepts(_lazyRecord1._type));
-            Assert.True(DType.EmptyTable.Accepts(_lazyTable1._type));
+            foreach (var usePFxV1CompatRules in new[] { false, true })
+            {
+                _getter1CalledCount = _getter2CalledCount = 0;
 
-            Assert.False(DType.EmptyRecord.Accepts(_lazyTable1._type));
-            Assert.False(DType.EmptyTable.Accepts(_lazyRecord1._type));
+                Assert.True(DType.EmptyRecord.Accepts(_lazyRecord1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.True(DType.EmptyTable.Accepts(_lazyTable1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-            // Hasn't callled field getter
-            Assert.Equal(0, _getter1CalledCount);
-            Assert.Equal(0, _getter2CalledCount);
+                Assert.False(DType.EmptyRecord.Accepts(_lazyTable1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(DType.EmptyTable.Accepts(_lazyRecord1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-            Assert.False(_lazyRecord2._type.Accepts(_lazyRecord1._type));
-            Assert.False(_lazyTable2._type.Accepts(_lazyTable1._type));
-                        
-            Assert.False(_lazyRecord1._type.Accepts(_lazyRecord2._type));
-            Assert.False(_lazyTable1._type.Accepts(_lazyTable2._type));
+                // Hasn't callled field getter
+                Assert.Equal(0, _getter1CalledCount);
+                Assert.Equal(0, _getter2CalledCount);
 
-            Assert.True(_lazyRecord1._type.Accepts(_lazyRecord1._type));
-            Assert.True(_lazyTable2._type.Accepts(_lazyTable2._type));
+                Assert.False(_lazyRecord2._type.Accepts(_lazyRecord1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(_lazyTable2._type.Accepts(_lazyTable1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-            // Hasn't callled field getter for lazy/lazy ops
-            Assert.Equal(0, _getter1CalledCount);
-            Assert.Equal(0, _getter2CalledCount);            
+                Assert.False(_lazyRecord1._type.Accepts(_lazyRecord2._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(_lazyTable1._type.Accepts(_lazyTable2._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-            Assert.False(TestUtils.DT("![not:s, in: b, lazy:n, record:c]").Accepts(_lazyRecord1._type));
-            Assert.False(TestUtils.DT("*[not:s, in: b, lazy:n, record:c]").Accepts(_lazyTable2._type));
+                Assert.True(_lazyRecord1._type.Accepts(_lazyRecord1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.True(_lazyTable2._type.Accepts(_lazyTable2._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-            // Calls field getter only once, stops on first mismatch
-            Assert.Equal(1, _getter1CalledCount);
-            Assert.Equal(1, _getter2CalledCount);
+                // Hasn't callled field getter for lazy/lazy ops
+                Assert.Equal(0, _getter1CalledCount);
+                Assert.Equal(0, _getter2CalledCount);
+
+                Assert.False(TestUtils.DT("![not:s, in: b, lazy:n, record:c]").Accepts(_lazyRecord1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(TestUtils.DT("*[not:s, in: b, lazy:n, record:c]").Accepts(_lazyTable2._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+
+                // Calls field getter only once, stops on first mismatch
+                Assert.Equal(1, _getter1CalledCount);
+                Assert.Equal(1, _getter2CalledCount);
+            }
         }
 
-        [Fact]
-        public void AcceptsAggregateAllFields()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void AcceptsAggregateAllFields(bool usePFxV1CompatRules)
         {
-            Assert.True(_lazyRecord1._type.Accepts(TestUtils.DT("![Foo:n, Bar: s, Baz:b]")));
+            _getter1CalledCount = _getter2CalledCount = 0;
+
+            Assert.True(_lazyRecord1._type.Accepts(TestUtils.DT("![Foo:n, Bar: s, Baz:b]"), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
             // Must call field getter for each field
             Assert.Equal(3, _getter1CalledCount);
 
             // Not all fields present
-            Assert.False(_lazyRecord2._type.Accepts(TestUtils.DT("![Qux: n]")));
+            Assert.False(_lazyRecord2._type.Accepts(TestUtils.DT("![Qux: n]"), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
             // Must call field getter for each field
             Assert.Equal(2, _getter2CalledCount);
 
             _getter1CalledCount = 0;
 
-            Assert.True(_lazyRecord1._type.Accepts(TestUtils.DT("![Foo:n, Bar: s, Baz:b]")));
-            
+            Assert.True(_lazyRecord1._type.Accepts(TestUtils.DT("![Foo:n, Bar: s, Baz:b]"), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+
             // Running Accepts again doesn't re-run the getter
             Assert.Equal(0, _getter1CalledCount);
         }
@@ -208,17 +221,24 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void AcceptsLazyMatch()
         {
-            Assert.True(_lazyRecord1._type.Accepts(_lazyRecord2.GetFieldType("Nested")._type));
+            foreach (var usePFxV1CompatRules in new[] { false, true })
+            {
+                _getter1CalledCount = _getter2CalledCount = 0;
+                Assert.True(_lazyRecord1._type.Accepts(_lazyRecord2.GetFieldType("Nested")._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-            // Getter2 only called once, Getter1 never called
-            Assert.Equal(0, _getter1CalledCount);
-            Assert.Equal(1, _getter2CalledCount);
+                // Getter2 only called once, Getter1 never called
+                Assert.Equal(0, _getter1CalledCount);
+                Assert.Equal(1, _getter2CalledCount);
+            }
         }
 
         [Fact]
         public void AcceptsLazyMatch_negative()
         {
-            Assert.False(_lazyRecord1._type.Accepts(_lazyRecord2._type));
+            foreach (var usePFxV1CompatRules in new[] { false, true })
+            {
+                Assert.False(_lazyRecord1._type.Accepts(_lazyRecord2._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+            }
 
             Assert.Equal(0, _getter1CalledCount);
             Assert.Equal(0, _getter2CalledCount);
@@ -272,10 +292,31 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void Supertype()
         {
-            Assert.Equal(_lazyRecord1, FormulaType.Build(DType.Supertype(_lazyRecord1._type, _lazyRecord1._type)));
-            Assert.Equal(_lazyTable1, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyTable1._type)));
-            Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyRecord1._type)));
-            Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyRecord2._type, _lazyRecord1._type)));
+            foreach (var usePowerFxV1CompatibilityRules in new[] { false, true })
+            {
+                Assert.Equal(_lazyRecord1, FormulaType.Build(DType.Supertype(_lazyRecord1._type, _lazyRecord1._type, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
+                Assert.Equal(_lazyTable1, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyTable1._type, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
+                Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyRecord1._type, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
+                Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyRecord2._type, _lazyRecord1._type, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
+            }
+        }
+        
+        [Fact]
+        public void HasErrors()
+        {
+            // Non-recursive
+            Assert.False(_lazyRecord1._type.HasErrors);
+
+            // Recursive
+            var recursiveType = new BindingEngineTests.LazyRecursiveRecordType();
+            Assert.False(recursiveType._type.HasErrors);
+        }
+
+        [Fact]
+        public void GetBackingDTypeLazyType()
+        {
+            _lazyRecord1.TryGetBackingDType("Foo", out var dType);
+            Assert.Equal(DType.Number, dType);
         }
     }
 }

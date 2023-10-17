@@ -183,7 +183,7 @@
     <value>Formula koja se procjenjuje i vraća ako nema pronađenih odgovarajućih vrijednosti.</value>
   </data>
   <data name="AboutAnd" xml:space="preserve">
-    <value>Provjerava jesu li svi argumenti true i vraća true ako su svi argumenti true.</value>
+    <value>Provjerava jesu li svi argumenti istiniti i vraća vrijednost „true” ako su svi argumenti istiniti.</value>
     
   </data>
   <data name="AboutOr" xml:space="preserve">
@@ -331,7 +331,7 @@
     <value>Numerička vrijednost za tu operaciju izračuna prosjeka.</value>
   </data>
   <data name="AboutAddColumns" xml:space="preserve">
-    <value>Vraća tablicu s novim stupcima koji su izračunati vrednovanjem svih vrijednosti "izraz" preko "izvora".</value>
+    <value>Vraća tablicu s novim stupcima koji su izračunati vrednovanjem svih vrijednosti „izraz” preko „izvora”.</value>
     
   </data>
   <data name="AddColumnsArg1" xml:space="preserve">
@@ -483,7 +483,7 @@
     <value>Tekstna vrijednost koja se pretvara u numeričku vrijednost.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Šifra jezika koja će se koristiti prilikom pretvaranja vrijednosti.</value>
+    <value>Šifra jezika koja će se upotrijebiti prilikom pretvaranja vrijednosti.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Stupac brojčanih vrijednosti koji treba obraditi.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Pretvara stavku „Booleova” u Booleovu vrijednost.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>booleov</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Booleova vrijednost koju je potrebno pretvoriti u Booleovu vrijednost.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Pretvara stupac Booleovih vrijednosti u stupac Booleovih vrijednosti.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>unos</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Stupac Booleovih vrijednosti za obradu.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vraća prvi argument koji nije prazan</value>
     
@@ -544,6 +566,24 @@
   <data name="AboutConcatenate" xml:space="preserve">
     <value>Spaja nekoliko tekstnih vrijednosti u jednu tekstnu vrijednost.</value>
     
+  </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Pretvara „tekst” koji predstavlja broj u decimalnu vrijednost.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Šifra jezika koja će se upotrijebiti prilikom pretvaranja vrijednosti.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Tekstna vrijednost koja se pretvara u decimalnu vrijednost.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Pretvara „tekst” koji predstavlja broj u vrijednost Float.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Šifra jezika koja će se upotrijebiti prilikom pretvaranja vrijednosti.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Tekstna vrijednost koja se pretvara u vrijednost Float.</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>tekst</value>
@@ -738,7 +778,7 @@
     <value>Zamjenska tekstna vrijednost.</value>
   </data>
   <data name="AboutReplace_text_column" xml:space="preserve">
-    <value>Stupac tekstnih vrijednosti koji se obrađuje.</value>
+    <value>Stupac tekstnih vrijednosti koji treba obraditi.</value>
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>Stvara pogrešku s prilagođenim vrijednostima.</value>
@@ -773,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Vrijednost koja se vraća ako je to prvi argument bez pogreške.</value>
+    <value>Vrijednost koja se vraća ako je prethodni argument pogreška.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -817,7 +857,7 @@
     <value>Navodi koje se pojavljivanje zadanog teksta zamjenjuje.</value>
   </data>
   <data name="AboutSubstitute_text_column" xml:space="preserve">
-    <value>Stupac tekstnih vrijednosti koji se obrađuje.</value>
+    <value>Stupac tekstnih vrijednosti koji treba obraditi.</value>
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>Sortira "izvor" na temelju rezultata "izraza" koji je vrednovan za svaki redak, po želji određuje "redoslijed" sortiranja.</value>
@@ -842,7 +882,8 @@
     <value>Izraz koji se vrednuje na temelju redaka u "izvoru" i daje vrijednosti za sortiranje.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Uzlazno ili silazno</value>
+    <value>SortOrder.Ascending ili SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sortira "izvor" na temelju stupca, po želji određuje "redoslijed" sortiranja.</value>
@@ -867,7 +908,8 @@
     <value>Jedinstveni naziv stupca.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Uzlazno ili silazno</value>
+    <value>SortOrder.Ascending ili SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sortira "izvor" na temelju indeksa podudarnih vrijednosti u navedenom stupcu.</value>
@@ -979,6 +1021,46 @@
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Vrijednost datuma za koju će se izračunati ISO broj tjedna.</value>
+  </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Vraća datum prilagođen prema broju mjeseci. Dan u mjesecu ostaje isti, ali je ograničen brojem dana u novom mjesecu.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>datum</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>mj.</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Vrijednost datuma koju treba prilagoditi za navedeni broj mjeseci.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Broj mjeseci za koji treba promijeniti datum. Pozitivna vrijednost daje datum u budućnosti, negativna vrijednost datum u prošlosti, a nula neće promijeniti mjesec.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Vraća zadnji dan u mjesecu za određeni datum, prilagođen za broj mjeseci.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>datum</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>mj.</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Vrijednost datuma koju treba prilagoditi za navedeni broj mjeseci.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Broj mjeseci za koji treba promijeniti datum. Pozitivna vrijednost daje datum u budućnosti, negativna vrijednost datum u prošlosti, a nula neće promijeniti mjesec.</value>
+         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Skraćuje „broj” zaokruživanjem prema negativnoj beskonačnosti.</value>
@@ -1166,7 +1248,7 @@
     
   </data>
   <data name="AboutAbsT" xml:space="preserve">
-    <value>Vraća apsolutne vrijednosti (brojeve bez njihova znaka) stupca s brojevima.</value>
+    <value>Vraća apsolutne vrijednosti (brojeve bez njihova predznaka) stupca s brojevima.</value>
     
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
@@ -1367,6 +1449,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Stupac brojčanih vrijednosti (u radijanima) koje će biti obrađene.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Vrednuje izraz na temelju jednog ili više stupaca tablice i vraća tablicu s jednim stupcem koja sadrži različite (jedinstvene) vrijednosti za vrednovani izraz.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>izvor</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>izraz</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Tablica iz koje će se izdvajati različite vrijednosti.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Izraz koji se vrednuje na temelju svakog retka u ulaznoj tablici i koji daje vrijednosti za operaciju Različite vrijednosti.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Vraća arkus tangens (u radijanima) navedenih koordinata x i y.</value>
   </data>
@@ -1404,6 +1503,14 @@
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>unos</value>
+    
+  </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifikator</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifikator</value>
     
   </data>
   <data name="AboutLeft" xml:space="preserve">
@@ -1593,7 +1700,7 @@
     
   </data>
   <data name="AboutAsType" xml:space="preserve">
-    <value>Koristi navedenu vrijednost kao odabranu vrstu.</value>
+    <value>Upotrebljava navedenu vrijednost kao odabranu vrstu.</value>
     
   </data>
   <data name="AsTypeArg1" xml:space="preserve">
@@ -1675,7 +1782,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Svojstvu prilagođenih podataka komponente s parametrima može se pristupiti samo unutar komponente ili iz svojstva izlaznih podataka komponente.</value>
+    <value>Svojstvu ili parametru funkcije komponente može se pristupiti samo unutar komponente ili iz svojstava izlaznih podataka komponente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Svojstvo ili parametar funkcije komponente može upućivati samo na druga svojstva funkcije.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1742,20 +1853,8 @@
     <value>Prvi argument stavke "{0}" treba biti tablica s jednim stupcem.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Shema nije valjana, očekuje se stupac vrijednosti teksta za "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Shema nije valjana, očekuje se stupac vrijednosti datuma za "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Shema nije valjana, očekuje se stupac numeričkih vrijednosti za "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Shema nije valjana, očekuje se stupac vrijednosti boje za "{0}".</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Shema nije valjana, očekuje se stupac vrijednosti {0} za „{1}”.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1798,6 +1897,26 @@
     <value>Numerička je vrijednost preduga.</value>
     
   </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Upotreba rezervirane riječi koja trenutno nije podržana.</value>
+    
+  </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Izraz ne može imati više od ovoliko znakova: {0}. Izraz ima ovoliko znakova: {1}.</value>
+    
+  </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Veličina niza formata ne može biti veća od ovoliko znakova: {0}.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Format nije valjan.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argument ne predstavlja valjanu vrijednost datuma ili vremena.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Izvor podataka nije valjan. Ispravite pogrešku u oknu "Izvori podataka" tako da kliknete "Sadržaj -&gt; Izvori podataka" ili "Prikaz -&gt; Mogućnosti"</value>
     
@@ -1816,6 +1935,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Vrsta argumenta "{0}" ne odgovara očekivanoj vrsti "{1}". Pronađena je vrsta "{2}".</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Vrsta izraza ne odgovara očekivanoj vrsti „{0}”. Pronađena je vrsta „{1}”.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -1852,6 +1975,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Sortiranje po vrsti izraza nije moguće.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Različitu vrijednost nije moguće primijeniti na vrstu izraza.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -2240,6 +2367,9 @@
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematičke i statističke</value>
   </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
+  </data>
   <data name="Information" xml:space="preserve">
     <value>Informacije</value>
   </data>
@@ -2319,7 +2449,7 @@
     <value>Broj jedinica koje se dodaju. Može biti negativan broj.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Jedinica koja se koristi, a koja može biti: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Jedinica koja će se upotrijebiti, može biti jedna od sljedećih: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2341,7 +2471,7 @@
     <value>Datum završetka za operaciju razlikovanja.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Jedinica u kojoj se izražava rezultat, a koja može biti: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Jedinica za izražavanje rezultata, može biti jedna od sljedećih: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2518,7 +2648,7 @@
     
   </data>
   <data name="DatePicker_Format_DisplayName" xml:space="preserve">
-    <value>Oblik</value>
+    <value>Format</value>
     
   </data>
   <data name="DatePicker_Language_DisplayName" xml:space="preserve">
@@ -2550,7 +2680,7 @@
     
   </data>
   <data name="text_Format_DisplayName" xml:space="preserve">
-    <value>Oblik</value>
+    <value>Format</value>
     
   </data>
   <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
@@ -2591,10 +2721,6 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Vrijednost koja se testira.</value>
-  </data>
-  <data name="Post" xml:space="preserve">
-    <value>Objava</value>
-    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Pretvara datum i vrijeme u obliku teksta u broj koji predstavlja datum u kodu vremena i datuma za Power Apps.</value>
@@ -2876,6 +3002,26 @@
     <value>Globus</value>
     
   </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe – nije povezano</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe – osvježi</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe – promjene na čekanju</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe – upozorenje</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe – pogreška</value>
+    
+  </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>Napola popunjeni krug</value>
     
@@ -3013,7 +3159,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Vlak</value>
+    <value>Uvježbavanje</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3113,7 +3259,7 @@
     
   </data>
   <data name="BorderStyle_Solid_DisplayName" xml:space="preserve">
-    <value>Puno</value>
+    <value>Ispunjeno</value>
     
   </data>
   <data name="BorderStyle_Dotted_DisplayName" xml:space="preserve">
@@ -3221,7 +3367,7 @@
     
   </data>
   <data name="Overflow_Scroll_DisplayName" xml:space="preserve">
-    <value>Pomicanje</value>
+    <value>Klizač</value>
     
   </data>
   <data name="TextMode_SingleLine_DisplayName" xml:space="preserve">
@@ -3268,8 +3414,40 @@
     <value>Tema Kontrast</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Dodaje zapise u izvor podataka.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>zapis</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Briše sve zapise iz zbirke. Stupci zbirke će ostati.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Briše sve zapise iz zbirke. Zatim dodaje drugačiji skup zapisa istoj zbirci.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>zapis</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
-    <value>Primjenjuje ažuriranja na navedeni redak i mijenja redak u navedenom izvoru podataka. Vraća ažurirani redak.</value>
+    <value>Primjenjuje ažuriranje na navedeni redak i mijenja redak u navedenom izvoru podataka. Vraća ažurirani redak.</value>
     
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
@@ -3325,7 +3503,7 @@
     
   </data>
   <data name="ImagePosition_Stretch_DisplayName" xml:space="preserve">
-    <value>Rastezanje</value>
+    <value>Rastegni</value>
     
   </data>
   <data name="ImagePosition_Tile_DisplayName" xml:space="preserve">
@@ -3473,7 +3651,7 @@
     
   </data>
   <data name="SelectedState_View_DisplayName" xml:space="preserve">
-    <value>Prikaz</value>
+    <value>Prikaži</value>
     
   </data>
   <data name="SelectedState_New_DisplayName" xml:space="preserve">
@@ -3489,7 +3667,7 @@
     
   </data>
   <data name="LoadingSpinner_None_DisplayName" xml:space="preserve">
-    <value>Ništa</value>
+    <value>Nema</value>
     
   </data>
   <data name="NotificationType_Error_DisplayName" xml:space="preserve">
@@ -3561,7 +3739,7 @@
     
   </data>
   <data name="Icon_Crop_DisplayName" xml:space="preserve">
-    <value>Izreži</value>
+    <value>Obreži</value>
     
   </data>
   <data name="Icon_Pin_DisplayName" xml:space="preserve">
@@ -3952,96 +4130,8 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Nije podržano u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Broj argumenata za funkciju {0} nije valjan: primljeno {1}, očekivano {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argument {0} nije podržan za funkciju {1} u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Ovaj argument nije moguće proslijediti kao ovu vrstu u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Ovaj argument nije moguće proslijediti kao vrstu {0} u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Za ovaj argument podržana je samo doslovna vrijednost.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Funkcija {0} se ne može izvršiti za taj unos bez pretvorbe vremenske zone, jer to nije podržano u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Ovu operaciju nije moguće izvesti na vrijednostima koje su različitih ponašanja datuma i vremena.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>U stupcima formule podržani su samo nizovi koji se odnose na kratki zapis formata datuma i vremena.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argument {0} je vremenska jedinica koja nije valjana / nije podržana za aritmetičku funkciju datuma {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Tokeni oblikovanja specifični za regionalnu shemu, kao što su „.” i „,” nisu podržani u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>Funkcija {0} nije podržana u stupcima formula, umjesto toga upotrijebite {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Ova se operacija ne može izvršiti na vrsti {0} u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Vrsta rezultata {0} nije podržana u stupcima formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Izravno upućivanje na cijeli zapis nije podržano u stupcima formule. Uputite na valjano polje u zapisu.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Očekuje se da će vrsta rezultata za ovu formulu biti {0}, ali je stvarna vrsta rezultata {1}. Vrsta rezultata stupca formule ne može se promijeniti.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Stupci vrste {0} nisu podržani u stupcima formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Stupci vrste {0} formata {1} nisu podržani u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Prisila zapisa ili tablica nije podržana u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formule ne smiju biti dulje od 1000 znakova.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tablice s jednim stupcem nisu podržane u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Ne može se izraditi referenca na virtualnu tablicu {0} u stupcima formule.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>Očekuje se operand. Formula ili izraz očekuju valjani operand. Možete, primjerice, dodati operand "2" u izraz " 1 +_" tako da rezultat bude "3". Ili pak u izraz ""Pozdrav "&amp; _ " dodajte operand "svima" tako da rezultat bude "Pozdrav svima".</value>
+    <value>Očekuje se operand. Formula ili izraz očekuju valjani operand. Možete, primjerice, dodati operand „2” u izraz „1 +_” tako da rezultat bude „3”. Ili pak u izraz „Pozdrav &amp; _” dodajte operand „svima” tako da rezultat bude „Pozdrav svima”.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4142,10 +4232,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Ta se pogreška pojavljuje kada se formula poziva na svojstva ponašanja komponente sa sintaksom koja nije valjana. (Na primjer, Component.OnCustomChange umjesto Component.OnCustomChange())</value>
+    <value>Ta se pogreška pojavljuje kada se formula poziva na svojstva funkcije komponente sa sintaksom koja nije valjana. (Na primjer, Component.CustomFunction instead of Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Koristite pravilnu sintaksu za pozivanje na svojstvo ponašanja komponente. Na primjer, Component.OnCustomChange()</value>
+    <value>Upotrijebite pravilnu sintaksu za pozivanje na svojstvo funkcije komponente. Na primjer, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4175,7 +4265,7 @@
     <value>Svaka razina ugnježđivanja povećava kompleksnost, pa Power Apps podržava ugnježđivanje opsega redaka samo do 63 razine.</value>
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
-    <value>Napišite formulu s manje razina ugnježđivanja.</value>
+    <value>Ponovno napišite formulu s manje razina ugnježđivanja.</value>
     
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
@@ -4186,7 +4276,7 @@
     <value>Power Apps podržava ugnježđivanje izraza samo do 50 razina. Tako dubok izraz teško je tumačiti i održavati.</value>
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
-    <value>Napišite formulu s manje razina ugnježđivanja.</value>
+    <value>Ponovno napišite formulu s manje razina ugnježđivanja.</value>
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
@@ -4201,7 +4291,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_Link_1" xml:space="preserve">
-    <value>Modul: Korištenje jednostavnih formula</value>
+    <value>Modul: upotreba jednostavnih formula</value>
     
   </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
@@ -4335,6 +4425,10 @@
     <value>Provjerite imate li tekst za identifikator. Ta se pogreška pojavljuje kada se identifikator sastoji samo od praznina ili razmaka.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Nije moguće usporediti vrijednosti vrste {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Nekompatibilne vrste za usporedbu. Ove se vrste ne mogu usporediti: {0}, {1}.</value>
     
@@ -4351,7 +4445,7 @@
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
-    <value>Modul: Korištenje jednostavnih formula</value>
+    <value>Modul: upotreba jednostavnih formula</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
@@ -4379,7 +4473,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1" xml:space="preserve">
-    <value>Modul: Korištenje jednostavnih formula</value>
+    <value>Modul: upotreba jednostavnih formula</value>
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
@@ -4398,6 +4492,10 @@
     <value>Članak: referenca formule za Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Vrsta nije kompatibilna. Stavka koju pokušavate unijeti u zapis nije kompatibilna s tablicom.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Vrsta nije kompatibilna. Vrsta stavke koju pokušavate unijeti u tablicu nije kompatibilna s tablicom.</value>
     
@@ -4407,7 +4505,7 @@
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1" xml:space="preserve">
-    <value>Modul: Korištenje jednostavnih formula</value>
+    <value>Modul: upotreba jednostavnih formula</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
@@ -4426,7 +4524,7 @@
     
   </data>
   <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
-    <value>Modul: Korištenje jednostavnih formula</value>
+    <value>Modul: upotreba jednostavnih formula</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
@@ -4456,7 +4554,7 @@
     <value>Izvor podataka možda neće moći obraditi formulu, pa će vratiti nepotpun skup podataka. Ako skup podataka nije potpun, vaša aplikacija možda neće vratiti točne rezultate ni pravilno funkcionirati.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Ako skup podataka prekoračuje ograničenje od 500 zapisa, ali sadrži manje od 2000 zapisa, pokušajte ponovno postaviti ograničenje.</value>
+    <value>Ako vaš skup podataka prekoračuje ograničenje od 500 zapisa, ali sadrži manje od 2000 zapisa, pokušajte ponovno postaviti ograničenje.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4464,15 +4562,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
-    <value>Pokušajte premjestiti podatke u neki drugi izvor podataka.</value>
+    <value>Pokušajte premjestiti svoje podatke u neki drugi izvor podataka.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
-    <value>Članak: Delegiranje u aplikaciji od gotovih gradivnih elemenata</value>
+    <value>Članak: razumijevanje delegiranja u aplikaciji od gotovih gradivnih elemenata</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
-    <value>Blog: Ograničenja redaka podataka za delegiranje</value>
+    <value>Blog: ograničenja retka podataka za delegiranje</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -4483,7 +4581,7 @@
     <value>Izvor podataka možda neće moći obraditi formulu, pa će vratiti nepotpun skup podataka. Ako skup podataka nije potpun, vaša aplikacija možda neće vratiti točne rezultate ni pravilno funkcionirati.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Ako skup podataka prekoračuje ograničenje od 500 zapisa, ali sadrži manje od 2000 zapisa, pokušajte ponovno postaviti ograničenje.</value>
+    <value>Ako vaš skup podataka prekoračuje ograničenje od 500 zapisa, ali sadrži manje od 2000 zapisa, pokušajte ponovno postaviti ograničenje.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4491,15 +4589,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
-    <value>Pokušajte premjestiti podatke u neki drugi izvor podataka.</value>
+    <value>Pokušajte premjestiti svoje podatke u neki drugi izvor podataka.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
-    <value>Članak: Delegiranje u aplikaciji od gotovih gradivnih elemenata</value>
+    <value>Članak: razumijevanje delegiranja u aplikaciji od gotovih gradivnih elemenata</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
-    <value>Blog: Ograničenja redaka podataka za delegiranje</value>
+    <value>Blog: ograničenja retka podataka za delegiranje</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -4510,11 +4608,11 @@
     <value>Desna strana operatora "u" mora biti naziv stupca iz točnog izvora podataka. Izvor podataka možda neće moći obraditi formulu te će vratiti nepotpun skup podataka. Vaša aplikacije možda neće vratiti točne rezultate niti se ponašati na odgovarajući način ako skup podataka nije potpun.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
-    <value>Promijenite stavku s desne strane operatora "u" u stupac iz točnog izvora podataka.</value>
+    <value>Promijenite stavku s desne strane operatora „u” u stupac iz točnog izvora podataka.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Ako skup podataka prekoračuje ograničenje od 500 zapisa, ali sadrži manje od 2000 zapisa, pokušajte ponovno postaviti ograničenje.</value>
+    <value>Ako vaš skup podataka prekoračuje ograničenje od 500 zapisa, ali sadrži manje od 2000 zapisa, pokušajte ponovno postaviti ograničenje.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4522,15 +4620,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
-    <value>Pokušajte premjestiti podatke u neki drugi izvor podataka.</value>
+    <value>Pokušajte premjestiti svoje podatke u neki drugi izvor podataka.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
-    <value>Članak: Delegiranje u aplikaciji od gotovih gradivnih elemenata</value>
+    <value>Članak: razumijevanje delegiranja u aplikaciji od gotovih gradivnih elemenata</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
-    <value>Blog: Ograničenja redaka podataka za delegiranje</value>
+    <value>Blog: ograničenja retka podataka za delegiranje</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -4542,7 +4640,7 @@
       </value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
-    <value>Promijenite stavku s desne strane operatora "u" u stupac iz točnog izvora podataka.</value>
+    <value>Promijenite stavku s desne strane operatora „u” u stupac iz točnog izvora podataka.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
@@ -4555,15 +4653,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
-    <value>Pokušajte premjestiti podatke u neki drugi izvor podataka.</value>
+    <value>Pokušajte premjestiti svoje podatke u neki drugi izvor podataka.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
-    <value>Članak: Delegiranje u aplikaciji od gotovih gradivnih elemenata</value>
+    <value>Članak: razumijevanje delegiranja u aplikaciji od gotovih gradivnih elemenata</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
-    <value>Blog: Ograničenja redaka podataka za delegiranje</value>
+    <value>Blog: ograničenja retka podataka za delegiranje</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -4575,7 +4673,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Ako skup podataka prekoračuje ograničenje od 500 zapisa, ali sadrži manje od 2000 zapisa, pokušajte ponovno postaviti ograničenje.</value>
+    <value>Ako vaš skup podataka prekoračuje ograničenje od 500 zapisa, ali sadrži manje od 2000 zapisa, pokušajte ponovno postaviti ograničenje.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4583,15 +4681,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
-    <value>Pokušajte premjestiti podatke u neki drugi izvor podataka.</value>
+    <value>Pokušajte premjestiti svoje podatke u neki drugi izvor podataka.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
-    <value>Članak: Delegiranje u aplikaciji od gotovih gradivnih elemenata</value>
+    <value>Članak: razumijevanje delegiranja u aplikaciji od gotovih gradivnih elemenata</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
-    <value>Blog: Ograničenja redaka podataka za delegiranje</value>
+    <value>Blog: ograničenja retka podataka za delegiranje</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -4642,8 +4740,44 @@
     <value>Kakvo jest nije dopušteno u ovom kontekstu</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Netipizirani objekti ne mogu se upotrijebiti kao prvi argument funkcijama koje podržavaju dosege zapisa.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Imenovana formula mora završiti točkom sa zarezom.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Imenovana formula mora biti izraz.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Korisnički definirana funkcija mora imati tijelo.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funkcija {0} je već definirana.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parametar {0} je duplikat.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Nepoznata vrsta {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Navedena vrsta povrata funkcije ne odgovara vrsti povrata tijela funkcije.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Nedostaje vrsta vraćanja funkcije, na primjer ":Number" u "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Nedostaje vrsta argumenta funkcije, na primjer ":Text" u "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4725,6 +4859,257 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Ta je značajka zastarjela i više nije podržana.</value>
+    
+  </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>U prostoru naziva {1} funkcija {0} je zastarjela.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>U prostoru naziva {1} funkcija {0} nije podržana.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Upozorenje: navedena je odgođena vrsta.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Očekivani naziv identifikatora</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Ta je funkcija dvosmislena, sadrži izraz lambda i identifikatore stupca za isti argument.</value>
+    
+  </data>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Vrijednost opcije {0} nije očekivane vrste {1}.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Vraća logički naziv dane vrijednosti skupa mogućnosti.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>mogućnost</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Vrijednost skupa mogućnosti čiji će se logički naziv vratiti.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Nabavite zadanu regionalnu shemu postavljenu tijekom izvođenja.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Kodira URL niz, zamjenjujući određene znakove koji nisu alfanumerički s % i heksadecimalnim brojem.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL koji treba kodirati.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>„{0}” je prepoznata, ali ne i podržana funkcija.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Pretvorba vrste nije uspjela zato što je dana vrijednost bila vrste „{0}”, a očekivala se vrsta „{1}”.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Ta operacija na tablici „{0}” možda neće raditi ako ima više od ovoliko redaka: {1}.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Ovaj će predikat uvijek biti istinit. Jeste li mislili upotrijebiti ThisRecord ili [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>{0} se ne može delegirati: podržava samo delegiranje za pretraživanje polja primarnog ključa „{1}”.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Nije moguće delegirati {0}: izraz uspoređuje više polja.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>{0} se ne može delegirati: sadrži funkciju ponašanja „{1}”.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Utvrđuje podudara li se navedeni tekst s navedenim oblikom teksta.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Tekst koji želite usporediti s oblikom.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Oblik s kojim želite usporediti tekst. To može biti vrijednost enumeracije TextFormat ili regularni izraz.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Određuje koji dio teksta želimo usporediti. To može biti vrijednost enumeracije MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>oblik</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>doseg</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>U navedenom tekstu traži navedeni regularni izraz i iz njega vraća prvo podudaranje.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>U navedenom tekstu traži navedeni regularni izraz i iz njega vraća sva podudaranja.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Tekst koji će se tražiti prema regularnom izrazu.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Regularni izraz za provjeru teksta. Sadrži snimke (vrijednosti između zagrada) koje će biti vraćene u slučaju podudaranja.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Određuje koji dio teksta želimo usporediti. To može biti vrijednost enumeracije MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Tekst koji će se tražiti prema regularnom izrazu.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Regularni izraz za provjeru teksta. Sadrži snimke (vrijednosti između zagrada) koje će biti vraćene u slučaju podudaranja.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Određuje koji dio teksta želimo usporediti. To može biti vrijednost enumeracije MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regularni_izraz</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>mogućnosti</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Osvježava navedeni izvor podataka.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>povezani_izvor_podataka</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Očekuje se vrijednost zapisa ili tablice.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Povezani izvor podataka koji će se osvježiti.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Samo se upravljane veze mogu osvježiti.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Regularni izraz nije valjan.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Regularni izrazi moraju biti konstantne vrijednosti.</value>
+    
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Vrijednost proslijeđena funkciji „{0}” ne može se promijeniti.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Naziv snimke "{0}" sakriva unaprijed određeno svojstvo koje vraća potpuno podudaranje regularnog izraza. Razmislite o tome da ga preimenujete ako želite koristiti imenovano svojstvo za izdvajanje potpunog podudaranja u određenom tekstu.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Naziv snimke "{0}" sakriva unaprijed određeno svojstvo koje vraća grupna podudaranja u regularnom izrazu. Razmislite o tome da ga preimenujete ako želite koristiti imenovano svojstvo za izdvajanje potpodudaranja u određenom tekstu.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Naziv snimke "{0}" sakriva unaprijed određeno svojstvo koje vraća mjesto podudaranja regularnog izraza. Razmislite o tome da ga preimenujete ako želite koristiti imenovano svojstvo za izdvajanje položaja potpunog podudaranja u određenom tekstu.</value>
+    
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Uklanja sva oblikovanja i vraća vrijednost običnog teksta.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Tekst iz kojeg treba ukloniti HTML i XML oznake.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Funkcije filtra ne dozvoljavaju funkcije ponašanja kao predikate.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Pomoću operatora And kombinirajte više predikata u drugi argument.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Ta se tablica ne može kopirati. Umjesto toga izradite umetnutu tablicu pomoću funkcije ForAll i oznake {...} da biste kopirali željene pojedinačne stupce.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Taj se zapis ne može kopirati. Umjesto toga izradite umetnuti zapis pomoću oznake {...} da biste kopirali željena pojedinačna polja.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Drugi argument funkcije „{0}” podržan je samo za numeričke vrijednosti i vrijednosti datuma/vremena.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Postavljanje varijable s vrijednošću online izvora podataka (tablica ili zapis) može uzrokovati više zahtjeva poslužitelju. To će se uskoro blokirati.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Vrsta doslovna vrijednost deklaracije nije valjana</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Nepodudaranje vrste između vrsta zapisa izvora i cilja. Navedena vrsta ima dodatna polja: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Nepodudaranje vrste između vrsta zapisa izvora i cilja. Navedenoj vrsti nedostaju polja: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Nepodudaranje vrste između vrsta zapisa izvora i cilja. Naziv polja: {0} – nije pronađeno.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Nepodudaranje vrste između vrsta zapisa izvora i cilja. Naziv polja: {0}. Očekivano {1}; pronađeno: {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Navedena vrsta {0} ne može se prisiliti na vrstu izvora {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Upišite nepodudaranja između izvorišnih i ciljnih vrsta. Očekivano: {0}; pronađeno {1}.</value>
     
   </data>
 </root>

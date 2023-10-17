@@ -22,13 +22,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
     {
         // Check() calls through to engine. 
         [Fact]
-        public void Test()
+        public void TestDecimal()
         {
             var engine = new Engine(new PowerFxConfig());
 
             var scope = engine.CreateEditorScope();
             var result = scope.Check("1+2");
-            Assert.Equal(result.ReturnType, FormulaType.Number);
+            Assert.Equal(result.ReturnType, FormulaType.Decimal);
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             // Also got error reported. 
             Assert.Equal(1, failHandler._counter); // was invoked
-            Assert.Equal(1, errorList.Count);
+            Assert.Single(errorList);
             var ex2 = errorList[0];
 
             Assert.Contains(failHandler.HandlerName, ex2.Message);            
@@ -106,13 +106,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             };
             scope.OnCommandExecuted(ca); // nop
 
-            ca.ActionResultContext.HandlerName = "";
+            ca.ActionResultContext.HandlerName = string.Empty;
             scope.OnCommandExecuted(ca); // nop
 
             ca.ActionResultContext.HandlerName = "   "; // whitespace
             scope.OnCommandExecuted(ca); // nop
 
-            Assert.Equal(0, handler._onExecuted.Count); // all were nops.
+            Assert.Empty(handler._onExecuted); // all were nops.
 
             // Set to real value from Suggest to get callback
             var fix = fixes[0];
@@ -121,8 +121,72 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                  ActionResultContext = fix.ActionResultContext
             };            
             scope.OnCommandExecuted(ca);
-            Assert.Equal(1, handler._onExecuted.Count);
+            Assert.Single(handler._onExecuted);
             Assert.Equal("Action1", handler._onExecuted[0]);
+        }
+
+        // Calling Suggest() on intellisense doesn't need to compute errors
+        [Fact]
+        public void SuggestDoesntNeedErrors()
+        {
+            var engine = new MyEngine();
+
+            IPowerFxScope ctx = engine.CreateEditorScope();
+            var result = ctx.Suggest("1+2", 1);
+
+            Assert.Equal(0, engine.PostCheckCounter);            
+        }
+
+        [Fact]
+        public void NullCtor()
+        {
+            Assert.Throws<ArgumentNullException>(() => new EditorContextScope(null));
+        }
+
+        [Fact]
+        public void Ctor()
+        {
+            var check = new CheckResult(new Engine());
+            var editor = new EditorContextScope(
+                (expr) => check.SetText(expr).SetBindingInfo());
+
+            var check2 = editor.Check("1+2");
+            Assert.Same(check, check2);
+
+            Assert.True(check2.IsSuccess);
+        }
+
+        // Fail if the getter doesn't fully create the CheckResult
+        [Fact]
+        public void MissingInit()
+        {
+            var check = new CheckResult(new Engine());
+
+            var editor = new EditorContextScope(
+                (expr) => check.SetText(expr));
+
+            Assert.Throws<InvalidOperationException>(() => editor.Check("1+2"));
+
+            editor = new EditorContextScope(
+                (expr) => check);
+
+            Assert.Throws<InvalidOperationException>(() => editor.Check("3+4"));
+        }
+
+        private class MyEngine : Engine
+        {
+            public MyEngine()
+                : base(new PowerFxConfig())
+            {
+            }
+
+            public int PostCheckCounter = 0;
+                    
+            protected override IEnumerable<ExpressionError> PostCheck(CheckResult check)
+            {
+                PostCheckCounter++;
+                return base.PostCheck(check);
+            }
         }
 
         [Fact]
@@ -133,6 +197,19 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             // By default, handler name is the fully qualified name. 
             Assert.Equal("Microsoft.PowerFx.Tests.LanguageServiceProtocol.EditorContextScopeTests+MyHandler", name);
+        }
+
+        [Fact]
+        public void CheckExpectedReturnValueNumber()
+        {
+            var editorContextScope = new EditorContextScope(
+                            (expr) => new CheckResult(
+                                    new Engine()).SetText(expr).SetBindingInfo().SetExpectedReturnValue(FormulaType.String, true));
+
+            var check = editorContextScope.Check("123");
+
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Decimal, check.ReturnType);
         }
 
         private class MyEmptyHandler : CodeFixHandler
