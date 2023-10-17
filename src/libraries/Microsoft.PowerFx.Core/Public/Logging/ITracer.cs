@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Logging
+namespace Microsoft.PowerFx.Logging
 {
     public interface ITracer
     {

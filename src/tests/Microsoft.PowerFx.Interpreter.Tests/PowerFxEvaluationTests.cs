@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Public.Logging;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.Tests.Helpers;
+using Microsoft.PowerFx.Logging;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 

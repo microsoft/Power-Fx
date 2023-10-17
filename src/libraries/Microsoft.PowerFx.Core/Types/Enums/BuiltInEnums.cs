@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.Public.Logging;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Logging;
 
 namespace Microsoft.PowerFx.Core.Types.Enums
 {

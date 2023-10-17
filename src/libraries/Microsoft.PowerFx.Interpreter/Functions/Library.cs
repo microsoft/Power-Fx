@@ -9,12 +9,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Logging;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Logging;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -2603,7 +2603,12 @@ namespace Microsoft.PowerFx.Functions
 
         public static async ValueTask<FormulaValue> TraceFunction(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var tracer = runner.FunctionServices.GetService<ITracer>() ?? throw new CustomFunctionErrorException("Logger Service is not added by the host");
+            var tracer = runner.FunctionServices.GetService<ITracer>();
+
+            if (tracer == null)
+            {
+                return FormulaValue.New(false);
+            }
 
             // the null case here handles Blanks
             var message = (args[0] as StringValue)?.Value ?? string.Empty;
@@ -2621,7 +2626,7 @@ namespace Microsoft.PowerFx.Functions
             RecordValue customRecord;
             if (args.Length < 3 || args[2] is BlankValue)
             {
-                customRecord = FormulaValue.NewRecordFromFields();
+                customRecord = RecordValue.Empty();
             }
             else
             {
@@ -2630,7 +2635,7 @@ namespace Microsoft.PowerFx.Functions
 
             try
             {
-                await tracer.LogAsync(message, (TraceSeverity)sev, customRecord, runner.CancellationToken).ConfigureAwait(false);
+                await tracer.LogAsync(message, sev, customRecord, runner.CancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
