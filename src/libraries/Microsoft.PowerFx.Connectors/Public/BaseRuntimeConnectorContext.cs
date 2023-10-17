@@ -2,14 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Net.Http;
-using SharpYaml.Serialization.Logging;
+using Microsoft.PowerFx.Connectors.Execution;
 
 namespace Microsoft.PowerFx.Connectors
 {
     public abstract class BaseRuntimeConnectorContext
-    {
-        public abstract HttpMessageInvoker GetInvoker(string @namespace);
+    {   
+        public abstract object GetInvoker(string @namespace);
 
         public abstract TimeZoneInfo TimeZoneInfo { get; }
 
@@ -17,7 +16,9 @@ namespace Microsoft.PowerFx.Connectors
 
         internal virtual bool ReturnRawResults { get; } = false;
 
-        public virtual ConnectorLogger ExecutionLogger { get; } = null; 
+        public virtual ConnectorLogger ExecutionLogger { get; } = null;
+
+        internal virtual IConnectorInvoker GetInvoker(ConnectorFunction function) => new HttpFunctionInvoker(function, this);
 
         internal BaseRuntimeConnectorContext WithRawResults()
         {

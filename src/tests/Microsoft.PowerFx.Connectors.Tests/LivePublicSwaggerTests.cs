@@ -84,8 +84,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Here we specify the BaseAddress
             using var client = new HttpClient() { BaseAddress = new Uri("https://api.math.tools") };
 
-            // Set IgnoreUnknownExtensions to true as this swagger uses some extensions we don't honnor like x-apisguru-categories, x-origin, x-providerName
-            var funcs = config.AddActionConnector(new ConnectorSettings("Math") { IgnoreUnknownExtensions = true }, doc, new ConsoleLogger(_output)); 
+            // Use default RejectUnknownExtensions set to false as this swagger uses some extensions we don't honnor like x-apisguru-categories, x-origin, x-providerName
+            var funcs = config.AddActionConnector(new ConnectorSettings("Math"), doc, new ConsoleLogger(_output)); 
 
             var engine = new RecalcEngine(config);
             var expr = "Math.numbersbasebinary(632506623)";
@@ -185,8 +185,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             using var clientXkcd = new HttpClient() { BaseAddress = new Uri(@"http://xkcd.com/") };
             using var clientWorldTime = new HttpClient() { BaseAddress = new Uri(@"http://worldtimeapi.org/api/") };
-            var funcsXkcd = config.AddActionConnector(new ConnectorSettings("Xkcd") { IgnoreUnknownExtensions = true }, docXkcd, new ConsoleLogger(_output));
-            var funcsWorldTime = config.AddActionConnector(new ConnectorSettings("WorldTime") { IgnoreUnknownExtensions = true }, docWorldTime, new ConsoleLogger(_output));
+            var funcsXkcd = config.AddActionConnector(new ConnectorSettings("Xkcd"), docXkcd, new ConsoleLogger(_output));
+            var funcsWorldTime = config.AddActionConnector(new ConnectorSettings("WorldTime"), docWorldTime, new ConsoleLogger(_output));
 
             var engine = new RecalcEngine(config);
             var runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Xkcd", clientXkcd, console: _output).Add("WorldTime", clientWorldTime));                                                   

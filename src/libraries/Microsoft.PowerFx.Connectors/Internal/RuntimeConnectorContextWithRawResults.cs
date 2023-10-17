@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public override TimeZoneInfo TimeZoneInfo => _baseRuntimeConnectorContext.TimeZoneInfo;
 
-        public override HttpMessageInvoker GetInvoker(string @namespace) => _baseRuntimeConnectorContext.GetInvoker(@namespace);
+        public override object GetInvoker(string @namespace) => _baseRuntimeConnectorContext.GetInvoker(@namespace);
 
         public override bool ThrowOnError => _baseRuntimeConnectorContext.ThrowOnError;
 

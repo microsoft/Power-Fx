@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             return this;
         }
 
-        public override HttpMessageInvoker GetInvoker(string @namespace)
+        public override object GetInvoker(string @namespace)
         {
             if (string.IsNullOrEmpty(@namespace) || !_clients.ContainsKey(@namespace))
             {

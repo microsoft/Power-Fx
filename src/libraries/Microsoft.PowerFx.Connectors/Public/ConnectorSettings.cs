@@ -26,9 +26,10 @@ namespace Microsoft.PowerFx.Connectors
         public int MaxRows { get; init; } = 1000;
 
         /// <summary>
-        /// Unknown extensions in swagger file will be ignored during the validation process.
+        /// Unknown extensions in swagger file will be ignored by default.
+        /// This flag allows to not support unknown extensions when turned to true.
         /// </summary>
-        public bool IgnoreUnknownExtensions { get; init; } = false;
+        public bool RejectUnknownExtensions { get; init; } = false;
 
         /// <summary>
         /// Allow using functions that are identified as unsupported.
