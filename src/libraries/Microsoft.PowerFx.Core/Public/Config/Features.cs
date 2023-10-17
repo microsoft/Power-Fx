@@ -113,5 +113,19 @@ namespace Microsoft.PowerFx
         internal Features()
         {
         }
+
+        internal Features(Features other)
+        {
+            TableSyntaxDoesntWrapRecords = other.TableSyntaxDoesntWrapRecords;
+            ConsistentOneColumnTableResult = other.ConsistentOneColumnTableResult;
+            DisableRowScopeDisambiguationSyntax = other.DisableRowScopeDisambiguationSyntax;
+            SupportColumnNamesAsIdentifiers = other.SupportColumnNamesAsIdentifiers;
+            StronglyTypedBuiltinEnums = other.StronglyTypedBuiltinEnums;
+            RestrictedIsEmptyArguments = other.RestrictedIsEmptyArguments;
+            FirstLastNRequiresSecondArguments = other.FirstLastNRequiresSecondArguments;
+            PowerFxV1CompatibilityRules = other.PowerFxV1CompatibilityRules;
+            CoalesceShortCircuit = other.CoalesceShortCircuit;
+            PrimaryOutputPropertyCoercionDeprecated = other.PrimaryOutputPropertyCoercionDeprecated;
+        }
     }
 }
