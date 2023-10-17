@@ -369,6 +369,7 @@ namespace Microsoft.PowerFx.Connectors
                     switch (schema.Format)
                     {
                         case "date":
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Date);
                         case "date-time":
                             return new ConnectorType(schema, openApiParameter, FormulaType.DateTime);
                         case "date-no-tz":
