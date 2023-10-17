@@ -182,7 +182,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",                
-                "Microsoft.PowerFx.UserInfo"
+                "Microsoft.PowerFx.UserInfo",
+                "Microsoft.PowerFx.Core.Public.Logging.ITracer",
+                "Microsoft.PowerFx.Core.Public.Logging.TraceSeverity"
             };
 
             var sb = new StringBuilder();

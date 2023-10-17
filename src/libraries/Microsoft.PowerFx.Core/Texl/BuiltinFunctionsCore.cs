@@ -216,6 +216,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction TimeValue_UO = _library.Add(new TimeValueFunction_UO());
         public static readonly TexlFunction TimeZoneOffset = _library.Add(new TimeZoneOffsetFunction());
         public static readonly TexlFunction Today = _library.Add(new TodayFunction());
+        public static readonly TexlFunction Trace = _library.Add(new TraceFunction());
         public static readonly TexlFunction Trim = _library.Add(new TrimFunction());
         public static readonly TexlFunction TrimEnds = _library.Add(new TrimEndsFunction());
         public static readonly TexlFunction TrimEndsT = _library.Add(new TrimEndsTFunction());

@@ -1,0 +1,19 @@
+#SETUP: StronglyTypedBuiltinEnums,EnableExpressionChaining,TraceSetup
+
+>> Trace("test1") ; traceRecord;
+{customRecord:"{}",message:"test1",severity:0}
+
+>> Trace("test1", TraceSeverity.Warning); traceRecord;
+{customRecord:"{}",message:"test1",severity:1}
+
+>> Trace("test1", TraceSeverity.Warning, {f1: Float(1), f2: "test"}) ; traceRecord;
+{customRecord:"{f1:Float(1),f2:""test""}",message:"test1",severity:1}
+
+>> Trace("test1", TraceSeverity.Warning, {f1: Decimal(1), f2: "test"}, TraceOptions.IgnoreUnsupportedTypes) ; traceRecord;
+{customRecord:"{f1:Decimal(1),f2:""test""}",message:"test1",severity:1}
+
+>> Trace("test1", Float(1/0), {f1: Float(1), f2: "test"}, "1") ; traceRecord;
+Errors: Error 15-25: Invalid argument type (Number). Expecting a Enum (TraceSeverity) value instead.|Error 55-58: Invalid argument type (Text). Expecting a Enum (TraceOptions) value instead.|Error 0-59: The function 'Trace' has some invalid arguments.
+
+>> Trace("test1", Decimal(1), {f1: Float(1), f2: "test"}, "1") ; traceRecord;
+Errors: Error 15-25: Invalid argument type (Decimal). Expecting a Enum (TraceSeverity) value instead.|Error 55-58: Invalid argument type (Text). Expecting a Enum (TraceOptions) value instead.|Error 0-59: The function 'Trace' has some invalid arguments.

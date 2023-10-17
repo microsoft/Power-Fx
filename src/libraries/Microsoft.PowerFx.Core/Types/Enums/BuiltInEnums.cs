@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.Public.Logging;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Types.Enums
@@ -104,6 +106,25 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             { "RightParen", "\\)" },
             { "Space", "\\s" },
             { "Tab", "\\t" }
+        });
+
+        public static readonly EnumSymbol TraceSeverityEnum = new EnumSymbol(new DName(LanguageConstants.TraceSeverityEnumString), DType.Number, TraceSeverityDictionary());
+
+        private static Dictionary<string, object> TraceSeverityDictionary()
+        {
+            var traceDictionary = new Dictionary<string, object>();
+            foreach (TraceSeverity severity in Enum.GetValues(typeof(TraceSeverity)))
+            {
+                traceDictionary[severity.ToString()] = (int)severity;
+            }
+
+            return traceDictionary;
+        }
+
+        public static readonly EnumSymbol TraceOptionsEnum = new EnumSymbol(new DName(LanguageConstants.TraceOptionsEnumString), DType.String, new Dictionary<string, object>()
+        {
+            { "None", "n" },
+            { "IgnoreUnsupportedTypes", TraceFunction.IgnoreUnsupportedTypesEnumValue },
         });
     }
 }
