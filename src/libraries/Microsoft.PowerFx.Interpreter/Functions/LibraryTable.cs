@@ -122,18 +122,23 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, rows);
         }
 
-        // Create new table
+        // Create new table / record
         public static async ValueTask<FormulaValue> AddColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var sourceArg = (TableValue)args[0];
-
             var newColumns = NamedLambda.Parse(args);
+            if (args[0] is TableValue sourceArg)
+            {
+                var tableType = (TableType)irContext.ResultType;
+                var recordIRContext = new IRContext(irContext.SourceContext, tableType.ToRecord());
+                var rows = await LazyAddColumnsAsync(runner, context, sourceArg.Rows, recordIRContext, newColumns).ConfigureAwait(false);
 
-            var tableType = (TableType)irContext.ResultType;
-            var recordIRContext = new IRContext(irContext.SourceContext, tableType.ToRecord());
-            var rows = await LazyAddColumnsAsync(runner, context, sourceArg.Rows, recordIRContext, newColumns).ConfigureAwait(false);
-
-            return new InMemoryTableValue(irContext, rows);
+                return new InMemoryTableValue(irContext, rows);
+            }
+            else
+            {
+                var recordResult = await AddColumnsRecordAsync(runner, context, DValue<RecordValue>.Of(args[0] as RecordValue), irContext, newColumns).ConfigureAwait(false);
+                return recordResult.Value;
+            }
         }
 
         public static async ValueTask<FormulaValue> DropColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -189,31 +194,33 @@ namespace Microsoft.PowerFx.Functions
             foreach (var row in sources)
             {
                 runner.CheckCancel();
-
-                if (row.IsValue)
-                {
-                    // $$$ this is super inefficient... maybe a custom derived RecordValue? 
-                    var fields = new List<NamedValue>(row.Value.Fields);
-
-                    var childContext = context.SymbolContext.WithScopeValues(row.Value);
-
-                    foreach (var column in newColumns)
-                    {
-                        runner.CheckCancel();
-
-                        var value = await column.Lambda.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
-                        fields.Add(new NamedValue(column.Name, value));
-                    }
-
-                    list.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(recordIRContext, fields.ToArray())));
-                }
-                else
-                {
-                    list.Add(row);
-                }
+                var newRow = await AddColumnsRecordAsync(runner, context, row, recordIRContext, newColumns).ConfigureAwait(false);
+                list.Add(newRow);
             }
 
             return list;
+        }
+
+        private static async Task<DValue<RecordValue>> AddColumnsRecordAsync(EvalVisitor runner, EvalVisitorContext context, DValue<RecordValue> source, IRContext recordIRContext, NamedLambda[] newColumns)
+        {
+            if (!source.IsValue)
+            {
+                return source;
+            }
+
+            var fields = new List<NamedValue>(source.Value.Fields);
+
+            var childContext = context.SymbolContext.WithScopeValues(source.Value);
+
+            foreach (var column in newColumns)
+            {
+                runner.CheckCancel();
+
+                var value = await column.Lambda.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
+                fields.Add(new NamedValue(column.Name, value));
+            }
+
+            return DValue<RecordValue>.Of(new InMemoryRecordValue(recordIRContext, fields.ToArray()));
         }
 
         private static async Task<IEnumerable<DValue<RecordValue>>> LazyDropColumnsAsync(EvalVisitor runner, EvalVisitorContext context, IEnumerable<DValue<RecordValue>> sources, IRContext recordIRContext, FormulaValue[] columnsToRemove)

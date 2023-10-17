@@ -347,7 +347,7 @@
     <comment>function_parameter - Third argument to the AddColumns function - the expression used to create the new column.</comment>
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>A table to add columns to.</value>
+    <value>A table or record to add columns to.</value>
     <comment>AddColumns Parameter.</comment>
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">

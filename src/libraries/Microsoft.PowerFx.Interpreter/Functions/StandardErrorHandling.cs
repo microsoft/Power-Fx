@@ -631,7 +631,7 @@ namespace Microsoft.PowerFx.Functions
         {
             if (index == 0)
             {
-                return ExactValueTypeOrBlank<TableValue>(irContext, index, arg);
+                return ExactValueTypeOrTableOrBlank<RecordValue>(irContext, index, arg);
             }
             else if (index % 2 == 1)
             {
