@@ -17,9 +17,9 @@ namespace Microsoft.PowerFx.Logging
 
     public enum TraceSeverity
     {
-        Information = 0,
+        Critical = -1,
+        Error = 0,
         Warning = 1,
-        Error = 2,
-        Critical = 3
+        Information = 3
     }
 }

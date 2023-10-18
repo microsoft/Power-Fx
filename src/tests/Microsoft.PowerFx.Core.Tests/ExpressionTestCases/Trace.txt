@@ -1,10 +1,10 @@
 #SETUP: EnableExpressionChaining,TraceSetup
 
 >> Trace("test1") ; traceRecord;
-{customRecord:"{}",message:"test1",severity:0}
+{customRecord:"{}",message:"test1",severity:3}
 
 >> Trace(If(1<0, "test1")) ; traceRecord;
-{customRecord:"{}",message:"",severity:0}
+{customRecord:"{}",message:"",severity:3}
 
 >> Trace("test1", TraceSeverity.Warning); traceRecord;
 {customRecord:"{}",message:"test1",severity:1}
@@ -19,16 +19,16 @@ Error({Kind:ErrorKind.InvalidArgument})
 {customRecord:"{}",message:"test1",severity:1}
 
 >> Trace("test1", TraceSeverity.Information, {f1: Decimal(1), f2: "test"}, TraceOptions.IgnoreUnsupportedTypes) ; traceRecord;
-{customRecord:"{f1:Decimal(1),f2:""test""}",message:"test1",severity:0}
+{customRecord:"{f1:Decimal(1),f2:""test""}",message:"test1",severity:3}
 
 >> Trace("test1", TraceSeverity.Warning, {f1: Decimal(1), f2: "test"}, TraceOptions.IgnoreUnsupportedTypes) ; traceRecord;
 {customRecord:"{f1:Decimal(1),f2:""test""}",message:"test1",severity:1}
 
 >> Trace("test1", TraceSeverity.Error, {f1: Decimal(1), f2: "test"}, TraceOptions.IgnoreUnsupportedTypes) ; traceRecord;
-{customRecord:"{f1:Decimal(1),f2:""test""}",message:"test1",severity:2}
+{customRecord:"{f1:Decimal(1),f2:""test""}",message:"test1",severity:0}
 
 >> Trace("test1", TraceSeverity.Critical, {f1: Decimal(1), f2: "test"}, TraceOptions.IgnoreUnsupportedTypes) ; traceRecord;
-{customRecord:"{f1:Decimal(1),f2:""test""}",message:"test1",severity:3}
+{customRecord:"{f1:Decimal(1),f2:""test""}",message:"test1",severity:-1}
 
 >> Trace("test1", TraceSeverity.Information, {f1: Decimal(1), f2: "test"}, If(1<0, TraceOptions.IgnoreUnsupportedTypes)) ; traceRecord;
 Errors: Error 72-116: The 'trace_options' parameter to the Trace function must be a constant value.
@@ -40,7 +40,7 @@ Error({Kind:ErrorKind.Div0})
 Errors: Error 39-49: Invalid argument type (Number). Expecting a Record value instead.|Error 0-69: The function 'Trace' has some invalid arguments.
 
 >> Trace(Blank(), TraceSeverity.Critical, Blank(), TraceOptions.None) ; traceRecord;
-{customRecord:"{}",message:"",severity:3}
+{customRecord:"{}",message:"",severity:-1}
 
 >> Trace("test2", Blank()) ; traceRecord;
 Error({Kind:ErrorKind.InvalidArgument})

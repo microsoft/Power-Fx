@@ -1,7 +1,7 @@
 #SETUP: StronglyTypedBuiltinEnums,EnableExpressionChaining,TraceSetup
 
 >> Trace("test1") ; traceRecord;
-{customRecord:"{}",message:"test1",severity:0}
+{customRecord:"{}",message:"test1",severity:3}
 
 >> Trace("test1", TraceSeverity.Warning); traceRecord;
 {customRecord:"{}",message:"test1",severity:1}

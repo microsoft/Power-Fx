@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         public static readonly EnumSymbol TraceOptionsEnum = new EnumSymbol(new DName(LanguageConstants.TraceOptionsEnumString), DType.String, new Dictionary<string, object>()
         {
-            { "None", "n" },
+            { "None", "none" },
             { "IgnoreUnsupportedTypes", TraceFunction.IgnoreUnsupportedTypesEnumValue },
         });
     }
