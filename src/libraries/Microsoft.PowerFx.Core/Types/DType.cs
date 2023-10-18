@@ -3325,8 +3325,7 @@ namespace Microsoft.PowerFx.Core.Types
                 out coercionType,
                 ref schemaDifference,
                 ref schemaDifferenceType,
-                usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules,
-                primaryOutputPropertyCoercionDeprecated: features.PrimaryOutputPropertyCoercionDeprecated);
+                features);
             if (subtypeCoerces.HasValue)
             {
                 return subtypeCoerces.Value;
@@ -3534,7 +3533,7 @@ namespace Microsoft.PowerFx.Core.Types
             return doesCoerce;
         }
 
-        protected virtual bool? SubtypeCoercesTo(DType typeDest, ref bool isSafe, out DType coercionType, ref KeyValuePair<string, DType> schemaDifference, ref DType schemaDifferenceType, bool usePowerFxV1CompatibilityRules = false, bool primaryOutputPropertyCoercionDeprecated = true)
+        protected virtual bool? SubtypeCoercesTo(DType typeDest, ref bool isSafe, out DType coercionType, ref KeyValuePair<string, DType> schemaDifference, ref DType schemaDifferenceType, Features features)
         {
             coercionType = null;
             return null;
