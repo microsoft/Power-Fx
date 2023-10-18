@@ -684,8 +684,8 @@ namespace Microsoft.PowerFx.Tests
             IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc);
 
             RecalcEngine engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client))
-                                                             .SetClock(new TestClockService());
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
+            runtimeConfig.SetClock(new TestClockService());
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook V4CalendarPostItem.json");
             FormulaValue result = await engine.EvalAsync(@"Office365Outlook.V4CalendarPostItem(""Calendar"", ""Subject"", Today(), Today(), ""(UTC+01:00) Brussels, Copenhagen, Madrid, Paris"")", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
@@ -704,7 +704,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/datasets/calendars/v4/tables/Calendar/items
  x-ms-user-agent: PowerFx/{version}
  [content-header] Content-Type: application/json; charset=utf-8
- [body] {{""subject"":""Subject"",""start"":""2023-06-02T00:00:00.0000000Z"",""end"":""2023-06-02T00:00:00.0000000Z"",""timeZone"":""(UTC\u002B01:00) Brussels, Copenhagen, Madrid, Paris""}}
+ [body] {{""subject"":""Subject"",""start"":""2023-06-02"",""end"":""2023-06-02"",""timeZone"":""(UTC\u002B01:00) Brussels, Copenhagen, Madrid, Paris""}}
 ";
 
             AssertEqual(expected, actual);

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,8 +17,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
-#pragma warning disable CA1005 // Avoid excessive parameters on generic types
-    public abstract class FunctionInvoker<TInvoker, TRequest, TResponse> : IConnectorSender<TInvoker, TRequest, TResponse>, IConnectorInvoker
+    public abstract class FunctionInvoker : IConnectorInvoker       
     {
         public BaseRuntimeConnectorContext Context { get; }        
 
@@ -25,23 +25,57 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         public ConnectorLogger Logger => Context.ExecutionLogger;
 
-        public bool ReturnRawResults => Context.ReturnRawResults;
+        public ConnectorFunction Function { get; }
 
         public bool ThrowOnError => Context.ThrowOnError;      
 
-        public FunctionInvoker(BaseRuntimeConnectorContext runtimeContext)
+        public FunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext)
         {
+            Function = function;
             Context = runtimeContext;            
             UtcConverter = new ConvertToUTC(Context.TimeZoneInfo);
         }
 
-        public abstract Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken);
+        public abstract Task<FormulaValue> SendAsync(InvokerParameters invokerElements, CancellationToken cancellationToken);
 
-        public abstract Task<FormulaValue> InvokeAsync(string nextlink, CancellationToken cancellationToken);        
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
 
-        public abstract Task<TResponse> SendAsync(TInvoker invoker, TRequest request, CancellationToken cancellationToken);
+            IConnectorInvoker invoker = Context.GetInvoker(Function);
+            InvokerParameters invokerParameters = GetRequestElements(Function, args, invoker is HttpFunctionInvoker hfi && hfi._invoker is HttpClient hc ? hc.BaseAddress : null, cancellationToken);
 
-        public (string url, Dictionary<string, string> header, string body) GetRequestElements(ConnectorFunction function, FormulaValue[] args, Uri baseAddress, CancellationToken cancellationToken)
+            if (invokerParameters == null)
+            {
+                Logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)} request is null");
+                return new ErrorValue(IRContext.NotInSource(Function.ReturnType), new ExpressionError()
+                {
+                    Kind = ErrorKind.Internal,
+                    Severity = ErrorSeverity.Critical,
+                    Message = $"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)} request is null"
+                });
+            }
+
+            return await SendAsync(invokerParameters, cancellationToken).ConfigureAwait(false);            
+        }
+
+        public async Task<FormulaValue> InvokeAsync(string nextlink, CancellationToken cancellationToken)
+        {
+            IConnectorInvoker invoker = Context.GetInvoker(Function);
+            InvokerParameters invokerParameters = new InvokerParameters()
+            {
+                QueryType = QueryType.NextPage,
+                HttpMethod = Function.HttpMethod,
+                Url = new Uri(nextlink).PathAndQuery,
+                Body = null,
+                ContentType = Function._internals.ContentType,
+                Headers = new Dictionary<string, string>()
+            };
+
+            return await SendAsync(invokerParameters, cancellationToken).ConfigureAwait(false);           
+        }
+
+        private InvokerParameters GetRequestElements(ConnectorFunction function, FormulaValue[] args, Uri baseAddress, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -106,15 +140,23 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
                         case ParameterLocation.Cookie:
                         default:
-                            Logger?.LogError($"In {nameof(FunctionInvoker<TInvoker, TRequest, TResponse>)}.{nameof(GetRequestElements)}, unsupported {param.In.Value}");
-                            return (null, null, null);
+                            Logger?.LogError($"In {nameof(FunctionInvoker)}.{nameof(GetRequestElements)}, unsupported {param.In.Value}");
+                            return null;
                     }
                 }
             }
 
             var url = (OpenApiParser.GetServer(function.Servers, baseAddress) ?? string.Empty) + path + query.ToString();
 
-            return (url, headers, body);
+            return new InvokerParameters()
+            {
+                QueryType = QueryType.InitialRequest,
+                Url = url,
+                Headers = headers,
+                Body = body,
+                HttpMethod = function.HttpMethod,
+                ContentType = function._internals.ContentType
+            };
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
@@ -152,11 +194,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
             }
         }
 
-        public FormulaValue DecodeJson(ConnectorFunction function, string text)
+        public FormulaValue DecodeJson(ConnectorFunction function, bool returnRawResults, string text)
         {
             return string.IsNullOrWhiteSpace(text)
                     ? FormulaValue.NewBlank(function.ReturnType)
-                    : ReturnRawResults
+                    : returnRawResults
                     ? FormulaValue.New(text)
                     : FormulaValueJSON.FromJson(text, function.ReturnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
         }
@@ -295,5 +337,4 @@ namespace Microsoft.PowerFx.Connectors.Execution
             return new InMemoryRecordValue(IRContext.NotInSource(rt), lst);
         }
     }
-#pragma warning restore CA1005 // Avoid excessive parameters on generic types
 }

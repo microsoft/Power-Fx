@@ -629,7 +629,7 @@ namespace Microsoft.PowerFx.Connectors
         // - PagesRecordValue if the next page has a next link
         // - RecordValue if there is no next link
         // - ErrorValue
-        private async Task<FormulaValue> GetNextPageAsync(string nextLink, IConnectorInvoker invoker, CancellationToken cancellationToken)
+        private async Task<FormulaValue> GetNextPageAsync(string nextLink, IConnectorInvoker invoker, CancellationToken cancellationToken)            
         {
             cancellationToken.ThrowIfCancellationRequested();
             invoker.Context.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetNextPageAsync))}, getting next page");

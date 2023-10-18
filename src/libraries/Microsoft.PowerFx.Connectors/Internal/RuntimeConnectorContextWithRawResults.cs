@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Net.Http;
+using Microsoft.PowerFx.Connectors.Execution;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public override TimeZoneInfo TimeZoneInfo => _baseRuntimeConnectorContext.TimeZoneInfo;
 
-        public override object GetInvoker(string @namespace) => _baseRuntimeConnectorContext.GetInvoker(@namespace);
+        public override IConnectorInvoker GetInvoker(ConnectorFunction function, bool returnRawResults) => _baseRuntimeConnectorContext.GetInvoker(function, true);
 
         public override bool ThrowOnError => _baseRuntimeConnectorContext.ThrowOnError;
 

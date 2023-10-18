@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using Microsoft.PowerFx.Connectors.Execution;
 using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
@@ -13,11 +14,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
     {
         private readonly Dictionary<string, HttpMessageInvoker> _clients = new ();
         private readonly bool _throwOnError;
-        private readonly ConnectorLogger _logger;
+        private readonly ConnectorLogger _logger;        
 
         public TestConnectorRuntimeContext(string @namespace, HttpMessageInvoker client, bool? throwOnError = null, ITestOutputHelper console = null, bool includeDebug = false)
         {
-            Add(@namespace, client);
+            Add(@namespace, client);            
             _throwOnError = throwOnError ?? base.ThrowOnError;
             _logger = console == null ? null : new ConsoleLogger(console, includeDebug);
         }
@@ -30,14 +31,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
             return this;
         }
 
-        public override object GetInvoker(string @namespace)
+        public override IConnectorInvoker GetInvoker(ConnectorFunction function, bool returnRawResults)
         {
-            if (string.IsNullOrEmpty(@namespace) || !_clients.ContainsKey(@namespace))
+            if (string.IsNullOrEmpty(function.Namespace) || !_clients.ContainsKey(function.Namespace))
             {
-                throw new ArgumentException("Invalid namespace or missing HttpMessageInvoker for this namespace", nameof(@namespace));
+                throw new ArgumentException("Invalid namespace or missing HttpMessageInvoker for this namespace", nameof(function.Namespace));
             }
 
-            return _clients[@namespace];
+            HttpMessageInvoker httpInvoker = _clients[function.Namespace];
+
+            return new HttpFunctionInvoker(function, returnRawResults ? new RuntimeConnectorContextWithRawResults(this) : this, httpInvoker);
         }
 
         public override bool ThrowOnError => _throwOnError;

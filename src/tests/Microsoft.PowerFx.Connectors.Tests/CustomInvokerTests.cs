@@ -53,60 +53,35 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _namespace = @namespace;
         }
 
-        // This is where we tell the runtime to use our custom invoker (otherwise HttpFunctionInvoker is used)
-        internal override IConnectorInvoker GetInvoker(ConnectorFunction function)
-        {
-            return new TestCustomInvoker(function, this);
-        }
-
         public override TimeZoneInfo TimeZoneInfo => TimeZoneInfo.Utc;
 
-        public override object GetInvoker(string @namespace)
+        public override IConnectorInvoker GetInvoker(ConnectorFunction function, bool returnRawResults = false)
         {
-            // No selection per namespace for simplicity
-            return new CustomInvoker();
+            return new CustomFunctionInvoker(function, this);
         }
     }
 
-    internal class TestCustomInvoker : FunctionInvoker<CustomInvoker, CustomRequest, CustomResponse>
+    internal class CustomFunctionInvoker : FunctionInvoker
     {
-        public ConnectorFunction Function { get; }
-
-        public TestCustomInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext)
-            : base(runtimeContext)
-        {
-            Function = function;
+        public CustomFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext)
+            : base(function, runtimeContext)
+        {            
         }
 
-        public override async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        public override async Task<FormulaValue> SendAsync(InvokerParameters invokerElements, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            CustomInvoker invoker = new CustomInvoker();
+            CustomResponse response = await invoker.GetResult(invokerElements, cancellationToken).ConfigureAwait(false);
 
-            (string url, Dictionary<string, string> headers, string body) = GetRequestElements(Function, args, null, cancellationToken);
-
-            CustomInvoker customInvoker = (CustomInvoker)Context.GetInvoker(Function.Namespace);
-            CustomRequest customRequest = new CustomRequest() { Url = url, Headers = headers, Body = body };
-
-            CustomResponse customResponse = await SendAsync(customInvoker, customRequest, cancellationToken).ConfigureAwait(false);
-
-            return RecordValue.NewRecordFromFields(customResponse.Parts.Select(kvp => new NamedValue(kvp.Key, FormulaValue.New(kvp.Value))));
-        }
-
-        public override Task<FormulaValue> InvokeAsync(string nextlink, CancellationToken cancellationToken)
-        {
-            // No need for paging in this example
-            throw new NotImplementedException();
-        }
-
-        public override async Task<CustomResponse> SendAsync(CustomInvoker invoker, CustomRequest request, CancellationToken cancellationToken)
-        {
-            return await invoker.GetResult(request, cancellationToken).ConfigureAwait(false);
+            return RecordValue.NewRecordFromFields(response.Parts.Select(kvp => new NamedValue(kvp.Key, FormulaValue.New(kvp.Value))));
         }
     }
 
-    internal class CustomInvoker
+    internal class CustomInvoker 
     {
-        public async Task<CustomResponse> GetResult(CustomRequest request, CancellationToken cancellationToken)
+        public BaseRuntimeConnectorContext Context => throw new NotImplementedException();
+
+        public async Task<CustomResponse> GetResult(InvokerParameters request, CancellationToken cancellationToken)
         {
             return new CustomResponse()
             {
@@ -115,14 +90,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     { "mobilePhone", "+33 799 999 999" }
                 }
             };
-        }
-    }
-
-    internal class CustomRequest
-    {
-        public string Url;
-        public Dictionary<string, string> Headers;
-        public string Body;
+        }      
     }
 
     internal class CustomResponse

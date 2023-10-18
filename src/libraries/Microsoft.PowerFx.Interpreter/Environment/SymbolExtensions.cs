@@ -41,10 +41,9 @@ namespace Microsoft.PowerFx
         /// <param name="symbols">SymbolValues where to set the CultureInfo.</param>
         /// <param name="clock">service to provide current time.</param>
         /// <exception cref="ArgumentNullException">When clock is null.</exception>
-        public static RuntimeConfig SetClock(this RuntimeConfig symbols, IClockService clock)
+        public static void SetClock(this RuntimeConfig symbols, IClockService clock)
         {
             symbols.AddService<IClockService>(clock ?? throw new ArgumentNullException(nameof(clock)));
-            return symbols;
         }
 
         /// <summary>
