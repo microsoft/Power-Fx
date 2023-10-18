@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // AddColumns(source:*[...], name:s, valueFunc:func<_>, name:s, valueFunc:func<_>, ...)
     // AddColumns(source:![...], name:s, valueFunc:func<_>, name:s, valueFunc:func<_>, ...)
     // Corresponding DAX function: AddColumns
-    internal sealed class AddColumnsFunction : BuiltinFunction
+    internal sealed class AddColumnsFunction : FunctionWithTableInput
     {
         public override bool SkipScopeForInlineRecords => true;
 

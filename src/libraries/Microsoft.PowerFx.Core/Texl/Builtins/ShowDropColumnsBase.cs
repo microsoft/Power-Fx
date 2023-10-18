@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // DropColumns(source:![...], name:s, name:s, ...)
     // ShowColumns(source:*[...], name:s, name:s, ...)
     // ShowColumns(source:![...], name:s, name:s, ...)
-    internal class ShowDropColumnsFunctionBase : BuiltinFunction
+    internal class ShowDropColumnsFunctionBase : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
 
@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             : base(
                   name: isShowColumns ? "ShowColumns" : "DropColumns",
                   description: isShowColumns ? TexlStrings.AboutShowColumns : TexlStrings.AboutDropColumns,
-                  functionCategories: FunctionCategories.Table,
+                  fc: FunctionCategories.Table,
                   returnType: DType.EmptyTable,
                   maskLambdas: 0,
                   arityMin: 2,
