@@ -57,7 +57,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         public override IConnectorInvoker GetInvoker(ConnectorFunction function, bool returnRawResults = false)
         {
-            return new CustomFunctionInvoker(function, this);
+            if (function.Namespace == _namespace)
+            {
+                return new CustomFunctionInvoker(function, this);
+            }
+
+            throw new NotImplementedException("Unknown namespace");
         }
     }
 
