@@ -122,25 +122,6 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, rows);
         }
 
-        // Create new table / record
-        public static async ValueTask<FormulaValue> AddColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
-        {
-            var newColumns = NamedLambda.Parse(args);
-            if (args[0] is TableValue sourceArg)
-            {
-                var tableType = (TableType)irContext.ResultType;
-                var recordIRContext = new IRContext(irContext.SourceContext, tableType.ToRecord());
-                var rows = await LazyAddColumnsAsync(runner, context, sourceArg.Rows, recordIRContext, newColumns).ConfigureAwait(false);
-
-                return new InMemoryTableValue(irContext, rows);
-            }
-            else
-            {
-                var recordResult = await AddColumnsRecordAsync(runner, context, DValue<RecordValue>.Of(args[0] as RecordValue), irContext, newColumns).ConfigureAwait(false);
-                return recordResult.Value;
-            }
-        }
-
         public static async ValueTask<FormulaValue> DropColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var columnsToRemove = args.Skip(1).ToArray();
@@ -187,6 +168,25 @@ namespace Microsoft.PowerFx.Functions
             return await DropColumns(runner, context, irContext, newArgs.ToArray()).ConfigureAwait(false);
         }
 
+        // Create new table / record
+        public static async ValueTask<FormulaValue> AddColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var newColumns = NamedLambda.Parse(args);
+            if (args[0] is TableValue sourceArg)
+            {
+                var tableType = (TableType)irContext.ResultType;
+                var recordIRContext = new IRContext(irContext.SourceContext, tableType.ToRecord());
+                var rows = await LazyAddColumnsAsync(runner, context, sourceArg.Rows, recordIRContext, newColumns).ConfigureAwait(false);
+
+                return new InMemoryTableValue(irContext, rows);
+            }
+            else
+            {
+                var recordResult = await AddColumnsRecordAsync(runner, context, DValue<RecordValue>.Of(args[0] as RecordValue), irContext, newColumns).ConfigureAwait(false);
+                return recordResult.Value;
+            }
+        }
+
         private static async Task<IEnumerable<DValue<RecordValue>>> LazyAddColumnsAsync(EvalVisitor runner, EvalVisitorContext context, IEnumerable<DValue<RecordValue>> sources, IRContext recordIRContext, NamedLambda[] newColumns)
         {
             var list = new List<DValue<RecordValue>>();
@@ -221,6 +221,65 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return DValue<RecordValue>.Of(new InMemoryRecordValue(recordIRContext, fields.ToArray()));
+        }
+
+        // Create new table / record
+        public static async ValueTask<FormulaValue> RenameColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var renamedColumns = new Dictionary<string, string>();
+            for (int i = 1; i < args.Length - 1; i += 2)
+            {
+                var oldName = ((StringValue)args[i]).Value;
+                var newName = ((StringValue)args[i + 1]).Value;
+                renamedColumns.Add(oldName, newName);
+            }
+
+            if (args[0] is TableValue sourceArg)
+            {
+                var tableType = (TableType)irContext.ResultType;
+                var recordIRContext = new IRContext(irContext.SourceContext, tableType.ToRecord());
+                var rows = await LazyRenameColumnsAsync(runner, context, sourceArg.Rows, recordIRContext, renamedColumns).ConfigureAwait(false);
+
+                return new InMemoryTableValue(irContext, rows);
+            }
+
+            var recordArg = (RecordValue)args[0];
+            var recordResult = RenameColumnsRecord(runner, context, DValue<RecordValue>.Of(recordArg), irContext, renamedColumns).Value;
+            return recordResult;
+        }
+
+        private static async Task<IEnumerable<DValue<RecordValue>>> LazyRenameColumnsAsync(EvalVisitor runner, EvalVisitorContext context, IEnumerable<DValue<RecordValue>> sources, IRContext recordIRContext, Dictionary<string, string> renamedColumns)
+        {
+            var list = new List<DValue<RecordValue>>();
+
+            foreach (var row in sources)
+            {
+                runner.CheckCancel();
+                var newRow = RenameColumnsRecord(runner, context, row, recordIRContext, renamedColumns);
+                list.Add(newRow);
+            }
+
+            return list;
+        }
+
+        private static DValue<RecordValue> RenameColumnsRecord(EvalVisitor runner, EvalVisitorContext context, DValue<RecordValue> source, IRContext recordIRContext, Dictionary<string, string> renamedColumns)
+        {
+            if (!source.IsValue)
+            {
+                return source;
+            }
+
+            var newFields = source.Value.Fields
+                .Select(f =>
+                {
+                    if (renamedColumns.TryGetValue(f.Name, out var newName))
+                    {
+                        return new NamedValue(newName, f.Value);
+                    }
+
+                    return f;
+                });
+            return DValue<RecordValue>.Of(new InMemoryRecordValue(recordIRContext, newFields.ToArray()));
         }
 
         private static async Task<IEnumerable<DValue<RecordValue>>> LazyDropColumnsAsync(EvalVisitor runner, EvalVisitorContext context, IEnumerable<DValue<RecordValue>> sources, IRContext recordIRContext, FormulaValue[] columnsToRemove)

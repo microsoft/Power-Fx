@@ -102,6 +102,7 @@
     "RandBetween",
     "Refresh",
     "Remove",
+    "RenameColumns",
     "Replace",
     "RGBA",
     "Right",

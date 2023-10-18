@@ -376,6 +376,35 @@
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>The name of a column to remove.</value>
   </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Returns a copy of the specified 'source' table, with the 'old_column' column renamed to 'new_column'.</value>
+    <comment>Description of RenameColumns function.</comment>
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - First argument of the RenameColumns function - the data source from which columns will be renamed.</comment>
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>old_column</value>
+    <comment>function_parameter - Second argument of the RenameColumns function - the new name for the column. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>new_column</value>
+    <comment>function_parameter - Third argument of the RenameColumns function - the new name for the column. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>A table value to process.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>The name of a column to rename.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>The new name for the column.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+  </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Returns the rows from the table for which all the specified conditions are true.</value>
     <comment>Description of 'Filter' function.</comment>
@@ -2274,6 +2303,10 @@
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
     <value>A field named '{0}' was specified more than once in this record.</value>
     <comment>Parse error on duplicate field definitions.</comment>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>A column named '{0}' was specified more than once.</value>

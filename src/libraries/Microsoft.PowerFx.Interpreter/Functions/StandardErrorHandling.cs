@@ -643,7 +643,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue ShowDropColumnsTypeChecker(IRContext irContext, int index, FormulaValue arg)
+        private static FormulaValue ShowDropRenameColumnsTypeChecker(IRContext irContext, int index, FormulaValue arg)
         {
             if (index == 0)
             {

@@ -308,6 +308,57 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], A, C)", "*[B:n,C:s]")]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], B, C)", "*[A:s,C:n]")]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], A, C, B, D)", "*[C:s,D:n]")]
+        [InlineData("RenameColumns({A:\"hello\",B:1}, A, C)", "![B:n,C:s]")]
+        [InlineData("RenameColumns({A:\"hello\",B:1}, B, C)", "![A:s,C:n]")]
+        [InlineData("RenameColumns({A:\"hello\",B:1}, A, C, B, D)", "![C:s,D:n]")]
+        public void TexlFunctionTypeSemanticsRenameColumns(string expression, string expectedType)
+        {
+            var engine = new Engine(new PowerFxConfig(Features.PowerFxV1));
+            var options = new ParserOptions() { NumberIsFloat = true };
+            var result = engine.Check(expression, options);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], \"A\", \"C\")", "*[B:n,C:s]")]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], \"B\", \"C\")", "*[A:s,C:n]")]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], \"A\", \"C\", \"B\", \"D\")", "*[C:s,D:n]")]
+        [InlineData("RenameColumns({A:\"hello\",B:1}, \"A\", \"C\")", "![B:n,C:s]")]
+        [InlineData("RenameColumns({A:\"hello\",B:1}, \"B\", \"C\")", "![A:s,C:n]")]
+        [InlineData("RenameColumns({A:\"hello\",B:1}, \"A\", \"C\", \"B\", \"D\")", "![C:s,D:n]")]
+        public void TexlFunctionTypeSemanticsRenameColumns_ColumnNamesAsIdentifiersDisabled(string expression, string expectedType)
+        {
+            var engine = new Engine(new PowerFxConfig(new Features { SupportColumnNamesAsIdentifiers = false, TableSyntaxDoesntWrapRecords = true }));
+            var options = new ParserOptions() { NumberIsFloat = true };
+            var result = engine.Check(expression, options);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], C, B)")]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], AB, B)")]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], A1, B)")]
+        [InlineData("RenameColumns({A:\"hello\",B:1}, C, B)")]
+        [InlineData("RenameColumns({A:\"hello\",B:1}, AB, B)")]
+        [InlineData("RenameColumns({A:\"hello\",B:1}, A1, B)")]
+        public void TexlFunctionTypeSemanticsRenameColumns_Negative(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression);
+
+            Assert.False(result.IsSuccess);
+        }
+
+        [Theory]
         [InlineData("Average(\"3\")")]
         [InlineData("Average(\"3\", 4)")]
         [InlineData("Average(true, 4)")]
