@@ -113,16 +113,19 @@ namespace Microsoft.PowerFx.Intellisense
                                 Label = paramName
                             });
 
-                            if (ArgNeedsHighlight(func, argCount, argIndex, signature.Count(), signatureIndex))
+                            // This and other similar code blocks are here for legacy formula bar.
+                            // Should be removed when that is deprecated.
+                            // Adds extra computations that won't be required in future after new formula bar
+                            if (ArgNeedsHighlight(possibleOverload, argCount, argIndex, signature.Count(), signatureIndex))
                             {
                                 (highlightStart, highlightEnd, highlightedFuncParamDescription) = (parameterHighlightStart, parameterHighlightEnd, funcParamDescription);
                             }
 
                             // For variadic function, we want to generate FuncName(arg1,arg1,...,arg1,...) as description.
-                            if (func.SignatureConstraint != null && argCount > func.SignatureConstraint.RepeatTopLength && CanParamOmit(func, argCount, argIndex, signature.Count(), signatureIndex))
+                            if (possibleOverload.SignatureConstraint != null && argCount > possibleOverload.SignatureConstraint.RepeatTopLength && CanParamOmit(possibleOverload, argCount, argIndex, signature.Count(), signatureIndex))
                             {
                                 funcDisplayString.Append("...");
-                                signatureIndex += func.SignatureConstraint.RepeatSpan;
+                                signatureIndex += possibleOverload.SignatureConstraint.RepeatSpan;
                             }
                             else
                             {
@@ -134,7 +137,7 @@ namespace Microsoft.PowerFx.Intellisense
                         }
 
                         // Add ... at the end of function display string. e.g. Text(value, Format_text,...)
-                        var shouldAddEllipsis = func.MaxArity > func.MinArity && func.MaxArity > argCount;
+                        var shouldAddEllipsis = possibleOverload.MaxArity > possibleOverload.MinArity && possibleOverload.MaxArity > argCount;
 
                         if (shouldAddEllipsis)
                         {
@@ -144,14 +147,15 @@ namespace Microsoft.PowerFx.Intellisense
                         funcDisplayString.Append(')');
                         var signatureInformation = new SignatureInformation()
                         {
-                            Documentation = func.Description,
+                            // Use overload description and not IntellisenseData.CurrFunc overload
+                            Documentation = possibleOverload.Description ?? func.Description,
                             Label = CreateFunctionSignature(func.Name, parameters, shouldAddEllipsis),
-                            Parameters = parameters.ToArray()
+                            Parameters = parameters.ToArray(),
                         };
                         _functionSignatures.Add(signatureInformation);
-                        _functionOverloads.Add(new IntellisenseSuggestion(new UIString(funcDisplayString.ToString(), highlightStart, highlightEnd), SuggestionKind.Function, SuggestionIconKind.Function, func.ReturnType, signatureIndex, func.Description, func.Name, highlightedFuncParamDescription));
+                        _functionOverloads.Add(new IntellisenseSuggestion(new UIString(funcDisplayString.ToString(), highlightStart, highlightEnd), SuggestionKind.Function, SuggestionIconKind.Function, possibleOverload.ReturnType, signatureIndex, possibleOverload.Description, possibleOverload.Name, highlightedFuncParamDescription));
 
-                        if ((signatureIndex >= argCount || (func.SignatureConstraint != null && argCount > func.SignatureConstraint.RepeatTopLength)) && minMatchingArgCount > signatureIndex)
+                        if ((signatureIndex >= argCount || (possibleOverload.SignatureConstraint != null && argCount > possibleOverload.SignatureConstraint.RepeatTopLength)) && minMatchingArgCount > signatureIndex)
                         {
                             // _functionOverloads has at least one item at this point.
                             CurrentFunctionOverloadIndex = _functionOverloads.Count - 1;
@@ -167,7 +171,7 @@ namespace Microsoft.PowerFx.Intellisense
                     {
                         Documentation = func.Description,
                         Label = CreateFunctionSignature(func.Name),
-                        Parameters = new ParameterInformation[0]
+                        Parameters = new ParameterInformation[0],
                     };
                     _functionSignatures.Add(signatureInformation);
                     _functionOverloads.Add(new IntellisenseSuggestion(new UIString(func.Name + "()", 0, func.Name.Length + 1), SuggestionKind.Function, SuggestionIconKind.Function, func.ReturnType, string.Empty, 0, func.Description, func.Name));
@@ -184,7 +188,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// </summary>
         public SignatureHelp.SignatureHelp SignatureHelp => new SignatureHelp.SignatureHelp()
         {
-            Signatures = _functionSignatures.ToArray(),
+            Signatures = _functionSignatures.Distinct().ToArray(),
             ActiveSignature = CurrentFunctionOverloadIndex > 0 ? (uint)CurrentFunctionOverloadIndex : 0,
             ActiveParameter = (uint)_currentArgumentIndex
         };
