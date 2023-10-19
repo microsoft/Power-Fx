@@ -149,12 +149,29 @@ namespace Microsoft.PowerFx.Core.Utils
                     // Use hasNumericCharacters to check if format string has numeric character before group separator or after decimal point.
                     hasNumericCharacters = true;
                     textFormatArgs.HasNumericFmt = true;
+
+                    // Clear comma list for scaling because comma before numeric characters does not use for scaling.
+                    if (commaIdxList.Count > 0)
+                    {
+                        if (formatStr.Contains('.') && decimalPointIndex == -1)
+                        {
+                            for (int j = commaIdxList.Count - 1; j >= 0; j--)
+                            {
+                                if (commaIdxList[j] < formatStr.Length - 1 && !_numericCharacters.Contains(formatStr[commaIdxList[j] + 1]))
+                                {
+                                    formatStr = formatStr.Remove(commaIdxList[j], 1);
+                                }
+                            }
+                        }
+
+                        commaIdxList.Clear();
+                    }
                 }
                 else if (_dateTimeCharacters.Contains(formatStr[i]))
                 {
                     textFormatArgs.DateTimeFmt = DateTimeFmtType.GeneralDateTimeFormat;
                 }
-                else if (textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat && formatStr[i] == ',' && !hasNumericCharacters)
+                else if (textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat && formatStr[i] == ',' && !hasNumericCharacters && decimalPointIndex == -1)
                 {
                     // If there is no numeric format character before group separator character, then treat it as an escaping character.
                     formatStr = formatStr.Insert(i, "\\");
@@ -165,16 +182,20 @@ namespace Microsoft.PowerFx.Core.Utils
                     // Reset hasNumericCharacters to false to later check if any numeric character after decimal point.
                     decimalPointIndex = i;
                     hasNumericCharacters = false;
+
                     if (commaIdxList.Count > 0)
                     {
-                        // Add escaping character for any group separator character ',' before decimal point.
-                        for (int j = commaIdxList.Count - 1; j >= 0; j--)
+                        // Remove any comma before decimal point that is not using for scaling
+                        if (commaIdxList[commaIdxList.Count - 1] != i - 1)
                         {
-                            formatStr = formatStr.Insert(commaIdxList[j], "\\");
-                        }
+                            for (int j = commaIdxList.Count - 1; j >= 0; j--)
+                            {
+                                formatStr = formatStr.Remove(commaIdxList[j], 1);
+                            }
 
-                        // Reset comma index list if it has any index because comma before numeric character is not used for scaling factor.
-                        commaIdxList.Clear();
+                            // Reset comma index list
+                            commaIdxList.Clear();
+                        }
                     }
                 }
                 else if (_unsupportedCharacters.Contains(formatStr[i]))
@@ -195,12 +216,24 @@ namespace Microsoft.PowerFx.Core.Utils
                         return false;
                     }
                 }
-                else if (textFormatArgs.HasNumericFmt && formatStr[i] == ',')
+                else if (textFormatArgs.HasNumericFmt && formatStr[i] == ',' && i > 0)
                 {
-                    if (i == formatStr.Length - 1 || !_numericCharacters.Contains(formatStr[i + 1]) || (i > 0 && !_numericCharacters.Contains(formatStr[i - 1])))
+                    if (_numericCharacters.Contains(formatStr[i - 1]) || commaIdxList.Contains(i - 1))
                     {
-                        // Record each comma index after decimal point and numeric character to do scaling factor process in the end of format.
+                        // Record each comma index after numeric character and comma to do scaling factor process in the end of format.
                         commaIdxList.Add(i);
+                    }
+                    else if (formatStr[i - 1] == ',')
+                    {
+                        // Removing consecutive comma if it is not used for scaling factor
+                        formatStr = formatStr.Remove(i, 1);
+                        i--;
+                    }
+                    else if (formatStr[i - 1] != '.')
+                    {
+                        // Add escaping character to comma
+                        formatStr = formatStr.Insert(i, "\\");
+                        i++;
                     }
                 }
                 else if (formatStr[i] == '\'' && (i == 0 || formatStr[i - 1] != '\\'))
@@ -218,7 +251,7 @@ namespace Microsoft.PowerFx.Core.Utils
                     }
 
                     // If format string of numeric ends with e or e+ (not escaping character) then format is invalid.
-                    if (textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat && (formatStr[i] == 'e' || formatStr[i] == 'E' || 
+                    if (textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat && (formatStr[i] == 'e' || formatStr[i] == 'E' ||
                         (i > 2 && formatStr[i - 2] != '\\' && (formatStr[i - 1] == 'e' || formatStr[i - 1] == 'E') && formatStr[i] == '+')))
                     {
                         return false;
@@ -260,6 +293,10 @@ namespace Microsoft.PowerFx.Core.Utils
                 for (int j = commaIdxList.Count - 1; j >= 0; j--)
                 {
                     formatStr = formatStr.Remove(commaIdxList[j], 1);
+                    if (commaIdxList[j] < decimalPointIndex)
+                    {
+                        decimalPointIndex--;
+                    }
                 }
 
                 formatStr = formatStr.Insert(decimalPointIndex, new string(',', commaIdxList.Count));
