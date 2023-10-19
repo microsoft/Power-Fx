@@ -206,7 +206,11 @@ namespace Microsoft.PowerFx
         internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null)
         {
             // Phase 1: Side affects are not allowed.
-            var options = new ParserOptions() { AllowsSideEffects = false, Culture = parseCulture };
+            var options = new ParserOptions() 
+            { 
+                AllowsSideEffects = false, 
+                Culture = parseCulture ?? CultureInfo.InvariantCulture 
+            };
             var sb = new StringBuilder();
 
             UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult);
