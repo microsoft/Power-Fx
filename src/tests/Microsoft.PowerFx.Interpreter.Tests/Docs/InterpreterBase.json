@@ -129,6 +129,7 @@
     "TimeValue",
     "TimeZoneOffset",
     "Today",
+    "Trace",
     "Trim",
     "TrimEnds",
     "Trunc",

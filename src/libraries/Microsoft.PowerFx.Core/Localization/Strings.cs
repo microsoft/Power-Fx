@@ -531,6 +531,12 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter JSONArg1 = (b) => StringResources.Get("JSONArg1", b);
         public static StringGetter JSONArg2 = (b) => StringResources.Get("JSONArg2", b);
 
+        public static StringGetter AboutTrace = (b) => StringResources.Get("AboutTrace", b);
+        public static StringGetter TraceArg1 = (b) => StringResources.Get("TraceArg1", b);
+        public static StringGetter TraceArg2 = (b) => StringResources.Get("TraceArg2", b);
+        public static StringGetter TraceArg3 = (b) => StringResources.Get("TraceArg3", b);
+        public static StringGetter TraceArg4 = (b) => StringResources.Get("TraceArg4", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -727,5 +733,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrJSONArg2IncompatibleOptions = new ErrorResourceKey("ErrJSONArg2IncompatibleOptions");
         public static ErrorResourceKey ErrJSONArg1UnsupportedNestedType = new ErrorResourceKey("ErrJSONArg1UnsupportedNestedType");
         public static ErrorResourceKey ErrJSONArg1UnsupportedTypeWithNonBehavioral = new ErrorResourceKey("ErrJSONArg1UnsupportedTypeWithNonBehavioral");
+        public static ErrorResourceKey ErrTraceInvalidCustomRecordType = new ErrorResourceKey("ErrTraceInvalidCustomRecordType");
     }
 }
