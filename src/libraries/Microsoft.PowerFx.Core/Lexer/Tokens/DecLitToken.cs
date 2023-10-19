@@ -41,8 +41,13 @@ namespace Microsoft.PowerFx.Syntax
         /// <inheritdoc />
         public override string ToString()
         {
+            return ToString(this.Value);
+        }
+
+        public static string ToString(decimal value)
+        {
             // $$$ can't use current culture
-            return Value.ToString("G29", CultureInfo.CurrentCulture);
+            return value.ToString("G29", CultureInfo.CurrentCulture);
         }
 
         /// <inheritdoc />
