@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Texl
             "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Defaults", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit", "GUID",
             "GroupBy", "HashTags", "IsMatch", "IsType", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "Print", "ReadNFC",
             "RecordInfo", "Relate", "RemoveAll", "RemoveIf", "RequestHide", "Reset", "ResetForm", "Revert", "SaveData", "ScanBarcode", "Search", "Select", "SetFocus",
-            "SetProperty", "ShowColumns", "State", "SubmitForm", "Trace", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm"
+            "SetProperty", "ShowColumns", "State", "SubmitForm", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm"
         };
 
         // Functions in this list are shared and may show up in other hosts by default.
@@ -217,6 +217,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction TimeValue_UO = _library.Add(new TimeValueFunction_UO());
         public static readonly TexlFunction TimeZoneOffset = _library.Add(new TimeZoneOffsetFunction());
         public static readonly TexlFunction Today = _library.Add(new TodayFunction());
+        public static readonly TexlFunction Trace = _library.Add(new TraceFunction());
         public static readonly TexlFunction Trim = _library.Add(new TrimFunction());
         public static readonly TexlFunction TrimEnds = _library.Add(new TrimEndsFunction());
         public static readonly TexlFunction TrimEndsT = _library.Add(new TrimEndsTFunction());

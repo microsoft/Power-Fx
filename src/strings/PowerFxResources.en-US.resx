@@ -5361,6 +5361,42 @@
     <value>The format to be used in the JSON conversion. The value will be a member of the JSONFormat enumeration.</value>
     <comment>{Locked=JSONFormat} Tooltip for the second argument of the JSON function.</comment>
   </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Logs information to Application Insights when enabled, and logs in a test studio session that will be available in the test results.</value>
+    <comment>Description of 'Trace' function.</comment>
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>message</value>
+    <comment>function_parameter - First argument to the Trace function - the message that will be logged to the test results and/or Application Insights.</comment>
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>severity</value>
+    <comment>Trace severity - a value that goes to an Application Insights TrackTrace API SeverityLevel </comment>
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    <comment>Custom dimensions - key value pairs that go to Application Insights. 'Record' is used as a noun in this string, not as a verb. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    <comment>Trace options - additional options passed to the Trace function. 'Trace' is used as an adjective in this string, not as a verb (options for the trace function). Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>The information to be traced.</value>
+    <comment>Description of the first parameter to the 'Trace' function.</comment>
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>The severity level to be traced to Application Insights.</value>
+    <comment>Description of the second parameter to the 'Trace' function.</comment>
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>A record containing custom data that will be traced to Application Insights.</value>
+    <comment>Description of the third parameter to the 'Trace' function.</comment>
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Additional options to the Trace function.</value>
+    <comment>{Locked=Trace} Description of the fourth parameter to the 'Trace' function.</comment>
+  </data>
   <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
     <value>The '{1}' parameter to the {0} function must be a constant value.</value>
     <comment>Error message shown to the user if they use a non-constant value for the a function that requires a constant value. The first parameter is the function name, and the second parameter is the function parameter name.</comment>
@@ -5383,5 +5419,9 @@
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
     <value>The JSON function cannot serialize binary data in non-behavioral expression.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>The parameter {0} contains a property of type {1} which is not supported.</value>
+    <comment>Error shown to the user when they try to use a custom record with an unsupported type. The first argument is the name of the parameter, the second argument is the type name.</comment>
   </data>
 </root>
