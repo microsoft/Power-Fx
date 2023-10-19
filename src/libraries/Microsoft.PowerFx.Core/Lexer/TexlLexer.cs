@@ -1371,7 +1371,7 @@ namespace Microsoft.PowerFx.Syntax
                         {
                             semicolonIndex = semicolonIndex == -1 ? CurrentPos : semicolonIndex;
                         }
-                        else if (_lex.TryGetPunctuator(CurrentChar.ToString() + _text[Math.Min(CurrentPos + 1, _charCount)].ToString(), out tid) && tid == TokKind.Semicolon)
+                        else if (_lex.TryGetPunctuator(CurrentChar.ToString() + _text[Math.Min(CurrentPos + 1, _charCount - 1)].ToString(), out tid) && tid == TokKind.Semicolon)
                         {
                             semicolonIndex = semicolonIndex == -1 ? CurrentPos : semicolonIndex;
                             _sb.Append(CurrentChar);

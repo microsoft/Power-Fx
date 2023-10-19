@@ -1,0 +1,28 @@
+#SETUP: disable:StronglyTypedBuiltinEnums,EnableExpressionChaining,TraceSetup
+>> Trace("test1") ; traceRecord;
+{customRecord:"{}",message:"test1",severity:3}
+
+>> Trace("test1", TraceSeverity.Warning); traceRecord;
+{customRecord:"{}",message:"test1",severity:1}
+
+>> Trace("test1", TraceSeverity.Warning, {f1: Float(1), f2: "test"}) ; traceRecord;
+{customRecord:"{f1:Float(1),f2:""test""}",message:"test1",severity:1}
+
+>> Trace("test1", TraceSeverity.Warning, {f1: Decimal(1), f2: "test"}, TraceOptions.IgnoreUnsupportedTypes) ; traceRecord;
+{customRecord:"{f1:Decimal(1),f2:""test""}",message:"test1",severity:1}
+
+>> Trace("test1", 2, {f1: Decimal(1), f2: "test"}, TraceOptions.IgnoreUnsupportedTypes) ; traceRecord;
+{customRecord:"{f1:Decimal(1),f2:""test""}",message:"test1",severity:2}
+
+>> Trace("test1", Abs(2), {f1: Decimal(1), f2: "test"}, TraceOptions.IgnoreUnsupportedTypes) ; traceRecord;
+{customRecord:"{f1:Decimal(1),f2:""test""}",message:"test1",severity:2}
+
+// 4th arg must be a constant
+>> Trace("test1", Abs(2), {f1: Decimal(1), f2: "test"}, 1) ; traceRecord;
+Errors: Error 53-54: The 'trace_options' parameter to the Trace function must be a constant value.
+
+>> Trace("test1", 1/0, {f1: Float(1), f2: "test"}, "1") ; traceRecord;
+Error({Kind:ErrorKind.Div0}) 
+
+>> Trace("test1", 1, {f1: Float(1), f2: "test"}, "1") ; traceRecord;
+{customRecord:"{f1:Float(1),f2:""test""}",message:"test1",severity:1} 

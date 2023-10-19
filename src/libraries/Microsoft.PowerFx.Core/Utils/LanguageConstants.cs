@@ -47,6 +47,10 @@ namespace Microsoft.PowerFx.Core.Utils
         /// </summary>
         public static string MatchEnumString => "Match";
 
+        public static string TraceSeverityEnumString => "TraceSeverity";
+
+        public static string TraceOptionsEnumString => "TraceOptions";
+
         /// <summary>
         /// Defines ascending sort order string constant.
         /// </summary>

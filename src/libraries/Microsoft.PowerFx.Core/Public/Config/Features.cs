@@ -72,6 +72,11 @@ namespace Microsoft.PowerFx
         internal bool CoalesceShortCircuit { get; set; }
 
         /// <summary>
+        /// This is required by AsType() in Legacy Analysis.
+        /// </summary>
+        internal bool IsLegacyAnalysis { get; set; }
+
+        /// <summary>
         /// This is specific for Cards team and it is a temporary feature.
         /// It will be soon deleted.
         /// </summary>
@@ -101,6 +106,7 @@ namespace Microsoft.PowerFx
             FirstLastNRequiresSecondArguments = true,
             PowerFxV1CompatibilityRules = true,
             CoalesceShortCircuit = true,
+            IsLegacyAnalysis = false,
         };
 
         internal Features()
