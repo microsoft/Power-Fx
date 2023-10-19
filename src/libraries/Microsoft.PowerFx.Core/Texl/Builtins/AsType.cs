@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var tableArgType = argTypes[1];
 
-            if (tableArgType.AssociatedDataSources.Any())
+            if (context.Features.IsLegacyAnalysis && tableArgType.AssociatedDataSources.Any())
             {
                 var tableDsInfo = tableArgType.AssociatedDataSources.Single();
 
