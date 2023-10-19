@@ -197,16 +197,20 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Adds an user defnied function.
+        /// Adds an user defined function.
         /// </summary>
         /// <param name="script">String representation of the user defined function.</param>
-        /// <param name="parseCulture">CultureInfo to parse the script againts.</param>
-        /// <param name="symbolTable">Extra symbols to bind UDF.</param>
-        /// <param name="extraSymbolTable"></param>
-        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null)
+        /// <param name="parseCulture">CultureInfo to parse the script againts. Default is invariant.</param>
+        /// <param name="symbolTable">Extra symbols to bind UDF. Commonly coming from Engine.</param>
+        /// <param name="extraSymbolTable">Additional symbols to bind UDF.</param>
+        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null)
         {
             // Phase 1: Side affects are not allowed.
-            var options = new ParserOptions() { AllowsSideEffects = false, Culture = parseCulture };
+            var options = new ParserOptions() 
+            { 
+                AllowsSideEffects = false, 
+                Culture = parseCulture ?? CultureInfo.InvariantCulture 
+            };
             var sb = new StringBuilder();
 
             UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult);
@@ -223,16 +227,7 @@ namespace Microsoft.PowerFx
                 throw new InvalidOperationException(sb.ToString());
             }
 
-            if (symbolTable == null)
-            {
-                symbolTable = new SymbolTable();
-            }    
-
-            if (extraSymbolTable == null)
-            {
-                extraSymbolTable = new SymbolTable();
-            }
-
+            // Compose will handle null symbols
             var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
 
             foreach (var udf in userDefinitionResult.UDFs)
