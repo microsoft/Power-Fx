@@ -248,6 +248,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("DropColumns({A:\"hello\",B:1}, C)")]
         [InlineData("DropColumns({A:\"hello\",B:1}, AB)")]
         [InlineData("DropColumns({A:\"hello\",B:1}, A1)")]
+        [InlineData("DropColumns([{A:\"hello\",B:1}], \"A\")")]
         public void TexlFunctionTypeSemanticsDropColumns_Negative(string expression)
         {
             var engine = new Engine(new PowerFxConfig());
@@ -299,6 +300,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("ShowColumns({A:\"hello\",B:1}, C)")]
         [InlineData("ShowColumns({A:\"hello\",B:1}, AB)")]
         [InlineData("ShowColumns({A:\"hello\",B:1}, A1)")]
+        [InlineData("ShowColumns([{A:\"hello\",B:1}], \"B\")")]
         public void TexlFunctionTypeSemanticsShowColumns_Negative(string expression)
         {
             var engine = new Engine(new PowerFxConfig());
@@ -350,6 +352,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("RenameColumns({A:\"hello\",B:1}, C, B)")]
         [InlineData("RenameColumns({A:\"hello\",B:1}, AB, B)")]
         [InlineData("RenameColumns({A:\"hello\",B:1}, A1, B)")]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], \"A\", \"B\")")]
         public void TexlFunctionTypeSemanticsRenameColumns_Negative(string expression)
         {
             var engine = new Engine(new PowerFxConfig());
