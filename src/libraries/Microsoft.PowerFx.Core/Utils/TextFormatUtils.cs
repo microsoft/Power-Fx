@@ -186,7 +186,6 @@ namespace Microsoft.PowerFx.Core.Utils
                     if (commaIdxList.Count > 0)
                     {
                         // Remove any comma before decimal point that is not using for scaling
-                        // if (i > 0 && formatStr[i - 1] != ',') 
                         if (commaIdxList[commaIdxList.Count - 1] != i - 1)
                         {
                             for (int j = commaIdxList.Count - 1; j >= 0; j--)
