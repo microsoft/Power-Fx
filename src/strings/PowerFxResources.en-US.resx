@@ -5391,4 +5391,8 @@
     <value>The parameter {0} contains a property of type {1} which is not supported.</value>
     <comment>Error shown to the user when they try to use a custom record with an unsupported type. The first argument is the name of the parameter, the second argument is the type name.</comment>
   </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>The specified column is read-only and can't be modified: {0}.</value>
+    <comment>Error shown to the user when they try to change the value of a read-only field.</comment>
+  </data>
 </root>
