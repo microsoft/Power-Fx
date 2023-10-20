@@ -31,16 +31,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             return this;
         }
 
-        public override IConnectorInvoker GetInvoker(ConnectorFunction function, bool returnRawResults)
+        public override HttpMessageInvoker GetHttpInvoker(ConnectorFunction function)
         {
             if (string.IsNullOrEmpty(function.Namespace) || !_clients.ContainsKey(function.Namespace))
             {
                 throw new ArgumentException("Invalid namespace or missing HttpMessageInvoker for this namespace", nameof(function.Namespace));
             }
 
-            HttpMessageInvoker httpInvoker = _clients[function.Namespace];
-
-            return new HttpFunctionInvoker(function, returnRawResults ? new RuntimeConnectorContextWithRawResults(this) : this, httpInvoker);
+            return  _clients[function.Namespace];            
         }
 
         public override bool ThrowOnError => _throwOnError;

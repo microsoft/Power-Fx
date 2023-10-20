@@ -592,7 +592,7 @@ namespace Microsoft.PowerFx.Connectors
             runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(InvokeInternalAsync))}, with {LogArguments(arguments)}");
             BaseRuntimeConnectorContext context = ConnectorReturnType.Binary ? runtimeContext.WithRawResults() : runtimeContext;
 
-            IConnectorInvoker invoker = context.GetInvoker(this);
+            FunctionInvoker invoker = context.GetInvoker(this);
             FormulaValue result = await invoker.InvokeAsync(arguments, cancellationToken).ConfigureAwait(false);
             FormulaValue formulaValue = await PostProcessResultAsync(result, invoker, cancellationToken).ConfigureAwait(false);
 
@@ -600,7 +600,7 @@ namespace Microsoft.PowerFx.Connectors
             return formulaValue;
         }
 
-        private async Task<FormulaValue> PostProcessResultAsync(FormulaValue result, IConnectorInvoker invoker, CancellationToken cancellationToken)
+        private async Task<FormulaValue> PostProcessResultAsync(FormulaValue result, FunctionInvoker invoker, CancellationToken cancellationToken)
         {
             ExpressionError er = null;
 
@@ -629,7 +629,7 @@ namespace Microsoft.PowerFx.Connectors
         // - PagesRecordValue if the next page has a next link
         // - RecordValue if there is no next link
         // - ErrorValue
-        private async Task<FormulaValue> GetNextPageAsync(string nextLink, IConnectorInvoker invoker, CancellationToken cancellationToken)            
+        private async Task<FormulaValue> GetNextPageAsync(string nextLink, FunctionInvoker invoker, CancellationToken cancellationToken)            
         {
             cancellationToken.ThrowIfCancellationRequested();
             invoker.Context.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetNextPageAsync))}, getting next page");

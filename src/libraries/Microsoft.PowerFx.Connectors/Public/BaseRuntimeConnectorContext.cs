@@ -2,13 +2,22 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Net.Http;
 using Microsoft.PowerFx.Connectors.Execution;
 
 namespace Microsoft.PowerFx.Connectors
 {
     public abstract class BaseRuntimeConnectorContext
     {
-        public abstract IConnectorInvoker GetInvoker(ConnectorFunction function, bool returnRawResults = false);
+        // When implementing a custom invoker, this is the method to override
+        public virtual FunctionInvoker GetInvoker(ConnectorFunction function, bool returnRawResults = false)
+        {
+            HttpMessageInvoker httpInvoker = GetHttpInvoker(function);
+            return new HttpFunctionInvoker(function, returnRawResults ? WithRawResults() : this, httpInvoker ?? throw new PowerFxConnectorException("If not overriding GetInvoker, you must implement GetCustomInvoker"));
+        }
+
+        // When using default http invoker, this is the method to override
+        public virtual HttpMessageInvoker GetHttpInvoker(ConnectorFunction function) => null;
 
         public abstract TimeZoneInfo TimeZoneInfo { get; }
 

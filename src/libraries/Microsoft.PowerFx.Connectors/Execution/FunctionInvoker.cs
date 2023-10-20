@@ -17,7 +17,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
-    public abstract class FunctionInvoker : IConnectorInvoker       
+    public abstract class FunctionInvoker    
     {
         public BaseRuntimeConnectorContext Context { get; }        
 
@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            IConnectorInvoker invoker = Context.GetInvoker(Function);
+            FunctionInvoker invoker = Context.GetInvoker(Function);
             InvokerParameters invokerParameters = GetRequestElements(Function, args, invoker is HttpFunctionInvoker hfi && hfi._invoker is HttpClient hc ? hc.BaseAddress : null, cancellationToken);
 
             if (invokerParameters == null)
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         public async Task<FormulaValue> InvokeAsync(string nextlink, CancellationToken cancellationToken)
         {
-            IConnectorInvoker invoker = Context.GetInvoker(Function);
+            FunctionInvoker invoker = Context.GetInvoker(Function);
             InvokerParameters invokerParameters = new InvokerParameters()
             {
                 QueryType = QueryType.NextPage,

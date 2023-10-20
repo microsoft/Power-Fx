@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         public override TimeZoneInfo TimeZoneInfo => TimeZoneInfo.Utc;
 
-        public override IConnectorInvoker GetInvoker(ConnectorFunction function, bool returnRawResults = false)
+        public override FunctionInvoker GetInvoker(ConnectorFunction function, bool returnRawResults = false)
         {
             if (function.Namespace == _namespace)
             {
@@ -70,13 +70,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
     {
         public CustomFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext)
             : base(function, runtimeContext)
-        {            
+        {
         }
 
         public override async Task<FormulaValue> SendAsync(InvokerParameters invokerElements, CancellationToken cancellationToken)
         {
-            CustomInvoker invoker = new CustomInvoker();
-            CustomResponse response = await invoker.GetResult(invokerElements, cancellationToken).ConfigureAwait(false);
+            CustomInvoker myInvoker = new CustomInvoker();
+            CustomResponse response = await myInvoker.GetResult(invokerElements, cancellationToken).ConfigureAwait(false);
 
             return RecordValue.NewRecordFromFields(response.Parts.Select(kvp => new NamedValue(kvp.Key, FormulaValue.New(kvp.Value))));
         }
