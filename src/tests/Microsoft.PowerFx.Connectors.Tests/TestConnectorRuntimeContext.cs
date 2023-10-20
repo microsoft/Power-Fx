@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 throw new ArgumentException("Invalid namespace or missing HttpMessageInvoker for this namespace", nameof(function.Namespace));
             }
 
-            return  _clients[function.Namespace];            
+            return _clients[function.Namespace];            
         }
 
         public override bool ThrowOnError => _throwOnError;
