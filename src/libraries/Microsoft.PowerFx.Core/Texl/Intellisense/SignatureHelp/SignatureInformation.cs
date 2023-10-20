@@ -20,8 +20,18 @@ namespace Microsoft.PowerFx.Intellisense.SignatureHelp
                 return false;
             }
 
-            // For now, label is enough to compare two signature information
+            // Label is not enough to compare two signature information
             if (Label != other.Label)
+            {
+                return false;
+            }
+
+            // Functions like Boolean, and Left have similar signature/label but different documentation
+            // For example Boolean(text) => "Converts a 'text' that represents a boolean to a boolean value
+            //                        And
+            //             Boolean(text) =>  "Converts a 'number' to a boolean value."
+            // This requires us to consider documentation as well
+            if (Documentation != other.Documentation)
             {
                 return false;
             }
@@ -36,7 +46,7 @@ namespace Microsoft.PowerFx.Intellisense.SignatureHelp
 
         public override int GetHashCode()
         {
-            return Label.GetHashCode();
+            return (Label, Documentation).GetHashCode();
         }
     }
 }

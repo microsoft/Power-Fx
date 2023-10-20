@@ -1,0 +1,66 @@
+{
+  "Signatures": [
+    {
+      "Label": "Boolean(text)",
+      "Documentation": "Converts a 'text' that represents a boolean to a boolean value.",
+      "Parameters": [
+        {
+          "Label": "text",
+          "Documentation": "The text value to convert to a boolean value."
+        }
+      ]
+    },
+    {
+      "Label": "Boolean(input)",
+      "Documentation": "Converts a column of text values to a column of boolean values.",
+      "Parameters": [
+        {
+          "Label": "input",
+          "Documentation": ""
+        }
+      ]
+    },
+    {
+      "Label": "Boolean(text)",
+      "Documentation": "Converts a 'number' to a boolean value.",
+      "Parameters": [
+        {
+          "Label": "text",
+          "Documentation": "The text value to convert to a boolean value."
+        }
+      ]
+    },
+    {
+      "Label": "Boolean(input)",
+      "Documentation": "Converts a column of boolean values to a column of boolean values.",
+      "Parameters": [
+        {
+          "Label": "input",
+          "Documentation": ""
+        }
+      ]
+    },
+    {
+      "Label": "Boolean(number)",
+      "Documentation": "Converts a 'number' to a boolean value.",
+      "Parameters": [
+        {
+          "Label": "number",
+          "Documentation": ""
+        }
+      ]
+    },
+    {
+      "Label": "Boolean(input)",
+      "Documentation": "Converts a column of numeric values to a column of boolean values.",
+      "Parameters": [
+        {
+          "Label": "input",
+          "Documentation": ""
+        }
+      ]
+    }
+  ],
+  "ActiveSignature": 0,
+  "ActiveParameter": 0
+}
