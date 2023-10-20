@@ -472,7 +472,7 @@ namespace Microsoft.PowerFx
             return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), culture, Config.Features, toDisplay: true);
         }
 
-        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture, ReadOnlySymbolTable symbolTable = null)
+        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null)
         {
             Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, SupportedFunctions, symbolTable);
         }
