@@ -1,4 +1,4 @@
-﻿#SETUP: SupportColumnNamesAsIdentifiers
+﻿#SETUP: SupportColumnNamesAsIdentifiers, MutationFunctionsTestSetup
 
 >> ShowColumns(Table({a:1,b:2},{a:3,b:4}), b)
 Table({b:2},{b:4})
@@ -41,3 +41,10 @@ Table({a:1},{a:Error({Kind:ErrorKind.Div0})},{a:5})
 
 >> ShowColumns(Filter([-2,-1,0,1,2],1/Value>0),Value)
 Table(Error({Kind:ErrorKind.Div0}),{Value:1},{Value:2})
+
+// Display names
+>> ShowColumns(t2,'DisplayNameField1')
+Table({Field1:1},{Field1:2},{Field1:3})
+
+>> ShowColumns(t2,'DisplayNameField1', Field3)
+Table({Field1:1,Field3:false},{Field1:2,Field3:false},{Field1:3,Field3:true})
