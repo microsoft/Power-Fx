@@ -26,6 +26,11 @@ using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
+    /// <summary>
+    /// Represents a user defined function (UDF) - which is created from parsing other Power Fx.     
+    /// This includings the binding (and hence IR for evaluation) - 
+    /// This is conceptually immutable after initialization - if the body or signature changes, you need to create a new instance.
+    /// </summary>
     internal class UserDefinedFunction : TexlFunction
     {
         private readonly bool _isImperative;
@@ -104,6 +109,11 @@ namespace Microsoft.PowerFx.Core.Functions
             if (documentBinderGlue is null)
             {
                 throw new ArgumentNullException(nameof(documentBinderGlue));
+            }
+
+            if (_binding != null)
+            {
+                throw new InvalidOperationException($"Body should only get bound once: {this.Name}");
             }
 
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);

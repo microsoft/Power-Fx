@@ -705,6 +705,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUDF_MissingParamType = new ErrorResourceKey("ErrUDF_MissingParamType");
 
         public static ErrorResourceKey ErrTypeLiteral_InvalidTypeDefinition = new ErrorResourceKey("ErrTypeLiteral_InvalidTypeDefinition");
+        public static ErrorResourceKey ErrRecordContainsInvalidFields_Arg = new ErrorResourceKey("ErrRecordContainsInvalidFields_Arg");
 
         // ErrorResourceKey for creating an error from an arbitrary string message. The key resolves to "{0}", meaning
         // that a single string arg can be supplied representing the entire text of the error.
