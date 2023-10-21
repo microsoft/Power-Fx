@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Types
                     else if (formulaType is DateType)
                     {
                         DateTime dt1 = element.GetDateTime().Date;
-                        return DateValue.New(dt1);
+                        return FormulaValue.NewDateOnly(dt1);
                     }
                     else if (formulaType is DateTimeType)
                     {

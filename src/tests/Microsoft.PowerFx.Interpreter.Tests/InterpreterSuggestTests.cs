@@ -43,11 +43,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // but for now we can at least get them to appear higher in the sort order
         [Theory]
         [InlineData("OptionSet.Optio|", "Option1", "Option2")]
-        [InlineData("Option|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
-        [InlineData("Opt|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
-        [InlineData("Opti|on", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
+        [InlineData("Option|", "OptionSet", "OtherOptionSet", "TopOptionSetField", "TraceOptions", "TraceOptions.IgnoreUnsupportedTypes", "TraceOptions.None")]
+        [InlineData("Opt|", "OptionSet", "OtherOptionSet", "TopOptionSetField", "TraceOptions", "TraceOptions.IgnoreUnsupportedTypes", "TraceOptions.None")]
+        [InlineData("Opti|on", "OptionSet", "OtherOptionSet", "TopOptionSetField", "TraceOptions", "TraceOptions.IgnoreUnsupportedTypes", "TraceOptions.None")]
         [InlineData("TopOptionSetField <> |", "TopOptionSetField", "XXX")]
-        [InlineData("TopOptionSetField <> Opt|", "OptionSet", "TopOptionSetField", "OtherOptionSet")]
+        [InlineData("TopOptionSetField <> Opt|", "OptionSet", "TopOptionSetField", "OtherOptionSet", "TraceOptions", "TraceOptions.IgnoreUnsupportedTypes", "TraceOptions.None")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
         {
             var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder());
