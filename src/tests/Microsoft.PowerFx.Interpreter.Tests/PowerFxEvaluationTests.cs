@@ -258,7 +258,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var symbol = engine._symbolTable;
 
-            symbol.EnableMutationFunctions();
+            engine.Config.EnableMutationFunctions();
 
             engine.UpdateVariable("t1", t1);
             engine.UpdateVariable("r1", r1);
@@ -460,9 +460,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 _engine = engine;
 
 #pragma warning disable CS0618 // Type or member is obsolete
-                _repl = new PowerFxREPL
-                {
-                    Engine = _engine,
+                _repl = new PowerFxREPL(_engine)
+                {                    
                     AllowSetDefinitions = true
                 };
 #pragma warning restore CS0618 // Type or member is obsolete

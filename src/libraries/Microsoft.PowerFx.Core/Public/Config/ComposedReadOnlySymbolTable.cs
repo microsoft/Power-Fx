@@ -21,8 +21,6 @@ namespace Microsoft.PowerFx
     {
         private readonly IEnumerable<ReadOnlySymbolTable> _symbolTables;
 
-        internal override Dictionary<TexlFunction, IFunctionImplementation> FunctionImplementations => _composedFunctionImplementations;
-
         private readonly Dictionary<TexlFunction, IFunctionImplementation> _composedFunctionImplementations = new Dictionary<TexlFunction, IFunctionImplementation>();
 
         // In priority order. 
@@ -30,17 +28,6 @@ namespace Microsoft.PowerFx
         {
             _symbolTables = symbolTables.Where(x => x != null);
             DebugName = "(" + string.Join(",", _symbolTables.Select(t => t.DebugName)) + ")";
-
-            foreach (var symbolTable in _symbolTables)
-            {
-                foreach (var kvp in symbolTable.FunctionImplementations)
-                {
-                    if (!_composedFunctionImplementations.ContainsKey(kvp.Key))
-                    {
-                        _composedFunctionImplementations.Add(kvp.Key, kvp.Value);
-                    }
-                }
-            }
         }
 
         internal IEnumerable<ReadOnlySymbolTable> SubTables => _symbolTables;

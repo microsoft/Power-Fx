@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,9 +25,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbols = new SymbolTable();
 
             var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
 
             var engine = new RecalcEngine();
+            engine.Config.EnableMutationFunctions();
+
             var runtimeConfig = new SymbolValues(symbols);
             runtimeConfig.Set(slot, databaseTable);
             
@@ -56,10 +56,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 20000);
             var symbols = new SymbolTable();
 
-            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);            
 
             var engine = new RecalcEngine();
+            engine.Config.EnableMutationFunctions();
+
             var runtimeConfig = new SymbolValues(symbols);
             runtimeConfig.Set(slot, databaseTable);
 
@@ -84,10 +85,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 0);
             var symbols = new SymbolTable();
 
-            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);            
 
             var engine = new RecalcEngine();
+            engine.Config.EnableMutationFunctions();
+
             var runtimeConfig = new SymbolValues(symbols);
 
             engine.UpdateVariable("x", TableValue.NewTable(RecordType.Empty()));
@@ -105,12 +107,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 0);
             var symbols = new SymbolTable();
 
-            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);            
 
             // Temporary feature to unblock Cards team
 #pragma warning disable CS0612 // Type or member is obsolete
             var config = new PowerFxConfig(Features.PowerFxV1AllowSetExpandedTypes);
+            config.EnableMutationFunctions();
 #pragma warning restore CS0612 // Type or member is obsolete
             var engine = new RecalcEngine(config);
             var runtimeConfig = new SymbolValues(symbols);
@@ -135,10 +137,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 0);
             var symbols = new SymbolTable();
 
-            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);            
 
             var engine = new RecalcEngine();
+            engine.Config.EnableMutationFunctions();
+
             var runtimeConfig = new SymbolValues(symbols);
 
             engine.UpdateVariable("x", TableValue.NewTable(RecordType.Empty()));

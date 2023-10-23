@@ -2,12 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -23,14 +18,13 @@ namespace Microsoft.PowerFx.Repl.Tests
         public ReplTests()
         {
             var config = new PowerFxConfig();
-            config.SymbolTable.EnableMutationFunctions();
+            config.EnableMutationFunctions();
 
             // config.EnableSetFunction();
             var engine = new RecalcEngine(config);
 
-            _repl = new PowerFxREPL
-            {
-                Engine = engine,
+            _repl = new PowerFxREPL(engine)
+            {                
                 Output = _output,
                 AllowSetDefinitions = true,
             };
@@ -233,11 +227,7 @@ Notify(z)
         [Fact]
         public void NamedFormulas()
         {
-            _repl.HandleLine(
-"Set(x,1)",
-"NamedFormula1 = x*10",
-"Notify(NamedFormula1)",
-"Set(x,2);Notify(NamedFormula1)");
+            _repl.HandleLine("Set(x,1)", "NamedFormula1 = x*10", "Notify(NamedFormula1)", "Set(x,2);Notify(NamedFormula1)");
 
             var log = _output.Get(OutputKind.Notify);
             Assert.Equal(

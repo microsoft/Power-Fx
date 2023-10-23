@@ -16,9 +16,10 @@ namespace Microsoft.PowerFx
             powerFxConfig.AddFunction(function.GetTexlFunction(), function);
         }
 
+        [Obsolete("Use PowerFxConfig.AddFunction.")]
         public static void AddFunction(this SymbolTable symbolTable, ReflectionFunction function)
         {
-            symbolTable.AddFunction(function.GetTexlFunction(), function);
+            symbolTable.AddFunction(function.GetTexlFunction(), function, null);
         }
 
         /// <summary>
@@ -33,17 +34,17 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Enable all multation functions which allows scripts to execute side effect behavior.
         /// </summary>
-        /// <param name="symbolTable"></param>
-        public static void EnableMutationFunctions(this SymbolTable symbolTable)
+        /// <param name="powerFxConfig"></param>
+        public static void EnableMutationFunctions(this PowerFxConfig powerFxConfig)
         {
-            symbolTable.AddFunction(new RecalcEngineSetFunction(), null /* no implementation */);
-            symbolTable.AddFunction(new CollectFunction(), new CollectFunctionImpl());
-            symbolTable.AddFunction(new PatchFunction(), new PatchFunctionImpl());
-            symbolTable.AddFunction(new RemoveFunction(), new RemoveFunctionImpl());
+            powerFxConfig.AddFunction(new RecalcEngineSetFunction(), null /* no implementation */);
+            powerFxConfig.AddFunction(new CollectFunction(), new CollectFunctionImpl());
+            powerFxConfig.AddFunction(new PatchFunction(), new PatchFunctionImpl());
+            powerFxConfig.AddFunction(new RemoveFunction(), new RemoveFunctionImpl());
 
             ClearFunctionImpl clearFunctionImpl = new ClearFunctionImpl();
-            symbolTable.AddFunction(new ClearFunction(), clearFunctionImpl);
-            symbolTable.AddFunction(new ClearCollectFunction(), new ClearCollectFunctionImpl(clearFunctionImpl));
+            powerFxConfig.AddFunction(new ClearFunction(), clearFunctionImpl);
+            powerFxConfig.AddFunction(new ClearCollectFunction(), new ClearCollectFunctionImpl(clearFunctionImpl));
         }
 
         [Obsolete("RegEx is still in preview. Grammar may change.")]
@@ -58,7 +59,7 @@ namespace Microsoft.PowerFx
                     throw new InvalidOperationException("Cannot add RegEx functions more than once.");
                 }
 
-                config.SymbolTable.AddFunction(func.Key, func.Value);                
+                config.AddFunction(func.Key, func.Value);                
             }
         }
     }

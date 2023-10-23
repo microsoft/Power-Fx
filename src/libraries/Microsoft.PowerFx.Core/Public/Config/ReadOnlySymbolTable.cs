@@ -288,9 +288,7 @@ namespace Microsoft.PowerFx
 
         internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
 
-        private protected readonly TexlFunctionSet _functions = new TexlFunctionSet();
-
-        internal virtual Dictionary<TexlFunction, IFunctionImplementation> FunctionImplementations { get; } = new ();
+        private protected readonly TexlFunctionSet _functions = new TexlFunctionSet();        
 
         public IEnumerable<string> FunctionNames => _functions.FunctionNames;
 

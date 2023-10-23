@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Data;
 using System.Threading;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -515,7 +513,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Create an engine with variable and enable mutation functions
             var engine = new RecalcEngine(new PowerFxConfig());
             engine.UpdateVariable("testDoubleVariable", 2.0);
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.EnableMutationFunctions();
 
             // Run compliation check
             var check = engine.Check("Set(testDoubleVariable, true)", options: _opts);

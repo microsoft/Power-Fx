@@ -3,20 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Net.Http;
-using System.Numerics;
-using System.Text.RegularExpressions;
-using System.Threading;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -53,8 +46,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var globalSymbols = new SymbolTable { DebugName = "Globals" };
             var tableType = r2.ToTable();
             globalSymbols.AddVariable("crf_table", tableType, displayName: "Table");
-            globalSymbols.AddFunction(f1, null);
-            globalSymbols.AddFunction(f2, null);
+            globalSymbols.AddFunction(f1, null, null);
+            globalSymbols.AddFunction(f2, null, null);
 
             var allSymbols = ReadOnlySymbolTable.Compose(rowScopeSymbols, globalSymbols);
 

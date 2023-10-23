@@ -70,8 +70,7 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            config.SymbolTable.EnableMutationFunctions();
-
+            config.EnableMutationFunctions();
             config.EnableSetFunction();
             config.EnableJsonFunctions();
 
@@ -115,9 +114,8 @@ namespace Microsoft.PowerFx
 #pragma warning restore CS0618 // Type or member is obsolete
         {
             public MyRepl()
-            {
-                this.Engine = ReplRecalcEngine();
-
+                : base(ReplRecalcEngine())
+            {                
                 _standardFormatter = new StandardFormatter();
                 this.ValueFormatter = _standardFormatter;
                 this.HelpProvider = new MyHelpProvider();

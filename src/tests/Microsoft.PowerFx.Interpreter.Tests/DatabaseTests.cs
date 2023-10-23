@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             RecalcEngine engine = new RecalcEngine(config);
 
             config.EnableSetFunction();
-            config.SymbolTable.EnableMutationFunctions();
+            config.EnableMutationFunctions();
             engine.UpdateVariable("x", FormulaValue.NewTable(TestDatabaseRecordValue.CustomRecordType));
 
             RecordType recordType = TestDatabaseRecordValue.CustomRecordType;

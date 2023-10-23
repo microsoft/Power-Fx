@@ -119,17 +119,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 AllowsSideEffects = true,
                 NumberIsFloat = true
             };
-
-            // Define symbol table
-            var symbolTable = new SymbolTable();
-            symbolTable.EnableMutationFunctions();
+            
+            engine.Config.EnableMutationFunctions();
 
             if (setVariableValueInEngine)      
             {
                 engine.UpdateVariable(varName, formulaValue);
             }
 
-            var check = engine.Check(expressionText, parserOptions, symbolTable: symbolTable);
+            var check = engine.Check(expressionText, parserOptions);
             Assert.True(check.IsSuccess);
             var run = check.GetEvaluator();
 

@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using Microsoft.PowerFx.Core;
@@ -23,11 +22,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
         {
             var tableType = TableType.Empty().Add(new NamedFormulaType(new TypedName(DType.Currency, new DName("Currency"))));
 
-            var symbols = new SymbolTable { DebugName = "ST1 " };
-            symbols.EnableMutationFunctions();
+            var symbols = new SymbolTable { DebugName = "ST1 " };            
             var slot = symbols.AddVariable("MyTable", tableType, mutable: true);
 
             var engine = new RecalcEngine(new PowerFxConfig());
+            engine.Config.EnableMutationFunctions();
+
             var checkResult = engine.Check("Patch(MyTable, { Currency: 1.2 }, { Currency: 1.5 })", new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = true }, symbolTable: symbols);
 
             checkResult.ThrowOnErrors();
@@ -47,11 +47,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
         {
             var tableType = TableType.Empty().Add(new NamedFormulaType(new TypedName(DType.Decimal, new DName("Decimal"))));
 
-            var symbols = new SymbolTable { DebugName = "ST1 " };
-            symbols.EnableMutationFunctions();
+            var symbols = new SymbolTable { DebugName = "ST1 " };            
             var slot = symbols.AddVariable("MyTable", tableType, mutable: true);
 
             var engine = new RecalcEngine(new PowerFxConfig());
+            engine.Config.EnableMutationFunctions();
+
             var checkResult = engine.Check("Patch(MyTable, { Decimal: 1.2 }, { Decimal: 1.5 })", new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbols);
 
             checkResult.ThrowOnErrors();
@@ -78,7 +79,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
             var integerVar = FormulaValue.New(1);
             var datetimeVar = FormulaValue.New(DateTime.Now);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.EnableMutationFunctions();
             engine.Config.SymbolTable.AddConstant("stringVar", stringVar);
             engine.Config.SymbolTable.AddConstant("integerVar", integerVar);
             engine.Config.SymbolTable.AddConstant("datetimeVar", datetimeVar);
@@ -98,7 +99,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
             var integerVar = FormulaValue.New(1);
             var datetimeVar = FormulaValue.New(DateTime.Now);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.EnableMutationFunctions();
             engine.Config.SymbolTable.AddConstant("stringVar", stringVar);
             engine.Config.SymbolTable.AddConstant("integerVar", integerVar);
             engine.Config.SymbolTable.AddConstant("datetimeVar", datetimeVar);

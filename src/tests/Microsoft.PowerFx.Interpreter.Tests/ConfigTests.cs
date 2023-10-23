@@ -42,10 +42,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Share a config
             var s1 = new SymbolTable();
-            s1.AddFunction(new Func1Function());
+            var func1 = new Func1Function();            
 
             // Per expression.
             var engine = new RecalcEngine();
+            s1.AddFunction(func1.GetTexlFunction(), func1, engine.Config);
+
             var result = await engine.EvalAsync("Func1(3)", CancellationToken.None, symbolTable: s1).ConfigureAwait(false);
             Assert.Equal(6.0, result.ToObject());
         }
@@ -98,14 +100,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // But still share symbol values.
         [Fact]
         public async Task BasicBindAndEvalFunc()
-        {
-            // Run separately 
-            var r1 = new SymbolTable();
-            r1.AddFunction(new Func1Function());
-
+        {            
             var expr = "Func1(3)";
             var engine = new RecalcEngine();
-            var check = engine.Check(expr, symbolTable: r1);
+            engine.Config.AddFunction(new Func1Function());
+            
+            var check = engine.Check(expr);
             Assert.True(check.IsSuccess);
 
             // Run separately 
@@ -155,94 +155,34 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public async Task ExecutionDoesntUseConfig()
         {
-            // Share a config
-            var s1 = new SymbolTable();
-            s1.AddFunction(new MultiplyFunction(3));
-
             // Per expression.
             var engine = new RecalcEngine();
+            engine.Config.AddFunction(new MultiplyFunction(3));
 
-            var check = engine.Check("Multiply(2)", symbolTable: s1);
+            var check = engine.Check("Multiply(2)");
 
             // Even removing it and mofiying the config afterwards doesn't matter
-            // since execution doesn't use config. 
-            s1.RemoveFunction("Multiply");
+            // since execution doesn't use config.             
             var expr = check.GetEvaluator();
+            engine.Config.RemoveFunction("Multiply");
 
             var result = await expr.EvalAsync(CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(6.0, result.ToObject());
 
             // Rebinding  fails because we removed the func. 
-            check = engine.Check("Multiply(2)", symbolTable: s1);
+            check = engine.Check("Multiply(2)");
             Assert.False(check.IsSuccess);
 
             // Re-add with same name, but configured differently. 
-            s1.AddFunction(new MultiplyFunction(4));
+            engine.Config.AddFunction(new MultiplyFunction(4));
 
             // Executing old expression is *still* unaffected (does not pickup new function with same name)
             result = await expr.EvalAsync(CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(6.0, result.ToObject());
 
             // But rebinding will pickup new ... 
-            result = await engine.EvalAsync("Multiply(2)", CancellationToken.None, symbolTable: s1).ConfigureAwait(false);
+            result = await engine.EvalAsync("Multiply(2)", CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(8.0, result.ToObject());
-        }
-
-        [Fact]
-        public async Task Shadow()
-        {
-            var s1 = new SymbolTable();
-            s1.AddFunction(new MultiplyFunction(3));
-            s1.AddFunction(new Func1Function());
-
-            var s2 = new SymbolTable();
-            s2.AddFunction(new MultiplyFunction(4)); // Shadows s1
-            var s21 = ReadOnlySymbolTable.Compose(s2, s1);
-
-            var engine = new RecalcEngine();
-
-            // Multiply was shadowed
-            var result = await engine.EvalAsync("Multiply(2)", CancellationToken.None, symbolTable: s21).ConfigureAwait(false);
-            Assert.Equal(2 * 4.0, result.ToObject());
-
-            // Func1 was not shadowed, so inherit. 
-            result = await engine.EvalAsync("Func1(2)", CancellationToken.None, symbolTable: s21).ConfigureAwait(false);
-            Assert.Equal(2 * 2.0, result.ToObject());
-        }
-
-        // Show symbol tables can be shared
-        [Fact]
-        public async Task Shared()
-        {
-            // Share a config
-            var sCommon = new SymbolTable { DebugName = "Common" };
-            sCommon.AddFunction(new Func1Function());
-
-            var s3 = new SymbolTable
-            {
-                DebugName = "S3"
-            };
-            s3.AddFunction(new MultiplyFunction(3));
-            var s3Common = ReadOnlySymbolTable.Compose(s3, sCommon);
-
-            var s4 = new SymbolTable
-            {
-                DebugName = "S4"
-            };
-            s4.AddFunction(new MultiplyFunction(4));
-            var s4Common = ReadOnlySymbolTable.Compose(s4, sCommon);
-
-            // Per expression.
-            // Same engine *instance*, same expression, but different configs. 
-            // Calls something from both shared config and individual config. 
-            var engine = new RecalcEngine();
-            var expr = "Func1(1) & Multiply(2)";
-
-            var result3 = await engine.EvalAsync(expr, CancellationToken.None, symbolTable: s3Common).ConfigureAwait(false); // 1*2 & 2*3  = "26"
-            Assert.Equal("26", result3.ToObject());
-
-            var result4 = await engine.EvalAsync(expr, CancellationToken.None, symbolTable: s4Common).ConfigureAwait(false); // 1*2 & 2*4  = "28"            
-            Assert.Equal("28", result4.ToObject());
         }
 
         [Fact]
@@ -576,14 +516,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             AssertUnique(set, s1);
 
             var func = new Func1Function();
+#pragma warning disable CS0618 // Type or member is obsolete
             s1.AddFunction(func);
+#pragma warning restore CS0618 // Type or member is obsolete
             AssertUnique(set, s1);
 
             s1.RemoveFunction("Func1");
             AssertUnique(set, s1);
 
             // Same as before, but should still be unique VersionHash!
+#pragma warning disable CS0618 // Type or member is obsolete
             s1.AddFunction(func);
+#pragma warning restore CS0618 // Type or member is obsolete
             AssertUnique(set, s1);
         }
 
@@ -616,16 +560,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Add a function that gets different runtime state per expression invoke
         [Fact]
         public async Task LocalFunction()
-        {
-            // Share a config
-            var s1 = new SymbolTable();
-            s1.AddFunction(new UserFunction());
-
+        {           
             var engine = new RecalcEngine();
+            engine.Config.AddFunction(new UserFunction());
 
-            var check = engine.Check(
-                "User(3)",
-                symbolTable: s1);
+            var check = engine.Check("User(3)");
 
             // Bind expression once, and then can pass in per-eval state. 
             var expr = check.GetEvaluator();
@@ -669,17 +608,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Fact]
         public async Task LocalFunctionDirect()
-        {
-            var s1 = new SymbolTable();
-            s1.AddFunction(new UserFunction());
-
+        {           
             var runtime = new RuntimeConfig();
             runtime.AddService(new UserFunction.Runtime { _name = "Bill" });
 
             var engine = new RecalcEngine();
+            engine.Config.AddFunction(new UserFunction());
 
             // Pass RuntimeConfig directly through eval.
-            var result = await engine.EvalAsync("User(3)", CancellationToken.None, symbolTable: s1, runtimeConfig: runtime).ConfigureAwait(false);
+            var result = await engine.EvalAsync("User(3)", CancellationToken.None, runtimeConfig: runtime).ConfigureAwait(false);
 
             Assert.Equal("Bill3", result.ToObject());
         }
@@ -688,24 +625,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public async Task LocalFunctionWithParameters()
         {
-            var s1 = new SymbolTable();
-            s1.AddFunction(new UserFunction());
-            
-            var r2 = new SymbolValues
-            {
-                DebugName = "Runtime-X",
-            }.Add("x", FormulaValue.New(3));
-
-            var r12 = new RuntimeConfig
-            {
-                 Values = r2
-            };
+            var r2 = new SymbolValues { DebugName = "Runtime-X", }.Add("x", FormulaValue.New(3));
+            var r12 = new RuntimeConfig { Values = r2 }; 
             r12.AddService(new UserFunction.Runtime { _name = "Bill" });
 
             var engine = new RecalcEngine();
+            engine.Config.AddFunction(new UserFunction());
 
             // Pass RuntimeConfig directly through eval.
-            var result = await engine.EvalAsync("User(x)", CancellationToken.None, symbolTable: s1, runtimeConfig: r12).ConfigureAwait(false);
+            var result = await engine.EvalAsync("User(x)", CancellationToken.None, runtimeConfig: r12).ConfigureAwait(false);
 
             Assert.Equal("Bill3", result.ToObject());
         }
@@ -771,7 +699,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Switch default function set.
             // This removes Sum() and adds Func1(). 
             var defaultFunctions = new SymbolTable();
+#pragma warning disable CS0618 // Type or member is obsolete
             defaultFunctions.AddFunction(new Func1Function());
+#pragma warning restore CS0618 // Type or member is obsolete
             engine.UpdateSupportedFunctions(defaultFunctions);
 
             result = engine.Check(expr1);

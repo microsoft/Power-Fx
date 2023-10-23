@@ -86,34 +86,10 @@ namespace Microsoft.PowerFx
                 _globals = globals,
                 _allSymbols = result.Symbols,
                 _parameterSymbolTable = result.Parameters,
-                _additionalFunctions = MergeDictionaries(result.Engine.Config.SymbolTable.FunctionImplementations, result.Symbols.FunctionImplementations)
+                _additionalFunctions = new Dictionary<TexlFunction, IFunctionImplementation>(result.Engine.Config.AdditionalFunctions)
             };
 
             return expr;
-        }
-
-        internal static Dictionary<TexlFunction, IFunctionImplementation> MergeDictionaries(Dictionary<TexlFunction, IFunctionImplementation> dic1, Dictionary<TexlFunction, IFunctionImplementation> dic2)
-        {
-            if (dic1 == null)
-            {
-                return dic2;
-            }
-
-            if (dic2 == null)
-            {
-                return dic1;
-            }
-
-            var merged = new Dictionary<TexlFunction, IFunctionImplementation>(dic1);
-            foreach (var pair in dic2)
-            {
-                if (!merged.ContainsKey(pair.Key))
-                {
-                    merged[pair.Key] = pair.Value;
-                }
-            }
-
-            return merged;
         }
     }
 

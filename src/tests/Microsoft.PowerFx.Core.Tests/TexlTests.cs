@@ -5,16 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection.Metadata;
 using Microsoft.CodeAnalysis;
-using Microsoft.PowerFx.Core.App.Controls;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
-using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests.Helpers;
@@ -23,7 +17,6 @@ using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -2236,7 +2229,7 @@ namespace Microsoft.PowerFx.Core.Tests
             
             try
             {
-                symbol.AddFunction(churnDataFunction, null);
+                symbol.AddFunction(churnDataFunction, null, null);
                 TestSimpleBindingSuccess("ChurnData(\"123\", true)", DType.Number, symbol);
             }
             finally
@@ -2273,10 +2266,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                symbol.AddFunction(mockFunction1, null);
-                symbol.AddFunction(mockFunction2, null);
-                symbol.AddFunction(mockFunction3, null);
-                symbol.AddFunction(mockFunction4, null);
+                symbol.AddFunction(mockFunction1, null, null);
+                symbol.AddFunction(mockFunction2, null, null);
+                symbol.AddFunction(mockFunction3, null, null);
+                symbol.AddFunction(mockFunction4, null, null);
 
                 if (expectedErrors)
                 {
@@ -2314,9 +2307,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                symbol.AddFunction(mockFunction1, null);
-                symbol.AddFunction(mockFunction2, null);
-                symbol.AddFunction(mockFunction3, null);
+                symbol.AddFunction(mockFunction1, null, null);
+                symbol.AddFunction(mockFunction2, null, null);
+                symbol.AddFunction(mockFunction3, null, null);
 
                 if (expectedErrors)
                 {
@@ -3396,7 +3389,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                symbol.AddFunction(silentFilterFunction, null);
+                symbol.AddFunction(silentFilterFunction, null, null);
 
                 var config = new PowerFxConfig
                 {

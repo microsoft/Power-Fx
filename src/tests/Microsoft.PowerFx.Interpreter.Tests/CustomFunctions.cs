@@ -2,16 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -656,16 +651,11 @@ namespace Microsoft.PowerFx.Tests
         // Add a function that gets different runtime state per expression invoke
         [Fact]
         public async void LocalAsyncFunction()
-        {
-            // Share a config
-            var s1 = new SymbolTable();
-            s1.AddFunction(new UserAsyncFunction());
-
+        {            
             var engine = new RecalcEngine();
+            engine.Config.AddFunction(new UserAsyncFunction());
 
-            var check = engine.Check(
-                "UserAsync(3)",
-                symbolTable: s1);
+            var check = engine.Check("UserAsync(3)");
 
             // Bind expression once, and then can pass in per-eval state. 
             var expr = check.GetEvaluator();

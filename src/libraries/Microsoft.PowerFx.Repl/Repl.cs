@@ -82,13 +82,15 @@ namespace Microsoft.PowerFx
             _pseudoFunctions.Add(func.Name, func);
         }
 
-        public PowerFxREPL()
+        public PowerFxREPL(RecalcEngine engine)
         {
-            this.MetaFunctions.AddFunction(new NotifyFunction());
+            Engine = engine;
+
+            Engine.Config.AddFunction(new NotifyFunction());
 
             // Hook through the HelpProvider, don't override these Help functions
-            this.MetaFunctions.AddFunction(new Help0Function(this));
-            this.MetaFunctions.AddFunction(new Help1Function(this));
+            Engine.Config.AddFunction(new Help0Function(this));
+            Engine.Config.AddFunction(new Help1Function(this));
         }
 
         private bool _userEnabled = false;

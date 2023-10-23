@@ -803,7 +803,7 @@ namespace Microsoft.PowerFx.Tests
         public void RecalcEngineMutateConfig()
         {
             var config = new PowerFxConfig();
-            config.SymbolTable.AddFunction(BuiltinFunctionsCore.Blank, null);
+            config.AddFunction(BuiltinFunctionsCore.Blank, null);
 
             var recalcEngine = new Engine(config)
             {
@@ -817,7 +817,7 @@ namespace Microsoft.PowerFx.Tests
 
             // We can mutate config after engine is created.
             var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "one key", "one value" } }));
-            config.SymbolTable.AddFunction(func, null);
+            config.AddFunction(func, null);
             config.SymbolTable.AddEntity(optionSet);
 
             Assert.True(config.TryGetVariable(new DName("foo"), out _));

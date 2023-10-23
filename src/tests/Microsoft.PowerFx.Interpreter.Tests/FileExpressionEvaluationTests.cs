@@ -1,15 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
-using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
 using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
@@ -160,7 +155,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);
 
             var config = new PowerFxConfig(features) { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
-            config.SymbolTable.EnableMutationFunctions();
+            config.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
 
             var rc = new RuntimeConfig();
