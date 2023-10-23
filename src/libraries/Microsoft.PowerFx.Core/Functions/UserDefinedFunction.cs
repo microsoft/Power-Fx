@@ -162,6 +162,15 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         /// <summary>
+        /// Clones a user defined function and drops the binding, if it's already bound.
+        /// </summary>
+        /// <returns>Returns a new functions.</returns>
+        public UserDefinedFunction Clone()
+        {
+            return new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args));
+        }
+
+        /// <summary>
         /// NameResolver that combines global named resolver and params for user defined function.
         /// </summary>
         private partial class UserDefinitionsNameResolver : INameResolver
