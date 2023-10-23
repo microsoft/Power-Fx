@@ -61,21 +61,13 @@ namespace Microsoft.PowerFx.Repl.Functions
     {
         public const string FormulaRefURL = "https://aka.ms/Power-Fx-Formula-Reference";
 
-        public static IEnumerable<string> FunctionsList(PowerFxREPL repl)
-        {
-            // Can't use Engine.SupportedFunctions as that doesn't include Engine.AddFunction functions
-            return repl.Engine.GetAllFunctionNames().Concat(repl.MetaFunctions.FunctionNames);
-        }
-
         public static string FormatFunctionsList(IEnumerable<string> functionList, int numColumns = 5, int leftPadding = 2, int columnWidth = 14)
         {
             var stringBuilder = new StringBuilder();
 
             var column = 0;
 
-            var funcNames = functionList.ToList();
-            funcNames.Sort();
-            foreach (var func in funcNames)
+            foreach (var func in functionList)
             {
                 stringBuilder.Append(string.Empty.PadLeft(leftPadding) + func.PadRight(columnWidth));
                 if (++column % numColumns == 0)
@@ -106,7 +98,7 @@ namespace Microsoft.PowerFx.Repl.Functions
             await WriteAsync(repl, "Available functions (case sensitive):\n", cancel)
                 .ConfigureAwait(false);
 
-            await WriteAsync(repl, FormatFunctionsList(FunctionsList(repl)), cancel)
+            await WriteAsync(repl, FormatFunctionsList(repl.FunctionNames), cancel)
                     .ConfigureAwait(false);
 
             await WriteAsync(repl, $"\nFormula reference: {FormulaRefURL}\n\n", cancel)

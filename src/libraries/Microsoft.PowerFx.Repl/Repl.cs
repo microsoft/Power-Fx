@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Repl;
@@ -63,6 +64,24 @@ namespace Microsoft.PowerFx
         /// Optional - if set, additional symbol values that are fed into the repl . 
         /// </summary>
         public ReadOnlySymbolValues ExtraSymbolValues { get; set; }
+
+        /// <summary>
+        /// Get sorted names of all functions. This includes functions from the <see cref="Engine"/> as well as <see cref="MetaFunctions"/>.
+        /// </summary>
+        public IEnumerable<string> FunctionNames
+        {
+            get
+            {
+                // Can't use Engine.SupportedFunctions as that doesn't include Engine.AddFunction functions
+                var set = new HashSet<string>();
+                set.UnionWith(this.Engine.GetAllFunctionNames());
+                set.UnionWith(this.MetaFunctions.FunctionNames);
+                var list = set.ToArray();
+                Array.Sort(list);
+                
+                return list;
+            }
+        }
 
         // Interpreter should normally not throw.
         // Exceptions should be caught and converted to ErrorResult.
