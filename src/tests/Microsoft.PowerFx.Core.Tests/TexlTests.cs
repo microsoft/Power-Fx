@@ -3510,8 +3510,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             if (symbolTable != null)
-            {
-                config.AddFunction(new ShowColumnsFunction(), null /* Not implemented function */);
+            {                
                 if (optionSets != null)
                 {
                     foreach (var optionSet in optionSets)

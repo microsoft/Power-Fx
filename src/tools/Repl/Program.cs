@@ -415,7 +415,7 @@ Use Reset() to clear all formulas and variables.
                 await WriteAsync(repl, pre, cancel)
                     .ConfigureAwait(false);
 
-                await WriteAsync(repl, FormatFunctionsList(FunctionsList(repl)), cancel)
+                await WriteAsync(repl, FormatFunctionsList(repl.FunctionNames), cancel)
                     .ConfigureAwait(false);
 
                 await WriteAsync(repl, $"\nFormula reference: {FormulaRefURL}\n", cancel)

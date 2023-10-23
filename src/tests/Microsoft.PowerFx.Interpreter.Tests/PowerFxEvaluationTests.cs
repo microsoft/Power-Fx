@@ -8,12 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.Tests.Helpers;
+using Microsoft.PowerFx.Logging;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 
@@ -38,7 +40,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             { "MutationFunctionsTestSetup", (null, null, null, MutationFunctionsTestSetup) },
             { "OptionSetSortTestSetup", (null, OptionSetSortTestSetup, null, null) },
             { "OptionSetTestSetup", (null, OptionSetTestSetup1, OptionSetTestSetup2, null) },
-            { "RegEx", (null, RegExSetup, null, null) }
+            { "RegEx", (null, RegExSetup, null, null) },
+            { "TraceSetup", (null, null, null, TraceSetup) }
         };
 
         private static object EnableJsonFunctions(PowerFxConfig config)
@@ -283,6 +286,43 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("t_name", FormulaValue.NewTable(nameTableType.ToRecord()));
         }
 
+        private static void TraceSetup(RecalcEngine engine, bool numberIsFloat)
+        {
+            var rType = RecordType.Empty()
+                .Add("message", FormulaType.String)
+                .Add("severity", FormulaType.Decimal)
+                .Add("customRecord", FormulaType.String);
+
+            var rFields = new NamedValue[]
+                {
+                    new NamedValue("message", FormulaValue.NewBlank()),
+                    new NamedValue("severity", FormulaValue.New(0)),
+                    new NamedValue("customRecord", FormulaValue.New(string.Empty))
+                };
+
+            var rValue = FormulaValue.NewRecordFromFields(rType, rFields);
+
+            engine.UpdateVariable("traceRecord", rValue);
+        }
+
+        private class Tracer : ITracer
+        {
+            private readonly RecordValue _result;
+
+            public Tracer(RecordValue result)
+            {
+                _result = result;
+            }
+
+            public Task LogAsync(string message, TraceSeverity severity, RecordValue customRecord, CancellationToken ct)
+            {
+                _result.UpdateField("message", FormulaValue.New(message));
+                _result.UpdateField("severity", FormulaValue.New((int)severity));
+                _result.UpdateField("customRecord", FormulaValue.New(customRecord.ToExpression()));
+                return Task.CompletedTask;
+            }
+        }
+
         // Interpret each test case independently
         // Supports #setup directives. 
         internal class InterpreterRunner : BaseRunner
@@ -389,6 +429,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 if (iSetup.TimeZoneInfo != null)
                 {
                     runtimeConfig.AddService(iSetup.TimeZoneInfo);
+                }
+
+                if (engine.TryGetByName("traceRecord", out _))
+                {
+                    var traceRecord = engine.GetValue("traceRecord");
+                    if (traceRecord != null)
+                    {
+                        runtimeConfig.AddService<ITracer>(new Tracer((RecordValue)traceRecord));
+                    }
                 }
 
                 // Ensure tests can run with governor on. 

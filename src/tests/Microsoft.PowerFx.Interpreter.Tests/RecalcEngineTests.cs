@@ -556,6 +556,47 @@ namespace Microsoft.PowerFx.Tests
             Assert.Throws<InvalidOperationException>(() => engine.AddUserDefinedFunction(script, CultureInfo.InvariantCulture));
         }
 
+        // Overloads and conflict 
+        [Theory]
+        [InlineData("foo(Text:Decimal):Decimal = Text;", 1)] // param name conflicts with type name
+        [InlineData("foo(K1:Decimal):Decimal = K1;", 1)] // param takes precedence
+        [InlineData("foo(param:Decimal):Decimal = K1;", 9999)] // param takes precedence
+        public void FunctionPrecedenceTest(string script, double expected)
+        {
+            SymbolTable st = new SymbolTable { DebugName = "Extras" };
+            st.AddConstant("K1", FormulaValue.New(9999));            
+
+            var engine = new RecalcEngine();
+            engine.AddUserDefinedFunction(script, symbolTable: st);
+
+            var check = engine.Check("foo(1)");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Decimal, check.ReturnType);
+
+            var result = check.GetEvaluator().Eval();            
+            Assert.Equal(expected, result.AsDouble());
+        }
+
+        // Binding to inner functions does not impact outer functions. 
+        [Fact]
+        public void FunctionInner()
+        {
+            // Inner table 
+            SymbolTable stInner = new SymbolTable { DebugName = "Extras" };
+            stInner.AddUserDefinedFunction("Func1() : Text = \"inner\";");
+
+            SymbolTable st = new SymbolTable { DebugName = "Extras" };
+            st.AddUserDefinedFunction("Func2() : Text = Func1() & \"2\";", symbolTable: stInner);
+
+            var engine = new RecalcEngine();
+            engine.AddUserDefinedFunction("Func1() : Text = \"Outer\";", symbolTable: st);
+
+            // Func1() here should bind to the top-level "outer" one, not the "inner" one.
+            var result = engine.EvalAsync("Func1() & Func2()", default, symbolTable: st).Result;
+            var str = ((StringValue)result).Value;
+            Assert.Equal("Outerinner2", str);
+        }
+
         [Fact]
         public void PropagateNull()
         {
@@ -1280,6 +1321,18 @@ namespace Microsoft.PowerFx.Tests
                 Assert.Equal(es, firstError.Severity);
                 Assert.Equal("Incompatible types for comparison. These types can't be compared: Decimal, Text.", firstError.Message);
             }
+        }
+
+        [Fact]
+        public void TryGetValueShouldNotThrowOnNonExistingValue()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            var success = engine.TryGetValue("Invalid", out var shouldBeNull);
+
+            Assert.False(success);
+            Assert.Null(shouldBeNull);
         }
 
         private class TestRandService : IRandomService
