@@ -178,7 +178,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args));
-            binding = BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
+            binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
 
             return func;
         }
