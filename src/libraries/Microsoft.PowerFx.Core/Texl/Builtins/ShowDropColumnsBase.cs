@@ -155,12 +155,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
-                var columnName = _isShowColumns ?
-                    new DName(expectedColumnName) :
-                    new DName(
-                        DType.TryGetLogicalNameForColumn(argTypes[0], expectedColumnName, out var logicalName)
-                        ? logicalName
-                        : expectedColumnName);
+                var columnName = new DName(
+                    DType.TryGetLogicalNameForColumn(argTypes[0], expectedColumnName, out var logicalName)
+                    ? logicalName
+                    : expectedColumnName);
 
                 // Verify that the name exists.
                 if (_isShowColumns)
