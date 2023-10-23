@@ -162,12 +162,25 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         /// <summary>
-        /// Clones a user defined function and drops the binding, if it's already bound.
+        /// Clones and binds a user defined function.
         /// </summary>
         /// <returns>Returns a new functions.</returns>
-        public UserDefinedFunction Clone()
+        public UserDefinedFunction WithBinding(INameResolver nameResolver, IBinderGlue binderGlue, out TexlBinding binding, BindingConfig bindingConfig = null, Features features = null, IExternalRule rule = null)
         {
-            return new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args));
+            if (nameResolver is null)
+            {
+                throw new ArgumentNullException(nameof(nameResolver));
+            }
+
+            if (binderGlue is null)
+            {
+                throw new ArgumentNullException(nameof(binderGlue));
+            }
+
+            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args));
+            binding = BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
+
+            return func;
         }
 
         /// <summary>

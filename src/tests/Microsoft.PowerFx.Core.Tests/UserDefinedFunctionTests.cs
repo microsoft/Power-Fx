@@ -454,8 +454,17 @@ namespace Microsoft.PowerFx.Core.Tests
             var func = userDefinitionResult.UDFs.FirstOrDefault();
             Assert.NotNull(func);
 
-            var clonedFunc = func.Clone();
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
+            var glue = new Glue2DocumentBinderGlue();
+            var udfs = new TexlFunctionSet(userDefinitionResult.UDFs);
+
+            Assert.Single(userDefinitionResult.UDFs);
+
+            var udf = userDefinitionResult.UDFs.First();
+            var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(udfs)), glue, BindingConfig.Default);
+            var clonedFunc = func.WithBinding(nameResolver, glue, out binding);
             Assert.NotNull(clonedFunc);
+            Assert.NotNull(binding);
 
             Assert.NotEqual(func, clonedFunc);
         }
