@@ -442,7 +442,7 @@ namespace Microsoft.PowerFx.Syntax
                 else
                 {
                     var tokenString = currentToken.Span.GetFragment(text);
-                    var shouldNotTrim = IsStringAPartOfALargerInterpolatedString(i - 1 >= 0 ? tokens[i - 1] : null, currentToken, i + 1 < tokens.Count ? tokens[i + 1] : null);
+                    var shouldNotTrim = IsStringPartOfALargerInterpolatedString(i - 1 >= 0 ? tokens[i - 1] : null, currentToken, i + 1 < tokens.Count ? tokens[i + 1] : null);
                     var newString = shouldNotTrim ? tokenString : tokenString.Trim();
 
                     stringBuilder.Append(newString);
@@ -460,7 +460,7 @@ namespace Microsoft.PowerFx.Syntax
         /// <param name="currentToken">Current token that might be a string literal inside a larger interpolated string.</param>
         /// <param name="followingToken">A token after the current token.</param>
         /// <returns>True if current token represents a string literal inside a larger interpolated string or false otherwise.</returns>
-        private static bool IsStringAPartOfALargerInterpolatedString(Token precedingToken, Token currentToken, Token followingToken)
+        private static bool IsStringPartOfALargerInterpolatedString(Token precedingToken, Token currentToken, Token followingToken)
         {
             if (currentToken == null || currentToken.Kind != TokKind.StrLit)
             {
