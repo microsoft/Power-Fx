@@ -5112,4 +5112,91 @@
     <value>Iturburuko eta helburuko motak ez datoz bat. {0} espero zen, baina {1} aurkitu da.</value>
     
   </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>JSON formatuko testu-kate bat sortzen du taula, erregistro edo balio baterako.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>datuak</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>JSON bihurtuko den datu-egitura. Ausaz habiaratutako taulak, erregistroak eta jatorrizko balioak onartzen dira.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>formatua</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON bihurketan erabiliko den formatua. Balioa JSONFormat enumerazioaren kidea izango da.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Gaituta dagoenean, informazioa Application Insights-en erregistratzen du. Halaber, probaren emaitzetan erabilgarri egongo den Test Studio-ren saio bat erregistratzen du.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>mezua</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>larritasuna</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>jarraitze-aukerak</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Jarraipena egin behar zaion informazioa.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Application Insights-en jarraipena egiteko erabiliko den larritasun-maila.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Application Insights-erainoko jarraipena egingo zaien datu pertsonalizatuak dituen erregistroa.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Trace funtzioaren aukera gehigarriak.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>{0} funtzioaren "{1}" parametroak balio konstante bat izan behar du.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>"{0}" eta "{1}" JSONFormat balioak ezin dira batera erabili.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>JSON funtziora eraman den balioak multimedia-edukia du eta ez da onartzen modu lehenetsian. JSON formatuari multimedia-balioak serializatzeko baimena emateko, ziurtatu IncludeBinaryData aukera erabiltzen duzula "format" parametroan.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON funtzioak ezin ditu serializatu "{0}" motako objektuak.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON funtzioak ezin ditu serializatu "{1}" motako eta "{0}" izeneko propietate habiaratu bat duten taulak edo objektuak.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON funtzioak ezin ditu serializatu datu bitarrak portaerarekin zerikusirik ez duten espresioetan.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>{0} parametroak onartzen ez den {1} motako propietate bat dauka.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Zehaztutako zutabea irakurtzeko soilik da eta ezin da aldatu: {0}.</value>
+    
+  </data>
 </root>

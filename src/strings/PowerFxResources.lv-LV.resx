@@ -5112,4 +5112,91 @@
     <value>Avota un mērķa tipu neatbilstība. Paredzēts {0}; atrasts {1}.</value>
     
   </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Šī funkcija ģenerē JSON teksta virkni tabulai, ierakstam vai vērtībai.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>dati</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Datu struktūra, kas jākonvertē JSON formātā. Tiek atbalstītas tabulas, ieraksti un primitīvas vērtības, un to dati tiek patvaļīgi ligzdoti.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>formāts</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON konvertēšanai izmantojamais formāts. Šī vērtība būs JSONFormat uzskaitījuma elements.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Veic informācijas reģistrēšanu līdzeklī Application Insights, ja tas ir iespējots, un Test Studio sesijā, kas būs pieejama testa rezultātos.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>ziņojums</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>nozīmīgums</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>izsekošanas_opcijas</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Izsekojamā informācija.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Nozīmīguma līmenis, kas ir jāizseko, izmantojot Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Ieraksts, kas satur pielāgotus datus, kuri tiks izsekoti, izmantojot Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Funkcijas Trace papildu opcijas.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Funkcijas “{0}” parametram “{1}” ir jābūt konstantai vērtībai.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Nevar kopā lietot JSONFormat vērtību “{0}” un “{1}”.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>JSON funkcijai norādītajā vērtībā ir iekļauts multivides saturs, un tā pēc noklusējuma netiek atbalstīta. Lai atļautu multivides vērtību JSON serializēšanu, parametrā “format” jāizmanto opcija IncludeBinaryData.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON funkcija nevar serializēt objektus, kuru tips ir “{0}”.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON funkcija nevar serializēt tabulas/objektus, kuros ir ligzdots rekvizīts ar nosaukumu “{0}” un tipu “{1}”.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON funkcija nevar serializēt bināros datus izteiksmē, kas nav uzvedības izteiksme.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parametrs {0} satur rekvizītu ar tipu {1}, kas netiek atbalstīts.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Norādītā kolonna ir tikai lasāma un to nevar modificēt: {0}.</value>
+    
+  </data>
 </root>

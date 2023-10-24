@@ -5112,4 +5112,91 @@
     <value>Ασυμφωνία τύπων μεταξύ τύπων προέλευσης και προορισμού. Αναμενόμενες {0}; Βρέθηκε {1}.</value>
     
   </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Δημιουργεί μια συμβολοσειρά κειμένου JSON για έναν πίνακα, μια εγγραφή ή μια τιμή.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>δεδομένα</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Η δομή δεδομένων που θα μετατραπεί σε JSON. Υποστηρίζονται πίνακες, εγγραφές και στοιχειώδεις τιμές, με αυθαίρετη ενσωμάτωση.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>μορφή</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Η μορφή που θα χρησιμοποιηθεί στη μετατροπή JSON. Η τιμή θα είναι μέλος της απαρίθμησης JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Καταγράφει τις πληροφορίες στο Application Insights όταν έχει ενεργοποιηθεί και καταγράφει μια περίοδο λειτουργίας Test Studio η οποία θα είναι διαθέσιμη στα αποτελέσματα της δοκιμής.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>μήνυμα</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>σοβαρότητα</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>προσαρμοσμένη_εγγραφή</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Οι πληροφορίες που θα εντοπιστούν.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Το επίπεδο σοβαρότητας που θα εντοπιστεί στο Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Μια εγγραφή που περιέχει προσαρμοσμένα δεδομένα τα οποία θα εντοπιστούν στο Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Πρόσθετες επιλογές για τη λειτουργία Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Η παράμετρος "{1}" στη συνάρτηση {0} πρέπει να είναι μια τιμή σταθεράς.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Οι τιμές JSONFormat "{0}" και "{1}" δεν είναι δυνατό να χρησιμοποιηθούν μαζί.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Η τιμή που μεταβιβάζεται στη συνάρτηση JSON περιέχει πολυμέσα και δεν υποστηρίζεται από προεπιλογή. Για να επιτρέψετε τη σειριοποίηση JSON τιμών πολυμέσων, φροντίστε να χρησιμοποιήσετε την επιλογή IncludeBinaryData στην παράμετρο "μορφή".</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Δεν είναι δυνατή η σειριοποίηση αντικειμένων τύπου "{0}" από τη συνάρτηση JSON.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Δεν είναι δυνατή η σειριοποίηση πινάκων/αντικειμένων με ένθετη ιδιότητα με όνομα "{0}" και τύπο "{1}" από τη συνάρτηση JSON.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Η συνάρτηση JSON δεν είναι δυνατό να σειριοποιήσει δυαδικά δεδομένα σε παράσταση που δεν αφορά τη συμπεριφορά.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Η παράμετρος {0} περιέχει μια ιδιότητα τύπου {1} που δεν υποστηρίζεται.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Η καθορισμένη στήλη είναι μόνο για ανάγνωση και δεν είναι δυνατή η τροποποίησή της: {0}.</value>
+    
+  </data>
 </root>
