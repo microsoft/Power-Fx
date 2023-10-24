@@ -34,8 +34,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             config.AddActionConnector("Office365Users", apiDoc, new ConsoleLogger(_output));
             var engine = new RecalcEngine(config);
 
-            BaseRuntimeConnectorContext runtimeContext = new CustomInvokerRuntimeContext("Office365Users");
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(runtimeContext);
+            RuntimeConfig runtimeConfig = new RuntimeConfig();
+            CustomInvokerRuntimeContext2 runtimeContext = new CustomInvokerRuntimeContext2(runtimeConfig);
+            runtimeContext.AddCustomInvoker("Office365Users", (function) => new CustomFunctionInvoker(function, runtimeContext));
+            runtimeConfig.AddRuntimeContext(runtimeContext);
 
             testConnector.SetResponseFromFile(@"Responses\Office365_UserProfileV2.json");
             var result = await engine.EvalAsync(@"Office365Users.UserProfileV2(""johndoe@microsoft.com"").mobilePhone", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
@@ -61,10 +63,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             config.AddActionConnector("MSNWeather", apiDoc2, logger);
             var engine = new RecalcEngine(config);
 
-            CustomInvokerRuntimeContext2 runtimeContext = new CustomInvokerRuntimeContext2();
+            RuntimeConfig runtimeConfig = new RuntimeConfig();
+            CustomInvokerRuntimeContext2 runtimeContext = new CustomInvokerRuntimeContext2(runtimeConfig);
             runtimeContext.AddCustomInvoker("Office365Users", (cf) => new CustomFunctionInvoker(cf, runtimeContext));
             runtimeContext.AddHttpInvoker("MSNWeather", client2);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(runtimeContext);
+            runtimeConfig.AddRuntimeContext(runtimeContext);
 
             testConnector1.SetResponseFromFile(@"Responses\Office365_UserProfileV2.json");
             testConnector2.SetResponseFromFile(@"Responses\MSNWeather_Response.json");                        
@@ -76,68 +79,33 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
     }
 
-    internal class CustomInvokerRuntimeContext : BaseRuntimeConnectorContext
-    {
-        private readonly string _namespace;
-
-        public CustomInvokerRuntimeContext(string @namespace)
-        {
-            _namespace = @namespace;
-        }
-
-        public override TimeZoneInfo TimeZoneInfo => TimeZoneInfo.Utc;
-
-        public override FunctionInvoker GetInvoker(ConnectorFunction function, bool returnRawResults = false)
-        {
-            if (function.Namespace == _namespace)
-            {
-                return new CustomFunctionInvoker(function, this);
-            }
-
-            throw new NotImplementedException("Unknown namespace");
-        }
-    }
-
     internal class CustomInvokerRuntimeContext2 : BaseRuntimeConnectorContext
     {
-        private readonly Dictionary<string, Func<ConnectorFunction, FunctionInvoker>> _customInvokers = new Dictionary<string, Func<ConnectorFunction, FunctionInvoker>>();
-        private readonly Dictionary<string, HttpMessageInvoker> _httpInvokers = new Dictionary<string, HttpMessageInvoker>();
+        private readonly Dictionary<string, Func<ConnectorFunction, bool, FunctionInvoker>> _invokers = new ();
 
-        public CustomInvokerRuntimeContext2()
-        {            
+        public CustomInvokerRuntimeContext2(RuntimeConfig runtimeConfig) 
+            : base(runtimeConfig)
+        {
         }
 
         public void AddHttpInvoker(string @namespace, HttpMessageInvoker client)
         {
-            _httpInvokers.Add(@namespace, client);
+            _invokers.Add(@namespace, (function, rawResults) => new HttpFunctionInvoker(function, this, rawResults, client));
         }
 
         public void AddCustomInvoker(string @namespace, Func<ConnectorFunction, FunctionInvoker> getInvoker)
         {
-            _customInvokers.Add(@namespace, getInvoker);
-        }
-
-        public override TimeZoneInfo TimeZoneInfo => TimeZoneInfo.Utc;
-
-        public override HttpMessageInvoker GetHttpInvoker(ConnectorFunction function)
+            _invokers.Add(@namespace, (function, rawResults) => getInvoker(function));
+        }        
+        
+        public override FunctionInvoker GetInvoker(ConnectorFunction function, bool rawResults)
         {
-            if (_httpInvokers.TryGetValue(function.Namespace, out var client))
+            if (_invokers.TryGetValue(function.Namespace, out var getInvoker))
             {
-                return client;
+                return getInvoker(function, rawResults);
             }
 
             throw new NotImplementedException("Unknown namespace");
-        }
-
-        public override FunctionInvoker GetInvoker(ConnectorFunction function, bool returnRawResults = false)
-        {
-            if (_customInvokers.TryGetValue(function.Namespace, out var getInvoker))
-            {
-                return getInvoker(function);
-            }
-
-            // If not custom, probably HTTP invoker
-            return base.GetInvoker(function, returnRawResults);
         }
     }
 

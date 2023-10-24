@@ -13,7 +13,6 @@ using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -72,9 +71,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
             config.AddActionConnector(new ConnectorSettings("Test"), doc, new ConsoleLogger(_output));
 
-            engine = new RecalcEngine(config);
-            connectorContext = new TestConnectorRuntimeContext("Test", client, throwOnError: true, console: _output);
-            services = new BasicServiceProvider().AddRuntimeContext(connectorContext);
+            engine = new RecalcEngine(config);            
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddTestRuntimeContext("Test", client, throwOnError: true, console: _output);
+            connectorContext = runtimeConfig.GetService<BaseRuntimeConnectorContext>();
+            services = runtimeConfig.ServiceProvider;
         }
 
         [SkippableFact]

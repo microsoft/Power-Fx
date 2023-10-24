@@ -14,11 +14,13 @@ namespace Microsoft.PowerFx.Connectors
     internal class HttpFunctionInvoker : FunctionInvoker
     {        
         internal readonly HttpMessageInvoker _invoker;
+        internal readonly bool _rawResults;
 
-        public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext, HttpMessageInvoker invoker)
+        public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext, bool rawResults, HttpMessageInvoker invoker)
             : base(function, runtimeContext)
         {            
             _invoker = invoker;
+            _rawResults = rawResults;
         }
 
         public override async Task<FormulaValue> SendAsync(InvokerParameters invokerParameters, CancellationToken cancellationToken)
@@ -45,7 +47,7 @@ namespace Microsoft.PowerFx.Connectors
             if (statusCode < 300)
             {
                 Logger?.LogInformation($"In {nameof(HttpFunctionInvoker)}.{nameof(SendAsync)}, response status code: {statusCode} {response.StatusCode}");
-                return DecodeJson(Function, Context.ReturnRawResults, text);
+                return DecodeJson(Function, _rawResults, text);
             }
 
             Logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(SendAsync)}, response status code: {statusCode} {response.StatusCode}");

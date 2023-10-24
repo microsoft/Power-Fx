@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using Microsoft.PowerFx.Connectors.Execution;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
@@ -13,37 +14,48 @@ namespace Microsoft.PowerFx.Connectors.Tests
     internal class TestConnectorRuntimeContext : BaseRuntimeConnectorContext
     {
         private readonly Dictionary<string, HttpMessageInvoker> _clients = new ();
-        private readonly bool _throwOnError;
-        private readonly ConnectorLogger _logger;        
+        private bool _throwOnError;
 
-        public TestConnectorRuntimeContext(string @namespace, HttpMessageInvoker client, bool? throwOnError = null, ITestOutputHelper console = null, bool includeDebug = false)
+        public TestConnectorRuntimeContext(RuntimeConfig runtimeConfig, ITestOutputHelper console = null, bool includeDebug = false)
+            : base(Initialize(runtimeConfig, console, includeDebug))
         {
-            Add(@namespace, client);            
-            _throwOnError = throwOnError ?? base.ThrowOnError;
-            _logger = console == null ? null : new ConsoleLogger(console, includeDebug);
         }
 
-        public override TimeZoneInfo TimeZoneInfo => TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
-
-        public TestConnectorRuntimeContext Add(string @namespace, HttpMessageInvoker client)
+        private static RuntimeConfig Initialize(RuntimeConfig runtimeConfig, ITestOutputHelper console, bool includeDebug)
         {
+            Assert.False(runtimeConfig == null || runtimeConfig.ServiceProvider == null);
+
+            if (runtimeConfig.ServiceProvider.GetService<TimeZoneInfo>() == null)
+            {
+                runtimeConfig.ServiceProvider.AddService(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
+            }
+
+            if (runtimeConfig.ServiceProvider.GetService<ConnectorLogger>() == null && console != null)
+            {
+                runtimeConfig.ServiceProvider.AddService<ConnectorLogger>(new ConsoleLogger(console, includeDebug));
+            }
+
+            return runtimeConfig;
+        }
+
+        public TestConnectorRuntimeContext Add(string @namespace, HttpMessageInvoker client, bool? throwOnError = null)
+        {            
+            _throwOnError = throwOnError ?? base.ThrowOnError;
             _clients[string.IsNullOrEmpty(@namespace) ? throw new ArgumentException("Invalid namespace", nameof(@namespace)) : @namespace] = client ?? throw new ArgumentNullException(nameof(@namespace), "Invalid HttpMessageInvoker");
             return this;
         }
 
-        public override HttpMessageInvoker GetHttpInvoker(ConnectorFunction function)
+        public override FunctionInvoker GetInvoker(ConnectorFunction function, bool rawResults)
         {
             if (string.IsNullOrEmpty(function.Namespace) || !_clients.ContainsKey(function.Namespace))
             {
                 throw new ArgumentException("Invalid namespace or missing HttpMessageInvoker for this namespace", nameof(function.Namespace));
             }
 
-            return _clients[function.Namespace];            
+            return GetDefaultInvoker(function, this, _clients[function.Namespace], rawResults);
         }
 
         public override bool ThrowOnError => _throwOnError;
-
-        public override ConnectorLogger ExecutionLogger => _logger;
     }
 
     internal class ConsoleLogger : ConnectorLogger
@@ -56,7 +68,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             _console = console;
             _includeDebug = includeDebug;
-        }       
+        }
 
         internal string GetLogs()
         {
@@ -64,7 +76,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         private string GetMessage(ConnectorLog connectorLog)
-        {           
+        {
             string cat = connectorLog.Category switch
             {
                 LogCategory.Exception => "EXCPT",
@@ -75,11 +87,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 _ => "??"
             };
 
-            return $"[{cat}] {connectorLog.Message}";        
+            return $"[{cat}] {connectorLog.Message}";
         }
 
         protected override void Log(ConnectorLog log)
-        {            
+        {
             if (_includeDebug || log.Category != LogCategory.Debug)
             {
                 _console.WriteLine(GetMessage(log));

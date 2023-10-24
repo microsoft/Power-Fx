@@ -12,7 +12,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -46,7 +45,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client, console: _output);
+            RuntimeConfig config = new RuntimeConfig().AddTestRuntimeContext("SQL", client, console: _output);
+            BaseRuntimeConnectorContext context = config.GetService<BaseRuntimeConnectorContext>();
 
             // Get all functions based on OpenApi document and using provided http client
             // throwOnError is set to true so that any later GetParameters call will generate an exception in case of HTTP failure (HTTP result not 200)
@@ -170,8 +170,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             OpenApiDocument apiDoc = testConnector._apiDocument;
             IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("SQL", apiDoc, new ConsoleLogger(_output)); 
             ConnectorFunction executeProcedureV2 = functions.First(cf => cf.Name == "ExecuteProcedureV2");
-
-            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client, throwOnError: true, console: _output);
+            
+            BaseRuntimeConnectorContext context = new RuntimeConfig().AddTestRuntimeContext("SQL", client, throwOnError: true, console: _output).GetService<BaseRuntimeConnectorContext>();            
 
             // Simulates an invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
@@ -183,7 +183,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Same invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
-            context = new TestConnectorRuntimeContext("SQL", client, throwOnError: false, console: _output);
+            context = new RuntimeConfig().AddTestRuntimeContext("SQL", client, throwOnError: false, console: _output).GetService<BaseRuntimeConnectorContext>();            
             ConnectorParameters parameters = await executeProcedureV2.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), executeProcedureV2.RequiredParameters[0], context, CancellationToken.None).ConfigureAwait(false);
 
             CheckParameters(parameters.ParametersWithSuggestions);

@@ -587,12 +587,17 @@ namespace Microsoft.PowerFx.Connectors
         internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            return await InvokeInternalAsync(arguments, runtimeContext, ConnectorReturnType.Binary, cancellationToken).ConfigureAwait(false);           
+        }
+
+        internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, bool rawResults, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
 
             EnsureInitialized();
-            runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(InvokeInternalAsync))}, with {LogArguments(arguments)}");
-            BaseRuntimeConnectorContext context = ConnectorReturnType.Binary ? runtimeContext.WithRawResults() : runtimeContext;
+            runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(InvokeInternalAsync))}, with {LogArguments(arguments)}");            
 
-            FunctionInvoker invoker = context.GetInvoker(this);
+            FunctionInvoker invoker = runtimeContext.GetInvoker(this, rawResults);
             FormulaValue result = await invoker.InvokeAsync(arguments, cancellationToken).ConfigureAwait(false);
             FormulaValue formulaValue = await PostProcessResultAsync(result, invoker, cancellationToken).ConfigureAwait(false);
 
@@ -806,7 +811,7 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            return await dynamicApi.ConnectorFunction.InvokeInternalAsync(arguments, runtimeContext.WithRawResults(), cancellationToken).ConfigureAwait(false);
+            return await dynamicApi.ConnectorFunction.InvokeInternalAsync(arguments, runtimeContext, true, cancellationToken).ConfigureAwait(false);
         }
 
         private void EnsureInitialized()

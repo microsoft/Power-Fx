@@ -7,30 +7,56 @@ using Microsoft.PowerFx.Connectors.Execution;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    /// <summary>
+    /// Base class used to create the runtime context for connectors.
+    /// </summary>    
     public abstract class BaseRuntimeConnectorContext
     {
-        // When implementing a custom invoker, this is the method to override
-        public virtual FunctionInvoker GetInvoker(ConnectorFunction function, bool returnRawResults = false)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="runtimeConfig">Runtime configuration.</param>
+        /// <remarks>We use the service provider of the runtime configuration
+        /// To retrieve TimeZoneInfo or ConnectorLogger services.</remarks>
+        public BaseRuntimeConnectorContext(RuntimeConfig runtimeConfig)
         {
-            HttpMessageInvoker httpInvoker = GetHttpInvoker(function);
-            return new HttpFunctionInvoker(function, returnRawResults ? WithRawResults() : this, httpInvoker ?? throw new PowerFxConnectorException("If not overriding GetInvoker, you must implement GetCustomInvoker"));
+            if (runtimeConfig == null || runtimeConfig.ServiceProvider == null)
+            {
+                TimeZoneInfo = TimeZoneInfo.Utc;
+                ExecutionLogger = null;
+            }
+
+            TimeZoneInfo = runtimeConfig.ServiceProvider.GetService<TimeZoneInfo>();
+            ExecutionLogger = runtimeConfig.ServiceProvider.GetService<ConnectorLogger>();
         }
 
-        // When using default http invoker, this is the method to override
-        public virtual HttpMessageInvoker GetHttpInvoker(ConnectorFunction function) => null;
+        /// <summary>
+        /// Returns the function invoker that is submitting the connector function call.        
+        /// </summary>
+        /// <param name="function">Connector function.</param>
+        /// <param name="returnsRawResult">Should return raw result.</param>
+        /// <returns>Function invoker.</returns>
+        public abstract FunctionInvoker GetInvoker(ConnectorFunction function, bool returnsRawResult = false);
 
-        public abstract TimeZoneInfo TimeZoneInfo { get; }
-
+        /// <summary>
+        /// Lets the end user decide if they want to throw on error or not.
+        /// </summary>
         public virtual bool ThrowOnError { get; } = false;
 
-        internal virtual bool ReturnRawResults { get; } = false;
+        internal TimeZoneInfo TimeZoneInfo { get; }
 
-        public virtual ConnectorLogger ExecutionLogger { get; } = null;
+        internal ConnectorLogger ExecutionLogger { get; }
 
-        internal BaseRuntimeConnectorContext WithRawResults()
-        {
-            return new RuntimeConnectorContextWithRawResults(this);
-        }
+        /// <summary>
+        /// Generates a default HTTP function invoker.
+        /// </summary>
+        /// <param name="function">Connector function.</param>
+        /// <param name="context">BaseRuntimeConnectorContext to use.</param>
+        /// <param name="httpInvoker">HTTP message invoker.</param>
+        /// <param name="rawResults">Flag to toggle raw output.</param>
+        /// <returns></returns>
+        public static FunctionInvoker GetDefaultInvoker(ConnectorFunction function, BaseRuntimeConnectorContext context, HttpMessageInvoker httpInvoker, bool rawResults) 
+            => new HttpFunctionInvoker(function, context, rawResults, httpInvoker);
     }
 
     public static class RuntimeConnectorContextExtensions

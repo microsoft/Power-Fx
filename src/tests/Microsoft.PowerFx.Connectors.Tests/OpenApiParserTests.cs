@@ -339,7 +339,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client, console: _output);
+            RuntimeConfig config = new RuntimeConfig();
+            TestConnectorRuntimeContext context = new TestConnectorRuntimeContext(config, _output);
+            context.Add("ACSL", client);
+            config.AddRuntimeContext(context);
 
             FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
             httpClient.Dispose();
@@ -354,7 +357,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            BaseRuntimeConnectorContext context2 = new TestConnectorRuntimeContext("ACSL", client2, console: _output);
+            RuntimeConfig config2 = new RuntimeConfig();
+            TestConnectorRuntimeContext context2 = new TestConnectorRuntimeContext(config2, _output);
+            context2.Add("ACSL", client2);
 
             FormulaValue httpResult2 = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context2, CancellationToken.None).ConfigureAwait(false);
 
@@ -442,8 +447,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             FormulaValue kind = FormulaValue.New("Conversation");
 
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878", };
-            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client, console: _output);
-            
+            RuntimeConfig config = new RuntimeConfig();
+            TestConnectorRuntimeContext context = new TestConnectorRuntimeContext(config, _output);
+            context.Add("ACSL", client);
+
             FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
@@ -795,7 +802,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var httpClient = new HttpClient(testConnector);            
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4" /* environment Id */, "4bf9a87fc9054b6db3a4d07a1c1f5a5b" /* connectionId */, () => "eyJ0eXAi...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
 
-            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("SQL", client, console: _output);
+            RuntimeConfig config = new RuntimeConfig();
+            TestConnectorRuntimeContext runtimeContext = new TestConnectorRuntimeContext(config, _output);
+            runtimeContext.Add("SQL", client);
 
             ConnectorFunction[] functions = OpenApiParser.GetFunctions("SQL", testConnector._apiDocument, new ConsoleLogger(_output)).ToArray();
             ConnectorFunction executeProcedureV2 = functions.First(f => f.Name == "ExecuteProcedureV2");
@@ -907,7 +916,9 @@ POST https://tip1002-002.azure-apihub.net/invoke
             using var httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1-shared.azure-apim.net", "Default-9f6be790-4a16-4dd6-9850-44a0d2649aef" /* environment Id */, "461a30624723445c9ba87313d8bbefa3" /* connectionId */, () => "eyJ0eXAiO...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
 
-            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
+            RuntimeConfig config = new RuntimeConfig();
+            TestConnectorRuntimeContext runtimeContext = new TestConnectorRuntimeContext(config, _output);
+            runtimeContext.Add("DV", client);
 
             ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
             ConnectorFunction createRecord = functions.First(f => f.Name == "CreateRecordWithOrganization");
