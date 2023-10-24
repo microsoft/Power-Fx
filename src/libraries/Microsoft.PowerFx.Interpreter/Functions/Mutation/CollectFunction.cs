@@ -227,6 +227,10 @@ namespace Microsoft.PowerFx.Interpreter
         {
             base.CheckSemantics(binding, args, argTypes, errors);
             base.ValidateArgumentIsMutable(binding, args[0], errors);
+
+            int skip = 1;
+
+            MutationUtils.CheckForReadOnlyFields(argTypes[0], args.Skip(skip).ToArray(), argTypes.Skip(skip).ToArray(), errors);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.

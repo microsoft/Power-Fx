@@ -72,6 +72,11 @@ namespace Microsoft.PowerFx
         internal bool CoalesceShortCircuit { get; set; }
 
         /// <summary>
+        /// This is required by AsType() in PA delegation analysis.
+        /// </summary>
+        internal bool AsTypeLegacyCheck { get; set; }
+
+        /// <summary>
         /// This is required by AsType() in Legacy Analysis.
         /// </summary>
         internal bool IsLegacyAnalysis { get; set; }
@@ -113,7 +118,7 @@ namespace Microsoft.PowerFx
             PowerFxV1CompatibilityRules = true,
             CoalesceShortCircuit = true,
             PrimaryOutputPropertyCoercionDeprecated = true,
-            IsLegacyAnalysis = false,
+            AsTypeLegacyCheck = false,
         };
 
         internal Features()

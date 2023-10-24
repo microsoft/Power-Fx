@@ -98,6 +98,7 @@ namespace Microsoft.PowerFx.Core.Tests
             possible.Add("RegEx");
             possible.Add("DecimalSupport");
             possible.Add("EnableJsonFunctions");
+            possible.Add("TraceSetup");
 
             foreach (Match match in Regex.Matches(setup, @"(disable:)?(([\w]+|//)(\([^\)]*\))?)"))
             {

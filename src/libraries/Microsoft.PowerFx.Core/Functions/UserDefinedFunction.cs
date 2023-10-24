@@ -26,6 +26,11 @@ using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
+    /// <summary>
+    /// Represents a user defined function (UDF) - which is created from parsing other Power Fx.     
+    /// This includings the binding (and hence IR for evaluation) - 
+    /// This is conceptually immutable after initialization - if the body or signature changes, you need to create a new instance.
+    /// </summary>
     internal class UserDefinedFunction : TexlFunction
     {
         private readonly bool _isImperative;
@@ -106,6 +111,11 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(documentBinderGlue));
             }
 
+            if (_binding != null)
+            {
+                throw new InvalidOperationException($"Body should only get bound once: {this.Name}");
+            }
+
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
             _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args), bindingConfig, features: features, rule: rule);
 
@@ -149,6 +159,28 @@ namespace Microsoft.PowerFx.Core.Functions
         public (IntermediateNode topNode, ScopeSymbol ruleScopeSymbol) GetIRTranslator()
         {
             return IRTranslator.Translate(_binding);
+        }
+
+        /// <summary>
+        /// Clones and binds a user defined function.
+        /// </summary>
+        /// <returns>Returns a new functions.</returns>
+        public UserDefinedFunction WithBinding(INameResolver nameResolver, IBinderGlue binderGlue, out TexlBinding binding, BindingConfig bindingConfig = null, Features features = null, IExternalRule rule = null)
+        {
+            if (nameResolver is null)
+            {
+                throw new ArgumentNullException(nameof(nameResolver));
+            }
+
+            if (binderGlue is null)
+            {
+                throw new ArgumentNullException(nameof(binderGlue));
+            }
+
+            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args));
+            binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
+
+            return func;
         }
 
         /// <summary>
