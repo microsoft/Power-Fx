@@ -5112,4 +5112,91 @@
     <value>ソースとターゲットの間で種類が一致しません。予期: {0}、実際: {1}</value>
     
   </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>テーブル、レコード、または値の JSON テキスト文字列を生成します。</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>データ</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>JSON に変換するデータ構造。テーブル、レコード、プリミティブ値がサポートされており、任意に入れ子にすることができます。</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>形式</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON 変換に使用する形式。この値は JSONFormat 列挙型のメンバーになります。</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>有効になっているときに Application Insights に情報を記録し、テスト結果で使用できるように Test Studio セッションに記録します。</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>メッセージ</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>重大度</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>カスタム_レコード</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>トレース_オプション</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>トレースされる情報。</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Application Insights にトレースされる重大度レベル。</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Application Insights にトレースされるカスタム データを含むレコード。</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Trace 関数の追加のオプションです。</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>{0} 関数の '{1}' パラメーターは定数値である必要があります。</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormat 値 '{0}' と '{1}' は同時に使用することはできません。</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>JSON 関数に渡された値はメディアを含んでおり、既定ではサポートされていません。メディア値の JSON シリアル化を許可するには、'format' パラメーターに IncludeBinaryData オプションを使用してください。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON 関数では型 '{0}' のオブジェクトをシリアル化できません。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON 関数では型 '{1}' の入れ子になった '{0}' というプロパティを持つテーブルまたはオブジェクトをシリアル化できません。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON 関数が、非行動的式でバイナリ データをシリアル化できません。</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>パラメーター {0} に型 {1} のプロパティが含まれていますが、これはサポートされていません。</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>指定された列 {0} は読み取り専用です。変更できません。</value>
+    
+  </data>
 </root>

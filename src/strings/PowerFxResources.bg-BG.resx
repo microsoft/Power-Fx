@@ -5112,4 +5112,91 @@
     <value>Несъответствие между типа на изходния и на целевия запис. Очаквано: {0}; открито: {1}.</value>
     
   </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Генерира текстов низ на JSON за таблица, запис или стойност.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>данни</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Структурата на данните, които ще се конвертират в JSON. Таблиците, записите и примитивните стойности се поддържат, вложени произволно.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>формат</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Форматът, който се използва за преобразуването в JSON. Стойността ще бъде член на изброяването на JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Регистрира информация в Application Insights, когато е разрешено, и регистрира в сесия в Test Studio, която ще бъде налична в резултатите от теста.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>съобщение</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>сериозност</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>персонализиран_запис</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>опциизапроследяване</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Информацията, която ще се проследява.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Степента на сериозност, която ще бъде проследена до Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Запис, съдържащ персонализирани данни, които ще бъдат проследени до Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Допълнителни опции към функцията Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Параметърът {1} към функцията {0} трябва да е константна стойност.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Стойностите на JSONFormat „{0}“ и „{1}“ не може да се използват заедно.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Стойността, подадена на функцията JSON, съдържа мултимедийно съдържание и не се поддържа по подразбиране. За да разрешите JSON сериализиране на мултимедийни стойности, се уверете, че използвате опцията IncludeBinaryData в параметъра format.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Функцията JSON не може да сериализира обекти от тип {0}.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Функцията JSON не може да сериализира таблици/обекти с вложено свойство от тип {0}, наречено „{1}“.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Функцията за JSON не може да сериализира двоични данни в неповеденчески израз.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Параметърът {0} съдържа свойство от тип {1}, което не се поддържа.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Указаната колона е само за четене и не може да се променя: {0}.</value>
+    
+  </data>
 </root>
