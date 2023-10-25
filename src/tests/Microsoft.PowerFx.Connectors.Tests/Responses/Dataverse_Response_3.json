@@ -1,0 +1,36 @@
+{
+  "value": [
+    {
+      "operationId": "Microsoft.Dynamics.CRM.PvaAuthorize",
+      "operationDisplayName": "PvaAuthorize"
+    },
+    {
+      "operationId": "Microsoft.Dynamics.CRM.PvaCreateBotComponents",
+      "operationDisplayName": "PvaCreateBotComponents"
+    },
+    {
+      "operationId": "Microsoft.Dynamics.CRM.PvaCreateContentSnapshot",
+      "operationDisplayName": "PvaCreateContentSnapshot"
+    },
+    {
+      "operationId": "Microsoft.Dynamics.CRM.PvaDeleteBot",
+      "operationDisplayName": "PvaDeleteBot"
+    },
+    {
+      "operationId": "Microsoft.Dynamics.CRM.PvaGetDirectLineEndpoint",
+      "operationDisplayName": "PvaGetDirectLineEndpoint"
+    },
+    {
+      "operationId": "Microsoft.Dynamics.CRM.PvaProvision",
+      "operationDisplayName": "PvaProvision"
+    },
+    {
+      "operationId": "Microsoft.Dynamics.CRM.PvaPublish",
+      "operationDisplayName": "PvaPublish"
+    },
+    {
+      "operationId": "Microsoft.Dynamics.CRM.PvaPublishStatus",
+      "operationDisplayName": "PvaPublishStatus"
+    }
+  ]
+}

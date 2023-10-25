@@ -576,6 +576,8 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsRecord => Kind == DKind.Record || Kind == DKind.ObjNull || Kind == DKind.LazyRecord;
 
+        public bool IsRecordNonObjNull => Kind == DKind.Record || Kind == DKind.LazyRecord;
+
         public bool IsTable => Kind == DKind.Table || Kind == DKind.ObjNull || Kind == DKind.LazyTable;
 
         public bool IsTableNonObjNull => Kind == DKind.Table || Kind == DKind.LazyTable;

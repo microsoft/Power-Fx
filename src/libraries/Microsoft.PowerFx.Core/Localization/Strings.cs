@@ -67,6 +67,11 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter ShowColumnsArg1 = (b) => StringResources.Get("ShowColumnsArg1", b);
         public static StringGetter ShowColumnsArg2 = (b) => StringResources.Get("ShowColumnsArg2", b);
 
+        public static StringGetter AboutRenameColumns = (b) => StringResources.Get("AboutRenameColumns", b);
+        public static StringGetter RenameColumnsArg1 = (b) => StringResources.Get("RenameColumnsArg1", b);
+        public static StringGetter RenameColumnsArg2 = (b) => StringResources.Get("RenameColumnsArg2", b);
+        public static StringGetter RenameColumnsArg3 = (b) => StringResources.Get("RenameColumnsArg3", b);
+
         public static StringGetter AboutFilter = (b) => StringResources.Get("AboutFilter", b);
         public static StringGetter FilterArg1 = (b) => StringResources.Get("FilterArg1", b);
         public static StringGetter FilterArg2 = (b) => StringResources.Get("FilterArg2", b);
@@ -671,6 +676,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WarnLiteralPredicate = new ErrorResourceKey("WarnLiteralPredicate");
         public static ErrorResourceKey WarnDynamicMetadata = new ErrorResourceKey("WarnDynamicMetadata");
         public static ErrorResourceKey WarnDeferredType = new ErrorResourceKey("WarnDeferredType");
+        public static ErrorResourceKey ErrColRenamedTwice_Name = new ErrorResourceKey("ErrColRenamedTwice_Name");
 
         public static StringGetter InfoMessage = (b) => StringResources.Get("InfoMessage", b);
         public static StringGetter InfoNode_Node = (b) => StringResources.Get("InfoNode_Node", b);
