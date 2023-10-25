@@ -415,6 +415,12 @@ namespace Microsoft.PowerFx.Syntax
             return result;
         }
 
+        /// <summary>
+        /// Given the expression and list of tokens that make up the expression, generates the minified version of the given expression.
+        /// </summary>
+        /// <param name="text">Expression to minify.</param>
+        /// <param name="tokens">List of tokens that make up the given expression.</param>
+        /// <returns>Minified Expression.</returns>
         public string GetMinifiedScript(string text, List<Token> tokens)
         {
             Contracts.AssertValue(text);
@@ -422,20 +428,22 @@ namespace Microsoft.PowerFx.Syntax
 
             var stringBuilder = new StringBuilder();
 
-            foreach (var tk in tokens)
+            for (var i = 0; i < tokens.Count; i++)
             {
-                if (tk.Kind == TokKind.Comment)
+                var currentToken = tokens[i];
+                if (currentToken.Kind == TokKind.Comment)
                 {
-                    stringBuilder.Append(tk.Span.GetFragment(text));
+                    stringBuilder.Append(currentToken.Span.GetFragment(text));
                 }
-                else if (RequiresWhiteSpace(tk))
+                else if (RequiresWhiteSpace(currentToken))
                 {
-                    stringBuilder.Append(" " + tk.Span.GetFragment(text) + " ");
+                    stringBuilder.Append(" " + currentToken.Span.GetFragment(text) + " ");
                 }
                 else
                 {
-                    var tokenString = tk.Span.GetFragment(text);
-                    var newString = tokenString.Trim();
+                    var tokenString = currentToken.Span.GetFragment(text);
+                    var shouldNotTrim = IsStringPartOfALargerInterpolatedString(i - 1 >= 0 ? tokens[i - 1] : null, currentToken, i + 1 < tokens.Count ? tokens[i + 1] : null);
+                    var newString = shouldNotTrim ? tokenString : tokenString.Trim();
 
                     stringBuilder.Append(newString);
                 }
@@ -443,6 +451,37 @@ namespace Microsoft.PowerFx.Syntax
 
             var result = stringBuilder.ToString();
             return result;
+        }
+
+        /// <summary>
+        /// Determines if current token is string literal inside a larger interpolated string.
+        /// </summary>
+        /// <param name="precedingToken">A token before the current token.</param>
+        /// <param name="currentToken">Current token that might be a string literal inside a larger interpolated string.</param>
+        /// <param name="followingToken">A token after the current token.</param>
+        /// <returns>True if current token represents a string literal inside a larger interpolated string or false otherwise.</returns>
+        private static bool IsStringPartOfALargerInterpolatedString(Token precedingToken, Token currentToken, Token followingToken)
+        {
+            if (currentToken == null || currentToken.Kind != TokKind.StrLit)
+            {
+                return false;
+            }
+
+            // See if current token is preceded by start of the interpolated string or an end of an island
+            // Example $"<current token>, }<current token>
+            if (precedingToken != null && (precedingToken.Kind == TokKind.StrInterpStart || precedingToken.Kind == TokKind.IslandEnd))
+            {
+                return true;
+            }
+
+            // See if current token is followed by end of the interpolated string or the start of an island
+            // Example <current token>", <current token>{
+            if (followingToken != null && (followingToken.Kind == TokKind.StrInterpEnd || followingToken.Kind == TokKind.IslandStart))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public string RemoveWhiteSpace(string text)

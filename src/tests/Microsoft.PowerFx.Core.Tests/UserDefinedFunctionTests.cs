@@ -440,5 +440,33 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(check.IsSuccess);
             Assert.Equal(FormulaType.Number, check.ReturnType);
         }
+
+        [Fact]
+        public void TestUserDefinedFunctionCloning()
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var script = "Add(a: Number, b: Number):Number = a + b;";
+            UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+            var func = userDefinitionResult.UDFs.FirstOrDefault();
+            Assert.NotNull(func);
+
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
+            var glue = new Glue2DocumentBinderGlue();
+            var udfs = new TexlFunctionSet(userDefinitionResult.UDFs);
+
+            Assert.Single(userDefinitionResult.UDFs);
+
+            var udf = userDefinitionResult.UDFs.First();
+            var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(udfs)), glue, BindingConfig.Default);
+            var clonedFunc = func.WithBinding(nameResolver, glue, out binding);
+            Assert.NotNull(clonedFunc);
+            Assert.NotNull(binding);
+
+            Assert.NotEqual(func, clonedFunc);
+        }
     }
 }
