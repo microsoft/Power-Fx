@@ -16,6 +16,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
+using SharpYaml.Tokens;
 using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
@@ -858,14 +859,14 @@ namespace Microsoft.PowerFx.Connectors
             {
                 string requiredParameterName = connectorParameter.Name;
 
-                if (dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is StaticConnectorExtensionValue && kvp.Key == requiredParameterName).Value is StaticConnectorExtensionValue sValue)
+                if (dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is StaticConnectorExtensionValue && GetLastPart(kvp.Key) == requiredParameterName).Value is StaticConnectorExtensionValue sValue)
                 {
                     arguments.Add(sValue.Value);
                     continue;
                 }
 
                 KeyValuePair<string, IConnectorExtensionValue> dValue = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is DynamicConnectorExtensionValue dv && dv.Reference == requiredParameterName);
-                NamedValue newParam = knownParameters.FirstOrDefault(nv => nv.Name == dValue.Key.Split('/').Last());
+                NamedValue newParam = knownParameters.FirstOrDefault(nv => nv.Name == GetLastPart(dValue.Key));
 
                 if (newParam == null)
                 {
@@ -879,6 +880,8 @@ namespace Microsoft.PowerFx.Connectors
             return arguments.ToArray();
         }
 
+        private string GetLastPart(string str) => str.Split('/').Last();
+        
         private ConnectorParameterInternals Initialize()
         {
             // Hidden-Required parameters exist in the following conditions:
