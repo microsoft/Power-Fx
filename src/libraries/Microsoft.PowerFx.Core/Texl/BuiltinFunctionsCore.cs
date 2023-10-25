@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Texl
         {
             "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Defaults", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit", "GUID",
             "GroupBy", "HashTags", "IsMatch", "IsType", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "Print", "ReadNFC",
-            "RecordInfo", "Relate", "RemoveAll", "RemoveIf", "RenameColumns", "RequestHide", "Reset", "ResetForm", "Revert", "SaveData", "ScanBarcode", "Search", "Select", "SetFocus",
+            "RecordInfo", "Relate", "RemoveAll", "RemoveIf", "RequestHide", "Reset", "ResetForm", "Revert", "SaveData", "ScanBarcode", "Search", "Select", "SetFocus",
             "SetProperty", "ShowColumns", "State", "SubmitForm", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm"
         };
 
@@ -172,6 +172,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Rand = _library.Add(new RandFunction());
         public static readonly TexlFunction RandBetween = _library.Add(new RandBetweenFunction());
         public static readonly TexlFunction Refresh = _library.Add(new RefreshFunction());
+        public static readonly TexlFunction RenameColumns = _library.Add(new RenameColumnsFunction());
         public static readonly TexlFunction Replace = _library.Add(new ReplaceFunction());
         public static readonly TexlFunction ReplaceT = _library.Add(new ReplaceTFunction());
         public static readonly TexlFunction RGBA = _library.Add(new RGBAFunction());
