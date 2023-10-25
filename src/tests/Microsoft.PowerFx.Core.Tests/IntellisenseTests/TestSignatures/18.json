@@ -1,0 +1,26 @@
+{
+  "Signatures": [
+    {
+      "Label": "Sqrt(number)",
+      "Documentation": "Returns the square root of a number.",
+      "Parameters": [
+        {
+          "Label": "number",
+          "Documentation": "A numeric value to process."
+        }
+      ]
+    },
+    {
+      "Label": "Sqrt(input)",
+      "Documentation": "Returns the square roots of a column of numbers.",
+      "Parameters": [
+        {
+          "Label": "input",
+          "Documentation": "A column of numeric values to process."
+        }
+      ]
+    }
+  ],
+  "ActiveSignature": 0,
+  "ActiveParameter": 0
+}
