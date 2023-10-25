@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Connectors
             return TryGetOpenApiValue(schema.Default, formulaType, out defaultValue);
         }
 
-        internal static bool TryGetOpenApiValue(IOpenApiAny openApiAny, FormulaType formulaType, out FormulaValue formulaValue)
+        internal static bool TryGetOpenApiValue(IOpenApiAny openApiAny, FormulaType formulaType, out FormulaValue formulaValue, bool allowOpenApiDateTime = false)
         {
             if (openApiAny is OpenApiString str)
             {
@@ -247,7 +247,7 @@ namespace Microsoft.PowerFx.Connectors
                 // OpenApi library uses Convert.FromBase64String
                 formulaValue = FormulaValue.New(Convert.ToBase64String(by.Value));
             }
-            else if (openApiAny is OpenApiDateTime dt)
+            else if (openApiAny is OpenApiDateTime dt && allowOpenApiDateTime)
             {
                 formulaValue = FormulaValue.New(new DateTime(dt.Value.Ticks, DateTimeKind.Utc));
             }
@@ -793,7 +793,7 @@ namespace Microsoft.PowerFx.Connectors
 
             foreach (KeyValuePair<string, IOpenApiAny> prm in opPrms)
             {
-                if (!OpenApiExtensions.TryGetOpenApiValue(prm.Value, null, out FormulaValue fv))
+                if (!OpenApiExtensions.TryGetOpenApiValue(prm.Value, null, out FormulaValue fv, forceString))
                 {
                     throw new NotImplementedException($"Unsupported param with OpenApi type {prm.Value.GetType().FullName}, key = {prm.Key}");
                 }
