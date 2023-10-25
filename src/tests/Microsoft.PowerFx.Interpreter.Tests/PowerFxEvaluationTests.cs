@@ -8,12 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.Tests.Helpers;
+using Microsoft.PowerFx.Logging;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 
@@ -21,65 +23,84 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class ExpressionEvaluationTests : PowerFxTest
     {
-        internal static Dictionary<string, Func<PowerFxConfig, bool, (RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new ()
+        // Each setup handler can define 4 types of specific actions to define the PowerFxConfig, Parameters and Engine configuration
+        // - initPfxConfig: to define the initial PowerFxConfig
+        // - updatePfxConfig: to update the PowerFxConfig, like enabling functions
+        //                    this function returns an 'object' which will be sent to 'parameters' function if defined
+        //                    if initPfxConfig is null, PowerFxConfig is created with default settings
+        // - parameters: to define the parameters for the test case
+        //               receives an 'object' if defined in updatePfxConfig
+        // - configureEngine: to configure the engine
+        // Each of these actions are executed in order (init, update, param, configure)
+        internal static Dictionary<string, (Func<PowerFxConfig, PowerFxConfig> initPfxConfig, Func<PowerFxConfig, object> updatePfxConfig, Func<object, RecordValue> parameters, Action<RecalcEngine, bool> configureEngine)> SetupHandlers = new ()
         {
-            { "OptionSetTestSetup", OptionSetTestSetup },
-            { "MutationFunctionsTestSetup", MutationFunctionsTestSetup },
-            { "OptionSetSortTestSetup", OptionSetSortTestSetup },
-            { "AllEnumsSetup", AllEnumsSetup },
-            { "RegEx", RegExSetup },
-            { "DecimalSupport", NoOpSetup }, // Decimal is enabled in the C# interpreter
+            { "AllEnumsSetup", (AllEnumsSetup, null, null, null) },
+            { "DecimalSupport", (null, null, null, null) }, // Decimal is enabled in the C# interpreter
+            { "EnableJsonFunctions", (null, EnableJsonFunctions, null, null) },
+            { "MutationFunctionsTestSetup", (null, null, null, MutationFunctionsTestSetup) },
+            { "OptionSetSortTestSetup", (null, OptionSetSortTestSetup, null, null) },
+            { "OptionSetTestSetup", (null, OptionSetTestSetup1, OptionSetTestSetup2, null) },
+            { "RegEx", (null, RegExSetup, null, null) },
+            { "TraceSetup", (null, null, null, TraceSetup) }
         };
 
-        private static (RecalcEngine engine, RecordValue parameters) NoOpSetup(PowerFxConfig config, bool numberIsFloat)
+        private static object EnableJsonFunctions(PowerFxConfig config)
         {
-            return (new RecalcEngine(config), null);
+            config.EnableJsonFunctions();
+            return null;
         }
 
-        private static (RecalcEngine engine, RecordValue parameters) RegExSetup(PowerFxConfig config, bool numberIsFloat)
+        private static object RegExSetup(PowerFxConfig config)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
             config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
 #pragma warning restore CS0618 // Type or member is obsolete
-            return (new RecalcEngine(config), null);
+
+            return null;
         }
 
-        private static (RecalcEngine engine, RecordValue parameters) AllEnumsSetup(PowerFxConfig config, bool numberIsFloat)
+        private static PowerFxConfig AllEnumsSetup(PowerFxConfig config)
         {
-            return (new RecalcEngine(PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet(), config.Features)), null);
+            return PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet(), config.Features);
         }
 
-        private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config, bool numberIsFloat)
+        private static object OptionSetTestSetup1(PowerFxConfig config)
         {
-            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            OptionSet optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
             }));
 
-            var otherOptionSet = new OptionSet("OtherOptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            OptionSet otherOptionSet = new OptionSet("OtherOptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
                     { "99", "OptionA" },
                     { "112", "OptionB" },
                     { "35694", "OptionC" },
                     { "123412983", "OptionD" },
             }));
-
             config.AddOptionSet(optionSet);
             config.AddOptionSet(otherOptionSet);
+
+            return (optionSet, otherOptionSet);
+        }
+
+        private static RecordValue OptionSetTestSetup2(object obj)
+        {
+            (OptionSet optionSet, OptionSet otherOptionSet) = ((OptionSet, OptionSet))obj;
 
             optionSet.TryGetValue(new DName("option_1"), out var o1Val);
             otherOptionSet.TryGetValue(new DName("123412983"), out var o2Val);
 
-            var parameters = FormulaValue.NewRecordFromFields(
+            RecordValue parameters = FormulaValue.NewRecordFromFields(
                     new NamedValue("TopOptionSetField", o1Val),
                     new NamedValue("Nested", FormulaValue.NewRecordFromFields(
                         new NamedValue("InnerOtherOptionSet", o2Val))));
 
-            return (new RecalcEngine(config), parameters);
+            return parameters;
         }
 
-        private static (RecalcEngine engine, RecordValue parameters) OptionSetSortTestSetup(PowerFxConfig config, bool numberIsFloat)
+        private static object OptionSetSortTestSetup(PowerFxConfig config)
         {
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -113,10 +134,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             symbol.AddConstant("t2", t2);
             symbol.AddConstant("t3", t3);
 
-            return (new RecalcEngine(config), null);
+            return null;
         }
 
-        private static (RecalcEngine engine, RecordValue parameters) MutationFunctionsTestSetup(PowerFxConfig config, bool numberIsFloat)
+        private static void MutationFunctionsTestSetup(RecalcEngine engine, bool numberIsFloat)
         {
             /*
              * Record r1 => {![Field1:n, Field2:s, Field3:d, Field4:b]}
@@ -135,8 +156,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var numberType = numberIsFloat ? FormulaType.Number : FormulaType.Decimal;
 
-            Func<double, FormulaValue> newNumber = number =>
-                numberIsFloat ? FormulaValue.New(number) : FormulaValue.New((decimal)number);
+            Func<double, FormulaValue> newNumber = number => numberIsFloat ? FormulaValue.New(number) : FormulaValue.New((decimal)number);
 
             var rType = RecordType.Empty()
                 .Add(new NamedFormulaType("Field1", numberType, "DisplayNameField1"))
@@ -239,7 +259,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 recordWithRecord3
             });
 
-            var engine = new RecalcEngine(config);
             var symbol = engine._symbolTable;
 
             symbol.EnableMutationFunctions();
@@ -265,8 +284,43 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var nameTableType = TableType.Empty().Add("name", FormulaType.String);
             engine.UpdateVariable("t_name", FormulaValue.NewTable(nameTableType.ToRecord()));
+        }
 
-            return (engine, null);
+        private static void TraceSetup(RecalcEngine engine, bool numberIsFloat)
+        {
+            var rType = RecordType.Empty()
+                .Add("message", FormulaType.String)
+                .Add("severity", FormulaType.Decimal)
+                .Add("customRecord", FormulaType.String);
+
+            var rFields = new NamedValue[]
+                {
+                    new NamedValue("message", FormulaValue.NewBlank()),
+                    new NamedValue("severity", FormulaValue.New(0)),
+                    new NamedValue("customRecord", FormulaValue.New(string.Empty))
+                };
+
+            var rValue = FormulaValue.NewRecordFromFields(rType, rFields);
+
+            engine.UpdateVariable("traceRecord", rValue);
+        }
+
+        private class Tracer : ITracer
+        {
+            private readonly RecordValue _result;
+
+            public Tracer(RecordValue result)
+            {
+                _result = result;
+            }
+
+            public Task LogAsync(string message, TraceSeverity severity, RecordValue customRecord, CancellationToken ct)
+            {
+                _result.UpdateField("message", FormulaValue.New(message));
+                _result.UpdateField("severity", FormulaValue.New((int)severity));
+                _result.UpdateField("customRecord", FormulaValue.New(customRecord.ToExpression()));
+                return Task.CompletedTask;
+            }
         }
 
         // Interpret each test case independently
@@ -301,26 +355,50 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName)
             {
-                RecalcEngine engine;
-                RecordValue parameters;
+                RecalcEngine engine = null;
+                RecordValue parameters = null;
                 var iSetup = InternalSetup.Parse(setupHandlerName, Features, NumberIsFloat);
 
                 var config = new PowerFxConfig(features: iSetup.Features);
-                config.EnableParseJSONFunction();
+                config.EnableJsonFunctions();
 
-                if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
+                if (iSetup.HandlerNames?.Any(hn => string.Equals(hn, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase)) == true)
                 {
                     return new RunResult(await RunVerifyAsync(expr, config, iSetup).ConfigureAwait(false));
                 }
 
-                if (iSetup.HandlerName != null)
+                if (iSetup.HandlerNames != null && iSetup.HandlerNames.Any())
                 {
-                    if (!SetupHandlers.TryGetValue(iSetup.HandlerName, out var handler))
+                    try
+                    {
+                        // Execute actions in order
+                        foreach (var k in iSetup.HandlerNames.Select(hn => SetupHandlers[hn]).OrderBy(kvp => kvp.initPfxConfig != null ? 1 : kvp.updatePfxConfig != null ? 2 : kvp.parameters != null ? 3 : 4))
+                        {
+                            if (k.initPfxConfig != null)
+                            {
+                                config = k.initPfxConfig(config);
+                            }
+
+                            object o = k.updatePfxConfig?.Invoke(config);
+
+                            if (k.parameters != null)
+                            {
+                                parameters = k.parameters(o);
+                            }
+
+                            if (k.configureEngine != null)
+                            {
+                                engine ??= new RecalcEngine(config);
+                                k.configureEngine(engine, NumberIsFloat);
+                            }
+                        }
+
+                        engine ??= new RecalcEngine(config);
+                    }
+                    catch (Exception)
                     {
                         throw new SetupHandlerNotFoundException();
                     }
-
-                    (engine, parameters) = handler(config, NumberIsFloat);
                 }
                 else
                 {
@@ -349,6 +427,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 if (iSetup.TimeZoneInfo != null)
                 {
                     runtimeConfig.AddService(iSetup.TimeZoneInfo);
+                }
+
+                if (engine.TryGetByName("traceRecord", out _))
+                {
+                    var traceRecord = engine.GetValue("traceRecord");
+                    if (traceRecord != null)
+                    {
+                        runtimeConfig.AddService<ITracer>(new Tracer((RecordValue)traceRecord));
+                    }
                 }
 
                 // Ensure tests can run with governor on. 
@@ -403,81 +490,51 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        // Runts through a .txt in sequence, allowing Set() functions that can create state. 
+        // Run through a .txt in sequence, allowing Set() functions that can create state. 
         // Useful for testing mutation functions. 
+        // The .txt format still provides an expected return value after each expression.
         internal class ReplRunner : BaseRunner
         {
             private readonly RecalcEngine _engine;
 
-            private readonly RuntimeConfig _runtimeConfig;
+            // Repl engine does all the policy around declaring variables via Set().
+#pragma warning disable CS0618 // Type or member is obsolete
+            public readonly PowerFxREPL _repl;
+#pragma warning restore CS0618 // Type or member is obsolete
 
-            public ReplRunner(RecalcEngine engine, RuntimeConfig runtimeConfig)
+            public ReplRunner(RecalcEngine engine)
             {
                 _engine = engine;
-                _runtimeConfig = runtimeConfig;
+
+#pragma warning disable CS0618 // Type or member is obsolete
+                _repl = new PowerFxREPL
+                {
+                    Engine = _engine,
+                    AllowSetDefinitions = true
+                };
+#pragma warning restore CS0618 // Type or member is obsolete
             }
 
             protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
             {
-                if (TryMatchSet(expr, out var runResult, NumberIsFloat))
+                var replResult = await _repl.HandleCommandAsync(expr, default).ConfigureAwait(false);
+
+                // .txt output format - if there are any Set(), compare those.
+                if (replResult.DeclaredVars.Count > 0)
                 {
+                    var newVar = replResult.DeclaredVars.First().Value;
+                    var runResult = new RunResult(newVar);
                     return runResult;
                 }
 
-                ParserOptions opts = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = NumberIsFloat };
-
-                var check = _engine.Check(expr, opts);
+                var check = replResult.CheckResult;
                 if (!check.IsSuccess)
                 {
                     return new RunResult(check);
                 }
 
-                var result = check.GetEvaluator().Eval(_runtimeConfig);
+                var result = replResult.EvalResult;
                 return new RunResult(result);
-            }
-
-            // Pattern match for Set(x,y) so that we can define the variable
-            public bool TryMatchSet(string expr, out RunResult runResult, bool numberIsFloat = false)
-            {
-                var parserOptions = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = NumberIsFloat };
-
-                var parse = _engine.Parse(expr, parserOptions);
-                if (parse.IsSuccess)
-                {
-                    if (parse.Root.Kind == Microsoft.PowerFx.Syntax.NodeKind.Call)
-                    {
-                        if (parse.Root is Microsoft.PowerFx.Syntax.CallNode call)
-                        {
-                            if (call.Head.Name.Value == "Set")
-                            {
-                                // Infer type based on arg1. 
-                                var arg0 = call.Args.ChildNodes[0];
-                                if (arg0 is Microsoft.PowerFx.Syntax.FirstNameNode arg0node)
-                                {
-                                    var arg0name = arg0node.Ident.Name.Value;
-
-                                    var arg1 = call.Args.ChildNodes[1];
-                                    var arg1expr = arg1.GetCompleteSpan().GetFragment(expr);
-
-                                    var check = _engine.Check(arg1expr, parserOptions);
-                                    if (check.IsSuccess)
-                                    {
-                                        var arg1Type = check.ReturnType;
-
-                                        var varValue = check.GetEvaluator().Eval(_runtimeConfig);
-                                        _engine.UpdateVariable(arg0name, varValue);
-
-                                        runResult = new RunResult(varValue);
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                runResult = null;
-                return false;
             }
         }
     }

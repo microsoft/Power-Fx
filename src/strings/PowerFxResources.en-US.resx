@@ -347,7 +347,7 @@
     <comment>function_parameter - Third argument to the AddColumns function - the expression used to create the new column.</comment>
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>A table to add columns to.</value>
+    <value>A table or record to add columns to.</value>
     <comment>AddColumns Parameter.</comment>
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     <comment>function_parameter - Second argument to the DropColumns function - the name of the column to be dropped. Translate this string. Maintain as a single word (do not add spaces).</comment>
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>A table value to remove columns from.</value>
+    <value>A table or record value to remove columns from.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>The name of a column to remove.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Returns a copy of the specified 'source' table, with the 'old_column' column renamed to 'new_column'.</value>
+    <comment>Description of RenameColumns function.</comment>
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - First argument of the RenameColumns function - the data source from which columns will be renamed.</comment>
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>old_column</value>
+    <comment>function_parameter - Second argument of the RenameColumns function - the new name for the column. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>new_column</value>
+    <comment>function_parameter - Third argument of the RenameColumns function - the new name for the column. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>A table value to process.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>The name of a column to rename.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>The new name for the column.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Returns the rows from the table for which all the specified conditions are true.</value>
@@ -1021,6 +1050,46 @@
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>A date value for which the ISO week number will be calculated.</value>
+  </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Returns a date adjusted by a number of months. The day of the month remains the same but is capped by the number of days in the new month.</value>
+    <comment>Description of 'EDate' function.</comment>
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>date</value>
+    <comment>function_parameter - First parameter for the EDate function - a date value to be adjusted by the specified number of months.</comment>
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>months</value>
+    <comment>function_parameter - Second parameter for the EDate function - number of months by which to change the date.</comment>
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>A date value to be adjusted by the specified number of months.</value>
+    <comment>Description of the first argument to the 'EDate' function.</comment>      
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Number of months by which to change the date. A positive value yields a future date, a negative value a past date, and zero will not change the month.</value>
+    <comment>Description of the second argument to the 'EDate' function.</comment>    
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Returns the last day of the month for a specified date, adjusted by a number of months.</value>
+    <comment>Description of 'EOMonth' function.</comment>
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>date</value>
+    <comment>function_parameter - First parameter for the EOMonth function - a date value to be adjusted by the specified number of months.</comment>
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>months</value>
+    <comment>function_parameter - Second parameter for the EOMonth function - number of months by which to change the date.</comment>
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>A date value to be adjusted by the specified number of months.</value>
+    <comment>Description of the first argument to the 'EOMonth' function.</comment>      
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>>Number of months by which to change the date. A positive value yields a future date, a negative value a past date, and zero will not change the month.</value>
+    <comment>Description of the second argument to the 'EOMonth' function.</comment>     
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Truncates 'number' by rounding toward negative infinity.</value>
@@ -2235,6 +2304,10 @@
     <value>A field named '{0}' was specified more than once in this record.</value>
     <comment>Parse error on duplicate field definitions.</comment>
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>A column named '{0}' was specified more than once.</value>
     <comment>Duplicate columns.</comment>
@@ -2772,7 +2845,7 @@
     <comment>function_parameter - Second argument of the ShowColumns function - the name of the column to be selected. Translate this string. Maintain as a single word (do not add spaces).</comment>
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>A table value to remove columns from.</value>
+    <value>A table or record value to remove columns from.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>The name of a column to keep.</value>
@@ -5243,6 +5316,117 @@
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Type literal declaration was invalid</value>
     <comment>Error message when type binding is invalid</comment>
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Type mismatch between source and target record types. Given type has extra fields: {0}.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Type mismatch between source and target record types. Given type has missing fields: {0}.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Type mismatch between source and target record types. Field name: {0} not found.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Type mismatch between source and target record types. Field name: {0} Expected {1}; Found {2}.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Given {0} type cannot be coerced to source type {1}.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Type mismatch between source and target types. Expected {0}; Found {1}.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Generates a JSON text string for a table, record, or value.</value>
+    <comment>Description of the 'JSON' function.</comment>
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>data</value>
+    <comment>function_parameter - First argument to the JSON function - the data (table, record or value) to be converted to the JSON format.</comment>
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>The data structure to be converted to JSON. Tables, records, and primitive values are supported, arbitrarily nested.</value>
+    <comment>Tooltip for the first argument of the JSON function.</comment>
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>format</value>
+    <comment>function_parameter - Second argument to the JSON function - The format for the JSON conversion. Member of the JSONFormat enum value.</comment>
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>The format to be used in the JSON conversion. The value will be a member of the JSONFormat enumeration.</value>
+    <comment>{Locked=JSONFormat} Tooltip for the second argument of the JSON function.</comment>
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Logs information to Application Insights when enabled, and logs in a test studio session that will be available in the test results.</value>
+    <comment>Description of 'Trace' function.</comment>
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>message</value>
+    <comment>function_parameter - First argument to the Trace function - the message that will be logged to the test results and/or Application Insights.</comment>
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>severity</value>
+    <comment>Trace severity - a value that goes to an Application Insights TrackTrace API SeverityLevel </comment>
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    <comment>Custom dimensions - key value pairs that go to Application Insights. 'Record' is used as a noun in this string, not as a verb. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    <comment>Trace options - additional options passed to the Trace function. 'Trace' is used as an adjective in this string, not as a verb (options for the trace function). Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>The information to be traced.</value>
+    <comment>Description of the first parameter to the 'Trace' function.</comment>
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>The severity level to be traced to Application Insights.</value>
+    <comment>Description of the second parameter to the 'Trace' function.</comment>
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>A record containing custom data that will be traced to Application Insights.</value>
+    <comment>Description of the third parameter to the 'Trace' function.</comment>
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Additional options to the Trace function.</value>
+    <comment>{Locked=Trace} Description of the fourth parameter to the 'Trace' function.</comment>
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>The '{1}' parameter to the {0} function must be a constant value.</value>
+    <comment>Error message shown to the user if they use a non-constant value for the a function that requires a constant value. The first parameter is the function name, and the second parameter is the function parameter name.</comment>
+  </data>
+ <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>The JSONFormat values '{0}' and '{1}' cannot be used together.</value>
+    <comment>{Locked=JSONFormat} Error message shown to the user if they try to use incompatible values from the JSONFormat enumeration. The parameters are string values, members of that enumeration. For example: The JSONFormat values 'IgnoreBinaryData' and 'IncludeBinaryData' cannot be used together.</comment>
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>The value passed to the JSON function contains media, and it is not supported by default. To allow JSON serialization of media values, make sure to use the IncludeBinaryData option in the 'format' parameter.</value>
+    <comment>{Locked=JSON}{Locked=IncludeBinaryData}. Error message shown to the user if they try to serialize an object that contains media values, without specifying the flag that would allow that operation to happen. Media values are any form of media (audio, images, video) that are included as part of a record or a table. The term 'format' should be translated like the term 'JSONArg2' in this same file.</comment>
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>The JSON function cannot serialize objects of type '{0}'.</value>
+    <comment>{Locked=JSON}. Error message shown to the user if they try to serialize an object which is not supported in the JSON function.</comment>
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>The JSON function cannot serialize tables / objects with a nested property called '{0}' of type '{1}'.</value>
+    <comment>{Locked=JSON}. Error message shown to the user if they try to serialize an object which contain a nested property of a type which is not supported in the JSON function. Both parameters are strings. E.g.: The JSON function cannot serialize tables / objects with a nested property called 'value' of type 'Polymorphic'.</comment>
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>The JSON function cannot serialize binary data in non-behavioral expression.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>The parameter {0} contains a property of type {1} which is not supported.</value>
+    <comment>Error shown to the user when they try to use a custom record with an unsupported type. The first argument is the name of the parameter, the second argument is the type name.</comment>
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>The specified column is read-only and can't be modified: {0}.</value>
+    <comment>Error shown to the user when they try to change the value of a read-only field.</comment>
   </data>
   <data name="ErrNonFiniteNumber" xml:space="preserve">
     <value>The function '{0}' returned a non-finite number.</value>

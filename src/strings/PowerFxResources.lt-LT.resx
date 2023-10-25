@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Datos reikšmė, kuriai bus skaičiuojamas ISO savaitės numeris.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Pateikia datą, pakoreguotą pagal mėnesių skaičių. Mėnesio diena išlieka tokia pati, bet ji apribojama naujojo mėnesio dienų skaičiumi.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>mėn.</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Datos reikšmė, kuri turi būti pakoreguota pagal nurodytą mėnesių skaičių.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Mėnesių skaičius, pagal kurį reikia pakeisti datą. Teigiama reikšmė pateiks datą ateityje, neigiama reikšmė – datą praeityje, o nulis mėnesio nepakeis.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Pateikia paskutinę nurodytos datos mėnesio dieną, pakoreguotą pagal mėnesių skaičių.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>mėn.</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Datos reikšmė, kuri turi būti pakoreguota pagal nurodytą mėnesių skaičių.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Mėnesių skaičius, pagal kurį reikia pakeisti datą. Teigiama reikšmė pateiks datą ateityje, neigiama reikšmė – datą praeityje, o nulis mėnesio nepakeis.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Skaičius trumpinamas suapvalinant iki neigiamos begalybės.</value>
     
@@ -5046,6 +5086,117 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Tipo literalo deklaracija buvo neteisinga</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Šaltinio ir paskirties įrašų tipai neatitinka. Pateiktame tipe yra papildomų laukų: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Šaltinio ir paskirties įrašų tipai neatitinka. Pateiktame tipe trūksta laukų: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Šaltinio ir paskirties įrašų tipai neatitinka. Lauko pavadinimas „{0}“ nerastas.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Šaltinio ir paskirties įrašų tipai neatitinka. Lauko pavadinimas „{0}“. Tikimasi „{1}“. Rasta „{2}“.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Pateikto {0} tipo negalima pakeisti į šaltinio tipą {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Šaltinio ir paskirties tipai neatitinka. Tikimasi „{0}“. Rasta „{1}“.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Sugeneruojama lentelės, įrašo arba reikšmės JSON teksto eilutė.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>duomenys</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Į JSON konvertuotina duomenų struktūra. Palaikomos pasirinktinai įdėtos lentelės, įrašai ir pagrindinės reikšmės.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>formatas</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Konvertuojant į JSON naudotinas formatas. Reikšmė bus išvardijimo JSONFormat narys.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Kai įjungta, registruoja informaciją „Application Insights“ ir prisijungia prie „Test Studio“ seanso, kuris bus pasiekiamas bandymo rezultatuose.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>pranešimas</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>svarba</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>Sekimo_parinktys</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Informacija, kurią reikia sekti.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Svarbos lygis, kurį reikia sekti iki „Application Insights“.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Įrašas su pasirinktiniais duomenimis, kurie bus atsekti iki „Application Insights“.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Papildomos „Trace“ funkcijos parinktys.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Funkcijos {0} parametro {1} reikšmė turi būti pastovi.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormat reikšmių {0} ir {1} negalima naudoti kartu.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>JSON funkcijai perduota reikšmė apima mediją, o pagal numatytuosius parametrus ji nepalaikoma. Norėdami leisti medijos reikšmių JSON nuoseklinimą, būtinai naudokite parinktį IncludeBinaryData, esančią parametre formatas.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON funkcija negali nuoseklinti tipo {0} objektų.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON funkcija negali nuoseklinti lentelių / objektų su tipo {1} įdėtąja ypatybe {0}.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Funkcija JSON negali išdėstyti dvejetainių duomenų eilutėmis ne veikimo būdo išraiškoje.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parametras {0} turi {1} tipo tapatybę, kuri nėra palaikoma.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Nurodytas stulpelis yra tik skaitomas, jo modifikuoti negalima: {0}.</value>
     
   </data>
 </root>

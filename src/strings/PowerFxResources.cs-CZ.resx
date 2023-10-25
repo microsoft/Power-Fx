@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Hodnota data, pro kterou bude vypočteno číslo týdne ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Vrátí datum upravené o počet měsíců. Den v měsíci zůstává stejný, ale je omezen počtem dní v novém měsíci.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>datum</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>měsíce</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Hodnota data, která se upraví o zadaný počet měsíců.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Počet měsíců, o které se má datum změnit. Kladná hodnota znamená budoucí datum, záporná hodnota minulé datum a nula měsíc nezmění.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Vrátí poslední den měsíce pro zadané datum, upravený o počet měsíců.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>datum</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>měsíce</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Hodnota data, která se upraví o zadaný počet měsíců.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Počet měsíců, o které se má datum změnit. Kladná hodnota znamená budoucí datum, záporná hodnota minulé datum a nula měsíc nezmění.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Zkrátí „číslo“ zaokrouhlením směrem k zápornému nekonečnu.</value>
     
@@ -5046,6 +5086,117 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Deklarace literálu typu byla neplatná</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Neshoda typů mezi zdrojovým a cílovým typem záznamu. Daný typ má další pole: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Neshoda typů mezi zdrojovým a cílovým typem záznamu. Danému typu chybí pole: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Neshoda typů mezi zdrojovým a cílovým typem záznamu. Název pole: {0} nebyl nalezen.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Neshoda typů mezi zdrojovým a cílovým typem záznamu. Název pole: {0} Očekávané {1}; Nalezeno {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Zadaný typ {0} nelze vynutit na typ zdroje {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Neshoda typů mezi zdrojovým a cílovým typem. Očekávané {0}; Nalezeno {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Vygeneruje textový řetězec JSON pro tabulku, záznam nebo hodnotu.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Datová struktura, která se má převést na JSON. Podporují se tabulky, záznamy a primitivní hodnoty, které můžou být libovolně vnořené.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Formát, který se má použít při převodu JSON. Hodnota bude členem výčtu JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Když se povolí, protokoluje informace do služby Application Insights a zapisuje do protokolu v relaci Test Studio, která bude k dispozici ve výsledcích testu.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>zpráva</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>závažnost</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trasovací_možnosti</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Informace, které mají být trasovány.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Úroveň závažnosti, která se má trasovat v Application Insights</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Záznam, který obsahuje vlastní data, která se budou trasovat v Application Insights</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Další možnosti funkce Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Parametr {1} funkce {0} musí mít konstantní hodnotu.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Hodnoty JSONFormat {0} a {1} se nedají použít obě najednou.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Hodnota předaná do funkce JSON obsahuje média, což se ve výchozím nastavení nepodporuje. Pokud chcete povolit serializaci JSON pro hodnoty médií, ujistěte se, že jste v parametru format použili možnost IncludeBinaryData.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Funkce JSON nemůže serializovat objekty typu {0}.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Funkce JSON nemůže serializovat tabulky nebo objekty s vnořenou vlastností s názvem {0} a typem {1}.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Funkce JSON nemůže serializovat binární data ve výrazu, který není behaviorální.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parametr {0} obsahuje vlastnost typu {1}, který není podporovaný.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Zadaný sloupec je určený jen pro čtení a nelze upravit: {0}.</value>
     
   </data>
 </root>

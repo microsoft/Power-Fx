@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Ett datumvärde som ISO-veckonumret ska beräknas för.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Returnerar ett datum justerat med ett antal månader. Dagen i månaden är densamma men justeras av antalet dagar i den nya månaden.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>datum</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>månader</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Ett datumvärde som ska justeras med angivet antal månader.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Antal månader som datumet ska ändras med. Ett positivt värde ger ett framtida datum, ett negativt ger ett tidigare datum och noll ändrar inte månaden.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Returnerar den sista dagen i månaden för ett angivet datum, justerat med ett antal månader.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>datum</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>månader</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Ett datumvärde som ska justeras med angivet antal månader.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Antal månader som datumet ska ändras med. Ett positivt värde ger ett framtida datum, ett negativt ger ett tidigare datum och noll ändrar inte månaden.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Trunkerar "tal" genom att avrunda mot negativ oändlighet.</value>
     
@@ -5046,6 +5086,117 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Typdeklarationen var ogiltig</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Källans och målets posttyp stämmer inte överens med varandra. Den angivna typen har extra fält: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Källans och målets posttyp stämmer inte överens med varandra. Den angivna typen saknar fält: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Källans och målets posttyp stämmer inte överens med varandra. Fältets namn: {0} hittades inte.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Källans och målets posttyp stämmer inte överens med varandra. Fältets namn: {0} {1} förväntades, {2} hittades.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Den angivna {0}-typen kan inte tvingas till källtypen {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Källans och målets typ stämmer inte överens med varandra. {0} förväntades, {1} hittades.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Genererar en JSON-textsträng för en tabell, post eller ett värde.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Den datastruktur som ska konverteras till JSON. Tabeller, poster och primitiva värden stöds, godtyckligt kapslade.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Det format som ska användas i JSON-konverteringen. Värdet blir medlem i JSONFormat-uppräkningen.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Loggar information till Application Insights när det är aktiverat och loggar i en Test Studio-session som kommer att vara tillgänglig i testresultaten.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>meddelande</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>allvarlighetsgrad</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Informationen som ska spåras.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Allvarlighetsgraden som ska spåras till Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>En post som innehåller anpassade data som ska spåras till Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Ytterligare alternativ för funktionen Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Parametern {1} till {0}-funktionen måste vara ett konstantvärde.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormat-värdena {0} och {1} kan inte användas tillsammans.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Det värde som skickas till JSON-funktionen innehåller media och stöds inte som standard. Om du vill tillåta JSON-serialisering av mediavärden måste du använda alternativet IncludeBinaryData i parametern format.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON-funktionen kan inte serialisera objekt av typen {0}.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON-funktionen kan inte serialisera tabeller/objekt med en den kapslade egenskapen {0} av typen {1}.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON-funktionen kan inte serialisera binära data i icke-beteendeuttryck.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parametern {0} innehåller en egenskap av typen {1} vilken inte stöds.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Den angivna kolumnen är skrivskyddad och kan inte ändras: {0}.</value>
     
   </data>
 </root>

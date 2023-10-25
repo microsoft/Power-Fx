@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Diagnostics;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    [DebuggerDisplay("{ConnectorType}")]
     public class ConnectorSchema
     {
         public ConnectorType ConnectorType { get; }
@@ -22,45 +24,20 @@ namespace Microsoft.PowerFx.Connectors
         public string Title => Schema.Title;
 
         public FormulaType FormulaType => UseHiddenTypes ? ConnectorType.HiddenRecordType : ConnectorType.FormulaType;
-       
+
         internal RecordType HiddenRecordType => ConnectorType.HiddenRecordType;
 
-        /// <summary>
-        /// "x-ms-dynamic-values".
-        /// </summary>
-        internal ConnectorDynamicValue DynamicValue => ConnectorExtensions.ConnectorDynamicValue;
+        public string Summary => ConnectorExtensions.Summary;
 
-        /// <summary>
-        /// "x-ms-dynamic-list".
-        /// </summary>
-        internal ConnectorDynamicList DynamicList => ConnectorExtensions.ConnectorDynamicList;
+        public bool SupportsDynamicIntellisense => ConnectorType.SupportsDynamicIntellisense;
 
-        /// <summary>
-        /// "x-ms-dynamic-schema".
-        /// </summary>
-        internal ConnectorDynamicSchema DynamicSchema => ConnectorExtensions.ConnectorDynamicSchema;
-
-        /// <summary>
-        /// "x-ms-dynamic-properties".
-        /// </summary>
-        internal ConnectorDynamicProperty DynamicProperty => ConnectorExtensions.ConnectorDynamicProperty;
-
-        public string Summary => ConnectorExtensions.Summary;        
-
-        public bool SupportsDynamicValuesOrList => DynamicValue != null || DynamicList != null;
-
-        public bool SupportsDynamicSchemaOrProperty => DynamicSchema != null || DynamicProperty != null;
-
-        public bool SupportsDynamicIntellisense => SupportsDynamicValuesOrList || SupportsDynamicSchemaOrProperty;
-
-        internal ConnectorSchema(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, bool numberIsFloat)
+        internal ConnectorSchema(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes)
         {
             Schema = openApiParameter.Schema;
             UseHiddenTypes = useHiddenTypes;
-            ConnectorType = openApiParameter.ToConnectorType(numberIsFloat: numberIsFloat);
-            DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue, numberIsFloat: numberIsFloat) ? defaultValue : null;
-
-            ConnectorExtensions = new ConnectorExtensions(openApiParameter, bodyExtensions, numberIsFloat);
+            ConnectorType = openApiParameter.ToConnectorType();
+            DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue) && defaultValue is not BlankValue ? defaultValue : null;
+            ConnectorExtensions = new ConnectorExtensions(openApiParameter, bodyExtensions);
         }
 
         internal ConnectorSchema(ConnectorSchema connectorSchema, ConnectorType connectorType)

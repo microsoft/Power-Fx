@@ -7,20 +7,11 @@ namespace Microsoft.PowerFx.Connectors
 {
     internal class ConnectorExtensions
     {
-        internal ConnectorDynamicValue ConnectorDynamicValue;
-        internal ConnectorDynamicList ConnectorDynamicList;
-        internal ConnectorDynamicSchema ConnectorDynamicSchema;
-        internal ConnectorDynamicProperty ConnectorDynamicProperty;
         internal string Summary;
         internal bool ExplicitInput;
 
-        internal ConnectorExtensions(IOpenApiExtensible extension, IOpenApiExtensible body, bool numberIsFloat)
+        internal ConnectorExtensions(IOpenApiExtensible extension, IOpenApiExtensible body)
         {
-            ConnectorDynamicValue = extension.GetDynamicValue(numberIsFloat);
-            ConnectorDynamicList = extension.GetDynamicList(numberIsFloat);
-            ConnectorDynamicSchema = extension.GetDynamicSchema(numberIsFloat);
-            ConnectorDynamicProperty = extension.GetDynamicProperty(numberIsFloat);
-
             Summary = (body ?? extension).GetSummary();
             ExplicitInput = (body ?? extension).GetExplicitInput();
         }

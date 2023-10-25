@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Значение даты, для которой будет рассчитываться номер недели по стандарту ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Возвращает дату, откорректированную по количеству месяцев. День месяца останется таким же, но он сокращается на число дней в новом месяце.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>дата</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>мес.</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Значение даты, которая должна быть откорректирована по указанному количеству месяцев.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Количество месяцев, по которым необходимо изменить дату. Положительное значение означает дату в будущем, отрицательное значение означает дату в прошлом, а нулевое значение не приводит к изменению месяца.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Возвращает последний день месяца для указанной даты, с корректировкой по числу месяцев.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>дата</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>мес.</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Значение даты, которая должна быть откорректирована по указанному количеству месяцев.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Количество месяцев, по которым необходимо изменить дату. Положительное значение означает дату в будущем, отрицательное значение означает дату в прошлом, а нулевое значение не приводит к изменению месяца.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Усекает число путем округления в сторону отрицательной бесконечности.</value>
     
@@ -5046,6 +5086,117 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Недопустимая декларация типа литерала</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Несоответствие типов между исходным и целевым типами записей. У данного типа есть дополнительные поля: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Несоответствие типов между исходным и целевым типами записей. Для данного типа отсутствуют поля: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Несоответствие типов между исходным и целевым типами записей. Имя поля "{0}" не найдено.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Несоответствие типов между исходным и целевым типами записей. Имя поля: "{0}"; ожидаемое: "{1}"; найдено "{2}".</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Данный тип "{0}" не может быть приведен к типу источника "{1}".</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Несоответствие типов между исходными и целевыми типами. Ожидаемое: "{0}"; найдено: "{1}".</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Создает текстовую строку JSON для таблицы, записи или значения.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>данные</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Структура данных, преобразуемая в JSON. Поддерживаются таблицы, записи и примитивные значения с произвольным вложением.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>формат</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Формат, используемый при преобразовании JSON. Значение будет членом перечисления JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>При работе регистрирует сведения в Application Insights, а также заносит в журнал сеанс Test Studio, который будет доступен в результатах теста.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>сообщение</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>серьезность</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Сведения для отслеживания.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Уровень серьезности для трассировки до Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Запись, содержащая настраиваемые данные, для которых будет выполняться трассировка до Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Дополнительные параметры для функции Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Параметр "{1}" для функции {0} должен иметь значение-константу.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Значения JSONFormat "{0}" и "{1}" невозможно использовать одновременно.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Значение, передаваемое функции JSON, содержит медиаданные и по умолчанию не поддерживается. Чтобы включить сериализацию значений медиаданных для JSON, в качестве параметра "формат" используйте IncludeBinaryData.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Функция JSON не может сериализовать объекты типа "{0}".</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Функция JSON не может сериализовать таблицы или объекты со вложенным свойством "{0}" типа "{1}".</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Функция JSON не может сериализовать двоичные данные в неповеденческом выражении.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Параметр {0} содержит свойство типа {1}, которое не поддерживается.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Указанный столбец доступен только для чтения, и его невозможно изменить: {0}.</value>
     
   </data>
 </root>

@@ -209,7 +209,26 @@ namespace Microsoft.PowerFx.Tests
 
         public override RetVal Visit(AggregateCoercionNode node, Context context)
         {
-            throw new NotImplementedException();
+            _sb.Append(node.Op.ToString());
+
+            _sb.Append('(');
+            _sb.Append('[');
+            foreach (var field in node.FieldCoercions)
+            {
+                _sb.Append(field.Key);
+                _sb.Append(':');
+                field.Value.Accept(this, context);
+                _sb.Append(',');
+            }
+
+            _sb.Remove(_sb.Length - 1, 1);
+            _sb.Append(']');
+            _sb.Append(',');
+
+            _sb.Append('(');
+            node.Child.Accept(this, context);
+            _sb.Append(')');
+            return null;
         }
     }
 }

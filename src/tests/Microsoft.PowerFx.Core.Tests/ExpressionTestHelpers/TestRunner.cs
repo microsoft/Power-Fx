@@ -6,11 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -100,6 +97,8 @@ namespace Microsoft.PowerFx.Core.Tests
             possible.Add("AllEnumsSetup");
             possible.Add("RegEx");
             possible.Add("DecimalSupport");
+            possible.Add("EnableJsonFunctions");
+            possible.Add("TraceSetup");
 
             foreach (Match match in Regex.Matches(setup, @"(disable:)?(([\w]+|//)(\([^\)]*\))?)"))
             {

@@ -3,10 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Utils;
+using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 
 namespace Microsoft.PowerFx
 {
@@ -20,26 +21,36 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// 
         /// <param name="config">Config to add the functions to.</param>
-        /// <param name="connectorSettings">Connector settings containing Namespace, NumberIsFloat and MaxRows to be returned.</param>        
+        /// <param name="connectorSettings">Connector settings containing Namespace and MaxRows to be returned.</param>        
         /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
-        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, ConnectorSettings connectorSettings, OpenApiDocument openApiDocument)
+        /// <param name="configurationLogger">Logger.</param>
+        /// <returns>List of connector functions.</returns>
+        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
+        {            
+            try
+            {
+                configurationLogger?.LogInformation($"Entering in ConfigExtensions.{nameof(AddActionConnector)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");
+                IReadOnlyList<ConnectorFunction> connectorFunctions = AddActionConnectorInternal(config, connectorSettings, openApiDocument, configurationLogger);
+                configurationLogger?.LogInformation($"Exiting ConfigExtensions.{nameof(AddActionConnector)}, returning {connectorFunctions.Count()} functions");
+
+                return connectorFunctions;
+            }
+            catch (Exception ex)
+            {
+                configurationLogger?.LogException(ex, $"Exception in ConfigExtensions.{nameof(AddActionConnector)}, {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, {LogException(ex)}");
+                throw;
+            }
+        }
+
+        internal static IReadOnlyList<ConnectorFunction> AddActionConnectorInternal(this PowerFxConfig config, ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
         {
-            if (connectorSettings.Namespace == null)
+            if (config == null)
             {
-                throw new ArgumentNullException(nameof(connectorSettings.Namespace));
+                configurationLogger?.LogError($"PowerFxConfig is null, cannot add functions");
+                return null;
             }
 
-            if (!DName.IsValidDName(connectorSettings.Namespace))
-            {
-                throw new ArgumentException(nameof(connectorSettings.Namespace), $"invalid functionNamespace: {connectorSettings.Namespace}");
-            }
-
-            if (openApiDocument == null)
-            {
-                throw new ArgumentNullException(nameof(openApiDocument));
-            }
-
-            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.Parse(connectorSettings, openApiDocument);
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(connectorSettings, openApiDocument, configurationLogger);
             foreach (TexlFunction function in texlFunctions)
             {
                 config.AddFunction(function);
@@ -56,10 +67,28 @@ namespace Microsoft.PowerFx
         /// <param name="config">Config to add the functions to.</param>
         /// <param name="namespace">Namespace name.</param>
         /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
-        /// <returns></returns>
-        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument)
-        {
-            return config.AddActionConnector(new ConnectorSettings(@namespace), openApiDocument);
+        /// <param name="configurationLogger">Logger.</param>
+        /// <returns>List of connector functions.</returns>
+        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
+        {            
+            try
+            {
+                configurationLogger?.LogInformation($"Entering in ConfigExtensions.{nameof(AddActionConnector)}, with {nameof(ConnectorSettings)} Namespace {@namespace ?? Null(nameof(@namespace))}");
+                IReadOnlyList<ConnectorFunction> connectorFunctions = AddActionConnectorInternal(config, new ConnectorSettings(@namespace), openApiDocument, configurationLogger);
+
+                if (connectorFunctions == null)
+                {
+                    return null;
+                }
+
+                configurationLogger?.LogInformation($"Exiting ConfigExtensions.{nameof(AddActionConnector)}, returning {connectorFunctions.Count()} functions");                
+                return connectorFunctions;
+            }
+            catch (Exception ex)
+            {
+                configurationLogger?.LogException(ex, $"Exception in ConfigExtensions.{nameof(AddActionConnector)}, Namespace {@namespace ?? Null(nameof(@namespace))}, {LogException(ex)}");
+                throw;
+            }            
         }
     }
 }

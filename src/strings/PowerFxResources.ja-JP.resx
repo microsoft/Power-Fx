@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>ISO 週番号を計算する日付の値です。</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>月を変更した日付を返します。日は変わりませんが、変更後の月の最終日以下に制限されます。</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>日付</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>か月</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>指定した月数で変更された日付の値です。</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>日付の変更に適用する月数です。正の値を指定すると未来の日付に、負の値を指定すると過去の日付に変わります。ゼロを指定すると月は変わりません。</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>指定された日付を月数で変更した後の、月の最終日を返します。</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>日付</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>か月</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>指定した月数で変更された日付の値です。</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;日付の変更に適用する月数です。正の値を指定すると未来の日付に、負の値を指定すると過去の日付に変わります。ゼロを指定すると月は変わりません。</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>負の無限大に丸めることで、'number' を切り詰めます。</value>
     
@@ -5046,6 +5086,117 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>タイプ リテラルの宣言が無効です</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。指定された種類には次の余分なフィールドが存在します: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。指定された型に次のフィールドが見つかりません: {0}。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。ファイル名: {0} が見つかりません。</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>ソースとターゲットの間でレコードの種類が一致しません。ファイル名: {0}、予期: {1}、実際: {2}</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>指定された種類 {0} は、ソースの種類 {1} には強制的に変換できません。</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>ソースとターゲットの間で種類が一致しません。予期: {0}、実際: {1}</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>テーブル、レコード、または値の JSON テキスト文字列を生成します。</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>データ</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>JSON に変換するデータ構造。テーブル、レコード、プリミティブ値がサポートされており、任意に入れ子にすることができます。</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>形式</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON 変換に使用する形式。この値は JSONFormat 列挙型のメンバーになります。</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>有効になっているときに Application Insights に情報を記録し、テスト結果で使用できるように Test Studio セッションに記録します。</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>メッセージ</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>重大度</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>カスタム_レコード</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>トレース_オプション</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>トレースされる情報。</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Application Insights にトレースされる重大度レベル。</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Application Insights にトレースされるカスタム データを含むレコード。</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Trace 関数の追加のオプションです。</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>{0} 関数の '{1}' パラメーターは定数値である必要があります。</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormat 値 '{0}' と '{1}' は同時に使用することはできません。</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>JSON 関数に渡された値はメディアを含んでおり、既定ではサポートされていません。メディア値の JSON シリアル化を許可するには、'format' パラメーターに IncludeBinaryData オプションを使用してください。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON 関数では型 '{0}' のオブジェクトをシリアル化できません。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON 関数では型 '{1}' の入れ子になった '{0}' というプロパティを持つテーブルまたはオブジェクトをシリアル化できません。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON 関数が、非行動的式でバイナリ データをシリアル化できません。</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>パラメーター {0} に型 {1} のプロパティが含まれていますが、これはサポートされていません。</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>指定された列 {0} は読み取り専用です。変更できません。</value>
     
   </data>
 </root>

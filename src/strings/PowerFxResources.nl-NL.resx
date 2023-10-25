@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Een datumwaarde waarvoor het ISO-weeknummer wordt berekend.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Retourneert een datum die is aangepast met een aantal maanden. De dag van de maand is gelijk, maar wordt begrensd door het aantal dagen in de nieuwe maand.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>datum</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>maanden</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Een datumwaarde die moet worden aangepast aan het opgegeven aantal maanden.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Aantal maanden waarmee de datum moet worden gewijzigd. Een positieve waarde heeft een datum in de toekomst, een negatieve waarde een datum in het verleden en nul wijzigt de maand niet.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Retourneert de laatste dag van de maand voor een opgegeven datum, aangepast door een aantal maanden.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>datum</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>maanden</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Een datumwaarde die moet worden aangepast aan het opgegeven aantal maanden.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Aantal maanden waarmee de datum moet worden gewijzigd. Een positieve waarde heeft een datum in de toekomst, een negatieve waarde een datum in het verleden en nul wijzigt de maand niet.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Getal wordt afgekapt door afronding op een negatieve oneindigheid.</value>
     
@@ -5046,6 +5086,117 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Type letterlijke aangifte was ongeldig</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Bron- en doelrecordtypen komen niet overeen. Het opgegeven type heeft extra velden: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Bron- en doelrecordtypen komen niet overeen. Het opgegeven type heeft ontbrekende velden: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Bron- en doelrecordtypen komen niet overeen. Veldnaam: {0} niet gevonden.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Bron- en doelrecordtypen komen niet overeen. Veldnaam: {0} Verwacht {1}, gevonden {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Opgegeven type {0} kan niet worden overeengestemd met brontype {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Bron- en doeltypen komen niet overeen. Verwacht {0}, gevonden {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Hiermee wordt een JSON-tekenreeks gegenereerd voor een tabel, record of waarde.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>gegevens</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>De gegevensstructuur die moet worden geconverteerd naar JSON. Tabellen, records en primitieve waarden worden ondersteund. Ze worden willekeurig genest.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>indeling</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>De indeling die moet worden gebruikt bij de JSON-conversie. De waarde is een lid van de JSONFormat-inventarisatie.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Hiermee wordt informatie vastgelegd in Application Insights wanneer dit is ingeschakeld en wordt een teststudiosessie vastgelegd die beschikbaar is in de testresultaten.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>bericht</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>ernst</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>De informatie die moet worden getraceerd.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Het ernstniveau dat moet worden getraceerd naar Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Een bestand met aangepaste gegevens die naar Application Insights worden getraceerd.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Aanvullende opties voor de Trace-functie.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>De parameter {1} voor de functie {0} moet een constante waarde zijn.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>De JSONFormat-waarden {0} en {1} kunnen niet gezamenlijk worden gebruikt.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>De waarde die is doorgegeven aan de JSON-functie, bevat media en wordt niet standaard ondersteund. Als u JSON-serialisatie van mediawaarden wilt toestaan, moet u de optie IncludeBinaryData gebruiken in de parameter format.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>De JSON-functie kan geen objecten van het type {0} serialiseren.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Met de JSON-functie kunnen geen tabellen/objecten worden geserialiseerd die de geneste eigenschap {0} van het type {1} bevatten.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>De JSON-functie kan binaire gegevens niet serialiseren in niet-gedragsexpressies.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>De parameter {0} bevat een eigenschap van het type {1} die niet wordt ondersteund.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>De opgegeven kolom is alleen-lezen en kan niet worden gewijzigd: {0}.</value>
     
   </data>
 </root>

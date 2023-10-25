@@ -13,7 +13,9 @@ using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
@@ -23,7 +25,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public const string SwaggerFile = @"http://localhost:5189/swagger/v1/swagger.json";
         private static bool skip = false;
 
-        private static void GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions)
+        private readonly ITestOutputHelper _output;
+
+        public DynamicTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
+        private void GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions)
         {
             functions = null;
             doc = null;
@@ -35,7 +44,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 {
                     using WebClient webClient = new WebClient();
                     doc = new OpenApiStreamReader().Read(webClient.OpenRead(SwaggerFile), out var diagnostic);
-                    functions = OpenApiParser.GetFunctions("Test", doc).OrderBy(cf => cf.Name).ToList();
+                    functions = OpenApiParser.GetFunctions("Test", doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
                 }
             }
             catch (WebException we)
@@ -57,14 +66,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
         }
 
-        private static void GetEngine(OpenApiDocument doc, out RecalcEngine engine, out BaseRuntimeConnectorContext connectorContext, out BasicServiceProvider services)
+        private void GetEngine(OpenApiDocument doc, out RecalcEngine engine, out BaseRuntimeConnectorContext connectorContext, out BasicServiceProvider services)
         {
             HttpClient client = new HttpClient() { BaseAddress = new Uri(Host) };
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
-            config.AddActionConnector(new ConnectorSettings("Test"), doc);
+            config.AddActionConnector(new ConnectorSettings("Test"), doc, new ConsoleLogger(_output));
 
             engine = new RecalcEngine(config);
-            connectorContext = new TestConnectorRuntimeContext("Test", client, throwOnError: true);
+            connectorContext = new TestConnectorRuntimeContext("Test", client, throwOnError: true, console: _output);
             services = new BasicServiceProvider().AddRuntimeContext(connectorContext);
         }
 
@@ -239,11 +248,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("![Database:![], Date:d, Index:w, Summary:s, SummaryEnum:w, TemperatureC:w, TemperatureF:w]", cParameters.ParametersWithSuggestions[3].FormulaType.ToStringWithDisplayNames());
             Assert.Equal(Visibility.Important, cParameters.ParametersWithSuggestions[3].ConnectorType.Fields[4].Visibility);
 
-            ConnectorType cType = await getWithDynamicValuesMultipleDynamic.GetConnectorTypeAsync(Array.Empty<NamedValue>(), getWithDynamicValuesMultipleDynamic.OptionalParameters[0], connectorContext, CancellationToken.None).ConfigureAwait(false);
+            ConnectorType cType = await getWithDynamicValuesMultipleDynamic.GetConnectorParameterTypeAsync(Array.Empty<NamedValue>(), getWithDynamicValuesMultipleDynamic.OptionalParameters[0], connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal("![Database:![], Date:d, Index:w, Summary:s, SummaryEnum:w, TemperatureC:w, TemperatureF:w]", cType.FormulaType.ToStringWithDisplayNames());
 
-            cType = await getWithDynamicValuesMultipleDynamic.GetConnectorTypeAsync(Array.Empty<NamedValue>(), cType.Fields[5], connectorContext, CancellationToken.None).ConfigureAwait(false);
-            Assert.Equal("![Name:s, PrimaryKey:s]", cType.FormulaType.ToStringWithDisplayNames());
+            ConnectorType innerType = await getWithDynamicValuesMultipleDynamic.GetConnectorTypeAsync(Array.Empty<NamedValue>(), cType.Fields.First(field => field.Name == "Database"), connectorContext, CancellationToken.None).ConfigureAwait(false);
+            Assert.Equal("![Index:w, Name:s, PrimaryKey:s]", innerType.FormulaType.ToStringWithDisplayNames());
+
+            ConnectorEnhancedSuggestions ces = await getWithDynamicValuesMultipleDynamic.GetConnectorSuggestionsAsync(Array.Empty<NamedValue>(), innerType.Fields.First(field => field.Name == "Index"), connectorContext, CancellationToken.None).ConfigureAwait(false);
+            Assert.Equal("110|120", string.Join("|", ces.ConnectorSuggestions.Suggestions.Select(cs => cs.DisplayName)));            
         }
 
         [SkippableFact]

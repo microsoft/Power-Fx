@@ -755,16 +755,16 @@ Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14
 "1,235dollarzM"
 
 >> Text(1234567891234, "0,0,""dollar"",\z,\M")
-"1,235dollarzM"
+"1,234,567,891dollar,z,M"
 
 >> Text(1234567891234, "0,0,""dollar"",\z,z""P""\M")
-"1,235dollarzzPM"
+"1,234,567,891dollar,z,zPM"
 
 >> Text(1234567891234, "\K#\M,,,z'""TH""")
-"K1235Mz'TH"
+"K1234567891234M,z'TH"
 
 >> Text(1234567891234, "\K#\M,,z'""TH"",")
-"K1235Mz'TH"
+"K1234567891234M,z'TH,"
 
 >> Text(1234567.1234567, "#,#.##################,,,z'\k\m")
 ".0012345671234567z'km"
@@ -779,13 +779,13 @@ Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14
 ".0012345671234567z'kmdyam"
 
 >> Text(1234567.1234567, "#,#.##################,z'\k\m,\d\y,""am"",")
-".000001234567123457z'kmdyam"
+"1,234.5671234567z'km,dy,am,"
 
 >> Text(1234567.1234567, "#,#.###############,###,z'\k\m,\d\y,""am"",")
-".000001234567123457z'kmdyam"
+"1,234.5671234567z'km,dy,am,"
 
 >> Text(1234567.1234567, "#,#.###,###,###,###,###,###,z'\k\m,\d\y,""am"",")
-".000001234567123457z'kmdyam"
+"1,234.5671234567z'km,dy,am,"
 
 // 5 digit month not supported yet
 >> Text(70.125, "MMMMM DD YYY")

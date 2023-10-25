@@ -47,6 +47,10 @@ namespace Microsoft.PowerFx.Core.Utils
         /// </summary>
         public static string MatchEnumString => "Match";
 
+        public static string TraceSeverityEnumString => "TraceSeverity";
+
+        public static string TraceOptionsEnumString => "TraceOptions";
+
         /// <summary>
         /// Defines ascending sort order string constant.
         /// </summary>
@@ -66,5 +70,10 @@ namespace Microsoft.PowerFx.Core.Utils
         /// The string value representing the locale invariant clock function namespace.
         /// </summary>
         internal const string InvariantClockNamespace = "Clock";
+
+        /// <summary>
+        /// The string value representing the JSON format.
+        /// </summary>
+        internal const string JSONFormatEnumString = "JSONFormat";
     }
 }

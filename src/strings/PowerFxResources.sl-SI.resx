@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Datumska vrednost, za katero bo izračunana številka tedna ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Vrne datum, prilagojen za število mesecev. Dan v mesecu ostane isti, vendar je omejen s številom dni v novem mesecu.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>datum</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>mes.</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Datumska vrednost, ki se prilagodi za določeno število mesecev.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Število mesecev za spremembo datuma. Pozitivna vrednost vrne datum v prihodnosti, negativna vrednost datum v preteklosti, število nič pa ne spremeni meseca.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Vrne zadnji dan v mesecu za navedeni datum, prilagojen za število mesecev.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>datum</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>mes.</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Datumska vrednost, ki se prilagodi za določeno število mesecev.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Število mesecev za spremembo datuma. Pozitivna vrednost vrne datum v prihodnosti, negativna vrednost datum v preteklosti, število nič pa ne spremeni meseca.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>»Število« prireže tako, da število zaokroži proti negativni neskončnosti.</value>
     
@@ -5046,6 +5086,117 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Vrsta dobesedne deklaracije ni bila veljavna</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Neujemanje vrste med izvornimi in ciljnimi vrstami zapisov. Dana vrsta ima dodatna polja: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Neujemanje vrste med izvornimi in ciljnimi vrstami zapisov. V dani vrsti manjkajo polja: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Neujemanje vrste med izvornimi in ciljnimi vrstami zapisov. Imena polja: {0} ni bilo mogoče najti.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Neujemanje vrste med izvornimi in ciljnimi vrstami zapisov. Ime polja: {0}; pričakovano: {1}; najdeno: {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Dane vrste {0} ni mogoče vsiliti v vrsto vira {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Neujemanje vrste med izvornimi in ciljnimi vrstami. Pričakovano: {0}; najdeno: {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Ustvari besedilni niz JSON za tabelo, zapis ali vrednost.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>podatki</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Struktura podatkov, ki bo pretvorjena v JSON. Tabele, zapisi in primitivne vrednosti so podprte in poljubno ugnezdene.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>oblika zapisa</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Oblika, ki bo uporabljena v pretvorbi JSON. Vrednost bo član oštevilčenja JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Beleži podatke v funkcijo Application Insights, če je omogočena, in se prijavi v sejo Test Studio, ki bo na voljo v rezultatih preskusa.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>sporočilo</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>resnost</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>zapis_po_meri</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>možnosti funkcije sledenja</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Informacije, ki jim želite slediti.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Raven resnosti, ki ji želite slediti v funkciji Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Zapis, v katerem so podatki po meri, ki bodo sledeni s funkcijo Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Dodatne možnosti za funkcijo sledenja »Trace«.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Parameter »{1}« v funkciji {0} mora biti konstantna vrednost.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Vrednosti JSONFormat »{0}« in »{1}« ni mogoče uporabiti skupaj.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Vrednost, ki je posredovana funkciji JSON, vsebuje predstavnost in ni privzeto podprta. Če želite dovoliti serializacijo vrednosti predstavnosti JSON, morate v parametru »format« uporabiti možnost »IncludeBinaryData«.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Funkcija JSON ne more serializirati predmetov vrste »{0}«.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Funkcija JSON ne more serializirati tabel/predmetov z ugnezdeno lastnostjo vrste »{1}«, imenovano »{0}«.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Funkcija JSON ne more serializirati binarnih podatkov v izrazu, ki ni povezan z vedenjem.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parameter {0} vsebuje lastnost vrste {1}, ki ni podprta.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Navedeni stolpec je samo za branje, zato ga ni mogoče spremeniti: {0}.</value>
     
   </data>
 </root>

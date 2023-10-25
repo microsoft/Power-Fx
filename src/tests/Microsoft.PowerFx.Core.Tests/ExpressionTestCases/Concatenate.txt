@@ -64,3 +64,22 @@ Error({Kind:ErrorKind.Div0})
 >> Concatenate("This is really very long string This is really very long string This is really very long string" ,"This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string")
 "This is really very long string This is really very long string This is really very long stringThis is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string"
 
+// ******** SCENARIO: CREATING JSON ********
+
+>> With(
+     { records: [ { Name: "Scooby Doo", Age: 7, IsHuman: false }, { Name: "Shaggy Rogers", Age: 17, IsHuman: true } ] },
+     "[" &
+     Concat(
+       records,
+       Concatenate(
+         "{",
+         """Name"":""",
+         ThisRecord.Name,
+         """,""Age"":",
+         ThisRecord.Age,
+         ",""IsHuman"":",
+         ThisRecord.IsHuman,
+         "}"),
+       ",") &
+     "]")
+"[{""Name"":""Scooby Doo"",""Age"":7,""IsHuman"":false},{""Name"":""Shaggy Rogers"",""Age"":17,""IsHuman"":true}]"

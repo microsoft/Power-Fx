@@ -41,5 +41,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         // Current symbols to pass into NL prompt 
         public CheckContextSummary SymbolSummary { get; set; }
+
+        // Engine can provide ambient details for NL, such as config and feature flags.
+        public Engine Engine { get; set; }
     }
 }

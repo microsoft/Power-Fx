@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>ค่าวันที่ที่จะคำนวณหมายเลขสัปดาห์ตาม ISO</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>ส่งกลับวันที่ที่ปรับตามจำนวนเดือน วันของเดือนจะยังคงเหมือนเดิม แต่ถูกจำกัดด้วยจำนวนวันในเดือนใหม่</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>วันที่</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>เดือน</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>ค่าวันที่ที่จะปรับตามจำนวนเดือนที่ระบุ</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>จำนวนเดือนที่จะเปลี่ยนวันที่ ค่าบวกจะให้วันที่ในอนาคต ค่าลบจะให้วันที่ในอดีต และศูนย์จะไม่เปลี่ยนแปลงเดือน</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>ส่งกลับวันสุดท้ายของเดือนสำหรับวันที่ที่ระบุ ซึ่งปรับตามจำนวนเดือน</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>วันที่</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>เดือน</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>ค่าวันที่ที่จะปรับตามจำนวนเดือนที่ระบุ</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;จำนวนเดือนที่จะเปลี่ยนวันที่ ค่าบวกจะให้วันที่ในอนาคต ค่าลบจะให้วันที่ในอดีต และศูนย์จะไม่เปลี่ยนแปลงเดือน</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>ตัดทอน 'ตัวเลข' โดยการปัดเศษไปทางจำนวนอนันต์ลบ</value>
     
@@ -4826,7 +4866,7 @@
     
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
-    <value>ไม่รองรับฟังก์ชัน {0} ใน namespace {1} </value>
+    <value>ไม่รองรับฟังก์ชัน {0} ใน namespace {1}</value>
     
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
@@ -5046,6 +5086,117 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>การประกาศสัญพจน์ของชนิดไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>ชนิดเรกคอร์ดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน ชนิดที่ให้มามีฟิลด์เกิน: {0}</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>ชนิดเรกคอร์ดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน ชนิดที่ให้มามีฟิลด์ขาดหายไป: {0}</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>ชนิดเรกคอร์ดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน ไม่พบชื่อฟิลด์: {0}</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>ชนิดเรกคอร์ดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน ชื่อฟิลด์: {0} คาดหวัง {1} แต่พบ {2}</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>ชนิด {0} ที่ให้มาไม่สามารถแปลงเป็นชนิดต้นทาง {1} ได้</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>ชนิดต้นทางและเป้าหมายมีชนิดไม่ตรงกัน คาดหวัง {0} แต่พบ {1}</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>สร้างสตริงข้อความ JSON สำหรับตาราง ระเบียน หรือค่า</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>ข้อมูล</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>โครงสร้างข้อมูลที่จะแปลงเป็น JSON รองรับตาราง ระเบียน และค่าดั้งเดิมซึ่งซ้อนกันโดยไม่ได้คาดคิด</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>รูปแบบ</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>รูปแบบที่จะใช้ในการแปลง JSON ค่าจะเป็นสมาชิกของการแจงนับ JSONFormat</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>บันทึกข้อมูลลงใน Application Insights เมื่อเปิดใช้งาน และเข้าสู่ระบบเซสชัน Test Studio ที่จะพร้อมใช้งานในผลลัพธ์การทดสอบ</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>ข้อความ</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>ความรุนแรง</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>ระเบียน_แบบกำหนดเอง</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>ข้อมูลที่จะติดตาม</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>ระดับความรุนแรงที่จะถูกติดตามไปยัง Application Insights</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>ระเบียนที่มีข้อมูลแบบกำหนดเองซึ่งจะถูกติดตามไปยัง Application Insights</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>ตัวเลือกเพิ่มเติมสำหรับฟังก์ชัน Trace</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>พารามิเตอร์ '{1}' ไปยังฟังก์ชัน {0} ต้องเป็นค่าคงที่</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>ไม่สามารถใช้ค่า JSONFormat '{0}' และ '{1}' ร่วมกันได้</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>ค่าที่ส่งผ่านไปยังฟังก์ชัน JSON มีสื่อ และไม่ได้รับการรับรองตามค่าเริ่มต้น เมื่อต้องการอนุญาตการจัดเรียงแบบอนุกรม JSON ของค่าสื่อ ให้ตรวจสอบให้แน่ใจว่าได้ใช้ตัวเลือก IncludeBinaryData ในพารามิเตอร์ 'รูปแบบ'</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>ฟังก์ชัน JSON ไม่สามารถทำให้วัตถุของชนิด '{0}' เป็นอนุกรมได้</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>ฟังก์ชัน JSON ไม่สามารถทำให้ตาราง / วัตถุที่มีคุณสมบัติที่ซ้อนกันที่เรียกว่า '{0}' ของชนิด '{1}' เป็นอนุกรมได้</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>ฟังก์ชัน JSON ไม่สามารถจัดลำดับข้อมูลไบนารีในนิพจน์ที่ไม่ใช่พฤติกรรมได้</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>พารามิเตอร์ {0} มีคุณสมบัติชนิด {1} ซึ่งไม่ได้รับการสนับสนุน</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>คอลัมน์ที่ระบุเป็นแบบอ่านได้อย่างเดียว และไม่สามารถแก้ไขได้: {0}</value>
     
   </data>
 </root>

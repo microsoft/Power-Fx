@@ -17,6 +17,7 @@ using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
+using Microsoft.PowerFx.LanguageServerProtocol.Schemas;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
@@ -330,8 +331,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     Kind = GetCompletionItemKind(item.Kind),
 
                     // The order of the results should be preserved.  To do that, we embed the index
-                    // into the sort text, which clients may sort lexigraphically.
-                    SortText = index.ToString(CultureInfo.InvariantCulture),
+                    // into the sort text, which clients may sort lexicographically.
+                    SortText = index.ToString("D3", CultureInfo.InvariantCulture),
 
                     // If the current position is in front of a single quote and the completion result starts with a single quote,
                     // we don't want to make it harder on the end user by inserting an extra single quote.
@@ -493,7 +494,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 var req = new NL2FxParameters
                 {
                     Sentence = request.Sentence,
-                    SymbolSummary = summary
+                    SymbolSummary = summary,
+                    Engine = check.Engine
                 };
 
                 CancellationToken cancel = default;
@@ -613,7 +615,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
-            HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.FullDocumentSemanticTokens);
+            HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.FullDocumentSemanticTokens, true);
         }
 
         /// <summary>
@@ -637,10 +639,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
-            HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.RangeDocumentSemanticTokens);
+            HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.RangeDocumentSemanticTokens, false);
         }
 
-        private void HandleSemanticTokens<T>(string id, T semanticTokensParams, string method)
+        private void HandleSemanticTokens<T>(string id, T semanticTokensParams, string method, bool isFullDocument = false)
             where T : SemanticTokensParams
         {
             var uri = new Uri(semanticTokensParams.TextDocument.Uri);
@@ -654,15 +656,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
-            var isRangeSemanticTokensMethod = method == TextDocumentNames.RangeDocumentSemanticTokens;
-
             // Monaco-Editor sometimes uses \r\n for the newline character. \n is not always the eol character so allowing clients to pass eol character
             var eol = queryParams?.Get("eol");
             eol = !string.IsNullOrEmpty(eol) ? eol : EOL.ToString();
 
             var startIndex = -1;
             var endIndex = -1;
-            if (isRangeSemanticTokensMethod)
+            if (!isFullDocument)
             {
                 (startIndex, endIndex) = (semanticTokensParams as SemanticTokensRangeParams).Range.ConvertRangeToPositions(expression, eol);
                 if (startIndex < 0 || endIndex < 0)
@@ -683,14 +683,42 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             var tokens = result.GetTokens(tokenTypesToSkip);
 
-            if (isRangeSemanticTokensMethod)
+            if (!isFullDocument)
             {
                 // Only consider overlapping tokens. end index is exlcusive
                 tokens = tokens.Where(token => !(token.EndIndex <= startIndex || token.StartIndex >= endIndex));
             }
 
-            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol);
+            var controlTokensObj = isFullDocument ? new ControlTokens() : null;
+
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol, controlTokensObj);
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse() { Data = encodedTokens }));
+
+            PublishControlTokenNotification(controlTokensObj, queryParams);
+        }
+
+        /// <summary>
+        /// Handles publishing a control token notification if any control tokens found.
+        /// </summary>
+        /// <param name="controlTokensObj">Collection to add control tokens to.</param>
+        /// <param name="queryParams">Collection of query params.</param>
+        private void PublishControlTokenNotification(ControlTokens controlTokensObj, NameValueCollection queryParams)
+        {
+            if (controlTokensObj == null || queryParams == null)
+            {
+                return;
+            }
+
+            var version = queryParams.Get("version") ?? string.Empty;
+
+            // Send PublishControlTokens notification
+            _sendToClient(JsonRpcHelper.CreateNotification(
+                CustomProtocolNames.PublishControlTokens,
+                new PublishControlTokensParams()
+                {
+                    Version = version,
+                    Controls = controlTokensObj.GetControlTokens()
+                }));
         }
 
         private HashSet<TokenType> ParseTokenTypesToSkipParam(string rawTokenTypesToSkipParam)
@@ -805,7 +833,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 {
                     diagnostics.Add(new Diagnostic()
                     {
-                        Range = GetRange(expression, item.Span),
+                        Range = GetRange(expression, item.Span ?? new Span(0, 0)),
                         Message = item.Message,
                         Severity = DocumentSeverityToDiagnosticSeverityMap(item.Severity)
                     });

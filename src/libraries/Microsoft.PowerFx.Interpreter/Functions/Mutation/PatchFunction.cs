@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
@@ -206,7 +208,7 @@ namespace Microsoft.PowerFx.Functions
                     continue;
                 }
 
-                // Checks if all record names exist against table type and if its possible to coerce.                
+                // Checks if all record names exist against table type and if its possible to coerce.
                 bool checkAggregateNames = curType.CheckAggregateNames(dataSourceType, args[i], errors, SupportsParamCoercion, context.Features.PowerFxV1CompatibilityRules);
 
                 isValid = isValid && checkAggregateNames;
@@ -236,6 +238,16 @@ namespace Microsoft.PowerFx.Functions
 
             returnType = retType;
             return isValid;
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            base.CheckSemantics(binding, args, argTypes, errors);
+            base.ValidateArgumentIsMutable(binding, args[0], errors);
+
+            int skip = 2;
+
+            MutationUtils.CheckForReadOnlyFields(argTypes[0], args.Skip(skip).ToArray(), argTypes.Skip(skip).ToArray(), errors);
         }
 
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)

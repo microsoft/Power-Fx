@@ -67,6 +67,11 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter ShowColumnsArg1 = (b) => StringResources.Get("ShowColumnsArg1", b);
         public static StringGetter ShowColumnsArg2 = (b) => StringResources.Get("ShowColumnsArg2", b);
 
+        public static StringGetter AboutRenameColumns = (b) => StringResources.Get("AboutRenameColumns", b);
+        public static StringGetter RenameColumnsArg1 = (b) => StringResources.Get("RenameColumnsArg1", b);
+        public static StringGetter RenameColumnsArg2 = (b) => StringResources.Get("RenameColumnsArg2", b);
+        public static StringGetter RenameColumnsArg3 = (b) => StringResources.Get("RenameColumnsArg3", b);
+
         public static StringGetter AboutFilter = (b) => StringResources.Get("AboutFilter", b);
         public static StringGetter FilterArg1 = (b) => StringResources.Get("FilterArg1", b);
         public static StringGetter FilterArg2 = (b) => StringResources.Get("FilterArg2", b);
@@ -349,6 +354,12 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter WeekNumArg2 = (b) => StringResources.Get("WeekNumArg2", b);
         public static StringGetter AboutISOWeekNum = (b) => StringResources.Get("AboutISOWeekNum", b);
         public static StringGetter ISOWeekNumArg1 = (b) => StringResources.Get("ISOWeekNumArg1", b);
+        public static StringGetter AboutEDate = (b) => StringResources.Get("AboutEDate", b);
+        public static StringGetter EDateArg1 = (b) => StringResources.Get("EDateArg1", b);
+        public static StringGetter EDateArg2 = (b) => StringResources.Get("EDateArg2", b);
+        public static StringGetter AboutEOMonth = (b) => StringResources.Get("AboutEOMonth", b);
+        public static StringGetter EOMonthArg1 = (b) => StringResources.Get("EOMonthArg1", b);
+        public static StringGetter EOMonthArg2 = (b) => StringResources.Get("EOMonthArg2", b);
 
         public static StringGetter AboutCalendar__MonthsLong = (b) => StringResources.Get("AboutCalendar__MonthsLong", b);
         public static StringGetter AboutCalendar__MonthsShort = (b) => StringResources.Get("AboutCalendar__MonthsShort", b);
@@ -521,6 +532,16 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutRefresh = (b) => StringResources.Get("AboutRefresh", b);
         public static StringGetter RefreshArg1 = (b) => StringResources.Get("RefreshArg1", b);
 
+        public static StringGetter AboutJSON = (b) => StringResources.Get("AboutJSON", b);
+        public static StringGetter JSONArg1 = (b) => StringResources.Get("JSONArg1", b);
+        public static StringGetter JSONArg2 = (b) => StringResources.Get("JSONArg2", b);
+
+        public static StringGetter AboutTrace = (b) => StringResources.Get("AboutTrace", b);
+        public static StringGetter TraceArg1 = (b) => StringResources.Get("TraceArg1", b);
+        public static StringGetter TraceArg2 = (b) => StringResources.Get("TraceArg2", b);
+        public static StringGetter TraceArg3 = (b) => StringResources.Get("TraceArg3", b);
+        public static StringGetter TraceArg4 = (b) => StringResources.Get("TraceArg4", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -655,6 +676,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WarnLiteralPredicate = new ErrorResourceKey("WarnLiteralPredicate");
         public static ErrorResourceKey WarnDynamicMetadata = new ErrorResourceKey("WarnDynamicMetadata");
         public static ErrorResourceKey WarnDeferredType = new ErrorResourceKey("WarnDeferredType");
+        public static ErrorResourceKey ErrColRenamedTwice_Name = new ErrorResourceKey("ErrColRenamedTwice_Name");
 
         public static StringGetter InfoMessage = (b) => StringResources.Get("InfoMessage", b);
         public static StringGetter InfoNode_Node = (b) => StringResources.Get("InfoNode_Node", b);
@@ -683,6 +705,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUDF_MissingParamType = new ErrorResourceKey("ErrUDF_MissingParamType");
 
         public static ErrorResourceKey ErrTypeLiteral_InvalidTypeDefinition = new ErrorResourceKey("ErrTypeLiteral_InvalidTypeDefinition");
+        public static ErrorResourceKey ErrRecordContainsInvalidFields_Arg = new ErrorResourceKey("ErrRecordContainsInvalidFields_Arg");
 
         // ErrorResourceKey for creating an error from an arbitrary string message. The key resolves to "{0}", meaning
         // that a single string arg can be supplied representing the entire text of the error.
@@ -702,5 +725,20 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WrnSetExpandableType = new ErrorResourceKey("WrnSetExpandableType");
 
         public static ErrorResourceKey ErrNotSupportedFormat_Func = new ErrorResourceKey("ErrNotSupportedFormat_Func");
+
+        public static ErrorResourceKey ErrExpectedRVExtraFields = new ErrorResourceKey("ErrExpectedRVExtraFields");
+        public static ErrorResourceKey ErrExpectedRVMissingFields = new ErrorResourceKey("ErrExpectedRVMissingFields");
+        public static ErrorResourceKey ErrExpectedRVFieldNotFound = new ErrorResourceKey("ErrExpectedRVFieldNotFound");
+        public static ErrorResourceKey ErrExpectedRVFieldTypeMismatch = new ErrorResourceKey("ErrExpectedRVFieldTypeMismatch");
+        public static ErrorResourceKey ErrExpectedRVCannotCoerceType = new ErrorResourceKey("ErrExpectedRVCannotCoerceType");
+        public static ErrorResourceKey ErrExpectedRVTypeMismatch = new ErrorResourceKey("ErrExpectedRVTypeMismatch");
+
+        public static ErrorResourceKey ErrFunctionArg2ParamMustBeConstant = new ErrorResourceKey("ErrFunctionArg2ParamMustBeConstant");
+        public static ErrorResourceKey ErrJSONArg1UnsupportedType = new ErrorResourceKey("ErrJSONArg1UnsupportedType");
+        public static ErrorResourceKey ErrJSONArg1ContainsUnsupportedMedia = new ErrorResourceKey("ErrJSONArg1ContainsUnsupportedMedia");
+        public static ErrorResourceKey ErrJSONArg2IncompatibleOptions = new ErrorResourceKey("ErrJSONArg2IncompatibleOptions");
+        public static ErrorResourceKey ErrJSONArg1UnsupportedNestedType = new ErrorResourceKey("ErrJSONArg1UnsupportedNestedType");
+        public static ErrorResourceKey ErrJSONArg1UnsupportedTypeWithNonBehavioral = new ErrorResourceKey("ErrJSONArg1UnsupportedTypeWithNonBehavioral");
+        public static ErrorResourceKey ErrTraceInvalidCustomRecordType = new ErrorResourceKey("ErrTraceInvalidCustomRecordType");
     }
 }

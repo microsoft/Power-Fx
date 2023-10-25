@@ -1,0 +1,86 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#microsoft.graph.meetingTimeSuggestionsResult",
+  "emptySuggestionsReason": "",
+  "meetingTimeSuggestions": [
+    {
+      "confidence": 100.0,
+      "organizerAvailability": "free",
+      "attendeeAvailability": [],
+      "locations": [],
+      "meetingTimeSlot": {
+        "start": {
+          "dateTime": "2023-09-26T12:00:00.0000000",
+          "timeZone": "UTC"
+        },
+        "end": {
+          "dateTime": "2023-09-26T12:30:00.0000000",
+          "timeZone": "UTC"
+        }
+      }
+    },
+    {
+      "confidence": 100.0,
+      "organizerAvailability": "free",
+      "attendeeAvailability": [],
+      "locations": [],
+      "meetingTimeSlot": {
+        "start": {
+          "dateTime": "2023-09-26T12:30:00.0000000",
+          "timeZone": "UTC"
+        },
+        "end": {
+          "dateTime": "2023-09-26T13:00:00.0000000",
+          "timeZone": "UTC"
+        }
+      }
+    },
+    {
+      "confidence": 100.0,
+      "organizerAvailability": "free",
+      "attendeeAvailability": [],
+      "locations": [],
+      "meetingTimeSlot": {
+        "start": {
+          "dateTime": "2023-09-26T13:00:00.0000000",
+          "timeZone": "UTC"
+        },
+        "end": {
+          "dateTime": "2023-09-26T13:30:00.0000000",
+          "timeZone": "UTC"
+        }
+      }
+    },
+    {
+      "confidence": 100.0,
+      "organizerAvailability": "free",
+      "attendeeAvailability": [],
+      "locations": [],
+      "meetingTimeSlot": {
+        "start": {
+          "dateTime": "2023-09-26T13:30:00.0000000",
+          "timeZone": "UTC"
+        },
+        "end": {
+          "dateTime": "2023-09-26T14:00:00.0000000",
+          "timeZone": "UTC"
+        }
+      }
+    },
+    {
+      "confidence": 100.0,
+      "organizerAvailability": "free",
+      "attendeeAvailability": [],
+      "locations": [],
+      "meetingTimeSlot": {
+        "start": {
+          "dateTime": "2023-09-26T14:30:00.0000000",
+          "timeZone": "UTC"
+        },
+        "end": {
+          "dateTime": "2023-09-26T15:00:00.0000000",
+          "timeZone": "UTC"
+        }
+      }
+    }
+  ]
+}

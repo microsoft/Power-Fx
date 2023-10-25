@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
@@ -88,6 +89,68 @@ namespace Microsoft.PowerFx.Types
 
             val = null;
             return false;
+        }
+
+        public bool AsBoolean()
+        {
+            if (this is BlankValue)
+            {
+                return default;
+            }
+
+            if (TryGetPrimitiveValue(out object val))
+            {
+                if (val is bool b)
+                {
+                    return b;
+                }
+            }
+
+            throw new InvalidOperationException($"Can't coerce to double from {this.Type._type.GetKindString()})");
+        }
+
+        public double AsDouble()
+        {
+            if (this is BlankValue)
+            {
+                return default;
+            }
+
+            if (TryGetPrimitiveValue(out object val))
+            {
+                if (val is double d1)
+                {
+                    return d1;
+                }
+                else if (val is decimal d2)
+                {
+                    return (double)d2;
+                }
+            }
+
+            throw new InvalidOperationException($"Can't coerce to double from {this.Type._type.GetKindString()})");
+        }
+
+        public decimal AsDecimal()
+        {
+            if (this is BlankValue)
+            {
+                return default;
+            }
+
+            if (TryGetPrimitiveValue(out object val))
+            {
+                if (val is double d1)
+                {
+                    return (decimal)d1;
+                }
+                else if (val is decimal d2)
+                {
+                    return d2;
+                }
+            }
+
+            throw new InvalidOperationException($"Can't coerce to decimal from {this.Type._type.GetKindString()})");
         }
     }
 }

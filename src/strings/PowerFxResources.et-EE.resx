@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Kuupäevaväärtus, mille jaoks arvutatakse ISO-nädalanumber.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Tagastab kuude arvu alusel korrigeeritud kuupäeva. Päev kuus jääb samaks, kuid seda piirab uue kuu päevade arv.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>kuupäev</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>kuud</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Kuupäevaväärtus, mida korrigeeritakse määratud kuude arvuga.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Kuude arv, mille võrra kuupäeva muudetakse. Positiivne väärtus annab tulevase kuupäeva, negatiivne väärtus annab möödunud kuupäeva ja null ei muuda kuud.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Tagastab määratud kuupäeva jaoks päeva kuus, mida korrigeeritakse kuude arvuga.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>kuupäev</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>kuud</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Kuupäevaväärtus, mida korrigeeritakse määratud kuude arvuga.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Kuude arv, mille võrra kuupäeva muudetakse. Positiivne väärtus annab tulevase kuupäeva, negatiivne väärtus annab möödunud kuupäeva ja null ei muuda kuud.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Lühendab „numbri“, ümardades negatiivse lõpmatuse suunas.</value>
     
@@ -5046,6 +5086,117 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Tüübi sõnasõnaline deklaratsioon ei sobinud</value>
+    
+  </data>
+  <data name="ErrExpectedRVExtraFields" xml:space="preserve">
+    <value>Lähte- ja sihtkirje tüüpide tüübi lahknevus. Antud tüübil on lisavälju: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVMissingFields" xml:space="preserve">
+    <value>Lähte- ja sihtkirje tüüpide tüübi lahknevus. Antud tüübil on puuduvaid välju: {0}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
+    <value>Lähte- ja sihtkirje tüüpide tüübi lahknevus. Välja nimi: üksust {0} ei leitud.</value>
+    
+  </data>
+  <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
+    <value>Lähte- ja sihtkirje tüüpide tüübi lahknevus. Välja nimi: {0} eeldatud {1}; leiti {2}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
+    <value>Antud tüüpi {0} ei saa sundida lähtetüübile {1}.</value>
+    
+  </data>
+  <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
+    <value>Lähte- ja sihtkirje tüüpide tüübi lahknevus. Eeldatud {0}; leiti {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Loob tabelile, kirjele või väärtusele JSON-i tekstistringi.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>andmed</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>JSON-iks teisendatav andmestruktuur. Tabelid, kirjed ja primitiivsed väärtused on toetatud, suvaliselt pesastatud.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>vorming</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON-i teisenduses kasutatav vorming. Väärtus on loetelu JSONFormat liige.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Kui see on lubatud, logib teavet Application Insightsi, ja logib Test Studio seansi, mis on saadaval testitulemites.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>sõnum</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>raskusaste</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>kohandatud_kirje</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>jälituse_suvandid</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Jälitatav teave.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Raskusaste, mida jälitatakse Application Insightsi.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Kirje, mis sisaldab kohandatud andmeid, mida jälitatakse Application Insightsi.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Funktsiooni Trace lisasuvandid.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Funktsiooni {0} parameeter '{1}' peab olema konstantne väärtus.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormati väärtuseid '{0}' ja '{1}' ei saa koos kasutada.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Funktsiooni JSON edastatud väärtus sisaldab meediumeid ja seda ei toetata vaikimisi. Meediumiväärtuste JSON-i serialiseerimise lubamiseks kasutage parameetris 'format' kindlasti suvandit IncludeBinaryData.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Funktsioon JSON ei saa serialiseerida objekte tüübiga '{0}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Funktsioon JSON ei saa serialiseerida tabeleid/objekte, millel on pesastatud atribuut tüübiga '{1}' ja nimega '{0}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON-i funktsioon ei saa kahendandmeid mittekäitumuslikus avaldises serialiseerida.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parameeter {0} sisaldab atribuudi tüüpi {1}, mida ei toetata.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Määratud veerg on kirjutuskaitstud ja seda ei saa muuta: {0}.</value>
     
   </data>
 </root>

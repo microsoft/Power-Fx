@@ -21,6 +21,8 @@ namespace Microsoft.PowerFx.Core.App.Controls
 
         bool UseForDataQuerySelects { get; }
 
+        bool IsTypeInferredFromPrimaryInput { get; }
+
         PropertyRuleCategory PropertyCategory { get; }
 
         bool IsScopeVariable { get; }

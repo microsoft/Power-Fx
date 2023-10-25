@@ -32,6 +32,18 @@ namespace Microsoft.PowerFx
             return new NotSupportedException($"User.{caller} is not supported.");
         }
 
+        /// <summary>
+        /// List all possible known properties. 
+        /// </summary>
+        public static string[] AllKeys => new string[] 
+        { 
+            nameof(FullName),
+            nameof(Email),
+            nameof(DataverseUserId),
+            nameof(TeamsMemberId),
+            nameof(EntraObjectId)
+        };
+
         public virtual async Task<string> FullName(CancellationToken cancel = default) => throw Ex();
 
         public virtual async Task<string> Email(CancellationToken cancel = default) => throw Ex();

@@ -3,6 +3,7 @@
 
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Utils;
@@ -13,13 +14,16 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class NamedFormulasTests : PowerFxTest
     {
+        private readonly ParserOptions _parseOptions = new ParserOptions() { AllowsSideEffects = true };
+
         [Theory]
         [InlineData("Foo = Type(Number);")]
         public void DefSimpleTypeTest(string script)
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true,
             };
 
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
@@ -34,7 +38,8 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true,
             };
 
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
@@ -51,6 +56,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true,
             };
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
             Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
@@ -62,7 +68,8 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true,
             };
             var result = UserDefinitions.Parse(script, parserOptions);
             Assert.True(result.HasErrors);
@@ -74,9 +81,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Foo(x: Number): Number = Abs(x);")]
         public void DefFuncTest(string script)
         {
-            var parsedUDFS = new ParsedUDFs(script);
-            var result = parsedUDFS.GetParsed();
-            Assert.False(result.HasError);
+            var result = UserDefinitions.Parse(script, _parseOptions);
+            Assert.False(result.HasErrors);
             var udf = result.UDFs.First();
             Assert.Equal("Foo", udf.Ident.ToString());
             Assert.Equal("Abs(x)", udf.Body.ToString());
@@ -93,9 +99,8 @@ namespace Microsoft.PowerFx.Core.Tests
                     "Rec7(x: Number): Number { x + 1 };")]
         public void DefFunctionFromDiscussion(string script)
         {
-            var parsedUDFs = new ParsedUDFs(script);
-            var result = parsedUDFs.GetParsed();
-            Assert.False(result.HasError);
+            var result = UserDefinitions.Parse(script, _parseOptions);
+            Assert.False(result.HasErrors);
         }
 
         [Theory]
@@ -105,19 +110,17 @@ namespace Microsoft.PowerFx.Core.Tests
                     "Rec7//comment\n(//comment\nx//comment\n://comment\n Number//comment\n)://comment\n Number//comment\n //comment\n { x + 1 }//comment\n;")]
         public void DefFunctionWeirdFormatting(string script)
         {
-            var parsedUDFs = new ParsedUDFs(script);
-            var result = parsedUDFs.GetParsed();
-            Assert.False(result.HasError);
+            var result = UserDefinitions.Parse(script, _parseOptions);
+            Assert.False(result.HasErrors);
         }
 
         [Theory]
         [InlineData("Foo(): Number { 1+1; 2+2; };")]
         public void TestChaining(string script)
         {
-            var parsedUDFs = new ParsedUDFs(script);
-            var result = parsedUDFs.GetParsed();
+            var result = UserDefinitions.Parse(script, _parseOptions);
 
-            Assert.False(result.HasError);
+            Assert.False(result.HasErrors);
             var udf = result.UDFs.First();
             Assert.Equal("Foo", udf.Ident.ToString());
             Assert.Equal("1 + 1 ; 2 + 2", udf.Body.ToString());
@@ -127,10 +130,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Foo(): Number { Sum(1, 1); Sum(2, 2); };")]
         public void TestChaining2(string script)
         {
-            var parsedUDFs = new ParsedUDFs(script);
-            var result = parsedUDFs.GetParsed();
+            var result = UserDefinitions.Parse(script, _parseOptions);
 
-            Assert.False(result.HasError);
+            Assert.False(result.HasErrors);
             var udf = result.UDFs.First();
             Assert.Equal("Foo", udf.Ident.ToString());
             Assert.Equal("Sum(1, 1) ; Sum(2, 2)", udf.Body.ToString());
@@ -164,7 +166,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
 
             Assert.Equal(namedFormulaCount, parsedNamedFormulasAndUDFs.NamedFormulas.Count());
-            Assert.Equal(udfCount, parsedNamedFormulasAndUDFs.UDFs.Count());
+            Assert.Equal(udfCount, parsedNamedFormulasAndUDFs.UDFs.Count(udf => udf.IsParseValid));
             Assert.Equal(expectErrors, parsedNamedFormulasAndUDFs.HasErrors);
         }
 

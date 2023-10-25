@@ -13,6 +13,8 @@ using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Logging;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -137,7 +139,7 @@ namespace Microsoft.PowerFx.Functions
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<FormulaValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: AsType)
             },
             {
@@ -580,10 +582,40 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.DropColumns.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: DropColumnsTypeChecker,
+                    checkRuntimeTypes: ShowDropRenameColumnsTypeChecker,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: DropColumns)
+            },
+            {
+                BuiltinFunctionsCore.EDate,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.EDate.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWith(
+                        new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                    checkRuntimeTypes: ExactSequence(
+                        DateOrDateTime,
+                        ExactValueType<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: EDate)
+            },
+            {
+                BuiltinFunctionsCore.EOMonth,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.EOMonth.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWith(
+                        new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                    checkRuntimeTypes: ExactSequence(
+                        DateOrDateTime,
+                        ExactValueType<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: EOMonth)
             },
             {
                 BuiltinFunctionsCore.EncodeUrl,
@@ -1258,6 +1290,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Refresh)
             },
             {
+                BuiltinFunctionsCore.RenameColumns,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.RenameColumns.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ShowDropRenameColumnsTypeChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: RenameColumns)
+            },
+            {
                 BuiltinFunctionsCore.Replace,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Replace.Name,
@@ -1375,6 +1418,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Shuffle)
+            },
+            {
+                BuiltinFunctionsCore.ShowColumns,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.ShowColumns.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ShowColumnsTypeChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: ShowColumns)
             },
             {
                 BuiltinFunctionsCore.Sin,
@@ -1601,6 +1655,21 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Today,
                 NoErrorHandling(Today)
+            },
+            {
+                BuiltinFunctionsCore.Trace,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.Trace.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<StringValue>,
+                        NumberOrDecimal,
+                        ExactValueTypeOrBlank<RecordValue>,
+                        ExactValueType<StringValue>), /* add check */
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: TraceFunction)
             },
             {
                 BuiltinFunctionsCore.Trim,
@@ -2541,6 +2610,50 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return new BooleanValue(irContext, false);
+        }
+
+        public static async ValueTask<FormulaValue> TraceFunction(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var tracer = runner.FunctionServices.GetService<ITracer>();
+
+            if (tracer == null)
+            {
+                return FormulaValue.New(false);
+            }
+
+            // the null case here handles Blanks
+            var message = (args[0] as StringValue)?.Value ?? string.Empty;
+
+            TraceSeverity sev;
+            if (args.Length < 2 || args[1] is BlankValue)
+            {
+                sev = TraceSeverity.Information;
+            }
+            else
+            {
+                sev = (TraceSeverity)(args[1] as NumberValue).Value;
+            }
+
+            RecordValue customRecord;
+            if (args.Length < 3 || args[2] is BlankValue)
+            {
+                customRecord = RecordValue.Empty();
+            }
+            else
+            {
+                customRecord = args[2] as RecordValue;
+            }
+
+            try
+            {
+                await tracer.LogAsync(message, sev, customRecord, runner.CancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                throw new CustomFunctionErrorException(ex.Message);
+            }
+
+            return FormulaValue.New(true);
         }
     }
 }
