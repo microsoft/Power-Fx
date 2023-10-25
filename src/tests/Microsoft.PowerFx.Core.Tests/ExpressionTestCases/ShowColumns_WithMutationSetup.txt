@@ -1,0 +1,9 @@
+﻿#SETUP: SupportColumnNamesAsIdentifiers, MutationFunctionsTestSetup
+
+
+// Display names
+>> ShowColumns(t2,'DisplayNameField1')
+Table({Field1:1},{Field1:2},{Field1:3})
+
+>> ShowColumns(t2,'DisplayNameField1', Field3)
+Table({Field1:1,Field3:false},{Field1:2,Field3:false},{Field1:3,Field3:true})
