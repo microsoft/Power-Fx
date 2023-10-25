@@ -5112,4 +5112,91 @@
     <value>Lähte- ja sihtkirje tüüpide tüübi lahknevus. Eeldatud {0}; leiti {1}.</value>
     
   </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Loob tabelile, kirjele või väärtusele JSON-i tekstistringi.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>andmed</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>JSON-iks teisendatav andmestruktuur. Tabelid, kirjed ja primitiivsed väärtused on toetatud, suvaliselt pesastatud.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>vorming</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON-i teisenduses kasutatav vorming. Väärtus on loetelu JSONFormat liige.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Kui see on lubatud, logib teavet Application Insightsi, ja logib Test Studio seansi, mis on saadaval testitulemites.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>sõnum</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>raskusaste</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>kohandatud_kirje</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>jälituse_suvandid</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Jälitatav teave.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Raskusaste, mida jälitatakse Application Insightsi.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Kirje, mis sisaldab kohandatud andmeid, mida jälitatakse Application Insightsi.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Funktsiooni Trace lisasuvandid.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Funktsiooni {0} parameeter '{1}' peab olema konstantne väärtus.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormati väärtuseid '{0}' ja '{1}' ei saa koos kasutada.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Funktsiooni JSON edastatud väärtus sisaldab meediumeid ja seda ei toetata vaikimisi. Meediumiväärtuste JSON-i serialiseerimise lubamiseks kasutage parameetris 'format' kindlasti suvandit IncludeBinaryData.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Funktsioon JSON ei saa serialiseerida objekte tüübiga '{0}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Funktsioon JSON ei saa serialiseerida tabeleid/objekte, millel on pesastatud atribuut tüübiga '{1}' ja nimega '{0}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON-i funktsioon ei saa kahendandmeid mittekäitumuslikus avaldises serialiseerida.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parameeter {0} sisaldab atribuudi tüüpi {1}, mida ei toetata.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Määratud veerg on kirjutuskaitstud ja seda ei saa muuta: {0}.</value>
+    
+  </data>
 </root>

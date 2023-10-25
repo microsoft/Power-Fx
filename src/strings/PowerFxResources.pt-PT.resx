@@ -5112,4 +5112,91 @@
     <value>Erro de correspondência de tipo entre os tipos de origem e destino. Esperado {0}; Encontrado {1}.</value>
     
   </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Gera uma cadeia de texto JSON numa tabela, num registo ou num valor.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>dados</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>A estrutura de dados a ser convertida para JSON. Tabelas, registos e valores primitivos são suportados, aninhados arbitrariamente.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>formato</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>O formato a ser utilizado na conversão JSON. O valor vai ser um membro da enumeração JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Regista informações para o Application Insights quando ativado e regista numa sessão do Test Studio que estará disponível nos resultados do teste.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>mensagem</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>gravidade</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>opções_de_rastreio</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>As informações a rastrear.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>O nível de gravidade a ser controlado no Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Um registo que contém dados personalizados que serão controlados para o Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Opções adicionais para a função Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>O parâmetro "{1}" na função {0} tem de ser um valor constante.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Os valores JSONFormat "{0}" e "{1}" não podem ser utilizados em conjunto.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>O valor transmitido para a função JSON contém suporte de dados e não é suportado por predefinição. Para permitir a serialização JSON de valores do suporte de dados, certifique-se de que utiliza a opção IncludeBinaryData no parâmetro "formato".</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>A função JSON não consegue serializar objetos do tipo "{0}".</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>A função JSON não pode serializar tabelas/objetos com uma propriedade aninhada do tipo "{1}" chamada "{0}".</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>A função JSON não pode serializar dados binários em expressões não comportamentais.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>O parâmetro {0} contém uma propriedade do tipo {1} que não é suportada.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>A coluna especificada é só de leitura e não pode ser modificada: {0}.</value>
+    
+  </data>
 </root>

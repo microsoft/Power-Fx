@@ -5112,4 +5112,91 @@
     <value>來源與目標記錄類型之間類型不相符。應為 {0}; 找到 {1}。</value>
     
   </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>為資料表、記錄或值產生 JSON 文字字串。</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>資料</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>要轉換成 JSON 的資料結構。會支援並任意巢狀資料表、記錄和基本值。</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>格式</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>要用於 JSON 轉換的格式。該值將會是 JSONFormat 列舉的成員。</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>啟用時，會將資訊記錄到 Application Insights，並會在可用於測試結果的 Test Studio 工作階段中記錄。</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>訊息</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>嚴重性</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>自訂記錄</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>要追蹤的資訊。</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>要追蹤到 Application Insights 的嚴重性等級。</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>記錄，包含要追蹤到 Application Insights 的自訂資料。</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Trace 函數的其他選項。</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>{0} 函式的 '{1}' 參數必須為常數值。</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>無法同時使用 JSONFormat 值 '{0}' 和 '{1}'。</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>傳遞至 JSON 函數的值包含媒體，但預設不予以支援。若要允許媒體值的 JSON 序列化，請務必在 'format' 參數中使用 IncludeBinaryData 選項。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON 函數無法序列化類型為 '{0}' 的物件。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON 函式無法將具有類型為 '{1}' 且稱作 '{0}' 之巢狀屬性的資料表/物件序列化。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON 函式無法序列化非行為運算式中的二進位資料。</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>參數 {0} 包含不支援的 {1} 類型屬性。</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>指定的資料行是唯讀資料行，無法修改: {0}。</value>
+    
+  </data>
 </root>
