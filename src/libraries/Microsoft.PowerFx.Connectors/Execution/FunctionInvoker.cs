@@ -3,13 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
@@ -17,9 +14,9 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
-    public abstract class FunctionInvoker    
+    public abstract class FunctionInvoker
     {
-        public BaseRuntimeConnectorContext Context { get; }        
+        public BaseRuntimeConnectorContext Context { get; }
 
         internal IConvertToUTC UtcConverter { get; }
 
@@ -27,12 +24,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         public ConnectorFunction Function { get; }
 
-        public bool ThrowOnError => Context.ThrowOnError;      
+        public bool ThrowOnError => Context.ThrowOnError;
 
         public FunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext)
         {
             Function = function;
-            Context = runtimeContext;            
+            Context = runtimeContext;
             UtcConverter = new ConvertToUTC(Context.TimeZoneInfo);
         }
 
@@ -43,7 +40,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             cancellationToken.ThrowIfCancellationRequested();
 
             FunctionInvoker invoker = Context.GetInvoker(Function);
-            InvokerParameters invokerParameters = GetRequestElements(Function, args, invoker is HttpFunctionInvoker hfi && hfi._invoker is HttpClient hc ? hc.BaseAddress : null, cancellationToken);
+            InvokerParameters invokerParameters = GetInvokerParameters(Function, args, invoker is HttpFunctionInvoker hfi && hfi._invoker is HttpClient hc ? hc.BaseAddress : null, cancellationToken);
 
             if (invokerParameters == null)
             {
@@ -56,37 +53,31 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 });
             }
 
-            return await SendAsync(invokerParameters, cancellationToken).ConfigureAwait(false);            
+            return await SendAsync(invokerParameters, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<FormulaValue> InvokeAsync(string nextlink, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(string nextLink, CancellationToken cancellationToken)
         {
             FunctionInvoker invoker = Context.GetInvoker(Function);
             InvokerParameters invokerParameters = new InvokerParameters()
             {
                 QueryType = QueryType.NextPage,
                 HttpMethod = Function.HttpMethod,
-                Url = new Uri(nextlink).PathAndQuery,
-                Body = null,
+                Address = new Uri(nextLink),
                 ContentType = Function._internals.ContentType,
-                Headers = new Dictionary<string, string>()
             };
 
-            return await SendAsync(invokerParameters, cancellationToken).ConfigureAwait(false);           
+            return await SendAsync(invokerParameters, cancellationToken).ConfigureAwait(false);
         }
 
-        private InvokerParameters GetRequestElements(ConnectorFunction function, FormulaValue[] args, Uri baseAddress, CancellationToken cancellationToken)
+        private InvokerParameters GetInvokerParameters(ConnectorFunction function, FormulaValue[] args, Uri baseAddress, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            // https://stackoverflow.com/questions/5258977/are-http-headers-case-sensitive
-            // Header names are not case sensitive.
-            // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
-            Dictionary<string, string> headers = new (StringComparer.OrdinalIgnoreCase);            
-            Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
-            StringBuilder query = new StringBuilder();
-            string body = null;
-            string path = function.OperationPath;
+            List<InvokerParameter> queryParameters = new List<InvokerParameter>();
+            List<InvokerParameter> pathParameters = new List<InvokerParameter>();
+            List<InvokerParameter> headerParameters = new List<InvokerParameter>();
+            List<InvokerParameter> bodyParameters = new List<InvokerParameter>();
 
             Dictionary<string, FormulaValue> map = ConvertToNamedParameters(function, args);
 
@@ -94,104 +85,58 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 if (map.TryGetValue(param.Name, out var paramValue))
                 {
-                    bodyParts.Add(param.Name, (param.Schema, paramValue));
+                    InvokerParameter invokerParameter = new InvokerParameter() { Name = param.Name, Schema = param.Schema, Value = paramValue, DoubleEncoded = param.GetDoubleEncoding() };
+                    bodyParameters.Add(invokerParameter);
                 }
                 else if (param.Schema.Default != null)
                 {
                     if (OpenApiExtensions.TryGetOpenApiValue(param.Schema.Default, null, out FormulaValue defaultValue))
                     {
-                        bodyParts.Add(param.Name, (param.Schema, defaultValue));
+                        InvokerParameter invokerParameter = new InvokerParameter() { Name = param.Name, Schema = param.Schema, Value = defaultValue, DoubleEncoded = param.GetDoubleEncoding() };
+                        bodyParameters.Add(invokerParameter);
                     }
                 }
             }
 
-            if (bodyParts.Any())
-            {
-                body = GetBody(function, function._internals.BodySchemaReferenceId, function._internals.SchemaLessBody, bodyParts, cancellationToken);
-            }
-
             foreach (OpenApiParameter param in function.Operation.Parameters)
             {
-                if (map.TryGetValue(param.Name, out var paramValue))
+                if (map.TryGetValue(param.Name, out FormulaValue paramValue))
                 {
-                    var valueStr = paramValue?.ToObject()?.ToString() ?? string.Empty;
-
-                    if (param.GetDoubleEncoding())
-                    {
-                        valueStr = HttpUtility.UrlEncode(valueStr);
-                    }
+                    InvokerParameter invokerParameter = new InvokerParameter() { Name = param.Name, Schema = param.Schema, Value = paramValue, DoubleEncoded = param.GetDoubleEncoding() };
 
                     switch (param.In.Value)
                     {
                         case ParameterLocation.Path:
-                            path = path.Replace("{" + param.Name + "}", HttpUtility.UrlEncode(valueStr));
+                            pathParameters.Add(invokerParameter);
                             break;
 
                         case ParameterLocation.Query:
-                            query.Append((query.Length == 0) ? "?" : "&");
-                            query.Append(param.Name);
-                            query.Append('=');
-                            query.Append(HttpUtility.UrlEncode(valueStr));
+                            queryParameters.Add(invokerParameter);
                             break;
 
                         case ParameterLocation.Header:
-                            headers.Add(param.Name, valueStr);
+                            headerParameters.Add(invokerParameter);
                             break;
 
                         case ParameterLocation.Cookie:
                         default:
-                            Logger?.LogError($"In {nameof(FunctionInvoker)}.{nameof(GetRequestElements)}, unsupported {param.In.Value}");
+                            Logger?.LogError($"In {nameof(FunctionInvoker)}.{nameof(GetInvokerParameters)}, unsupported {param.In.Value}");
                             return null;
                     }
                 }
             }
 
-            var url = (OpenApiParser.GetServer(function.Servers, baseAddress) ?? string.Empty) + path + query.ToString();
-
             return new InvokerParameters()
             {
                 QueryType = QueryType.InitialRequest,
-                Url = url,
-                Headers = headers,
-                Body = body,
                 HttpMethod = function.HttpMethod,
-                ContentType = function._internals.ContentType
+                Address = baseAddress,
+                ContentType = function._internals.ContentType,
+                HeaderParameters = headerParameters,
+                BodyParameters = bodyParameters,
+                PathParameters = pathParameters,
+                QueryParameters = queryParameters
             };
-        }
-
-        [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        private string GetBody(ConnectorFunction function, string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, CancellationToken cancellationToken)
-        {
-            FormulaValueSerializer serializer = null;
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            try
-            {
-                serializer = function._internals.ContentType.ToLowerInvariant() switch
-                {
-                    OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(UtcConverter, schemaLessBody),
-                    OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(UtcConverter, schemaLessBody),
-                    _ => new OpenApiJsonSerializer(UtcConverter, schemaLessBody)
-                };
-
-                serializer.StartSerialization(referenceId);
-                foreach (var kv in map)
-                {
-                    serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
-                }
-
-                serializer.EndSerialization();
-
-                return serializer.GetResult();                
-            }
-            finally
-            {
-                if (serializer != null && serializer is IDisposable disp)
-                {
-                    disp.Dispose();
-                }
-            }
         }
 
         public FormulaValue DecodeJson(ConnectorFunction function, bool returnRawResults, string text)

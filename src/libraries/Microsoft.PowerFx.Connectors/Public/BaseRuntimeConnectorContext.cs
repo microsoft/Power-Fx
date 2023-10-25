@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Connectors
     public abstract class BaseRuntimeConnectorContext
     {
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="BaseRuntimeConnectorContext"/> class.
         /// </summary>
         /// <param name="runtimeConfig">Runtime configuration.</param>
         /// <remarks>We use the service provider of the runtime configuration
