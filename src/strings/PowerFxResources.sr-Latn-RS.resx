@@ -5112,4 +5112,91 @@
     <value>Izvorni i odredišni tip se ne podudaraju. Očekivano {0}; Pronađeno {1}.</value>
     
   </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Generiše JSON tekstualnu nisku za tabelu, zapis ili vrednost.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>podaci</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Struktura podataka će se konvertovati u JSON. Tabele, zapisi i primitivne vrednosti su podržane, proizvoljno ugnežđene.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Format koji će se koristiti u u JSON konvertovanju. Vrednost će biti član JSONFormat nabrajanja.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Evidentira informacije o funkciji Application Insights kada je omogućena, kao i sesiju u usluzi Test Studio koja će biti dostupna u rezultatima testiranja.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>poruka</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>ozbiljnost</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>prilagođeni_zapis</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>opcije_praćenja</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Informacije koje treba pratiti.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Stepen značaja koji treba pratiti do funkcije Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Zapis koji sadrži prilagođene podatke koji će se pratiti do funkcije Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Dodatne opcije funkcije Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Parametar „{1}“ za funkciju {0} mora da bude vrednost konstante.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormat vrednosti „{0}“ i „{1}“ ne mogu se koristiti zajedno.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Vrednost prosleđena funkciji JSON sadrži medije, a nije podržana po podrazumevanoj vrednosti. Da biste dozvolili JSON serijalizaciju medijskih vrednosti, uverite se da koristite opciju IncludeBinaryData u parametru „format“.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Funkcija JSON ne može da serijalizuje objekte tipa „{0}“.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Funkcija JSON ne može da serijalizuje tabele/objekte sa ugnežđenim svojstvom „{0}“ tipa „{1}“.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Funkcija JSON ne može da serijalizuje binarne podatke u izrazu koji se ne odnosi na ponašanje.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parametar {0} sadrži svojstvo tipa {1}, što nije podržano.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Navedena kolona je samo za čitanje i nije je moguće izmeniti: {0}.</value>
+    
+  </data>
 </root>

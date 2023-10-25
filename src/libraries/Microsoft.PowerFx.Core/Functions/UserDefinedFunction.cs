@@ -162,6 +162,28 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         /// <summary>
+        /// Clones and binds a user defined function.
+        /// </summary>
+        /// <returns>Returns a new functions.</returns>
+        public UserDefinedFunction WithBinding(INameResolver nameResolver, IBinderGlue binderGlue, out TexlBinding binding, BindingConfig bindingConfig = null, Features features = null, IExternalRule rule = null)
+        {
+            if (nameResolver is null)
+            {
+                throw new ArgumentNullException(nameof(nameResolver));
+            }
+
+            if (binderGlue is null)
+            {
+                throw new ArgumentNullException(nameof(binderGlue));
+            }
+
+            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args));
+            binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
+
+            return func;
+        }
+
+        /// <summary>
         /// NameResolver that combines global named resolver and params for user defined function.
         /// </summary>
         private partial class UserDefinitionsNameResolver : INameResolver
