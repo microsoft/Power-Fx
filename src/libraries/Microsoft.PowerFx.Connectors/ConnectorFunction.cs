@@ -865,7 +865,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
 
                 KeyValuePair<string, IConnectorExtensionValue> dValue = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is DynamicConnectorExtensionValue dv && dv.Reference == requiredParameterName);
-                NamedValue newParam = knownParameters.FirstOrDefault(nv => nv.Name == dValue.Key);
+                NamedValue newParam = knownParameters.FirstOrDefault(nv => nv.Name == dValue.Key.Split('/').Last());
 
                 if (newParam == null)
                 {
