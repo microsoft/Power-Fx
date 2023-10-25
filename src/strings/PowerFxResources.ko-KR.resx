@@ -5112,4 +5112,91 @@
     <value>원본 형식과 대상 형식이 일치하지 않습니다. 예상 {0}, 발견 {1}.</value>
     
   </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>테이블, 레코드 또는 값에 대한 JSON 텍스트 문자열을 생성합니다.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>데이터</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>JSON으로 변환할 데이터 구조입니다. 테이블, 레코드 및 기본 값이 지원되며 임의로 중첩됩니다.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>형식</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON 변환에 사용되는 형식입니다. 이 값은 JSONFormat 열거형의 멤버입니다.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>사용하도록 설정된 경우 정보를 Application Insights에 기록하고 테스트 결과에 포함되는 테스트 스튜디오 세션에 기록합니다.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>메시지</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>심각도</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>추적 옵션</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>추적할 정보입니다.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Application Insights로 추적되는 심각도 수준입니다.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Application Insights로 추적되는 사용자 지정 데이터를 포함하는 레코드입니다.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Trace 기능에 대한 추가 옵션입니다.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>{0} 함수에 대한 '{1}' 매개 변수는 상수 값이어야 합니다.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormat 값 '{0}' 및 '{1}'을(를) 함께 사용할 수 없습니다. </value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>JSON 함수에 전달된 값에 미디어가 포함되어 있는데 이는 기본적으로 지원되지 않습니다. 미디어 값의 JSON serialization을 허용하려면 '형식' 매개 변수에 IncludeBinaryData 옵션을 사용해야 합니다.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON 함수는 '{0}' 형식의 개체를 직렬화할 수 없습니다.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON 함수는 '{1}' 형식의 '{0}'(이)라는 중첩된 속성이 포함된 테이블/개체를 직렬화할 수 없습니다.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON 함수는 비동작 표현식으로 바이너리 데이터를 직렬화할 수 없습니다.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>매개 변수 {0}에 지원되지 않는 {1} 유형의 속성이 포함되어 있습니다.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>지정된 다음 열은 읽기 전용이므로 수정할 수 없습니다. {0}</value>
+    
+  </data>
 </root>

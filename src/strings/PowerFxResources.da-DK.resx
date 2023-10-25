@@ -5112,4 +5112,91 @@
     <value>Typeuoverensstemmelse mellem kilde- og måltyper. Forventede {0}, fandt {1}.</value>
     
   </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Genererer en JSON-tekststreng for en tabel, post eller værdi.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Den datastruktur, der skal konverteres til JSON. Tabeller, poster og primitive værdier understøttes, vilkårligt indlejret.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Det format, der skal bruges i JSON-konverteringen. Værdien vil blive medlem af JSONFormat-optællingen.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Logfører oplysninger til Application Insights, når de er aktiveret, og logfører i en test-studio-session, der vil være tilgængelig i testresultaterne.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>meddelelse</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>alvorlighedsgrad</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_indstillinger</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>De oplysninger, der skal spores.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Det alvorlighedsniveau, der skal spores til Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>En post, der indeholder brugerdefinerede data, som spores til Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Yderligere indstillinger for funktionen Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Parameteren "{1}" til funktionen {0} skal være en konstant værdi.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormat-værdierne '{0}' og '{1}' kan ikke bruges sammen.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Den værdi, der overføres til JSON-funktionen, indeholder medier, og den understøttes ikke som standard. Hvis du vil tillade JSON-serialisering af medieværdier, skal du sørge for at bruge indstillingen IncludeBinaryData i parameteren 'format'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Funktionen JSON kan ikke serialisere objekter af typen '{0}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON-funktionen kan ikke serialisere tabeller/objekter med en indlejret egenskab med navnet '{0}' af typen '{1}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON-funktionen kan ikke serialisere binære data i et ikke-adfærdsbaseret udtryk.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parameteren {0} indeholder en egenskab af typen {1}, som ikke understøttes.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Den angivne kolonne er skrivebeskyttet og kan ikke ændres: {0}</value>
+    
+  </data>
 </root>
