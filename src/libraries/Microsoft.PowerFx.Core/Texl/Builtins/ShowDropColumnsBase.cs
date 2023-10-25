@@ -160,7 +160,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     ? logicalName
                     : expectedColumnName);
 
-                // Verify that the name exists.
                 if (_isShowColumns)
                 {
                     // Verify that the name exists.
@@ -185,6 +184,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
+                    // Verify that the name exists.
                     if (!colsToKeep.TryGetType(columnName, out var columnType))
                     {
                         fArgsValid = false;
