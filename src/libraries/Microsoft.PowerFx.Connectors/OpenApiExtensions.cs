@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Connectors
             return TryGetOpenApiValue(schema.Default, formulaType, out defaultValue);
         }
 
-        internal static bool TryGetOpenApiValue(IOpenApiAny openApiAny, FormulaType formulaType, out FormulaValue formulaValue)
+        internal static bool TryGetOpenApiValue(IOpenApiAny openApiAny, FormulaType formulaType, out FormulaValue formulaValue, bool allowOpenApiDateTime = false)
         {
             if (openApiAny is OpenApiString str)
             {
@@ -247,11 +247,9 @@ namespace Microsoft.PowerFx.Connectors
                 // OpenApi library uses Convert.FromBase64String
                 formulaValue = FormulaValue.New(Convert.ToBase64String(by.Value));
             }
-            else if (openApiAny is OpenApiDateTime dt)
+            else if (openApiAny is OpenApiDateTime dt && allowOpenApiDateTime)
             {
-                // A string like "2022-11-18" is interpreted as a DateTimeOffset
-                // https://github.com/microsoft/OpenAPI.NET/issues/533
-                throw new PowerFxConnectorException($"Unsupported OpenApiDateTime {dt.Value}");
+                formulaValue = FormulaValue.New(new DateTime(dt.Value.Ticks, DateTimeKind.Utc));
             }
             else if (openApiAny is OpenApiPassword pw)
             {
@@ -352,7 +350,7 @@ namespace Microsoft.PowerFx.Connectors
 
             OpenApiSchema schema = openApiParameter.Schema;
 
-            if (level == 20)
+            if (level == 30)
             {
                 throw new Exception("ToFormulaType() excessive recursion");
             }
@@ -733,7 +731,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 // Mandatory openrationId for connectors, except when capibility or builtInOperation are defined
                 apiObj.WhenPresent("operationId", (opId) => cdv.OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId));
-                apiObj.WhenPresent("parameters", (opPrms) => cdv.ParameterMap = GetOpenApiObject(opPrms));
+                apiObj.WhenPresent("parameters", (opPrms) => cdv.ParameterMap = GetOpenApiObject(opPrms, true));
                 apiObj.WhenPresent("value-title", (opValTitle) => cdv.ValueTitle = opValTitle);
                 apiObj.WhenPresent("value-path", (opValPath) => cdv.ValuePath = opValPath);
                 apiObj.WhenPresent("value-collection", (opValCollection) => cdv.ValueCollection = opValCollection);
@@ -789,15 +787,29 @@ namespace Microsoft.PowerFx.Connectors
             return null;
         }
 
-        internal static Dictionary<string, IConnectorExtensionValue> GetOpenApiObject(this OpenApiObject opPrms)
+        internal static Dictionary<string, IConnectorExtensionValue> GetOpenApiObject(this OpenApiObject opPrms, bool forceString = false)
         {
             Dictionary<string, IConnectorExtensionValue> dvParams = new ();
 
             foreach (KeyValuePair<string, IOpenApiAny> prm in opPrms)
             {
-                if (!OpenApiExtensions.TryGetOpenApiValue(prm.Value, null, out FormulaValue fv))
+                if (!OpenApiExtensions.TryGetOpenApiValue(prm.Value, null, out FormulaValue fv, forceString))
                 {
                     throw new NotImplementedException($"Unsupported param with OpenApi type {prm.Value.GetType().FullName}, key = {prm.Key}");
+                }
+
+                if (prm.Value is OpenApiDateTime oadt && fv is DateTimeValue dtv)
+                {
+                    if (forceString && prm.Key == "api-version")
+                    {
+                        fv = FormulaValue.New(dtv.GetConvertedValue(TimeZoneInfo.Utc).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                    }
+                    else
+                    {
+                        // A string like "2022-11-18" is interpreted as a DateTimeOffset
+                        // https://github.com/microsoft/OpenAPI.NET/issues/533
+                        throw new PowerFxConnectorException($"Unsupported OpenApiDateTime {oadt.Value}");
+                    }
                 }
 
                 if (fv is not RecordValue rv)
