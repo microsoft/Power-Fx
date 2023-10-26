@@ -36,15 +36,21 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     }
 
     /// <summary>
-    /// Result of an NL2Fx opereation. 
-    /// This is an object so we can include future information like ranking, model version, etc. 
+    /// Result of an NL2Fx operation. 
     /// </summary>
     public class CustomNL2FxResultItem
     {
         /// <summary>
         /// A power fx expression.
+        /// This should be valid and LSP verified it has no errors. 
         /// </summary>
         public string Expression { get; set; }
+
+        /// <summary>
+        /// The expression from the model, prior to any client-side LSP filtering.
+        /// This can be useful for diagnostics. 
+        /// </summary>
+        public string RawExpression { get; set; }
 
         /// <summary>
         /// Identification (such as name/version) for model that produced the result. 
