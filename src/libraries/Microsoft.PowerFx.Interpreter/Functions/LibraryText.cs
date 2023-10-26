@@ -433,6 +433,9 @@ namespace Microsoft.PowerFx.Functions
 
                         var dateTimeResult = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), numberValue).GetConvertedValue(timeZoneInfo);
 
+                        // Update the right section for DateTime format
+                        textFormatArgs.FormatArg = SectionFormatStr(textFormatArgs.FormatArg, textFormatArgs.Sections, numberValue.Value);
+
                         return textFormatArgs.DateTimeFmt == DateTimeFmtType.EnumDateTimeFormat ? TryExpandDateTimeFromEnumFormat(irContext, textFormatArgs, dateTimeResult, timeZoneInfo, culture, cancellationToken, out result) :
                             TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, "g", dateTimeResult, timeZoneInfo, culture, cancellationToken, out result);
                     }
@@ -492,6 +495,26 @@ namespace Microsoft.PowerFx.Functions
                             var timeValue = value as TimeValue;
                             dateTimeResult = Library.TimeToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), timeValue).GetConvertedValue(timeZoneInfo);
                             defaultFormat = "t";
+                        }
+
+                        // Update the right section for DateTime format
+                        if (textFormatArgs.Sections != null && textFormatArgs.Sections.Count > 1)
+                        {
+                            NumberValue dateTimeNumberValue;
+                            if (value is DateTimeValue datetimeValue)
+                            {
+                                dateTimeNumberValue = Library.DateTimeToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), datetimeValue);
+                            }
+                            else if (value is DateValue dateValue)
+                            {
+                                dateTimeNumberValue = Library.DateToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateValue);
+                            }
+                            else
+                            {
+                                dateTimeNumberValue = Library.TimeToNumber(IRContext.NotInSource(FormulaType.Number), new TimeValue[] { value as TimeValue });
+                            }
+
+                            textFormatArgs.FormatArg = SectionFormatStr(textFormatArgs.FormatArg, textFormatArgs.Sections, dateTimeNumberValue.Value);
                         }
 
                         return textFormatArgs.DateTimeFmt == DateTimeFmtType.EnumDateTimeFormat ? TryExpandDateTimeFromEnumFormat(irContext, textFormatArgs, dateTimeResult, timeZoneInfo, culture, cancellationToken, out result) :
@@ -1194,6 +1217,27 @@ namespace Microsoft.PowerFx.Functions
 
             outputValue = (int)inputValue;
             return true;
+        }
+
+        private static string SectionFormatStr(string formatStr, List<string> sections, double numberValue)
+        {
+            if (sections != null && sections.Count > 1)
+            {
+                if (numberValue > 0 || (numberValue == 0 && sections.Count == 2))
+                {
+                    return sections[0];
+                }
+                else if (numberValue < 0)
+                {
+                    return sections[1];
+                }
+                else if (numberValue == 0 && sections.Count == 3)
+                {
+                    return sections[2];
+                }
+            }
+
+            return formatStr;
         }
     }
 }
