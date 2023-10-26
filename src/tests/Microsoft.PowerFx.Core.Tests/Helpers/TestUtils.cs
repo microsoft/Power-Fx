@@ -186,7 +186,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedCol);
                     return false;
                 }
-                else if (!(expectedType.Accepts(columns.Single().Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) || columns.Single().Type.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)))
+                else if (!(expectedType.Accepts(columns.Single().Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) || columns.Single().Type.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, features: context.Features)))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedTypeCol_Col, expectedType.GetKindString(), columns.Single().Name.Value);
                     return false;

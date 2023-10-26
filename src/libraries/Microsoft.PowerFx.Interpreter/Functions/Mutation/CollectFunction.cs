@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Interpreter
                 }
 
                 // Checks if all record names exist against table type and if its possible to coerce.
-                bool checkAggregateNames = argType.CheckAggregateNames(argTypes[0], args[i], errors, SupportsParamCoercion, context.Features.PowerFxV1CompatibilityRules);
+                bool checkAggregateNames = argType.CheckAggregateNames(argTypes[0], args[i], errors, context.Features, SupportsParamCoercion);
                 fValid = fValid && checkAggregateNames;
 
                 if (!itemType.IsValid)
@@ -147,7 +147,7 @@ namespace Microsoft.PowerFx.Interpreter
                 else
                 {
                     var fUnionError = false;
-                    itemType = DType.Union(ref fUnionError, itemType, argType, useLegacyDateTimeAccepts: true, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+                    itemType = DType.Union(ref fUnionError, itemType, argType, useLegacyDateTimeAccepts: true, context.Features);
                     if (fUnionError)
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleTypes);
@@ -194,7 +194,7 @@ namespace Microsoft.PowerFx.Interpreter
 
             if (fValid)
             {
-                if (!collectedType.TryGetCoercionSubType(collectionType, out DType coercionType, out var coercionNeeded, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (!collectedType.TryGetCoercionSubType(collectionType, out DType coercionType, out var coercionNeeded, context.Features))
                 {
                     fValid = false;
                 }
@@ -207,7 +207,7 @@ namespace Microsoft.PowerFx.Interpreter
 
                     var fError = false;
 
-                    returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType, useLegacyDateTimeAccepts: false, allowCoerce: true, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+                    returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType, useLegacyDateTimeAccepts: false, context.Features, allowCoerce: true);
 
                     if (fError)
                     {

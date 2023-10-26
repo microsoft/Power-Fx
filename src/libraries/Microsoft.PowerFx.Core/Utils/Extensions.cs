@@ -105,13 +105,13 @@ namespace Microsoft.PowerFx.Core.Utils
         /// <param name="arg">Arg node.</param>
         /// <param name="errors">Error object reference.</param>
         /// <param name="supportsParamCoercion">Does the caller function support coercion.</param>
-        /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
+        /// <param name="features">Enabled feature set, primarily for Use PFx v1 compatibility rules if enabled (less
         /// permissive Accepts relationships).</param>
         /// <returns></returns>
-        internal static bool CheckAggregateNames(this DType argType, DType dataSourceType, TexlNode arg, IErrorContainer errors, bool supportsParamCoercion = false, bool usePowerFxV1CompatibilityRules = false)
+        internal static bool CheckAggregateNames(this DType argType, DType dataSourceType, TexlNode arg, IErrorContainer errors, Features features, bool supportsParamCoercion = false)
         {
             bool isValid = true;
-
+            var usePowerFxV1CompatibilityRules = features.PowerFxV1CompatibilityRules;
             foreach (var typedName in argType.GetNames(DPath.Root))
             {
                 DName name = typedName.Name;
@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 if ((!dsNameType.Accepts(type, out var schemaDifference, out var schemaDifferenceType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) &&
                      !DType.Number.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) &&
                      !DType.Decimal.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)) &&                    
-                    (!supportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || !coercionIsSafe))
+                    (!supportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false, isTopLevelCoercion: false, features) || !coercionIsSafe))
                 {
                     if (dsNameType.Kind == type.Kind)
                     {
