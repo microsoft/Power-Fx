@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     { "Is", "Option IS" }, // Reserved word
                     { "Self", "Option SELF" }, // Keyword
                     { "is", "Option is low case" }, // Not a reserved word
-                    { "Self", "Option self low case" }, // Not a keyword
+                    { "self", "Option self low case" }, // Not a keyword
             }));
             
             OptionSet otherOptionSet = new OptionSet("OtherOptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
