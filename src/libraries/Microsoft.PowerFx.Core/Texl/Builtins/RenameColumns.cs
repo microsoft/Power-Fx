@@ -23,8 +23,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public override bool RecordFirstArgumentCanCreateScope => true;
-
         public override bool HasColumnIdentifiers => true;
 
         public RenameColumnsFunction()
@@ -32,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             // RenameColumns(source, oldName, newName, oldName, newName, ..., oldName, newName, ...)
             SignatureConstraint = new SignatureConstraint(omitStartIndex: 5, repeatSpan: 2, endNonRepeatCount: 0, repeatTopLength: 9);
-            ScopeInfo = new FunctionScopeInfo(this);
+            ScopeInfo = new FunctionScopeInfo(this, canBeCreatedByRecord: true);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()

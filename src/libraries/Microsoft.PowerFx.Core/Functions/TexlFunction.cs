@@ -119,12 +119,6 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool AllowedWithinNondeterministicOperationOrder => true;
 
         /// <summary>
-        /// Typically functions that create scope requires a table as the first argument,
-        /// but some functions can do the same with a record argument as well.
-        /// </summary>
-        public virtual bool RecordFirstArgumentCanCreateScope => false;
-
-        /// <summary>
         /// Whether the function always produces a visible error if CheckTypes returns invalid.
         /// This can be used to prevent the overall "Function has invalid arguments" error.
         /// </summary>
