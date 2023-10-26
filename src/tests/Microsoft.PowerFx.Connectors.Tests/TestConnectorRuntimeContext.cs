@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         public override FunctionInvoker GetInvoker(ConnectorFunction function, bool rawResults)
         {
-            if (string.IsNullOrEmpty(function.Namespace) || !_clients.ContainsKey(function.Namespace))
+            if (string.IsNullOrEmpty(function.InvokerSignature) || !_clients.ContainsKey(function.InvokerSignature))
             {
                 throw new ArgumentException("Invalid namespace or missing HttpMessageInvoker for this namespace", nameof(function.Namespace));
             }

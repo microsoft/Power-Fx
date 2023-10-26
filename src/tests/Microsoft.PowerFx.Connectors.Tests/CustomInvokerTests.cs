@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         
         public override FunctionInvoker GetInvoker(ConnectorFunction function, bool rawResults)
         {
-            if (_invokers.TryGetValue(function.Namespace, out var getInvoker))
+            if (_invokers.TryGetValue(function.InvokerSignature, out var getInvoker))
             {
                 return getInvoker(function, rawResults);
             }

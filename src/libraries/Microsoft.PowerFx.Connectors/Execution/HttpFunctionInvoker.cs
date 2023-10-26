@@ -16,7 +16,7 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Connectors
 {
     // Given Power Fx arguments, translate into a HttpRequestMessage and invoke.
-    internal class HttpFunctionInvoker : FunctionInvoker
+    public class HttpFunctionInvoker : FunctionInvoker
     {        
         internal readonly HttpMessageInvoker _invoker;
         internal readonly bool _rawResults;

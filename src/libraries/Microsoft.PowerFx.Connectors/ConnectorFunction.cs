@@ -236,6 +236,29 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
+        public string InvokerSignature
+        {
+            get => _invokerSignature;
+            set
+            {
+                if (_internals != null)
+                {
+                    throw new InvalidOperationException("Cannot set InvokerSignature after initialization");
+                }
+
+                if (_invokerSignatureOverwritten)
+                {
+                    throw new InvalidOperationException("Cannot set InvokerSignature twice");
+                }
+
+                _invokerSignature = value;
+                _invokerSignatureOverwritten = true;
+            }
+        }
+
+        private string _invokerSignature;
+        private bool _invokerSignatureOverwritten = false;
+
         /// <summary>
         /// Parameter types used for TexlFunction.
         /// </summary>
@@ -275,6 +298,7 @@ namespace Microsoft.PowerFx.Connectors
             _configurationLogger = configurationLogger;
             _isSupported = isSupported || connectorSettings.AllowUnsupportedFunctions;
             _notSupportedReason = notSupportedReason ?? (isSupported ? string.Empty : "Internal error on not supported reason");
+            _invokerSignature = connectorSettings.Namespace;
         }
 
         /// <summary>

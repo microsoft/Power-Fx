@@ -43,6 +43,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.Execution.InvokerParameter",
               "Microsoft.PowerFx.Connectors.Execution.InvokerParameters",              
               "Microsoft.PowerFx.Connectors.Execution.QueryType",
+              "Microsoft.PowerFx.Connectors.HttpFunctionInvoker",
               "Microsoft.PowerFx.Connectors.LogCategory",
               "Microsoft.PowerFx.Connectors.ODataParameters",
               "Microsoft.PowerFx.Connectors.ODataQueryableTableValue",
