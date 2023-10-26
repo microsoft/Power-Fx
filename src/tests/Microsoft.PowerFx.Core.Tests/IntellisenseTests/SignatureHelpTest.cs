@@ -1,10 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using Microsoft.PowerFx.Core;
+using System.Linq;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Intellisense.SignatureHelp;
+using Microsoft.PowerFx.Syntax;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -99,6 +103,15 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("If(true, If(true, 0, 1)|)", 8)]
         [InlineData("Filter|", 9)]
         [InlineData("|", 10)]
+        [InlineData("Boolean(|", 11)]
+        [InlineData("Max(|", 12)]
+        [InlineData("Max([1,2],|", 13)]
+        [InlineData("Max(1,2,3,4,5,6,|", 14)]
+        [InlineData("Left(|", 15)]
+        [InlineData("Table(|", 16)]
+        [InlineData("Table({Value:1}, {Value: 2},| {Value:3}, {Value:3})", 17)]
+        [InlineData("Table({Value:1}, {Value: Sqrt(|1)},{Value:3}, {Value:3})", 18)]
+        [InlineData("LastN([1,2],|", 19)]
         public void TestSignatureHelp(string expression, int helpId) => CheckSignatureHelpTest(Suggest(expression, SuggestTests.Default, CultureInfo.InvariantCulture).SignatureHelp, helpId);
 
         [Fact]
