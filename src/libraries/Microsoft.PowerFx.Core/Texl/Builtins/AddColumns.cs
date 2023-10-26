@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // AddColumns(source:*[...], name:s, valueFunc:func<_>, name:s, valueFunc:func<_>, ...)
+    // AddColumns(source:![...], name:s, valueFunc:func<_>, name:s, valueFunc:func<_>, ...)
     // Corresponding DAX function: AddColumns
     internal sealed class AddColumnsFunction : FunctionWithTableInput
     {
@@ -27,6 +28,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;
+
+        public override bool RecordFirstArgumentCanCreateScope => true;
 
         public AddColumnsFunction()
             : base("AddColumns", TexlStrings.AboutAddColumns, FunctionCategories.Table, DType.EmptyTable, 0, 3, int.MaxValue, DType.EmptyTable)
@@ -62,14 +65,31 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = true;
+            var isRecord = false;
+            nodeToCoercedTypeMap = null;
+            returnType = ReturnType;
+
+            if (argTypes[0].IsTable)
+            {
+                fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            }
+            else if (argTypes[0].IsRecord)
+            {
+                isRecord = true;
+                returnType = argTypes[0];
+                fArgsValid = base.CheckType(context, args[0], argTypes[0], DType.EmptyRecord, errors, ref nodeToCoercedTypeMap);
+            }
 
             // The first arg determines the scope type for the lambda params, and the return type.
             fArgsValid &= ScopeInfo.CheckInput(context.Features, args[0], argTypes[0], errors, out var typeScope);
             Contracts.Assert(typeScope.IsRecord);
 
             // The result type has N additional columns, as specified by (args[1],args[2]), (args[3],args[4]), ... etc.
-            returnType = typeScope.ToTable();
+            if (!isRecord)
+            {
+                returnType = typeScope.ToTable();
+            }
 
             var count = args.Length;
             if ((count & 1) == 0)
@@ -208,7 +228,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(index >= 0);
 
             // Left to right mask (infinite): ...010101010 
-            return index >= 1 && ((index & 1) == 1);
+            return (index & 1) == 1;
         }
 
         public override bool AllowsRowScopedParamDelegationExempted(int index)

@@ -108,9 +108,19 @@ namespace Microsoft.PowerFx.Core.Functions
             }
             else if (_function.ParamTypes[0].IsTable)
             {
-                var isBadArgumentType = features.PowerFxV1CompatibilityRules ?
-                    !typeScope.IsTableNonObjNull : // Untyped blank values should not be used to define the scope
-                    !typeScope.IsTable;
+                bool isBadArgumentType = false;
+                if (typeScope.IsRecordNonObjNull)
+                {
+                    isBadArgumentType = !_function.RecordFirstArgumentCanCreateScope;
+                }
+                else
+                {
+                    isBadArgumentType =
+                        features.PowerFxV1CompatibilityRules ?
+                            !typeScope.IsTableNonObjNull : // Untyped blank values should not be used to define the scope
+                            !typeScope.IsTable;
+                }
+
                 if (isBadArgumentType)
                 {
                     errors.Error(callNode, TexlStrings.ErrNeedTable_Func, _function.Name);

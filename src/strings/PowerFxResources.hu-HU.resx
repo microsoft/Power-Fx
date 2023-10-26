@@ -5112,4 +5112,91 @@
     <value>Típuseltérés a forrás- és céltípusok között. Várt {0}; Talált {1}.</value>
     
   </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>JSON-sztring létrehozása egy táblához, rekordhoz vagy értékhez.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>adatok</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>A JSON-ba konvertálandó adatstruktúra. A táblák, a rekordok és a primitív értékek támogatottak, önkényesen beágyazva.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>formátum</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>A JSON-átalakításban használandó formátum. Az érték a JSONFormat enumerálás tagja lesz.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Az adatok Application Insights-ba való naplózása, ha engedélyezve van, és naplózás egy Test Studio-munkamenetben, amelynek adatai elérhetők lesznek a teszteredmények között.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>üzenet</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>súlyosság</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>egyéni_rekord</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>nyomkövetési_beállítások</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>A naplózandó adatok.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Az Application Insights-ba naplózandó súlyossági szint.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Olyan egyéni adatokat tartalmazó rekord, amely az Application Insights-ba lesz naplózva.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>A Trace funkció további beállításai.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>A {0} függvény {1} paraméterének konstans értéknek kell lennie.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>A(z) {0} és a(z) {1} JSONFormat-érték nem használható együtt.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>A JSON-függvénynek átadott érték multimédiát tartalmaz, és alapértelmezés szerint nem támogatott. Ha engedélyezni szeretné a médiaértékek JSON-szerializálását, használja az IncludeBinaryData beállítást a „format” paraméterben.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>A JSON-függvény nem tudja szerializálni a(z) {0} típusú objektumokat.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>A JSON-függvény nem tudja szerializálni a(z) {1} típusú, {0} nevű beágyazott tulajdonsággal rendelkező táblákat/objektumokat.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>A JSON függvény nem tudja szerializálni a bináris adatokat nem viselkedési kifejezésben.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>A(z) {0} paraméter nem támogatott, {1} típusú tulajdonságot tartalmaz.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>A megadott oszlop írásvédett, ezért nem módosítható: {0}.</value>
+    
+  </data>
 </root>
