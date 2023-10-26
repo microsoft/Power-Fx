@@ -502,7 +502,30 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 var result = _parent.NL2FxImplementation.NL2FxAsync(req, cancel)
                     .ConfigureAwait(false).GetAwaiter().GetResult();
 
+                FinalCheck(scope, result);
                 return result;
+            }
+
+            // This Engine / LSP context may have restrictions that aren't captured in
+            // the NL2Fx payload, so the Model may have returned things that aren't valid here.
+            // Do a final pass where we filter out any expressions that don't compile.
+            public void FinalCheck(IPowerFxScope scope, CustomNL2FxResult result)
+            {
+                List<CustomNL2FxResultItem> items = new List<CustomNL2FxResultItem>();
+
+                if (result.Expressions != null)
+                {
+                    foreach (var item in result.Expressions)
+                    {
+                        var check = scope.Check(item.Expression);
+                        if (check.IsSuccess)
+                        {
+                            items.Add(item);
+                        }
+                    }
+                }
+
+                result.Expressions = items.ToArray();
             }
         }
 
