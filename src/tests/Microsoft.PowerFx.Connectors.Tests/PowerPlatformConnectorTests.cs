@@ -1372,5 +1372,50 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 ";
             Assert.Equal(expected, testConnector._log.ToString());
         }
+
+        [Fact]
+        public async Task DataverseTest_WithComplexMapping()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Dataverse.json");
+            using var httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "b29c41cf-173b-e469-830b-4f00163d296b" /* environment Id */, "82728ddb6bfa461ea3e50e17da8ab164" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJ...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
+            ConnectorFunction performBoundActionWithOrganization = functions.First(f => f.Name == "PerformBoundActionWithOrganization");
+
+            testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_3.json");
+            ConnectorParameters parameters = await performBoundActionWithOrganization.GetParameterSuggestionsAsync(
+                new NamedValue[]
+                {
+                    new NamedValue("organization", FormulaValue.New("https://aurorabapenv9984a.crm10.dynamics.com/")),
+                    new NamedValue("entityName", FormulaValue.New("bots")),
+                },
+                performBoundActionWithOrganization.RequiredParameters[2], // actionName
+                runtimeContext,
+                CancellationToken.None).ConfigureAwait(false);
+
+            // Received 8 suggestions
+            Assert.Equal(8, parameters.ParametersWithSuggestions[2].Suggestions.Count());
+
+            string actual = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+            string expected = @$"POST https://tip1002-002.azure-apihub.net/invoke
+ authority: tip1002-002.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJ...
+ organization: https://aurorabapenv9984a.crm10.dynamics.com/
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b29c41cf-173b-e469-830b-4f00163d296b
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/commondataserviceforapps/82728ddb6bfa461ea3e50e17da8ab164/v1.0/$metadata.json/GetActionListEnum/GetBoundActionsWithOrganization
+ x-ms-user-agent: PowerFx/{version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""entityName"":""bots""}}
+";
+
+            Assert.Equal(expected, actual);
+        }
     }
 }
