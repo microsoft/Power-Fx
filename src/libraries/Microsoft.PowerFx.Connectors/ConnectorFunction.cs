@@ -17,7 +17,6 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
-using SharpYaml.Tokens;
 using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
@@ -262,7 +261,7 @@ namespace Microsoft.PowerFx.Connectors
         // Those properties are only used by HttpFunctionInvoker
         internal ConnectorParameterInternals _internals = null;
 
-        private readonly ConnectorLogger _configurationLogger = null;
+        private readonly ConnectorLogger _configurationLogger = null;        
 
         internal ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, ConnectorSettings connectorSettings, List<ConnectorFunction> functionList, ConnectorLogger configurationLogger)
         {
