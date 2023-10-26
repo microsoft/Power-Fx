@@ -131,14 +131,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (context.Features.PowerFxV1CompatibilityRules)
             {
-                if (!IfFunction.TryDetermineReturnTypePowerFxV1CompatRules(possibleResults, errors, ref nodeToCoercedTypeMap, out type))
+                if (!IfFunction.TryDetermineReturnTypePowerFxV1CompatRules(possibleResults, errors, context.Features, ref nodeToCoercedTypeMap, out type))
                 {
                     fArgsValid = false;
                 }
             }
             else
             {
-                if (!IfFunction.TryDetermineReturnTypePowerFxV1CompatRulesDisabled(possibleResults, errors, ref nodeToCoercedTypeMap, out type))
+                if (!IfFunction.TryDetermineReturnTypePowerFxV1CompatRulesDisabled(possibleResults, errors, context.Features, ref nodeToCoercedTypeMap, out type))
                 {
                     fArgsValid = false;
                 }

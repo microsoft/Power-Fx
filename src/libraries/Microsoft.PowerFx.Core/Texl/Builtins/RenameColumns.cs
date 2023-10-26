@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 bool isError = false;
                 returnType = returnType.Drop(ref isError, DPath.Root, new DName(DType.MetaFieldName));
                 Contracts.Assert(!isError);
-                returnType = DType.Union(returnType, isRecord ? metaFieldType.ToRecord() : metaFieldType.ToTable(), useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+                returnType = DType.Union(returnType, isRecord ? metaFieldType.ToRecord() : metaFieldType.ToTable(), useLegacyDateTimeAccepts: false, features: context.Features);
             }
 
             int count = args.Length;

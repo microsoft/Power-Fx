@@ -77,6 +77,17 @@ namespace Microsoft.PowerFx
         internal bool AsTypeLegacyCheck { get; set; }
 
         /// <summary>
+        /// This is required by AsType() in Legacy Analysis.
+        /// </summary>
+        internal bool IsLegacyAnalysis { get; set; }
+
+        /// <summary>
+        /// Removes support for coercing a control to it's primary output property. 
+        /// This only impacts PA Client scenarios, but some code still lives in PFx. 
+        /// </summary>
+        internal bool PrimaryOutputPropertyCoercionDeprecated { get; set; }
+
+        /// <summary>
         /// This is specific for Cards team and it is a temporary feature.
         /// It will be soon deleted.
         /// </summary>
@@ -106,11 +117,26 @@ namespace Microsoft.PowerFx
             FirstLastNRequiresSecondArguments = true,
             PowerFxV1CompatibilityRules = true,
             CoalesceShortCircuit = true,
+            PrimaryOutputPropertyCoercionDeprecated = true,
             AsTypeLegacyCheck = false,
         };
 
         internal Features()
         {
+        }
+
+        internal Features(Features other)
+        {
+            TableSyntaxDoesntWrapRecords = other.TableSyntaxDoesntWrapRecords;
+            ConsistentOneColumnTableResult = other.ConsistentOneColumnTableResult;
+            DisableRowScopeDisambiguationSyntax = other.DisableRowScopeDisambiguationSyntax;
+            SupportColumnNamesAsIdentifiers = other.SupportColumnNamesAsIdentifiers;
+            StronglyTypedBuiltinEnums = other.StronglyTypedBuiltinEnums;
+            RestrictedIsEmptyArguments = other.RestrictedIsEmptyArguments;
+            FirstLastNRequiresSecondArguments = other.FirstLastNRequiresSecondArguments;
+            PowerFxV1CompatibilityRules = other.PowerFxV1CompatibilityRules;
+            CoalesceShortCircuit = other.CoalesceShortCircuit;
+            PrimaryOutputPropertyCoercionDeprecated = other.PrimaryOutputPropertyCoercionDeprecated;
         }
     }
 }

@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx
                             continue;
                         }
 
-                        if (!curType.CheckAggregateNames(paramType, args[i], errors, SupportCoercionForArg(i), context.Features.PowerFxV1CompatibilityRules))
+                        if (!curType.CheckAggregateNames(paramType, args[i], errors, context.Features, SupportCoercionForArg(i)))
                         {
                             return false;
                         }
