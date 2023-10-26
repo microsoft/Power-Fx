@@ -631,7 +631,7 @@ namespace Microsoft.PowerFx.Functions
         {
             if (index == 0)
             {
-                return ExactValueTypeOrBlank<TableValue>(irContext, index, arg);
+                return ExactValueTypeOrTableOrBlank<RecordValue>(irContext, index, arg);
             }
             else if (index % 2 == 1)
             {
@@ -643,11 +643,21 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue DropColumnsTypeChecker(IRContext irContext, int index, FormulaValue arg)
+        private static FormulaValue ShowDropRenameColumnsTypeChecker(IRContext irContext, int index, FormulaValue arg)
         {
             if (index == 0)
             {
-                return ExactValueTypeOrBlank<TableValue>(irContext, index, arg);
+                return ExactValueTypeOrTableOrBlank<RecordValue>(irContext, index, arg);
+            }
+
+            return ExactValueTypeOrBlank<StringValue>(irContext, index, arg);
+        }
+
+        private static FormulaValue ShowColumnsTypeChecker(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (index == 0)
+            {
+                return ExactValueTypeOrTableOrBlank<RecordValue>(irContext, index, arg);
             }
 
             return ExactValueTypeOrBlank<StringValue>(irContext, index, arg);

@@ -1,0 +1,28 @@
+{
+  "Signatures": [
+    {
+      "Label": "Max(number, number, number, number, ...)",
+      "Documentation": "Returns the largest value in a set of values. Ignores logical values and text.",
+      "Parameters": [
+        {
+          "Label": "number",
+          "Documentation": "A numeric value for this max operation."
+        },
+        {
+          "Label": "number",
+          "Documentation": "A numeric value for this max operation."
+        },
+        {
+          "Label": "number",
+          "Documentation": "A numeric value for this max operation."
+        },
+        {
+          "Label": "number",
+          "Documentation": "A numeric value for this max operation."
+        }
+      ]
+    }
+  ],
+  "ActiveSignature": 0,
+  "ActiveParameter": 6
+}

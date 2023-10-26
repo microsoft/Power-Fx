@@ -133,6 +133,13 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("RGBA(\n    255,\n    /*r   */255,\n    255,\n    1\n)//com   ", "RGBA(255,\n    /*r   */255,255,1)//com   ")]
         [InlineData("If(\n    Text(\n        Coalesce(\n            Sum(\n                Filter(\n                    Expenses,\n                    BudgetTitle = Gallery1.Selected.BudgetTitle && BudgetId=Gallery1.Selected.BudgetId\n                ),\n                Value(Expense)\n            ),\n            0\n        ),\n        \"$#,##\"\n    )=\"$\",\n    \"$0\",\n    Text(\n        Coalesce(\n            Sum(\n                Filter(\n                    Expenses,\n                    BudgetId = Gallery1.Selected.BudgetId\n                ),\n                Value(Expense)\n            ),\n            0\n        ),\n        \"$#,##\"\n    )\n)", "If(Text(Coalesce(Sum(Filter(Expenses,BudgetTitle=Gallery1.Selected.BudgetTitle&&BudgetId=Gallery1.Selected.BudgetId),Value(Expense)),0),\"$#,##\")=\"$\",\"$0\",Text(Coalesce(Sum(Filter(Expenses,BudgetId=Gallery1.Selected.BudgetId),Value(Expense)),0),\"$#,##\"))")]
         [InlineData("If(\n    Text(\n        Value(ThisItem.Expense)\n    )= \"0\",\n    \"$\",\n    Text(\n        Value(ThisItem.Expense),\n        \"$#,##\"\n    )\n)", "If(Text(Value(ThisItem.Expense))=\"0\",\"$\",Text(Value(ThisItem.Expense),\"$#,##\"))")]
+        [InlineData("$\"1 + 2 is\n\n{6} not 3\"", "$\"1 + 2 is\n\n{6} not 3\"")]
+        [InlineData("$\"\n\n1 + 2 is\n\n{6} not 3\n\n\t\"", "$\"\n\n1 + 2 is\n\n{6} not 3\n\n\t\"")]
+        [InlineData("$\" Foo\n\n\n\n\n Bar\"\"{{1}}\"", "$\" Foo\n\n\n\n\n Bar\"\"{{1}}\"")]
+        [InlineData("$\"{\"ddddd\"} Foo is bar\"", "$\"{\"ddddd\"} Foo is bar\"")]
+        [InlineData("$\"        Foo is bar           \n\"", "$\"        Foo is bar           \n\"")]
+        [InlineData("$\" String n{$\" Foo\"\"\n bar {4+4} rr\"} between {223} trail\"", "$\" String n{$\" Foo\"\"\n bar {4+4} rr\"} between {223} trail\"")]
+        [InlineData("\" Foo bar space\" ; 34", "\" Foo bar space\";34")]
         public void TestRemoveWhiteSpace(string script, string expected)
         {
             var result = TexlLexer.InvariantLexer.RemoveWhiteSpace(script);

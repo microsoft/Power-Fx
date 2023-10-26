@@ -1,0 +1,414 @@
+{
+  "__type": "Route:http://schemas.microsoft.com/search/local/ws/rest/v1",
+  "bbox": {
+    "southLatitude": 47.395146,
+    "westLongitude": -0.499966,
+    "northLatitude": 47.399186,
+    "eastLongitude": -0.480137
+  },
+  "id": "v70,h2130752478,i0,a0,cen-US,dAAAAAAAAAAA1,y0,s1,m1,o1,t4,wA0Lr4cuyR0AjEoWWdf_fvw2~AJyv5UBZWXMiAADgAb2zrT4A0~NDcuMzk2ODQ2LCAtMC40OTk5Njc1~~~~~~~~v12,wVaNXA5SyR0Dz59uCpbrevw2~AJyv5UBhHnMiAADgAcRvED4A0~NDcuMzk1MTQyLCAtMC40ODAxNDI1~~~~~~~~v12,k1",
+  "distanceUnit": "Kilometer",
+  "durationUnit": "Second",
+  "routeLegs": {
+    "actualEnd": {
+      "type": "Point",
+      "coordinates": {
+        "latitude": 47.395146,
+        "longitude": -0.480137,
+        "combined": "47.395146,-0.480137"
+      }
+    },
+    "actualStart": {
+      "type": "Point",
+      "coordinates": {
+        "latitude": 47.396847,
+        "longitude": -0.499966,
+        "combined": "47.396847,-0.499966"
+      }
+    },
+    "alternateVias": [],
+    "description": "Chemin de la Grand'Muraille, Chemin du Marsou",
+    "endLocation": {
+      "bbox": {
+        "southLatitude": 47.366171,
+        "westLongitude": -0.537172,
+        "northLatitude": 47.424112,
+        "eastLongitude": -0.423112
+      },
+      "name": "47.395142, -0.480142",
+      "point": {
+        "type": "Point",
+        "coordinates": {
+          "latitude": 47.395142,
+          "longitude": -0.480142,
+          "combined": "47.395142,-0.480142"
+        }
+      },
+      "address": {
+        "formattedAddress": "47.395142, -0.480142"
+      },
+      "confidence": "High",
+      "entityType": null,
+      "geocodePoints": {
+        "type": "Point",
+        "coordinates": {
+          "latitude": 47.395142,
+          "longitude": -0.480142,
+          "combined": "47.395142,-0.480142"
+        },
+        "calculationMethod": "Rooftop",
+        "usageTypes": [
+          "Display"
+        ]
+      },
+      "matchCodes": [
+        "Good"
+      ]
+    },
+    "endTime": "2023-09-27T16:56:21.245+00:00",
+    "itineraryItems": [
+      {
+        "compassDirection": "north",
+        "details": [
+          {
+            "compassDegrees": 17,
+            "endPathIndices": [
+              1
+            ],
+            "maneuverType": "DepartStart",
+            "mode": "Driving",
+            "names": [
+              "Chemin de Montgilet"
+            ],
+            "roadType": "Arterial",
+            "startPathIndices": [
+              0
+            ]
+          }
+        ],
+        "exit": "",
+        "iconType": "Auto",
+        "instruction": {
+          "formattedText": null,
+          "maneuverType": "DepartStart",
+          "text": "Head north on Chemin de Montgilet toward Chemin de la Grand'Muraille"
+        },
+        "isRealTimeTransit": false,
+        "maneuverPoint": {
+          "type": "Point",
+          "coordinates": {
+            "latitude": 47.396847,
+            "longitude": -0.499966,
+            "combined": "47.396847,-0.499966"
+          }
+        },
+        "realTimeTransitDelay": 0,
+        "sideOfStreet": "Unknown",
+        "tollZone": "",
+        "towardsRoadName": "Chemin de la Grand'Muraille",
+        "transitTerminus": "",
+        "travelDistance": 0.069,
+        "travelDuration": 5,
+        "travelMode": "Driving"
+      },
+      {
+        "compassDirection": "northeast",
+        "details": [
+          {
+            "compassDegrees": 56,
+            "endPathIndices": [
+              5
+            ],
+            "maneuverType": "BearRight",
+            "mode": "Driving",
+            "names": [
+              "Chemin de la Grand'Muraille"
+            ],
+            "roadType": "Street",
+            "startPathIndices": [
+              1
+            ]
+          }
+        ],
+        "exit": "",
+        "iconType": "Auto",
+        "instruction": {
+          "formattedText": null,
+          "maneuverType": "BearRight",
+          "text": "Bear right onto Chemin de la Grand'Muraille"
+        },
+        "isRealTimeTransit": false,
+        "maneuverPoint": {
+          "type": "Point",
+          "coordinates": {
+            "latitude": 47.397457,
+            "longitude": -0.499762,
+            "combined": "47.397457,-0.499762"
+          }
+        },
+        "realTimeTransitDelay": 0,
+        "sideOfStreet": "Unknown",
+        "tollZone": "",
+        "transitTerminus": "",
+        "travelDistance": 0.217,
+        "travelDuration": 29,
+        "travelMode": "Driving"
+      },
+      {
+        "compassDirection": "east",
+        "details": [
+          {
+            "compassDegrees": 92,
+            "endPathIndices": [
+              13
+            ],
+            "maneuverType": "TurnRight",
+            "mode": "Driving",
+            "names": [
+              "Chemin du Marsou"
+            ],
+            "roadType": "Street",
+            "startPathIndices": [
+              5
+            ]
+          }
+        ],
+        "exit": "",
+        "iconType": "Auto",
+        "instruction": {
+          "formattedText": null,
+          "maneuverType": "TurnRight",
+          "text": "Turn right onto Chemin du Marsou"
+        },
+        "isRealTimeTransit": false,
+        "maneuverPoint": {
+          "type": "Point",
+          "coordinates": {
+            "latitude": 47.399186,
+            "longitude": -0.498521,
+            "combined": "47.399186,-0.498521"
+          }
+        },
+        "realTimeTransitDelay": 0,
+        "sideOfStreet": "Unknown",
+        "tollZone": "",
+        "transitTerminus": "",
+        "travelDistance": 0.602,
+        "travelDuration": 79,
+        "travelMode": "Driving"
+      },
+      {
+        "compassDirection": "south",
+        "details": [
+          {
+            "compassDegrees": 195,
+            "endPathIndices": [
+              16
+            ],
+            "maneuverType": "TurnRight",
+            "mode": "Driving",
+            "names": [
+              "Route du Plessis"
+            ],
+            "roadType": "Arterial",
+            "startPathIndices": [
+              13
+            ]
+          }
+        ],
+        "exit": "",
+        "iconType": "Auto",
+        "instruction": {
+          "formattedText": null,
+          "maneuverType": "TurnRight",
+          "text": "Turn right onto Route du Plessis"
+        },
+        "isRealTimeTransit": false,
+        "maneuverPoint": {
+          "type": "Point",
+          "coordinates": {
+            "latitude": 47.397194,
+            "longitude": -0.491245,
+            "combined": "47.397194,-0.491245"
+          }
+        },
+        "realTimeTransitDelay": 0,
+        "sideOfStreet": "Unknown",
+        "tollZone": "",
+        "transitTerminus": "",
+        "travelDistance": 0.137,
+        "travelDuration": 15,
+        "travelMode": "Driving"
+      },
+      {
+        "compassDirection": "east",
+        "details": [
+          {
+            "compassDegrees": 103,
+            "endPathIndices": [
+              27
+            ],
+            "maneuverType": "TurnLeft",
+            "mode": "Driving",
+            "roadType": "Street",
+            "startPathIndices": [
+              16
+            ]
+          }
+        ],
+        "exit": "",
+        "iconType": "Auto",
+        "instruction": {
+          "formattedText": null,
+          "maneuverType": "TurnLeft",
+          "text": "Turn left"
+        },
+        "isRealTimeTransit": false,
+        "maneuverPoint": {
+          "type": "Point",
+          "coordinates": {
+            "latitude": 47.395983,
+            "longitude": -0.491025,
+            "combined": "47.395983,-0.491025"
+          }
+        },
+        "realTimeTransitDelay": 0,
+        "sideOfStreet": "Unknown",
+        "tollZone": "",
+        "transitTerminus": "",
+        "travelDistance": 0.873,
+        "travelDuration": 131,
+        "travelMode": "Driving",
+        "warnings": [
+          {
+            "severity": "None",
+            "text": "Unpaved Road",
+            "warningType": "UnPavedRoad"
+          }
+        ]
+      },
+      {
+        "compassDirection": "southeast",
+        "details": [
+          {
+            "compassDegrees": 143,
+            "endPathIndices": [
+              27
+            ],
+            "maneuverType": "ArriveFinish",
+            "mode": "Driving",
+            "roadType": "Arterial",
+            "startPathIndices": [
+              27
+            ]
+          }
+        ],
+        "exit": "",
+        "hints": [
+          {
+            "hintType": "PreviousIntersection",
+            "text": "The last intersection before your destination is Route de Martigneau"
+          }
+        ],
+        "iconType": "Auto",
+        "instruction": {
+          "formattedText": null,
+          "maneuverType": "ArriveFinish",
+          "text": "Arrive at 47.395142, -0.480142"
+        },
+        "isRealTimeTransit": false,
+        "maneuverPoint": {
+          "type": "Point",
+          "coordinates": {
+            "latitude": 47.395146,
+            "longitude": -0.480137,
+            "combined": "47.395146,-0.480137"
+          }
+        },
+        "realTimeTransitDelay": 0,
+        "sideOfStreet": "Unknown",
+        "tollZone": "",
+        "transitTerminus": "",
+        "travelDistance": 0,
+        "travelDuration": 0,
+        "travelMode": "Driving"
+      }
+    ],
+    "routeRegion": "WWMX",
+    "routeSubLegs": [
+      {
+        "endWaypoint": {
+          "type": "Point",
+          "coordinates": [
+            47.395146,
+            -0.480137
+          ],
+          "description": "47.395142, -0.480142",
+          "isVia": false,
+          "locationIdentifier": "0|156|175|229|64|97|30|115|34|0|0|224|1|196|111|16|62|0|47.395146,-0.480137",
+          "routePathIndex": 27
+        },
+        "startWaypoint": {
+          "type": "Point",
+          "coordinates": [
+            47.396847,
+            -0.499966
+          ],
+          "description": "47.396846, -0.499967",
+          "isVia": false,
+          "locationIdentifier": "0|156|175|229|64|89|89|115|34|0|0|224|1|189|179|173|62|0|47.396847,-0.499966",
+          "routePathIndex": 0
+        },
+        "travelDistance": 1.898,
+        "travelDuration": 260
+      }
+    ],
+    "startLocation": {
+      "bbox": {
+        "southLatitude": 47.367876,
+        "westLongitude": -0.556999,
+        "northLatitude": 47.425817,
+        "eastLongitude": -0.442935
+      },
+      "name": "47.396846, -0.499967",
+      "point": {
+        "type": "Point",
+        "coordinates": {
+          "latitude": 47.396847,
+          "longitude": -0.499967,
+          "combined": "47.396847,-0.499967"
+        }
+      },
+      "address": {
+        "formattedAddress": "47.396846, -0.499967"
+      },
+      "confidence": "High",
+      "entityType": null,
+      "geocodePoints": {
+        "type": "Point",
+        "coordinates": {
+          "latitude": 47.396847,
+          "longitude": -0.499967,
+          "combined": "47.396847,-0.499967"
+        },
+        "calculationMethod": "Rooftop",
+        "usageTypes": [
+          "Display"
+        ]
+      },
+      "matchCodes": [
+        "Good"
+      ]
+    },
+    "startTime": "2023-09-27T16:52:01.245+00:00",
+    "travelDistance": 1.898,
+    "travelDuration": 260,
+    "travelMode": "Driving"
+  },
+  "trafficCongestion": "None",
+  "trafficDataUsed": "None",
+  "travelDistance": 1.898,
+  "travelDuration": 260,
+  "travelDurationTraffic": 226,
+  "travelMode": "Driving"
+}

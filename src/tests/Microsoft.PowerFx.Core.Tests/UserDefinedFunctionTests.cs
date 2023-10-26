@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var glue = new Glue2DocumentBinderGlue();
             var hasBinderErrors = false;
 
-            foreach (var udf in userDefinitionResult.UDFs) 
+            foreach (var udf in userDefinitionResult.UDFs)
             {
                 var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(userDefinitionResult.UDFs)), glue, BindingConfig.Default);
                 hasBinderErrors |= binding.ErrorContainer.HasErrors();
@@ -189,6 +189,284 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal(commentSpan.Min, begin);
             Assert.Equal(commentSpan.Lim, end);
+        }
+
+        [Theory]
+        [InlineData("a = Abs(1.2);\nAdd(a: Number, b: Number):Number = a + b;\nb = Add(1, 2);", 2, 1, 0)]
+        [InlineData("a = Abs(1.2);\nAdd(a: Number, b:):Number = a + b;\nb = Add(1, 2); ", 2, 0, 1)]
+        [InlineData("a = Abs(1.2);\nAdd(a: Number, b:/*comment*/):Number = a + b;\nb = Add(1, 2); ", 2, 0, 1)]
+        [InlineData("a = Abs(1.2);\nAdd(a: Number, b:/*comment*/Number):Number = a + b;\nb = Add(1, 2); ", 2, 1, 0)]
+        [InlineData("a = Abs(1.2);\nF1(a: Number):Number = a;\nb = F1(1, 2); F2(", 2, 1, 1)]
+        [InlineData("a = Abs(1.2);\nF1(a: Number):Number = a;\nb = F1(1, 2); F2(a):Number = 1;", 2, 1, 1)]
+        [InlineData("a = Abs(1.2);\nF1(a: Number):Number = a;\nb = F1(1, 2); F2(a):Number = ;", 2, 1, 1)]
+        [InlineData("a = Abs(1.2);\nF1(a: Number):Number = a;\nb = F1(1, 2); F2(a:Number): = 1;", 2, 1, 1)]
+        [InlineData(@"A(a:Number, b:/*comment*/Number):Number = 12;b(a:Number): = 1;c(a:Number):Number = 100;x = 10;", 1, 2, 1)]
+        [InlineData(@"A(a:Number, b:/*comment*/Number):Number = 12;b(a:):Number = 1;c(a:Number):Number = 100;", 0, 2, 1)]
+        [InlineData("a = Abs(1.2);\nAdd(a: Number, b: Number):/* Number */Number", 1, 0, 1)]
+        [InlineData("a = Abs(1.2);\nAdd(a: Number, b: Number):/* Number */Number = a + b;", 1, 1, 0)]
+
+        public void TestParseUserDefinitionsCountswithIncompleteUDFs(string script, int nfCount, int validUDFCount, int inValidUDFCount)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+
+            Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
+            Assert.Equal(validUDFCount, parseResult.UDFs.Count(udf => udf.IsParseValid));
+            Assert.Equal(inValidUDFCount, parseResult.UDFs.Count(udf => !udf.IsParseValid));
+        }
+
+        [Theory]
+
+        [InlineData("a = Abs(1.2);\n F1(a:Number):Number = a;", 0)]
+        [InlineData("a = Abs(1.2);\n F1(a):Number = a;", 1)]
+        [InlineData("a = Abs(1.2);\n F1(a:):Number = a;", 1)]
+        [InlineData("a = Abs(1.2);\n F1(a:Number): = a;", 1)]
+        [InlineData("a = -;\n F1(a:):Number = 1;F2(a:Number): = 1;", 3)]
+        public void TestErrorCountsWithUDFs(string script, int errorCount)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+
+            Assert.Equal(errorCount, parseResult.Errors?.Count() ?? 0);
+        }
+
+        /// <summary>
+        /// Verifies that UDFs are marked as valid/invalid approriately.
+        /// </summary>
+        [Fact]
+        public void TestUserDefinedFunctionValidity()
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var script = @" a = Abs(1.2);
+                            F1(a:Number, b: Number):Number = a + b /*comment*/;
+                            F2(a:Number, b):Number = a + b;
+                            F3(a:Number, b:):Number = a + b;
+                            b = ""test"";
+                            F4(";
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            Assert.Equal(2, parseResult.NamedFormulas.Count());
+            Assert.Equal(1, parseResult.UDFs.Count(udf => udf.IsParseValid));
+            Assert.Equal(3, parseResult.UDFs.Count(udf => !udf.IsParseValid));
+
+            foreach (var udf in parseResult.UDFs)
+            {
+                if (udf.Ident.Name == "F1")
+                {
+                    // Verify return type colon token span
+                    Assert.Equal(67, udf.ReturnTypeColonToken.Span.Min);
+                    Assert.Equal(68, udf.ReturnTypeColonToken.Span.Lim);
+                }
+                else if (udf.Ident.Name == "F2")
+                {
+                    Assert.Equal(2, udf.Args.Count());
+                    var firstArg = udf.Args.ElementAt(0);
+                    var secondArg = udf.Args.ElementAt(1);
+                    Assert.NotNull(firstArg.ColonToken);
+
+                    // Verify first arg colon token span
+                    Assert.Equal(129, firstArg.ColonToken.Span.Min);
+                    Assert.Equal(130, firstArg.ColonToken.Span.Lim);
+
+                    Assert.Null(secondArg.ColonToken);
+                    Assert.Null(secondArg.TypeIdent);
+                }
+                else if (udf.Ident.Name == "F3")
+                {
+                    Assert.Equal(2, udf.Args.Count());
+                    Assert.Null(udf.Args.ElementAt(1).TypeIdent);
+                }
+                else if (udf.Ident.Name == "F4")
+                {
+                    Assert.Empty(udf.Args);
+                    Assert.Null(udf.ReturnTypeColonToken);
+                    Assert.Null(udf.ReturnType);
+                    Assert.Null(udf.Body);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Verifies that UDFs are marked as valid/invalid approriately.
+        /// </summary>
+        [Fact]
+        public void TestUserDefinedFunctionValidity2()
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var script = @"func(a";
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
+
+            Assert.False(func.IsParseValid);
+            Assert.NotNull(func);
+            Assert.Single(func.Args);
+            var firstArg = func.Args.Single();
+            Assert.NotNull(firstArg.NameIdent);
+            Assert.Null(firstArg.TypeIdent);
+            Assert.Null(firstArg.ColonToken);
+            Assert.Null(func.ReturnTypeColonToken);
+            Assert.Null(func.ReturnType);
+            Assert.Null(func.Body);
+
+            script = @"func(a:";
+            parseResult = UserDefinitions.Parse(script, parserOptions);
+            func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
+
+            Assert.False(func.IsParseValid);
+            Assert.NotNull(func);
+            Assert.Single(func.Args);
+            firstArg = func.Args.Single();
+            Assert.NotNull(firstArg.NameIdent);
+            Assert.Null(firstArg.TypeIdent);
+            Assert.NotNull(firstArg.ColonToken);
+
+            script = @"func(a:Number";
+            parseResult = UserDefinitions.Parse(script, parserOptions);
+            func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
+
+            Assert.False(func.IsParseValid);
+            Assert.NotNull(func);
+            Assert.Single(func.Args);
+            firstArg = func.Args.Single();
+            Assert.NotNull(firstArg.NameIdent);
+            Assert.NotNull(firstArg.TypeIdent);
+            Assert.NotNull(firstArg.ColonToken);
+
+            script = @"func(a:Number, b";
+            parseResult = UserDefinitions.Parse(script, parserOptions);
+            func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
+
+            Assert.False(func.IsParseValid);
+            Assert.NotNull(func);
+            Assert.Equal(2, func.Args.Count());
+            firstArg = func.Args.ElementAt(0);
+            Assert.NotNull(firstArg.NameIdent);
+            Assert.NotNull(firstArg.TypeIdent);
+            Assert.NotNull(firstArg.ColonToken);
+            firstArg = func.Args.ElementAt(1);
+            Assert.NotNull(firstArg.NameIdent);
+
+            script = @"func(a:Number):";
+            parseResult = UserDefinitions.Parse(script, parserOptions);
+            func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
+
+            Assert.False(func.IsParseValid);
+            Assert.NotNull(func);
+            Assert.Single(func.Args);
+            Assert.NotNull(func.ReturnTypeColonToken);
+            Assert.Null(func.ReturnType);
+            Assert.Null(func.Body);
+
+            script = @"func(a:Number):Number";
+            parseResult = UserDefinitions.Parse(script, parserOptions);
+            func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
+
+            Assert.False(func.IsParseValid);
+            Assert.NotNull(func);
+            Assert.Single(func.Args);
+            Assert.NotNull(func.ReturnTypeColonToken);
+            Assert.NotNull(func.ReturnType);
+            Assert.Null(func.Body);
+
+            script = @"func(a:Number):Number = 1;";
+            parseResult = UserDefinitions.Parse(script, parserOptions);
+            func = parseResult.UDFs.FirstOrDefault(udf => udf.Ident.Name == "func");
+
+            Assert.NotNull(func);
+            Assert.Single(func.Args);
+            Assert.NotNull(func.ReturnTypeColonToken);
+            Assert.NotNull(func.ReturnType);
+            Assert.NotNull(func.Body);
+            Assert.True(func.IsParseValid);
+        }
+
+        // Show definitions directly on symbol tables
+        [Fact]
+        public void Basic()
+        {
+            var st1 = new SymbolTable();
+            st1.AddUserDefinedFunction("Foo1(x: Number): Number = x*2;");
+            st1.AddUserDefinedFunction("Foo2(x: Number): Number = Foo1(x)+1;");
+
+            var engine = new Engine();
+            var check = engine.Check("Foo2(3)", symbolTable: st1);
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Number, check.ReturnType);
+
+            // A different symbol table can have same function name with different type.  
+            var st2 = new SymbolTable();
+            st2.AddUserDefinedFunction("Foo2(x: Number): Text = x;");
+            check = engine.Check("Foo2(3)", symbolTable: st2);
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.String, check.ReturnType);
+        }
+                
+        [Fact]
+        public void DefineEmpty()
+        {
+            // Empty symbol table doesn't get builtins. 
+            var st = new SymbolTable();
+
+            st.AddUserDefinedFunction("Foo1(x: Number): Number = x;"); // ok 
+            Assert.Throws<InvalidOperationException>(() => st.AddUserDefinedFunction("Foo2(x: Number): Number = Abs(x);"));
+        }
+
+        // Show definitions on public symbol tables
+        [Fact]
+        public void BasicEngine()
+        {
+            var extra = new SymbolTable();
+            extra.AddVariable("K1", FormulaType.Number);
+
+            var engine = new Engine();
+            engine.AddUserDefinedFunction("Foo1(x: Number): Number = Abs(K1);", symbolTable: extra);
+
+            var check = engine.Check("Foo1(3)");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Number, check.ReturnType);
+        }
+
+        [Fact]
+        public void TestUserDefinedFunctionCloning()
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var script = "Add(a: Number, b: Number):Number = a + b;";
+            UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+            var func = userDefinitionResult.UDFs.FirstOrDefault();
+            Assert.NotNull(func);
+
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
+            var glue = new Glue2DocumentBinderGlue();
+            var udfs = new TexlFunctionSet(userDefinitionResult.UDFs);
+
+            Assert.Single(userDefinitionResult.UDFs);
+
+            var udf = userDefinitionResult.UDFs.First();
+            var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(udfs)), glue, BindingConfig.Default);
+            var clonedFunc = func.WithBinding(nameResolver, glue, out binding);
+            Assert.NotNull(clonedFunc);
+            Assert.NotNull(binding);
+
+            Assert.NotEqual(func, clonedFunc);
         }
     }
 }

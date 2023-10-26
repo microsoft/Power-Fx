@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Valor de data per al qual es calcularà el nombre de la setmana ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Retorna una data ajustada segons un nombre de mesos. El dia del mes continua sent el mateix, però està limitat pel nombre de dies del mes nou.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>mesos</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Valor de data que s'ajustarà segons el nombre de mesos especificat.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Nombre de mesos segons el qual s'ha de canviar la data. Un valor positiu produeix una data futura, un valor negatiu, una data passada i zero no canviarà el mes.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Retorna l'últim dia del mes d'una data especificada, ajustada segons un nombre de mesos.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>mesos</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Valor de data que s'ajustarà segons el nombre de mesos especificat.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Nombre de mesos segons el qual s'ha de canviar la data. Un valor positiu produeix una data futura, un valor negatiu, una data passada i zero no canviarà el mes.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Trunca el "nombre" arrodonint-lo cap a l'infinit negatiu.</value>
     
@@ -5070,6 +5110,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Els tipus d'origen i de destinació no coincideixen. S'esperava {0}, però s'ha trobat {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Genera una cadena de text JSON per a una taula, registre o valor.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>dades</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Estructura de dades que es convertirà en JSON. S'admeten taules, registres i valors primitius, que s'imbriquen de manera arbitrària.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Format que s'utilitzarà a la conversió de JSON. El valor formarà part de l'enumeració JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Registra informació a l'Application Insights quan la funció està habilitada, i inicia la sessió en una sessió del Test Studio que estarà disponible als resultats de la prova.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>missatge</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>gravetat</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>registre_personalitzat</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Informació de la qual es farà un seguiment.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Nivell de gravetat del qual es farà un seguiment a l'Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Registre que conté dades personalitzades de les quals es farà un seguiment a l'Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Opcions addicionals a la funció Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>El paràmetre "{1}" per a la funció {0} ha de ser un valor constant.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Els valors de JSONFormat "{0}" i "{1}" no es poden utilitzar junts.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>El valor que s'ha passat a la funció JSON conté fitxers multimèdia i no s'admet per defecte. Per permetre la serialització JSON dels valors multimèdia, assegureu-vos que utilitzeu l'opció IncludeBinaryData al paràmetre "format".</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>La funció JSON no pot serialitzar objectes de tipus "{0}".</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>La funció JSON no pot serialitzar taules ni objectes amb una propietat imbricada anomenada "{0}" de tipus "{1}".</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>La funció JSON no pot serialitzar dades binàries en una expressió que no sigui de comportament.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>El paràmetre {0} conté una propietat de tipus {1}, que no s'admet.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>La columna especificada és només de lectura i no es pot modificar: {0}.</value>
     
   </data>
 </root>

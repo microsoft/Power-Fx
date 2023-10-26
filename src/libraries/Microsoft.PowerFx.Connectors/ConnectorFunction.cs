@@ -16,6 +16,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
+using SharpYaml.Tokens;
 using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
@@ -827,6 +828,11 @@ namespace Microsoft.PowerFx.Connectors
         // Only used by ConnectorTexlFunction
         private DType[] GetParamTypes()
         {
+            if (RequiredParameters == null)
+            {
+                return Array.Empty<DType>();
+            }
+
             IEnumerable<DType> parameterTypes = RequiredParameters.Select(parameter => parameter.FormulaType._type);
             if (OptionalParameters.Any())
             {
@@ -853,14 +859,14 @@ namespace Microsoft.PowerFx.Connectors
             {
                 string requiredParameterName = connectorParameter.Name;
 
-                if (dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is StaticConnectorExtensionValue && kvp.Key == requiredParameterName).Value is StaticConnectorExtensionValue sValue)
+                if (dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is StaticConnectorExtensionValue && GetLastPart(kvp.Key) == requiredParameterName).Value is StaticConnectorExtensionValue sValue)
                 {
                     arguments.Add(sValue.Value);
                     continue;
                 }
 
-                KeyValuePair<string, IConnectorExtensionValue> dValue = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is DynamicConnectorExtensionValue dv && dv.Reference == requiredParameterName);
-                NamedValue newParam = knownParameters.FirstOrDefault(nv => nv.Name == dValue.Key);
+                KeyValuePair<string, IConnectorExtensionValue> dValue = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is DynamicConnectorExtensionValue dv && GetLastPart(kvp.Key) == requiredParameterName);
+                NamedValue newParam = knownParameters.FirstOrDefault(nv => nv.Name == ((DynamicConnectorExtensionValue)dValue.Value).Reference);
 
                 if (newParam == null)
                 {
@@ -874,6 +880,8 @@ namespace Microsoft.PowerFx.Connectors
             return arguments.ToArray();
         }
 
+        private string GetLastPart(string str) => str.Split('/').Last();
+        
         private ConnectorParameterInternals Initialize()
         {
             // Hidden-Required parameters exist in the following conditions:
@@ -915,6 +923,10 @@ namespace Microsoft.PowerFx.Connectors
 
                             // Ex: Api-Version 
                             hiddenRequired = true;
+                        }
+                        else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
+                        {
+                            continue;
                         }
                     }
 
@@ -978,7 +990,11 @@ namespace Microsoft.PowerFx.Connectors
                                                 continue;
                                             }
 
-                                            bodyPropertyHiddenRequired = !requestBody.Required;
+                                            bodyPropertyHiddenRequired = ConnectorSettings.Compatibility == ConnectorCompatibility.PowerAppsCompatibility ? !requestBody.Required : true;
+                                        }
+                                        else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
+                                        {
+                                            continue;
                                         }
                                     }
 
@@ -1054,10 +1070,10 @@ namespace Microsoft.PowerFx.Connectors
                     }
                 }
 
-                // Required params are first N params in the final list. 
+                // Required params are first N params in the final list, "in" parameters first.
                 // Optional params are fields on a single record argument at the end.
                 // Hidden required parameters do not count here            
-                _requiredParameters = requiredParameters.ToArray();
+                _requiredParameters = ConnectorSettings.Compatibility == ConnectorCompatibility.PowerAppsCompatibility ? GetPowerAppsParameterOrder(requiredParameters) : requiredParameters.ToArray();
                 _optionalParameters = optionalParameters.ToArray();
                 _hiddenRequiredParameters = hiddenRequiredParameters.ToArray();
                 _arityMin = _requiredParameters.Length;
@@ -1093,6 +1109,45 @@ namespace Microsoft.PowerFx.Connectors
                 ParameterDefaultValues = parameterDefaultValues,
                 SchemaLessBody = schemaLessBody
             };
+        }
+
+        private ConnectorParameter[] GetPowerAppsParameterOrder(List<ConnectorParameter> parameters)
+        {
+            List<ConnectorParameter> newList = new List<ConnectorParameter>();
+
+            foreach (ConnectorParameter parameter in parameters)
+            {
+                if (parameter.Location == ParameterLocation.Path)
+                {
+                    newList.Add(parameter);
+                }
+            }
+
+            foreach (ConnectorParameter parameter in parameters)
+            {
+                if (parameter.Location == ParameterLocation.Query)
+                {
+                    newList.Add(parameter);
+                }
+            }
+
+            foreach (ConnectorParameter parameter in parameters)
+            {
+                if (parameter.Location == ParameterLocation.Header)
+                {
+                    newList.Add(parameter);
+                }
+            }
+
+            foreach (ConnectorParameter parameter in parameters)
+            {
+                if (parameter.Location == null || parameter.Location == ParameterLocation.Cookie)
+                {
+                    newList.Add(parameter);
+                }
+            }
+
+            return newList.ToArray();
         }
 
         private bool VerifyCanHandle(ParameterLocation? location)

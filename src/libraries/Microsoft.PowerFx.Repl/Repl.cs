@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Repl;
@@ -25,6 +26,8 @@ namespace Microsoft.PowerFx
         public RecalcEngine Engine { get; set; }
 
         public ValueFormatter ValueFormatter { get; set; } = new StandardFormatter();
+
+        public HelpProvider HelpProvider { get; set; } = new HelpProvider();
 
         public IReplOutput Output { get; set; } = new ConsoleReplOutput();
 
@@ -52,7 +55,7 @@ namespace Microsoft.PowerFx
         public ParserOptions ParserOptions { get; set; } = new ParserOptions() { AllowsSideEffects = true };
 
         // example override, switching to [1], [2] etc.
-        public virtual string Prompt => ">> ";
+        public virtual string Prompt => "\n>> ";
 
         // prompt for multiline continuation
         public virtual string PromptContinuation => ".. ";
@@ -61,6 +64,24 @@ namespace Microsoft.PowerFx
         /// Optional - if set, additional symbol values that are fed into the repl . 
         /// </summary>
         public ReadOnlySymbolValues ExtraSymbolValues { get; set; }
+
+        /// <summary>
+        /// Get sorted names of all functions. This includes functions from the <see cref="Engine"/> as well as <see cref="MetaFunctions"/>.
+        /// </summary>
+        public IEnumerable<string> FunctionNames
+        {
+            get
+            {
+                // Can't use Engine.SupportedFunctions as that doesn't include Engine.AddFunction functions
+                var set = new HashSet<string>();
+                set.UnionWith(this.Engine.GetAllFunctionNames());
+                set.UnionWith(this.MetaFunctions.FunctionNames);
+                var list = set.ToArray();
+                Array.Sort(list);
+                
+                return list;
+            }
+        }
 
         // Interpreter should normally not throw.
         // Exceptions should be caught and converted to ErrorResult.
@@ -83,7 +104,10 @@ namespace Microsoft.PowerFx
         public PowerFxREPL()
         {
             this.MetaFunctions.AddFunction(new NotifyFunction());
-            this.MetaFunctions.AddFunction(new HelpFunction(this));
+
+            // Hook through the HelpProvider, don't override these Help functions
+            this.MetaFunctions.AddFunction(new Help0Function(this));
+            this.MetaFunctions.AddFunction(new Help1Function(this));
         }
 
         private bool _userEnabled = false;
@@ -252,8 +276,25 @@ namespace Microsoft.PowerFx
 
                 if (check.Parse.Root is BinaryOpNode bo && bo.Op == BinaryOp.Equal && bo.Left.Kind == NodeKind.FirstName)
                 {
-                    Engine.SetFormula(bo.Left.ToString(), bo.Right.ToString(), OnFormulaUpdate);
-                    return new ReplResult();
+                    var formula = bo.Right.ToString();
+                    CheckResult formulaCheck = this.Engine.Check(formula, options: this.ParserOptions, symbolTable: extraSymbolTable);
+
+                    if (formulaCheck.IsSuccess)
+                    {
+                        Engine.SetFormula(bo.Left.ToString(), formula, OnFormulaUpdate);
+                        return new ReplResult();
+                    }
+                    else
+                    {
+                        foreach (var error in formulaCheck.Errors)
+                        {
+                            var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
+                            await this.Output.WriteLineAsync(error.ToString(), kind, cancel)
+                                .ConfigureAwait(false);
+                        }
+
+                        return new ReplResult { CheckResult = formulaCheck };
+                    }
                 }
             }
 

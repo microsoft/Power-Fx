@@ -4,15 +4,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Tests;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
+using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
+using YamlDotNet.Serialization;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
@@ -35,11 +37,18 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
             string srcFolder = Path.GetFullPath(Path.Combine(outFolder, ".."));
-            string reportName = @"report\Analysis.txt";
-            string jsonReport = @"report\Report.json";
+            string reportFolder = @"report";
+            string reportName = @$"{reportFolder}\Analysis.txt";
+            string jsonReport = @$"{reportFolder}\Report.json";
 
             // New report name every second
             string jsonReport2 = @$"report\Report_{Math.Round(DateTime.UtcNow.Ticks / 1e7):00000000000}.json";
+
+            string outFolderPath = Path.Combine(outFolder, reportFolder);
+            if (Directory.Exists(outFolderPath))
+            {
+                Directory.Delete(outFolderPath, true);
+            }
 
             // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
             // Locally         : ENV: C:\Data\Power-Fx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Debug\netcoreapp3.1
@@ -48,7 +57,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _output.WriteLine($"SRC: {srcFolder}");
 
             Directory.CreateDirectory(Path.Combine(outFolder, "report"));
-            GenerateReport(reportName, outFolder, srcFolder);
+            GenerateReport(reportFolder, reportName, outFolder, srcFolder);
             AnalyzeReport(reportName, outFolder, srcFolder, jsonReport);
 
             File.Copy(Path.Combine(outFolder, jsonReport), Path.Combine(outFolder, jsonReport2));
@@ -325,11 +334,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             White = 3,  // #FFFFFF
         }
 
-        private void GenerateReport(string reportName, string outFolder, string srcFolder)
+        private void GenerateReport(string reportFolder, string reportName, string outFolder, string srcFolder)
         {
             int i = 0;
             int j = 0;
             using StreamWriter writer = new StreamWriter(Path.Combine(outFolder, reportName), append: false);
+
+            Dictionary<string, List<string>> w2 = new Dictionary<string, List<string>>();
 
             Dictionary<string, int> exceptionMessages = new ();
             Dictionary<string, IEnumerable<ConnectorFunction>> allFunctions = new ();
@@ -356,7 +367,49 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     };
 
                     // Check we can add the service (more comprehensive test)
-                    config.AddActionConnector("Connector", doc, new ConsoleLogger(_output));
+                    config.AddActionConnector("Connector", doc);
+
+                    IEnumerable<ConnectorFunction> functions2 = OpenApiParser.GetFunctions(new ConnectorSettings("C1") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc);
+                    string cFolder = Path.Combine(outFolder, reportFolder, doc.Info.Title);
+
+                    int ix = 2;
+                    while (Directory.Exists(cFolder))
+                    {
+                        cFolder = Path.Combine(outFolder, reportFolder, doc.Info.Title) + $"_{ix++}";
+                    }
+
+                    Directory.CreateDirectory(cFolder);
+
+                    foreach (ConnectorFunction cf1 in functions)
+                    {
+                        ConnectorFunction cf2 = functions2.First(f => f.Name == cf1.Name);
+
+                        if (cf1.RequiredParameters != null && cf2.RequiredParameters != null)
+                        {
+                            string rp1 = string.Join(", ", cf1.RequiredParameters.Select(rp => rp.Name));
+                            string rp2 = string.Join(", ", cf2.RequiredParameters.Select(rp => rp.Name));
+
+                            if (rp1 != rp2)
+                            {
+                                string s = $"Function {cf1.Name} - Required parameters are different: [{rp1}] -- [{rp2}]";
+                                if (w2.ContainsKey(title))
+                                {
+                                    w2[title].Add(s);
+                                }
+                                else
+                                {
+                                    w2.Add(title, new List<string>() { s });
+                                }
+                            }
+                        }
+
+                        dynamic obj = cf1.ToExpando(swaggerFile);
+                        var serializer = new SerializerBuilder().Build();
+                        string yaml = serializer.Serialize(obj);
+
+                        string functionFile = Path.Combine(cFolder, cf1.OriginalName.Replace("/", "_") + ".yaml");
+                        File.WriteAllText(functionFile, yaml);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -373,6 +426,20 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     {
                         exceptionMessages.Add(key, 1);
                     }
+                }
+
+                using StreamWriter writer2 = new StreamWriter(Path.Combine(outFolder, reportFolder, "ConnectorComparison.txt"), append: false);
+
+                foreach (KeyValuePair<string, List<string>> kvp in w2.OrderBy(kvp => kvp.Key))
+                {
+                    writer2.WriteLine($"-- {kvp.Key} --");
+
+                    foreach (string s in kvp.Value.OrderBy(x => x))
+                    {
+                        writer2.WriteLine(s);
+                    }
+
+                    writer2.WriteLine();
                 }
             }
 
@@ -469,6 +536,307 @@ namespace Microsoft.PowerFx.Connectors.Tests
             {
                 console.WriteLine(obj.ToString());
             }
+        }
+
+        public static ExpandoObject ToExpando(this ConnectorFunction connectorFunction, string swaggerFile)
+        {
+            dynamic func = new ExpandoObject();
+
+            func.Name = connectorFunction.Name;
+            func.OperationId = connectorFunction.OriginalName;
+            func.Method = connectorFunction.HttpMethod.ToString().ToUpperInvariant();
+            func.Path = connectorFunction.OperationPath;
+            func.SwaggerFile = swaggerFile;
+
+            if (!string.IsNullOrEmpty(connectorFunction.Description))
+            {
+                func.Description = connectorFunction.Description;
+            }
+
+            if (!string.IsNullOrEmpty(connectorFunction.Summary))
+            {
+                func.Summary = connectorFunction.Summary;
+            }
+
+            func.IsBehavior = connectorFunction.IsBehavior;
+            func.IsDeprecated = connectorFunction.IsDeprecated;
+            func.IsInternal = connectorFunction.IsInternal;
+            func.IsPageable = connectorFunction.IsPageable;
+
+            if (connectorFunction.RequiresUserConfirmation)
+            {
+                func.RequiresUserConfirmation = connectorFunction.RequiresUserConfirmation;
+            }
+
+            if (!string.IsNullOrEmpty(connectorFunction.Visibility))
+            {
+                func.Visibility = connectorFunction.Visibility;
+            }
+
+            func.ReturnType = connectorFunction.ReturnType._type.ToString();
+            func.ReturnType_Detailed = connectorFunction.ConnectorReturnType == null ? (dynamic)"null" : connectorFunction.ConnectorReturnType.ToExpando(noname: true);
+
+            func.ArityMin = connectorFunction.ArityMin;
+            func.ArityMax = connectorFunction.ArityMax;
+            func.RequiredParameters = connectorFunction.RequiredParameters == null ? (dynamic)"null" : connectorFunction.RequiredParameters.Select(rp => rp.ToExpando()).ToList();
+            func.OptionalParameters = connectorFunction.OptionalParameters == null ? (dynamic)"null" : connectorFunction.OptionalParameters.Select(op => op.ToExpando()).ToList();
+
+            return func;
+        }
+
+        internal static ExpandoObject ToExpando(this ConnectorParameter connectorParam)
+        {
+            dynamic cParam = new ExpandoObject();
+
+            cParam.Name = connectorParam.Name;
+
+            if (!string.IsNullOrEmpty(connectorParam.Description))
+            {
+                cParam.Description = connectorParam.Description;
+            }
+
+            if (connectorParam.Location != null)
+            {
+                cParam.Location = connectorParam.Location.ToString();
+            }
+
+            cParam.FormulaType = connectorParam.FormulaType._type.ToString();
+            cParam.Type = connectorParam.ConnectorType.ToExpando();
+
+            if (connectorParam.DefaultValue != null)
+            {
+                cParam.DefaultValue = connectorParam.DefaultValue.ToExpression();                
+            }
+
+            if (!string.IsNullOrEmpty(connectorParam.Title))
+            {
+                cParam.Title = connectorParam.Title;
+            }
+
+            if (connectorParam.ConnectorExtensions.ExplicitInput)
+            {
+                cParam.ExplicitInput = connectorParam.ConnectorExtensions.ExplicitInput;
+            }
+
+            return cParam;
+        }
+
+        internal static ExpandoObject ToExpando(this ConnectorType connectorType, bool noname = false)
+        {
+            dynamic cType = new ExpandoObject();
+
+            if (!noname)
+            {
+                cType.Name = connectorType.Name;
+
+                if (!string.IsNullOrEmpty(connectorType.DisplayName))
+                {
+                    cType.DisplayName = connectorType.DisplayName;
+                }
+
+                if (!string.IsNullOrEmpty(connectorType.Description))
+                {
+                    cType.Description = connectorType.Description;
+                }
+            }
+
+            cType.IsRequired = connectorType.IsRequired;
+
+            if (connectorType.Fields != null && connectorType.Fields.Any())
+            {
+                cType.Fields = connectorType.Fields.Select(fieldCT => fieldCT.ToExpando()).ToList();
+            }
+
+            cType.FormulaType = connectorType.FormulaType._type.ToString();
+
+            if (connectorType.ExplicitInput)
+            {
+                cType.ExplicitInput = connectorType.ExplicitInput;
+            }
+
+            cType.IsEnum = connectorType.IsEnum;
+
+            if (connectorType.IsEnum)
+            {
+                bool hasDisplayNames = connectorType.EnumDisplayNames != null && connectorType.EnumDisplayNames.Length > 0;
+                cType.EnumValues = connectorType.EnumValues.Select<FormulaValue, object>((ev, i) => GetEnumExpando(hasDisplayNames ? connectorType.EnumDisplayNames[i] : null, ev.ToObject().ToString(), ev.Type._type.ToString())).ToList();
+            }
+
+            if (connectorType.Visibility != Visibility.None && connectorType.Visibility != Visibility.Unknown)
+            {
+                cType.Visibility = connectorType.Visibility.ToString();
+            }
+
+            if (connectorType.DynamicList != null)
+            {
+                cType.DynamicList = connectorType.DynamicList.ToExpando();
+            }
+
+            if (connectorType.DynamicProperty != null)
+            {
+                cType.DynamicProperty = connectorType.DynamicProperty.ToExpando();
+            }
+
+            if (connectorType.DynamicSchema != null)
+            {
+                cType.DynamicSchema = connectorType.DynamicSchema.ToExpando();
+            }
+
+            if (connectorType.DynamicValues != null)
+            {
+                cType.DynamicValues = connectorType.DynamicValues.ToExpando();
+            }
+
+            return cType;
+        }
+
+        internal static ExpandoObject GetEnumExpando(string displayName, string value, string type)
+        {
+            dynamic e = new ExpandoObject();
+
+            if (!string.IsNullOrEmpty(displayName))
+            {
+                e.DisplayName = displayName;
+            }
+
+            e.Value = value;
+            e.Type = type;
+
+            return e;
+        }
+
+        internal static ExpandoObject ToExpando(this ConnectorDynamicList dynamicList)
+        {
+            dynamic dList = new ExpandoObject();
+
+            dList.OperationId = dynamicList.OperationId;
+
+            if (!string.IsNullOrEmpty(dynamicList.ItemValuePath))
+            {
+                dList.ItemValuePath = dynamicList.ItemValuePath;
+            }
+
+            if (!string.IsNullOrEmpty(dynamicList.ItemPath))
+            {
+                dList.ItemPath = dynamicList.ItemPath;
+            }
+
+            if (!string.IsNullOrEmpty(dynamicList.ItemTitlePath))
+            {
+                dList.ItemTitlePath = dynamicList.ItemTitlePath;
+            }
+
+            if (dynamicList.ParameterMap != null)
+            {
+                dList.Map = dynamicList.ParameterMap.ToExpando();
+            }
+
+            return dList;
+        }
+
+        internal static ExpandoObject ToExpando(this ConnectorDynamicProperty dynamicProp)
+        {
+            dynamic dProp = new ExpandoObject();
+
+            dProp.OperationId = dynamicProp.OperationId;
+
+            if (!string.IsNullOrEmpty(dynamicProp.ItemValuePath))
+            {
+                dProp.ItemValuePath = dynamicProp.ItemValuePath;
+            }
+
+            if (dynamicProp.ParameterMap != null)
+            {
+                dProp.Map = dynamicProp.ParameterMap.ToExpando();
+            }
+
+            return dProp;
+        }
+
+        internal static ExpandoObject ToExpando(this ConnectorDynamicSchema dynamicSchema)
+        {
+            dynamic dSchema = new ExpandoObject();
+
+            dSchema.OperationId = dynamicSchema.OperationId;
+
+            if (!string.IsNullOrEmpty(dynamicSchema.ValuePath))
+            {
+                dSchema.ValuePath = dynamicSchema.ValuePath;
+            }
+
+            if (dynamicSchema.ParameterMap != null)
+            {
+                dSchema.Map = dynamicSchema.ParameterMap.ToExpando();
+            }
+
+            return dSchema;
+        }
+
+        internal static ExpandoObject ToExpando(this ConnectorDynamicValue dynamicValue)
+        {
+            dynamic dValue = new ExpandoObject();
+
+            dValue.OperationId = dynamicValue.OperationId;
+
+            if (!string.IsNullOrEmpty(dynamicValue.ValuePath))
+            {
+                dValue.ValuePath = dynamicValue.ValuePath;
+            }
+
+            if (!string.IsNullOrEmpty(dynamicValue.ValueTitle))
+            {
+                dValue.ValueTitle = dynamicValue.ValueTitle;
+            }
+
+            if (!string.IsNullOrEmpty(dynamicValue.ValueCollection))
+            {
+                dValue.ValueCollection = dynamicValue.ValueCollection;
+            }
+
+            if (dynamicValue.ParameterMap != null)
+            {
+                dValue.Map = dynamicValue.ParameterMap.ToExpando();
+            }
+
+            return dValue;
+        }
+
+        internal static ExpandoObject ToExpando(this Dictionary<string, IConnectorExtensionValue> paramMap)
+        {
+            IDictionary<string, object> dMap = new ExpandoObject() as IDictionary<string, object>;
+
+            foreach (var kvp in paramMap)
+            {
+                if (kvp.Value is StaticConnectorExtensionValue scev)
+                {
+                    dMap[kvp.Key] = GetStaticExt(scev.Value.ToExpression(), scev.Value.Type._type.ToString());
+                }
+                else if (kvp.Value is DynamicConnectorExtensionValue dcev)
+                {
+                    dMap[kvp.Key] = GetDynamicExt(dcev.Reference);
+                }
+            }
+
+            return (dynamic)dMap;
+        }
+
+        internal static ExpandoObject GetStaticExt(string value, string type)
+        {
+            dynamic s = new ExpandoObject();
+
+            s.Value = value;
+            s.Type = type;
+
+            return s;
+        }
+
+        internal static ExpandoObject GetDynamicExt(string @ref)
+        {
+            dynamic s = new ExpandoObject();
+
+            s.Reference = @ref;
+
+            return s;
         }
     }
 }

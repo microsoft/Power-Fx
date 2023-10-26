@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Hodnota dátumu, pre ktorú sa vypočíta číslo týždňa ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Vráti dátum upravený o určitý počet mesiacov. Deň v mesiaci zostáva rovnaký, je však obmedzený počtom dní v novom mesiaci.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>dátum</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>mesiace</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Hodnota dátumu, ktorá sa má upraviť o zadaný počet mesiacov.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Počet mesiacov, o ktoré sa má zmeniť dátum. Kladná hodnota poskytne dátum v budúcnosti, záporná hodnota dátum v minulosti a nula mesiac nezmení.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Vráti posledný deň mesiaca pre zadaný dátum upravený o určitý počet mesiacov.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>dátum</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>mesiace</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Hodnota dátumu, ktorá sa má upraviť o zadaný počet mesiacov.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Počet mesiacov, o ktoré sa má zmeniť dátum. Kladná hodnota poskytne dátum v budúcnosti, záporná hodnota dátum v minulosti a nula mesiac nezmení.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Skráti číslo zaokrúhlením smerom k zápornému nekonečnu (nadol).</value>
     
@@ -5070,6 +5110,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Nesúlad typov medzi zdrojovými a cieľovými typmi. Očakávalo sa: {0}; našlo sa: {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Vygeneruje textový reťazec JSON pre tabuľku, záznam alebo hodnotu.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>údaje</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Štruktúra údajov, ktorá sa má skonvertovať na formát JSON. Tabuľky, záznamy a primitívne hodnoty sú podporované, ľubovoľne vnorené.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>formát</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Formát, ktorý sa má použiť pri konverzii na formát JSON. Hodnota bude členom enumerácie JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Ak je táto možnosť povolená, zapisuje informácie do služby Application Insights a zaznamenáva informácie do denníka v relácii Test Studio, ktorá bude k dispozícii vo výsledkoch testov.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>správa</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>závažnosť</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>možnosti_sledovania</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Informácie, ktoré sa majú sledovať.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Úroveň závažnosti, ktorá sa má sledovať v službe Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Záznam, ktorý obsahuje vlastné údaje, ktoré sa budú sledovať v službe Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Ďalšie možnosti funkcie Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Parameter {1} funkcie {0} musí byť konštantná hodnota.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Hodnoty JSONFormat {0} a {1} sa nedajú použiť spoločne.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Hodnota odovzdaná funkcii JSON obsahuje médium a nie je predvolene podporovaná. Ak chcete povoliť serializáciu hodnôt médií vo formáte JSON, nezabudnite použiť možnosť IncludeBinaryData v parametri Format.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Funkcia JSON nemôže serializovať objekty typu {0}.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Funkcia JSON nemôže serializovať tabuľky alebo objekty s vnorenou vlastnosťou {0} typu {1}.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Funkcia JSON nemôže serializovať binárne údaje v inom ako behaviorálnom výraze.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parameter {0} obsahuje vlastnosť typu {1}, ktorá nie je podporovaná.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Zadaný stĺpec je určený iba na čítanie a nemožno ho upravovať: {0}.</value>
     
   </data>
 </root>

@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>O valoare de tip dată pentru care se va calcula numărul săptămânii conform ISO.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Returnează o dată la care s-a modificat un număr de luni. Ziua din lună rămâne aceeași, dar este limitată la numărul de zile din noua lună.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>dată</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>luni</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>O valoare de dată care urmează a fi modificată cu un număr specificat de luni.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Numărul de luni cu care se modifică data. O valoare pozitivă returnează o dată viitoare, o valoare negativă o dată trecută, iar zero nu va schimba luna.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Returnează ultima zi din luna datei specificate, ajustată cu un număr de luni.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>dată</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>luni</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>O valoare de dată care urmează a fi modificată cu un număr specificat de luni.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Numărul de luni cu care se modifică data. O valoare pozitivă returnează o dată viitoare, o valoare negativă o dată trecută, iar zero nu va schimba luna.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Trunchiază „numărul” rotunjindu-l spre infinit negativ.</value>
     
@@ -5070,6 +5110,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Nepotrivire între tipurile sursă și țintă. Așteptat {0}; găsit {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Generează un șir text JSON pentru un tabel, o înregistrare sau o valoare.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>date</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Structura de date care se va converti la JSON. Tabelele, înregistrările și valorile primitive sunt acceptate, imbricate arbitrar.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Formatul de utilizat în conversia JSON. Valoarea va fi un membru al enumerării JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Înregistrează informații în Application Insights atunci când este activată și se conectează la o sesiune Test Studio care va fi disponibilă în rezultatele testului.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>mesaj</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>severitate</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>înregistrare_particularizată</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Informațiile de urmărit.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Nivelul de severitate care să fie urmărit cu Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>O înregistrare care conține date particularizate care vor fi urmărite în Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Opțiuni suplimentare pentru funcția Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Parametrul „{1}” pentru funcția {0} trebuie să fie o valoare constantă.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Valorile JSONFormat „{0}” și „{1}” nu pot fi utilizate împreună.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Valoarea transmisă funcției JSON are conținut media și nu este acceptată în mod implicit. Pentru a permite serializarea JSON a valorilor media, asigurați-vă că utilizați opțiunea IncludeBinaryData în parametrul „format”.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Funcția JSON nu poate serializa obiectele de tipul „{0}”.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Funcția JSON nu poate serializa tabelele/obiectele cu o proprietate imbricată numită „{0}” de tip „{1}”.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Funcția JSON nu poate serializa datele binare într-o expresie necomportamentală.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parametrul {0} conține o proprietate de tip {1} care nu este acceptată.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Coloana specificată este doar în citire și nu poate fi modificată. {0}.</value>
     
   </data>
 </root>

@@ -55,6 +55,18 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 {
                     LanguageConstants.MatchEnumString,
                     $"%s[{string.Join(", ", BuiltInEnums.MatchEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
+                },
+                {
+                    LanguageConstants.JSONFormatEnumString,
+                    "%s[Compact:\"\", IndentFour:\"4\", IgnoreBinaryData:\"G\", IncludeBinaryData:\"B\", IgnoreUnsupportedTypes:\"I\"]"
+                },
+                { 
+                    LanguageConstants.TraceSeverityEnumString,
+                    $"%n[{string.Join(", ", BuiltInEnums.TraceSeverityEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}: {pair.Value.Object}"))}]" 
+                },
+                {
+                    LanguageConstants.TraceOptionsEnumString,
+                    $"%s[{string.Join(", ", BuiltInEnums.TraceOptionsEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
                 }
             };
         #endregion

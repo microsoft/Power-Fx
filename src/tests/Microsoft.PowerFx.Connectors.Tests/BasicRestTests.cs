@@ -41,8 +41,8 @@ namespace Microsoft.PowerFx.Tests
 
         [Theory]
         [InlineData(1, @"Test.GetKey(""abc"")", "GET http://localhost:5000/Keys?keyName=abc")]
-        [InlineData(2, @"Test.GetWeather3b(4, 8, 10, { i : 5 })", "GET http://localhost:5000/weather3b?i=5&ir=4&kr=10\r\n jr: 8")]
-        [InlineData(3, @"Test.GetWeather3b(4, 8, 10, { i : 7, j : 9, k : 11 })", "GET http://localhost:5000/weather3b?i=7&ir=4&k=11&kr=10\r\n j: 9\r\n jr: 8")]
+        [InlineData(2, @"Test.GetWeather3b(4, 8, 10, { i : 5 })", "GET http://localhost:5000/weather3b?i=5&ir=4&kr=8\r\n jr: 10")]
+        [InlineData(3, @"Test.GetWeather3b(4, 8, 10, { i : 7, j : 9, k : 11 })", "GET http://localhost:5000/weather3b?i=7&ir=4&k=11&kr=8\r\n j: 9\r\n jr: 10")]
         [InlineData(4, @"Test.GetWeatherWithHeader()", "GET http://localhost:5000/weather/header")]
         [InlineData(5, @"Test.GetWeatherWithHeader({ id : 11 })", "GET http://localhost:5000/weather/header\r\n id: 11")]
         [InlineData(6, @"Test.GetWeatherWithHeader2()", "GET http://localhost:5000/weather/header2")]

@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
                 else if (param.Schema.Default != null)
                 {
-                    if (OpenApiExtensions.TryGetOpenApiValue(param.Schema.Default, out FormulaValue defaultValue))
+                    if (OpenApiExtensions.TryGetOpenApiValue(param.Schema.Default, null, out FormulaValue defaultValue))
                     {
                         bodyParts.Add(param.Name, (param.Schema, defaultValue));
                     }
@@ -138,13 +138,10 @@ namespace Microsoft.PowerFx.Connectors
 
             Dictionary<string, FormulaValue> map = new (StringComparer.OrdinalIgnoreCase);
 
-            // Seed with default values. This will get over written if provided. 
+            // Seed with default values. This will get overwritten if provided. 
             foreach (KeyValuePair<string, (bool required, FormulaValue fValue, DType dType)> kv in _function._internals.ParameterDefaultValues)
             {
-                if (kv.Value.required)
-                {
-                    map[kv.Key] = kv.Value.fValue;
-                }
+                map[kv.Key] = kv.Value.fValue;
             }
 
             foreach (ConnectorParameter param in _function.HiddenRequiredParameters)
@@ -242,9 +239,19 @@ namespace Microsoft.PowerFx.Connectors
                         lst.Remove(field1);
                         lst.Add(field2);
                     }
+                    else if (field1.Value is BlankValue)
+                    {
+                        lst.Remove(field1);
+                        lst.Add(field2);
+                    }
+                    else if (field2.Value is BlankValue)
+                    {
+                        lst.Remove(field2);
+                        lst.Add(field1);
+                    }
                     else
                     {
-                        throw new ArgumentException($"Cannot merge {field1.Name} of type {field1.Value.GetType().Name} with {field2.Name} of type {field2.Value.GetType().Name}");
+                        throw new ArgumentException($"Cannot merge '{field1.Name}' of type {field1.Value.GetType().Name} with '{field2.Name}' of type {field2.Value.GetType().Name}");
                     }
                 }
             }

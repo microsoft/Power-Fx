@@ -23,6 +23,10 @@ namespace Microsoft.PowerFx.Core.App.Controls
 
         IEnumerable<IExternalControlProperty> ExpandoProperties { get; }
 
+        bool HasPropsInferringTypeFromPrimaryInProperty { get; }
+
+        IEnumerable<IExternalControlProperty> PropsInferringTypeFromPrimaryInProperty { get; }
+
         string ThisItemInputInvariantName { get; }
 
         IExternalControlProperty PrimaryOutputProperty { get; }

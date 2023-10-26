@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Päivämääräarvo, jolle ISO-viikon numero lasketaan.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Palauttaa päivämäärän mukautettuna kuukausien määrällä. Kuukauden päivä pysyy samana, mutta sitä rajoittaa uuden kuukauden päivien lukumäärä.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>päivämäärä</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>kuukautta</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Päivämääräarvo, jota oikaistaan määritetyllä kuukausien määrällä.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Kuukausien lukumäärä, joihin mennessä päivämäärää muutetaan. Positiivinen arvo antaa tulevan päivämäärän, negatiivinen arvo menneen päivämäärän, ja nolla ei muuta kuukautta.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Palauttaa kuukauden viimeisen päivän määritettynä päivänä, korjattuna kuukausien määrällä.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>päivämäärä</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>kuukautta</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Päivämääräarvo, jota oikaistaan määritetyllä kuukausien määrällä.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Kuukausien lukumäärä, joihin mennessä päivämäärää muutetaan. Positiivinen arvo antaa tulevan päivämäärän, negatiivinen arvo menneen päivämäärän, ja nolla ei muuta kuukautta.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Katkaisee luvun pyöristämällä negatiivista ääretöntä kohti.</value>
     
@@ -5070,6 +5110,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Lähteen ja kohdetyyppien välinen tyyppiristiriita. Odotettu {0}; Löytyi {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Muodostaa JSON-tekstimerkkijonon taulukolle, tietueelle tai arvolle.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>tiedot</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>JSON-muotoon muunnettava tietorakenne. Taulukoita, tietueita ja primitiiviarvoja tuetaan, kun ne ovat mielivaltaisesti sisäkkäin.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>muoto</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON-muunnoksessa käytettävä muoto. Arvo on JSONFormat-luetteloinnin jäsen.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Kirjaa tiedot Application Insightsiin, kun ominaisuus on käytössä, ja kirjaa Testi Studio -istuntoon, joka on käytettävissä testituloksissa.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>sanoma</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>vakavuusaste</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>mukautettu_tietue</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Jäljitettävät tiedot.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Vakavuustaso, joka jäljitetään Application Insightsiin.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Tietue, joka sisältää mukautetut tiedot, jotka jäljitetään Application Insightsissä.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Trace-toiminnon lisäasetukset.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Funktion {0} parametrilla {1} on oltava vakioarvo.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormat-arvoja {0} ja {1} ei voi käyttää yhdessä.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>JSON-funktiolle välitetty arvo sisältää mediasisältöä, eikä sitä tueta oletusarvon mukaa. Jos haluat sallia mediasisältöarvojen JSON-sarjoittamisen, varmista, että käytät IncludeBinaryData-asetusta format-parametrissa.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON-funktio ei voi sarjoittaa objekteja, joiden tyyppi on {0}.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON-funktio ei voi sarjoittaa taulukoita tai objekteja, joilla on sisäkkäinen ominaisuus {0}, jonka tyyppi on {1}.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON-toiminto ei voi sarjallistaa binaaritietoja ei-käyttäytymisen lausekkeessa.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parametri {0} sisältää tyypin {1} ominaisuuden, jota ei tueta.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Määritetty sarake on vain luku -muotoa, eikä sitä voi muokata: {0}.</value>
     
   </data>
 </root>

@@ -239,7 +239,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Now execute it...
             var engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("AzureBlobStorage", client, console: _output)); 
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("AzureBlobStorage", client));
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response.json");
 
             var result = await engine.EvalAsync(@"AzureBlobStorage.CreateFile(""container"", ""bora4.txt"", ""abc"").Size", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
@@ -260,11 +260,12 @@ namespace Microsoft.PowerFx.Tests
  authority: {host}
  Authorization: Bearer eyJ0eX...
  path: /invoke
+ ReadFileMetadataFromServer: True
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
  x-ms-client-session-id: ccccbff3-9d2c-44b2-bee6-cf24aab10b7e
  x-ms-request-method: POST
- x-ms-request-url: /apim/azureblob/3a3239ba9a2648788a83f5172d3d4ec5/datasets/default/files?folderPath=container&name=bora4.txt
+ x-ms-request-url: /apim/azureblob/3a3239ba9a2648788a83f5172d3d4ec5/datasets/default/files?folderPath=container&name=bora4.txt&queryParametersSingleEncoded=True
  x-ms-user-agent: PowerFx/{version}
  [content-header] Content-Type: text/plain; charset=utf-8
  [body] abc
@@ -311,7 +312,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(fv is StringValue);
 
             StringValue sv = (StringValue)fv;
-            Assert.Equal("container", sv.Value);            
+            Assert.Equal("container", sv.Value);
         }
 
         [Fact]
@@ -366,7 +367,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 Assert.DoesNotContain(check.Errors, d => d.Message == TestExtensions.GetErrBehaviorPropertyExpectedMessage());
             }
-            
+
             var result = engine.Suggest(check, expr.Length);
 
             var overload = result.FunctionOverloads.Single();
@@ -630,7 +631,7 @@ namespace Microsoft.PowerFx.Tests
             };
 
             IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc);
-            
+
             RecalcEngine engine = new RecalcEngine(config);
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
 
@@ -648,7 +649,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
  x-ms-request-method: GET
- x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/v2/Mail
+ x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/v2/Mail?folderPath=Inbox&importance=Any&fetchOnlyWithAttachment=False&fetchOnlyUnread=True&fetchOnlyFlagged=False&includeAttachments=False&top=10
  x-ms-user-agent: PowerFx/{version}
 ";
 
@@ -678,10 +679,10 @@ namespace Microsoft.PowerFx.Tests
 
             RecalcEngine engine = new RecalcEngine(config);
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
-            
+
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook V4CalendarPostItem.json");
             FormulaValue result = await engine.EvalAsync(@"Office365Outlook.V4CalendarPostItem(""Calendar"", ""Subject"", Today(), Today(), ""(UTC+01:00) Brussels, Copenhagen, Madrid, Paris"")", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
-            Assert.Equal(@"![body:s, categories:*[Value:s], createdDateTime:d, end:d, endWithTimeZone:d, iCalUId:s, id:s, importance:s, isAllDay:b, isHtml:b, isReminderOn:b, lastModifiedDateTime:d, location:s, numberOfOccurences:w, optionalAttendees:s, organizer:s, recurrence:s, recurrenceEnd:d, reminderMinutesBeforeStart:w, requiredAttendees:s, resourceAttendees:s, responseRequested:b, responseTime:d, responseType:s, selectedDaysOfWeek:N, sensitivity:s, seriesMasterId:s, showAs:s, start:d, startWithTimeZone:d, subject:s, timeZone:s, webLink:s]", result.Type._type.ToString());
+            Assert.Equal(@"![body:s, categories:*[Value:s], createdDateTime:d, end:d, endWithTimeZone:d, iCalUId:s, id:s, importance:s, isAllDay:b, isHtml:b, isReminderOn:b, lastModifiedDateTime:d, location:s, numberOfOccurences:w, optionalAttendees:s, organizer:s, recurrence:s, recurrenceEnd:D, reminderMinutesBeforeStart:w, requiredAttendees:s, resourceAttendees:s, responseRequested:b, responseTime:d, responseType:s, selectedDaysOfWeek:N, sensitivity:s, seriesMasterId:s, showAs:s, start:d, startWithTimeZone:d, subject:s, timeZone:s, webLink:s]", result.Type._type.ToString());
 
             var actual = testConnector._log.ToString();
             var today = DateTime.UtcNow.Date.ToString("O");
@@ -813,7 +814,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
             };
-            
+
             IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc);
 
             RecalcEngine engine = new RecalcEngine(config);
@@ -1023,6 +1024,54 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public async Task BingMaps_GetRouteV3()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Bing_Maps.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net",   // endpoint
+                    "b60ed9ea-c17c-e39a-8682-e33a20d51e14",          // environment
+                    "9ab2342eaecc4800a5c327290abf4a1f",              // connectionId
+                    () => "eyJ0eXAiOiJKV1Qi....",
+                    httpClient)
+            {
+                SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
+            };
+
+            IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("BingMaps", apiDoc);
+            ConnectorFunction getRouteV3 = functions.First(f => f.Name == "GetRouteV3");
+
+            Assert.Equal("![distanceUnit:s, durationUnit:s, routeLegs:![actualEnd:![coordinates:![combined:s, latitude:w, longitude:w], type:s], actualStart:![coordinates:![combined:s, latitude:w, longitude:w], type:s], description:s, endLocation:![address:![countryRegion:s, formattedAddress:s], confidence:s, entityType:s, name:s], routeRegion:s, startLocation:![address:![countryRegion:s, formattedAddress:s], confidence:s, entityType:s, name:s]], trafficCongestion:s, trafficDataUsed:s, travelDistance:w, travelDuration:w, travelDurationTraffic:w]", getRouteV3.ReturnType._type.ToString());
+
+            RecalcEngine engine = new RecalcEngine(config);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("BingMaps", client));
+
+            testConnector.SetResponseFromFile(@"Responses\Bing Maps GetRouteV3.json");
+            FormulaValue result = await engine.EvalAsync(@"BingMaps.GetRouteV3(""Driving"", ""47,396846, -0,499967"", ""47,395142, -0,480142"").travelDuration", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            Assert.Equal(260m, (result as DecimalValue).Value);
+
+            var actual = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+            var expected = @$"POST https://b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net/invoke
+ authority: b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJKV1Qi....
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
+ x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/bingmaps/9ab2342eaecc4800a5c327290abf4a1f/V3/REST/V1/Routes/Driving?wp.0=47%2c396846%2c+-0%2c499967&wp.1=47%2c395142%2c+-0%2c480142&avoid_highways=False&avoid_tolls=False&avoid_ferry=False&avoid_minimizeHighways=False&avoid_minimizeTolls=False&avoid_borderCrossing=False
+ x-ms-user-agent: PowerFx/{version}
+";
+
+            AssertEqual(expected, actual);
+        }
+
+        [Fact]
         public async Task SQL_GetStoredProcs()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
@@ -1122,7 +1171,7 @@ namespace Microsoft.PowerFx.Tests
 
         [Fact]
         public async Task SharePointOnlineTest()
-        {            
+        {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SharePoint.json");
             OpenApiDocument apiDoc = testConnector._apiDocument;
             PowerFxConfig config = new PowerFxConfig();
@@ -1288,7 +1337,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
- x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/root/children?source=me
+ x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives/me/root/children?source=b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb
  x-ms-user-agent: PowerFx/{version}
 POST https://tip1-shared-002.azure-apim.net/invoke
  authority: tip1-shared-002.azure-apim.net
@@ -1298,7 +1347,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
- x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/items/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/workbook/tables?source=me
+ x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives/me/items/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/workbook/tables?source=01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO
  x-ms-user-agent: PowerFx/{version}
 POST https://tip1-shared-002.azure-apim.net/invoke
  authority: tip1-shared-002.azure-apim.net
@@ -1308,7 +1357,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
- x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/drives/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/files/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/tables/%7b00000000-000C-0000-FFFF-FFFF00000000%7d/items?source=me
+ x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/drives/me/files/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/tables/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/items?source=%7b00000000-000C-0000-FFFF-FFFF00000000%7d
  x-ms-user-agent: PowerFx/{version}
 POST https://tip1-shared-002.azure-apim.net/invoke
  authority: tip1-shared-002.azure-apim.net
@@ -1318,10 +1367,55 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
- x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/drives/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/files/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/tables/%7b00000000-000C-0000-FFFF-FFFF00000000%7d/items/f830UPeAXoI?source=me&idColumn=__PowerAppsId__
+ x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/drives/me/files/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/tables/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/items/%257b00000000-000C-0000-FFFF-FFFF00000000%257d?source=__PowerAppsId__&idColumn=f830UPeAXoI
  x-ms-user-agent: PowerFx/{version}
 ";
             Assert.Equal(expected, testConnector._log.ToString());
+        }
+
+        [Fact]
+        public async Task DataverseTest_WithComplexMapping()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Dataverse.json");
+            using var httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "b29c41cf-173b-e469-830b-4f00163d296b" /* environment Id */, "82728ddb6bfa461ea3e50e17da8ab164" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJ...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
+            ConnectorFunction performBoundActionWithOrganization = functions.First(f => f.Name == "PerformBoundActionWithOrganization");
+
+            testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_3.json");
+            ConnectorParameters parameters = await performBoundActionWithOrganization.GetParameterSuggestionsAsync(
+                new NamedValue[]
+                {
+                    new NamedValue("organization", FormulaValue.New("https://aurorabapenv9984a.crm10.dynamics.com/")),
+                    new NamedValue("entityName", FormulaValue.New("bots")),
+                },
+                performBoundActionWithOrganization.RequiredParameters[2], // actionName
+                runtimeContext,
+                CancellationToken.None).ConfigureAwait(false);
+
+            // Received 8 suggestions
+            Assert.Equal(8, parameters.ParametersWithSuggestions[2].Suggestions.Count());
+
+            string actual = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+            string expected = @$"POST https://tip1002-002.azure-apihub.net/invoke
+ authority: tip1002-002.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJ...
+ organization: https://aurorabapenv9984a.crm10.dynamics.com/
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b29c41cf-173b-e469-830b-4f00163d296b
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/commondataserviceforapps/82728ddb6bfa461ea3e50e17da8ab164/v1.0/$metadata.json/GetActionListEnum/GetBoundActionsWithOrganization
+ x-ms-user-agent: PowerFx/{version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""entityName"":""bots""}}
+";
+
+            Assert.Equal(expected, actual);
         }
     }
 }

@@ -11,7 +11,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -980,7 +979,7 @@ namespace Microsoft.PowerFx.Functions
                     maxLenChars = sourceLen - matchLen + replacementLen;
                 }
             }
-            
+
             // If not match found, will still be source length 
             return Math.Max(sourceLen, maxLenChars);
         }

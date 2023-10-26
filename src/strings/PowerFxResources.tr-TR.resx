@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>ISO hafta numarasının hesaplanacağı tarih değeri.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Ay sayısına göre ayarlanmış bir tarih döndürür. Ayın günü aynı kalır ancak yeni ay içindeki gün sayısıyla sınırlı olur.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>tarih</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>ay</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Belirtilen ay sayısına göre ayarlanacak tarih değeri.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Tarihin değiştirileceği ay sayısı. Pozitif değer gelecek bir tarihi, negatif değer geçmiş bir tarihi verir ve sıfır değeri ayı değiştirmez.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Belirli bir tarih için ayın son gününü, ay sayısına göre ayarlanmış olarak döndürür.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>tarih</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>ay</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Belirtilen ay sayısına göre ayarlanacak tarih değeri.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Tarihin değiştirileceği ay sayısı. Pozitif değer gelecek bir tarihi, negatif değer geçmiş bir tarihi verir ve sıfır değeri ayı değiştirmez.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Eksi sonsuza doğru yuvarlayarak "sayıyı" kısaltır.</value>
     
@@ -5070,6 +5110,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Kaynak ve hedef türler arasında tür uyuşmazlığı. {0} bekleniyordu; {1} bulundu.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Bir tablo, kayıt veya değer için bir JSON metin dizesi oluşturur.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>veri</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>JSON'ye dönüştürülecek veri yapısı. Tablolar, kayıtlar ve temel değerler desteklenir, rastgele olarak iç içe geçmiştir.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>biçim</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON dönüştürmede kullanılacak biçim. Değer, JSONFormat numaralandırmasının bir üyesi olacaktır.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Etkinleştirildiğinde, hem Application Insights'ta bilgileri hem de test sonuçlarında gösterilen bir Test Studio oturumunu günlüğe kaydeder.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>ileti</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>önem derecesi</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>izlemeseçenekleri</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>İzlenecek bilgiler.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Application Insights'a izlenecek önem düzeyi.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Application Insights'a izlenecek özel verileri içeren bir kayıt.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Trace işlevine ek seçenekler.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>{0} işlevinin '{1}' parametresi sabit bir değer olmalıdır.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>'{0}' ve '{1}' JSONFormat değerleri birlikte kullanılamaz.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>JSON işlevine geçirilen değer medya içeriyor ve varsayılan olarak desteklenmiyor. Medya değerlerinin JSON serileştirmesine izin vermek için, 'format' parametresinde IncludeBinaryData seçeneğini kullandığınızdan emin olun.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON işlevi, '{0}' türündeki nesneleri seri hale getiremiyor.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON işlevi, '{1}' türündeki '{0}' adlı iç içe geçmiş bir özelliğe sahip tabloları/nesneleri seri hale getiremiyor.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON işlevi, ikili verileri davranışsal olmayan ifadede serileştiremez.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>{0} parametresi, desteklenmeyen {1} türünde bir özellik içeriyor.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Belirtilen sütun salt okunur ve değiştirilemez: {0}.</value>
     
   </data>
 </root>

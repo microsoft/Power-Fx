@@ -1,0 +1,20 @@
+// (UTC+01:00) Brussels, Copenhagen, Madrid, Paris
+#SETUP: TimeZoneInfo("Romance Standard Time")
+#SETUP: EnableJsonFunctions
+
+>> JSON(Date(2022,8,7))
+"""2022-08-07"""
+
+>> JSON(DateTimeValue("1970-01-01T00:00:00Z"))
+"""1970-01-01T00:00:00.000Z"""
+
+// Midnight local time in Pacific Time is 11PM the previous day in UTC
+>> JSON(DateTimeValue("1970-01-01T00:00:00"))
+"""1969-12-31T23:00:00.000Z"""
+
+// Independent from local timezone
+>> With({dt: DateTime(1987,6,5,4,30,0)}, JSON(DateAdd(dt,-TimeZoneOffset(dt),TimeUnit.Minutes), JSONFormat.IndentFour))
+"""1987-06-05T04:30:00.000Z"""
+
+>> JSON(DateTime(2022, 06, 28, 11, 05, 44))
+"""2022-06-28T09:05:44.000Z"""

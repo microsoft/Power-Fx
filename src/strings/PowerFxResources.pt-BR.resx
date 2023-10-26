@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Um valor de data para o qual o número da semana ISO será calculado.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>Retorna uma data ajustada por um número de meses. O dia do mês permanece igual, mas é limitado pelo número de dias do novo mês.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>meses</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>Valor de data a ser ajustado pelo número de meses especificado.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>Número de meses para alterar a data. Um valor positivo gera uma data futura, um valor negativo uma data no passado e zero não alterará o mês.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>Retorna o último dia do mês para uma data especificada, ajustada por um número de meses.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>meses</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>Valor de data a ser ajustado pelo número de meses especificado.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;Número de meses para alterar a data. Um valor positivo gera uma data futura, um valor negativo uma data no passado e zero não alterará o mês.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Trunca o 'número' por arredondamento para infinidade negativa.</value>
     
@@ -5070,6 +5110,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Incompatibilidade entre os tipos de origem e de destino. Esperado {0}; Encontrado {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Gera uma cadeia de caracteres de texto JSON para uma tabela, um registro ou um valor.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>dados</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>A estrutura de dados a ser convertida em JSON. Há suporte para tabelas, registros e valores primitivos, arbitrariamente aninhados.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>formato</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>O formato a ser usado na conversão JSON. O valor será um membro da enumeração JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Registra informações para o Application Insights quando habilitada e registra uma sessão do Test Studio que estará disponível nos resultados de teste.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>mensagem</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>gravidade</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>registro_personalizado</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>opções_de_rastreamento</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>As informações a serem rastreadas.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>O nível de severidade a ser rastreado para o Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Um registro que contém dados personalizados que serão rastreados para o Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Opções adicionais da função Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>O parâmetro '{1}' para a função {0} precisa ser um valor constante.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Os valores JSONFormat '{0}' e '{1}' não podem ser usados juntos.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>O valor passado para a função JSON contém mídia e por padrão não há suporte para ele. Para permitir a serialização JSON de valores de mídia, não se esqueça de usar a opção IncludeBinaryData no parâmetro 'format'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>A função JSON não pode serializar objetos do tipo '{0}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>A função JSON não pode serializar tabelas/objetos com uma propriedade aninhada chamada '{0}' do tipo '{1}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>A função JSON não pode serializar dados binários em expressão não comportamental.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>O parâmetro {0} contém uma propriedade do tipo {1} que não tem suporte.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>A coluna especificada é somente leitura e não pode ser modificada: {0}.</value>
     
   </data>
 </root>

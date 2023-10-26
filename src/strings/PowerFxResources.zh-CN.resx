@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>将针对其计算 ISO 周编号的日期值。</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>返回按月数调整的日期。月中的日期仍然相同，但因新月份中的天数而受限制。</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>日期</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>月</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>要按指定的月数调整的日期值。</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>日期的更改月数。正值产生将来日期，负值产生过去日期，零将不会更改该月。</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>返回指定日期中月份的最后一天(已按月数进行了调整)。</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>日期</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>月</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>要按指定的月数调整的日期值。</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;日期的更改月数。正值产生将来日期，负值产生过去日期，零将不会更改该月。</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>通过向负无穷大舍入来截断“数字”。</value>
     
@@ -5070,6 +5110,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>源类型与目标类型不匹配。需要 {0}；找到 {1}。</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>生成表、记录或值的 JSON 文本字符串。</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>数据</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>要转换为 JSON 的数据结构。表、记录和基元值受支持，可任意嵌套。</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>格式</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON 转换中使用的格式。该值将是 JSONFormat 枚举的成员。</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>启用后将信息记录到 Application Insights，并记录到将在测试结果中显示的 Test Studio 会话中。</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>消息</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>严重性</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>要跟踪的信息。</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>要跟踪到 Application Insights 的严重性级别。</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>包含将跟踪到 Application Insights 的自定义数据的记录。</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Trace 功能的其他选项。</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>{0} 函数的“{1}”参数必须是常数值。</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormat 值“{0}”和“{1}”不能同时使用。</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>传递给 JSON 函数的值包含媒体，且默认不受支持。要允许媒体值的 JSON 序列化，请确保使用 "format" 参数中的 IncludeBinaryData 选项。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON 函数无法序列化“{0}”类型的对象。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON 函数无法使用类型“{1}”的嵌套属性“{0}”来序列化表/对象。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON 函数无法对非行为表达式中的二进制数据进行序列化。</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>参数 {0} 包含类型为 {1} 的属性，而该属性不受支持。</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>指定列为只读状态，无法修改: {0}。</value>
     
   </data>
 </root>

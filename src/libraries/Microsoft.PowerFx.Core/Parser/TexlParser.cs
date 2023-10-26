@@ -76,6 +76,12 @@ namespace Microsoft.PowerFx.Core.Parser
             _features = features;
         }
 
+        /// <summary>
+        /// Parses a script with both named formulas, user defined functions and user defined types.
+        /// </summary>
+        /// <param name="script">Script to be parsed.</param>
+        /// <param name="parserOptions">Options for parsing an expression.</param>
+        /// <returns><see cref="ParseUserDefinitionResult"/>.</returns>
         public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, ParserOptions parserOptions)
         {
             Contracts.AssertValue(parserOptions);
@@ -84,32 +90,6 @@ namespace Microsoft.PowerFx.Core.Parser
             var parser = new TexlParser(formulaTokens, flags);
 
             return parser.ParseUDFsAndNamedFormulas(script, parserOptions);
-        }
-
-        private ParseUDFsResult ParseUDFs(string script)
-        {
-            var udfs = new List<UDF>();
-
-            // <root> ::= (<udf> ';')*
-            while (_curs.TokCur.Kind != TokKind.Eof)
-            {
-                ParseTrivia();
-                if (!ParseUDF(udfs))
-                {
-                    return new ParseUDFsResult(udfs, _errors);
-                }
-
-                ParseTrivia();
-
-                if (TokEat(TokKind.Semicolon) == null)
-                {
-                    break;
-                }
-
-                ParseTrivia();
-            }
-
-            return new ParseUDFsResult(udfs, _errors);
         }
 
         private bool ParseUDFArgs(out HashSet<UDFArg> args)
@@ -127,15 +107,19 @@ namespace Microsoft.PowerFx.Core.Parser
                 ParseTrivia();
                 var varIdent = TokEat(TokKind.Ident);
                 ParseTrivia();
-                if (TokEat(TokKind.Colon, addError: false) == null)
+                var colonToken = TokEat(TokKind.Colon, addError: false);
+                if (colonToken == null)
                 {
                     CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingParamType);
 
-                    // If the result was an error, keep moving cursor until end of expression
-                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                    if (varIdent != null)
                     {
-                        _curs.TokMove();
+                        // Add incomplete UDFArgs (colon & type are missing) as well, these are needed for intellisense.
+                        args.Add(new UDFArg(varIdent.As<IdentToken>(), typeIdent: null, colonToken: null, argIndex));
                     }
+
+                    // If the result was an error, keep moving cursor until end of expression
+                    MoveToNextUserDefinition();
 
                     return false;
                 }
@@ -147,11 +131,11 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingParamType);
 
+                    // Add incomplete UDFArgs (type is mising) as well, these are needed for intellisense.
+                    args.Add(new UDFArg(varIdent.As<IdentToken>(), typeIdent: null, colonToken, argIndex));
+
                     // If the result was an error, keep moving cursor until end of expression
-                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
-                    {
-                        _curs.TokMove();
-                    }
+                    MoveToNextUserDefinition();
 
                     return false;
                 }
@@ -159,26 +143,20 @@ namespace Microsoft.PowerFx.Core.Parser
                 if (varIdent == null)
                 {
                     // If the result was an error, keep moving cursor until end of expression
-                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
-                    {
-                        _curs.TokMove();
-                    }
+                    MoveToNextUserDefinition();
 
                     return false;
                 }
 
                 ParseTrivia();
 
-                args.Add(new UDFArg(varIdent.As<IdentToken>(), varType.As<IdentToken>(), argIndex++));
+                args.Add(new UDFArg(varIdent.As<IdentToken>(), varType.As<IdentToken>(), colonToken, argIndex++));
                 if (_curs.TokCur.Kind != TokKind.ParenClose && _curs.TokCur.Kind != TokKind.Comma)
                 {
                     ErrorTid(_curs.TokCur, TokKind.Comma);
 
                     // If the result was an error, keep moving cursor until end of expression
-                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
-                    {
-                        _curs.TokMove();
-                    }
+                    MoveToNextUserDefinition();
 
                     return false;
                 }
@@ -192,6 +170,22 @@ namespace Microsoft.PowerFx.Core.Parser
 
             TokEat(TokKind.ParenClose);
             return true;
+        }
+
+        private void MoveToNextUserDefinition()
+        {
+            // Move to semicolon
+            while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+            {
+                _curs.TokMove();
+            }
+
+            if (_curs.TidCur == TokKind.Semicolon)
+            {
+                // Consume semicolon and any comments
+                _curs.TokMove();
+                ParseTrivia();
+            }
         }
 
         private TypeLiteralNode ParseTypeLiteral()
@@ -209,76 +203,6 @@ namespace Microsoft.PowerFx.Core.Parser
             sourceList.Add(ParseTrivia());
             TokEat(TokKind.ParenClose);
             return new TypeLiteralNode(ref _idNext, parenOpen, expr, new SourceList(sourceList));
-        }
-
-        private bool ParseUDF(List<UDF> udfs)
-        {
-            // <udf> ::= IDENT '(' <args> ')' ':' IDENT ('=' EXP | <bracs-exp>)
-
-            ParseTrivia();
-            var ident = TokEat(TokKind.Ident);
-            if (ident == null)
-            {
-                return false;
-            }
-
-            ParseTrivia();
-
-            if (!ParseUDFArgs(out HashSet<UDFArg> args))
-            {
-                return false;
-            }
-
-            ParseTrivia();
-
-            if (TokEat(TokKind.Colon) == null)
-            {
-                return false;
-            }
-
-            ParseTrivia();
-
-            var returnType = TokEat(TokKind.Ident);
-            if (returnType == null)
-            {
-                return false;
-            }
-
-            ParseTrivia();
-
-            // <bracs-exp> ::= '{' (((<EXP> ';')+ <EXP>) | <EXP>) (';')? '}'
-
-            if (_curs.TidCur == TokKind.CurlyOpen)
-            {
-                _curs.TokMove();
-                _hasSemicolon = false;
-                ParseTrivia();
-                _flagsMode.Push(Flags.EnableExpressionChaining);
-                var exp_result = ParseExpr(Precedence.None);
-                _flagsMode.Pop();
-                ParseTrivia();
-                if (TokEat(TokKind.CurlyClose) == null)
-                {
-                    return false;
-                }
-
-                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, (_flagsMode.Peek() & Flags.NumberIsFloat) != 0));
-
-                return true;
-            }
-            else if (_curs.TidCur == TokKind.Equ)
-            {
-                _curs.TokMove();
-                ParseTrivia();
-                var result = ParseExpr(Precedence.None);
-                ParseTrivia();
-                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, (_flagsMode.Peek() & Flags.NumberIsFloat) != 0));
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
 
         private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, ParserOptions parserOptions)
@@ -356,12 +280,14 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     if (!ParseUDFArgs(out HashSet<UDFArg> args))
                     {
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken: null, returnType: null, new HashSet<UDFArg>(args), body: null, _hasSemicolon, parserOptions.NumberIsFloat, isValid: false));
                         continue;
                     }
 
                     ParseTrivia();
 
-                    if (TokEat(TokKind.Colon, addError: false) == null)
+                    var colonToken = TokEat(TokKind.Colon, addError: false);
+                    if (colonToken == null)
                     {
                         CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingReturnType);
                         _curs.TokMove();
@@ -374,13 +300,16 @@ namespace Microsoft.PowerFx.Core.Parser
                     if (returnType == null)
                     {
                         CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingReturnType);
-                        break;
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType: null, new HashSet<UDFArg>(args), body: null, _hasSemicolon, parserOptions.NumberIsFloat, isValid: false));
+
+                        // Return type not found, move to next user definition
+                        MoveToNextUserDefinition();
+                        continue;
                     }
 
                     // <bracs-exp> ::= '{' (((<EXP> ';')+ <EXP>) | <EXP>) (';')? '}'
 
                     ParseTrivia();
-
                     if (_curs.TidCur == TokKind.CurlyOpen)
                     {
                         _curs.TokMove();
@@ -395,7 +324,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
                         }
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken,  returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: true));
                     }
                     else if (_curs.TidCur == TokKind.Equ)
                     {
@@ -411,11 +340,12 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
                         }
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, parserOptions.NumberIsFloat));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, parserOptions.NumberIsFloat, isValid: true));
                     }
                     else
                     {
                         CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingFunctionBody);
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), body: null, false, parserOptions.NumberIsFloat, isValid: false));
                         break;
                     }
 

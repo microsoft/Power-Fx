@@ -1022,6 +1022,46 @@
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>तिथि मान जिसके लिए ISO सप्ताह संख्या की गणना की जाएगी.</value>
   </data>
+  <data name="AboutEDate" xml:space="preserve">
+    <value>कई महीनों से समायोजित तिथि लौटाता है. महीने का दिन वही रहता है लेकिन नए महीने में दिनों की संख्या से सीमित होता है.</value>
+    
+  </data>
+  <data name="EDateArg1" xml:space="preserve">
+    <value>दिनांक</value>
+    
+  </data>
+  <data name="EDateArg2" xml:space="preserve">
+    <value>महीने</value>
+    
+  </data>
+  <data name="AboutEDate_date" xml:space="preserve">
+    <value>महीनों की निर्दिष्ट संख्या के अनुसार समायोजित किया जाने वाला दिनांक मान.</value>
+          
+  </data>
+  <data name="AboutEDate_months" xml:space="preserve">
+    <value>तिथि बदलने के लिए महीनों की संख्या. एक सकारात्मक मान एक भविष्य की तारीख देता है, एक नकारात्मक मान एक पिछली तारीख देता है, और शून्य से महीना नहीं बदलेगा.</value>
+        
+  </data>
+  <data name="AboutEOMonth" xml:space="preserve">
+    <value>किसी निर्दिष्ट तिथि के लिए महीने का अंतिम दिन लौटाता है, जिसे कई महीनों के अनुसार समायोजित किया जाता है.</value>
+    
+  </data>
+  <data name="EOMonthArg1" xml:space="preserve">
+    <value>दिनांक</value>
+    
+  </data>
+  <data name="EOMonthArg2" xml:space="preserve">
+    <value>महीने</value>
+    
+  </data>
+  <data name="AboutEOMonth_date" xml:space="preserve">
+    <value>महीनों की निर्दिष्ट संख्या के अनुसार समायोजित किया जाने वाला दिनांक मान.</value>
+          
+  </data>
+  <data name="AboutEOMonth_months" xml:space="preserve">
+    <value>&gt;तिथि बदलने के लिए महीनों की संख्या. एक सकारात्मक मान एक भविष्य की तारीख देता है, एक नकारात्मक मान एक पिछली तारीख देता है, और शून्य से महीना नहीं बदलेगा.</value>
+         
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>नकारात्मक अनंत की ओर पूर्णांकन करके 'number' को कम करता है.</value>
     
@@ -5070,6 +5110,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>स्रोत और लक्ष्य प्रकार के बीच बेमेल प्रकार. अपेक्षित {0}; {1} मिला.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>तालिका, रिकॉर्ड या मान के लिए JSON पाठ स्ट्रिंग जनरेट करता है.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>डेटा</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>JSON में रूपांतरित की जाने वाली डेटा संरचना. तालिकाएँ, रिकॉर्ड्स और प्रिमिटिव मान समर्थित हैं, मनमाने ढंग से नेस्ट किए गए.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>फॉर्मेट</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON रूपांतरण में उपयोग किया जाने वाला फ़ॉर्मेट. मान JSONFormat प्रगणना का सदस्य होगा.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>सक्षम होने पर Application Insights में जानकारी लॉग करता है और Test Studio सत्र में लॉग करता है, जो परीक्षण परिणाम में उपलब्ध होगा.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>संदेश</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>तीव्रता</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>ट्रेस की जाने वाली जानकारी.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Application Insights के लिए गंभीरता स्तर का पता लगाया जाएगा.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>रिकॉर्ड, जिसमें कस्टम डेटा शामिल है, उसे Application Insights में ट्रेस किया जाएगा.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Trace फ़ंक्शन के लिए अतिरिक्त विकल्प.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>{0} फ़ंक्शन के लिए, '{1}' पैरामीटर में एक अचर मान होना चाहिए.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormat मान '{0}' और '{1}' का उपयोग एक साथ नहीं किया जा सकता.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>JSON फ़ंक्शन के लिए पास किए गए मान में मीडिया शामिल है और यह डिफ़ॉल्ट रूप से समर्थित नहीं है. मीडिया मानों के JSON क्रमबद्ध की अनुमति देने के लिए, 'फ़ॉर्मेट' पैरामीटर में IncludeBinaryData विकल्प का उपयोग करना सुनिश्चित करें.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON फ़ंक्शन, '{0}' प्रकार के ऑब्जेक्ट्स क्रमबद्ध नहीं कर सकता.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON फ़ंक्शन, '{1}' प्रकार के '{0}' नाम के नेस्ट किए गए गुण वाली तालिकाओं/ऑब्जेक्ट्स को क्रमबद्ध नहीं कर सकता.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON फ़ंक्शन गैर-व्यवहारिक अभिव्यक्ति में बाइनरी डेटा को क्रमबद्ध नहीं कर सकता है.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>पैरामीटर {0} में प्रकार {1} का एक गुण शामिल है, जो समर्थित नहीं है.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>निर्दिष्ट स्तंभ केवल पढ़ने के लिए है और संशोधित नहीं किया जा सकता: {0}.</value>
     
   </data>
 </root>
