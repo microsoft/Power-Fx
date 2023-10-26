@@ -2255,7 +2255,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 "19/23/15"
 
 >> Text(Time(0, 0, 0, 0), "hh:mm:ss.00;hh/mm/ss;hh mm ss")
-"00 00 0"
+"00 00 00"
 
 >> Text(Time(14, 32, 25, 678), "\T\:hh:mm:ss.00;\Z\:hh/mm/ss")
 "T:14:32:25.67"
@@ -2270,28 +2270,28 @@ Error({Kind:ErrorKind.InvalidArgument})
 "T:14:32:25.67"
 
 >> Text(Time(-5, 23, 15, 356), "\T\:hh:mm:ss.00;\Z\:hh/mm/ss;\K\:hh mm ss")
-"\Z\:19/23/15"
+"Z:19/23/15"
 
 >> Text(Time(0, 0, 0, 0), "\T\:hh:mm:ss.00;\Z\:hh/mm/ss;\K\:hh mm ss")
-"\K\:00 00 0"
+"K:00 00 00"
 
 >> Text(Time(14, 32, 25, 678), "hh:mm:ss.00\;hh/mm/ss")
-"14:32:25.67\;14/32/25"
+"14:32:25.67;14/32/25"
 
 >> Text(Time(-5, 23, 15, 356), "hh:mm:ss.00\;hh/mm/ss")
-"19:23:15.35\;19/23/15"
+"19:23:15.35;19/23/15"
 
 >> Text(Time(0, 0, 0, 0), "hh:mm:ss.00\;hh/mm/ss")
-"00:00:00.00\;00/00/00"
+"00:00:00.00;00/00/00"
 
 >> Text(Time(14, 32, 25, 678), "hh:mm:ss.00\;hh/mm/ss\;hh mm ss")
-"14:32:25.67\;14/32/25\;14 32 25"
+"14:32:25.67;14/32/25;14 32 25"
 
 >> Text(Time(-5, 23, 15, 356), "hh:mm:ss.00\;hh/mm/ss\;hh mm ss")
-"19:23:15.35\;19/23/15\;19 23 15"
+"19:23:15.35;19/23/15;19 23 15"
 
 >> Text(Time(0, 0, 0, 0), "hh:mm:ss.00\;hh/mm/ss\;hh mm ss")
-"00:00:00.00\;00/00/00\;00 00 00"
+"00:00:00.00;00/00/00;00 00 00"
 
 >> Text(Time(14, 32, 25, 678), "hh:mm:ss.00"";""hh/mm/ss"";""hh mm ss")
 "14:32:25.67;14/32/25;14 32 25"
@@ -2306,7 +2306,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 "1900-01-24"
 
 >> Text(-25, "yyyy-mm-dd;mm/dd/yyyy")
-"12/05/1899"
+"01/24/1900"
 
 >> Text(0, "yyyy-mm-dd;mm/dd/yyyy")
 "1899-12-30"
@@ -2315,7 +2315,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 "1900-01-24"
 
 >> Text(-25, "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
-"12/05/1899"
+"01/24/1900"
 
 >> Text(0, "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
 "December 30 1899"
@@ -2338,14 +2338,14 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(0, "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
 "1899-12-30;12/30/1899;December 30 1899"
 
->> Text(1246.234, "hh:mm:ss.00;hh/mm/ss;hh mm ss")
-"05:36:57.60"
+>> Text(1246.22265625, "hh:mm:ss.00;hh/mm/ss;hh mm ss")
+"05:20:37.50"
 
->> Text(-34.56, "hh:mm:ss.00;hh/mm/ss;hh mm ss")
-"10/33/36"
+>> Text(-34.55859375, "hh:mm:ss.00;hh/mm/ss;hh mm ss")
+"13/24/22"
 
 >> Text(0, "hh:mm:ss.00;hh/mm/ss;hh mm ss")
-"00 00 0"
+"00 00 00"
 
 >> Text(25, "yyyy-mm-dd"";""mm/dd/yyyy")
 "1900-01-24;01/24/1900"

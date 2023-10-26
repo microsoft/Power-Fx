@@ -270,7 +270,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
                 else if (formatStr[i] == '\\')
                 {
-                    if (textFormatArgs.HasNumericFmt || (i < formatStr.Length - 1 && formatStr[i + 1] == '\"'))
+                    if ((textFormatArgs.HasNumericFmt && textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat) || (i < formatStr.Length - 1 && formatStr[i + 1] == '\"'))
                     {
                         // Skip next character if seeing escaping character \.
                         i++;
@@ -297,9 +297,9 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
             }
 
-            if (lastSectionIdx != -1)
+            if (lastSectionIdx != -1 && lastSectionIdx < formatStr.Length - 1)
             {
-                textFormatArgs.Sections.Add(formatStr.Substring(lastSectionIdx + 1, formatStr.Length - lastSectionIdx - 2));
+                textFormatArgs.Sections.Add(formatStr.Substring(lastSectionIdx + 1, formatStr.Length - lastSectionIdx - 1));
             }
 
             // Each comma after the decimal point and numeric character divides the number by 1,000.
