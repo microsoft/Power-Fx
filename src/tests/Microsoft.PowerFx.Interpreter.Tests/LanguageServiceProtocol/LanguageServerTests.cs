@@ -1403,6 +1403,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             {
                 public string Expression { get; set; }
 
+                public string RawExpression { get; set; }
+
                 public string ModelId { get; set; }
             }
 
@@ -1666,19 +1668,24 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             // result has expected concat with symbols. 
             var items = response.Result.Expressions;
 
+            Assert.Single(items);
+            var expression = items[0];
+
             if (success)
             {
-                Assert.Single(items);
-                var expression = items[0];
                 Assert.Equal("my sentence: Score < 50: Score,Number", testNLHandler._log);
+
                 Assert.Equal(expectedExpr, expression.Expression);
-                Assert.Equal(TestNLHandler.ModelIdStr, expression.ModelId);
+                Assert.Null(expression.RawExpression);
             }
             else
             {
                 // Even though model returned an expression, it didn't compile, so it should be filtered out by LSP.
-                Assert.Empty(items);
+                Assert.Null(expression.Expression);
+                Assert.Equal(expectedExpr, expression.RawExpression);
             }
+
+            Assert.Equal(TestNLHandler.ModelIdStr, expression.ModelId);
         }
 
         [Fact]

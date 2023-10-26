@@ -511,21 +511,18 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             // Do a final pass where we filter out any expressions that don't compile.
             public void FinalCheck(IPowerFxScope scope, CustomNL2FxResult result)
             {
-                List<CustomNL2FxResultItem> items = new List<CustomNL2FxResultItem>();
-
                 if (result.Expressions != null)
                 {
                     foreach (var item in result.Expressions)
                     {
                         var check = scope.Check(item.Expression);
-                        if (check.IsSuccess)
+                        if (!check.IsSuccess)
                         {
-                            items.Add(item);
+                            item.RawExpression = item.Expression;
+                            item.Expression = null;
                         }
                     }
                 }
-
-                result.Expressions = items.ToArray();
             }
         }
 
