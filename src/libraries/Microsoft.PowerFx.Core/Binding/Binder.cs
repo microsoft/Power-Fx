@@ -4446,8 +4446,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
-                FirstNameNode dsNode;
-                if (maybeFunc.TryGetDataSourceNodes(node, _txb, out var dsNodes) && ((dsNode = dsNodes.FirstOrDefault()) != default(FirstNameNode)))
+                if (DataSourceNodeHelper.TryGetDataSourceNodes(node, maybeFunc, _txb, out var dsNodes) &&
+                    dsNodes.FirstOrDefault() is { } dsNode)
                 {
                     _currentScopeDsNodeId = dsNode.Id;
                 }
