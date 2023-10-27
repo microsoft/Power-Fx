@@ -467,8 +467,8 @@ namespace Microsoft.PowerFx.Core.IR
             var usesPFxV1CompatRules = binding.Features.PowerFxV1CompatibilityRules;
             if (!rightType.IsAggregate || (usesPFxV1CompatRules && rightType.Kind == DKind.ObjNull))
             {
-                if ((DType.String.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules) && (DType.String.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules) || leftType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules))) ||
-                    (rightType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules) && DType.String.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules)))
+                if ((DType.String.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules) && (DType.String.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules) || leftType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, binding.Features))) ||
+                    (rightType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, binding.Features) && DType.String.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules)))
                 {
                     return parsedBinaryOp == BinaryOp.In ? BinaryOpKind.InText : BinaryOpKind.ExactInText;
                 }

@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (!DType.Number.Accepts(otherType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
-                    if (otherType.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                    if (otherType.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, otherArg, DType.Number);
                     }

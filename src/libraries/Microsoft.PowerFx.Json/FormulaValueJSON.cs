@@ -205,7 +205,7 @@ namespace Microsoft.PowerFx.Types
                         GuaranteeRecord(record).IRContext.ResultType._type, 
                         typeUnion, 
                         useLegacyDateTimeAccepts: false, 
-                        usePowerFxV1CompatibilityRules: false /* Use more strict union rules */);
+                        features: Features.None /* Use more strict union rules */);
                 }
 
                 if (typeUnion.HasErrors)
