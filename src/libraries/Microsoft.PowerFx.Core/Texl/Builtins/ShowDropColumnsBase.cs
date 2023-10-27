@@ -25,8 +25,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public override bool RecordFirstArgumentCanCreateScope => true;
-
         private readonly bool _isShowColumns;
 
         public ShowDropColumnsFunctionBase(bool isShowColumns)
@@ -40,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                   arityMax: int.MaxValue,
                   DType.EmptyTable)
         {
-            ScopeInfo = new FunctionScopeInfo(this);
+            ScopeInfo = new FunctionScopeInfo(this, canBeCreatedByRecord: true);
             _isShowColumns = isShowColumns;
         }
 
