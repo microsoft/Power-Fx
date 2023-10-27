@@ -130,7 +130,7 @@
     <Rule Id="SA1404" Action="Error" />
     <Rule Id="SA1405" Action="Error" />
     <Rule Id="SA1406" Action="Error" />
-    <Rule Id="SA1407" Action="Error" />
+    <Rule Id="SA1407" Action="None" />       <!-- SA1407: ArithmeticExpressionsMustDeclarePrecedence-->
     <Rule Id="SA1408" Action="Error" />
     <Rule Id="SA1410" Action="Error" />
     <Rule Id="SA1411" Action="Error" />
