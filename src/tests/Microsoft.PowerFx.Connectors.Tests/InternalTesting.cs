@@ -574,7 +574,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
 
             func.ReturnType = connectorFunction.ReturnType._type.ToString();
-            func.ReturnType_Detailed = connectorFunction.ConnectorReturnType == null ? (dynamic)"null" : connectorFunction.ConnectorReturnType.ToExpando(noname: true);
+            func.ReturnType_Detailed = connectorFunction.ReturnParameterType == null ? (dynamic)"null" : connectorFunction.ReturnParameterType.ToExpando(noname: true);
 
             func.ArityMin = connectorFunction.ArityMin;
             func.ArityMax = connectorFunction.ArityMax;

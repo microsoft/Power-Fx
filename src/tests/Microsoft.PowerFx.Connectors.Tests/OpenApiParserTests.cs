@@ -197,7 +197,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(rt3Name, returnTypeName);
             Assert.True((FormulaType)expectedReturnType == returnType);
 
-            ConnectorType connectorReturnType = function.ConnectorReturnType;
+            ConnectorType connectorReturnType = function.ReturnParameterType;
             Assert.NotNull(connectorReturnType);
             Assert.Equal((FormulaType)expectedReturnType, connectorReturnType.FormulaType);
             Assert.Equal(2, connectorReturnType.Fields.Length);
@@ -305,7 +305,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(rt3Name, returnTypeName);
             Assert.True((FormulaType)expectedReturnType == returnType);
 
-            ConnectorType connectorReturnType = function.ConnectorReturnType;
+            ConnectorType connectorReturnType = function.ReturnParameterType;
             Assert.NotNull(connectorReturnType);
             Assert.Equal((FormulaType)expectedReturnType, connectorReturnType.FormulaType);
             Assert.Equal(2, connectorReturnType.Fields.Length);
@@ -722,14 +722,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(Visibility.Advanced, createFileV2.OptionalParameters[1].ConnectorType.Visibility);
             Assert.Equal(Visibility.Internal, createFileV2.OptionalParameters[2].ConnectorType.Visibility);
 
-            Assert.Equal(Visibility.None, createFileV2.ConnectorReturnType.Visibility);
+            Assert.Equal(Visibility.None, createFileV2.ReturnParameterType.Visibility);
 
             ConnectorFunction listFolderV4 = functions.First(f => f.Name == "ListFolderV4");
 
-            Assert.Equal(Visibility.None, listFolderV4.ConnectorReturnType.Visibility);
-            Assert.Equal(Visibility.None, listFolderV4.ConnectorReturnType.Fields[0].Visibility);
-            Assert.Equal(Visibility.Advanced, listFolderV4.ConnectorReturnType.Fields[1].Visibility);
-            Assert.Equal(Visibility.Advanced, listFolderV4.ConnectorReturnType.Fields[2].Visibility);
+            Assert.Equal(Visibility.None, listFolderV4.ReturnParameterType.Visibility);
+            Assert.Equal(Visibility.None, listFolderV4.ReturnParameterType.Fields[0].Visibility);
+            Assert.Equal(Visibility.Advanced, listFolderV4.ReturnParameterType.Fields[1].Visibility);
+            Assert.Equal(Visibility.Advanced, listFolderV4.ReturnParameterType.Fields[2].Visibility);
         }
 
         [Fact]
@@ -973,9 +973,8 @@ POST https://tip1-shared.azure-apim.net/invoke
         }
 
         [Theory]
-
-        // Very slow -- [InlineData(@"Swagger\Dataverse 2.json")]
-        // Very slow -- [InlineData(@"Swagger\Dataverse 3.json")]
+        [InlineData(@"Swagger\Dataverse 2.json")]
+        [InlineData(@"Swagger\Dataverse 3.json")]
         [InlineData(@"Swagger\PowerPlatformForAdmins.json")]
         public async Task DataverseTest2(string swaggerFile)
         {

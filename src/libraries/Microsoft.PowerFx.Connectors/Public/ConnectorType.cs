@@ -77,8 +77,10 @@ namespace Microsoft.PowerFx.Connectors
 
         internal bool Binary { get; private set; }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, bool binary = false)
+        internal ConnectorType(OpenApiParameter openApiParameter, FormulaType formulaType, bool binary = false)
         {
+            OpenApiSchema schema = openApiParameter.Schema;
+            
             Name = openApiParameter?.Name;
             IsRequired = openApiParameter?.Required == true;
             Visibility = openApiParameter?.GetVisibility().ToVisibility() ?? Visibility.Unknown;
@@ -120,31 +122,31 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         internal ConnectorType(OpenApiSchema schema)
-            : this(schema, null, new OpenApiParameter() { Schema = schema }.ToConnectorType())
+            : this(new OpenApiParameter { Schema = schema }, new OpenApiParameter { Schema = schema }.ToConnectorType(null))
         {
         }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, ConnectorType connectorType)
-            : this(schema, openApiParameter, connectorType.FormulaType)
+        internal ConnectorType(OpenApiParameter openApiParameter, ConnectorType connectorType)
+            : this(openApiParameter, connectorType.FormulaType)
         {
             Fields = connectorType.Fields;
         }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, RecordType hiddenRecordType)
-            : this(schema, openApiParameter, formulaType)
+        internal ConnectorType(OpenApiParameter openApiParameter, FormulaType formulaType, RecordType hiddenRecordType)
+            : this(openApiParameter, formulaType)
         {
             HiddenRecordType = hiddenRecordType;
         }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, TableType tableType, ConnectorType tableConnectorType)
-            : this(schema, openApiParameter, tableType)
+        internal ConnectorType(OpenApiParameter openApiParameter, TableType tableType, ConnectorType tableConnectorType)
+            : this(openApiParameter, tableType)
         {
             Fields = new ConnectorType[] { tableConnectorType };
             HiddenRecordType = null;
         }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
-            : this(schema, openApiParameter, recordType)
+        internal ConnectorType(OpenApiParameter openApiParameter, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
+            : this(openApiParameter, recordType)
         {
             Fields = fields;
             HiddenFields = hiddenFields;

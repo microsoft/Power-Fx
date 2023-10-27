@@ -337,10 +337,35 @@ namespace Microsoft.PowerFx.Connectors
                 action(openApiObj);
             }
         }
+        
+        private static int OpenApiParameterHash(this OpenApiParameter openApiParameter)
+        {
+            unchecked
+            {
+                // Those are the only parameters that we use from openApiParameter and more specificallyy when traversing objects
+                int hash = 17;
+                hash = hash * 31 + openApiParameter.Schema.GetHashCode();
+                hash = hash * 31 + openApiParameter.Name.GetHashCode();                
+                hash = hash * 31 + openApiParameter.Required.GetHashCode();
+                hash = hash * 31 + openApiParameter.Extensions.GetHashCode();
+                return hash;
+            }
+        }
+
+        private static ConnectorType CacheResult(this ConnectorType connectorType, OpenApiParameter openApiParameter, Dictionary<int, ConnectorType> openApiParameterCache)
+        {                      
+            openApiParameterCache?.Add(openApiParameter.OpenApiParameterHash(), connectorType);           
+            return connectorType;
+        }
 
         // See https://swagger.io/docs/specification/data-models/data-types/        
-        internal static ConnectorType ToConnectorType(this OpenApiParameter openApiParameter, Stack<string> chain = null, int level = 0)
+        internal static ConnectorType ToConnectorType(this OpenApiParameter openApiParameter, Dictionary<int, ConnectorType> openApiParameterCache, Stack<string> chain = null, int level = 0)
         {
+            if (openApiParameterCache?.TryGetValue(openApiParameter.OpenApiParameterHash(), out ConnectorType cachedConnectorType) == true)
+            {
+                return cachedConnectorType;
+            }
+                       
             chain ??= new Stack<string>();
 
             if (openApiParameter == null)
@@ -352,7 +377,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (level == 30)
             {
-                throw new Exception("ToFormulaType() excessive recursion");
+                throw new Exception($"{nameof(ToConnectorType)} excessive recursion");
             }
 
             // schema.Format is optional and potentially any string
@@ -367,20 +392,20 @@ namespace Microsoft.PowerFx.Connectors
                     switch (schema.Format)
                     {
                         case "date":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Date);
+                            return new ConnectorType(openApiParameter, FormulaType.Date).CacheResult(openApiParameter, openApiParameterCache);
                         case "date-time":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.DateTime);
+                            return new ConnectorType(openApiParameter, FormulaType.DateTime).CacheResult(openApiParameter, openApiParameterCache);
                         case "date-no-tz":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.DateTimeNoTimeZone);
+                            return new ConnectorType(openApiParameter, FormulaType.DateTimeNoTimeZone).CacheResult(openApiParameter, openApiParameterCache);
 
                         case "binary":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.String, binary: true);
+                            return new ConnectorType(openApiParameter, FormulaType.String, binary: true).CacheResult(openApiParameter, openApiParameterCache);
 
                         case "enum":
                             if (schema.Enum.All(e => e is OpenApiString))
                             {
                                 OptionSet os = new OptionSet("enum", schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
-                                return new ConnectorType(schema, openApiParameter, os.FormulaType);
+                                return new ConnectorType(openApiParameter, os.FormulaType).CacheResult(openApiParameter, openApiParameterCache);
                             }
                             else
                             {
@@ -388,7 +413,7 @@ namespace Microsoft.PowerFx.Connectors
                             }
 
                         default:
-                            return new ConnectorType(schema, openApiParameter, FormulaType.String);
+                            return new ConnectorType(openApiParameter, FormulaType.String).CacheResult(openApiParameter, openApiParameterCache);
                     }
 
                 // OpenAPI spec: Format could be float, double, or not specified.
@@ -403,19 +428,19 @@ namespace Microsoft.PowerFx.Connectors
                         case "byte":
                         case "number":
                         case "int32":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
+                            return new ConnectorType(openApiParameter, FormulaType.Decimal).CacheResult(openApiParameter, openApiParameterCache);
 
                         case null:
                         case "decimal":
                         case "currency":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
+                            return new ConnectorType(openApiParameter, FormulaType.Decimal).CacheResult(openApiParameter, openApiParameterCache);
 
                         default:
                             throw new NotImplementedException($"Unsupported type of number: {schema.Format}");
                     }
 
                 // Always a boolean (Format not used)                
-                case "boolean": return new ConnectorType(schema, openApiParameter, FormulaType.Boolean);
+                case "boolean": return new ConnectorType(openApiParameter, FormulaType.Boolean).CacheResult(openApiParameter, openApiParameterCache);
 
                 // OpenAPI spec: Format could be <null>, int32, int64
                 case "integer":
@@ -424,11 +449,11 @@ namespace Microsoft.PowerFx.Connectors
                         case null:
                         case "integer":
                         case "int32":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
+                            return new ConnectorType(openApiParameter, FormulaType.Decimal).CacheResult(openApiParameter, openApiParameterCache);
 
                         case "int64":
                         case "unixtime":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
+                            return new ConnectorType(openApiParameter, FormulaType.Decimal).CacheResult(openApiParameter, openApiParameterCache);
 
                         default:
                             throw new NotImplementedException($"Unsupported type of integer: {schema.Format}");
@@ -438,7 +463,7 @@ namespace Microsoft.PowerFx.Connectors
                     if (schema.Items == null)
                     {
                         // Type of items in unknown
-                        return new ConnectorType(schema, openApiParameter, FormulaType.UntypedObject);
+                        return new ConnectorType(openApiParameter, FormulaType.UntypedObject).CacheResult(openApiParameter, openApiParameterCache);
                     }
 
                     var innerA = GetUniqueIdentifier(schema.Items);
@@ -446,37 +471,39 @@ namespace Microsoft.PowerFx.Connectors
                     if (innerA.StartsWith("R:", StringComparison.Ordinal) && chain.Contains(innerA))
                     {
                         // Here, we have a circular reference and default to a string
-                        return new ConnectorType(schema, openApiParameter, FormulaType.String);
+                        return new ConnectorType(openApiParameter, FormulaType.String).CacheResult(openApiParameter, openApiParameterCache);
                     }
 
                     // Inheritance/Polymorphism - Can't know the exact type
                     // https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md
                     if (schema.Items.Discriminator != null)
                     {
-                        return new ConnectorType(schema, openApiParameter, FormulaType.UntypedObject);
+                        return new ConnectorType(openApiParameter, FormulaType.UntypedObject).CacheResult(openApiParameter, openApiParameterCache);
                     }
 
                     chain.Push(innerA);
-                    ConnectorType arrayType = new OpenApiParameter() { Name = "Array", Required = true, Schema = schema.Items, Extensions = schema.Items.Extensions }.ToConnectorType(chain, level + 1);
+
+                    // Only cache the inner part
+                    ConnectorType arrayType = new OpenApiParameter() { Name = "Array", Required = true, Schema = schema.Items, Extensions = schema.Items.Extensions }.ToConnectorType(openApiParameterCache, chain, level + 1);
 
                     chain.Pop();
 
                     if (arrayType.FormulaType is RecordType connectorRecordType)
                     {
-                        return new ConnectorType(schema, openApiParameter, connectorRecordType.ToTable(), arrayType);
+                        return new ConnectorType(openApiParameter, connectorRecordType.ToTable(), arrayType);
                     }
                     else if (arrayType.FormulaType is TableType tableType)
                     {
                         // Array of array 
                         TableType newTableType = new TableType(TableType.Empty().Add(TableValue.ValueName, tableType)._type);
-                        return new ConnectorType(schema, openApiParameter, newTableType, arrayType);
+                        return new ConnectorType(openApiParameter, newTableType, arrayType);
                     }
                     else if (arrayType.FormulaType is not AggregateType)
                     {
                         // Primitives get marshalled as a SingleColumn table.
                         // Make sure this is consistent with invoker. 
                         var recordType3 = RecordType.Empty().Add(TableValue.ValueName, arrayType.FormulaType);
-                        return new ConnectorType(schema, openApiParameter, recordType3.ToTable(), arrayType);
+                        return new ConnectorType(openApiParameter, recordType3.ToTable(), arrayType);
                     }
                     else
                     {
@@ -490,7 +517,7 @@ namespace Microsoft.PowerFx.Connectors
                     // Key is always a string, Value is in AdditionalProperties
                     if ((schema.AdditionalProperties != null && schema.AdditionalProperties.Properties.Any()) || schema.Discriminator != null)
                     {
-                        return new ConnectorType(schema, openApiParameter, FormulaType.UntypedObject);
+                        return new ConnectorType(openApiParameter, FormulaType.UntypedObject).CacheResult(openApiParameter, openApiParameterCache);
                     }
                     else
                     {
@@ -521,11 +548,11 @@ namespace Microsoft.PowerFx.Connectors
                             if (innerO.StartsWith("R:", StringComparison.Ordinal) && chain.Contains(innerO))
                             {
                                 // Here, we have a circular reference and default to a string                                
-                                return new ConnectorType(schema, openApiParameter, FormulaType.String, hiddenRecordType);
+                                return new ConnectorType(openApiParameter, FormulaType.String, hiddenRecordType).CacheResult(openApiParameter, openApiParameterCache);
                             }
 
                             chain.Push(innerO);
-                            ConnectorType propertyType = new OpenApiParameter() { Name = propName, Required = schema.Required.Contains(propName), Schema = kv.Value, Extensions = kv.Value.Extensions }.ToConnectorType(chain, level + 1);
+                            ConnectorType propertyType = new OpenApiParameter() { Name = propName, Required = schema.Required.Contains(propName), Schema = kv.Value, Extensions = kv.Value.Extensions }.ToConnectorType(openApiParameterCache, chain, level + 1);
                             chain.Pop();
 
                             if (propertyType.HiddenRecordType != null)
@@ -546,7 +573,7 @@ namespace Microsoft.PowerFx.Connectors
                             }
                         }
 
-                        return new ConnectorType(schema, openApiParameter, recordType, hiddenRecordType, connectorTypes.ToArray(), hiddenConnectorTypes.ToArray());
+                        return new ConnectorType(openApiParameter, recordType, hiddenRecordType, connectorTypes.ToArray(), hiddenConnectorTypes.ToArray()).CacheResult(openApiParameter, openApiParameterCache);
                     }
 
                 default:
@@ -574,19 +601,19 @@ namespace Microsoft.PowerFx.Connectors
             };
         }
 
-        public static FormulaType GetReturnType(this OpenApiOperation openApiOperation)
-        {
-            (ConnectorType connectorType, string unsupportedReason) = openApiOperation.GetConnectorReturnType();
-            FormulaType ft = connectorType?.FormulaType ?? new BlankType();
-            return ft;
-        }
+        //public static FormulaType GetReturnType(this OpenApiOperation openApiOperation, Dictionary<int, ConnectorType> openApiParameterCache)
+        //{
+        //    (ConnectorType connectorType, string unsupportedReason) = openApiOperation.GetConnectorReturnType(openApiParameterCache);
+        //    FormulaType ft = connectorType?.FormulaType ?? new BlankType();
+        //    return ft;
+        //}
 
         public static bool GetRequiresUserConfirmation(this OpenApiOperation op)
         {
             return op.Extensions.TryGetValue(XMsRequireUserConfirmation, out IOpenApiExtension openExt) && openExt is OpenApiBoolean b && b.Value;
         }
 
-        internal static (ConnectorType ConnectorType, string UnsupportedReason) GetConnectorReturnType(this OpenApiOperation openApiOperation)
+        internal static (ConnectorType ConnectorType, string UnsupportedReason) GetConnectorReturnType(this OpenApiOperation openApiOperation, Dictionary<int, ConnectorType> openApiParameterCache)
         {
             OpenApiResponses responses = openApiOperation.Responses;
             OpenApiResponse response = responses.Where(kvp => kvp.Key?.Length == 3 && kvp.Key.StartsWith("2", StringComparison.Ordinal)).OrderBy(kvp => kvp.Key).FirstOrDefault().Value;
@@ -610,7 +637,7 @@ namespace Microsoft.PowerFx.Connectors
             if (response.Content.Count == 0)
             {
                 OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "binary" };
-                ConnectorType connectorType = new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.ToConnectorType();
+                ConnectorType connectorType = new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.ToConnectorType(openApiParameterCache);
                 return (connectorType, null);
             }
 
@@ -631,11 +658,11 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         // Treat as void.                         
                         OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "binary" };
-                        ConnectorType cType = new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.ToConnectorType();
+                        ConnectorType cType = new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.ToConnectorType(openApiParameterCache);
                         return (cType, null);
                     }
 
-                    ConnectorType connectorType = new OpenApiParameter() { Name = "response", Required = true, Schema = openApiMediaType.Schema, Extensions = openApiMediaType.Schema.Extensions }.ToConnectorType();
+                    ConnectorType connectorType = new OpenApiParameter() { Name = "response", Required = true, Schema = openApiMediaType.Schema, Extensions = openApiMediaType.Schema.Extensions }.ToConnectorType(openApiParameterCache);
 
                     return (connectorType, null);
                 }

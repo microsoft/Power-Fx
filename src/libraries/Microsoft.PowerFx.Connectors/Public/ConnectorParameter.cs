@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -22,24 +23,24 @@ namespace Microsoft.PowerFx.Connectors
 
         internal bool IsBodyParameter = false;
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter)
-            : this(openApiParameter, null, false)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, Dictionary<int, ConnectorType> openApiParameterCache)
+            : this(openApiParameter, null, false, openApiParameterCache)
         {
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, bool useHiddenTypes)
-            : this(openApiParameter, null, useHiddenTypes)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, bool useHiddenTypes, Dictionary<int, ConnectorType> openApiParameterCache)
+            : this(openApiParameter, null, useHiddenTypes, openApiParameterCache)
         {
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions)
-            : this(openApiParameter, bodyExtensions, false)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, Dictionary<int, ConnectorType> openApiParameterCache)
+            : this(openApiParameter, bodyExtensions, false, openApiParameterCache)
         {
             IsBodyParameter = true;
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes)
-            : base(openApiParameter, bodyExtensions, useHiddenTypes)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, Dictionary<int, ConnectorType> openApiParameterCache)
+            : base(openApiParameter, bodyExtensions, useHiddenTypes, openApiParameterCache)
         {
             Name = openApiParameter.Name;
             Description = openApiParameter.Description;
