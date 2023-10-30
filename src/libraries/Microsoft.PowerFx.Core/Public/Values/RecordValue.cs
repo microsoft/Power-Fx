@@ -322,7 +322,7 @@ namespace Microsoft.PowerFx.Types
             sb.Append("}");
         }
 
-        [Obsolete("This will be removed in a future version.")]
+        [Obsolete("This will be removed in a future version. Use ToExpression(StringBuilder, FormulaValueSerializerSettings")]
         protected string ToExpressionField(string tableFieldName)
         {
             var fieldName = IdentToken.MakeValidIdentifier(tableFieldName);
