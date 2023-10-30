@@ -658,7 +658,7 @@ namespace Microsoft.PowerFx.Syntax
                     return sb.ToString();
                 }
 
-                if (!IsKeyword(name, out _) && !IsReservedKeyword(name))
+                if (!IsKeyword(name, out _))
                 {
                     return name;
                 }
@@ -679,6 +679,23 @@ namespace Microsoft.PowerFx.Syntax
                     StringBuilderCache.Release(sb);
                 }
             }
+        }
+
+        /// <summary>
+        /// Takes a valid name and changes it to an identifier, escaping if needed.
+        /// </summary>
+        /// <param name="name">Valid name.</param>
+        /// <returns>Escaped name, if needed.</returns>
+        public static string EscapeNameWithReservedWord(string name)
+        {
+            var escaped = EscapeName(name);
+
+            if (IsReservedKeyword(escaped))
+            {
+                return $"{IdentifierDelimiter}{escaped}{IdentifierDelimiter}";
+            }
+
+            return escaped;
         }
 
         // Takes an escaped string and returns the unescaped version.

@@ -313,7 +313,7 @@ namespace Microsoft.PowerFx.Types
 
                 flag = false;
 
-                sb.Append(TexlLexer.EscapeName(field.Name));
+                sb.Append(TexlLexer.EscapeNameWithReservedWord(field.Name));
                 sb.Append(':');
 
                 field.Value.ToExpression(sb, settings);
