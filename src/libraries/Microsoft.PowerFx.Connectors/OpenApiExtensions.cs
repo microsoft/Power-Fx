@@ -336,32 +336,18 @@ namespace Microsoft.PowerFx.Connectors
             {
                 action(openApiObj);
             }
-        }
-        
-        private static int OpenApiParameterHash(this OpenApiParameter openApiParameter)
-        {
-            unchecked
-            {
-                // Those are the only parameters that we use from openApiParameter and more specificallyy when traversing objects
-                int hash = 17;
-                hash = hash * 31 + openApiParameter.Schema.GetHashCode();
-                hash = hash * 31 + openApiParameter.Name.GetHashCode();                
-                hash = hash * 31 + openApiParameter.Required.GetHashCode();
-                hash = hash * 31 + openApiParameter.Extensions.GetHashCode();
-                return hash;
-            }
-        }
+        }        
 
-        private static ConnectorType CacheResult(this ConnectorType connectorType, OpenApiParameter openApiParameter, Dictionary<int, ConnectorType> openApiParameterCache)
+        private static ConnectorType CacheResult(this ConnectorType connectorType, OpenApiParameter openApiParameter, Dictionary<OpenApiParameter, ConnectorType> openApiParameterCache)
         {                      
-            openApiParameterCache?.Add(openApiParameter.OpenApiParameterHash(), connectorType);           
+            openApiParameterCache?.Add(openApiParameter, connectorType);           
             return connectorType;
         }
 
         // See https://swagger.io/docs/specification/data-models/data-types/        
-        internal static ConnectorType ToConnectorType(this OpenApiParameter openApiParameter, Dictionary<int, ConnectorType> openApiParameterCache, Stack<string> chain = null, int level = 0)
+        internal static ConnectorType ToConnectorType(this OpenApiParameter openApiParameter, Dictionary<OpenApiParameter, ConnectorType> openApiParameterCache, Stack<string> chain = null, int level = 0)
         {
-            if (openApiParameterCache?.TryGetValue(openApiParameter.OpenApiParameterHash(), out ConnectorType cachedConnectorType) == true)
+            if (openApiParameterCache?.TryGetValue(openApiParameter, out ConnectorType cachedConnectorType) == true)
             {
                 return cachedConnectorType;
             }
@@ -601,19 +587,12 @@ namespace Microsoft.PowerFx.Connectors
             };
         }
 
-        //public static FormulaType GetReturnType(this OpenApiOperation openApiOperation, Dictionary<int, ConnectorType> openApiParameterCache)
-        //{
-        //    (ConnectorType connectorType, string unsupportedReason) = openApiOperation.GetConnectorReturnType(openApiParameterCache);
-        //    FormulaType ft = connectorType?.FormulaType ?? new BlankType();
-        //    return ft;
-        //}
-
         public static bool GetRequiresUserConfirmation(this OpenApiOperation op)
         {
             return op.Extensions.TryGetValue(XMsRequireUserConfirmation, out IOpenApiExtension openExt) && openExt is OpenApiBoolean b && b.Value;
         }
 
-        internal static (ConnectorType ConnectorType, string UnsupportedReason) GetConnectorReturnType(this OpenApiOperation openApiOperation, Dictionary<int, ConnectorType> openApiParameterCache)
+        internal static (ConnectorType ConnectorType, string UnsupportedReason) GetConnectorReturnType(this OpenApiOperation openApiOperation, Dictionary<OpenApiParameter, ConnectorType> openApiParameterCache)
         {
             OpenApiResponses responses = openApiOperation.Responses;
             OpenApiResponse response = responses.Where(kvp => kvp.Key?.Length == 3 && kvp.Key.StartsWith("2", StringComparison.Ordinal)).OrderBy(kvp => kvp.Key).FirstOrDefault().Value;

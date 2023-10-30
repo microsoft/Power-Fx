@@ -875,7 +875,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         private string GetLastPart(string str) => str.Split('/').Last();
-        
+
         private ConnectorParameterInternals Initialize()
         {
             // Hidden-Required parameters exist in the following conditions:
@@ -892,7 +892,7 @@ namespace Microsoft.PowerFx.Connectors
             string bodySchemaReferenceId = null;
             bool schemaLessBody = false;
             string contentType = OpenApiExtensions.ContentType_ApplicationJson;
-            Dictionary<int, ConnectorType> openApiParameterCache = new ();
+            Dictionary<OpenApiParameter, ConnectorType> openApiParameterCache = new (new OpenApiParameterComparer());
 
             try
             {
@@ -1104,6 +1104,37 @@ namespace Microsoft.PowerFx.Connectors
                 ParameterDefaultValues = parameterDefaultValues,
                 SchemaLessBody = schemaLessBody
             };
+        }
+
+        private class OpenApiParameterComparer : IEqualityComparer<OpenApiParameter>
+        {
+            public bool Equals(OpenApiParameter x, OpenApiParameter y)
+            {
+                if (x == null && y == null)
+                {
+                    return true;
+                }
+
+                if (x == null || y == null)
+                {
+                    return false;
+                }
+
+                return (x.Schema == y.Schema) && 
+                       (x.Name == y.Name) &&
+                       (x.Required == y.Required) &&
+                       (x.Extensions == y.Extensions);                
+            }
+
+            public int GetHashCode(OpenApiParameter openApiParameter)
+            {
+                int hash = 17;
+                hash = hash * 31 + openApiParameter.Schema.GetHashCode();
+                hash = hash * 31 + openApiParameter.Name.GetHashCode();
+                hash = hash * 31 + openApiParameter.Required.GetHashCode();
+                hash = hash * 31 + openApiParameter.Extensions.GetHashCode();
+                return hash;
+            }
         }
 
         private ConnectorParameter[] GetPowerAppsParameterOrder(List<ConnectorParameter> parameters)

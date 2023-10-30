@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool SupportsDynamicIntellisense => ConnectorType.SupportsDynamicIntellisense;
 
-        internal ConnectorSchema(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, Dictionary<int, ConnectorType> openApiParameterCache)
+        internal ConnectorSchema(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, Dictionary<OpenApiParameter, ConnectorType> openApiParameterCache)
         {
             Schema = openApiParameter.Schema;
             UseHiddenTypes = useHiddenTypes;

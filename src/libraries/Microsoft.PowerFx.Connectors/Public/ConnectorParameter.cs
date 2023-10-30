@@ -23,23 +23,23 @@ namespace Microsoft.PowerFx.Connectors
 
         internal bool IsBodyParameter = false;
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, Dictionary<int, ConnectorType> openApiParameterCache)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, Dictionary<OpenApiParameter, ConnectorType> openApiParameterCache)
             : this(openApiParameter, null, false, openApiParameterCache)
         {
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, bool useHiddenTypes, Dictionary<int, ConnectorType> openApiParameterCache)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, bool useHiddenTypes, Dictionary<OpenApiParameter, ConnectorType> openApiParameterCache)
             : this(openApiParameter, null, useHiddenTypes, openApiParameterCache)
         {
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, Dictionary<int, ConnectorType> openApiParameterCache)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, Dictionary<OpenApiParameter, ConnectorType> openApiParameterCache)
             : this(openApiParameter, bodyExtensions, false, openApiParameterCache)
         {
             IsBodyParameter = true;
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, Dictionary<int, ConnectorType> openApiParameterCache)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, Dictionary<OpenApiParameter, ConnectorType> openApiParameterCache)
             : base(openApiParameter, bodyExtensions, useHiddenTypes, openApiParameterCache)
         {
             Name = openApiParameter.Name;
