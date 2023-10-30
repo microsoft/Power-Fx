@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 if (context.Features.PrimaryOutputPropertyCoercionDeprecated)
                 {
-                    return false;
+                    return true;
                 }
 
                 // If primary output property coercion is enabled,
