@@ -49,6 +49,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 if (context.Features.PrimaryOutputPropertyCoercionDeprecated)
                 {
+                    // Even when primary output property coercion is not supported,
+                    // IsBlank can be a valid operation on control types, e.g. a variable of 
+                    // Type control, could have been set to Blank();
                     return true;
                 }
 
