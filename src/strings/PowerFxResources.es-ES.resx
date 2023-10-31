@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Una tabla a la que se van a agregar columnas.</value>
+    <value>Una tabla o registro a los que se agregarán columnas.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Un valor de tabla del que se van a quitar columnas.</value>
+    <value>Un valor de tabla o registro del que se quitarán columnas.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Nombre de una columna que se va a quitar.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Devuelve una copia de la tabla de origen especificada con el nombre de la columna "columna_antigua" cambiado a "columna_nueva".</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>origen</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>columna_anterior</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>columna_nueva</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Un valor de tabla que se va a procesar.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Nombre de una columna que se va a cambiar.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Nuevo nombre de la columna.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Devuelve las filas de la tabla que cumplen todas las condiciones especificadas.</value>
@@ -2275,6 +2304,10 @@
     <value>Un campo denominado "{0}" se especificó más de una vez en este registro.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>No se puede cambiar dos veces el nombre de la columna especificada "{0}".</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Una columna denominada "{0}" se ha especificado más de una vez.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Un valor de tabla del que se van a quitar columnas.</value>
+    <value>Un valor de tabla o registro del que se quitarán columnas.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Nombre de una columna que se va a conservar.</value>

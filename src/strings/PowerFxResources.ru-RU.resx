@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Таблица для добавления столбцов.</value>
+    <value>Таблица или запись для добавления столбцов.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Табличное значение для удаления столбцов.</value>
+    <value>Значение таблицы или записи для удаления столбцов.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Имя столбца для удаления.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Возвращает копию указанной таблицы "источника", в которой "старый_столбец" переименован в "новый_столбец".</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>источник</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>старый_столбец</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>новый_столбец</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Табличное значение для обработки.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Имя столбца для переименования.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Новое имя для столбца.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Возвращает строки таблицы, для которых все указанные условия верны.</value>
@@ -2275,6 +2304,10 @@
     <value>Поле с именем "{0}" указано в этой записи больше одного раза.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Указанный столбец "{0}" невозможно переименовать дважды.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Цвет "{0}" был указан несколько раз.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Табличное значение для удаления столбцов.</value>
+    <value>Значение таблицы или записи для удаления столбцов.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Имя столбца для сохранения.</value>

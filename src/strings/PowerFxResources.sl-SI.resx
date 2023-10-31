@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Tabela, v katero bodo dodani stolpci.</value>
+    <value>Tabela ali zapis, kamor bodo dodani stolpci.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Vrednost tabele, iz katere je treba odstraniti stolpce.</value>
+    <value>Vrednost tabele ali zapisa, iz katere bodo odstranjeni stolpci.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Ime stolpca, ki ga je treba odstraniti.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Vrne kopijo določene tabele argumenta »vir«, v kateri je stolpec »stari_stolpec« preimenovan v »novi_stolpec«.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>vir</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>stari_stolpec</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>nov_stolpec</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Vrednost tabele za obdelavo.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Ime stolpca, ki ga je treba preimenovati.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Novo ime stolpca.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Vrne tiste vrstice table, za katere so izpolnjeni vsi določeni pogoji.</value>
@@ -2275,6 +2304,10 @@
     <value>Polje z imenom »{0}« je bilo navedeno več kot enkrat v tem zapisu.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Navedenega stolpca »{0}« ni mogoče preimenovati dvakrat.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Ime stolpca »{0}« je bilo navedeno več kot enkrat.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Vrednost tabele, iz katere je treba odstraniti stolpce.</value>
+    <value>Vrednost tabele ali zapisa, iz katere bodo odstranjeni stolpci.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Ime stolpca, ki ga je treba obdržati.</value>

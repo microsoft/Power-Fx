@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Een tabel waaraan kolommen worden toegevoegd.</value>
+    <value>Een tabel of record waaraan kolommen worden toegevoegd.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Een tabelwaarde waaruit kolommen moeten worden verwijderd.</value>
+    <value>Een tabel- of recordwaarde waaruit kolommen moeten worden verwijderd.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>De naam van een kolom die moet worden verwijderd.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Hiermee wordt een kopie van de opgegeven tabel bron geretourneerd, waarbij de naam van de kolom oude kolom is gewijzigd in nieuwe kolom.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>bron</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>oude_kolom</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>nieuwe_kolom</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Een tabelwaarde die moet worden verwerkt.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>De naam van een kolom waarvan de naam moet worden gewijzigd.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>De nieuwe naam voor de kolom.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Hiermee worden de rijen uit de tabel geretourneerd waarvoor alle opgegeven voorwaarden waar zijn.</value>
@@ -2275,6 +2304,10 @@
     <value>Er is meerdere keren een veld met de naam {0} opgegeven in deze record.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>De naam van de opgegeven kolom {0} kan niet tweemaal worden gewijzigd.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Er is meerdere keren een kolom met de naam {0} opgegeven.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Een tabelwaarde waaruit kolommen moeten worden verwijderd.</value>
+    <value>Een tabel- of recordwaarde waaruit kolommen moeten worden verwijderd.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>De naam van een kolom die moet worden behouden.</value>

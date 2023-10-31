@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Tabulka, do které se mají sloupce přidat.</value>
+    <value>Tabulka nebo záznam, kam se mají sloupce přidat.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Hodnota tabulky, ze které se mají odebrat sloupce</value>
+    <value>Hodnota tabulky nebo záznamu, odkud se mají sloupce odebrat.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Název sloupce, který se má odebrat</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Vrátí kopii zadané zdrojové tabulky, ve které bude starý sloupec přejmenován na nový sloupec</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>zdroj</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>starý_sloupec</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>nový_sloupec</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Hodnota tabulky, která má být zpracována</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Název sloupce, který se má přejmenovat</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Nový název sloupce</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Vrátí řádky z tabulky, pro kterou jsou všechny zadané podmínky pravdivé.</value>
@@ -2275,6 +2304,10 @@
     <value>Pole s názvem „{0}“ se v tomto záznamu zadalo více než jednou.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Zadaný sloupec {0} se nedá přejmenovat dvakrát.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Sloupec s názvem {0} byl zadaný víc než jednou.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Hodnota tabulky, ze které se mají odebrat sloupce</value>
+    <value>Hodnota tabulky nebo záznamu, odkud se mají sloupce odebrat.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Název sloupce, který se má zachovat</value>

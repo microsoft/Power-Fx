@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>En tabel, hvortil der kan føjes kolonner.</value>
+    <value>En tabel eller post, hvortil der skal føjes kolonner.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>En tabelværdi, som kolonner skal fjernes fra.</value>
+    <value>En tabel eller postværdi, der skal fjernes kolonner fra.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Navnet på en kolonne, der skal fjernes.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Returnerer en kopi af den angivne 'kilde'-tabel, hvor kolonnen 'gammel_kolonne' er omdøbt til 'ny_kolonne'.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>gammel_kolonne</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>ny_kolonne</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>En tabelværdi, der skal behandles.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Navnet på en kolonne, der skal omdøbes.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Kolonnens nye navn.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Returnerer rækker fra tabellen, for hvilke alle de angivne betingelser er sande.</value>
@@ -2275,6 +2304,10 @@
     <value>Et felt med navnet '{0}' blev angivet mere end én gang i denne post.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Den angivne kolonne '{0}' kan ikke omdøbes to gange.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>En kolonne med navnet '{0}' blev angivet mere end én gang.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>En tabelværdi, som kolonner skal fjernes fra.</value>
+    <value>En tabel eller postværdi, der skal fjernes kolonner fra.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Navnet på en kolonne, der skal beholdes.</value>

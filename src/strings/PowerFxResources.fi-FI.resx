@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Taulukko, johon sarakkeet lisätään.</value>
+    <value>Taulukko tai tietue, johon sarakkeet lisätään.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Taulukkoarvo, josta sarakkeet poistetaan.</value>
+    <value>Taulukko- tai tietuearvo, josta sarakkeet poistetaan.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Poistettavan sarakkeen nimi.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Palauttaa kopion määritetystä source-taulukosta niin, että old_column-sarake on nimetty uudelleen new_column-nimellä.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>lähde</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>vanha_sarake</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>uusi_sarake</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Käsiteltävä taulukkoarvo.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Uudelleennimettävän sarakkeen nimi.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Uuden sarakkeen nimi.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Palauttaa rivit taulukosta, jolle kaikki määritetyt ehdot ovat tosia.</value>
@@ -2275,6 +2304,10 @@
     <value>Kenttä {0} määritettiin useammin kuin kerran tässä tietueessa.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Määritettyä saraketta {0} ei voi nimetä uudelleen kahdesti.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Sarake nimeltä {0} määritettiin useammin kuin kerran.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Taulukkoarvo, josta sarakkeet poistetaan.</value>
+    <value>Taulukko- tai tietuearvo, josta sarakkeet poistetaan.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Säilytettävän sarakkeen nimi.</value>
