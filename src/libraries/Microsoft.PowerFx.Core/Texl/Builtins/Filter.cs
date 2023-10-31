@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     continue;
                 }
-                else if (!argTypes[i].CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules))
+                else if (!argTypes[i].CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, binding.Features))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
                     continue;

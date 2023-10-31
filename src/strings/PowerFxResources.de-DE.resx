@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Eine Tabelle, der Spalten hinzugefügt werden sollen.</value>
+    <value>Eine Tabelle oder ein Datensatz, dem Spalten hinzugefügt werden sollen.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Ein Tabellenwert, aus dem Spalten entfernt werden.</value>
+    <value>Ein Tabellen- oder Datensatzwert, aus dem Spalten entfernt werden sollen.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Der Name einer zu entfernenden Spalte.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Gibt eine Kopie der angegebenen Quelltabelle "Quelle" zurück, in der die Spalte "alte_Spalte" in "neue_Spalte" umbenannt wurde.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>Quelle</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>alte_Spalte</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>neue_Spalte</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Ein zu verarbeitender Tabellenwert.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Der Name einer umzubenennenden Spalte.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Der neue Name für die Spalte.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Gibt die Zeilen aus der Tabelle zurück, für die alle angegebenen Bedingungen WAHR sind.</value>
@@ -2275,6 +2304,10 @@
     <value>Ein Feld mit dem Namen „{0}“ wurde mehrfach angegeben.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Die angegebene Spalte "{0}" kann nicht zweimal umbenannt werden.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Eine Spalte mit dem Namen „{0}“ wurde mehrfach angegeben.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Ein Tabellenwert, aus dem Spalten entfernt werden.</value>
+    <value>Ein Tabellen- oder Datensatzwert, aus dem Spalten entfernt werden sollen.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Der Name einer beizubehaltenden Spalte.</value>

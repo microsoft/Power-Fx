@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else if (DType.TryUnionWithCoerce(
                          type,
                          argType,
-                         usePowerFxV1CompatibilityRules: true,
+                         context.Features,
                          coerceToLeftTypeOnly: true,
                          out var unionType,
                          out var coercionNeeded))
@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else if (!type.IsError)
                 {
                     // Types don't resolve normally, coercion needed
-                    if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: false))
+                    if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
                     }

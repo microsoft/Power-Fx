@@ -353,14 +353,17 @@ namespace Microsoft.PowerFx.Intellisense
                         }
                     }
 
-                    if (info.ScopeIdentifier != default)
+                    if (!intellisenseData.TryAddSuggestionForCurrentBinaryOp(checkForOptionSetOnly: true))
                     {
-                        AddSuggestion(intellisenseData, info.ScopeIdentifier, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: false);
-                    }
+                        if (info.ScopeIdentifier != default)
+                        {
+                            AddSuggestion(intellisenseData, info.ScopeIdentifier, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: false);
+                        }
 
-                    if (!info.RequiresScopeIdentifier)
-                    {
-                        AddTopLevelSuggestions(intellisenseData, type);
+                        if (!info.RequiresScopeIdentifier)
+                        {
+                            AddTopLevelSuggestions(intellisenseData, type);
+                        }
                     }
                 }
 

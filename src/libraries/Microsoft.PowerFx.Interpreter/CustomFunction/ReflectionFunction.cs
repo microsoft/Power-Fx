@@ -321,7 +321,7 @@ namespace Microsoft.PowerFx
                         }
 
                         // Check if formulaResultType can coerce to retType
-                        if (isValid && !formulaResultType.CoercesTo(retType, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: true))
+                        if (isValid && !formulaResultType.CoercesTo(retType, aggregateCoercion: false, isTopLevelCoercion: false, features: Features.PowerFxV1))
                         {
                             isValid = false;
                         }

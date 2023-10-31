@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Tabula, kam pievienot kolonnas.</value>
+    <value>Tabula vai ieraksts, kam pievienot kolonnas.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Tabulas vērtība, no kuras noņemt kolonnas.</value>
+    <value>Tabulas vai ieraksta vērtība, no kuras noņemt kolonnas.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Noņemamās kolonnas nosaukums.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Atgriež norādītās tabulas "source" kopiju, kur kolonna "old_column" pārdēvēta par "new_column".</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>avots</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>vecā­_kolonna</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>jauna_kolonna</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Apstrādājamā tabulas vērtība.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Pārdēvējamās kolonnas nosaukums.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Kolonnas jaunas nosaukums.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Atgriež rindas no tabulas, kurām visi norādītie nosacījumi ir patiesi.</value>
@@ -2275,6 +2304,10 @@
     <value>Lauks ar nosaukumu {0} tika norādīts vairākkārt šajā ierakstā.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Norādīto kolonnu “{0}” nevar pārdēvēt divas reizes.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Kolonna ar nosaukumu {0} tika norādīta vairākkārt.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Tabulas vērtība, no kuras noņemt kolonnas.</value>
+    <value>Tabulas vai ieraksta vērtība, no kuras noņemt kolonnas.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Saglabājamās kolonnas nosaukums.</value>

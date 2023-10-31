@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Tabela, do której zostaną dodane kolumny.</value>
+    <value>Tabela lub rekord, do którego mają zostać dodane kolumny.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Wartość tabeli, z której zostaną usunięte kolumny.</value>
+    <value>Wartość tabeli lub rekordu, z której mają zostać usunięte kolumny.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Nazwa kolumny do usunięcia.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Zwraca kopię określonej tabeli „źródło”, przy czym nazwa kolumny „stara_kolumna” jest zmieniana na „nowa_kolumna”.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>źródło</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>stara_kolumna</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>nowa_kolumna</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Wartość tabeli do przetworzenia.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Nazwa kolumny, która będzie zmieniona.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Nowa nazwa dla kolumny.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Zwraca wiersze z tabeli, dla której wszystkie określone warunki zostały spełnione.</value>
@@ -2275,6 +2304,10 @@
     <value>Pole o nazwie „{0}” zostało określone więcej niż jeden raz w tym rekordzie.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Nazwy określonej kolumny „{0}” nie można zmienić dwa razy.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Kolumna o nazwie „{0}” została określona więcej niż jeden raz.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Wartość tabeli, z której zostaną usunięte kolumny.</value>
+    <value>Wartość tabeli lub rekordu, z której mają zostać usunięte kolumny.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Nazwa kolumny do zachowania.</value>

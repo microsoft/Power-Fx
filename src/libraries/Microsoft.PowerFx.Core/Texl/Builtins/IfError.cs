@@ -152,7 +152,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     else if (!type.IsError)
                     {
                         // Types don't resolve normally, coercion needed
-                        if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                        if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
                         {
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
                         }
@@ -230,7 +230,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 possibleResults.Add((args[i], argTypes[i]));
             }
 
-            if (!IfFunction.TryDetermineReturnTypePowerFxV1CompatRules(possibleResults, errors, ref nodeToCoercedTypeMap, out var type))
+            if (!IfFunction.TryDetermineReturnTypePowerFxV1CompatRules(possibleResults, errors, context.Features, ref nodeToCoercedTypeMap, out var type))
             {
                 fArgsValid = false;
             }

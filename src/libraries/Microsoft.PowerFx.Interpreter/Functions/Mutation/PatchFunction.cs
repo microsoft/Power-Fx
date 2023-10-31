@@ -209,14 +209,14 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 // Checks if all record names exist against table type and if its possible to coerce.
-                bool checkAggregateNames = curType.CheckAggregateNames(dataSourceType, args[i], errors, SupportsParamCoercion, context.Features.PowerFxV1CompatibilityRules);
+                bool checkAggregateNames = curType.CheckAggregateNames(dataSourceType, args[i], errors, context.Features, SupportsParamCoercion);
 
                 isValid = isValid && checkAggregateNames;
                 isSafeToUnion = checkAggregateNames;
 
                 if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
-                    if (!curType.TryGetCoercionSubType(dataSourceType, out DType coercionType, out var coercionNeeded, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                    if (!curType.TryGetCoercionSubType(dataSourceType, out DType coercionType, out var coercionNeeded, context.Features))
                     {
                         isValid = false;
                     }
@@ -227,12 +227,12 @@ namespace Microsoft.PowerFx.Functions
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
                         }
 
-                        retType = DType.Union(retType, coercionType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+                        retType = DType.Union(retType, coercionType, useLegacyDateTimeAccepts: false, context.Features);
                     }
                 }
                 else if (isSafeToUnion)
                 {
-                    retType = DType.Union(retType, curType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+                    retType = DType.Union(retType, curType, useLegacyDateTimeAccepts: false, context.Features);
                 }
             }
 

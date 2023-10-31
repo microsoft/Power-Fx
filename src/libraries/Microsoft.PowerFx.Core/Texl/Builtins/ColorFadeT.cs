@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return true;
             }
 
-            if (otherType.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+            if (otherType.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
             {
                 CollectionUtils.Add(ref nodeToCoercedTypeMap, otherArg, expectedType);
                 return true;

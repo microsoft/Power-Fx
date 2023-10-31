@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 !DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
                 !DType.Boolean.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (argType.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) && !argType.IsControl)
+                if (argType.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, context.Features) && !argType.IsControl)
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
                 }

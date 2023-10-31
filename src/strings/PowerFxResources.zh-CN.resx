@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>要向其中添加列的表。</value>
+    <value>要向其中添加列的表或记录。</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>要从中删除列的表值。</value>
+    <value>要从中删除列的表或记录值。</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>要删除的列的名称。</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>返回指定 "source" 表的副本，将 "old_column" 列重命名为 "new_column"。</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>源</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>旧列</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>新列</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>要处理的表值。</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>要重命名的列的名称。</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>新的列名称。</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>从表中返回所有指定条件都是 true 的行。</value>
@@ -2275,6 +2304,10 @@
     <value>此记录中多次指定了名为 '{0}' 的字段。</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>不能将指定的列“{0}”重命名两次。</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>多次指定了名为 '{0}' 的列。</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>要从中删除列的表值。</value>
+    <value>要从中删除列的表或记录值。</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>要保持的列的名称。</value>

@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 if (!DType.Boolean.Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
-                    if (argTypes[i].CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                    if (argTypes[i].CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean, allowDupes: true);
                     }
@@ -100,9 +100,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            IExternalDataSource dataSource = null;
-
-            if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource))
+            if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out IExternalDataSource dataSource))
             {
                 if (dataSource != null && dataSource.IsDelegatable)
                 {

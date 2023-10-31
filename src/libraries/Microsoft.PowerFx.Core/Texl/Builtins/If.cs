@@ -59,7 +59,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         internal static bool TryDetermineReturnTypePowerFxV1CompatRules(
             List<(TexlNode node, DType type)> possibleResults,
-            IErrorContainer errors, 
+            IErrorContainer errors,
+            Features features,
             ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap,
             out DType returnType)
         {
@@ -90,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else if (DType.TryUnionWithCoerce(
                          type,
                          argType,
-                         usePowerFxV1CompatibilityRules: true,
+                         features,
                          coerceToLeftTypeOnly: true,
                          out var unionType,
                          out var coercionNeeded))
@@ -115,6 +116,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         internal static bool TryDetermineReturnTypePowerFxV1CompatRulesDisabled(
             List<(TexlNode node, DType type)> possibleResults,
             IErrorContainer errors,
+            Features features,
             ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap,
             out DType returnType)
         {
@@ -145,7 +147,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (!type.IsError)
                 {
-                    if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: false))
+                    if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, features))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
                     }
@@ -210,14 +212,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // For PowerFxV1 compat rules, validate that all non-predicate args can be coerced to the first one
             if (context.Features.PowerFxV1CompatibilityRules)
             {
-                if (!TryDetermineReturnTypePowerFxV1CompatRules(possibleResults, errors, ref nodeToCoercedTypeMap, out type))
+                if (!TryDetermineReturnTypePowerFxV1CompatRules(possibleResults, errors, context.Features, ref nodeToCoercedTypeMap, out type))
                 {
                     fArgsValid = false;
                 }
             }
             else
             {
-                if (!TryDetermineReturnTypePowerFxV1CompatRulesDisabled(possibleResults, errors, ref nodeToCoercedTypeMap, out type))
+                if (!TryDetermineReturnTypePowerFxV1CompatRulesDisabled(possibleResults, errors, context.Features, ref nodeToCoercedTypeMap, out type))
                 {
                     fArgsValid = false;
                 }

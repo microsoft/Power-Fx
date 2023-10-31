@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Option|", "OptionSet", "OtherOptionSet", "TopOptionSetField", "TraceOptions", "TraceOptions.IgnoreUnsupportedTypes", "TraceOptions.None")]
         [InlineData("Opt|", "OptionSet", "OtherOptionSet", "TopOptionSetField", "TraceOptions", "TraceOptions.IgnoreUnsupportedTypes", "TraceOptions.None")]
         [InlineData("Opti|on", "OptionSet", "OtherOptionSet", "TopOptionSetField", "TraceOptions", "TraceOptions.IgnoreUnsupportedTypes", "TraceOptions.None")]
-        [InlineData("TopOptionSetField <> |", "TopOptionSetField", "XXX")]
+        [InlineData("TopOptionSetField <> |", "OptionSet", "TopOptionSetField", "XXX")]
         [InlineData("TopOptionSetField <> Opt|", "OptionSet", "TopOptionSetField", "OtherOptionSet", "TraceOptions", "TraceOptions.IgnoreUnsupportedTypes", "TraceOptions.None")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
         {

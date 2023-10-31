@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = args.Length == 2 ? argTypes[0].ToRecord() : argTypes[2];
 
             // Ensure that the arg at index 1 is boolean or can coerece to boolean if they are OptionSetValues.
-            if (argTypes[1].Kind == DKind.OptionSetValue && argTypes[1].CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+            if (argTypes[1].Kind == DKind.OptionSetValue && argTypes[1].CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
             {
                 CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Boolean, allowDupes: true);
             }

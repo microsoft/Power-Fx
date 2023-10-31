@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>列の追加先となるテーブル。</value>
+    <value>列の追加先となるテーブルまたはレコードです。</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>列の削除元となるテーブル値。</value>
+    <value>列の削除元となるテーブルまたはレコードの値です。</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>削除する列の名前。</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>'変更前の列' 列の名前が '変更後の列' に変更された指定の 'ソース' テーブルのコピーを返します。</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>ソース</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>古い列</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>新しい列</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>処理するテーブル値。</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>名前を変更する列の名前。</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>列の新しい名前。</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>指定の条件すべてが True となるテーブルの行を返します。</value>
@@ -2275,6 +2304,10 @@
     <value>このレコードの中で '{0}' という名前のフィールドが複数回指定されました。</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>指定された列 '{0}' の名前を 2 回変更することはできません。</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>'{0}' という列が 2 回以上指定されました。</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>列の削除元となるテーブル値。</value>
+    <value>列の削除元となるテーブルまたはレコードの値です。</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>保持する列の名前。</value>

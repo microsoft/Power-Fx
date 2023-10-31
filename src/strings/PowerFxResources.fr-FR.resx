@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Table à laquelle ajouter des colonnes.</value>
+    <value>Table ou enregistrement à laquelle ou auquel ajouter des colonnes.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Table pour laquelle supprimer des colonnes.</value>
+    <value>Valeur de table ou d’enregistrement dans laquelle ou dans lequel supprimer des colonnes.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Nom d’une colonne à supprimer.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Retourne une copie de la table « source » spécifiée, dont la colonne « ancienne_colonne » est renommée « nouvelle_colonne ».</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>source</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>ancienne_colonne</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>nouvelle_colonne</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Valeur de table à traiter.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Nom d’une colonne à renommer.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Nouveau nom de la colonne.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Retourne les lignes de la table pour lesquelles toutes les conditions spécifiées sont vraies.</value>
@@ -2275,6 +2304,10 @@
     <value>Un champ nommé '{0}' a été spécifié plusieurs fois dans cet enregistrement.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>La colonne « {0} » spécifiée ne peut pas être renommée à deux reprises.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Une colonne nommée '{0}' a été spécifiée plusieurs fois.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Table pour laquelle supprimer des colonnes.</value>
+    <value>Valeur de table ou d’enregistrement dans laquelle ou dans lequel supprimer des colonnes.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Nom d’une colonne à conserver.</value>

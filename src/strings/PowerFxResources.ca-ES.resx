@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Taula a la qual s'afegiran columnes.</value>
+    <value>Taula o registre al qual s'afegiran columnes.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Valor de taula del qual se suprimiran columnes.</value>
+    <value>Valor de la taula o registre del qual se suprimiran columnes.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Nom d'una columna que se suprimirà.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Retorna una còpia de la taula 'source' especificada, amb el nom de la columna 'columna_anterior' canviat per 'columna_nova'.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>origen</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>columna_anterior</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>columna_nova</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Valor de taula que es processarà.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Nom d'una columna que es canviarà de nom.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Nom nou de la columna.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Retorna les files de la taula en què totes les condicions especificades són true.</value>
@@ -2275,6 +2304,10 @@
     <value>S'ha especificat més d'una vegada un camp anomenat "{0}" en aquest registre.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>No es pot canviar dues vegades el nom de la columna especificada "{0}".</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>S'ha especificat més d'una vegada una columna anomenada '{0}'.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Valor de taula del qual se suprimiran columnes.</value>
+    <value>Valor de la taula o registre del qual se suprimiran columnes.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Nom d'una columna que es conservarà.</value>

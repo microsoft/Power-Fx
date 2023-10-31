@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Az a tábla, amelybe fel kell venni az értékeket.</value>
+    <value>Az a tábla vagy rekord, amelybe fel kell venni az értékeket.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Az a tábla, amelyből oszlopokat kell eltávolítani.</value>
+    <value>Az a tábla vagy rekord, amelyből oszlopokat kell eltávolítani.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Az eltávolítandó oszlop neve.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>A megadott forrástábla egy példányát adja vissza, amelyben a „régi_oszlop” át van nevezve az „új_oszlop” argumentumban megadott névre.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>forrás</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>régi_oszlop</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>új_oszlop</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Egy feldolgozandó táblaérték.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Az átnevezendő oszlop neve.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Az oszlop új neve.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Azokat a sorait adja vissza a táblázatnak, amelyekre minden megadott feltétel igaz.</value>
@@ -2275,6 +2304,10 @@
     <value>A(z) {0} mezőnév egynél többször van megadva ebben a rekordban.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>A megadott oszlop ({0}) nem nevezhető át kétszer.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>A(z) {0} nevű oszlop egynél többször van megadva.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Az a tábla, amelyből oszlopokat kell eltávolítani.</value>
+    <value>Az a tábla vagy rekord, amelyből oszlopokat kell eltávolítani.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>A megtartandó oszlop neve.</value>
