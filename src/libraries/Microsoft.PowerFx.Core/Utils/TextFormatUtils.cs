@@ -8,7 +8,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Utils
