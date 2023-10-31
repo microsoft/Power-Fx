@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Utils
@@ -104,6 +105,7 @@ namespace Microsoft.PowerFx.Core.Utils
             int sectionCount = 0;
             int mCount = 0;
             bool hasColonWithNum = false;
+            bool hasExponentialNotation = false;
             List<int> commaIdxList = new List<int>();
             for (int i = 0; i < formatStr.Length; i++)
             {
@@ -183,6 +185,12 @@ namespace Microsoft.PowerFx.Core.Utils
                     decimalPointIndex = i;
                     hasNumericCharacters = false;
 
+                    if (hasExponentialNotation)
+                    {
+                        // Block exponential notation with decimal number
+                        return false;
+                    }
+
                     if (commaIdxList.Count > 0)
                     {
                         // Remove any comma before decimal point that is not using for scaling
@@ -242,6 +250,10 @@ namespace Microsoft.PowerFx.Core.Utils
                     formatStr = formatStr.Insert(i, "\\");
                     i++;
                 }
+                else if ((formatStr[i] == 'e' || formatStr[i] == 'E') && (i < formatStr.Length - 1 && (formatStr[i + 1] == '+' || formatStr[i + 1] == '-')))
+                {
+                    hasExponentialNotation = true;
+                }
                 else if (i == formatStr.Length - 1)
                 {
                     // If format string ends with backsplash but no following character or opening double quote then format is invalid.
@@ -259,9 +271,15 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
                 else if (formatStr[i] == '\\')
                 {
+                    if (hasExponentialNotation)
+                    {
+                        // Block exponential notation with escaping character
+                        return false;
+                    }
+
                     if (textFormatArgs.HasNumericFmt || (i < formatStr.Length - 1 && formatStr[i + 1] == '\"'))
                     {
-                        // Skip next character if seeing escaping character \.
+                        // Skip next character if seeing escaping character.
                         i++;
                     }
                     else if (i < formatStr.Length - 1)
@@ -275,6 +293,12 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
                 else if (formatStr[i] == '\"' && i < formatStr.Length - 1)
                 {
+                    if (hasExponentialNotation)
+                    {
+                        // Block exponential notation with escaping character.
+                        return false;
+                    }
+
                     // Jump to close quote to pass all escaping characters.
                     i = formatStr.IndexOf('\"', i + 1);
 
