@@ -1034,7 +1034,7 @@ true
 >> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime24)
 "Thursday, January 1, 1970 0:00:00"
 
-// Block exponential notation with decimals and escaping character
+// Block exponential notation with decimals, escaping character and scaling modifier
 >> Text(1234567.1234567, "0.00E+0.0")
 Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
@@ -1190,3 +1190,21 @@ Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-3
 
 >> Text(1234567.1234567, "#e-#""k""00")
 Errors: Error 0-36: The function 'Text' has some invalid arguments.|Warning 22-35: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "0.00E+00%")
+Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "0.000E+0000%")
+Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 22-36: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#.#E+#00%")
+Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "0.0E+#%")
+Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "0E+000%")
+Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#E+#00%")
+Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.

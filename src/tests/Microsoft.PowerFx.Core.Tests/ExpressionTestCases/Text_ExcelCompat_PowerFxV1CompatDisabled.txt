@@ -967,7 +967,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime24)
 "'long1ateti1e24'"
 
-// Block exponential notation with decimals and escaping character
+// Block exponential notation with decimals, escaping character and scaling modifier
 >> Text(1234567.1234567, "0.00E+0.0")
 Error({Kind:ErrorKind.InvalidArgument})
 
@@ -1122,4 +1122,22 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(1234567.1234567, "#e-#""k""00")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, "0.00E+00%")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, "0.000E+0000%")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, "#.#E+#00%")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, "0.0E+#%")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, "0E+000%")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, "#E+#00%")
 Error({Kind:ErrorKind.InvalidArgument})

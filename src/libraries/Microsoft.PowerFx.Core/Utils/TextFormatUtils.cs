@@ -253,6 +253,11 @@ namespace Microsoft.PowerFx.Core.Utils
                 {
                     hasExponentialNotation = true;
                 }
+                else if (formatStr[i] == '%' && hasExponentialNotation)
+                {
+                    // Block exponential notation with %
+                    return false;
+                }
                 else if (i == formatStr.Length - 1)
                 {
                     // If format string ends with backsplash but no following character or opening double quote then format is invalid.
