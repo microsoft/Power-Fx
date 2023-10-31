@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Một bảng để thêm cột.</value>
+    <value>Một bảng hoặc bản ghi để thêm cột vào.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Giá trị bảng cần loại bỏ cột khỏi đó.</value>
+    <value>Giá trị bảng hoặc bản ghi cần loại bỏ khỏi cột đó.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Tên của cột cần xóa.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Trả về một bản sao của bảng 'nguồn' được chỉ định, với cột 'cột_cũ' được đổi tên thành 'cột_mới'.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>nguồn</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>cột_cũ</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>cột_mới</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Giá trị bảng cần xử lý.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Tên của cột cần đổi tên.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Tên mới cho cột.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Trả về các hàng từ bảng mà theo đó tất cả các điều kiện được chỉ định đều đúng.</value>
@@ -2275,6 +2304,10 @@
     <value>Một trường có tên là '{0}' được chỉ định nhiều lần trong bản ghi này.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Không thể đặt lại tên hai lần cho cột '{0}' được chỉ định.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Đã chỉ định cột có tên là '{0}' nhiều lần.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Giá trị bảng cần loại bỏ cột khỏi đó.</value>
+    <value>Giá trị bảng hoặc bản ghi cần loại bỏ khỏi cột đó.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Tên của cột cần duy trì.</value>

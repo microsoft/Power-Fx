@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Uma tabela para adicionar colunas.</value>
+    <value>Uma tabela ou registo para adicionar colunas.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Um valor da tabela para remover colunas.</value>
+    <value>Um valor de tabela ou registo para remover colunas.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>O nome de uma coluna para remover.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Devolve uma cópia da tabela "origem" especificada, com o nome da coluna "old_column" mudado para "new_column".</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>origem</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>coluna_antiga</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>nova_coluna</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Um valor de tabela a processar.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Nome da coluna a mudar o nome.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Novo nome para a coluna.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Devolve as linhas da tabela em que todas as condições especificadas são verdadeiras.</value>
@@ -2275,6 +2304,10 @@
     <value>Foi especificado um campo com o nome "{0}" mais do que uma vez neste registo.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Não é possível mudar o nome da coluna especificada "{0}" duas vezes.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Uma coluna com o nome "{0}" foi especificado mais do que uma vez.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Um valor da tabela para remover colunas.</value>
+    <value>Um valor de tabela ou registo para remover colunas.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Nome da coluna a manter.</value>

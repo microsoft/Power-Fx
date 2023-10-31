@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>ตารางสำหรับเพิ่มคอลัมน์เข้าไป</value>
+    <value>ตารางหรือเรกคอร์ดสำหรับเพิ่มคอลัมน์เข้าไป</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>ค่าตารางที่จะเอาคอลัมน์ออก</value>
+    <value>ค่าตารางหรือเรกคอร์ดที่จะเอาคอลัมน์ออก</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>ชื่อของคอลัมน์ที่จะเอาออก</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>ส่งกลับสำเนาของตาราง 'แหล่งที่มา' ที่เปลี่ยนชื่อจาก 'คอลัมน์_เก่า' เป็น 'คอลัมน์_ใหม่'</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>แหล่งที่มา</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>คอลัมน์_เก่า</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>คอลัมน์_ใหม่</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>ค่าตารางที่จะดำเนินการ</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>ชื่อของคอลัมน์ที่จะเปลี่ยน</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>ชื่อคอลัมน์ใหม่</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>คืนค่าแถวจากตารางที่เงื่อนไขทุกอย่างที่ระบุไว้เป็นจริง</value>
@@ -2275,6 +2304,10 @@
     <value>มีการระบุเขตข้อมูลชื่อ '{0}' มากกว่าหนึ่งครั้งในระเบียนนี้</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>คอลัมน์ที่ระบุ '{0}' ไม่สามารถเปลี่ยนชื่อถึงสองครั้งได้</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>คอลัมน์ชื่อ '{0}' ถูกระบุมากกว่าหนึ่งครั้ง</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>ค่าตารางที่จะเอาคอลัมน์ออก</value>
+    <value>ค่าตารางหรือเรกคอร์ดที่จะเอาคอลัมน์ออก</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>ชื่อของคอลัมน์ที่จะเก็บไว้</value>

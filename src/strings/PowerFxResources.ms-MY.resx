@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Jadual untuk ditambahkan lajur.</value>
+    <value>Jadual atau rekod untuk ditambahkan lajur.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Nilai jadual untuk dialih keluar jalur.</value>
+    <value>Nilai jadual atau rekod untuk dialih keluar lajur.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Nama lajur untuk dialih keluar.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Mengembalikan satu salinan jadual 'sumber' yang ditentukan, dengan lajur 'lajur_lama' dinamakan semula kepada 'lajur_baru'.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>sumber</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>lajur_lama</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>lajur_baru</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Nilai jadual untuk diproses.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Nama lajur untuk dinamakan semula.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Nama baru untuk lajur.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Mengembalikan baris daripada jadual yang semua syarat yang ditentukan adalah benar.</value>
@@ -2275,6 +2304,10 @@
     <value>Medan bernama '{0}' telah ditentukan lebih daripada sekali dalam rekod ini.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Lajur yang ditentukan '{0}' tidak boleh dinamakan semula dua kali.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Lajur bernama '{0}' telah ditentukan lebih daripada sekali.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Nilai jadual untuk dialih keluar jalur.</value>
+    <value>Nilai jadual atau rekod untuk dialih keluar lajur.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Nama lajur untuk disimpan.</value>
