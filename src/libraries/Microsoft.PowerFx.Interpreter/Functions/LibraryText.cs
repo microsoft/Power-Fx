@@ -431,17 +431,10 @@ namespace Microsoft.PowerFx.Functions
                             numberValue = new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)decimalValue.Value);
                         }
 
-                        // Flip sign of negative number if it has more than 1 section format
-                        double oriNumberValue = numberValue.Value;
-                        if (oriNumberValue < 0 && textFormatArgs.Sections != null && textFormatArgs.Sections.Count > 1)
-                        {
-                            numberValue = new NumberValue(IRContext.NotInSource(FormulaType.Number), -1 * numberValue.Value);
-                        }
-
                         var dateTimeResult = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), numberValue).GetConvertedValue(timeZoneInfo);
 
                         // Update the right section for DateTime format
-                        textFormatArgs.FormatArg = SectionFormatStr(textFormatArgs.FormatArg, textFormatArgs.Sections, oriNumberValue);
+                        textFormatArgs.FormatArg = SectionFormatStr(textFormatArgs.FormatArg, textFormatArgs.Sections, numberValue.Value);
 
                         return textFormatArgs.DateTimeFmt == DateTimeFmtType.EnumDateTimeFormat ? TryExpandDateTimeFromEnumFormat(irContext, textFormatArgs, dateTimeResult, timeZoneInfo, culture, cancellationToken, out result) :
                             TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, "g", dateTimeResult, timeZoneInfo, culture, cancellationToken, out result);
