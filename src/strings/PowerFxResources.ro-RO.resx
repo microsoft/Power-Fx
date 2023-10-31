@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Un tabel la care se adaugă coloane.</value>
+    <value>Un tabel sau înregistrare la care se adaugă coloane.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>O valoare de tabel din care să se elimine coloane.</value>
+    <value>O valoare de tabel sau de înregistrare din care să se elimine coloane.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Numele unei coloane de eliminat.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Returnează o copie a tabelului „sursă” specificat, cu coloana „coloană_veche” redenumită „coloană_nouă”.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>coloană_veche</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>coloană_nouă</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>O valoare de tabel de procesat.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Numele unei coloane de redenumit.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Noul nume pentru coloană.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Returnează rândurile din tabelul pentru care toate condițiile specificate sunt adevărate.</value>
@@ -2275,6 +2304,10 @@
     <value>Un câmp denumit „{0}” a fost specificat de mai multe ori în această înregistrare.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Coloana specificată, „{0}”, nu poate fi redenumită de două ori.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>O coloană denumită „{0}” a fost specificată de mai multe ori.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>O valoare de tabel din care să se elimine coloane.</value>
+    <value>O valoare de tabel sau de înregistrare din care să se elimine coloane.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Numele unei coloane de păstrat.</value>

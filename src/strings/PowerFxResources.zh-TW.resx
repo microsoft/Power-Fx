@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>要新增資料行的資料表。</value>
+    <value>要新增資料行的資料表或記錄。</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>要從中移除資料行的資料表值。</value>
+    <value>要從中移除資料行的資料表或記錄值。</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>要移除的資料行名稱。</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>傳回指定的 'source' 資料表複本，其 'old_column' 資料行已重新命名為 'new_column'。</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>來源</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>舊_資料行</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>新_資料行</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>要處理的資料表值。</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>要重新命名的資料行名稱。</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>資料行的新名稱。</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>傳回資料表中所有指定條件皆為 True 的資料列。</value>
@@ -1059,7 +1088,7 @@
           
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;用以變更日期的月份數。正值會產生未來的日期，負值會產生過去的日期，零則不會變更月份。</value>
+    <value>&gt;用以變更日期的月份數。正值會得出未來的日期，負值會得出過去的日期，零則不會變更月份。</value>
          
   </data>
   <data name="AboutInt" xml:space="preserve">
@@ -2275,6 +2304,10 @@
     <value>在此記錄中，指定了一次以上名稱為 '{0}' 的欄位。</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>指定的欄位 '{0}' 無法重新命名兩次。</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>指定了一次以上名稱為 '{0}' 的資料行。</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>要從中移除資料行的資料表值。</value>
+    <value>要從中移除資料行的資料表或記錄值。</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>要保留的資料行名稱。</value>

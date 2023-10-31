@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>स्तंभ जोड़ने के लिए तालिका.</value>
+    <value>पंक्तियाँ जोड़ने के लिए एक तालिका या रिकॉर्ड.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>तालिका का मान जिससे स्तंभ निकाले जाने हैं.</value>
+    <value>पंक्तियाँ हटाने के लिए एक तालिका या रिकॉर्ड मान.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>निकाले जाने वाले स्तंभ का नाम.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>निर्दिष्ट 'source' तालिका की प्रतिलिपि लौटाता है, जिसमें 'old_column' स्तंभ का नाम बदलकर 'new_column' किया गया है.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>स्रोत</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>पुराना_स्तंभ</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>नया_स्तंभ</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>संसाधित की जाने वाली तालिका का मान.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>नाम बदले जाने वाले स्तंभ का नाम.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>स्तंभ का नया नाम.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>तालिका की वह पंक्तियाँ लौटाता है जिसके लिए सभी निर्दिष्ट स्थितियाँ सत्य हों.</value>
@@ -2275,6 +2304,10 @@
     <value>इस रिकॉर्ड में '{0}' नाम वाला फ़ील्ड एक से अधिक बार निर्दिष्ट किया गया था.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>निर्दिष्ट स्तंभ '{0}' का नाम दो बार नहीं बदला जा सकता.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>स्तंभ नाम '{0}' एक से अधिक बार निर्दिष्ट किया गया था.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>तालिका का मान जिससे स्तंभ निकाले जाने हैं.</value>
+    <value>पंक्तियाँ हटाने के लिए एक तालिका या रिकॉर्ड मान.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>रखे जाने वाले स्तंभ का नाम.</value>
