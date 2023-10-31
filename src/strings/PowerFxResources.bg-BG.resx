@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Таблица, към която да се добавят колони.</value>
+    <value>Таблица или запис, към които да се добавят колони.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Стойност на таблица, от която да се премахнат колони.</value>
+    <value>Стойност на таблица или запис, от която да се премахнат колони.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Името на дадена колона за премахване.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Връща копие на указаната таблица на „източник“, където колоната „old_column“ е преименувана на „new_column“.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>източник</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>стара_колона</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>нова_колона</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Стойност на таблица за обработване.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Името на колона за преименуване.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Новото име на колоната.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Връща редовете от таблицата, за които всички указани условия са true.</value>
@@ -2275,6 +2304,10 @@
     <value>Поле с името „{0}“ е указано повече от един път в този запис.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Указаната колона „{0}“ не може да бъде преименувана два пъти.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Колона с име „{0}“ е указана повече от един път.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Стойност на таблица, от която да се премахнат колони.</value>
+    <value>Стойност на таблица или запис, от която да се премахнат колони.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Името на колона за запазване.</value>

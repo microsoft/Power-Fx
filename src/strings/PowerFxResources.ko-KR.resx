@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>열을 추가할 테이블입니다.</value>
+    <value>열을 추가할 테이블 또는 레코드입니다.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>열을 제거할 테이블 값입니다.</value>
+    <value>열을 제거할 테이블 또는 레코드 값입니다.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>제거할 열의 이름입니다.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>'old_column' 열의 이름이 'new_column'(으)로 바뀐 지정된 '원본' 테이블의 복사본을 반환합니다.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>원본</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>이전_열</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>새_열</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>처리할 테이블 값입니다.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>이름을 바꿀 열의 이름입니다.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>열의 새 이름입니다.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>테이블에서 지정된 모든 조건이 true인 행을 반환합니다.</value>
@@ -1035,7 +1064,7 @@
     
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
-    <value>지정된 월 수만큼 조정할 날짜 값입니다.</value>
+    <value>지정된 개월 수만큼 조정할 날짜 값입니다.</value>
           
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
@@ -2273,6 +2302,10 @@
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
     <value>이름이 '{0}'인 필드가 이 레코드에서 두 번 이상 지정되었습니다.</value>
+    
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>지정된 열 '{0}'의 이름을 두 번 바꿀 수 없습니다.</value>
     
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
