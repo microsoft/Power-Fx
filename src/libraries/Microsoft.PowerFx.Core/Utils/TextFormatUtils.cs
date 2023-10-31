@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Core.Utils
                     mCount = 0;
                 }
 
-                if (formatStr[i] == 'a' || formatStr[i] == 'A')
+                if ((formatStr[i] == 'a' || formatStr[i] == 'A') && (i == 0 || formatStr[i - 1] != '\''))
                 {
                     // Block lower or mix cases of A/P or AM/PM
                     if ((i < formatStr.Length - 2 && formatStr[i] == 'a' && formatStr[i + 1] == '/' && (formatStr[i + 2] == 'p' || formatStr[i + 2] == 'P')) ||
@@ -161,6 +161,7 @@ namespace Microsoft.PowerFx.Core.Utils
                                 if (commaIdxList[j] < formatStr.Length - 1 && !_numericCharacters.Contains(formatStr[commaIdxList[j] + 1]))
                                 {
                                     formatStr = formatStr.Remove(commaIdxList[j], 1);
+                                    i--;
                                 }
                             }
                         }
@@ -168,15 +169,24 @@ namespace Microsoft.PowerFx.Core.Utils
                         commaIdxList.Clear();
                     }
                 }
-                else if (_dateTimeCharacters.Contains(formatStr[i]))
+                else if (_dateTimeCharacters.Contains(formatStr[i]) && (i == 0 || formatStr[i - 1] != '\''))
                 {
                     textFormatArgs.DateTimeFmt = DateTimeFmtType.GeneralDateTimeFormat;
                 }
                 else if (textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat && formatStr[i] == ',' && !hasNumericCharacters && decimalPointIndex == -1)
                 {
-                    // If there is no numeric format character before group separator character, then treat it as an escaping character.
-                    formatStr = formatStr.Insert(i, "\\");
-                    i++;
+                    // Removing consecutive comma
+                    if (i > 0 && formatStr[i - 1] == ',')
+                    {
+                        formatStr = formatStr.Remove(i, 1);
+                        i--;
+                    }
+                    else
+                    {
+                        // If there is no numeric format character before group separator character, then treat it as an escaping character.
+                        formatStr = formatStr.Insert(i, "\\");
+                        i++;
+                    }
                 }
                 else if (textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat && formatStr[i] == '.')
                 {
@@ -225,7 +235,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
                 else if (textFormatArgs.HasNumericFmt && formatStr[i] == ',' && i > 0)
                 {
-                    if (_numericCharacters.Contains(formatStr[i - 1]) || commaIdxList.Contains(i - 1))
+                    if ((_numericCharacters.Contains(formatStr[i - 1]) && (i == 1 || formatStr[i - 2] != '\\')) || commaIdxList.Contains(i - 1))
                     {
                         // Record each comma index after numeric character and comma to do scaling factor process in the end of format.
                         commaIdxList.Add(i);
