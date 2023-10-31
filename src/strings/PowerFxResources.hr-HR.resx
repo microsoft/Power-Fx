@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Tablica u koju se dodaju stupci.</value>
+    <value>Tablica ili zapis kojem se dodaju stupci.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Vrijednost tablice iz koje se uklanjaju stupci.</value>
+    <value>Vrijednost tablice ili zapisa iz kojeg se uklanjaju stupci.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Naziv stupca koji se uklanja.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Vraća kopiju tablice navedene tablice "izvora" sa stupcem "stari_stupac" preimenovanim u "novi_stupac".</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>izvor</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>stari_stupac</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>novi_stupac</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Vrijednost tablice koja se obrađuje.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Naziv stupca koji se mijenja.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Novi naziv stupca.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Vraća retke iz tablice za koje su svi navedeni uvjeti true.</value>
@@ -2275,6 +2304,10 @@
     <value>Polje naziva "{0}" u zapisu je navedeno više puta.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Navedeni stupac "{0}" nije moguće dvaput preimenovati.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Stupac naziva "{0}" naveden je više puta.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Vrijednost tablice iz koje se uklanjaju stupci.</value>
+    <value>Vrijednost tablice ili zapisa iz kojeg se uklanjaju stupci.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Naziv stupca koji se zadržava.</value>

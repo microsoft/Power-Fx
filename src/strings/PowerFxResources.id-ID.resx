@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Kolom untuk ditambahkan ke tabel.</value>
+    <value>Kolom untuk ditambahkan ke tabel atau rekaman.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Nilai tabel yang kolomnya akan dihapus.</value>
+    <value>Nilai tabel atau rekaman yang kolomnya akan dihapus.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Nama kolom untuk dihapus.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Menampilkan salinan tabel 'sumber' yang ditentukan, dengan nama kolom 'old_column' yang sudah diubah menjadi 'new_column'.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>sumber</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>kolom_lama</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>kolom_baru</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Nilai tabel untuk diproses.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Nama kolom untuk diubah namanya.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Nama baru kolom.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Menampilkan baris dari tabel yang semua kondisinya true.</value>
@@ -2275,6 +2304,10 @@
     <value>Bidang dengan nama '{0}' ditentukan lebih dari sekali di catatan ini.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Nama kolom yang ditentukan '{0}' tidak dapat diganti dua kali.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Kolom dengan nama '{0}' ditentukan lebih dari satu kali.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Nilai tabel yang kolomnya akan dihapus.</value>
+    <value>Nilai tabel atau rekaman yang kolomnya akan dihapus.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Nama kolom untuk dipertahankan.</value>

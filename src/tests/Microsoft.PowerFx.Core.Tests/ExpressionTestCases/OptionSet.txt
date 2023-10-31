@@ -2,14 +2,35 @@
 
 // Both logical and display names bind
 >> OptionSet.option_1
-OptionSet.option_1 
+OptionSet.option_1
 
->> OptionSet.Option1 
-OptionSet.option_1 
+>> OptionSet.Option1
+OptionSet.option_1
+
+>> OptionSet.'option_1'
+OptionSet.option_1
+
+>> OptionSet.'Option1'
+OptionSet.option_1
+
+>> OptionSet.'Option SELF'
+OptionSet.'Self'
+
+>> OptionSet.'Option IS'
+OptionSet.'Is'
+
+>> OptionSet.'Option self low case'
+OptionSet.self
+
+>> OptionSet.'Option is low case'
+OptionSet.is
 
 // Can use in If
 >> If(true, OptionSet.Option1)
-OptionSet.option_1 
+OptionSet.option_1
+
+>> OptionSet.'Option-3'
+OptionSet.'option-3'
 
 >> OptionSet.Option1 <> OptionSet.Option2
 true

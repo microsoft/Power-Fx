@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Tabuľka, ku ktorej sa majú pridať stĺpce.</value>
+    <value>Tabuľka alebo záznam, kam sa majú pridať stĺpce.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Hodnota tabuľky, z ktorej sa majú odstrániť stĺpce.</value>
+    <value>Hodnota tabuľky alebo záznamu, z ktorého sa majú odstrániť stĺpce.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Názov stĺpca, ktorý sa má odstrániť.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Vráti kópiu tabuľky zadaného zdroja so stĺpcom old_column premenovaným na new_column.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>zdroj</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>starý_stĺpec</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>nový_stĺpec</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Hodnota tabuľky na spracovanie.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Názov stĺpca, ktorý sa má premenovať.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Nový názov pre stĺpec.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Vráti riadky tabuľky, pre ktoré sú pravdivé všetky zadané podmienky.</value>
@@ -2275,6 +2304,10 @@
     <value>Pole s názvom {0} bolo v tomto zázname zadané viac než raz.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Zadaný stĺpec {0} sa nedá premenovať dvakrát.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Stĺpec s názvom {0} bol zadaný viac než raz.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Hodnota tabuľky, z ktorej sa majú odstrániť stĺpce.</value>
+    <value>Hodnota tabuľky alebo záznamu, z ktorého sa majú odstrániť stĺpce.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Názov stĺpca, ktorý sa má ponechať.</value>
