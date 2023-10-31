@@ -1402,6 +1402,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             public class PayloadItem
             {
                 public string Expression { get; set; }
+
+                public string RawExpression { get; set; }
+
+                public string ModelId { get; set; }
             }
 
             public class Payload
@@ -1512,8 +1516,14 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             }
         }
 
+        // NL Handler is invoked by LSP 
         private class TestNLHandler : NLHandler
         {
+            public const string ModelIdStr = "Model123";
+
+            // Set on call to NL2Fx 
+            public string _log;
+
             // Set the expected expression to return. 
             public string Expected { get; set; }
 
@@ -1545,7 +1555,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 foreach (var sym in request.SymbolSummary.SuggestedSymbols)
                 {
                     sb.Append($"{sym.BestName},{sym.Type}");
-                }                
+                }
+
+                _log = sb.ToString();
 
                 return new CustomNL2FxResult
                 {
@@ -1553,7 +1565,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     {
                         new CustomNL2FxResultItem 
                         {
-                            Expression = sb.ToString()
+                            Expression = this.Expected,
+                            ModelId = ModelIdStr
                         }
                     }
                 };
@@ -1620,11 +1633,12 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             });
         }
 
-        [Fact]
-        public void TestNL2FX()
+        [Theory]
+        [InlineData("Score < 50", true)]
+        [InlineData("missing < 50", false)] // doesn't compile, should get filtered out by LSP 
+        public void TestNL2FX(string expectedExpr, bool success)
         {
             var documentUri = "powerfx://app?context=1";
-            var expectedExpr = "score < 50";
 
             var engine = new Engine();
             var symbols = new SymbolTable();
@@ -1652,7 +1666,26 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("123", response.Id);
 
             // result has expected concat with symbols. 
-            Assert.Equal("my sentence: score < 50: Score,Number", response.Result.Expressions[0].Expression);
+            var items = response.Result.Expressions;
+
+            Assert.Single(items);
+            var expression = items[0];
+
+            if (success)
+            {
+                Assert.Equal("my sentence: Score < 50: Score,Number", testNLHandler._log);
+
+                Assert.Equal(expectedExpr, expression.Expression);
+                Assert.Null(expression.RawExpression);
+            }
+            else
+            {
+                // Even though model returned an expression, it didn't compile, so it should be filtered out by LSP.
+                Assert.Null(expression.Expression);
+                Assert.Equal(expectedExpr, expression.RawExpression);
+            }
+
+            Assert.Equal(TestNLHandler.ModelIdStr, expression.ModelId);
         }
 
         [Fact]

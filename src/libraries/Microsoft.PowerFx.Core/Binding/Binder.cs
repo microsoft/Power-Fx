@@ -2066,7 +2066,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     accumulatedType,
                     currentRecordType,
                     useLegacyDateTimeAccepts: false,
-                    usePowerFxV1CompatibilityRules: Features.PowerFxV1CompatibilityRules);
+                    features: Features);
             }
 
             return accumulatedType;
@@ -2122,7 +2122,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         fields,
                         DType.EmptyRecord.Add(ref fError, DPath.Root, name.Name, lambdaParamType),
                         useLegacyDateTimeAccepts: false,
-                        usePowerFxV1CompatibilityRules: Features.PowerFxV1CompatibilityRules);
+                        features: Features);
                 }
             }
 
@@ -3826,7 +3826,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var childType = _txb.GetType(node.Child);
 
-                var res = CheckUnaryOpCore(_txb.ErrorContainer, node, _features.PowerFxV1CompatibilityRules, childType, _txb.BindingConfig.NumberIsFloat);
+                var res = CheckUnaryOpCore(_txb.ErrorContainer, node, _features, childType, _txb.BindingConfig.NumberIsFloat);
 
                 foreach (var coercion in res.Coercions)
                 {
@@ -3852,7 +3852,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 var leftType = _txb.GetType(node.Left);
                 var rightType = _txb.GetType(node.Right);
 
-                var res = CheckBinaryOpCore(_txb.ErrorContainer, node, _txb.Features.PowerFxV1CompatibilityRules, leftType, rightType, _txb.BindingConfig.NumberIsFloat);
+                var res = CheckBinaryOpCore(_txb.ErrorContainer, node, _txb.Features, leftType, rightType, _txb.BindingConfig.NumberIsFloat);
 
                 foreach (var coercion in res.Coercions)
                 {
@@ -5399,7 +5399,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         if (DType.TryUnionWithCoerce(
                             exprType,
                             childType,
-                            usePowerFxV1CompatibilityRules: true,
+                            _features,
                             coerceToLeftTypeOnly: true,
                             out var returnType,
                             out var needCoercion))
@@ -5422,11 +5422,11 @@ namespace Microsoft.PowerFx.Core.Binding
                         {
                             exprType = childType;
                         }
-                        else if (exprType.CanUnionWith(childType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: false))
+                        else if (exprType.CanUnionWith(childType, useLegacyDateTimeAccepts: false, _features))
                         {
-                            exprType = DType.Union(exprType, childType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: false);
+                            exprType = DType.Union(exprType, childType, useLegacyDateTimeAccepts: false, _features);
                         }
-                        else if (childType.CoercesTo(exprType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: false))
+                        else if (childType.CoercesTo(exprType, aggregateCoercion: true, isTopLevelCoercion: false, _features))
                         {
                             _txb.SetCoercedType(child, exprType);
                         }

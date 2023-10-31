@@ -23,8 +23,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public override bool RecordFirstArgumentCanCreateScope => true;
-
         public override bool HasColumnIdentifiers => true;
 
         public RenameColumnsFunction()
@@ -32,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             // RenameColumns(source, oldName, newName, oldName, newName, ..., oldName, newName, ...)
             SignatureConstraint = new SignatureConstraint(omitStartIndex: 5, repeatSpan: 2, endNonRepeatCount: 0, repeatTopLength: 9);
-            ScopeInfo = new FunctionScopeInfo(this);
+            ScopeInfo = new FunctionScopeInfo(this, canBeCreatedByRecord: true);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -91,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 bool isError = false;
                 returnType = returnType.Drop(ref isError, DPath.Root, new DName(DType.MetaFieldName));
                 Contracts.Assert(!isError);
-                returnType = DType.Union(returnType, isRecord ? metaFieldType.ToRecord() : metaFieldType.ToTable(), useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+                returnType = DType.Union(returnType, isRecord ? metaFieldType.ToRecord() : metaFieldType.ToTable(), useLegacyDateTimeAccepts: false, features: context.Features);
             }
 
             int count = args.Length;

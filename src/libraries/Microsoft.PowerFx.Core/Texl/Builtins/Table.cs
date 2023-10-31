@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     if (DType.TryUnionWithCoerce(
                         rowType,
                         argType,
-                        context.Features.PowerFxV1CompatibilityRules,
+                        context.Features,
                         coerceToLeftTypeOnly: context.Features.StronglyTypedBuiltinEnums || context.Features.PowerFxV1CompatibilityRules,
                         out var newType,
                         out bool coercionNeeded))

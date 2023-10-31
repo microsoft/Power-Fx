@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
                 return _aggregateTypeChecker.Run(sourceAggregateType, aggregateTypeToCheck, this);
             }
 
-            return IsMatchScaler(sourceType, typeToCheck);
+            return IsMatchScalar(sourceType, typeToCheck);
         }
 
         public FormulaTypeChecker(AggregateTypeChecker aggregateTypeChecker, ICollection<ExpressionError> errorList)
@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
             _aggregateTypeChecker = aggregateTypeChecker ?? throw new ArgumentNullException(nameof(aggregateTypeChecker));
         }
 
-        public abstract bool IsMatchScaler(FormulaType sourceType, FormulaType typeToCheck);
+        public abstract bool IsMatchScalar(FormulaType sourceType, FormulaType typeToCheck);
     }
 
     internal class FormulaTypeCheckerNumberCoercionOnly : FormulaTypeChecker
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
         {
         }
 
-        public override bool IsMatchScaler(FormulaType sourceType, FormulaType typeToCheck)
+        public override bool IsMatchScalar(FormulaType sourceType, FormulaType typeToCheck)
         {
             // NumericCoercion is allowed.
             if ((sourceType._type == DType.Number || sourceType._type == DType.Decimal) &&
@@ -84,9 +84,9 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
         {
         }
 
-        public override bool IsMatchScaler(FormulaType sourceType, FormulaType typeToCheck)
+        public override bool IsMatchScalar(FormulaType sourceType, FormulaType typeToCheck)
         {
-            var isTypeMatch = typeToCheck._type.CoercesTo(sourceType._type, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: true);
+            var isTypeMatch = typeToCheck._type.CoercesTo(sourceType._type, aggregateCoercion: false, isTopLevelCoercion: false, Features.PowerFxV1);
             if (!isTypeMatch)
             {
                 _errorList.Add(new ExpressionError()

@@ -313,7 +313,7 @@ namespace Microsoft.PowerFx.Types
 
                 flag = false;
 
-                sb.Append(this.ToExpressionField(field.Name));
+                sb.Append(TexlLexer.EscapeNameWithReservedWord(field.Name));
                 sb.Append(':');
 
                 field.Value.ToExpression(sb, settings);
@@ -322,6 +322,7 @@ namespace Microsoft.PowerFx.Types
             sb.Append("}");
         }
 
+        [Obsolete("This will be removed in a future version. Use ToExpression(StringBuilder, FormulaValueSerializerSettings")]
         protected string ToExpressionField(string tableFieldName)
         {
             var fieldName = IdentToken.MakeValidIdentifier(tableFieldName);

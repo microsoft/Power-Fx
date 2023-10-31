@@ -119,12 +119,6 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool AllowedWithinNondeterministicOperationOrder => true;
 
         /// <summary>
-        /// Typically functions that create scope requires a table as the first argument,
-        /// but some functions can do the same with a record argument as well.
-        /// </summary>
-        public virtual bool RecordFirstArgumentCanCreateScope => false;
-
-        /// <summary>
         /// Whether the function always produces a visible error if CheckTypes returns invalid.
         /// This can be used to prevent the overall "Function has invalid arguments" error.
         /// </summary>
@@ -1044,7 +1038,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             KeyValuePair<string, DType> coercionDifference = default;
             DType coercionDifferenceType = null;
-            if (coerceIfSupported && nodeType.CoercesTo(expectedType, out _, out coercionType, out coercionDifference, out coercionDifferenceType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePFxv1CompatRules))
+            if (coerceIfSupported && nodeType.CoercesTo(expectedType, out _, out coercionType, out coercionDifference, out coercionDifferenceType, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
             {
                 return true;
             }
@@ -1115,7 +1109,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if (!expectedType.Accepts(column.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (SupportsParamCoercion && column.Type.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (SupportsParamCoercion && column.Type.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
                 {
                     returnType = DType.CreateTable(new TypedName(expectedType, column.Name));
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, arg, returnType);
