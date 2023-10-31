@@ -2364,3 +2364,283 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(1234567.1234567, "'z','#',,,,'k',,,,,,'t',,,,'c',,,,'f',,,,'i',,#,,,#.0,,0,,,#,")
 "'z','1,2','k','t','c','f','i',34.567"
+
+// Sections for DateTime format
+>> Text(Date(2023,10,26), "yyyy-mm-dd")
+"2023-10-26"
+
+>> Text(Date(1000,7,4), "yyyy-mm-dd")
+"1000-07-04"
+
+>> Text(Date(1899,12,30), "yyyy-mm-dd")
+"1899-12-30"
+
+>> Text(Date(2023,10,26), "yyyy-mm-dd;mm/dd/yyyy")
+"2023-10-26"
+
+>> Text(Date(1000,7,4), "yyyy-mm-dd;mm/dd/yyyy")
+"07/04/1000"
+
+>> Text(Date(1899,12,30), "yyyy-mm-dd;mm/dd/yyyy")
+"1899-12-30"
+
+>> Text(Date(2023,10,26), "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"2023-10-26"
+
+>> Text(Date(1000,7,4), "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"07/04/1000"
+
+>> Text(Date(1899,12,30), "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"December 30 1899"
+
+>> Text(Date(2023,10,26), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy")
+"T:2023-10-26"
+
+>> Text(Date(1000,7,4), """T:""yyyy-mm-dd;""Z:""mm/dd/yyyy")
+"Z:07/04/1000"
+
+>> Text(Date(1899,12,30), """T:""yyyy-mm-dd;""Z:""mm/dd/yyyy")
+"T:1899-12-30"
+
+>> Text(Date(2023,10,26), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy;\K\:mmmm dd yyyy")
+"T:2023-10-26"
+
+>> Text(Date(1000,7,4), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy;\K\:mmmm dd yyyy")
+"Z:07/04/1000"
+
+>> Text(Date(1899,12,30), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy;\K\:mmmm dd yyyy")
+"K:December 30 1899"
+
+>> Text(Date(2023,10,26), "yyyy-mm-dd\;mm/dd/yyyy")
+"2023-10-26;10/26/2023"
+
+>> Text(Date(1000,7,4), "yyyy-mm-dd\;mm/dd/yyyy")
+"1000-07-04;07/04/1000"
+
+>> Text(Date(1899,12,30), "yyyy-mm-dd\;mm/dd/yyyy")
+"1899-12-30;12/30/1899"
+
+>> Text(Date(2023,10,26), "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"2023-10-26;10/26/2023;October 26 2023"
+
+>> Text(Date(1000,7,4), "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"1000-07-04;07/04/1000;July 04 1000"
+
+>> Text(Date(1899,12,30), "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"1899-12-30;12/30/1899;December 30 1899"
+
+>> Text(Date(2023,10,26), "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"2023-10-26;10/26/2023;October 26 2023"
+
+>> Text(Date(1000,7,4), "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"1000-07-04;07/04/1000;July 04 1000"
+
+>> Text(Date(1899,12,30), "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"1899-12-30;12/30/1899;December 30 1899"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "yyyy-mm-dd")
+"2023-10-26"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), "yyyy-mm-dd")
+"1000-02-06"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), "yyyy-mm-dd")
+"1899-12-30"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "yyyy-mm-dd;mm/dd/yyyy")
+"2023-10-26"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), "yyyy-mm-dd;mm/dd/yyyy")
+"02/06/1000"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), "yyyy-mm-dd;mm/dd/yyyy")
+"1899-12-30"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"2023-10-26"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"02/06/1000"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"1899-12-30"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy")
+"T:2023-10-26"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), """T:""yyyy-mm-dd;""Z:""mm/dd/yyyy")
+"Z:02/06/1000"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), """T:""yyyy-mm-dd;""Z:""mm/dd/yyyy")
+"T:1899-12-30"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy;\K\:mmmm dd yyyy")
+"T:2023-10-26"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy;\K\:mmmm dd yyyy")
+"Z:02/06/1000"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy;\K\:mmmm dd yyyy")
+"T:1899-12-30"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "yyyy-mm-dd\;mm/dd/yyyy")
+"2023-10-26;10/26/2023"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), "yyyy-mm-dd\;mm/dd/yyyy")
+"1000-02-06;02/06/1000"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), "yyyy-mm-dd\;mm/dd/yyyy")
+"1899-12-30;12/30/1899"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"2023-10-26;10/26/2023;October 26 2023"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"1000-02-06;02/06/1000;February 06 1000"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"1899-12-30;12/30/1899;December 30 1899"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"2023-10-26;10/26/2023;October 26 2023"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"1000-02-06;02/06/1000;February 06 1000"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"1899-12-30;12/30/1899;December 30 1899"
+
+>> Text(Time(14, 32, 25, 678), "hh:mm:ss.00")
+"14:32:25.67"
+
+>> Text(Time(-5, 23, 15, 356), "hh:mm:ss.00")
+"19:23:15.35"
+
+>> Text(Time(0, 0, 0, 0), "hh:mm:ss.00")
+"00:00:00.00"
+
+>> Text(Time(14, 32, 25, 678), "hh:mm:ss.00;hh/mm/ss")
+"14:32:25.67"
+
+>> Text(Time(-5, 23, 15, 356), "hh:mm:ss.00;hh/mm/ss")
+"19/23/15"
+
+>> Text(Time(0, 0, 0, 0), "hh:mm:ss.00;hh/mm/ss")
+"00:00:00.00"
+
+>> Text(Time(14, 32, 25, 678), "hh:mm:ss.00;hh/mm/ss;hh mm ss")
+"14:32:25.67"
+
+>> Text(Time(-5, 23, 15, 356), "hh:mm:ss.00;hh/mm/ss;hh mm ss")
+"19/23/15"
+
+>> Text(Time(0, 0, 0, 0), "hh:mm:ss.00;hh/mm/ss;hh mm ss")
+"00 00 00"
+
+>> Text(Time(14, 32, 25, 678), "\T\:hh:mm:ss.00;\Z\:hh/mm/ss")
+"T:14:32:25.67"
+
+>> Text(Time(-5, 23, 15, 356), """T:""hh:mm:ss.00;""Z:""hh/mm/ss")
+"Z:19/23/15"
+
+>> Text(Time(0, 0, 0, 0), """T:""hh:mm:ss.00;""Z:""hh/mm/ss")
+"T:00:00:00.00"
+
+>> Text(Time(14, 32, 25, 678), "\T\:hh:mm:ss.00;\Z\:hh/mm/ss;\K\:hh mm ss")
+"T:14:32:25.67"
+
+>> Text(Time(-5, 23, 15, 356), "\T\:hh:mm:ss.00;\Z\:hh/mm/ss;\K\:hh mm ss")
+"Z:19/23/15"
+
+>> Text(Time(0, 0, 0, 0), "\T\:hh:mm:ss.00;\Z\:hh/mm/ss;\K\:hh mm ss")
+"K:00 00 00"
+
+>> Text(Time(14, 32, 25, 678), "hh:mm:ss.00\;hh/mm/ss")
+"14:32:25.67;14/32/25"
+
+>> Text(Time(-5, 23, 15, 356), "hh:mm:ss.00\;hh/mm/ss")
+"19:23:15.35;19/23/15"
+
+>> Text(Time(0, 0, 0, 0), "hh:mm:ss.00\;hh/mm/ss")
+"00:00:00.00;00/00/00"
+
+>> Text(Time(14, 32, 25, 678), "hh:mm:ss.00\;hh/mm/ss\;hh mm ss")
+"14:32:25.67;14/32/25;14 32 25"
+
+>> Text(Time(-5, 23, 15, 356), "hh:mm:ss.00\;hh/mm/ss\;hh mm ss")
+"19:23:15.35;19/23/15;19 23 15"
+
+>> Text(Time(0, 0, 0, 0), "hh:mm:ss.00\;hh/mm/ss\;hh mm ss")
+"00:00:00.00;00/00/00;00 00 00"
+
+>> Text(Time(14, 32, 25, 678), "hh:mm:ss.00"";""hh/mm/ss"";""hh mm ss")
+"14:32:25.67;14/32/25;14 32 25"
+
+>> Text(Time(-5, 23, 15, 356), "hh:mm:ss.00"";""hh/mm/ss"";""hh mm ss")
+"19:23:15.35;19/23/15;19 23 15"
+
+>> Text(Time(0, 0, 0, 0), "hh:mm:ss.00"";""hh/mm/ss"";""hh mm ss")
+"00:00:00.00;00/00/00;00 00 00"
+
+>> Text(25, "yyyy-mm-dd;mm/dd/yyyy")
+"1900-01-24"
+
+>> Text(-25, "yyyy-mm-dd;mm/dd/yyyy")
+"12/05/1899"
+
+>> Text(0, "yyyy-mm-dd;mm/dd/yyyy")
+"1899-12-30"
+
+>> Text(25, "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"1900-01-24"
+
+>> Text(-25, "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"12/05/1899"
+
+>> Text(0, "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"December 30 1899"
+
+>> Text(25, "yyyy-mm-dd\;mm/dd/yyyy")
+"1900-01-24;01/24/1900"
+
+>> Text(-25, "yyyy-mm-dd\;mm/dd/yyyy")
+"1899-12-05;12/05/1899"
+
+>> Text(0, "yyyy-mm-dd\;mm/dd/yyyy")
+"1899-12-30;12/30/1899"
+
+>> Text(25, "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"1900-01-24;01/24/1900;January 24 1900"
+
+>> Text(-25, "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"1899-12-05;12/05/1899;December 05 1899"
+
+>> Text(0, "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"1899-12-30;12/30/1899;December 30 1899"
+
+>> Text(1246.22265625, "hh:mm:ss.00;hh/mm/ss;hh mm ss")
+"05:20:37.50"
+
+>> Text(-34.55859375, "hh:mm:ss.00;hh/mm/ss;hh mm ss")
+"10/35/37"
+
+>> Text(0, "hh:mm:ss.00;hh/mm/ss;hh mm ss")
+"00 00 00"
+
+>> Text(25, "yyyy-mm-dd"";""mm/dd/yyyy")
+"1900-01-24;01/24/1900"
+
+>> Text(-25, "yyyy-mm-dd"";""mm/dd/yyyy")
+"1899-12-05;12/05/1899"
+
+>> Text(0, "yyyy-mm-dd"";""mm/dd/yyyy")
+"1899-12-30;12/30/1899"
+
+>> Text(25, "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"1900-01-24;01/24/1900;January 24 1900"
+
+>> Text(-25, "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"1899-12-05;12/05/1899;December 05 1899"
+
+>> Text(0, "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"1899-12-30;12/30/1899;December 30 1899"
