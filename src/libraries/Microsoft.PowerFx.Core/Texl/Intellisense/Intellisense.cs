@@ -267,7 +267,7 @@ namespace Microsoft.PowerFx.Intellisense
             intellisenseData.Suggestions.Sort(culture);
             intellisenseData.SubstringSuggestions.Sort(culture);
             resultSuggestions.Sort(new IntellisenseSuggestionComparer(culture));
-
+            
             var allFunctionsOverloads = GetFunctionOverloads(intellisenseData.Binding.NameResolver, intellisenseData.CurFunc);
             return new IntellisenseResult(intellisenseData, resultSuggestions, allFunctionsOverloads);
         }

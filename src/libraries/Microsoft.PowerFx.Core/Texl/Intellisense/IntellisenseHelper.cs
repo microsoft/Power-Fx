@@ -14,6 +14,7 @@ using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Intellisense.Intellisense;
 
 namespace Microsoft.PowerFx.Intellisense
 {
@@ -196,6 +197,8 @@ namespace Microsoft.PowerFx.Intellisense
         {
             Contracts.AssertValue(intellisenseData);
             Contracts.AssertValue(possibilities);
+
+            var argType = intellisenseData.GetCurrentArgType();
 
             foreach (var possibility in possibilities)
             {
@@ -843,6 +846,12 @@ namespace Microsoft.PowerFx.Intellisense
         {
             Contracts.AssertValue(intellisenseData);
 
+            DType argType = default;
+            if (intellisenseData.CurFunc != null)
+            {
+                argType = intellisenseData.GetCurrentArgType();
+            }
+
             var suggestions = intellisenseData.Suggestions;
             var substringSuggestions = intellisenseData.SubstringSuggestions;
             var countSuggBefore = suggestions.Count;
@@ -854,9 +863,12 @@ namespace Microsoft.PowerFx.Intellisense
                 var enumName = TexlLexer.EscapeName(enumInfo.EntityName.Value);
 
                 // TASK: 76039: Intellisense: Update intellisense to filter suggestions based on the expected type of the text being typed in UI
-                AddSuggestion(intellisenseData, enumName, SuggestionKind.Enum, SuggestionIconKind.Other, enumType, requiresSuggestionEscaping: false);
+                if (argType == default || enumType == argType) 
+                {
+                    AddSuggestion(intellisenseData, enumName, SuggestionKind.Enum, SuggestionIconKind.Other, enumType, requiresSuggestionEscaping: false);
 
-                AddSuggestionsForEnum(intellisenseData, enumInfo, prefix: enumName + TexlLexer.PunctuatorDot);
+                    AddSuggestionsForEnum(intellisenseData, enumInfo, prefix: enumName + TexlLexer.PunctuatorDot);
+                }
             }
         }
 
