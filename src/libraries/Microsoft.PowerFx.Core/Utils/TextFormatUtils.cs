@@ -35,6 +35,11 @@ namespace Microsoft.PowerFx.Core.Utils
         public string FormatArg { get; set; }
 
         /// <summary>
+        /// Numeric/date time format string.
+        /// </summary>
+        public List<string> Sections { get; set; }
+
+        /// <summary>
         /// Type of date time format.
         /// </summary>
         public DateTimeFmtType DateTimeFmt { get; set; }
@@ -102,10 +107,13 @@ namespace Microsoft.PowerFx.Core.Utils
             bool hasNumericCharacters = false;
             int decimalPointIndex = -1;
             int sectionCount = 0;
+            int lastSectionIdx = -1;
             int mCount = 0;
             bool hasColonWithNum = false;
             bool hasExponentialNotation = false;
             List<int> commaIdxList = new List<int>();
+            textFormatArgs.Sections = new List<string>();
+
             for (int i = 0; i < formatStr.Length; i++)
             {
                 if (formatStr[i] == 'm' || formatStr[i] == 'M')
@@ -232,6 +240,9 @@ namespace Microsoft.PowerFx.Core.Utils
                     {
                         return false;
                     }
+
+                    textFormatArgs.Sections.Add(formatStr.Substring(lastSectionIdx + 1, i - lastSectionIdx - 1));
+                    lastSectionIdx = i;
                 }
                 else if (textFormatArgs.HasNumericFmt && formatStr[i] == ',' && i > 0)
                 {
@@ -291,7 +302,7 @@ namespace Microsoft.PowerFx.Core.Utils
                         return false;
                     }
 
-                    if (textFormatArgs.HasNumericFmt || (i < formatStr.Length - 1 && formatStr[i + 1] == '\"'))
+                    if ((textFormatArgs.HasNumericFmt && textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat) || (i < formatStr.Length - 1 && formatStr[i + 1] == '\"'))
                     {
                         // Skip next character if seeing escaping character.
                         i++;
@@ -322,6 +333,11 @@ namespace Microsoft.PowerFx.Core.Utils
                         return false;
                     }
                 }
+            }
+
+            if (lastSectionIdx != -1 && lastSectionIdx < formatStr.Length - 1)
+            {
+                textFormatArgs.Sections.Add(formatStr.Substring(lastSectionIdx + 1, formatStr.Length - lastSectionIdx - 1));
             }
 
             // Each comma after the decimal point and numeric character divides the number by 1,000.
