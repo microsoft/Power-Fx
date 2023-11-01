@@ -116,6 +116,7 @@
     "Shuffle",
     "Sin",
     "Sort",
+    "SortByColumns",
     "Split",
     "Sqrt",
     "StartsWith",

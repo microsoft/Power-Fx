@@ -662,6 +662,153 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        public static async ValueTask<FormulaValue> SortByColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (TableValue)args[0];
+
+            var columnNames = new List<string>();
+            var ascendingSort = new List<bool>();
+            for (var i = 1; i < args.Length; i += 2)
+            {
+                var columnName = ((StringValue)args[i]).Value;
+                var isAscending =
+                    i == args.Length - 1 ||
+                    !((StringValue)args[i + 1]).Value.Equals("descending", StringComparison.OrdinalIgnoreCase);
+
+                columnNames.Add(columnName);
+                ascendingSort.Add(isAscending);
+            }
+
+            var rowsWithValues = new List<(DValue<RecordValue> row, List<FormulaValue> columnValues)>();
+            foreach (var row in arg0.Rows)
+            {
+                if (row.IsError)
+                {
+                    return row.Error;
+                }
+
+                var valuesForRow = new List<FormulaValue>();
+                foreach (var column in columnNames)
+                {
+                    runner.CheckCancel();
+                    if (row.IsBlank)
+                    {
+                        valuesForRow.Add(row.Blank);
+                    }
+                    else
+                    {
+                        var fieldValue = await row.Value.GetFieldAsync(column, runner.CancellationToken).ConfigureAwait(false);
+                        if (fieldValue is ErrorValue ev)
+                        {
+                            return ev;
+                        }
+
+                        valuesForRow.Add(fieldValue);
+                    }
+                }
+
+                rowsWithValues.Add((row, valuesForRow));
+            }
+
+            return SortByColumnsImpl(irContext, runner, rowsWithValues, ascendingSort);
+        }
+
+        private class FormulaValueComparer : IComparer<FormulaValue>
+        {
+            private EvalVisitor Runner { get; }
+
+            private bool IsAscending { get; }
+
+            public FormulaValueComparer(EvalVisitor runner, bool isAscending)
+            {
+                Runner = runner;
+                IsAscending = isAscending;
+            }
+
+            public int Compare(FormulaValue x, FormulaValue y)
+            {
+                var modifier = this.IsAscending ? 1 : -1;
+                if (x is BlankValue)
+                {
+                    return y is BlankValue ? 0 : 1;
+                }
+
+                if (y is BlankValue)
+                {
+                    return -1;
+                }
+
+                if (x is StringValue sv1 && y is StringValue sv2)
+                {
+#pragma warning disable CA1309 // Use ordinal string comparison
+                    return string.Compare(sv1.Value, sv2.Value, StringComparison.CurrentCulture) * modifier;
+#pragma warning restore CA1309 // Use ordinal string comparison
+                }
+
+                if (x is DateValue dv1 && y is DateValue dv2)
+                {
+                    return dv1.GetConvertedValue(Runner.TimeZoneInfo).CompareTo(dv2.GetConvertedValue(Runner.TimeZoneInfo)) * modifier;
+                }
+
+                if (x is DateTimeValue dtv1 && y is DateTimeValue dtv2)
+                {
+                    return dtv1.GetConvertedValue(Runner.TimeZoneInfo).CompareTo(dtv2.GetConvertedValue(Runner.TimeZoneInfo)) * modifier;
+                }
+
+                if (x is TimeValue tv1 && y is TimeValue tv2)
+                {
+                    return tv1.Value.CompareTo(tv2.Value) * modifier;
+                }
+
+                if (x is BooleanValue bv1 && y is BooleanValue bv2)
+                {
+                    return bv1.Value.CompareTo(bv2.Value) * modifier;
+                }
+
+                if (x is GuidValue gv1 && y is GuidValue gv2)
+                {
+                    return gv1.Value.CompareTo(gv2.Value) * modifier;
+                }
+
+                if (x is NumberValue nv1 && y is NumberValue nv2)
+                {
+                    return nv1.Value.CompareTo(nv2.Value) * modifier;
+                }
+
+                if (x is DecimalValue dcv1 && y is DecimalValue dcv2)
+                {
+                    return dcv1.Value.CompareTo(dcv2.Value) * modifier;
+                }
+
+                if (x is OptionSetValue osv1 && y is OptionSetValue osv2)
+                {
+                    return string.Compare(osv1.Option, osv2.Option, StringComparison.Ordinal) * modifier;
+                }
+
+                throw new InvalidOperationException();
+            }
+        }
+
+        private static FormulaValue SortByColumnsImpl(IRContext irContext, EvalVisitor runner, List<(DValue<RecordValue> row, List<FormulaValue> columnValues)> rowWithValues, List<bool> isAscending)
+        {
+            var ordered = rowWithValues.OrderBy(r => r.columnValues[0], new FormulaValueComparer(runner, isAscending[0]));
+            for (int i = 1; i < isAscending.Count; i++)
+            {
+                var columnToSort = i;
+                ordered = ordered.ThenBy(r => r.columnValues[columnToSort], new FormulaValueComparer(runner, isAscending[columnToSort]));
+            }
+
+            try
+            {
+                var orderedRows = ordered.Select(pair => pair.row).ToList();
+                return new InMemoryTableValue(irContext, orderedRows);
+            }
+            catch (InvalidOperationException)
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+        }
+
         public static async ValueTask<FormulaValue> AsType(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (RecordValue)args[0];

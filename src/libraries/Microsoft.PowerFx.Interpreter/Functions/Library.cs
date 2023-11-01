@@ -1456,6 +1456,19 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: SortTable)
             },
             {
+                BuiltinFunctionsCore.SortByColumns,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.SortByColumns.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequenceVariadic(
+                        new Func<IRContext, int, FormulaValue, FormulaValue>[] { ExactValueTypeOrBlank<TableValue> },
+                        new Func<IRContext, int, FormulaValue, FormulaValue>[] { ExactValueTypeOrBlank<StringValue> }),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: SortByColumns)
+            },
+            {
                 BuiltinFunctionsCore.Split,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Split.Name,
