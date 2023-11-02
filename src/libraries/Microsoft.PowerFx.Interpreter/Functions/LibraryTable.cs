@@ -14,6 +14,44 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
+        public static FormulaValue Chain(IRContext irContext, TableValue[] args)
+        {
+            if (irContext.ResultType is not TableType typeTbl)
+            {
+                throw new System.InvalidOperationException("Table type expected");
+            }
+
+            var tables = (TableValue[])args.Clone();
+            int itabLim = 0;
+            for (int i = 0; i < tables.Length; i++)
+            {
+                var tbl = tables[i];
+                if (tbl is null)
+                {
+                    continue;
+                }
+
+                if (itabLim < i)
+                {
+                    tables[itabLim] = tables[i];
+                }
+
+                itabLim++;
+            }
+
+            if (itabLim <= 1)
+            {
+                return itabLim == 0 ? new EmptyTableValue(irContext) : MaybeAdjustToCompileTimeType(tables[0], irContext);
+            }
+
+            if (itabLim < tables.Length)
+            {
+                Array.Resize(ref tables, itabLim);
+            }
+
+            return new ChainTableValue(typeTbl, tables);
+        }
+
         public static async ValueTask<FormulaValue> LookUp(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             // Streaming 

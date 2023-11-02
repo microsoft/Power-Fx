@@ -99,8 +99,8 @@ namespace Microsoft.PowerFx.Repl.Services
         {
             if (record.TryGetSpecialFieldName(SpecialFieldKind.PrimaryKey, out var primaryKey) &&
                 record.TryGetSpecialFieldName(SpecialFieldKind.PrimaryName, out var primaryName))
-            { 
-                    return new HashSet<string>() { primaryName, primaryKey };
+            {
+                return new HashSet<string>() { primaryName, primaryKey };
             }
 
             return null;
@@ -110,17 +110,25 @@ namespace Microsoft.PowerFx.Repl.Services
         {
             StringBuilder resultString;
 
-            IEnumerable<string> fieldNames = selectedFieldNames ?? table.Type.FieldNames;
-
             if (Minimal)
             {
-                resultString = new StringBuilder("<table>");
+                return "<table>";
+            }
+
+            var fieldNames = (selectedFieldNames ?? table.Type.FieldNames).ToArray();
+            if (fieldNames.Length == 0)
+            {
+                return Minimal ? string.Empty : "Table()";
+            }
+
+            // special treatment for empty table
+            if (!table.Rows.Any())
+            {
+                return "\n<empty table>";
             }
 
             // special treatment for single column table named Value
-            else if (table.Rows.Count() > 0 && 
-                     table.Rows.First().Value?.Fields.Count() == 1 && 
-                     table.Rows.First().Value?.Fields.First().Name == "Value")
+            if (fieldNames.Length == 1 && fieldNames[0] == "Value")
             {
                 var separator = string.Empty;
                 resultString = new StringBuilder("[");
@@ -131,163 +139,127 @@ namespace Microsoft.PowerFx.Repl.Services
                     separator = ", ";
                 }
 
-                resultString.Append("]");
+                return resultString.Append("]").ToString();
             }
 
-            // special treatment for empty table
-            else if (table.Rows.Count() == 0)
+            if (!FormatTable)
             {
-                resultString = new StringBuilder("\n<empty table>");
+                // table without formatting 
+                // REVIEW: should this honor MaxTableRows?
+
+                resultString = new StringBuilder("[");
+                var separator = string.Empty;
+                foreach (var row in table.Rows)
+                {
+                    resultString.Append(separator);
+                    resultString.Append(FormatRecordCore(row.Value));
+                    separator = ", ";
+                }
+
+                return resultString.Append(']').ToString();
             }
 
             // otherwise a full table treatment is needed
-            else
+            var colMap = new Dictionary<string, int>();
+            var columnWidth = new int[fieldNames.Length];
+            for (int i = 0; i < fieldNames.Length; i++)
             {
-                var columnCount = fieldNames.Count();
+                var name = fieldNames[i];
+                colMap[name] = i;
+                columnWidth[i] = name.Length;
+            }
 
-                if (columnCount == 0)
+            var maxRows = MaxTableRows;
+            foreach (var row in table.Rows)
+            {
+                if (maxRows-- <= 0)
                 {
-                    return Minimal ? string.Empty : "Table()";
+                    break;
                 }
 
-                var columnWidth = new int[columnCount];
-
-                var maxRows = MaxTableRows;
-                foreach (var row in table.Rows)
+                if (row.Value != null)
                 {
-                    if (row.Value != null)
+                    foreach (var field in row.Value.Fields)
                     {
-                        if (maxRows-- <= 0)
+                        if (colMap.TryGetValue(field.Name, out int column))
                         {
-                            break;
-                        }
-
-                        var column = 0;
-
-                        foreach (NamedValue field in row.Value.Fields)
-                        {
-                            if (fieldNames.Contains(field.Name))
-                            {
-                                columnWidth[column] = Math.Max(columnWidth[column], FormatField(field, true).Length);
-                                column++;
-                            }
+                            int len = FormatField(field, true).Length;
+                            columnWidth[column] = Math.Max(columnWidth[column], len);
                         }
                     }
                 }
+            }
 
-                if (FormatTable)
+            resultString = new StringBuilder("\n ");
+            for (int i = 0; i < fieldNames.Length; i++)
+            {
+                var name = fieldNames[i];
+                resultString.Append(' ', columnWidth[i] - name.Length + 1).Append(name).Append("  ");
+            }
+
+            resultString.Append("\n ");
+            foreach (var width in columnWidth)
+            {
+                resultString.Append('=', width + 2).Append(" ");
+            }
+
+            if (selectedFieldNames != null)
+            {
+                resultString.Append("=====");
+            }
+
+            maxRows = MaxTableRows;
+            foreach (var row in table.Rows)
+            {
+                if (maxRows-- <= 0)
                 {
-                    resultString = new StringBuilder("\n ");
-                    var column = 0;
+                    break;
+                }
 
-                    foreach (var row in table.Rows)
+                resultString.Append("\n ");
+                if (row.Value != null)
+                {
+                    int col = 0;
+                    var pairs = row.Value.Fields
+                        .Select(f => (f, colMap.TryGetValue(f.Name, out int c) ? c : -1))
+                        .Where(p => p.Item2 >= 0)
+                        .OrderBy(p => p.Item2);
+
+                    foreach (var (field, column) in pairs)
                     {
-                        if (row.Value != null)
+                        while (col < column)
                         {
-                            column = 0;
-
-                            foreach (NamedValue field in row.Value.Fields)
-                            {
-                                if (fieldNames.Contains(field.Name))
-                                {
-                                    columnWidth[column] = Math.Max(columnWidth[column], field.Name.Length);
-                                    resultString.Append(' ');
-                                    resultString.Append(field.Name.PadRight(columnWidth[column]));
-                                    resultString.Append("  ");
-                                    column++;
-                                }
-                            }
-
-                            if (selectedFieldNames != null)
-                            {
-                                resultString.Append(" ...");
-                            }
-
-                            break;
-                        }
-                    }
-
-                    resultString.Append("\n ");
-
-                    foreach (var row in table.Rows)
-                    {
-                        if (row.Value != null)
-                        {
-                            column = 0;
-
-                            foreach (NamedValue field in row.Value.Fields)
-                            {
-                                if (fieldNames.Contains(field.Name))
-                                {
-                                    resultString.Append(new string('=', columnWidth[column] + 2));
-                                    resultString.Append(' ');
-                                    column++;
-                                }
-                            }
-
-                            if (selectedFieldNames != null)
-                            {
-                                resultString.Append("=====");
-                            }
-
-                            break;
-                        }
-                    }
-
-                    var maxRows2 = MaxTableRows;
-                    foreach (var row in table.Rows)
-                    {
-                        if (maxRows2-- <= 0)
-                        {
-                            break;
+                            resultString.Append(' ', columnWidth[col] + 3);
+                            col++;
                         }
 
-                        column = 0;
-                        resultString.Append("\n ");
-                        if (row.Value != null)
+                        resultString.Append(' ');
+                        var str = FormatField(field, true);
+                        int cch = columnWidth[column] - str.Length;
+                        if (cch > 0)
                         {
-                            foreach (NamedValue field in row.Value.Fields)
-                            {
-                                if (fieldNames.Contains(field.Name))
-                                {
-                                    resultString.Append(' ');
-                                    resultString.Append(FormatField(field, true).PadRight(columnWidth[column]));
-                                    resultString.Append("  ");
-                                    column++;
-                                }
-                            }
+                            resultString.Append(' ', cch);
                         }
-                        else
-                        {
-                            resultString.Append(row.IsError ? row.Error?.Errors?[0].Message : "Blank()");
-                        }
-                    }
 
-                    if (maxRows2 < 0)
-                    {
-                        resultString.Append($"\n (showing first {MaxTableRows} records)");
-                    }
-
-                    if (FormatTableNewLine)
-                    {
-                        resultString.Append("\n ");
+                        resultString.Append(str);
+                        resultString.Append("  ");
+                        col++;
                     }
                 }
                 else
                 {
-                    // table without formatting 
-
-                    resultString = new StringBuilder("[");
-                    var separator = string.Empty;
-                    foreach (var row in table.Rows)
-                    {
-                        resultString.Append(separator);
-                        resultString.Append(FormatRecordCore(row.Value));
-                        separator = ", ";
-                    }
-
-                    resultString.Append(']');
+                    resultString.Append(row.IsError ? row.Error?.Errors?[0].Message : "Blank()");
                 }
+            }
+
+            if (maxRows < 0)
+            {
+                resultString.Append($"\n (showing first {MaxTableRows} records)");
+            }
+
+            if (FormatTableNewLine)
+            {
+                resultString.Append("\n ");
             }
 
             return resultString.ToString();

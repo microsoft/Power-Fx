@@ -92,4 +92,22 @@ namespace Microsoft.PowerFx.Types
             return row;
         }
     }
+
+    // An empty table.
+    internal class EmptyTableValue : RecordsOnlyTableValue
+    {
+        internal EmptyTableValue(IRContext irContext)
+            : base(irContext, System.Array.Empty<RecordValue>())
+        {
+        }
+
+        public override bool TryShallowCopy(out FormulaValue copy)
+        {
+            // REVIEW: Shouldn't the instance be immutable? Can this safely just set copy = this?
+            copy = new EmptyTableValue(this.IRContext);
+            return true;
+        }
+
+        public override bool CanShallowCopy => true;
+    }
 }

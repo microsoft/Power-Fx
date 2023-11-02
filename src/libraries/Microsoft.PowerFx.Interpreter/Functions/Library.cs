@@ -251,6 +251,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Boolean_UO)
             },
             {
+                BuiltinFunctionsCore.Chain,
+                StandardErrorHandling<TableValue>(
+                    BuiltinFunctionsCore.Chain.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Chain)
+            },
+            {
                 BuiltinFunctionsCore.Concat,
                 StandardErrorHandlingAsync<FormulaValue>(
                     BuiltinFunctionsCore.Concat.Name,
