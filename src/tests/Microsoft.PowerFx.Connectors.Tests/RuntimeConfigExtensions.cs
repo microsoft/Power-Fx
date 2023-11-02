@@ -11,9 +11,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public static RuntimeConfig AddTestRuntimeContext(this RuntimeConfig runtimeConfig, string @namespace, HttpMessageInvoker client, bool? throwOnError = null, ITestOutputHelper console = null, bool includeDebug = false)
         {
             TestConnectorRuntimeContext runtimeContext = new TestConnectorRuntimeContext(runtimeConfig, console, includeDebug);
-            runtimeContext.Add(@namespace, client, throwOnError);
 
+            runtimeContext.Add(@namespace, client, throwOnError);
             runtimeConfig.AddRuntimeContext(runtimeContext);
+
             return runtimeConfig;
         }
     }

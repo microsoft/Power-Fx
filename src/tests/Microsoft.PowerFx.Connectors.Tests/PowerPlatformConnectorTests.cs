@@ -684,7 +684,7 @@ namespace Microsoft.PowerFx.Tests
             IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc);
 
             RecalcEngine engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddTestRuntimeContext("Office365Outlook", client, console: _output);
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook V4CalendarPostItem.json");
             FormulaValue result = await engine.EvalAsync(@"Office365Outlook.V4CalendarPostItem(""Calendar"", ""Subject"", Today(), Today(), ""(UTC+01:00) Brussels, Copenhagen, Madrid, Paris"")", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
