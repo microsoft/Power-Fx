@@ -271,7 +271,7 @@ namespace Microsoft.PowerFx
                 // comment only
                 if (check.Parse.Root is BlankNode bn)
                 {
-//                    return new ReplResult();
+                    return new ReplResult();
                 }
 
                 // pseudo function call
