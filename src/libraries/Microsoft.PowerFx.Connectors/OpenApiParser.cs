@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Connectors
                 return functions;
             }
 
-            if (!ValidateSupportedOpenApiDocument(openApiDocument, ref connectorIsSupported, ref connectorNotSupportedReason, connectorSettings.RejectUnknownExtensions, configurationLogger))
+            if (!ValidateSupportedOpenApiDocument(openApiDocument, ref connectorIsSupported, ref connectorNotSupportedReason, connectorSettings.IgnoreUnknownExtensions, configurationLogger))
             {
                 return functions;
             }
@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Connectors
                     continue;
                 }
 
-                ValidateSupportedOpenApiPathItem(ops, ref isSupportedForPath, ref notSupportedReasonForPath, connectorSettings.RejectUnknownExtensions, configurationLogger);
+                ValidateSupportedOpenApiPathItem(ops, ref isSupportedForPath, ref notSupportedReasonForPath, connectorSettings.IgnoreUnknownExtensions, configurationLogger);
 
                 foreach (KeyValuePair<OperationType, OpenApiOperation> kv2 in ops.Operations)
                 {
@@ -122,8 +122,8 @@ namespace Microsoft.PowerFx.Connectors
                         continue;
                     }
 
-                    ValidateSupportedOpenApiOperation(op, ref isSupportedForOperation, ref notSupportedReasonForOperation, connectorSettings.RejectUnknownExtensions, configurationLogger);
-                    ValidateSupportedOpenApiParameters(op, ref isSupportedForOperation, ref notSupportedReasonForOperation, connectorSettings.RejectUnknownExtensions, configurationLogger);
+                    ValidateSupportedOpenApiOperation(op, ref isSupportedForOperation, ref notSupportedReasonForOperation, connectorSettings.IgnoreUnknownExtensions, configurationLogger);
+                    ValidateSupportedOpenApiParameters(op, ref isSupportedForOperation, ref notSupportedReasonForOperation, connectorSettings.IgnoreUnknownExtensions, configurationLogger);
 
                     string operationName = NormalizeOperationId(op.OperationId ?? path);
 
@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Connectors
             return functions;
         }
 
-        private static bool ValidateSupportedOpenApiDocument(OpenApiDocument openApiDocument, ref bool isSupported, ref string notSupportedReason, bool rejectUnknownExtensions, ConnectorLogger logger = null)
+        private static bool ValidateSupportedOpenApiDocument(OpenApiDocument openApiDocument, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions, ConnectorLogger logger = null)
         {
             // OpenApiDocument - https://learn.microsoft.com/en-us/dotnet/api/microsoft.openapi.models.openapidocument?view=openapi-dotnet
             // AutoRest Extensions for OpenAPI 2.0 - https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md            
@@ -170,7 +170,7 @@ namespace Microsoft.PowerFx.Connectors
                 return false;
             }
 
-            if (rejectUnknownExtensions)
+            if (!ignoreUnknownExtensions)
             {
                 // All these Info properties can be ignored
                 // openApiDocument.Info.Description 
@@ -223,7 +223,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 // openApiDocument.Examples can be ignored
 
-                if (isSupported && !rejectUnknownExtensions)
+                if (isSupported && !ignoreUnknownExtensions)
                 {
                     if (openApiDocument.Components.Extensions.Any())
                     {
@@ -254,7 +254,7 @@ namespace Microsoft.PowerFx.Connectors
                 // openApiDocument.Components.SecuritySchemes are critical but as we don't manage them at all, we'll ignore this parameter                
             }
 
-            if (isSupported && !rejectUnknownExtensions)
+            if (isSupported && !ignoreUnknownExtensions)
             {
                 List<string> extensions = openApiDocument.Extensions.Where(e => !((e.Value is OpenApiArray oaa && oaa.Count == 0) || (e.Value is OpenApiObject oao && oao.Count == 0))).Select(e => e.Key).ToList();
 
@@ -290,9 +290,9 @@ namespace Microsoft.PowerFx.Connectors
             return true;
         }
 
-        private static void ValidateSupportedOpenApiPathItem(OpenApiPathItem ops, ref bool isSupported, ref string notSupportedReason, bool rejectUnknownExtensions, ConnectorLogger logger = null)
+        private static void ValidateSupportedOpenApiPathItem(OpenApiPathItem ops, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions, ConnectorLogger logger = null)
         {
-            if (rejectUnknownExtensions)
+            if (!ignoreUnknownExtensions)
             {
                 List<string> pathExtensions = ops.Extensions.Keys.ToList();
 
@@ -310,7 +310,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        private static void ValidateSupportedOpenApiOperation(OpenApiOperation op, ref bool isSupported, ref string notSupportedReason, bool rejectUnknownExtensions, ConnectorLogger logger = null)
+        private static void ValidateSupportedOpenApiOperation(OpenApiOperation op, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions, ConnectorLogger logger = null)
         {
             if (!isSupported)
             {
@@ -331,7 +331,7 @@ namespace Microsoft.PowerFx.Connectors
                 logger?.LogWarning($"OperationId {op.OperationId} is deprecated");
             }
 
-            if (rejectUnknownExtensions)
+            if (!ignoreUnknownExtensions)
             {
                 List<string> opExtensions = op.Extensions.Keys.ToList();
 
@@ -372,7 +372,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        private static void ValidateSupportedOpenApiParameters(OpenApiOperation op, ref bool isSupported, ref string notSupportedReason, bool rejectUnknownExtensions, ConnectorLogger logger = null)
+        private static void ValidateSupportedOpenApiParameters(OpenApiOperation op, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions, ConnectorLogger logger = null)
         {
             foreach (OpenApiParameter param in op.Parameters)
             {

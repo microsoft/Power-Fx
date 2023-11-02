@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Connectors
         /// Unknown extensions in swagger file will be ignored by default.
         /// This flag allows to not support unknown extensions when turned to true.
         /// </summary>
-        public bool RejectUnknownExtensions { get; init; } = false;
+        public bool IgnoreUnknownExtensions { get; init; } = false;
 
         /// <summary>
         /// Allow using functions that are identified as unsupported.

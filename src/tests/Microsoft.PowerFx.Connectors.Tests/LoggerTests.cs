@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Empty(functions);
             Assert.Equal(
-                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace <Namespace is null>, MaxRows 1000, RejectUnknownExtensions False, AllowUnsupportedFunctions False, |" +
+                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace <Namespace is null>, MaxRows 1000, IgnoreUnknownExtensions False, AllowUnsupportedFunctions False, |" +
                 @"[ERROR] connectorSettings.Namespace is null|" +
                 @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
         }
@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Empty(functions);
             Assert.Equal(
-                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace Test, MaxRows 1000, RejectUnknownExtensions False, AllowUnsupportedFunctions False, |" +
+                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace Test, MaxRows 1000, IgnoreUnknownExtensions False, AllowUnsupportedFunctions False, |" +
                 @"[ERROR] openApiDocument is null|" +
                 @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
         }
@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Empty(functions);
             Assert.Equal(
-                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace Test, MaxRows 1000, RejectUnknownExtensions False, AllowUnsupportedFunctions False, |" +
+                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace Test, MaxRows 1000, IgnoreUnknownExtensions False, AllowUnsupportedFunctions False, |" +
                 @"[ERROR] OpenApiDocument is invalid, it has no Path|" +
                 @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
         }
@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Empty(functions);
             Assert.Equal(
-                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace , MaxRows 1000, RejectUnknownExtensions False, AllowUnsupportedFunctions False, |" +
+                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace , MaxRows 1000, IgnoreUnknownExtensions False, AllowUnsupportedFunctions False, |" +
                 @"[ERROR] connectorSettings.Namespace is not a valid DName|" +
                 @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
         }
@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.NotEmpty(functions);
             Assert.Equal(
-                "[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace SQL, MaxRows 1000, RejectUnknownExtensions False, AllowUnsupportedFunctions False, |" +
+                "[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace SQL, MaxRows 1000, IgnoreUnknownExtensions False, AllowUnsupportedFunctions False, |" +
                 "[INFO ] Operation GET /{connectionId}/datasets({dataset})/tables({table})/onnewitems is trigger|" +
                 "[INFO ] Operation GET /{connectionId}/datasets({dataset})/tables({table})/onupdateditems is trigger|" +
                 "[INFO ] Operation GET /{connectionId}/datasets/{server},{database}/tables/{table}/onupdateditems is trigger|" +
