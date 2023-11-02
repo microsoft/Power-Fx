@@ -12,19 +12,11 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
     public class LivePublicSwaggerTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public LivePublicSwaggerTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact(Skip = "These APIs are rate limited and HTTP error 429 is possible")]
         public async Task RealTest()
         {
@@ -41,7 +33,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // No BaseAdress specified, we'll use the 1st HTTPS one found in the swagger file
             using var client = new HttpClient(); // public auth             
-            var funcs = config.AddActionConnector("Math", doc, new ConsoleLogger(_output));
+            var funcs = config.AddActionConnector("Math", doc);
 
             var engine = new RecalcEngine(config);
             var expr = "Math.numberscardinal({number: 1791941})";
@@ -50,7 +42,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.True(ok);
 
-            var runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Math", client, console: _output));
+            var runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Math", client));
             FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
 
             if (result is ErrorValue ev)
@@ -84,8 +76,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Here we specify the BaseAddress
             using var client = new HttpClient() { BaseAddress = new Uri("https://api.math.tools") };
 
-            // Set IgnoreUnknownExtensions to true as this swagger uses some extensions we don't honnor like x-apisguru-categories, x-origin, x-providerName
-            var funcs = config.AddActionConnector(new ConnectorSettings("Math") { IgnoreUnknownExtensions = true }, doc, new ConsoleLogger(_output)); 
+            // FailOnUnknownExtension in connectorsettings is set to false (default) as this swagger uses some extensions we don't honnor like x-apisguru-categories, x-origin, x-providerName
+            var funcs = config.AddActionConnector(new ConnectorSettings("Math"), doc); 
 
             var engine = new RecalcEngine(config);
             var expr = "Math.numbersbasebinary(632506623)";
@@ -94,7 +86,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.True(ok, string.Join(", ", check.Errors.Select(er => er.Message)));
 
-            var runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Math", client, console: _output));
+            var runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Math", client));
             FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
 
             if (result is ErrorValue ev)
@@ -138,7 +130,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             OpenApiDocument doc = await ReadSwaggerFromUrl(swaggerUrl).ConfigureAwait(false);
             using var client = new HttpClient() { BaseAddress = new Uri("https://date.nager.at") };
-            var funcs = config.AddActionConnector("Holiday", doc, new ConsoleLogger(_output));
+            var funcs = config.AddActionConnector("Holiday", doc);
 
             var engine = new RecalcEngine(config);
             var expr = @"Index(Holiday.PublicHolidayPublicHolidaysV3(2023, ""US""), 8)";
@@ -149,7 +141,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ok = check.IsSuccess;
             Assert.True(ok, string.Join(", ", check.Errors.Select(er => er.Message)));
 
-            var runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Holiday", client, console: _output));
+            var runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Holiday", client));
             FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);            
 
             if (result is ErrorValue ev)
@@ -185,11 +177,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             using var clientXkcd = new HttpClient() { BaseAddress = new Uri(@"http://xkcd.com/") };
             using var clientWorldTime = new HttpClient() { BaseAddress = new Uri(@"http://worldtimeapi.org/api/") };
-            var funcsXkcd = config.AddActionConnector(new ConnectorSettings("Xkcd") { IgnoreUnknownExtensions = true }, docXkcd, new ConsoleLogger(_output));
-            var funcsWorldTime = config.AddActionConnector(new ConnectorSettings("WorldTime") { IgnoreUnknownExtensions = true }, docWorldTime, new ConsoleLogger(_output));
+            var funcsXkcd = config.AddActionConnector(new ConnectorSettings("Xkcd"), docXkcd);
+            var funcsWorldTime = config.AddActionConnector(new ConnectorSettings("WorldTime"), docWorldTime);
 
             var engine = new RecalcEngine(config);
-            var runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Xkcd", clientXkcd, console: _output).Add("WorldTime", clientWorldTime));                                                   
+            var runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Xkcd", clientXkcd).Add("WorldTime", clientWorldTime));                                                   
 
             FormulaValue fv1 = await engine.EvalAsync(@"Xkcd.comicIdinfo0json(1).transcript", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             string transcript = ((StringValue)fv1).Value.Replace("\n", "\r\n");
