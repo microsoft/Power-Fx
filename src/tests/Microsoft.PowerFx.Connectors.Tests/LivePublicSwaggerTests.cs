@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -194,6 +195,25 @@ Boy: I wonder where I'll float next?
             FormulaValue fv2 = await engine.EvalAsync(@"First(WorldTime.timezone()).Value", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             string firstTZ = ((StringValue)fv2).Value;
             Assert.Equal("Africa/Abidjan", firstTZ);
+        }
+
+        [Fact(Skip = "Live Test")]
+        public async Task RealTest5()
+        {
+            var config = new PowerFxConfig();
+            OpenApiDocument docXkcd = await ReadSwaggerFromUrl(@"https://api.apis.guru/v2/specs/xkcd.com/1.0.0/openapi.json").ConfigureAwait(false);
+
+            IReadOnlyList<ConnectorFunction> funcsXkcd = config.AddActionConnector(new ConnectorSettings("Xkcd") { FailOnUnknownExtension = true }, docXkcd);
+
+            ConnectorFunction info0json = funcsXkcd.First(f => f.Name == "info0json");
+            Assert.False(info0json.IsSupported);
+            Assert.Equal("OpenApiDocument Info contains unsupported extensions x-apisguru-categories, x-origin, x-providerName, x-tags, x-unofficialSpec", info0json.NotSupportedReason);
+
+            IReadOnlyList<ConnectorFunction> funcsXkcd2 = config.AddActionConnector(new ConnectorSettings("Xkcd") { FailOnUnknownExtension = false }, docXkcd);
+
+            ConnectorFunction info0json2 = funcsXkcd2.First(f => f.Name == "info0json");
+            Assert.True(info0json2.IsSupported);
+            Assert.Equal(string.Empty, info0json2.NotSupportedReason);
         }
 
         // Get a swagger file from the embedded resources. 

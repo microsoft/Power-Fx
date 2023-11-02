@@ -223,7 +223,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 // openApiDocument.Examples can be ignored
 
-                if (isSupported && !failOnUnknownExtensions)
+                if (isSupported && failOnUnknownExtensions)
                 {
                     if (openApiDocument.Components.Extensions.Any())
                     {
@@ -254,7 +254,7 @@ namespace Microsoft.PowerFx.Connectors
                 // openApiDocument.Components.SecuritySchemes are critical but as we don't manage them at all, we'll ignore this parameter                
             }
 
-            if (isSupported && !failOnUnknownExtensions)
+            if (isSupported && failOnUnknownExtensions)
             {
                 List<string> extensions = openApiDocument.Extensions.Where(e => !((e.Value is OpenApiArray oaa && oaa.Count == 0) || (e.Value is OpenApiObject oao && oao.Count == 0))).Select(e => e.Key).ToList();
 
