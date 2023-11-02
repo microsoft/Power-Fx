@@ -198,7 +198,7 @@ Boy: I wonder where I'll float next?
         }
 
         [Fact(Skip = "Live Test")]
-        public async Task RealTest5()
+        public async Task FailOnUnknownExtensionTest()
         {
             var config = new PowerFxConfig();
             OpenApiDocument docXkcd = await ReadSwaggerFromUrl(@"https://api.apis.guru/v2/specs/xkcd.com/1.0.0/openapi.json").ConfigureAwait(false);
