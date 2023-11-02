@@ -9,6 +9,6 @@ namespace Microsoft.PowerFx.Connectors
         {
             runtimeConfig.ServiceProvider.AddService(typeof(BaseRuntimeConnectorContext), context);
             return runtimeConfig;
-        }        
+        }
     }
 }

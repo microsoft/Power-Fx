@@ -236,6 +236,10 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
+        /// <summary>
+        /// Defines the key used in BaseRuntimeConnectorContext.GetInvoker to identify the function invoker.
+        /// Usually defaults to the namespace for mapping to an HttpClient.
+        /// </summary>
         public string InvokerSignature
         {
             get => _invokerSignature;
