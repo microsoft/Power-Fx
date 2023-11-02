@@ -38,6 +38,10 @@ namespace Microsoft.PowerFx
         // Useful if we're running a file, or ir input UI is separated from output UI. 
         public bool Echo { get; set; } = false;
 
+        // Has Exit() been called?
+        // Host can check this flag after each command is executed.
+        public bool ExitRequested { get; set; } = false;
+
         /// <summary>
         /// Optional - provide the current user. 
         /// Must call <see cref="EnableUserObject(string[])"/> first to declare the schema.
@@ -104,6 +108,8 @@ namespace Microsoft.PowerFx
         public PowerFxREPL()
         {
             this.MetaFunctions.AddFunction(new NotifyFunction());
+
+            this.MetaFunctions.AddFunction(new ExitFunction(this));
 
             // Hook through the HelpProvider, don't override these Help functions
             this.MetaFunctions.AddFunction(new Help0Function(this));
@@ -224,7 +230,8 @@ namespace Microsoft.PowerFx
 
             if (this.Echo)
             {
-                await this.Output.WriteLineAsync(expression, OutputKind.Repl, cancel);
+                await this.WritePromptAsync(cancel);
+                await this.Output.WriteAsync(expression, OutputKind.Repl, cancel);
             }
 
             var extraSymbolTable = this.ExtraSymbolValues?.SymbolTable;
@@ -281,7 +288,16 @@ namespace Microsoft.PowerFx
 
                     if (formulaCheck.IsSuccess)
                     {
-                        Engine.SetFormula(bo.Left.ToString(), formula, OnFormulaUpdate);
+                        try
+                        {
+                            Engine.SetFormula(bo.Left.ToString(), formula, OnFormulaUpdate);
+                        }
+                        catch (Exception ex)
+                        {
+                            await this.Output.WriteLineAsync(ex.Message, OutputKind.Error, cancel)
+                                .ConfigureAwait(false);
+                        }
+
                         return new ReplResult();
                     }
                     else
@@ -359,7 +375,19 @@ namespace Microsoft.PowerFx
                 foreach (var error in check.Errors)
                 {
                     var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
-                    await this.Output.WriteLineAsync(error.ToString(), kind, cancel)
+                    var msg = error.ToString();
+
+                    // If case is wrong or parens are missing for Help() or Exit(), suggest the correct form
+                    if (error.MessageKey == "ErrInvalidName" || error.MessageKey == "ErrUnknownFunction")
+                    {
+                        var invalid = error.MessageArgs.First().ToString().ToLowerInvariant();
+                        if (invalid == "help" || invalid == "exit")
+                        {
+                            msg = msg + $" Did you mean \"{invalid.Substring(0, 1).ToUpperInvariant()}{invalid.Substring(1)}()\"?";
+                        }
+                    }
+
+                    await this.Output.WriteLineAsync(msg, kind, cancel)
                         .ConfigureAwait(false);
                 }
 
