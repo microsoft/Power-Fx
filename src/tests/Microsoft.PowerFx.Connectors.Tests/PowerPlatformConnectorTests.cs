@@ -662,11 +662,6 @@ namespace Microsoft.PowerFx.Tests
             AssertEqual(expected, actual);
         }
 
-        internal class TestClockService : IClockService
-        {
-            public DateTime UtcNow { get; set; } = new DateTime(2023, 6, 2, 3, 15, 7, DateTimeKind.Utc);
-        }
-
         [Fact]
         public async Task Office365Outlook_V4CalendarPostItem()
         {
@@ -689,16 +684,14 @@ namespace Microsoft.PowerFx.Tests
             IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc);
 
             RecalcEngine engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig();
-            runtimeConfig.SetTimeZone(TimeZoneInfo.Utc);
-            runtimeConfig.AddTestRuntimeContext("Office365Outlook", client, console: _output);
-            runtimeConfig.SetClock(new TestClockService());
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook V4CalendarPostItem.json");
             FormulaValue result = await engine.EvalAsync(@"Office365Outlook.V4CalendarPostItem(""Calendar"", ""Subject"", Today(), Today(), ""(UTC+01:00) Brussels, Copenhagen, Madrid, Paris"")", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             Assert.Equal(@"![body:s, categories:*[Value:s], createdDateTime:d, end:d, endWithTimeZone:d, iCalUId:s, id:s, importance:s, isAllDay:b, isHtml:b, isReminderOn:b, lastModifiedDateTime:d, location:s, numberOfOccurences:w, optionalAttendees:s, organizer:s, recurrence:s, recurrenceEnd:D, reminderMinutesBeforeStart:w, requiredAttendees:s, resourceAttendees:s, responseRequested:b, responseTime:d, responseType:s, selectedDaysOfWeek:N, sensitivity:s, seriesMasterId:s, showAs:s, start:d, startWithTimeZone:d, subject:s, timeZone:s, webLink:s]", result.Type._type.ToString());
 
-            var actual = testConnector._log.ToString();            
+            var actual = testConnector._log.ToString();
+            var today = DateTime.UtcNow.Date.ToString("O");
             var version = PowerPlatformConnectorClient.Version;
             var expected = @$"POST https://b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net/invoke
  authority: b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net
@@ -711,7 +704,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/datasets/calendars/v4/tables/Calendar/items
  x-ms-user-agent: PowerFx/{version}
  [content-header] Content-Type: application/json; charset=utf-8
- [body] {{""subject"":""Subject"",""start"":""2023-06-02"",""end"":""2023-06-02"",""timeZone"":""(UTC\u002B01:00) Brussels, Copenhagen, Madrid, Paris""}}
+ [body] {{""subject"":""Subject"",""start"":""{today}"",""end"":""{today}"",""timeZone"":""(UTC\u002B01:00) Brussels, Copenhagen, Madrid, Paris""}}
 ";
 
             AssertEqual(expected, actual);
