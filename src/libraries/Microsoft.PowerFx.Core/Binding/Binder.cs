@@ -3418,7 +3418,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     // We block the property access usage for scoped component properties or functional properties
-                    // TODO remove feature gate when ECS flag is completely rolled out
                     if (template.IsComponent &&
                         (property.IsScopeVariable ||
                         property.IsScopedProperty))
