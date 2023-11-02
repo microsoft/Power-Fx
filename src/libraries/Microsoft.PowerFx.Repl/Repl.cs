@@ -386,7 +386,7 @@ namespace Microsoft.PowerFx
                     var msg = error.ToString();
 
                     // If case is wrong or parens are missing for Help() or Exit(), suggest the correct form
-                    if (error.MessageKey == "ErrInvalidName" || error.MessageKey == "ErrUnknownFunction")
+                    if (error.MessageKey == "ErrInvalidName" || error.MessageKey == "ErrUnknownFunction" || error.MessageKey == "ErrUnimplementedFunction")
                     {
                         var invalid = error.MessageArgs.First().ToString().ToLowerInvariant();
                         if (invalid == "help" || invalid == "exit")
