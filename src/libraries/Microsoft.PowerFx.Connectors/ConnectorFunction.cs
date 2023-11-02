@@ -12,11 +12,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using Microsoft.PowerFx.Connectors.Execution;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
-using SharpYaml.Tokens;
 using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
@@ -237,6 +237,33 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         /// <summary>
+        /// Defines the key used in BaseRuntimeConnectorContext.GetInvoker to identify the function invoker.
+        /// Usually defaults to the namespace for mapping to an HttpClient.
+        /// </summary>
+        public string InvokerSignature
+        {
+            get => _invokerSignature;
+            set
+            {
+                if (_internals != null)
+                {
+                    throw new InvalidOperationException("Cannot set InvokerSignature after initialization");
+                }
+
+                if (_invokerSignatureOverwritten)
+                {
+                    throw new InvalidOperationException("Cannot set InvokerSignature twice");
+                }
+
+                _invokerSignature = value;
+                _invokerSignatureOverwritten = true;
+            }
+        }
+
+        private string _invokerSignature;
+        private bool _invokerSignatureOverwritten = false;
+
+        /// <summary>
         /// Parameter types used for TexlFunction.
         /// </summary>
         internal DType[] ParameterTypes => _parameterTypes ?? GetParamTypes();
@@ -261,7 +288,7 @@ namespace Microsoft.PowerFx.Connectors
         // Those properties are only used by HttpFunctionInvoker
         internal ConnectorParameterInternals _internals = null;
 
-        private readonly ConnectorLogger _configurationLogger = null;
+        private readonly ConnectorLogger _configurationLogger = null;        
 
         internal ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, ConnectorSettings connectorSettings, List<ConnectorFunction> functionList, ConnectorLogger configurationLogger)
         {
@@ -275,6 +302,7 @@ namespace Microsoft.PowerFx.Connectors
             _configurationLogger = configurationLogger;
             _isSupported = isSupported || connectorSettings.AllowUnsupportedFunctions;
             _notSupportedReason = notSupportedReason ?? (isSupported ? string.Empty : "Internal error on not supported reason");
+            _invokerSignature = connectorSettings.Namespace;
         }
 
         /// <summary>
@@ -587,25 +615,31 @@ namespace Microsoft.PowerFx.Connectors
         internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            return await InvokeInternalAsync(arguments, runtimeContext, ConnectorReturnType.Binary, cancellationToken).ConfigureAwait(false);           
+        }
+
+        internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, bool rawResults, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
 
             EnsureInitialized();
-            runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(InvokeInternalAsync))}, with {LogArguments(arguments)}");
-            BaseRuntimeConnectorContext context = ConnectorReturnType.Binary ? runtimeContext.WithRawResults() : runtimeContext;
-            ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(this, context), context.ThrowOnError);
-            FormulaValue result = await invoker.InvokeAsync(arguments, context, cancellationToken).ConfigureAwait(false);
-            FormulaValue formulaValue = await PostProcessResultAsync(result, runtimeContext, invoker, cancellationToken).ConfigureAwait(false);
+            runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(InvokeInternalAsync))}, with {LogArguments(arguments)}");            
+
+            FunctionInvoker invoker = runtimeContext.GetInvoker(this, rawResults);
+            FormulaValue result = await invoker.InvokeAsync(arguments, cancellationToken).ConfigureAwait(false);
+            FormulaValue formulaValue = await PostProcessResultAsync(result, invoker, cancellationToken).ConfigureAwait(false);
 
             runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(InvokeInternalAsync))}, returning {LogFormulaValue(formulaValue)}");
             return formulaValue;
         }
 
-        private async Task<FormulaValue> PostProcessResultAsync(FormulaValue result, BaseRuntimeConnectorContext runtimeContext, ScopedHttpFunctionInvoker invoker, CancellationToken cancellationToken)
+        private async Task<FormulaValue> PostProcessResultAsync(FormulaValue result, FunctionInvoker invoker, CancellationToken cancellationToken)
         {
             ExpressionError er = null;
 
             if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)
             {
-                runtimeContext.ExecutionLogger?.LogError($"{this.LogFunction(nameof(PostProcessResultAsync))}, ErrorValue is returned with {er.Message}");
+                invoker.Context.ExecutionLogger?.LogError($"{this.LogFunction(nameof(PostProcessResultAsync))}, ErrorValue is returned with {er.Message}");
                 result = FormulaValue.NewError(new ExpressionError() { Kind = er.Kind, Severity = er.Severity, Message = $"{DPath.Root.Append(new DName(Namespace)).ToDottedSyntax()}.{Name} failed: {er.Message}" }, ev.Type);
             }
 
@@ -617,7 +651,7 @@ namespace Microsoft.PowerFx.Connectors
                 // If there is no next link, we'll return a "normal" RecordValue as no paging is needed
                 if (!string.IsNullOrEmpty(nextLink))
                 {
-                    result = new PagedRecordValue(rv, async () => await GetNextPageAsync(nextLink, runtimeContext, invoker, cancellationToken).ConfigureAwait(false), ConnectorSettings.MaxRows, cancellationToken);
+                    result = new PagedRecordValue(rv, async () => await GetNextPageAsync(nextLink, invoker, cancellationToken).ConfigureAwait(false), ConnectorSettings.MaxRows, cancellationToken);
                 }
             }
 
@@ -628,13 +662,13 @@ namespace Microsoft.PowerFx.Connectors
         // - PagesRecordValue if the next page has a next link
         // - RecordValue if there is no next link
         // - ErrorValue
-        private async Task<FormulaValue> GetNextPageAsync(string nextLink, BaseRuntimeConnectorContext runtimeContext, ScopedHttpFunctionInvoker invoker, CancellationToken cancellationToken)
+        private async Task<FormulaValue> GetNextPageAsync(string nextLink, FunctionInvoker invoker, CancellationToken cancellationToken)            
         {
             cancellationToken.ThrowIfCancellationRequested();
-            runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetNextPageAsync))}, getting next page");
-            FormulaValue result = await invoker.InvokeAsync(nextLink, runtimeContext, cancellationToken).ConfigureAwait(false);
-            result = await PostProcessResultAsync(result, runtimeContext, invoker, cancellationToken).ConfigureAwait(false);
-            runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetNextPageAsync))} with {LogFormulaValue(result)}");
+            invoker.Context.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetNextPageAsync))}, getting next page");
+            FormulaValue result = await invoker.InvokeAsync(nextLink, cancellationToken).ConfigureAwait(false);
+            result = await PostProcessResultAsync(result, invoker, cancellationToken).ConfigureAwait(false);
+            invoker.Context.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetNextPageAsync))} with {LogFormulaValue(result)}");
             return result;
         }
 
@@ -805,7 +839,7 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            return await dynamicApi.ConnectorFunction.InvokeInternalAsync(arguments, runtimeContext.WithRawResults(), cancellationToken).ConfigureAwait(false);
+            return await dynamicApi.ConnectorFunction.InvokeInternalAsync(arguments, runtimeContext, true, cancellationToken).ConfigureAwait(false);
         }
 
         private void EnsureInitialized()

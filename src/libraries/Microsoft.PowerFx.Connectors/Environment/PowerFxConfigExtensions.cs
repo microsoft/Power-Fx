@@ -90,5 +90,15 @@ namespace Microsoft.PowerFx
                 throw;
             }            
         }
+
+        /// <summary>
+        /// Add a single connector function to Power Fx config.
+        /// </summary>
+        /// <param name="config">Power Fx Config.</param>
+        /// <param name="connectorFunction">Connector function.</param>
+        public static void AddFunction(this PowerFxConfig config, ConnectorFunction connectorFunction)
+        {
+            config.AddFunction(new ConnectorTexlFunction(connectorFunction));
+        }
     }
 }

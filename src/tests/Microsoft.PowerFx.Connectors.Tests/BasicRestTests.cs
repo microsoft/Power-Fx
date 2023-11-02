@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Connectors.Tests;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -84,7 +83,7 @@ namespace Microsoft.PowerFx.Tests
 
             var rConfig = new RuntimeConfig();            
             rConfig.SetTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
-            rConfig.AddRuntimeContext(new TestConnectorRuntimeContext("Test", httpClient, console: _output));
+            rConfig.AddTestRuntimeContext("Test", httpClient, console: _output);
 
             var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost, runtimeConfig: rConfig).ConfigureAwait(false);
             Assert.NotNull(result);

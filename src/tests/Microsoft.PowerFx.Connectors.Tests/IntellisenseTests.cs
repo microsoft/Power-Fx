@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -72,10 +71,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 _ => null
             });
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddTestRuntimeContext("SQL", client, console: _output);
 
             CheckResult checkResult = engine.Check(expression, symbolTable: null);
-            IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);
+            IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, runtimeConfig.ServiceProvider);
 
             string list = string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text).OrderBy(x => x));
             Assert.Equal(expectedSuggestions, list);
@@ -155,10 +154,10 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             }
 
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddTestRuntimeContext("SQL", client, console: _output);
 
             CheckResult checkResult = engine.Check(expression, symbolTable: null);
-            IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);
+            IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, runtimeConfig.ServiceProvider);
 
             string list = string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text).OrderBy(x => x));
             Assert.Equal(expectedSuggestions, list);
@@ -220,9 +219,9 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             }
 
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider services = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext(cxNamespace, client, console: _output));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddTestRuntimeContext(cxNamespace, client, console: _output);
 
-            IPowerFxScope scope = new EditorContextScope((expr) => engine.Check(expression, symbolTable: null)) { Services = services };
+            IPowerFxScope scope = new EditorContextScope((expr) => engine.Check(expression, symbolTable: null)) { Services = runtimeConfig.ServiceProvider };
             IIntellisenseResult suggestions = scope.Suggest(expression, expression.Length);
 
             string list = string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text).OrderBy(x => x));
@@ -298,10 +297,10 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
 
             config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddTestRuntimeContext("SQL", client, console: _output);
 
             CheckResult checkResult = engine.Check(expression, symbolTable: null);
-            IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);
+            IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, runtimeConfig.ServiceProvider);
 
             Assert.DoesNotContain(suggestions.Suggestions, suggestion => suggestion.DisplayText.Text.Equals(deprecatedFunctionExample));
         }

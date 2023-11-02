@@ -431,28 +431,25 @@ namespace Microsoft.PowerFx.Connectors
             return (cFunctions, tFunctions);
         }
 
-        internal static string GetServer(IEnumerable<OpenApiServer> openApiServers, HttpMessageInvoker httpClient)
-        {
-            if (httpClient != null && httpClient is HttpClient hc)
+        internal static string GetServer(IEnumerable<OpenApiServer> openApiServers, Uri baseAddress)
+        {            
+            if (baseAddress != null)
             {
-                if (hc.BaseAddress != null)
+                string path = baseAddress.AbsolutePath;
+
+                if (path.EndsWith("/", StringComparison.Ordinal))
                 {
-                    string path = hc.BaseAddress.AbsolutePath;
-
-                    if (path.EndsWith("/", StringComparison.Ordinal))
-                    {
-                        path = path.Substring(0, path.Length - 1);
-                    }
-
-                    return path;
+                    path = path.Substring(0, path.Length - 1);
                 }
 
-                if (hc.BaseAddress == null && openApiServers.Any())
-                {
-                    // descending order to prefer https
-                    return openApiServers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault()?.OriginalString;
-                }
+                return path;
             }
+
+            if (baseAddress == null && openApiServers.Any())
+            {
+                // descending order to prefer https
+                return openApiServers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault()?.OriginalString;
+            }            
 
             return null;
         }

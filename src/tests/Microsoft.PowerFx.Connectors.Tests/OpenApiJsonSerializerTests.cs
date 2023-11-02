@@ -4,11 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
-using System.Threading;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Connectors;
+using Microsoft.PowerFx.Connectors.Execution;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Connectors.Tests.OpenApiHelperFunctions;
