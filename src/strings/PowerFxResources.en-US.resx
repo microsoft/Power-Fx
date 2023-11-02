@@ -1811,11 +1811,7 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Component function property or parameter can only be accessed from within a component or from component output properties.</value>
-    <comment>Error Message.</comment>
-  </data>
-  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
-    <value>Component function property or parameter can only reference other function properties.</value>
+    <value>Component input function property can only be accessed from within a component or from component output properties.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrBadArity" xml:space="preserve">
