@@ -265,9 +265,16 @@ namespace Microsoft.PowerFx
 
             if (check.Parse.IsSuccess)
             {
-                // pseudo functions and named formula assignments, handled outside of the interpreter
+                // comments, pseudo functions, and named formula assignments, handled outside of the interpreter
                 // for our purposes, we don't need the engine's features or the parser options
 
+                // comment only
+                if (check.Parse.Root is BlankNode bn)
+                {
+//                    return new ReplResult();
+                }
+
+                // pseudo function call
                 if (check.Parse.Root is CallNode cn && _pseudoFunctions.TryGetValue(cn.Head.Name, out var psuedoFunction))
                 {
                     // Foo(expr)
@@ -281,6 +288,7 @@ namespace Microsoft.PowerFx
                     return new ReplResult();
                 }
 
+                // named formula assignment
                 if (check.Parse.Root is BinaryOpNode bo && bo.Op == BinaryOp.Equal && bo.Left.Kind == NodeKind.FirstName)
                 {
                     var formula = bo.Right.ToString();
