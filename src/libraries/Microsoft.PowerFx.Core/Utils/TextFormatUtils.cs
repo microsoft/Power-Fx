@@ -131,13 +131,55 @@ namespace Microsoft.PowerFx.Core.Utils
 
                 if ((formatStr[i] == 'a' || formatStr[i] == 'A') && (i == 0 || formatStr[i - 1] != '\''))
                 {
-                    // Block lower or mix cases of A/P or AM/PM
-                    if ((i < formatStr.Length - 2 && formatStr[i] == 'a' && formatStr[i + 1] == '/' && (formatStr[i + 2] == 'p' || formatStr[i + 2] == 'P')) ||
-                        (i < formatStr.Length - 2 && formatStr[i] == 'A' && formatStr[i + 1] == '/' && formatStr[i + 2] == 'p') ||
-                        (i < formatStr.Length - 4 && formatStr[i] == 'a' && (formatStr[i + 1] == 'm' || formatStr[i + 1] == 'M') && formatStr[i + 2] == '/' && formatStr[i + 3] == 'p' && (formatStr[i + 4] == 'm' || formatStr[i + 4] == 'M')) ||
-                        (i < formatStr.Length - 4 && formatStr[i] == 'A' && formatStr[i + 1] == 'm' && formatStr[i + 2] == '/' && formatStr[i + 3] == 'P' && formatStr[i + 4] == 'm'))
+                    // Block mix cases of A/P or AM/PM
+                    if (i < formatStr.Length - 2 && formatStr[i + 1] == '/' && char.ToLowerInvariant(formatStr[i + 2]) == 'p')
                     {
-                        return false;
+                        if (char.IsUpper(formatStr[i]) != char.IsUpper(formatStr[i + 2]))
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            // Temporary: block lower case of a/p
+                            if (formatStr[i] == 'a')
+                            {
+                                return false;
+                            }
+
+                            // It's a valid 'a/p' token
+                            i += 2;
+                            continue;
+                        }
+                    }
+
+                    if (
+                        i < formatStr.Length - 4 &&
+                        char.ToLowerInvariant(formatStr[i + 1]) == 'm' &&
+                        formatStr[i + 2] == '/' &&
+                        char.ToLowerInvariant(formatStr[i + 3]) == 'p' &&
+                        char.ToLowerInvariant(formatStr[i + 4]) == 'm')
+                    {
+                        var upperCount =
+                            (char.IsUpper(formatStr[i]) ? 1 : 0) +
+                            (char.IsUpper(formatStr[i + 1]) ? 1 : 0) +
+                            (char.IsUpper(formatStr[i + 3]) ? 1 : 0) +
+                            (char.IsUpper(formatStr[i + 4]) ? 1 : 0);
+                        if (upperCount == 0 || upperCount == 4)
+                        {
+                            // Temporary: block lower case of am/pm
+                            if (formatStr[i] == 'a')
+                            {
+                                return false;
+                            }
+
+                            // It's a valid 'am/pm' token
+                            i += 4;
+                            continue;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                 }
 

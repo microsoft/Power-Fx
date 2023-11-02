@@ -708,6 +708,12 @@ Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 22-4
 >> Text(0.324305555555556, "h:mm:ss A/P")
 "7:47:00 A"
 
+>> Text(DateTime(2023, 10, 28, 13, 14, 5, 231), "yy/mm/dd hh:mm:ss.000 A/P" )
+"23/10/28 01:14:05.231 P"
+
+>> Text(DateTime(2023, 10, 28, 13, 14, 5, 231), "yy/mm/dd hh:mm:ss.000 AM/PM" )
+"23/10/28 01:14:05.231 PM"
+
 >> Text(70.32430555555555555555555,"h:mm:ss A/P", "vi-VN")
 "7:47:00 S"
 
