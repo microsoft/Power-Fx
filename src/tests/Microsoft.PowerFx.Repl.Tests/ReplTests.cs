@@ -76,7 +76,7 @@ Set(z, x * 5 + y)
 Notify(z)
 ";
             var lines = file.Split("\n");
-            
+
             foreach (var line in lines)
             {
                 _repl.HandleLine(line);
@@ -149,7 +149,7 @@ Notify(z)
 
             // Failed to define at all. 
             var ok = _repl.Engine.TryGetVariableType("x", out var type);
-            Assert.False(ok);            
+            Assert.False(ok);
         }
 
         [Fact]
@@ -211,8 +211,8 @@ Notify(z)
             SymbolTable st = new SymbolTable() { DebugName = "ExtraValues" };
             var slot = st.AddVariable("Const1", FormulaType.Decimal, new SymbolProperties
             {
-                 CanMutate = false,
-                 CanSet = false
+                CanMutate = false,
+                CanSet = false
             });
             var extraValues = st.CreateValues();
             extraValues.Set(slot, FormulaValue.New(10));
@@ -227,7 +227,7 @@ Notify(z)
 
             // But can't set (doesn't declare a shadow copy).
             var replResult = _repl.HandleCommandAsync("Set(Const1, 99)").Result;
-            Assert.False(replResult.IsSuccess); 
+            Assert.False(replResult.IsSuccess);
         }
 
         [Fact]
@@ -349,8 +349,7 @@ Notify(z)
             _repl.WritePromptAsync().Wait();
 
             var log1 = _output.Get(OutputKind.Control, trim: false);
-            Assert.True(log1 == @"
->> ");
+            Assert.True(log1 == @">> ");
 
             Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
@@ -362,8 +361,7 @@ Notify(z)
         {
             _repl.WritePromptAsync().Wait();
             var log1p = _output.Get(OutputKind.Control, trim: false);
-            Assert.True(log1p == @"
->> ");
+            Assert.True(log1p == @">> ");
 
             _repl.HandleLineAsync("Sqrt(4").Wait();     // intentionally left unclosed
 
@@ -379,8 +377,7 @@ Notify(z)
 
             _repl.WritePromptAsync().Wait();
             var log3p = _output.Get(OutputKind.Control, trim: false);
-            Assert.True(log3p == @"
->> ");
+            Assert.True(log3p == @">> ");
 
             Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
@@ -393,8 +390,7 @@ Notify(z)
             _repl.WritePromptAsync().Wait();
 
             var log1p = _output.Get(OutputKind.Control, trim: false);
-            Assert.True(log1p == @"
->> ");
+            Assert.True(log1p == @">> ");
 
             _repl.HandleCommandAsync(
 "[1,2,3]").Wait();
@@ -404,8 +400,7 @@ Notify(z)
 
             _repl.WritePromptAsync().Wait();
             var log2p = _output.Get(OutputKind.Control, trim: false);
-            Assert.True(log2p == @"
->> ");
+            Assert.True(log2p == @">> ");
 
             Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
@@ -418,8 +413,7 @@ Notify(z)
             _repl.WritePromptAsync().Wait();
 
             var log1p = _output.Get(OutputKind.Control, trim: false);
-            Assert.True(log1p == @"
->> ");
+            Assert.True(log1p == @">> ");
 
             _repl.HandleCommandAsync(
 "[1,2,3]").Wait();
@@ -437,8 +431,7 @@ Notify(z)
 
             _repl.WritePromptAsync().Wait();
             var log2p = _output.Get(OutputKind.Control, trim: false);
-            Assert.True(log2p == @"
->> ");
+            Assert.True(log2p == @">> ");
 
             Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
@@ -451,8 +444,7 @@ Notify(z)
             _repl.WritePromptAsync().Wait();
 
             var log1p = _output.Get(OutputKind.Control, trim: false);
-            Assert.True(log1p == @"
->> ");
+            Assert.True(log1p == @">> ");
 
             // compare but ignore trailing whitespace at the end of each line
             _repl.HandleCommandAsync(
@@ -468,8 +460,7 @@ Notify(z)
 
             _repl.WritePromptAsync().Wait();
             var log2p = _output.Get(OutputKind.Control, trim: false);
-            Assert.True(log2p == @"
->> ");
+            Assert.True(log2p == @">> ");
 
             Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
@@ -481,8 +472,7 @@ Notify(z)
         {
             _repl.WritePromptAsync().Wait();
             var log1p = _output.Get(OutputKind.Control, trim: false);
-            Assert.True(log1p == @"
->> ");
+            Assert.True(log1p == @">> ");
 
             // compare but ignore trailing whitespace at the end of each line
             _repl.HandleCommandAsync(
@@ -498,8 +488,7 @@ Notify(z)
 
             _repl.WritePromptAsync().Wait();
             var log2p = _output.Get(OutputKind.Control, trim: false);
-            Assert.True(log2p == @"
->> ");
+            Assert.True(log2p == @">> ");
 
             Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
@@ -511,8 +500,7 @@ Notify(z)
         {
             _repl.WritePromptAsync().Wait();
             var log1p = _output.Get(OutputKind.Control, trim: false);
-            Assert.True(log1p == @"
->> ");
+            Assert.True(log1p == @">> ");
 
             _repl.HandleCommandAsync(
 "MyTable = Table({a:1},{b:2})").Wait();
@@ -535,8 +523,7 @@ Notify(z)
 
             _repl.WritePromptAsync().Wait();
             var log2p = _output.Get(OutputKind.Control, trim: false);
-            Assert.True(log2p == @"
->> ");
+            Assert.True(log2p == @">> ");
 
             Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);

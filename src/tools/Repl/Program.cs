@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -106,7 +107,7 @@ namespace Microsoft.PowerFx
             Console.WriteLine("Enter Excel formulas.  Use \"Help()\" for details, \"Option()\" for options. CTRL-Z to exit.");
             Console.WriteLine("TAB for auto-completion, ESC for showing Intellisense suggestions. SHIFT-ESC to clear. UP/DOWN for history.");
 
-            REPL();
+            REPL(Console.In, prompt: true, echo: false);
         }
 
         // Hook repl engine with customizations.
@@ -145,12 +146,15 @@ namespace Microsoft.PowerFx
         {
             while (true)
             {
-                var repl = new MyRepl();
+                var repl = new MyRepl() { Echo = echo };
                 List<string> expressions = new List<string>();
 
                 while (!_reset)
                 {
-                    repl.WritePromptAsync().Wait();
+                    if (prompt)
+                    {
+                        repl.WritePromptAsync().Wait();
+                    }
 
                     string line = string.Empty;
 
@@ -167,6 +171,7 @@ namespace Microsoft.PowerFx
                     while (true)
                     {
                         ConsoleKeyInfo cki = Console.ReadKey(true);
+                        ClearIntellisense(ref iStart, iEnd);
 
                         // SHIFT-ESC = clear line
                         if (cki.Key == ConsoleKey.Escape && (cki.Modifiers & ConsoleModifiers.Shift) != 0)
@@ -180,7 +185,7 @@ namespace Microsoft.PowerFx
                         }
 
                         // TAB or ESC = intellisense
-                        if ((cki.Key == ConsoleKey.Tab || cki.Key == ConsoleKey.Escape) && tabCount == 0)
+                        if ((cki.Key == ConsoleKey.Tab && tabCount == 0) || cki.Key == ConsoleKey.Escape)
                         {
                             ReplResult rr = repl.HandleLineAsync(line, suggest: true).Result;
 
@@ -203,7 +208,7 @@ namespace Microsoft.PowerFx
                                 IIntellisenseSuggestion suggestion = list.Skip(tabCount % list.Count).First();
                                 int hs = suggestion.DisplayText.HighlightStart;
                                 int he = suggestion.DisplayText.HighlightEnd;
-                                line = string.Concat(tabLine.AsSpan(0, tabLine.Length - he + hs), suggestion.DisplayText.Text);
+                                line = string.Concat(tabLine.AsSpan(0, tabLine.Length - he + hs), suggestion.DisplayText.Text);                                
                                 DisplayCurrentLine(repl, line);
                                 tabCount++;
                             }
@@ -242,7 +247,6 @@ namespace Microsoft.PowerFx
                         }
 
                         tabCount = 0;                        
-                        ClearIntellisense(ref iStart, iEnd);
                         
                         // UP and DOWN, search in history
                         if (cki.Key == ConsoleKey.UpArrow || cki.Key == ConsoleKey.DownArrow)
@@ -311,6 +315,12 @@ namespace Microsoft.PowerFx
 
                         Console.Write(cki.KeyChar);
                         line += cki.KeyChar;
+                    }
+
+                    // End of file
+                    if (line == null)
+                    {
+                        return;
                     }
 
                     repl.HandleLineAsync(line).Wait();
