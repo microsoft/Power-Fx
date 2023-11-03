@@ -34,12 +34,16 @@ namespace Microsoft.PowerFx
         // Allow repl to create new definitions, such as Set(). 
         public bool AllowSetDefinitions { get; set; }
 
-        // Do we print each command?
-        // Useful if we're running a file, or ir input UI is separated from output UI. 
+        // Do we print each command before evaluation?
+        // Useful if we're running a file and are debugging, or if input UI is separated from output UI. 
         public bool Echo { get; set; } = false;
 
+        // Do we print each result after evaluation?
+        // Useful if we're running in interactive mode, or with Echo enabled.
+        public bool PrintResult { get; set; } = true;
+
         // Has Exit() been called?
-        // Host can check this flag after each command is executed.
+        // Host can check this flag after each command is executed to see if the repl should close.
         public bool ExitRequested { get; set; } = false;
 
         /// <summary>
@@ -191,10 +195,11 @@ namespace Microsoft.PowerFx
         /// This allows continuations via the policy set in <see cref="MultilineProcessor"/>.
         /// </summary>
         /// <param name="line">A line of input.</param>
+        /// <param name="lineNumber">Line number.</param>
         /// <param name="cancel"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException">If cancelled.</exception>
-        public async Task HandleLineAsync(string line, CancellationToken cancel = default)
+        public async Task HandleLineAsync(string line, CancellationToken cancel = default, uint? lineNumber = null)
         {
             if (this.Engine == null)
             {
@@ -205,7 +210,7 @@ namespace Microsoft.PowerFx
 
             if (expression != null)
             {
-                await this.HandleCommandAsync(expression, cancel);
+                await this.HandleCommandAsync(expression, cancel: cancel, lineNumber: lineNumber);
             }
         }
 
@@ -214,10 +219,13 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="expression">expression to run.</param>
         /// <param name="cancel">cancellation token.</param>
+        /// <param name="lineNumber">line number to attribute errors to.</param>
         /// <returns>status object with details.</returns>
         /// <exception cref="InvalidOperationException">invalid.</exception>
-        public virtual async Task<ReplResult> HandleCommandAsync(string expression, CancellationToken cancel = default)
+        public virtual async Task<ReplResult> HandleCommandAsync(string expression, CancellationToken cancel = default, uint? lineNumber = null)
         {
+            string lineError = lineNumber == null ? string.Empty : $"Line {lineNumber}: ";
+
             if (this.Engine == null)
             {
                 throw new InvalidOperationException($"Engine is not set.");
@@ -231,7 +239,9 @@ namespace Microsoft.PowerFx
             if (this.Echo)
             {
                 await this.WritePromptAsync(cancel);
-                await this.Output.WriteAsync(expression, OutputKind.Repl, cancel);
+
+                // better to strip any newline and add one ourselves (with WriteLine), in case the expression didn't come in with one
+                await this.Output.WriteLineAsync(expression.TrimEnd(), OutputKind.Repl, cancel);
             }
 
             var extraSymbolTable = this.ExtraSymbolValues?.SymbolTable;
@@ -302,7 +312,7 @@ namespace Microsoft.PowerFx
                         }
                         catch (Exception ex)
                         {
-                            await this.Output.WriteLineAsync(ex.Message, OutputKind.Error, cancel)
+                            await this.Output.WriteLineAsync(lineError + "Error: " + ex.Message, OutputKind.Error, cancel)
                                 .ConfigureAwait(false);
                         }
 
@@ -313,7 +323,7 @@ namespace Microsoft.PowerFx
                         foreach (var error in formulaCheck.Errors)
                         {
                             var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
-                            await this.Output.WriteLineAsync(error.ToString(), kind, cancel)
+                            await this.Output.WriteLineAsync(lineError + error.ToString(), kind, cancel)
                                 .ConfigureAwait(false);
                         }
 
@@ -395,7 +405,7 @@ namespace Microsoft.PowerFx
                         }
                     }
 
-                    await this.Output.WriteLineAsync(msg, kind, cancel)
+                    await this.Output.WriteLineAsync(lineError + msg, kind, cancel)
                         .ConfigureAwait(false);
                 }
 
@@ -433,23 +443,30 @@ namespace Microsoft.PowerFx
                 EvalResult = result,
             };
 
-            foreach (var varName in varsToDisplay)
+            if (PrintResult)
             {
-                var varValue = this.Engine.GetValue(varName);
-                replResult.DeclaredVars[varName] = varValue;
+                // Print results for updated named formulas
+                foreach (var varName in varsToDisplay)
+                {
+                    var varValue = this.Engine.GetValue(varName);
+                    replResult.DeclaredVars[varName] = varValue;
 
-                await this.WriteLineVarAsync(varValue, cancel, $"{varName}: ");
+                    await this.WriteLineVarAsync(varValue, cancel, $"{varName}: ");
+                }
+
+                // Now print the result for this expression
+                await this.WriteLineVarAsync(result, cancel);
             }
-
-            // Now print the result
-            await this.WriteLineVarAsync(result, cancel);
 
             return replResult;
         }
 
         public virtual async void OnFormulaUpdate(string name, FormulaValue newValue)
         {
-            await this.WriteLineVarAsync(newValue, CancellationToken.None, $"{name}: ");
+            if (PrintResult)
+            {
+                await this.WriteLineVarAsync(newValue, CancellationToken.None, $"{name}: ");
+            }
         }
 
         private async Task WriteLineVarAsync(FormulaValue result, CancellationToken cancel, string prefix = null)
@@ -473,7 +490,7 @@ namespace Microsoft.PowerFx
     }
 
     /// <summary>
-    /// Result from <see cref="PowerFxREPL.HandleCommandAsync(string, CancellationToken)"/>.
+    /// Result from <see cref="PowerFxREPL.HandleCommandAsync(string, CancellationToken, uint?)"/>.
     /// </summary>
     public class ReplResult
     {
