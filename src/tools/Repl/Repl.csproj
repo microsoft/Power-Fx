@@ -8,14 +8,6 @@
     <Configurations>Debug;Release</Configurations>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.1|AnyCPU'">
-    <NoWarn>$(NoWarn);NU5125;CA1303</NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.1|AnyCPU'">
-    <NoWarn>$(NoWarn);NU5125;CA1303</NoWarn>
-  </PropertyGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />

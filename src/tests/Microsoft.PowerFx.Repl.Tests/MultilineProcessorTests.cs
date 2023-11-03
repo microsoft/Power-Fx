@@ -36,19 +36,16 @@ namespace Microsoft.PowerFx.Repl.Tests
                 Assert.Equal(isFirstLine, _processor.IsFirstLine);
 
                 var result = _processor.HandleLine(line);
+                sb.AppendLine(line);
 
                 if (!isLast)
                 {
-                    sb.AppendLine(line);
-
                     Assert.Null(result);
 
                     Assert.False(_processor.IsFirstLine); // always false after HandleLine();
                 } 
                 else
                 {
-                    sb.Append(line);
-
                     // Last line completes
                     Assert.Equal(sb.ToString(), result);
 

@@ -29,13 +29,7 @@ namespace Microsoft.PowerFx.Repl.Services
         {
             _commandBuffer.AppendLine(line);
 
-            string commandBufferString = _commandBuffer.ToString();
-
-            // Remove the trailing newline if it exists as it disturbs Intellisense
-            if (commandBufferString.EndsWith("\r\n", StringComparison.OrdinalIgnoreCase))
-            {
-                commandBufferString = commandBufferString.Substring(0, commandBufferString.Length - 2);
-            }
+            var commandBufferString = _commandBuffer.ToString();
 
             // We use the parser results to determine if the command is complete or more lines are needed.
             // The Engine features and parser options do not need to match what we will actually use,
