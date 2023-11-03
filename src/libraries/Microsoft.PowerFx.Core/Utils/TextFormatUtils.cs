@@ -111,6 +111,8 @@ namespace Microsoft.PowerFx.Core.Utils
             int mCount = 0;
             bool hasColonWithNum = false;
             bool hasExponentialNotation = false;
+            bool hasNonNumericCharacter = false;
+            int poundAfterExponentialIdx = -1;
             List<int> commaIdxList = new List<int>();
             textFormatArgs.Sections = new List<string>();
 
@@ -183,14 +185,49 @@ namespace Microsoft.PowerFx.Core.Utils
                     }
                 }
 
+                if (hasExponentialNotation && !_numericCharacters.Contains(formatStr[i]))
+                {
+                    hasNonNumericCharacter = true;
+                }
+
                 if ((i == 0 || textFormatArgs.HasNumericFmt) && _specialCharacters.Contains(formatStr[i]))
                 {
                     formatStr = formatStr.Insert(i + 1, "\"");
                     formatStr = formatStr.Insert(i, "\"");
                     i += 2;
                 }
+                else if (formatStr[i] == ';' && poundAfterExponentialIdx != -1)
+                {
+                    // Insert 0 to the last # character after exponential notation
+                    formatStr = formatStr.Insert(poundAfterExponentialIdx, "0");
+                    
+                    // Reset to check exponential notation
+                    hasExponentialNotation = false;
+                    poundAfterExponentialIdx = -1;
+                    hasNonNumericCharacter = false;
+                }
                 else if (_numericCharacters.Contains(formatStr[i]))
                 {
+                    if (hasExponentialNotation)
+                    {
+                        if (hasNonNumericCharacter)
+                        {
+                            // Block any non numeric character after exponential notation and before numeric character
+                            return false;
+                        }
+
+                        if (formatStr[i] == '#')
+                        {
+                            formatStr = formatStr.Remove(i, 1);
+                            i--;
+                            poundAfterExponentialIdx = i;
+                        }
+                        else
+                        {
+                            poundAfterExponentialIdx = -1;
+                        }                            
+                    }
+
                     // ':' is not allowed between # or 0 (numeric)
                     if (textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat && hasColonWithNum)
                     {
@@ -315,6 +352,11 @@ namespace Microsoft.PowerFx.Core.Utils
                 else if ((formatStr[i] == 'e' || formatStr[i] == 'E') && (i < formatStr.Length - 1 && (formatStr[i + 1] == '+' || formatStr[i + 1] == '-')))
                 {
                     hasExponentialNotation = true;
+
+                    if (i < formatStr.Length - 2)
+                    {
+                        i++;
+                    }
                 }
                 else if (formatStr[i] == '%' && hasExponentialNotation)
                 {
@@ -338,12 +380,6 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
                 else if (formatStr[i] == '\\')
                 {
-                    if (hasExponentialNotation)
-                    {
-                        // Block exponential notation with escaping character
-                        return false;
-                    }
-
                     if ((textFormatArgs.HasNumericFmt && textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat) || (i < formatStr.Length - 1 && formatStr[i + 1] == '\"'))
                     {
                         // Skip next character if seeing escaping character.
@@ -360,12 +396,6 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
                 else if (formatStr[i] == '\"' && i < formatStr.Length - 1)
                 {
-                    if (hasExponentialNotation)
-                    {
-                        // Block exponential notation with escaping character.
-                        return false;
-                    }
-
                     // Jump to close quote to pass all escaping characters.
                     i = formatStr.IndexOf('\"', i + 1);
 
@@ -375,6 +405,11 @@ namespace Microsoft.PowerFx.Core.Utils
                         return false;
                     }
                 }
+            }
+
+            if (poundAfterExponentialIdx != -1)
+            {
+                formatStr = formatStr.Insert(poundAfterExponentialIdx, "0");
             }
 
             if (lastSectionIdx != -1 && lastSectionIdx < formatStr.Length - 1)
