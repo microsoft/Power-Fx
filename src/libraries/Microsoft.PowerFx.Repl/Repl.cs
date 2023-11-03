@@ -210,7 +210,7 @@ namespace Microsoft.PowerFx
 
             if (expression != null)
             {
-                await this.HandleCommandAsync(expression, lineNumber: lineNumber);
+                await this.HandleCommandAsync(expression, cancel: cancel, lineNumber: lineNumber);
             }
         }
 
@@ -240,7 +240,7 @@ namespace Microsoft.PowerFx
             {
                 await this.WritePromptAsync(cancel);
 
-                // better to strip any newline and add one ourselves, in case the expression didn't come in with one
+                // better to strip any newline and add one ourselves (with WriteLine), in case the expression didn't come in with one
                 await this.Output.WriteLineAsync(expression.TrimEnd(), OutputKind.Repl, cancel);
             }
 

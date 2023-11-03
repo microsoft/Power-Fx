@@ -593,6 +593,7 @@ true
         public void LineNumbersInErrors()
         {
             _repl.HandleCommandAsync(@"2 +-* s", lineNumber: 7891).Wait();
+
             var errors = _output.Get(OutputKind.Error, trim: false);
 
             // make sure there is at least one error
