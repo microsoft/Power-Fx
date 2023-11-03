@@ -150,6 +150,7 @@ namespace Microsoft.PowerFx
             {
                 FormatCultureName = null,
                 FormatArg = null,
+                Sections = null,
                 DateTimeFmt = DateTimeFmtType.NoDateTimeFormat,
                 HasNumericFmt = false
             };

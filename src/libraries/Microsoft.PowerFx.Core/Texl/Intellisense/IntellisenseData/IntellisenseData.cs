@@ -326,7 +326,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         internal virtual void AddCustomSuggestionsForGlobals()
         {
             AddSuggestionForCurrentFunction();
-            AddSuggestionForCurrentBinaryOp();
+            TryAddSuggestionForCurrentBinaryOp();
         }
 
         /// <summary>
@@ -605,12 +605,12 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             return isSuggestable;
         }
 
-        private void AddSuggestionForCurrentBinaryOp()
+        internal bool TryAddSuggestionForCurrentBinaryOp(bool checkForOptionSetOnly = false)
         {
             var binaryOp = CurNode?.Parent?.AsBinaryOp();
             if (binaryOp == null || this.Binding.NameResolver is not IGlobalSymbolNameResolver globalResolver)
             {
-                return;
+                return false;
             }
 
             var symbols = globalResolver.GlobalSymbols;
@@ -618,9 +618,19 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             var nonErrorNode = binaryOp.Right.AsError() == null ? binaryOp.Right : binaryOp.Left;
             var nonErrorNodeType = Binding.GetType(nonErrorNode);
 
+            if (checkForOptionSetOnly && !nonErrorNodeType.IsOptionSet)
+            {
+                return false;
+            }
+
             foreach (var symbol in symbols)
             {
                 var symbolType = symbol.Value.Type;
+
+                if (symbolType.Kind == DKind.OptionSet)
+                {
+                    symbolType = symbolType.GetType(symbolType.OptionSetInfo.OptionNames.FirstOrDefault());
+                }
 
                 // Check for invalid symbol types and skip if found.
                 if (IsSuggestionTypeInvalid(symbolType))
@@ -636,6 +646,8 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                     IntellisenseHelper.AddSuggestion(this, symbol, SuggestionKind.Global, SuggestionIconKind.Other, symbolType, requiresSuggestionEscaping: true);
                 }
             }
+
+            return true;
         }
 
         private static bool IsSuggestionTypeInvalid(DType symbolType)
@@ -646,6 +658,17 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             }
 
             return false;
+        }
+
+        internal bool TryAddOptionSetSuggestion(CallNode callNode)
+        {
+            var binaryOp = CurNode?.Parent?.AsBinaryOp();
+            if (callNode == null || binaryOp == null)
+            {
+                return false;
+            }
+
+            throw new NotImplementedException();
         }
     }
 }

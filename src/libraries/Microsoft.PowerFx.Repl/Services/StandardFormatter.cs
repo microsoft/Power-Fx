@@ -133,10 +133,16 @@ namespace Microsoft.PowerFx.Repl.Services
 
                 resultString.Append("]");
             }
+
+            // special treatment for empty table
+            else if (table.Rows.Count() == 0)
+            {
+                resultString = new StringBuilder("\n<empty table>");
+            }
+
+            // otherwise a full table treatment is needed
             else
             {
-                // otherwise a full table treatment is needed
-
                 var columnCount = fieldNames.Count();
 
                 if (columnCount == 0)

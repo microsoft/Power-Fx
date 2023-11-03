@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Sütunların ekleneceği bir tablo.</value>
+    <value>Sütunların ekleneceği bir tablo veya kayıt.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Sütunların kaldırılacağı bir tablo değeri.</value>
+    <value>Sütunların kaldırılacağı bir tablo veya kayıt değeri.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Kaldırılacak sütunun adı.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>'old_column' sütunu 'new_column' olarak yeniden adlandırılmış şekilde, belirtilen 'source' tablosunun bir kopyasını döndürür.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>eski_sütun</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>yeni_sütun</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>İşlenecek bir tablo değeri.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Yeniden adlandırma işlemi gerçekleştirilecek olan sütun adı.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Sütunun yeni adı.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Tablodan, belirtilen tüm koşulların true olduğu satırları döndürür.</value>
@@ -2275,6 +2304,10 @@
     <value>'{0}' adındaki alan bu kayıtta birden çok kez belirtildi.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Belirtilen sütun '{0}' iki defa yeniden adlandırılamaz.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>'{0}' adlı sütun birçok kez belirtildi.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Sütunların kaldırılacağı bir tablo değeri.</value>
+    <value>Sütunların kaldırılacağı bir tablo veya kayıt değeri.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Korunacak sütunun adı.</value>

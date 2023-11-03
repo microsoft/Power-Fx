@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Tabela u koju se dodaju kolone.</value>
+    <value>Tabela ili zapis u koje treba dodati kolone.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Vrednost tabele iz koje treba ukloniti kolone.</value>
+    <value>Vrednost tabele ili zapisa iz kojih treba ukloniti kolone.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Ime kolone koju treba ukloniti.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Vraća kopiju navedene tabele „izvor“ sa kolonom „old_column“ preimenovanom u „new_column“.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>izvor</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>stara_kolona</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>nova_kolona</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Vrednost tabele za obradu.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Ime kolone koje treba preimenovati.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Novo ime za kolonu.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Vraća red iz tabele za koju su svi navedeni uslovi ispravni.</value>
@@ -2275,6 +2304,10 @@
     <value>Polje sa imenom „{0}“ navedeno je više puta u ovom zapisu.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Ne možete dvaput preimenovati navedenu kolonu „{0}“.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Kolona sa imenom „{0}“ navedena je više puta.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Vrednost tabele iz koje treba ukloniti kolone.</value>
+    <value>Vrednost tabele ili zapisa iz kojih treba ukloniti kolone.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Ime kolone koju treba zadržati.</value>
@@ -5089,19 +5122,19 @@
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
-    <value>Izvorni i odredišni tip zapisa se ne podudaraju. Dati tip ima dodatna polja: {0}.</value>
+    <value>Izvorna i odredišna vrsta zapisa se ne podudaraju. Dati tip ima dodatna polja: {0}.</value>
     
   </data>
   <data name="ErrExpectedRVMissingFields" xml:space="preserve">
-    <value>Izvorni i odredišni tip zapisa se ne podudaraju. Dati tip ima polja koja nedostaju: {0}.</value>
+    <value>Izvorna i odredišna vrsta zapisa se ne podudaraju. Dati tip ima polja koja nedostaju: {0}.</value>
     
   </data>
   <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
-    <value>Izvorni i odredišni tip zapisa se ne podudaraju. Naziv polja: {0} nije pronađen.</value>
+    <value>Izvorna i odredišna vrsta zapisa se ne podudaraju. Naziv polja: {0} nije pronađen.</value>
     
   </data>
   <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
-    <value>Izvorni i odredišni tip zapisa se ne podudaraju. Naziv polja: {0} Očekivano {1}; Pronađeno {2}.</value>
+    <value>Izvorna i odredišna vrsta zapisa se ne podudaraju. Naziv polja: {0} Očekivano {1}; Pronađeno {2}.</value>
     
   </data>
   <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">

@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Connectors
 
             return $"{nameof(connectorSettings.Namespace)} {connectorSettings.Namespace ?? Null(nameof(connectorSettings.Namespace))}, " +
                    $"{nameof(connectorSettings.MaxRows)} {connectorSettings.MaxRows}, " +
-                   $"{nameof(connectorSettings.IgnoreUnknownExtensions)} {connectorSettings.IgnoreUnknownExtensions}, " +
+                   $"{nameof(connectorSettings.FailOnUnknownExtension)} {connectorSettings.FailOnUnknownExtension}, " +
                    $"{nameof(connectorSettings.AllowUnsupportedFunctions)} {connectorSettings.AllowUnsupportedFunctions}, ";           
         }
 

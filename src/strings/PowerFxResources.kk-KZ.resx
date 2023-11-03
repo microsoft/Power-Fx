@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Бағандар қосылатын кесте.</value>
+    <value>Бағандар қосылатын кесте немесе жазба.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Бағандар жойылатын кесте мәні.</value>
+    <value>Бағандары жойылатын кесте немесе жазба.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Жойылатын баған атауы.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Көрсетілген бастапқы кестенің көшірмесін қайтарады, мұнда "ескі_баған" атауы "жаңа_баған" етіп өзгертіледі.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>деректер_көзі</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>ескі_баған</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>жаңа_баған</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Өңделетін кестелік мән.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Атауы өзгертілетін бағанның атауы.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Бағанның жаңа атауы.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Барлық көрсетілген шарттар шын болатын кестеден жолдарды қайтарады.</value>
@@ -2275,6 +2304,10 @@
     <value>"{0}" деп аталатын өріс осы жазбада бірнеше рет көрсетілген.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Көрсетілген "{0}" бағанының атауын екі рет өзгерту мүмкін емес.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>"{0}" деп аталатын баған бірнеше рет көрсетілді.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Бағандар жойылатын кесте мәні.</value>
+    <value>Бағандары жойылатын кесте немесе жазба.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Сақталатын бағанның атауы.</value>

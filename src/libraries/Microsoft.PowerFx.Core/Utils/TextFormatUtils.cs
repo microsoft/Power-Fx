@@ -35,6 +35,11 @@ namespace Microsoft.PowerFx.Core.Utils
         public string FormatArg { get; set; }
 
         /// <summary>
+        /// Numeric/date time format string.
+        /// </summary>
+        public List<string> Sections { get; set; }
+
+        /// <summary>
         /// Type of date time format.
         /// </summary>
         public DateTimeFmtType DateTimeFmt { get; set; }
@@ -102,9 +107,13 @@ namespace Microsoft.PowerFx.Core.Utils
             bool hasNumericCharacters = false;
             int decimalPointIndex = -1;
             int sectionCount = 0;
+            int lastSectionIdx = -1;
             int mCount = 0;
             bool hasColonWithNum = false;
+            bool hasExponentialNotation = false;
             List<int> commaIdxList = new List<int>();
+            textFormatArgs.Sections = new List<string>();
+
             for (int i = 0; i < formatStr.Length; i++)
             {
                 if (formatStr[i] == 'm' || formatStr[i] == 'M')
@@ -120,15 +129,57 @@ namespace Microsoft.PowerFx.Core.Utils
                     mCount = 0;
                 }
 
-                if (formatStr[i] == 'a' || formatStr[i] == 'A')
+                if ((formatStr[i] == 'a' || formatStr[i] == 'A') && (i == 0 || formatStr[i - 1] != '\''))
                 {
-                    // Block lower or mix cases of A/P or AM/PM
-                    if ((i < formatStr.Length - 2 && formatStr[i] == 'a' && formatStr[i + 1] == '/' && (formatStr[i + 2] == 'p' || formatStr[i + 2] == 'P')) ||
-                        (i < formatStr.Length - 2 && formatStr[i] == 'A' && formatStr[i + 1] == '/' && formatStr[i + 2] == 'p') ||
-                        (i < formatStr.Length - 4 && formatStr[i] == 'a' && (formatStr[i + 1] == 'm' || formatStr[i + 1] == 'M') && formatStr[i + 2] == '/' && formatStr[i + 3] == 'p' && (formatStr[i + 4] == 'm' || formatStr[i + 4] == 'M')) ||
-                        (i < formatStr.Length - 4 && formatStr[i] == 'A' && formatStr[i + 1] == 'm' && formatStr[i + 2] == '/' && formatStr[i + 3] == 'P' && formatStr[i + 4] == 'm'))
+                    // Block mix cases of A/P or AM/PM
+                    if (i < formatStr.Length - 2 && formatStr[i + 1] == '/' && char.ToLowerInvariant(formatStr[i + 2]) == 'p')
                     {
-                        return false;
+                        if (char.IsUpper(formatStr[i]) != char.IsUpper(formatStr[i + 2]))
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            // Temporary: block lower case of a/p
+                            if (formatStr[i] == 'a')
+                            {
+                                return false;
+                            }
+
+                            // It's a valid 'a/p' token
+                            i += 2;
+                            continue;
+                        }
+                    }
+
+                    if (
+                        i < formatStr.Length - 4 &&
+                        char.ToLowerInvariant(formatStr[i + 1]) == 'm' &&
+                        formatStr[i + 2] == '/' &&
+                        char.ToLowerInvariant(formatStr[i + 3]) == 'p' &&
+                        char.ToLowerInvariant(formatStr[i + 4]) == 'm')
+                    {
+                        var upperCount =
+                            (char.IsUpper(formatStr[i]) ? 1 : 0) +
+                            (char.IsUpper(formatStr[i + 1]) ? 1 : 0) +
+                            (char.IsUpper(formatStr[i + 3]) ? 1 : 0) +
+                            (char.IsUpper(formatStr[i + 4]) ? 1 : 0);
+                        if (upperCount == 0 || upperCount == 4)
+                        {
+                            // Temporary: block lower case of am/pm
+                            if (formatStr[i] == 'a')
+                            {
+                                return false;
+                            }
+
+                            // It's a valid 'am/pm' token
+                            i += 4;
+                            continue;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                 }
 
@@ -160,6 +211,7 @@ namespace Microsoft.PowerFx.Core.Utils
                                 if (commaIdxList[j] < formatStr.Length - 1 && !_numericCharacters.Contains(formatStr[commaIdxList[j] + 1]))
                                 {
                                     formatStr = formatStr.Remove(commaIdxList[j], 1);
+                                    i--;
                                 }
                             }
                         }
@@ -167,21 +219,36 @@ namespace Microsoft.PowerFx.Core.Utils
                         commaIdxList.Clear();
                     }
                 }
-                else if (_dateTimeCharacters.Contains(formatStr[i]))
+                else if (_dateTimeCharacters.Contains(formatStr[i]) && (i == 0 || formatStr[i - 1] != '\''))
                 {
                     textFormatArgs.DateTimeFmt = DateTimeFmtType.GeneralDateTimeFormat;
                 }
                 else if (textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat && formatStr[i] == ',' && !hasNumericCharacters && decimalPointIndex == -1)
                 {
-                    // If there is no numeric format character before group separator character, then treat it as an escaping character.
-                    formatStr = formatStr.Insert(i, "\\");
-                    i++;
+                    // Removing consecutive comma
+                    if (i > 0 && formatStr[i - 1] == ',')
+                    {
+                        formatStr = formatStr.Remove(i, 1);
+                        i--;
+                    }
+                    else
+                    {
+                        // If there is no numeric format character before group separator character, then treat it as an escaping character.
+                        formatStr = formatStr.Insert(i, "\\");
+                        i++;
+                    }
                 }
                 else if (textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat && formatStr[i] == '.')
                 {
                     // Reset hasNumericCharacters to false to later check if any numeric character after decimal point.
                     decimalPointIndex = i;
                     hasNumericCharacters = false;
+
+                    if (hasExponentialNotation)
+                    {
+                        // Block exponential notation with decimal number
+                        return false;
+                    }
 
                     if (commaIdxList.Count > 0)
                     {
@@ -215,10 +282,13 @@ namespace Microsoft.PowerFx.Core.Utils
                     {
                         return false;
                     }
+
+                    textFormatArgs.Sections.Add(formatStr.Substring(lastSectionIdx + 1, i - lastSectionIdx - 1));
+                    lastSectionIdx = i;
                 }
                 else if (textFormatArgs.HasNumericFmt && formatStr[i] == ',' && i > 0)
                 {
-                    if (_numericCharacters.Contains(formatStr[i - 1]) || commaIdxList.Contains(i - 1))
+                    if ((_numericCharacters.Contains(formatStr[i - 1]) && (i == 1 || formatStr[i - 2] != '\\')) || commaIdxList.Contains(i - 1))
                     {
                         // Record each comma index after numeric character and comma to do scaling factor process in the end of format.
                         commaIdxList.Add(i);
@@ -242,6 +312,15 @@ namespace Microsoft.PowerFx.Core.Utils
                     formatStr = formatStr.Insert(i, "\\");
                     i++;
                 }
+                else if ((formatStr[i] == 'e' || formatStr[i] == 'E') && (i < formatStr.Length - 1 && (formatStr[i + 1] == '+' || formatStr[i + 1] == '-')))
+                {
+                    hasExponentialNotation = true;
+                }
+                else if (formatStr[i] == '%' && hasExponentialNotation)
+                {
+                    // Block exponential notation with %
+                    return false;
+                }
                 else if (i == formatStr.Length - 1)
                 {
                     // If format string ends with backsplash but no following character or opening double quote then format is invalid.
@@ -259,9 +338,15 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
                 else if (formatStr[i] == '\\')
                 {
-                    if (textFormatArgs.HasNumericFmt || (i < formatStr.Length - 1 && formatStr[i + 1] == '\"'))
+                    if (hasExponentialNotation)
                     {
-                        // Skip next character if seeing escaping character \.
+                        // Block exponential notation with escaping character
+                        return false;
+                    }
+
+                    if ((textFormatArgs.HasNumericFmt && textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat) || (i < formatStr.Length - 1 && formatStr[i + 1] == '\"'))
+                    {
+                        // Skip next character if seeing escaping character.
                         i++;
                     }
                     else if (i < formatStr.Length - 1)
@@ -275,6 +360,12 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
                 else if (formatStr[i] == '\"' && i < formatStr.Length - 1)
                 {
+                    if (hasExponentialNotation)
+                    {
+                        // Block exponential notation with escaping character.
+                        return false;
+                    }
+
                     // Jump to close quote to pass all escaping characters.
                     i = formatStr.IndexOf('\"', i + 1);
 
@@ -284,6 +375,11 @@ namespace Microsoft.PowerFx.Core.Utils
                         return false;
                     }
                 }
+            }
+
+            if (lastSectionIdx != -1 && lastSectionIdx < formatStr.Length - 1)
+            {
+                textFormatArgs.Sections.Add(formatStr.Substring(lastSectionIdx + 1, formatStr.Length - lastSectionIdx - 1));
             }
 
             // Each comma after the decimal point and numeric character divides the number by 1,000.
