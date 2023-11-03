@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx
             Console.WriteLine("Enter Excel formulas.  Use \"Help()\" for details, \"Option()\" for options.");
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
 
-            REPL(Console.In, prompt: true, echo: false);
+            REPL(Console.In, prompt: true, echo: false, printResult: true, lineNumber: null);
         }
 
         // Hook repl engine with customizations.
@@ -143,11 +143,11 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public static void REPL(TextReader input, bool prompt, bool echo)
+        public static void REPL(TextReader input, bool prompt, bool echo, bool printResult, uint? lineNumber)
         {
             while (true)
             {
-                var repl = new MyRepl() { Echo = echo };
+                var repl = new MyRepl() { Echo = echo, PrintResult = printResult };
 
                 while (!_reset)
                 {
@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx
                         return;
                     }
 
-                    repl.HandleLineAsync(line).Wait();
+                    repl.HandleLineAsync(line, lineNumber: lineNumber++).Wait();
 
                     // Exit() function called
                     if (repl.ExitRequested)
@@ -212,7 +212,7 @@ namespace Microsoft.PowerFx
                 try
                 {
                     var reader = new StreamReader(file.Value);
-                    REPL(reader, prompt: false, echo: echo.Value);
+                    REPL(reader, prompt: false, echo: echo.Value, printResult: echo.Value, lineNumber: 1);
                     reader.Dispose();
                 }
                 catch (Exception ex)
