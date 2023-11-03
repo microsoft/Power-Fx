@@ -549,8 +549,7 @@ Notify(z)
 ");
             Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"Notify( 2345 )
 ");
-            Assert.True(_output.Get(OutputKind.Control, trim: false) == @"
->> ");
+            Assert.True(_output.Get(OutputKind.Control, trim: false) == @">> ");
 
             _repl.Echo = false;
             _repl.PrintResult = true;
@@ -569,8 +568,7 @@ Notify(z)
             Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"Notify( 4567 )
 true
 ");
-            Assert.True(_output.Get(OutputKind.Control, trim: false) == @"
->> ");
+            Assert.True(_output.Get(OutputKind.Control, trim: false) == @">> ");
 
             Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
