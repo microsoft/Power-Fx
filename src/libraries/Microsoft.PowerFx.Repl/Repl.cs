@@ -227,7 +227,7 @@ namespace Microsoft.PowerFx
         /// <param name="lineNumber">line number to attribute errors to.</param>
         /// <returns>status object with details.</returns>
         /// <exception cref="InvalidOperationException">invalid.</exception>
-        public virtual async Task<ReplResult> HandleCommandAsync(string expression, bool suggest = false, uint? lineNumber = null,CancellationToken cancel = default)
+        public virtual async Task<ReplResult> HandleCommandAsync(string expression, bool suggest = false, uint? lineNumber = null, CancellationToken cancel = default)
         {
             string lineError = lineNumber == null ? string.Empty : $"Line {lineNumber}: ";
 
