@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -528,6 +529,76 @@ Notify(z)
             Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
+        }
+
+        [Fact]
+        public void EchoAndPrintResult()
+        {
+            _repl.Echo = false;
+            _repl.PrintResult = false;
+            _repl.HandleCommandAsync(@"Notify( 1234 )").Wait();
+            Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"1234
+");
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Control, trim: false) == string.Empty);
+
+            _repl.Echo = true;
+            _repl.PrintResult = false;
+            _repl.HandleCommandAsync(@"Notify( 2345 )").Wait();
+            Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"2345
+");
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"Notify( 2345 )
+");
+            Assert.True(_output.Get(OutputKind.Control, trim: false) == @"
+>> ");
+
+            _repl.Echo = false;
+            _repl.PrintResult = true;
+            _repl.HandleCommandAsync(@"Notify( 3456 )").Wait();
+            Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"3456
+");
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"true
+");
+            Assert.True(_output.Get(OutputKind.Control, trim: false) == string.Empty);
+
+            _repl.Echo = true;
+            _repl.PrintResult = true;
+            _repl.HandleCommandAsync(@"Notify( 4567 )").Wait();
+            Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"4567
+");
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"Notify( 4567 )
+true
+");
+            Assert.True(_output.Get(OutputKind.Control, trim: false) == @"
+>> ");
+
+            Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
+        }
+
+        [Fact]
+        public void LineNumbersInErrors()
+        {
+            _repl.HandleCommandAsync(@"2 +-* s", lineNumber: 7891).Wait();
+
+            var errors = _output.Get(OutputKind.Error, trim: false);
+
+            // make sure there is at least one error
+            Assert.StartsWith("Line ", errors);
+
+            using (StringReader reader = new StringReader(errors))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Assert.StartsWith("Line 7891: ", errors);
+                }
+            }
+
+            Assert.True(_output.Get(OutputKind.Notify, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Control, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
         }
     }
 

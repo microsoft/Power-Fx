@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx
             Console.WriteLine("Enter Excel formulas.  Use \"Help()\" for details, \"Option()\" for options. CTRL-Z to exit.");
             Console.WriteLine("TAB for auto-completion, ESC for showing Intellisense suggestions. SHIFT-ESC to clear. UP/DOWN for history.");
 
-            REPL(Console.In, prompt: true, echo: false);
+            REPL(Console.In, prompt: true, echo: false, printResult: true, lineNumber: null);
         }
 
         // Hook repl engine with customizations.
@@ -142,11 +142,11 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public static void REPL(TextReader input, bool prompt, bool echo)
+        public static void REPL(TextReader input, bool prompt, bool echo, bool printResult, uint? lineNumber)
         {
             while (true)
             {
-                var repl = new MyRepl() { Echo = echo };
+                var repl = new MyRepl() { Echo = echo, PrintResult = printResult };
                 List<string> expressions = new List<string>();
 
                 while (!_reset)
@@ -323,7 +323,7 @@ namespace Microsoft.PowerFx
                         return;
                     }
 
-                    repl.HandleLineAsync(line).Wait();
+                    repl.HandleLineAsync(line, lineNumber: lineNumber++).Wait();
 
                     // Exit() function called
                     if (repl.ExitRequested)
@@ -414,7 +414,7 @@ namespace Microsoft.PowerFx
                 try
                 {
                     var reader = new StreamReader(file.Value);
-                    REPL(reader, prompt: false, echo: echo.Value);
+                    REPL(reader, prompt: false, echo: echo.Value, printResult: echo.Value, lineNumber: 1);
                     reader.Dispose();
                 }
                 catch (Exception ex)
