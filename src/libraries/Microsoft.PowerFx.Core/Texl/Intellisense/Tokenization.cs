@@ -4,15 +4,51 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
+    internal interface ITokenizationInfoProvider
+    {
+        public IEnumerable<FirstNameInfo> GetFirstNames();
+
+        public IEnumerable<DottedNameInfo> GetDottedNames();
+
+        public IEnumerable<StrInterpNode> GetStringInterpolations();
+
+        public CallNode GetCompilerGeneratedCallNode(TexlNode node);
+
+        public IEnumerable<CallInfo> GetCalls();
+
+        public IEnumerable<ControlKeywordInfo> GetControlKeywordInfos();
+
+        public IEnumerable<VariadicOpNode> GetVariadicOperators();
+
+        public IEnumerable<BinaryOpNode> GetBinaryOperators();
+
+        public IEnumerable<UnaryOpNode> GetUnaryOperators();
+
+        public IEnumerable<StrLitNode> GetStringLiterals();
+
+        public IEnumerable<BoolLitNode> GetBooleanLiterals();
+
+        public IEnumerable<DecLitNode> GetDecimalLiterals();
+
+        public IEnumerable<NumLitNode> GetNumericLiterals();
+
+        public DType GetType(TexlNode node);
+
+        IExternalDocument Document { get; }
+    }
+
     /// <summary>
     /// An entity with methods to compute enumeration of tokens in a expression with their start and end indices and token type.
     /// </summary>
@@ -35,6 +71,32 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             return Tokenize(expression, binding, comments, new TokenTextSpanComparer(), true);
         }
 
+        internal static IEnumerable<ITokenTextSpan> TokenizeUDfs(string expression, ParseUserDefinitionResult parseResult, IEnumerable<ITokenizationInfoProvider> providers = null, IReadOnlyCollection<TokenType> tokenTypesToSkip = null)
+        {
+            var tokens = new List<ITokenTextSpan>();
+            
+            foreach (var udf in parseResult.UDFs)
+            {
+                tokens.Add(new TokenTextSpan(udf.Ident.Name, udf.Ident.Span.Min, udf.Ident.Span.Lim, TokenType.Function, canHide: false));
+
+                foreach (var arg in udf.Args)
+                {
+                    tokens.Add(new TokenTextSpan(arg.TypeIdent.Name, arg.TypeIdent.Span.Min, arg.TypeIdent.Span.Lim, TokenType.Type, canHide: false));
+                }
+
+                tokens.Add(new TokenTextSpan(udf.ReturnType.Name, udf.ReturnType.Span.Min, udf.ReturnType.Span.Lim, TokenType.Type, canHide: false));
+            }
+
+            tokens.AddRange(Tokenize(expression, providers, parseResult.Comments, null, false, tokenTypesToSkip));
+
+            return tokens;
+        }
+
+        internal static IEnumerable<ITokenTextSpan> Tokenize(string expression, IEnumerable<ITokenizationInfoProvider> providers, IEnumerable<CommentToken> comments = null, IComparer<ITokenTextSpan> comparer = null, bool allowTokenHiding = false, IReadOnlyCollection<TokenType> tokenTypesToSkip = null)
+        {
+            return providers.SelectMany(provider => Tokenize(expression, provider, comments, comparer, allowTokenHiding, tokenTypesToSkip));
+        }
+
         /// <summary>
         /// Returns an enumeration of token text spans in a expression rule with their start and end indices and token type.
         /// </summary>
@@ -48,7 +110,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         // allowTokenHiding flag is off by default as we don't want to compute hiddenness of the tokens for the new formula bar as we are not going to support that.
         // However, we want to keep this for old formula bar as long as it exists and once we consume the changes in Canvas App backend,
         // we would update the tokenization logic behind old formula bar to use this one instead and allowTokenHiding would be true for old formula bar.
-        internal static IEnumerable<ITokenTextSpan> Tokenize(string expression, TexlBinding binding, IEnumerable<CommentToken> comments = null, IComparer<ITokenTextSpan> comparer = null, bool allowTokenHiding = false, IReadOnlyCollection<TokenType> tokenTypesToSkip = null)
+        internal static IEnumerable<ITokenTextSpan> Tokenize(string expression, ITokenizationInfoProvider binding, IEnumerable<CommentToken> comments = null, IComparer<ITokenTextSpan> comparer = null, bool allowTokenHiding = false, IReadOnlyCollection<TokenType> tokenTypesToSkip = null)
         {
             var tokens = new List<ITokenTextSpan>();
             if (expression == null || binding == null)
@@ -183,7 +245,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <param name="nameInfo">NameInfo.</param>
         /// <param name="binding">TexlBinding.</param>
         /// <returns>True if the left-hand side of the dotted name can be hidden or false otherwise.</returns>
-        private static bool CanHideLeftHandSideOfDottedName(NameInfo nameInfo, TexlBinding binding)
+        private static bool CanHideLeftHandSideOfDottedName(NameInfo nameInfo, ITokenizationInfoProvider binding)
         {
             DottedNameNode dottedNameParent;
             if (binding?.Document?.GlobalScope == null || nameInfo?.Node?.Parent == null || (dottedNameParent = nameInfo.Node.Parent.AsDottedName()) == null)
@@ -201,7 +263,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <param name="binding">Binding which would be used to tokenize the operation and determine the type of each token.</param>
         /// <param name="compilerGeneratedNodes">Collection that contains ids of compiler generate nodes.</param>
         /// <param name="tokenTypesToSkip">Options: Collection of token types to potentially skip in the final result. Tokens with these token types may or may not be skipped depending on their types.</param>
-        private static void ExtractTokensFromStringInterpolationNodesList(ICollection<ITokenTextSpan> tokens, TexlBinding binding, ICollection<int> compilerGeneratedNodes, IReadOnlyCollection<TokenType> tokenTypesToSkip = null)
+        private static void ExtractTokensFromStringInterpolationNodesList(ICollection<ITokenTextSpan> tokens, ITokenizationInfoProvider binding, ICollection<int> compilerGeneratedNodes, IReadOnlyCollection<TokenType> tokenTypesToSkip = null)
         {
             Contracts.AssertValue(tokens);
 
@@ -282,7 +344,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <param name="compilerGeneratedNodes">Collection that contains ids of compiler generate nodes.</param>
         /// <param name="node">Node for which transient node may have been generated during binding.</param>
         /// <param name="binding">Binding which would be used to tokenize the operation and determine the type of each token.</param>
-        private static void TrackCompilerGeneratedNodes(ICollection<int> compilerGeneratedNodes, TexlNode node, TexlBinding binding)
+        private static void TrackCompilerGeneratedNodes(ICollection<int> compilerGeneratedNodes, TexlNode node, ITokenizationInfoProvider binding)
         {
             var compilerGeneratedNode = binding.GetCompilerGeneratedCallNode(node);
             if (compilerGeneratedNode != null)

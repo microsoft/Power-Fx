@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -348,6 +349,44 @@ namespace Microsoft.PowerFx
                             Config.Features);
 
             return (binding, combinedSymbols);
+        }
+
+        internal (IEnumerable<TexlBinding>, ReadOnlySymbolTable) ComputeBindingUDfs(CheckResult result)
+        {
+            if (!result.IsUDFInstance)
+            {
+                return (Enumerable.Empty<TexlBinding>(), null);
+            }
+
+            var parse = result.ApplyParse() as ParseUserDefinitionResult;
+
+            ReadOnlySymbolTable symbolTable = result.Parameters;
+
+            // Ok to continue with binding even if there are parse errors. 
+            // We can still use that for intellisense.             
+            var resolver = CreateResolverInternal(out var combinedSymbols, symbolTable);
+
+            var externalRuleScopeResolver = CreateExternalRuleScopeResolver();
+
+            var glue = CreateBinderGlue();
+
+            var ruleScope = this.GetRuleScope();
+            var bindingConfig = GetDefaultBindingConfig(result.Parse.Options, ruleScope);
+
+            var bindings = parse.UDFs.Select(udf => TexlBinding.Run(
+                            glue,
+                            externalRuleScopeResolver,
+                            new DataSourceToQueryOptionsMap(),
+                            udf.Body,
+                            resolver,
+                            bindingConfig,
+                            false,
+                            ruleScope?._type,
+                            false,
+                            null,
+                            Config.Features));
+
+            return (bindings, combinedSymbols);
         }
 
         /// <summary>

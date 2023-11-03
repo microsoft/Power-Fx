@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types.TypeCheckers;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
@@ -76,6 +77,8 @@ namespace Microsoft.PowerFx
 
         internal Engine Engine => _engine;
 
+        internal bool IsUDFInstance { get; private set; } = false;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckResult"/> class.
         /// Create a "failed" check around a set of errors. 
@@ -116,6 +119,7 @@ namespace Microsoft.PowerFx
                 throw new InvalidOperationException($"Can only call {nameof(SetText)} once.");
             }
 
+            IsUDFInstance = parse is ParseUserDefinitionResult;
             _expression = parse.Text;
             _parserOptions = parse.Options;
             this.Parse = parse;
@@ -137,6 +141,7 @@ namespace Microsoft.PowerFx
             _expression = expression;
             _parserOptions = parserOptions ?? Engine.GetDefaultParserOptionsCopy();
             ParserCultureInfo = _parserOptions.Culture;
+            IsUDFInstance = _parserOptions.AreOptionsForUDFsExpression;
 
             return this;
         }
@@ -231,6 +236,23 @@ namespace Microsoft.PowerFx
         /// Return type of the expression. Null if type can't be determined. 
         /// </summary>
         public FormulaType ReturnType { get; set; }
+
+        private IEnumerable<TexlBinding> _bindings = null;
+
+        internal IEnumerable<TexlBinding> Bindings
+        {
+            get
+            {
+                if (IsUDFInstance)
+                {
+                    return _bindings;
+                }
+                else
+                {
+                    return new List<TexlBinding> { Binding };
+                }
+            }
+        }
 
         #endregion
 
@@ -436,7 +458,19 @@ namespace Microsoft.PowerFx
                     throw new InvalidOperationException($"Must call {nameof(SetBindingInfo)} before calling {nameof(ApplyBinding)}.");
                 }
 
-                (var binding, var combinedSymbols) = Engine.ComputeBinding(this);
+                IEnumerable<TexlBinding> bindings = Enumerable.Empty<TexlBinding>();
+                ReadOnlySymbolTable combinedSymbols;
+                TexlBinding binding;
+                if (IsUDFInstance)
+                {
+                    (bindings, combinedSymbols) = Engine.ComputeBindingUDfs(this);
+                    binding = bindings.FirstOrDefault();
+                    _bindings = bindings;
+                }
+                else
+                {
+                    (binding, combinedSymbols) = Engine.ComputeBinding(this);
+                }
 
                 this.ThrowIfSymbolsChanged();
 
@@ -446,7 +480,7 @@ namespace Microsoft.PowerFx
                 this._allSymbols = combinedSymbols;
 
                 // Add the errors
-                IEnumerable<ExpressionError> bindingErrors = ExpressionError.New(binding.ErrorContainer.GetErrors(), ParserCultureInfo);
+                IEnumerable<ExpressionError> bindingErrors = ExpressionError.New(IsUDFInstance ? bindings.SelectMany(binding => binding.ErrorContainer.GetErrors()) : binding.ErrorContainer.GetErrors(), ParserCultureInfo);
                 _errors.AddRange(bindingErrors);
 
                 if (this.IsSuccess)
@@ -600,7 +634,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="tokenTypesToSkip">Optional: Token types that would be skipped and not included in the final result. Usually provided by the language server.</param>
         /// <returns> Enumerable of tokens. Tokens are ordered only if comparer is provided.</returns>
-        internal IEnumerable<ITokenTextSpan> GetTokens(IReadOnlyCollection<TokenType> tokenTypesToSkip = null) => Tokenization.Tokenize(_expression, _binding, Parse?.Comments, null, false, tokenTypesToSkip);
+        internal IEnumerable<ITokenTextSpan> GetTokens(IReadOnlyCollection<TokenType> tokenTypesToSkip = null) => IsUDFInstance ? Tokenization.TokenizeUDfs(_expression, this.Parse as ParseUserDefinitionResult, Bindings, tokenTypesToSkip) : Tokenization.Tokenize(_expression, _binding, Parse?.Comments, null, false, tokenTypesToSkip);
 
         private string _expressionInvariant;
 

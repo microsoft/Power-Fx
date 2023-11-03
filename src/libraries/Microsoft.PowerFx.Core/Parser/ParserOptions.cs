@@ -49,15 +49,18 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool AllowParseAsTypeLiteral { get; set; }
 
+        internal bool AreOptionsForUDFsExpression { get; set; }
+
         public ParserOptions()
         {
         }
 
-        public ParserOptions(CultureInfo culture, bool allowsSideEffects = false, int maxExpressionLength = 0)
+        public ParserOptions(CultureInfo culture, bool allowsSideEffects = false, int maxExpressionLength = 0, bool areOptionsForUDFsExpression = false)
         {
             Culture = culture;
             AllowsSideEffects = allowsSideEffects;
             MaxExpressionLength = maxExpressionLength;
+            AreOptionsForUDFsExpression = areOptionsForUDFsExpression;
         }
 
         internal ParseResult Parse(string script)
@@ -75,11 +78,20 @@ namespace Microsoft.PowerFx
                 return result2;
             }
 
-            var flags = (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
+            ParseResult result;
+            if (!AreOptionsForUDFsExpression)
+            {
+                var flags = (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
                         (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0) |
                         (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0);
 
-            var result = TexlParser.ParseScript(script, features, Culture, flags);
+                result = TexlParser.ParseScript(script, features, Culture, flags);
+            }
+            else
+            {
+                result = TexlParser.ParseUserDefinitionScript(script, this);
+            }
+
             result.Options = this;
             return result;
         }

@@ -240,6 +240,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             AssertControlTokens(tokens, controlTokens, expectedControlTokenIndices);
         }
 
+        [Fact]
+        public void Test()
+        {
+            string expression = "Foobar(A: Number): Number = A + 23;";
+            var result = GetDefaultCheckResult(expression, true);
+
+            Assert.True(true);
+        }
+
         private static void AssertEncodedTokens(IEnumerable<uint> encodedTokensCollection, IEnumerable<ITokenTextSpan> tokens, string expression, string eol, bool hasMultilineTokens = false)
         {
             var encodedTokens = encodedTokensCollection.ToArray();
@@ -327,7 +336,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             return "\n";
         }
 
-        private static CheckResult GetDefaultCheckResult(string expression)
+        private static CheckResult GetDefaultCheckResult(string expression, bool isUdfExpr = false)
         {
             var powerFxConfig = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet());
             var mockSymbolTable = new MockSymbolTable();
@@ -336,7 +345,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             mockSymbolTable.Add("InvalidPhoneWarningText", new NameLookupInfo(BindKind.PowerFxResolvedObject, DType.String, DPath.Root, 0));
             powerFxConfig.SymbolTable.AddFunction(new NotifyFunc());
             var engine = new Engine(powerFxConfig);
-            var checkResult = engine.Check(expression, new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true }, mockSymbolTable);
+            var checkResult = engine.Check(expression, new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true, AreOptionsForUDFsExpression = isUdfExpr }, mockSymbolTable);
             Assert.False(checkResult.Errors.Any(), string.Join(Environment.NewLine, checkResult.Errors));
             return checkResult;
         }
