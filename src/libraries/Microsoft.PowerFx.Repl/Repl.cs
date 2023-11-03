@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Repl;
 using Microsoft.PowerFx.Repl.Functions;
 using Microsoft.PowerFx.Repl.Services;
@@ -63,7 +64,7 @@ namespace Microsoft.PowerFx
         public ParserOptions ParserOptions { get; set; } = new ParserOptions() { AllowsSideEffects = true };
 
         // example override, switching to [1], [2] etc.
-        public virtual string Prompt => "\n>> ";
+        public virtual string Prompt => ">> ";
 
         // prompt for multiline continuation
         public virtual string PromptContinuation => ".. ";
@@ -196,10 +197,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="line">A line of input.</param>
         /// <param name="lineNumber">Line number.</param>
+        /// <param name="suggest">Provide suggestions instead of evaluating the expression.</param>
         /// <param name="cancel"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException">If cancelled.</exception>
-        public async Task HandleLineAsync(string line, CancellationToken cancel = default, uint? lineNumber = null)
+        public async Task<ReplResult> HandleLineAsync(string line, bool suggest = false, uint? lineNumber = null, CancellationToken cancel = default)
         {
             if (this.Engine == null)
             {
@@ -210,19 +212,22 @@ namespace Microsoft.PowerFx
 
             if (expression != null)
             {
-                await this.HandleCommandAsync(expression, cancel: cancel, lineNumber: lineNumber);
+                return await this.HandleCommandAsync(expression, suggest, lineNumber, cancel);
             }
+
+            return null;
         }
 
         /// <summary>
         /// Directly invoke a command. This skips multiline handling. 
         /// </summary>
         /// <param name="expression">expression to run.</param>
+        /// <param name="suggest">Provide suggestions instead of evaluating the expression.</param>
         /// <param name="cancel">cancellation token.</param>
         /// <param name="lineNumber">line number to attribute errors to.</param>
         /// <returns>status object with details.</returns>
         /// <exception cref="InvalidOperationException">invalid.</exception>
-        public virtual async Task<ReplResult> HandleCommandAsync(string expression, CancellationToken cancel = default, uint? lineNumber = null)
+        public virtual async Task<ReplResult> HandleCommandAsync(string expression, bool suggest = false, uint? lineNumber = null, CancellationToken cancel = default)
         {
             string lineError = lineNumber == null ? string.Empty : $"Line {lineNumber}: ";
 
@@ -244,12 +249,8 @@ namespace Microsoft.PowerFx
                 await this.Output.WriteLineAsync(expression.TrimEnd(), OutputKind.Repl, cancel);
             }
 
-            var extraSymbolTable = this.ExtraSymbolValues?.SymbolTable;
-            
-            var runtimeConfig = new RuntimeConfig(this.ExtraSymbolValues)
-            {
-                 ServiceProvider = new BasicServiceProvider(this.InnerServices)
-            };
+            ReadOnlySymbolTable extraSymbolTable = this.ExtraSymbolValues?.SymbolTable;
+            RuntimeConfig runtimeConfig = new RuntimeConfig(this.ExtraSymbolValues) { ServiceProvider = new BasicServiceProvider(this.InnerServices) };
 
             if (this.UserInfo != null)
             {
@@ -261,15 +262,17 @@ namespace Microsoft.PowerFx
                 runtimeConfig.SetUserInfo(this.UserInfo);
             }
 
-            runtimeConfig.AddService<IReplOutput>(this.Output);
+            runtimeConfig.AddService(this.Output);
+            ReadOnlySymbolTable currentSymbolTable = ReadOnlySymbolTable.Compose(this.MetaFunctions, extraSymbolTable);            
 
-            var currentSymbolTable = ReadOnlySymbolTable.Compose(this.MetaFunctions, extraSymbolTable);
-
-            var check = new CheckResult(this.Engine)
-                .SetText(expression, ParserOptions)
-                .SetBindingInfo(currentSymbolTable);
-
+            CheckResult check = new CheckResult(this.Engine).SetText(expression, ParserOptions).SetBindingInfo(currentSymbolTable);            
             check.ApplyParse();
+
+            if (suggest)
+            {
+                IIntellisenseResult intellisenseResults = this.Engine.Suggest(check, expression.Length, runtimeConfig.ServiceProvider);
+                return new ReplResult { CheckResult = check, IntellisenseResult = intellisenseResults };
+            }
 
             HashSet<string> varsToDisplay = new HashSet<string>();
 
@@ -355,8 +358,7 @@ namespace Microsoft.PowerFx
                         var setCheck = this.Engine.Check(rhsExpr, ParserOptions, this.ExtraSymbolValues?.SymbolTable);
                         if (!setCheck.IsSuccess)
                         {
-                            await this.Output.WriteLineAsync($"Failed to initialize '{name}'.", OutputKind.Error, cancel)
-                                .ConfigureAwait(false);
+                            await this.Output.WriteLineAsync($"Failed to initialize '{name}'.", OutputKind.Error, cancel).ConfigureAwait(false);
                             return new ReplResult { CheckResult = setCheck };
                         }
 
@@ -420,8 +422,7 @@ namespace Microsoft.PowerFx
 
             try
             {
-                result = await runner.EvalAsync(cancel, runtimeConfig)
-                    .ConfigureAwait(false);
+                result = await runner.EvalAsync(cancel, runtimeConfig).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -490,7 +491,7 @@ namespace Microsoft.PowerFx
     }
 
     /// <summary>
-    /// Result from <see cref="PowerFxREPL.HandleCommandAsync(string, CancellationToken, uint?)"/>.
+    /// Result from <see cref="PowerFxREPL.HandleCommandAsync(string, bool, uint?, CancellationToken)"/>.
     /// </summary>
     public class ReplResult
     {
@@ -512,5 +513,10 @@ namespace Microsoft.PowerFx
         /// key is the name, value is the final value at the end of the expression. 
         /// </summary>
         public IDictionary<string, FormulaValue> DeclaredVars { get; set; } = new Dictionary<string, FormulaValue>();
+
+        /// <summary>
+        /// Intellisense results, if any.
+        /// </summary>
+        public IIntellisenseResult IntellisenseResult { get; set; }
     }
 }
