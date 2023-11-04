@@ -1,7 +1,7 @@
-// ******************************** ORDER TABLE TESTCASES ********************************
+#SETUP: disable:SupportColumnNamesAsIdentifiers
 
 // Sort null table with null order values
->> SortByColumns(If(1<0,Table({a:1,b:2},{a:2,b:3})), "a",[Blank()])
+>> SortByColumns(If(1<0,Table({a:1,b:2},{a:2,b:3})), "a",Table({Value:Blank()}))
 Blank()
 
 // Sort null table with empty order values
@@ -13,16 +13,16 @@ Blank()
 Blank()
 
 //Sort empty table with null order values
->> SortByColumns(Filter([1, 2, 3], Value > 100), "Value", [Blank()])
-[]
+>> SortByColumns(Filter([1, 2, 3], Value > 100), "Value", Table({Value:Blank()}))
+Table()
 
 //Sort empty table with empty order values
 >> SortByColumns(Filter([1, 2, 3], Value > 100), "Value", Filter([1, 2, 3], Value > 100))
-[]
+Table()
 
 // Sort empty table with non-empty order values
 >> SortByColumns(Filter([1, 2, 3], Value > 100), "Value", [1])
-[]
+Table()
 
 // Sort on numeric column, with order values ascending
 >> SortByColumns(Table(
@@ -282,7 +282,7 @@ Table({Age:792,First:"Titan",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccin
   Blank(),
   { First: "John", Last: "Batali", Age: 17 },
   { First: "Emily", Age: 29 }), "Last", ["Batali",Blank(),"Smith"])
-Table({Age:17,First:"John",Last:"Batali"},{Age:2,First:"Bob",Last:"Smith"},{First:"Alice"},Blank(),Blank(),Blank(),{Age:29,First:"Emily"})
+Table({Age:17,First:"John",Last:"Batali"},{Age:2,First:"Bob",Last:"Smith"},{Age:Blank(),First:"Alice",Last:Blank()},Blank(),Blank(),Blank(),{Age:29,First:"Emily",Last:Blank()})
 
 
 // Sort calendar, with order values ascending
@@ -352,8 +352,8 @@ Table({Day:"Monday",name:"Scrum Meeting 1"},{Day:"Monday",name:"Project Meeting 
 // Sort on table with columns having special characters
 
 >>  SortByColumns(Table(
-  { "A\"B": "Bob" }, { "A\"B": "Alice" }, { "A\"B": "Mary" }, { "A\"B": "Wonderland" }, { "A\"B": "Samantha" }), "A\""B", ["Alice", "Bob", "Mary", "Samantha", "Wonderland"])
-Table({ "A\"B": "Wonderland" }, { "A\"B": "Samantha" }, { "A\"B": "Mary" }, { "A\"B": "Bob" }, { "A\"B": "Alice" })
+  { 'A\"B': "Bob" }, { 'A\"B': "Alice" }, { 'A\"B': "Mary" }, { 'A\"B': "Wonderland" }, { 'A\"B': "Samantha" }), "A\""B", ["Alice", "Bob", "Mary", "Samantha", "Wonderland"])
+Table({'A\"B':"Alice"},{'A\"B':"Bob"},{'A\"B':"Mary"},{'A\"B':"Samantha"},{'A\"B':"Wonderland"})
 
 // Sort on error order values table
 >> SortByColumns(Table(
@@ -443,7 +443,7 @@ Error({Kind:ErrorKind.InvalidArgument})
   { name: Left("Hello", -1), Day: "Tuesday" },
   { name: "Team Meeting", Day: "Monday" },
   { name: "Scrum Meeting 2", Day: "Tuesday" }),"Day", ["Monday","Tuesday","Wednesday","Thursday","Friday"])
-Table({name:"Scrum Meeting 1",Day:Monday}, {name:"Project Meeting 1",Day:Monday}, {name:"Team Meeting",Day:Monday}, {name:Error({Kind:ErrorKind.InvalidArgument}),Day:Tuesday}, {name:"Scrum Meeting 2",Day:Tuesday}, {name:"Scrum Meeting 3",Day:Wednesday}, {name:"Project Meeting 2",Day:Wednesday}, {name:"Scrum Meeting 4",Day:Thursday}, {name:"Project Meeting 3",Day:Friday}, {name:"Scrum Meeting 5",Day:Friday})
+Table({Day:"Monday",name:"Scrum Meeting 1"},{Day:"Monday",name:"Project Meeting 1"},{Day:"Monday",name:"Team Meeting"},{Day:"Tuesday",name:Error({Kind:ErrorKind.InvalidArgument})},{Day:"Tuesday",name:"Scrum Meeting 2"},{Day:"Wednesday",name:"Scrum Meeting 3"},{Day:"Wednesday",name:"Project Meeting 2"},{Day:"Thursday",name:"Scrum Meeting 4"},{Day:"Friday",name:"Project Meeting 3"},{Day:"Friday",name:"Scrum Meeting 5"})
 
 
 // Sort on error values for some columns
@@ -462,7 +462,7 @@ Error({Kind:ErrorKind.InvalidArgument})
   { First: "Alice", Last: Left("Hello", -1) },
   { First: "John", Last: "Batali", Age: 17 },
   { First: "Emily", Last: Left("Hello", -1), Age: 29 }), "First", ["Alice","Emily","Bob","John"])
-Table({First:"Alice",Last:Error({Kind:ErrorKind.InvalidArgument})}, {First:"Emily",Last:Error({Kind:ErrorKind.InvalidArgument}),Age:29}, {First:"Bob",Last:"Smith",Age:2}, {First:"John",Last:"Batali",Age:17})
+Table({Age:Blank(),First:"Alice",Last:Error({Kind:ErrorKind.InvalidArgument})},{Age:29,First:"Emily",Last:Error({Kind:ErrorKind.InvalidArgument})},{Age:2,First:"Bob",Last:"Smith"},{Age:17,First:"John",Last:"Batali"})
 
 
 // All duplicate values in order table

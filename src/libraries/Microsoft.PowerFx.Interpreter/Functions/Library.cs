@@ -1461,9 +1461,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.SortByColumns.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactSequenceVariadic(
-                        new Func<IRContext, int, FormulaValue, FormulaValue>[] { ExactValueTypeOrBlank<TableValue> },
-                        new Func<IRContext, int, FormulaValue, FormulaValue>[] { ExactValueTypeOrBlank<StringValue> }),
+                    checkRuntimeTypes: SortByColumnsTypeChecker,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: SortByColumns)

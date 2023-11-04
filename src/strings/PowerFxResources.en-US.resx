@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending or SortOrder.Descending</value>
     <comment>{Locked=SortOrder.Ascending}{Locked=SortOrder.Descending} Possible values for the third argument of the Sort function</comment>
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Sorts 'source' based on the index of matching values in the specified column.</value>
-    <comment>Description of 'SortByColumns' function.</comment>
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>source</value>
-    <comment>function_parameter - First argument to the SortByColumns function - the source (table / collection) to be sorted.</comment>
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>column</value>
-    <comment>function_parameter - Second argument to the SortByColumns function - the column based on which the source will be sorted.</comment>
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>values</value>
     <comment>function_parameter - Third argument to the SortByColumns function - a list of values specifying the order of items to be sorted.</comment>

@@ -23,6 +23,7 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // SortByColumns(source:*, name:s, order:s...name:s, [order:s])
+    // SortByColumns(source:*, name:s, values:*[])
     internal sealed class SortByColumnsFunction : BuiltinFunction
     {
         private readonly SortOrderValidator _sortOrderValidator;
@@ -49,6 +50,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Enumerate just the base overloads (the first 2 possibilities).
             yield return new[] { TexlStrings.SortByColumnsArg1, TexlStrings.SortByColumnsArg2 };
             yield return new[] { TexlStrings.SortByColumnsArg1, TexlStrings.SortByColumnsArg2, TexlStrings.SortByColumnsArg3 };
+            yield return new[] { TexlStrings.SortByColumnsArg1, TexlStrings.SortByColumnsArg2, TexlStrings.SortByColumnsWithOrderValuesArg3 };
         }
 
         public override IEnumerable<string> GetRequiredEnumNames()
@@ -85,6 +87,87 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var supportColumnNamesAsIdentifiers = context.Features.SupportColumnNamesAsIdentifiers;
             returnType = argTypes[0];
             var sourceType = argTypes[0];
+            var isOrderTableOverload = args.Length == 3 && argTypes[2].IsTable;
+            if (isOrderTableOverload)
+            {
+                var nameArg = args[1];
+                var nameArgType = argTypes[1];
+                DName columnName;
+
+                if (supportColumnNamesAsIdentifiers)
+                {
+                    if (nameArg is not FirstNameNode identifierNode)
+                    {
+                        // Argument '{0}' is invalid, expected an identifier.
+                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedIdentifierArg_Name, nameArg.ToString());
+                        return false;
+                    }
+
+                    columnName = identifierNode.Ident.Name;
+                }
+                else
+                {
+                    if (nameArgType.Kind != DKind.String)
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrStringExpected);
+                        return false;
+                    }
+
+                    StrLitNode nameNode = nameArg.AsStrLit();
+                    if (nameNode == null)
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());
+                        return false;
+                    }
+
+                    // Verify that the name is valid.
+                    if (!DName.IsValidDName(nameNode.Value))
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, nameNode, TexlStrings.ErrArgNotAValidIdentifier_Name, nameNode.Value);
+                        return false;
+                    }
+
+                    columnName = new DName(nameNode.Value);
+                }
+
+                var columnType = DType.Invalid;
+
+                // Verify that the name exists.
+                if (!sourceType.TryGetType(columnName, out columnType))
+                {
+                    sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, nameArg);
+                    fValid = false;
+                }
+                else if (!columnType.IsPrimitive)
+                {
+                    errors.EnsureError(nameArg, TexlStrings.ErrSortWrongType);
+                    fValid = false;
+                }
+
+                var valuesArg = args[2];
+                IEnumerable<TypedName> columns;
+                if ((columns = argTypes[2].GetNames(DPath.Root)).Count() != 1)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, valuesArg, TexlStrings.ErrInvalidSchemaNeedCol);
+                    return false;
+                }
+
+                var column = columns.Single();
+                if (nameArg != null && columnType.IsValid && !columnType.Accepts(column.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                {
+                    errors.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        valuesArg,
+                        TexlStrings.ErrTypeError_Arg_Expected_Found,
+                        columnName.Value,
+                        columnType.GetKindString(),
+                        column.Type.GetKindString());
+                    fValid = false;
+                }
+
+                return fValid;
+            }
+
             for (var i = 1; i < args.Length; i += 2)
             {
                 var colNameArg = args[i];
@@ -275,6 +358,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
+            if (callNode.Args.Count == 3)
+            {
+                // Check if using the SortByColumns(source, column, ordertable) overload, which is not delegable
+                var secondArgType = binding.GetType(callNode.Args.ChildNodes[2]);
+                if (secondArgType.IsTable)
+                {
+                    return false;
+                }
+            }
+
             SortOpMetadata metadata = null;
             if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
             {
@@ -403,12 +496,46 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            var retval = false;
+            DName columnName;
+            DType columnType;
+            var retVal = false;
+
+            if (callNode.Args.Count == 3 && binding.GetType(callNode.Args.ChildNodes[2]).IsTableNonObjNull)
+            {
+                // Using the SortByColumns(source, column, ordertable) overload
+                if (binding.Features.SupportColumnNamesAsIdentifiers)
+                {
+                    var firstName = args[1].AsFirstName();
+                    if (firstName == null)
+                    {
+                        return false;
+                    }
+
+                    columnName = firstName.Ident.Name;
+                }
+                else
+                {
+                    var strLitNode = args[1].AsStrLit();
+                    if (strLitNode == null)
+                    {
+                        return false;
+                    }
+
+                    columnName = new DName(strLitNode.Value);
+                }
+
+                Contracts.Assert(dsType.Contains(new DName(columnName)));
+
+                if (!dsType.TryGetType(columnName, out columnType))
+                {
+                    return false;
+                }
+
+                return dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
+            }
 
             for (var i = 1; i < args.Count; i += 2)
             {
-                DName columnName;
-                DType columnType;
                 if (binding.Features.SupportColumnNamesAsIdentifiers)
                 {
                     var firstName = args[i].AsFirstName();
@@ -418,13 +545,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
 
                     columnName = firstName.Ident.Name;
-                    columnType = DType.String; // Existing bug
                 }
                 else
                 {
-                    columnType = binding.GetType(args[i]);
                     var strLitNode = args[i].AsStrLit();
-                    if (columnType.Kind != DKind.String || strLitNode == null)
+                    if (strLitNode == null)
                     {
                         continue;
                     }
@@ -433,156 +558,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 Contracts.Assert(dsType.Contains(columnName));
+                if (!dsType.TryGetType(columnName, out columnType))
+                {
+                    continue;
+                }
 
-                retval |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
+                retVal |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
             }
 
-            return retval;
+            return retVal;
         }
 
         public override bool IsIdentifierParam(int index)
         {
             return (index % 2) == 1;
-        }
-    }
-
-    // SortByColumns(source:*, name:s, values:*[])
-    internal sealed class SortByColumnsOrderTableFunction : BuiltinFunction
-    {
-        public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => false;
-
-        public SortByColumnsOrderTableFunction()
-            : base("SortByColumns", TexlStrings.AboutSortByColumnsWithOrderValues, FunctionCategories.Table, DType.EmptyTable, 0, 3, 3, DType.EmptyTable, DType.String, DType.EmptyTable)
-        {
-        }
-
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
-        {
-            yield return new[] { TexlStrings.SortByColumnsWithOrderValuesArg1, TexlStrings.SortByColumnsWithOrderValuesArg2, TexlStrings.SortByColumnsWithOrderValuesArg3 };
-        }
-
-        public override IEnumerable<string> GetRequiredEnumNames()
-        {
-            return new List<string>() { LanguageConstants.SortOrderEnumString };
-        }
-
-        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertAllValues(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.AssertValue(errors);
-            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
-
-            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.IsTable);
-
-            returnType = argTypes[0];
-            var sourceType = argTypes[0];
-            var nameArg = args[1];
-            var nameArgType = argTypes[1];
-            StrLitNode nameNode = null;
-            var columnType = DType.Invalid;
-
-            if (nameArgType.Kind != DKind.String)
-            {
-                errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrStringExpected);
-                fValid = false;
-            }
-            else if ((nameNode = nameArg.AsStrLit()) != null)
-            {
-                // Verify that the name is valid.
-                if (DName.IsValidDName(nameNode.Value))
-                {
-                    var columnName = new DName(nameNode.Value);
-
-                    // Verify that the name exists.
-                    if (!sourceType.TryGetType(columnName, out columnType))
-                    {
-                        sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, nameNode);
-                        fValid = false;
-                    }
-                    else if (!columnType.IsPrimitive)
-                    {
-                        fValid = false;
-                        errors.EnsureError(nameArg, TexlStrings.ErrSortWrongType);
-                    }
-                }
-                else
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, nameNode, TexlStrings.ErrArgNotAValidIdentifier_Name, nameNode.Value);
-                    fValid = false;
-                }
-            }
-
-            var valuesArg = args[2];
-            IEnumerable<TypedName> columns;
-            if ((columns = argTypes[2].GetNames(DPath.Root)).Count() != 1)
-            {
-                errors.EnsureError(DocumentErrorSeverity.Severe, valuesArg, TexlStrings.ErrInvalidSchemaNeedCol);
-                return false;
-            }
-
-            var column = columns.Single();
-            if (nameNode != null && columnType.IsValid && !columnType.Accepts(column.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-            {
-                errors.EnsureError(
-                    DocumentErrorSeverity.Severe,
-                    valuesArg,
-                    TexlStrings.ErrTypeError_Arg_Expected_Found,
-                    nameNode.Value,
-                    columnType.GetKindString(),
-                    column.Type.GetKindString());
-                fValid = false;
-            }
-
-            return fValid;
-        }
-
-        // This method returns true if there are special suggestions for a particular parameter of the function.
-        public override bool HasSuggestionsForParam(int argumentIndex)
-        {
-            Contracts.Assert(argumentIndex >= 0);
-
-            return argumentIndex == 0 || argumentIndex == 1;
-        }
-
-        public override bool AffectsDataSourceQueryOptions => true;
-
-        public override bool UpdateDataQuerySelects(CallNode callNode, TexlBinding binding, DataSourceToQueryOptionsMap dataSourceToQueryOptionsMap)
-        {
-            Contracts.AssertValue(callNode);
-            Contracts.AssertValue(binding);
-
-            // Ignore delegation warning
-            if (!CheckArgsCount(callNode, binding, DocumentErrorSeverity.Moderate))
-            {
-                return false;
-            }
-
-            var args = callNode.Args.Children.VerifyValue();
-
-            var dsType = binding.GetType(args[0]);
-            if (dsType.AssociatedDataSources == null)
-            {
-                return false;
-            }
-
-            var columnType = binding.GetType(args[1]);
-            var columnNode = args[1].AsStrLit();
-            if (columnType.Kind != DKind.String || columnNode == null)
-            {
-                return false;
-            }
-
-            var columnName = columnNode.Value;
-
-            Contracts.Assert(dsType.Contains(new DName(columnName)));
-
-            return dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
@@ -664,6 +665,12 @@ namespace Microsoft.PowerFx.Functions
 
         public static async ValueTask<FormulaValue> SortByColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            if (args.Length == 3 && args[2].Type._type.IsTableNonObjNull)
+            {
+                // Order table overload
+                return await SortByColumnsOrderTable(runner, context, irContext, args).ConfigureAwait(false);
+            }
+
             var arg0 = (TableValue)args[0];
 
             var columnNames = new List<string>();
@@ -711,6 +718,114 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return SortByColumnsImpl(irContext, runner, rowsWithValues, ascendingSort);
+        }
+
+        public static async ValueTask<FormulaValue> SortByColumnsOrderTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (TableValue)args[0];
+            var columnName = ((StringValue)args[1]).Value;
+            var orderTable = (TableValue)args[2];
+            var orderTableValues = new List<object>();
+            foreach (var orderTableRow in orderTable.Rows)
+            {
+                if (orderTableRow.IsError)
+                {
+                    return orderTableRow.Error;
+                }
+
+                if (orderTableRow.IsBlank)
+                {
+                    // Blank values are ignored
+                    continue;
+                }
+
+                var orderTableRecord = orderTableRow.Value;
+                Contracts.Assert(orderTableRecord.Fields.Count() == 1);
+
+                var fieldValue = orderTableRecord.Fields.Single().Value;
+                if (fieldValue is ErrorValue ev)
+                {
+                    return ev;
+                }
+
+                if (fieldValue is BlankValue)
+                {
+                    // Blank values are ignored
+                    continue;
+                }
+
+                if (!fieldValue.TryGetPrimitiveValue(out var primitiveValue))
+                {
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                }
+
+                if (orderTableValues.Contains(primitiveValue))
+                {
+                    return new ErrorValue(irContext, new ExpressionError()
+                    {
+                        Message = "Order table can't have duplicate values",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.InvalidArgument
+                    });
+                }
+
+                orderTableValues.Add(primitiveValue);
+            }
+
+            var rowsToOrder = new List<(DValue<RecordValue> row, FormulaValue columnValue)>();
+            var blankRows = new List<DValue<RecordValue>>();
+            foreach (var row in arg0.Rows)
+            {
+                if (row.IsError)
+                {
+                    return row.Error;
+                }
+
+                if (row.IsBlank)
+                {
+                    rowsToOrder.Add((row, row.Blank));
+                }
+                else
+                {
+                    var fieldValue = await row.Value.GetFieldAsync(columnName, runner.CancellationToken).ConfigureAwait(false);
+                    if (fieldValue is ErrorValue ev)
+                    {
+                        return ev;
+                    }
+
+                    rowsToOrder.Add((row, fieldValue));
+                }
+            }
+
+            var sortedList = rowsToOrder.OrderBy(pair =>
+            {
+                if (pair.columnValue is BlankValue)
+                {
+                    // Blanks go to the end
+                    return int.MaxValue;
+                }
+                else
+                {
+                    if (!pair.columnValue.TryGetPrimitiveValue(out var primitiveValue))
+                    {
+                        return int.MaxValue;
+                    }
+
+                    var indexOnTable = orderTableValues.IndexOf(primitiveValue);
+                    if (indexOnTable < 0)
+                    {
+                        // If not found, go to the end before the blanks
+                        return int.MaxValue - 1;
+                    }
+                    else
+                    {
+                        return indexOnTable;
+                    }
+                }
+            });
+
+            var orderedRows = sortedList.Select(pair => pair.row).ToList();
+            return new InMemoryTableValue(irContext, orderedRows);
         }
 
         private class FormulaValueComparer : IComparer<FormulaValue>
