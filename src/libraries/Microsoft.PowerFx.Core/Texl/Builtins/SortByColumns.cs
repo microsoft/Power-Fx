@@ -87,92 +87,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var supportColumnNamesAsIdentifiers = context.Features.SupportColumnNamesAsIdentifiers;
             returnType = argTypes[0];
             var sourceType = argTypes[0];
-            var isOrderTableOverload = args.Length == 3 && argTypes[2].IsTable;
+            var isOrderTableOverload = fValid && args.Length == 3 && argTypes[2].IsTable;
             if (isOrderTableOverload)
             {
-                var nameArg = args[1];
-                var nameArgType = argTypes[1];
-                DName columnName;
-
-                if (supportColumnNamesAsIdentifiers)
-                {
-                    if (nameArg is not FirstNameNode identifierNode)
-                    {
-                        // Argument '{0}' is invalid, expected an identifier.
-                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedIdentifierArg_Name, nameArg.ToString());
-                        return false;
-                    }
-
-                    columnName = identifierNode.Ident.Name;
-                }
-                else
-                {
-                    if (nameArgType.Kind != DKind.String)
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrStringExpected);
-                        return false;
-                    }
-
-                    StrLitNode nameNode = nameArg.AsStrLit();
-                    if (nameNode == null)
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());
-                        return false;
-                    }
-
-                    // Verify that the name is valid.
-                    if (!DName.IsValidDName(nameNode.Value))
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, nameNode, TexlStrings.ErrArgNotAValidIdentifier_Name, nameNode.Value);
-                        return false;
-                    }
-
-                    columnName = new DName(nameNode.Value);
-                }
-
-                var columnType = DType.Invalid;
-
-                // Verify that the name exists.
-                if (!sourceType.TryGetType(columnName, out columnType))
-                {
-                    sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, nameArg);
-                    fValid = false;
-                }
-                else if (!columnType.IsPrimitive)
-                {
-                    errors.EnsureError(nameArg, TexlStrings.ErrSortWrongType);
-                    fValid = false;
-                }
-
-                var valuesArg = args[2];
-                IEnumerable<TypedName> columns;
-                if ((columns = argTypes[2].GetNames(DPath.Root)).Count() != 1)
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, valuesArg, TexlStrings.ErrInvalidSchemaNeedCol);
-                    return false;
-                }
-
-                var column = columns.Single();
-                if (nameArg != null && columnType.IsValid && !columnType.Accepts(column.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                {
-                    errors.EnsureError(
-                        DocumentErrorSeverity.Severe,
-                        valuesArg,
-                        TexlStrings.ErrTypeError_Arg_Expected_Found,
-                        columnName.Value,
-                        columnType.GetKindString(),
-                        column.Type.GetKindString());
-                    fValid = false;
-                }
-
-                return fValid;
+                return CheckTypesOrderTableOverload(context, args, argTypes, errors, sourceType, supportColumnNamesAsIdentifiers);
             }
 
             for (var i = 1; i < args.Length; i += 2)
             {
                 var colNameArg = args[i];
                 var colNameArgType = argTypes[i];
-                DName columnName;
+                DName columnName = default;
+                DType columnType = null;
 
                 if (supportColumnNamesAsIdentifiers)
                 {
@@ -185,6 +111,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
 
                     columnName = identifierNode.Ident.Name;
+
+                    // Verify that the name exists.
+                    if (!sourceType.TryGetType(columnName, out columnType))
+                    {
+                        sourceType.ReportNonExistingName(FieldNameKind.Display, errors, columnName, args[i]);
+                        fValid = false;
+                    }
                 }
                 else
                 {
@@ -196,33 +129,36 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
 
                     var nameNode = colNameArg.AsStrLit();
-                    if (nameNode == null)
+                    if (nameNode != null)
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, colNameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, colNameArg.ToString());
-                        fValid = false;
-                        continue;
-                    }
+                        if (!DName.IsValidDName(nameNode.Value))
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, nameNode, TexlStrings.ErrArgNotAValidIdentifier_Name, nameNode.Value);
+                            fValid = false;
+                            continue;
+                        }
 
-                    if (!DName.IsValidDName(nameNode.Value))
+                        columnName = new DName(nameNode.Value);
+                    }
+                    else
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, nameNode, TexlStrings.ErrArgNotAValidIdentifier_Name, nameNode.Value);
-                        fValid = false;
-                        continue;
+                        // Legacy behavior: it's ok for the column name not to be a constant string - no validation will be performed.
                     }
-
-                    columnName = new DName(nameNode.Value);
                 }
 
-                // Verify that the name exists.
-                if (!sourceType.TryGetType(columnName, out var columnType))
+                if (columnName.IsValid)
                 {
-                    sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, args[i]);
-                    fValid = false;
-                }
-                else if (!columnType.IsPrimitive)
-                {
-                    fValid = false;
-                    errors.EnsureError(colNameArg, TexlStrings.ErrSortWrongType);
+                    // Verify that the name exists.
+                    if (!sourceType.TryGetType(columnName, out columnType))
+                    {
+                        sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, args[i]);
+                        fValid = false;
+                    }
+                    else if (!columnType.IsPrimitive)
+                    {
+                        fValid = false;
+                        errors.EnsureError(colNameArg, TexlStrings.ErrSortWrongType);
+                    }
                 }
 
                 var nextArgIdx = i + 1;
@@ -243,6 +179,97 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return fValid;
+        }
+
+        private bool CheckTypesOrderTableOverload(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, DType sourceType, bool supportColumnNamesAsIdentifiers)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+
+            var nameArg = args[1];
+            var nameArgType = argTypes[1];
+            DName columnName = default;
+
+            if (supportColumnNamesAsIdentifiers)
+            {
+                if (nameArg is not FirstNameNode identifierNode)
+                {
+                    // Argument '{0}' is invalid, expected an identifier.
+                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedIdentifierArg_Name, nameArg.ToString());
+                    return false;
+                }
+
+                columnName = identifierNode.Ident.Name;
+            }
+            else
+            {
+                if (nameArgType.Kind != DKind.String)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrStringExpected);
+                    return false;
+                }
+
+                StrLitNode nameNode = nameArg.AsStrLit();
+                if (nameNode != null)
+                {
+                    // Verify that the name is valid.
+                    if (!DName.IsValidDName(nameNode.Value))
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, nameNode, TexlStrings.ErrArgNotAValidIdentifier_Name, nameNode.Value);
+                        return false;
+                    }
+
+                    columnName = new DName(nameNode.Value);
+                }
+                else
+                {
+                    // Legacy behavior: it's ok for the column name not to be a constant string - no validation will be performed.
+                }
+            }
+
+            var columnType = DType.Invalid;
+
+            if (columnName.IsValid)
+            {
+                // Verify that the name exists.
+                if (!sourceType.TryGetType(columnName, out columnType))
+                {
+                    sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, nameArg);
+                    return false;
+                }
+                else if (!columnType.IsPrimitive)
+                {
+                    errors.EnsureError(nameArg, TexlStrings.ErrSortWrongType);
+                    return false;
+                }
+            }
+
+            var valuesArg = args[2];
+            IEnumerable<TypedName> columns;
+            if ((columns = argTypes[2].GetNames(DPath.Root)).Count() != 1)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, valuesArg, TexlStrings.ErrInvalidSchemaNeedCol);
+                return false;
+            }
+
+            var column = columns.Single();
+            if (nameArg != null && columnType.IsValid && !columnType.Accepts(column.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+            {
+                errors.EnsureError(
+                    DocumentErrorSeverity.Severe,
+                    valuesArg,
+                    TexlStrings.ErrTypeError_Arg_Expected_Found,
+                    columnName.Value,
+                    columnType.GetKindString(),
+                    column.Type.GetKindString());
+                return false;
+            }
+
+            return true;
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.

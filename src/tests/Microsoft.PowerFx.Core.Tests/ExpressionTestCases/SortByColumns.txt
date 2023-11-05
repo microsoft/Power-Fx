@@ -560,7 +560,7 @@ Table({Age:5,First:"Alice",Gender:"Female",HasDog:true,Last:"Smith",Vaccinated:t
   { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
   { First: Blank(), Last: "Rodriguez", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
   { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }),Left("Hello", -1), SortOrder.Ascending,"Age", SortOrder.Descending)
-Errors: Error 1854-1871: Argument 'Left("Hello", -1)' is invalid, expected a text literal.|Error 0-1921: The function 'SortByColumns' has some invalid arguments.
+Error({Kind:ErrorKind.InvalidArgument})
 
 
 // SORT ON TABLE WITH ERROR PASSED AS SORT ORDER - ASCENDING ORDER

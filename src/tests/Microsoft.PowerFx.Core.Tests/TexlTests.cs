@@ -1448,6 +1448,45 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("SortByColumns([1,2,3,4,5], \"Value\", \"Ascending\")", "*[Value:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], \"Value\")", "*[Value:n]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), \"a\", \"Ascending\")", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), \"a\")", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), \"a\", \"Ascending\", \"b\")", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), \"a\", \"Ascending\", \"b\", \"Descending\")", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), \"a\", \"Ascending\", \"b\", \"Descending\", \"c\")", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), \"a\", \"Ascending\", \"b\", \"Descending\", \"c\", \"Ascending\")", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], First([\"Value\"]).Value, \"Ascending\")", "*[Value:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], First([\"Value\"]).Value)", "*[Value:n]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), If(true,\"a\"), \"Ascending\")", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), If(true,\"a\"))", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), If(true,\"a\"), \"Ascending\", \"b\")", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), \"a\", \"Ascending\", If(true,\"b\"), \"Descending\")", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), If(true,\"a\"), \"Ascending\", If(true,\"b\"), \"Descending\", \"c\")", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), If(true,\"c\"), \"Ascending\", If(true,\"a\"), \"Descending\", If(true,\"b\"), \"Ascending\")", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], \"Value\", [3,4,5])", "*[Value:n]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), \"a\", Table({q:\"hello\"}))", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:1}), \"a\", Table({c:1}))", "*[a:n]")]
+        [InlineData("SortByColumns(Table({a:true}), \"a\", Table({d:true}))", "*[a:b]")]
+        [InlineData("SortByColumns(Table({a:DateTimeValue(\"21 Jan 2014\")}), \"a\", Table({e:DateTimeValue(\"21 Jan 2014\")}))", "*[a:d]")]
+        [InlineData("SortByColumns(Table({a:TimeValue(\"11:15\")}), \"a\", Table({b:TimeValue(\"12:15\")}))", "*[a:T]")]
+        [InlineData("SortByColumns(Table({a:DateValue(\"21 Jan 2014\")}), \"a\", Table({b:DateValue(\"21 Jan 2014\")}))", "*[a:D]")]
+        [InlineData("SortByColumns(Table({a:2}), If(true,\"a\"),[3,4,5])", "*[a:n]")]
+        public void TexlFunctionTypeSemanticsSortByColumns(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n, B:s, C:b, D:*[X:n]]")));
+            symbol.AddVariable("Table2", new TableType(TestUtils.DT("*[A:n, B:s, C:b, D:![X:n]]")));
+            symbol.AddVariable("X", new TableType(TestUtils.DT("*[Nnnuuummm:n]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol,
+                new Features { SupportColumnNamesAsIdentifiers = false });
+        }
+
+        [Theory]
         [InlineData("Sqrt(1234.567)", "n")]
         [InlineData("Sqrt(T)", "*[A:n]")]
         [InlineData("Sqrt(ShowColumns(T2,\"Value\"))", "*[Value:n]")]
