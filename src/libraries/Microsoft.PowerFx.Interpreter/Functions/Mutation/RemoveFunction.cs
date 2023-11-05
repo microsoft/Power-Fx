@@ -172,7 +172,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.ObjNull : collectionType;
+            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.Void : collectionType;
 
             return fValid;
         }
@@ -230,7 +230,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                result = FormulaValue.NewBlank();
+                result = FormulaValue.NewVoid();
             }
 
             return result;

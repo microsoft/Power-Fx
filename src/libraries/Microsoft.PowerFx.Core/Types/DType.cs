@@ -1879,8 +1879,9 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (Kind == DKind.Void || type.Kind == DKind.Void)
             {
-                // No types accept a void type, void type doesn't accept any type
-                return false;
+                // Void only accepts itself. This is important where we checking return types, such as in ReflectionFunction.
+                // No other types accept Void, nor does it accept other types
+                return Kind == DKind.Void && type.Kind == DKind.Void;
             }
 
             // We accept ObjNull as any DType (but subtypes can override).

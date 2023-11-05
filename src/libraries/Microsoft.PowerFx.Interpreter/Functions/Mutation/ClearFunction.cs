@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Functions
         // Unlike the other mutation functions, there is no need to Lazy evaluate the first argument since there is only one arg.
 
         public ClearFunction()
-            : base("Clear", TexlStrings.AboutClear, FunctionCategories.Behavior, DType.Boolean, 0, 1, 1, DType.EmptyTable)
+            : base("Clear", TexlStrings.AboutClear, FunctionCategories.Behavior, DType.Void, 0, 1, 1, DType.EmptyTable)
         {
         }
 
@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Functions
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.Kind is DKind.Boolean);
+            Contracts.Assert(returnType.Kind is DKind.Void);
 
             // Need a collection for the 1st arg
             DType collectionType = argTypes[0];
@@ -78,13 +78,13 @@ namespace Microsoft.PowerFx.Functions
 
             if (args[0] is BlankValue)
             {
-                return FormulaValue.NewBlank(FormulaType.Boolean);
+                return FormulaValue.NewVoid();
             }
 
             var datasource = (TableValue)args[0];
             var ret = await datasource.ClearAsync(cancellationToken).ConfigureAwait(false);
 
-            return ret.ToFormulaValue();
+            return FormulaValue.NewVoid();
         }
     }
 }

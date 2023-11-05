@@ -355,7 +355,14 @@ namespace Microsoft.PowerFx
                         var setCheck = this.Engine.Check(rhsExpr, ParserOptions, this.ExtraSymbolValues?.SymbolTable);
                         if (!setCheck.IsSuccess)
                         {
-                            await this.Output.WriteLineAsync($"Failed to initialize '{name}'.", OutputKind.Error, cancel)
+                            await this.Output.WriteLineAsync($"Error: Failed to initialize '{name}'.", OutputKind.Error, cancel)
+                                .ConfigureAwait(false);
+                            return new ReplResult { CheckResult = setCheck };
+                        }
+
+                        if (setCheck.ReturnType == FormulaType.Void)
+                        {
+                            await this.Output.WriteLineAsync($"Error: Can't set '{name}' to a Void value.", OutputKind.Error, cancel)
                                 .ConfigureAwait(false);
                             return new ReplResult { CheckResult = setCheck };
                         }
@@ -455,7 +462,10 @@ namespace Microsoft.PowerFx
                 }
 
                 // Now print the result for this expression
-                await this.WriteLineVarAsync(result, cancel);
+                if (result is ErrorValue || !(result is VoidValue))
+                {
+                    await this.WriteLineVarAsync(result, cancel);
+                }
             }
 
             return replResult;

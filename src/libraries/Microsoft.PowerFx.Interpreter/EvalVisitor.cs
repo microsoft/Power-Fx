@@ -174,7 +174,7 @@ namespace Microsoft.PowerFx
                     if (_symbolValues != null)
                     {
                         _symbolValues.Set(sym, newValue);
-                        return FormulaValue.New(true);
+                        return FormulaValue.NewVoid();
                     }
 
                     // This may happen if the runtime symbols are missing a value and we failed to update. 
