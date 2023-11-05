@@ -142,7 +142,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else
                     {
-                        // Legacy behavior: it's ok for the column name not to be a constant string - no validation will be performed.
+                        if (context.Features.PowerFxV1CompatibilityRules)
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, colNameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, colNameArg.ToString());
+                            return false;
+                        }
+                        else
+                        {
+                            // Legacy behavior: it's ok for the column name not to be a constant string - no validation will be performed.
+                        }
                     }
                 }
 
@@ -227,7 +235,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
-                    // Legacy behavior: it's ok for the column name not to be a constant string - no validation will be performed.
+                    if (context.Features.PowerFxV1CompatibilityRules)
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());
+                        return false;
+                    }
+                    else
+                    {
+                        // Legacy behavior: it's ok for the column name not to be a constant string - no validation will be performed.
+                    }
                 }
             }
 

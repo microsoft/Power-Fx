@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
@@ -663,6 +664,18 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        private static ErrorValue CreateInvalidSortColumnError(IRContext irContext, CultureInfo cultureInfo, string columnName)
+        {
+            // Needs to be localized - https://github.com/microsoft/Power-Fx/issues/908
+            var invalidSortColumnTemplate = "The specified column '{0}' does not exist or is an invalid sort column type.";
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = string.Format(cultureInfo, invalidSortColumnTemplate, columnName),
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
+
         public static async ValueTask<FormulaValue> SortByColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             if (args.Length == 3 && args[2].Type._type.IsTableNonObjNull)
@@ -678,6 +691,12 @@ namespace Microsoft.PowerFx.Functions
             for (var i = 1; i < args.Length; i += 2)
             {
                 var columnName = ((StringValue)args[i]).Value;
+
+                if (!arg0.Type.FieldNames.Contains(columnName))
+                {
+                    return CreateInvalidSortColumnError(irContext, runner.CultureInfo, columnName);
+                }
+
                 var isAscending =
                     i == args.Length - 1 ||
                     !((StringValue)args[i + 1]).Value.Equals("descending", StringComparison.OrdinalIgnoreCase);
@@ -724,6 +743,11 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = (TableValue)args[0];
             var columnName = ((StringValue)args[1]).Value;
+            if (!arg0.Type.FieldNames.Contains(columnName))
+            {
+                return CreateInvalidSortColumnError(irContext, runner.CultureInfo, columnName);
+            }
+
             var orderTable = (TableValue)args[2];
             var orderTableValues = new List<object>();
             foreach (var orderTableRow in orderTable.Rows)
@@ -763,6 +787,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
+                        // Needs to be localized - https://github.com/microsoft/Power-Fx/issues/908
                         Message = "Order table can't have duplicate values",
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.InvalidArgument
