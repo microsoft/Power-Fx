@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>列の追加先となるテーブル。</value>
+    <value>列の追加先となるテーブルまたはレコードです。</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>列の削除元となるテーブル値。</value>
+    <value>列の削除元となるテーブルまたはレコードの値です。</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>削除する列の名前。</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>'変更前の列' 列の名前が '変更後の列' に変更された指定の 'ソース' テーブルのコピーを返します。</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>ソース</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>古い列</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>新しい列</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>処理するテーブル値。</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>名前を変更する列の名前。</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>列の新しい名前。</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>指定の条件すべてが True となるテーブルの行を返します。</value>
@@ -2275,6 +2304,10 @@
     <value>このレコードの中で '{0}' という名前のフィールドが複数回指定されました。</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>指定された列 '{0}' の名前を 2 回変更することはできません。</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>'{0}' という列が 2 回以上指定されました。</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>列の削除元となるテーブル値。</value>
+    <value>列の削除元となるテーブルまたはレコードの値です。</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>保持する列の名前。</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>ソースとターゲットの間で種類が一致しません。予期: {0}、実際: {1}</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>テーブル、レコード、または値の JSON テキスト文字列を生成します。</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>データ</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>JSON に変換するデータ構造。テーブル、レコード、プリミティブ値がサポートされており、任意に入れ子にすることができます。</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>形式</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON 変換に使用する形式。この値は JSONFormat 列挙型のメンバーになります。</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>有効になっているときに Application Insights に情報を記録し、テスト結果で使用できるように Test Studio セッションに記録します。</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>メッセージ</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>重大度</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>カスタム_レコード</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>トレース_オプション</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>トレースされる情報。</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Application Insights にトレースされる重大度レベル。</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Application Insights にトレースされるカスタム データを含むレコード。</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Trace 関数の追加のオプションです。</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>{0} 関数の '{1}' パラメーターは定数値である必要があります。</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormat 値 '{0}' と '{1}' は同時に使用することはできません。</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>JSON 関数に渡された値はメディアを含んでおり、既定ではサポートされていません。メディア値の JSON シリアル化を許可するには、'format' パラメーターに IncludeBinaryData オプションを使用してください。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON 関数では型 '{0}' のオブジェクトをシリアル化できません。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON 関数では型 '{1}' の入れ子になった '{0}' というプロパティを持つテーブルまたはオブジェクトをシリアル化できません。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON 関数が、非行動的式でバイナリ データをシリアル化できません。</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>パラメーター {0} に型 {1} のプロパティが含まれていますが、これはサポートされていません。</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>指定された列 {0} は読み取り専用です。変更できません。</value>
     
   </data>
 </root>

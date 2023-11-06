@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Connectors.Tests;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -656,6 +657,11 @@ namespace Microsoft.PowerFx.Tests
             AssertEqual(expected, actual);
         }
 
+        internal class TestClockService : IClockService
+        {
+            public DateTime UtcNow { get; set; } = new DateTime(2023, 6, 2, 3, 15, 7, DateTimeKind.Utc);
+        }
+
         [Fact]
         public async Task Office365Outlook_V4CalendarPostItem()
         {
@@ -678,14 +684,17 @@ namespace Microsoft.PowerFx.Tests
             IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc);
 
             RecalcEngine engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
+
+            RuntimeConfig runtimeConfig = new RuntimeConfig();
+            runtimeConfig.SetClock(new TestClockService());
+            runtimeConfig.SetTimeZone(TimeZoneInfo.Utc);
+            runtimeConfig.AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));            
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook V4CalendarPostItem.json");
             FormulaValue result = await engine.EvalAsync(@"Office365Outlook.V4CalendarPostItem(""Calendar"", ""Subject"", Today(), Today(), ""(UTC+01:00) Brussels, Copenhagen, Madrid, Paris"")", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             Assert.Equal(@"![body:s, categories:*[Value:s], createdDateTime:d, end:d, endWithTimeZone:d, iCalUId:s, id:s, importance:s, isAllDay:b, isHtml:b, isReminderOn:b, lastModifiedDateTime:d, location:s, numberOfOccurences:w, optionalAttendees:s, organizer:s, recurrence:s, recurrenceEnd:D, reminderMinutesBeforeStart:w, requiredAttendees:s, resourceAttendees:s, responseRequested:b, responseTime:d, responseType:s, selectedDaysOfWeek:N, sensitivity:s, seriesMasterId:s, showAs:s, start:d, startWithTimeZone:d, subject:s, timeZone:s, webLink:s]", result.Type._type.ToString());
 
-            var actual = testConnector._log.ToString();
-            var today = DateTime.UtcNow.Date.ToString("O");
+            var actual = testConnector._log.ToString();            
             var version = PowerPlatformConnectorClient.Version;
             var expected = @$"POST https://b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net/invoke
  authority: b60ed9ea-c17c-e39a-8682-e33a20d51e14.15.common.tip1eu.azure-apihub.net
@@ -698,7 +707,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/datasets/calendars/v4/tables/Calendar/items
  x-ms-user-agent: PowerFx/{version}
  [content-header] Content-Type: application/json; charset=utf-8
- [body] {{""subject"":""Subject"",""start"":""{today}"",""end"":""{today}"",""timeZone"":""(UTC\u002B01:00) Brussels, Copenhagen, Madrid, Paris""}}
+ [body] {{""subject"":""Subject"",""start"":""2023-06-02"",""end"":""2023-06-02"",""timeZone"":""(UTC\u002B01:00) Brussels, Copenhagen, Madrid, Paris""}}
 ";
 
             AssertEqual(expected, actual);
@@ -1371,6 +1380,51 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-user-agent: PowerFx/{version}
 ";
             Assert.Equal(expected, testConnector._log.ToString());
+        }
+
+        [Fact]
+        public async Task DataverseTest_WithComplexMapping()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Dataverse.json");
+            using var httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "b29c41cf-173b-e469-830b-4f00163d296b" /* environment Id */, "82728ddb6bfa461ea3e50e17da8ab164" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJ...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
+            ConnectorFunction performBoundActionWithOrganization = functions.First(f => f.Name == "PerformBoundActionWithOrganization");
+
+            testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_3.json");
+            ConnectorParameters parameters = await performBoundActionWithOrganization.GetParameterSuggestionsAsync(
+                new NamedValue[]
+                {
+                    new NamedValue("organization", FormulaValue.New("https://aurorabapenv9984a.crm10.dynamics.com/")),
+                    new NamedValue("entityName", FormulaValue.New("bots")),
+                },
+                performBoundActionWithOrganization.RequiredParameters[2], // actionName
+                runtimeContext,
+                CancellationToken.None).ConfigureAwait(false);
+
+            // Received 8 suggestions
+            Assert.Equal(8, parameters.ParametersWithSuggestions[2].Suggestions.Count());
+
+            string actual = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+            string expected = @$"POST https://tip1002-002.azure-apihub.net/invoke
+ authority: tip1002-002.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJ...
+ organization: https://aurorabapenv9984a.crm10.dynamics.com/
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b29c41cf-173b-e469-830b-4f00163d296b
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/commondataserviceforapps/82728ddb6bfa461ea3e50e17da8ab164/v1.0/$metadata.json/GetActionListEnum/GetBoundActionsWithOrganization
+ x-ms-user-agent: PowerFx/{version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""entityName"":""bots""}}
+";
+
+            Assert.Equal(expected, actual);
         }
     }
 }

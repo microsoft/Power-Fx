@@ -55,12 +55,27 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public Func<int, bool> AppliesToArgument { get; }
 
+        /// <summary>
+        /// Indicates whether a new scope can be created by a record,
+        /// instead of just by a table, which is the typical case for functions
+        /// that take a table as a first argument.
+        /// </summary>
+        public bool CanBeCreatedByRecord { get; }
+
         // True indicates that this function cannot guarantee that it will iterate over the datasource in order.
         // This means it should not allow lambdas that operate on the same data multiple times, as this will
         // cause nondeterministic behavior.
         public bool HasNondeterministicOperationOrder => IteratesOverScope && SupportsAsyncLambdas;
 
-        public FunctionScopeInfo(TexlFunction function, bool usesAllFieldsInScope = true, bool supportsAsyncLambdas = true, bool acceptsLiteralPredicates = true, bool iteratesOverScope = true, DType scopeType = null, Func<int, bool> appliesToArgument = null)
+        public FunctionScopeInfo(
+            TexlFunction function, 
+            bool usesAllFieldsInScope = true,
+            bool supportsAsyncLambdas = true,
+            bool acceptsLiteralPredicates = true,
+            bool iteratesOverScope = true,
+            DType scopeType = null,
+            Func<int, bool> appliesToArgument = null,
+            bool canBeCreatedByRecord = false)
         {
             UsesAllFieldsInScope = usesAllFieldsInScope;
             SupportsAsyncLambdas = supportsAsyncLambdas;
@@ -69,6 +84,7 @@ namespace Microsoft.PowerFx.Core.Functions
             ScopeType = scopeType;
             _function = function;
             AppliesToArgument = appliesToArgument ?? (i => i > 0);
+            CanBeCreatedByRecord = canBeCreatedByRecord;
         }
 
         // Typecheck an input for this function, and get the cursor type for an invocation with that input.
@@ -108,9 +124,19 @@ namespace Microsoft.PowerFx.Core.Functions
             }
             else if (_function.ParamTypes[0].IsTable)
             {
-                var isBadArgumentType = features.PowerFxV1CompatibilityRules ?
-                    !typeScope.IsTableNonObjNull : // Untyped blank values should not be used to define the scope
-                    !typeScope.IsTable;
+                bool isBadArgumentType = false;
+                if (typeScope.IsRecordNonObjNull)
+                {
+                    isBadArgumentType = !CanBeCreatedByRecord;
+                }
+                else
+                {
+                    isBadArgumentType =
+                        features.PowerFxV1CompatibilityRules ?
+                            !typeScope.IsTableNonObjNull : // Untyped blank values should not be used to define the scope
+                            !typeScope.IsTable;
+                }
+
                 if (isBadArgumentType)
                 {
                     errors.Error(callNode, TexlStrings.ErrNeedTable_Func, _function.Name);

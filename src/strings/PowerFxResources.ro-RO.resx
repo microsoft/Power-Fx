@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Un tabel la care se adaugă coloane.</value>
+    <value>Un tabel sau înregistrare la care se adaugă coloane.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>O valoare de tabel din care să se elimine coloane.</value>
+    <value>O valoare de tabel sau de înregistrare din care să se elimine coloane.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Numele unei coloane de eliminat.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Returnează o copie a tabelului „sursă” specificat, cu coloana „coloană_veche” redenumită „coloană_nouă”.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>coloană_veche</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>coloană_nouă</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>O valoare de tabel de procesat.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Numele unei coloane de redenumit.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Noul nume pentru coloană.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Returnează rândurile din tabelul pentru care toate condițiile specificate sunt adevărate.</value>
@@ -2275,6 +2304,10 @@
     <value>Un câmp denumit „{0}” a fost specificat de mai multe ori în această înregistrare.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Coloana specificată, „{0}”, nu poate fi redenumită de două ori.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>O coloană denumită „{0}” a fost specificată de mai multe ori.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>O valoare de tabel din care să se elimine coloane.</value>
+    <value>O valoare de tabel sau de înregistrare din care să se elimine coloane.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Numele unei coloane de păstrat.</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Nepotrivire între tipurile sursă și țintă. Așteptat {0}; găsit {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Generează un șir text JSON pentru un tabel, o înregistrare sau o valoare.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>date</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Structura de date care se va converti la JSON. Tabelele, înregistrările și valorile primitive sunt acceptate, imbricate arbitrar.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Formatul de utilizat în conversia JSON. Valoarea va fi un membru al enumerării JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Înregistrează informații în Application Insights atunci când este activată și se conectează la o sesiune Test Studio care va fi disponibilă în rezultatele testului.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>mesaj</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>severitate</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>înregistrare_particularizată</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Informațiile de urmărit.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Nivelul de severitate care să fie urmărit cu Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>O înregistrare care conține date particularizate care vor fi urmărite în Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Opțiuni suplimentare pentru funcția Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Parametrul „{1}” pentru funcția {0} trebuie să fie o valoare constantă.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Valorile JSONFormat „{0}” și „{1}” nu pot fi utilizate împreună.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Valoarea transmisă funcției JSON are conținut media și nu este acceptată în mod implicit. Pentru a permite serializarea JSON a valorilor media, asigurați-vă că utilizați opțiunea IncludeBinaryData în parametrul „format”.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Funcția JSON nu poate serializa obiectele de tipul „{0}”.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Funcția JSON nu poate serializa tabelele/obiectele cu o proprietate imbricată numită „{0}” de tip „{1}”.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Funcția JSON nu poate serializa datele binare într-o expresie necomportamentală.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parametrul {0} conține o proprietate de tip {1} care nu este acceptată.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Coloana specificată este doar în citire și nu poate fi modificată. {0}.</value>
     
   </data>
 </root>

@@ -1,0 +1,20 @@
+{
+  "Signatures": [
+    {
+      "Label": "LastN(source, count)",
+      "Documentation": "Returns the last 'count' rows of 'source'.",
+      "Parameters": [
+        {
+          "Label": "source",
+          "Documentation": "A table from which rows will be returned."
+        },
+        {
+          "Label": "count",
+          "Documentation": "The number of rows to return."
+        }
+      ]
+    }
+  ],
+  "ActiveSignature": 0,
+  "ActiveParameter": 1
+}

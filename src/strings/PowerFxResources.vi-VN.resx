@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Một bảng để thêm cột.</value>
+    <value>Một bảng hoặc bản ghi để thêm cột vào.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Giá trị bảng cần loại bỏ cột khỏi đó.</value>
+    <value>Giá trị bảng hoặc bản ghi cần loại bỏ khỏi cột đó.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Tên của cột cần xóa.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Trả về một bản sao của bảng 'nguồn' được chỉ định, với cột 'cột_cũ' được đổi tên thành 'cột_mới'.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>nguồn</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>cột_cũ</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>cột_mới</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Giá trị bảng cần xử lý.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Tên của cột cần đổi tên.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Tên mới cho cột.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Trả về các hàng từ bảng mà theo đó tất cả các điều kiện được chỉ định đều đúng.</value>
@@ -1027,7 +1056,7 @@
     
   </data>
   <data name="EDateArg1" xml:space="preserve">
-    <value>ngày</value>
+    <value>ngày</value>
     
   </data>
   <data name="EDateArg2" xml:space="preserve">
@@ -1047,7 +1076,7 @@
     
   </data>
   <data name="EOMonthArg1" xml:space="preserve">
-    <value>ngày</value>
+    <value>ngày</value>
     
   </data>
   <data name="EOMonthArg2" xml:space="preserve">
@@ -2275,6 +2304,10 @@
     <value>Một trường có tên là '{0}' được chỉ định nhiều lần trong bản ghi này.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Không thể đặt lại tên hai lần cho cột '{0}' được chỉ định.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Đã chỉ định cột có tên là '{0}' nhiều lần.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Giá trị bảng cần loại bỏ cột khỏi đó.</value>
+    <value>Giá trị bảng hoặc bản ghi cần loại bỏ khỏi cột đó.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Tên của cột cần duy trì.</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Loại không khớp giữa loại nguồn và loại đích. Dự kiến {0}; Tìm thấy {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Tạo chuỗi văn bản JSON cho bảng, bản ghi hoặc giá trị.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>dữ liệu</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Cấu trúc dữ liệu sẽ được chuyển đổi sang JSON. Các bảng, bản ghi và giá trị gốc được hỗ trợ, lồng nhau tùy ý.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>định dạng</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Định dạng sẽ được sử dụng trong chuyển đổi JSON. Giá trị sẽ là thành viên của liệt kê JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Ghi thông tin vào Application Insights khi được bật và nhật ký trong phiên Test Studio sẽ có trong kết quả thử nghiệm.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>tin nhắn</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>mức độ nghiêm trọng</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>hồ_sơ_tùy_chỉnh</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>tùy_chọn_trace</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Thông tin cần theo dõi.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Mức độ nghiêm trọng cần theo dõi về Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Một bản ghi có chứa dữ liệu tùy chỉnh sẽ được theo dõi về Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Các tùy chọn bổ sung cho chức năng Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Tham số ' {1} ' cho hàm {0} phải là giá trị hằng số.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Không thể sử dụng các giá trị JSONFormat '{0}' và '{1}' cùng nhau.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Giá trị được truyền đến hàm JSON chứa phương tiện và không được hỗ trợ theo mặc định. Để cho phép chuỗi các giá trị truyền thông của JSON, hãy đảm bảo sử dụng tùy chọn IncludeBinaryData trong tham số 'format'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Hàm JSON không thể tạo chuỗi các đối tượng thuộc loại '{0}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Hàm JSON không thể tạo chuỗi các bảng / đối tượng có thuộc tính lồng nhau có tên là '{0}' thuộc loại '{1}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Hàm JSON không thể tuần tự hóa dữ liệu nhị phân trong biểu thức phi hành vi.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Tham số {0} chứa thuộc tính thuộc loại {1} không được hỗ trợ.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Cột được chỉ định là cột chỉ đọc và không sửa đổi được: {0}.</value>
     
   </data>
 </root>

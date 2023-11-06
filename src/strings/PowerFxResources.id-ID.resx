@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Kolom untuk ditambahkan ke tabel.</value>
+    <value>Kolom untuk ditambahkan ke tabel atau rekaman.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Nilai tabel yang kolomnya akan dihapus.</value>
+    <value>Nilai tabel atau rekaman yang kolomnya akan dihapus.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Nama kolom untuk dihapus.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Menampilkan salinan tabel 'sumber' yang ditentukan, dengan nama kolom 'old_column' yang sudah diubah menjadi 'new_column'.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>sumber</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>kolom_lama</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>kolom_baru</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Nilai tabel untuk diproses.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Nama kolom untuk diubah namanya.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Nama baru kolom.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Menampilkan baris dari tabel yang semua kondisinya true.</value>
@@ -2275,6 +2304,10 @@
     <value>Bidang dengan nama '{0}' ditentukan lebih dari sekali di catatan ini.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Nama kolom yang ditentukan '{0}' tidak dapat diganti dua kali.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Kolom dengan nama '{0}' ditentukan lebih dari satu kali.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Nilai tabel yang kolomnya akan dihapus.</value>
+    <value>Nilai tabel atau rekaman yang kolomnya akan dihapus.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Nama kolom untuk dipertahankan.</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Ketidakcocokan jenis antara jenis sumber dan target. Diharapkan {0}; Ditemukan {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Menghasilkan string teks JSON untuk tabel, catatan, atau nilai.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Struktur data yang akan dikonversi ke JSON. Tabel, catatan, dan nilai primitif bertumpuk secara acak dan didukung.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Format yang akan digunakan dalam percakapan JSON. Nilai akan menjadi anggota enumerasi JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Mencatat informasi ke Application Insights jika diaktifkan, dan mencatat dalam sesi test studio yang akan tersedia dalam hasil pengujian.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>pesan</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>keparahan</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Informasi yang akan dilacak.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Tingkat keparahan yang akan dilacak untuk Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Catatan yang berisi data kustom yang akan dilacak ke Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Opsi tambahan untuk fungsi Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Parameter '{1}' untuk fungsi {0} harus merupakan nilai konstan.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Nilai JSONFormat ' {0} ' dan ' {1} ' tidak dapat digunakan bersamaan.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Nilai yang diberikan ke fungsi JSON berisi media, dan hal ini tidak didukung secara default. Untuk memungkinkan serialisasi JSON dari nilai media, pastikan Anda menggunakan pilihan IncludeBinaryData dalam parameter 'format'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Fungsi JSON tidak dapat menserialisasi objek dari tipe '{0}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Fungsi JSON tidak dapat melakukan serialisasi tabel/objek dengan properti bertumpuk bernama '{0}' dari jenis '{1}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Fungsi JSON tidak dapat membuat serial data biner dalam ekspresi non-perilaku.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parameter {0} berisi properti tipe {1} yang tidak didukung.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Kolom yang ditentukan adalah kolom baca-saja dan tidak dapat diubah: {0}.</value>
     
   </data>
 </root>

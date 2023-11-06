@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Tabulka, do které se mají sloupce přidat.</value>
+    <value>Tabulka nebo záznam, kam se mají sloupce přidat.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Hodnota tabulky, ze které se mají odebrat sloupce</value>
+    <value>Hodnota tabulky nebo záznamu, odkud se mají sloupce odebrat.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Název sloupce, který se má odebrat</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Vrátí kopii zadané zdrojové tabulky, ve které bude starý sloupec přejmenován na nový sloupec</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>zdroj</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>starý_sloupec</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>nový_sloupec</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Hodnota tabulky, která má být zpracována</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Název sloupce, který se má přejmenovat</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Nový název sloupce</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Vrátí řádky z tabulky, pro kterou jsou všechny zadané podmínky pravdivé.</value>
@@ -2275,6 +2304,10 @@
     <value>Pole s názvem „{0}“ se v tomto záznamu zadalo více než jednou.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Zadaný sloupec {0} se nedá přejmenovat dvakrát.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Sloupec s názvem {0} byl zadaný víc než jednou.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Hodnota tabulky, ze které se mají odebrat sloupce</value>
+    <value>Hodnota tabulky nebo záznamu, odkud se mají sloupce odebrat.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Název sloupce, který se má zachovat</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Neshoda typů mezi zdrojovým a cílovým typem. Očekávané {0}; Nalezeno {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Vygeneruje textový řetězec JSON pro tabulku, záznam nebo hodnotu.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Datová struktura, která se má převést na JSON. Podporují se tabulky, záznamy a primitivní hodnoty, které můžou být libovolně vnořené.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Formát, který se má použít při převodu JSON. Hodnota bude členem výčtu JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Když se povolí, protokoluje informace do služby Application Insights a zapisuje do protokolu v relaci Test Studio, která bude k dispozici ve výsledcích testu.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>zpráva</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>závažnost</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trasovací_možnosti</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Informace, které mají být trasovány.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Úroveň závažnosti, která se má trasovat v Application Insights</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Záznam, který obsahuje vlastní data, která se budou trasovat v Application Insights</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Další možnosti funkce Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Parametr {1} funkce {0} musí mít konstantní hodnotu.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Hodnoty JSONFormat {0} a {1} se nedají použít obě najednou.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Hodnota předaná do funkce JSON obsahuje média, což se ve výchozím nastavení nepodporuje. Pokud chcete povolit serializaci JSON pro hodnoty médií, ujistěte se, že jste v parametru format použili možnost IncludeBinaryData.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Funkce JSON nemůže serializovat objekty typu {0}.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Funkce JSON nemůže serializovat tabulky nebo objekty s vnořenou vlastností s názvem {0} a typem {1}.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Funkce JSON nemůže serializovat binární data ve výrazu, který není behaviorální.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parametr {0} obsahuje vlastnost typu {1}, který není podporovaný.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Zadaný sloupec je určený jen pro čtení a nelze upravit: {0}.</value>
     
   </data>
 </root>

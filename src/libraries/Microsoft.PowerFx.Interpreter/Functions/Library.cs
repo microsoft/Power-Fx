@@ -582,7 +582,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.DropColumns.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: DropColumnsTypeChecker,
+                    checkRuntimeTypes: ShowDropRenameColumnsTypeChecker,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: DropColumns)
@@ -1290,6 +1290,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Refresh)
             },
             {
+                BuiltinFunctionsCore.RenameColumns,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.RenameColumns.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ShowDropRenameColumnsTypeChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: RenameColumns)
+            },
+            {
                 BuiltinFunctionsCore.Replace,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Replace.Name,
@@ -1414,7 +1425,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.ShowColumns.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: DropColumnsTypeChecker,
+                    checkRuntimeTypes: ShowColumnsTypeChecker,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: ShowColumns)

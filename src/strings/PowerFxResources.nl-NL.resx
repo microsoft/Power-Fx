@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Een tabel waaraan kolommen worden toegevoegd.</value>
+    <value>Een tabel of record waaraan kolommen worden toegevoegd.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Een tabelwaarde waaruit kolommen moeten worden verwijderd.</value>
+    <value>Een tabel- of recordwaarde waaruit kolommen moeten worden verwijderd.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>De naam van een kolom die moet worden verwijderd.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Hiermee wordt een kopie van de opgegeven tabel bron geretourneerd, waarbij de naam van de kolom oude kolom is gewijzigd in nieuwe kolom.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>bron</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>oude_kolom</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>nieuwe_kolom</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Een tabelwaarde die moet worden verwerkt.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>De naam van een kolom waarvan de naam moet worden gewijzigd.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>De nieuwe naam voor de kolom.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Hiermee worden de rijen uit de tabel geretourneerd waarvoor alle opgegeven voorwaarden waar zijn.</value>
@@ -2275,6 +2304,10 @@
     <value>Er is meerdere keren een veld met de naam {0} opgegeven in deze record.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>De naam van de opgegeven kolom {0} kan niet tweemaal worden gewijzigd.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Er is meerdere keren een kolom met de naam {0} opgegeven.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Een tabelwaarde waaruit kolommen moeten worden verwijderd.</value>
+    <value>Een tabel- of recordwaarde waaruit kolommen moeten worden verwijderd.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>De naam van een kolom die moet worden behouden.</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Bron- en doeltypen komen niet overeen. Verwacht {0}, gevonden {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Hiermee wordt een JSON-tekenreeks gegenereerd voor een tabel, record of waarde.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>gegevens</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>De gegevensstructuur die moet worden geconverteerd naar JSON. Tabellen, records en primitieve waarden worden ondersteund. Ze worden willekeurig genest.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>indeling</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>De indeling die moet worden gebruikt bij de JSON-conversie. De waarde is een lid van de JSONFormat-inventarisatie.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Hiermee wordt informatie vastgelegd in Application Insights wanneer dit is ingeschakeld en wordt een teststudiosessie vastgelegd die beschikbaar is in de testresultaten.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>bericht</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>ernst</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>De informatie die moet worden getraceerd.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Het ernstniveau dat moet worden getraceerd naar Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Een bestand met aangepaste gegevens die naar Application Insights worden getraceerd.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Aanvullende opties voor de Trace-functie.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>De parameter {1} voor de functie {0} moet een constante waarde zijn.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>De JSONFormat-waarden {0} en {1} kunnen niet gezamenlijk worden gebruikt.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>De waarde die is doorgegeven aan de JSON-functie, bevat media en wordt niet standaard ondersteund. Als u JSON-serialisatie van mediawaarden wilt toestaan, moet u de optie IncludeBinaryData gebruiken in de parameter format.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>De JSON-functie kan geen objecten van het type {0} serialiseren.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Met de JSON-functie kunnen geen tabellen/objecten worden geserialiseerd die de geneste eigenschap {0} van het type {1} bevatten.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>De JSON-functie kan binaire gegevens niet serialiseren in niet-gedragsexpressies.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>De parameter {0} bevat een eigenschap van het type {1} die niet wordt ondersteund.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>De opgegeven kolom is alleen-lezen en kan niet worden gewijzigd: {0}.</value>
     
   </data>
 </root>

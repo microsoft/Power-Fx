@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Sütunların ekleneceği bir tablo.</value>
+    <value>Sütunların ekleneceği bir tablo veya kayıt.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Sütunların kaldırılacağı bir tablo değeri.</value>
+    <value>Sütunların kaldırılacağı bir tablo veya kayıt değeri.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Kaldırılacak sütunun adı.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>'old_column' sütunu 'new_column' olarak yeniden adlandırılmış şekilde, belirtilen 'source' tablosunun bir kopyasını döndürür.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>eski_sütun</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>yeni_sütun</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>İşlenecek bir tablo değeri.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Yeniden adlandırma işlemi gerçekleştirilecek olan sütun adı.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Sütunun yeni adı.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Tablodan, belirtilen tüm koşulların true olduğu satırları döndürür.</value>
@@ -2275,6 +2304,10 @@
     <value>'{0}' adındaki alan bu kayıtta birden çok kez belirtildi.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Belirtilen sütun '{0}' iki defa yeniden adlandırılamaz.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>'{0}' adlı sütun birçok kez belirtildi.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Sütunların kaldırılacağı bir tablo değeri.</value>
+    <value>Sütunların kaldırılacağı bir tablo veya kayıt değeri.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Korunacak sütunun adı.</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Kaynak ve hedef türler arasında tür uyuşmazlığı. {0} bekleniyordu; {1} bulundu.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Bir tablo, kayıt veya değer için bir JSON metin dizesi oluşturur.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>veri</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>JSON'ye dönüştürülecek veri yapısı. Tablolar, kayıtlar ve temel değerler desteklenir, rastgele olarak iç içe geçmiştir.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>biçim</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON dönüştürmede kullanılacak biçim. Değer, JSONFormat numaralandırmasının bir üyesi olacaktır.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Etkinleştirildiğinde, hem Application Insights'ta bilgileri hem de test sonuçlarında gösterilen bir Test Studio oturumunu günlüğe kaydeder.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>ileti</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>önem derecesi</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>izlemeseçenekleri</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>İzlenecek bilgiler.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Application Insights'a izlenecek önem düzeyi.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Application Insights'a izlenecek özel verileri içeren bir kayıt.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Trace işlevine ek seçenekler.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>{0} işlevinin '{1}' parametresi sabit bir değer olmalıdır.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>'{0}' ve '{1}' JSONFormat değerleri birlikte kullanılamaz.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>JSON işlevine geçirilen değer medya içeriyor ve varsayılan olarak desteklenmiyor. Medya değerlerinin JSON serileştirmesine izin vermek için, 'format' parametresinde IncludeBinaryData seçeneğini kullandığınızdan emin olun.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON işlevi, '{0}' türündeki nesneleri seri hale getiremiyor.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON işlevi, '{1}' türündeki '{0}' adlı iç içe geçmiş bir özelliğe sahip tabloları/nesneleri seri hale getiremiyor.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON işlevi, ikili verileri davranışsal olmayan ifadede serileştiremez.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>{0} parametresi, desteklenmeyen {1} türünde bir özellik içeriyor.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Belirtilen sütun salt okunur ve değiştirilemez: {0}.</value>
     
   </data>
 </root>

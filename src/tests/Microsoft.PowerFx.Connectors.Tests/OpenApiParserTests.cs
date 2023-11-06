@@ -973,6 +973,20 @@ POST https://tip1-shared.azure-apim.net/invoke
             Assert.Equal(expected, input);
         }
 
+        [Theory]
+
+        // Very slow -- [InlineData(@"Swagger\Dataverse 2.json")]
+        // Very slow -- [InlineData(@"Swagger\Dataverse 3.json")]
+        [InlineData(@"Swagger\PowerPlatformForAdmins.json")]
+        public async Task DataverseTest2(string swaggerFile)
+        {
+            PowerFxConfig powerFxConfig = new PowerFxConfig();
+            OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile);
+
+            OpenApiParser.GetFunctions("namespace", doc);
+            powerFxConfig.AddActionConnector("namespace", doc);
+        }
+
         [Fact]
         public async Task PowerAppsCardsTest()
         {
@@ -999,44 +1013,44 @@ POST https://tip1-shared.azure-apim.net/invoke
             Assert.Equal("test", suggestions.Suggestions[0].DisplayName);
             Assert.Equal("testWithInputs", suggestions.Suggestions[1].DisplayName);
         }
+    }
 
-        public static class Extensions
+    public static class Extensions
+    {
+        public static RecordType MakeRecordType(params (string, FormulaType)[] columns)
         {
-            public static RecordType MakeRecordType(params (string, FormulaType)[] columns)
+            RecordType rt = RecordType.Empty();
+
+            foreach ((string name, FormulaType type) in columns)
             {
-                RecordType rt = RecordType.Empty();
-
-                foreach ((string name, FormulaType type) in columns)
-                {
-                    rt = rt.Add(name, type);
-                }
-
-                return rt;
+                rt = rt.Add(name, type);
             }
 
-            public static TableType MakeTableType(params (string, FormulaType)[] columns)
-            {
-                TableType tt = TableType.Empty();
-
-                foreach ((string name, FormulaType type) in columns)
-                {
-                    tt = tt.Add(name, type);
-                }
-
-                return tt;
-            }
-
-            public static OptionSetValueType MakeOptionSetType(string name, params string[] names)
-            {
-                return MakeOptionSet(name, names).FormulaType;
-            }
-
-            public static OptionSet MakeOptionSet(string name, params string[] names)
-            {
-                return new OptionSet(name, DisplayNameUtility.MakeUnique(names.ToDictionary(n => n, n => n)));
-            }
+            return rt;
         }
 
-#pragma warning restore SA1118, SA1117, SA1119, SA1137
+        public static TableType MakeTableType(params (string, FormulaType)[] columns)
+        {
+            TableType tt = TableType.Empty();
+
+            foreach ((string name, FormulaType type) in columns)
+            {
+                tt = tt.Add(name, type);
+            }
+
+            return tt;
+        }
+
+        public static OptionSetValueType MakeOptionSetType(string name, params string[] names)
+        {
+            return MakeOptionSet(name, names).FormulaType;
+        }
+
+        public static OptionSet MakeOptionSet(string name, params string[] names)
+        {
+            return new OptionSet(name, DisplayNameUtility.MakeUnique(names.ToDictionary(n => n, n => n)));
+        }
     }
+
+#pragma warning restore SA1118, SA1117, SA1119, SA1137
 }

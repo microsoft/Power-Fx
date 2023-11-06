@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Taula, zeinari zutabeak gehituko zaizkion.</value>
+    <value>Zutabeak gehitu zaizkion taula edo erregistroa.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Zutabeak kenduko zaizkion taula-balioa.</value>
+    <value>Zutabeak kenduko zaizkion taularen edo erregistroaren balioa.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Kenduko den zutabearen izena.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Zehaztutako "source" taularen kopia bat itzultzen du, "old_column" zutabearen izena "new_column" gisa ezarrita.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>iturburua</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>zutabe_zaharra</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>zutabe_berria</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Prozesatuko den taula-balioa.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Izena aldatuko zaion zutabearen izena.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Zutabearen izen berria.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Zehaztutako baldintza guztiak egia gisa dituen taularen errenkadak itzultzen ditu.</value>
@@ -2275,6 +2304,10 @@
     <value>Behin baino gehiagotan zehaztu da "{0}" eremua erregistro honetan.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Ezin da birritan aldatu zehaztutako "{0}" zutabearen izena.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Behin baino gehiagotan zehaztu da '{0}' deitzen den zutabea.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Zutabeak kenduko zaizkion taula-balioa.</value>
+    <value>Zutabeak kenduko zaizkion taularen edo erregistroaren balioa.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Mantenduko den zutabearen izena.</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Iturburuko eta helburuko motak ez datoz bat. {0} espero zen, baina {1} aurkitu da.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>JSON formatuko testu-kate bat sortzen du taula, erregistro edo balio baterako.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>datuak</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>JSON bihurtuko den datu-egitura. Ausaz habiaratutako taulak, erregistroak eta jatorrizko balioak onartzen dira.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>formatua</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON bihurketan erabiliko den formatua. Balioa JSONFormat enumerazioaren kidea izango da.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Gaituta dagoenean, informazioa Application Insights-en erregistratzen du. Halaber, probaren emaitzetan erabilgarri egongo den Test Studio-ren saio bat erregistratzen du.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>mezua</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>larritasuna</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>jarraitze-aukerak</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Jarraipena egin behar zaion informazioa.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Application Insights-en jarraipena egiteko erabiliko den larritasun-maila.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Application Insights-erainoko jarraipena egingo zaien datu pertsonalizatuak dituen erregistroa.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Trace funtzioaren aukera gehigarriak.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>{0} funtzioaren "{1}" parametroak balio konstante bat izan behar du.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>"{0}" eta "{1}" JSONFormat balioak ezin dira batera erabili.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>JSON funtziora eraman den balioak multimedia-edukia du eta ez da onartzen modu lehenetsian. JSON formatuari multimedia-balioak serializatzeko baimena emateko, ziurtatu IncludeBinaryData aukera erabiltzen duzula "format" parametroan.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON funtzioak ezin ditu serializatu "{0}" motako objektuak.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON funtzioak ezin ditu serializatu "{1}" motako eta "{0}" izeneko propietate habiaratu bat duten taulak edo objektuak.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON funtzioak ezin ditu serializatu datu bitarrak portaerarekin zerikusirik ez duten espresioetan.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>{0} parametroak onartzen ez den {1} motako propietate bat dauka.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Zehaztutako zutabea irakurtzeko soilik da eta ezin da aldatu: {0}.</value>
     
   </data>
 </root>

@@ -560,7 +560,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     returnType = DType.CreateTable(new TypedName(type0, GetOneColumnTableResultName(context.Features)));
                 }
-                else if (type0.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                else if (type0.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
                     returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(context.Features)));
@@ -579,7 +579,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else if (!DType.Number.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type1.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (type1.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Number);
                 }
@@ -718,7 +718,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else if (!DType.DateTime.Accepts(type0, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type0.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (type0.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
                 }
@@ -737,7 +737,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else if (!DType.DateTime.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type1.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (type1.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.DateTime);
                 }

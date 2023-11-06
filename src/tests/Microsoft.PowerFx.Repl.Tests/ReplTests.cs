@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -256,6 +257,92 @@ Notify(z)
             Assert.True(log.Length > 0);
         }
 
+        // test that we get back an error for redefining a named formula, as opposed to throwing an exception
+        [Fact]
+        public void BadRedefinedNamedFormula()
+        {
+            _repl.HandleLine("a = 3");
+            _repl.HandleLine("a = \"hello\"");
+
+            var log = _output.Get(OutputKind.Error);
+            Assert.True(log.Length > 0);
+        }
+
+        // test that Exit() informs the host that an exit has been requested
+        [Fact]
+        public void Exit()
+        {
+            _repl.HandleLine("Exit()");
+            Assert.True(_repl.ExitRequested);
+        }
+
+        // test that comments do not return a result
+        [Fact]
+        public void Comments()
+        {
+            _repl.HandleLine("// hello world");
+            var log1 = _output.Get(OutputKind.Repl);
+            Assert.True(log1.Length == 0);
+
+            _repl.HandleLine("/* hello world */");
+            var log2 = _output.Get(OutputKind.Repl);
+            Assert.True(log2.Length == 0);
+
+            _repl.HandleLine("/* hello */  /* world */");
+            var log3 = _output.Get(OutputKind.Repl);
+            Assert.True(log3.Length == 0);
+        }
+
+        // test suggestion for "help" with differnet case and without parens
+        [Fact]
+        public void SuggestHelp()
+        {
+            // should suggest
+            _repl.HandleLine("help");
+            Assert.Contains("Help()", _output.Get(OutputKind.Error));
+
+            _repl.HandleLine("HELP");
+            Assert.Contains("Help()", _output.Get(OutputKind.Error));
+
+            _repl.HandleLine("help()");
+            Assert.Contains("Help()", _output.Get(OutputKind.Error));
+
+            _repl.HandleLine("HELP()");
+            Assert.Contains("Help()", _output.Get(OutputKind.Error));
+
+            // should not suggest
+            _repl.HandleLine("HELF()");
+            Assert.DoesNotContain("Help()", _output.Get(OutputKind.Error));
+
+            _repl.HandleLine("helq");
+            Assert.DoesNotContain("Help()", _output.Get(OutputKind.Error));
+        }
+
+        // test suggestion for "exit" with differnet case and without parens
+        [Fact]
+        public void SuggestExit()
+        {
+            // should suggest
+            _repl.HandleLine("exit");
+            Assert.Contains("Exit()", _output.Get(OutputKind.Error));
+
+            _repl.HandleLine("EXIT");
+            Assert.Contains("Exit()", _output.Get(OutputKind.Error));
+
+            _repl.HandleLine("exit()");
+            Assert.Contains("Exit()", _output.Get(OutputKind.Error));
+
+            _repl.HandleLine("EXIT()");
+            Assert.Contains("Exit()", _output.Get(OutputKind.Error));
+
+            // should not suggest
+            _repl.HandleLine("EXIP()");
+            Assert.DoesNotContain("Exit()", _output.Get(OutputKind.Error));
+
+            _repl.HandleLine("exif");
+            Assert.DoesNotContain("Exit()", _output.Get(OutputKind.Error));
+        }
+
         // test that newlines are properly placed, especailly with FormatTable
         [Fact]
         public void NewLinesBasicPrompt()
@@ -327,6 +414,39 @@ Notify(z)
         }
 
         [Fact]
+        public void EmptyValueTable()
+        {
+            _repl.WritePromptAsync().Wait();
+
+            var log1p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log1p == @"
+>> ");
+
+            _repl.HandleCommandAsync(
+"[1,2,3]").Wait();
+            var log2 = _output.Get(OutputKind.Repl, trim: true);
+            var expected2 = @"[1, 2, 3]";
+            Assert.True(log2 == expected2);
+
+            _repl.HandleCommandAsync(
+"Filter([1,2,3],Value>4)").Wait();
+            var log3 = _output.Get(OutputKind.Repl, trim: false);
+            var expected3 = @"
+<empty table>
+";
+            Assert.True(Regex.Replace(log3, @"\r?\n", @"\n") == Regex.Replace(expected3, @"\r?\n", @"\n"));
+
+            _repl.WritePromptAsync().Wait();
+            var log2p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log2p == @"
+>> ");
+
+            Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
+        }
+
+        [Fact]
         public void NewlinesFormatTable()
         {
             _repl.WritePromptAsync().Wait();
@@ -345,7 +465,7 @@ Notify(z)
   1      
       2 
 ";
-            Assert.True(Regex.Replace(log2, @"\s*\r?\n", @"\n") == Regex.Replace(expected2, @"\s*\r?\n", @"\n"));
+            Assert.True(Regex.Replace(log2, @"[ ]*\r?\n", @"\n") == Regex.Replace(expected2, @"[ ]*\r?\n", @"\n"));
 
             _repl.WritePromptAsync().Wait();
             var log2p = _output.Get(OutputKind.Control, trim: false);
@@ -375,7 +495,7 @@ Notify(z)
   1      
       2
 ";
-            Assert.True(Regex.Replace(log2, @"\s*\r?\n", @"\n") == Regex.Replace(expected2, @"\s*\r?\n", @"\n"));
+            Assert.True(Regex.Replace(log2, @"[ ]*\r?\n", @"\n") == Regex.Replace(expected2, @"[ ]*\r?\n", @"\n"));
 
             _repl.WritePromptAsync().Wait();
             var log2p = _output.Get(OutputKind.Control, trim: false);
@@ -385,6 +505,113 @@ Notify(z)
             Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
+        }
+
+        [Fact]
+        public void EmptyFormatTable()
+        {
+            _repl.WritePromptAsync().Wait();
+            var log1p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log1p == @"
+>> ");
+
+            _repl.HandleCommandAsync(
+"MyTable = Table({a:1},{b:2})").Wait();
+            var log2 = _output.Get(OutputKind.Repl, trim: false);
+            var expected2 = @"MyTable:
+  a   b  
+ === === 
+  1      
+      2
+";
+            Assert.True(Regex.Replace(log2, @"[ ]*\r?\n", @"\n") == Regex.Replace(expected2, @"[ ]*\r?\n", @"\n"));
+
+            _repl.HandleCommandAsync(
+"Filter( MyTable, a = b )").Wait();
+            var log3 = _output.Get(OutputKind.Repl, trim: false);
+            var expected3 = @"
+<empty table>
+";
+            Assert.True(Regex.Replace(log3, @"\r?\n", @"\n") == Regex.Replace(expected3, @"\r?\n", @"\n"));
+
+            _repl.WritePromptAsync().Wait();
+            var log2p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log2p == @"
+>> ");
+
+            Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
+        }
+
+        [Fact]
+        public void EchoAndPrintResult()
+        {
+            _repl.Echo = false;
+            _repl.PrintResult = false;
+            _repl.HandleCommandAsync(@"Notify( 1234 )").Wait();
+            Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"1234
+");
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Control, trim: false) == string.Empty);
+
+            _repl.Echo = true;
+            _repl.PrintResult = false;
+            _repl.HandleCommandAsync(@"Notify( 2345 )").Wait();
+            Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"2345
+");
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"Notify( 2345 )
+");
+            Assert.True(_output.Get(OutputKind.Control, trim: false) == @"
+>> ");
+
+            _repl.Echo = false;
+            _repl.PrintResult = true;
+            _repl.HandleCommandAsync(@"Notify( 3456 )").Wait();
+            Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"3456
+");
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"true
+");
+            Assert.True(_output.Get(OutputKind.Control, trim: false) == string.Empty);
+
+            _repl.Echo = true;
+            _repl.PrintResult = true;
+            _repl.HandleCommandAsync(@"Notify( 4567 )").Wait();
+            Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"4567
+");
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"Notify( 4567 )
+true
+");
+            Assert.True(_output.Get(OutputKind.Control, trim: false) == @"
+>> ");
+
+            Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
+        }
+
+        [Fact]
+        public void LineNumbersInErrors()
+        {
+            _repl.HandleCommandAsync(@"2 +-* s", lineNumber: 7891).Wait();
+
+            var errors = _output.Get(OutputKind.Error, trim: false);
+
+            // make sure there is at least one error
+            Assert.StartsWith("Line ", errors);
+
+            using (StringReader reader = new StringReader(errors))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Assert.StartsWith("Line 7891: ", errors);
+                }
+            }
+
+            Assert.True(_output.Get(OutputKind.Notify, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Control, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
         }
     }
 

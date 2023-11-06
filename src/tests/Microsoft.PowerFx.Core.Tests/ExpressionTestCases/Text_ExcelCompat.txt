@@ -708,6 +708,12 @@ Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 22-4
 >> Text(0.324305555555556, "h:mm:ss A/P")
 "7:47:00 A"
 
+>> Text(DateTime(2023, 10, 28, 13, 14, 5, 231), "yy/mm/dd hh:mm:ss.000 A/P" )
+"23/10/28 01:14:05.231 P"
+
+>> Text(DateTime(2023, 10, 28, 13, 14, 5, 231), "yy/mm/dd hh:mm:ss.000 AM/PM" )
+"23/10/28 01:14:05.231 PM"
+
 >> Text(70.32430555555555555555555,"h:mm:ss A/P", "vi-VN")
 "7:47:00 S"
 
@@ -2084,3 +2090,1190 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(1234567.1234567, "#,,,\k,,\z,,.00")
 "1234567k,z,.12"
+
+// Thousand grouping with escaping characters
+>> Text(1234567.1234567, "0\#,0")
+"123456#,7"
+
+>> Text(1234567.1234567, "0""#"",0")
+"123456#,7"
+
+>> Text(1234567.1234567, "0'#',0")
+"12345'6',7"
+
+>> Text(1234567.1234567, "0\K,0")
+"123456K,7"
+
+>> Text(1234567.1234567, "0""K"",0")
+"123456K,7"
+
+>> Text(1234567.1234567, "0'K',0")
+"123456'K',7"
+
+>> Text(1234567.1234567, "0\#,")
+"1234567#,"
+
+>> Text(1234567.1234567, "0""#"",")
+"1234567#,"
+
+>> Text(1234567.1234567, "0'#',")
+"123456'7',"
+
+>> Text(1234567.1234567, "0\K,")
+"1234567K,"
+
+>> Text(1234567.1234567, "0""K"",")
+"1234567K,"
+
+>> Text(1234567.1234567, "0'K',")
+"1234567'K',"
+
+>> Text(1234567.1234567, "\#,0")
+"#,1234567"
+
+>> Text(1234567.1234567, """#"",0")
+"#,1234567"
+
+>> Text(1234567.1234567, "'#',0")
+"'123456',7"
+
+>> Text(1234567.1234567, "\K,0")
+"K,1234567"
+
+>> Text(1234567.1234567, """K"",0")
+"K,1234567"
+
+>> Text(1234567.1234567, "'K',0")
+"'K',1234567"
+
+>> Text(1234567.1234567, "0.\#,0")
+"1234567.#,1"
+
+>> Text(1234567.1234567, "0.""#"",0")
+"1234567.#,1"
+
+>> Text(1234567.1234567, "0.'#',0")
+"1234567.'1',2"
+
+>> Text(1234567.1234567, "0.\K,0")
+"1234567.K,1"
+
+>> Text(1234567.1234567, "0.""K"",0")
+"1234567.K,1"
+
+>> Text(1234567.1234567, "0.'K',0")
+"1234567.'K',1"
+
+>> Text(1234567.1234567, "0\#,,,0")
+"123456#,7"
+
+>> Text(1234567.1234567, "0""#"",,,0")
+"123456#,7"
+
+>> Text(1234567.1234567, "0'#',,,0")
+"12345'6',7"
+
+>> Text(1234567.1234567, "0\K,,,0")
+"123456K,7"
+
+>> Text(1234567.1234567, "0""K"",,,0")
+"123456K,7"
+
+>> Text(1234567.1234567, "0'K',,,0")
+"123456'K',7"
+
+>> Text(1234567.1234567, "0\#,,,#,,#")
+"1,234,5#,67"
+
+>> Text(1234567.1234567, "0""#"",,,#,,#")
+"1,234,5#,67"
+
+>> Text(1234567.1234567, "0'#',,,#,,#")
+"1,234,'5',67"
+
+>> Text(1234567.1234567, "0\K,,,#,,#")
+"1,234,5K,67"
+
+>> Text(1234567.1234567, "0""K"",,,#,,#")
+"1,234,5K,67"
+
+>> Text(1234567.1234567, "0'K',,,#,,#")
+"1,234,5'K',67"
+
+>> Text(1234567.1234567, "\#,,,#,,,,#")
+"#,1,234,567"
+
+>> Text(1234567.1234567, """#"",,,#,,,,#")
+"#,1,234,567"
+
+>> Text(1234567.1234567, "'#',,,#,,,,#")
+"'1,234,5',67"
+
+>> Text(1234567.1234567, "\K,,,#,,,,#")
+"K,1,234,567"
+
+>> Text(1234567.1234567, """K"",,,#,,,,#")
+"K,1,234,567"
+
+>> Text(1234567.1234567, "'K',,,#,,,,#")
+"'K',1,234,567"
+
+>> Text(1234567.1234567, "0.#\#,,,#,,,,#")
+"1234567.1#,23"
+
+>> Text(1234567.1234567, "0.#""#"",,,#,,,,#")
+"1234567.1#,23"
+
+>> Text(1234567.1234567, "0.#'#',,,#,,,,#")
+"1234567.1'2',35"
+
+>> Text(1234567.1234567, "0.#\K,,,#,,,,#")
+"1234567.1K,23"
+
+>> Text(1234567.1234567, "0.#""K"",,,#,,,,#")
+"1234567.1K,23"
+
+>> Text(1234567.1234567, "0.#'K',,,#,,,,#")
+"1234567.1'K',23"
+
+>> Text(1234567.1234567, "\#,,,#,,,,#.0,,0,,,#")
+"#,1,234,567.123"
+
+>> Text(1234567.1234567, """#"",,,#,,,,#.0,,0,,,#")
+"#,1,234,567.123"
+
+>> Text(1234567.1234567, "'#',,,#,,,,#.0,,0,,,#")
+"'1,234,5',67.123"
+
+>> Text(1234567.1234567, "\K,,,#,,,,#.0,,0,,,#")
+"K,1,234,567.123"
+
+>> Text(1234567.1234567, """K"",,,#,,,,#.0,,0,,,#")
+"K,1,234,567.123"
+
+>> Text(1234567.1234567, "'K',,,#,,,,#.0,,0,,,#")
+"'K',1,234,567.123"
+
+>> Text(1234567.1234567, ",,,,\#,,,#,,,,#.0,,0,,,#")
+",#,1,234,567.123"
+
+>> Text(1234567.1234567, ",,,,""#"",,,#,,,,#.0,,0,,,#")
+",#,1,234,567.123"
+
+>> Text(1234567.1234567, ",,,,'#',,,#,,,,#.0,,0,,,#")
+",'1,234,5',67.123"
+
+>> Text(1234567.1234567, ",,,,\K,,,#,,,,#.0,,0,,,#")
+",K,1,234,567.123"
+
+>> Text(1234567.1234567, ",,,,""K"",,,#,,,,#.0,,0,,,#")
+",K,1,234,567.123"
+
+>> Text(1234567.1234567, ",,,,'K',,,#,,,,#.0,,0,,,#")
+",'K',1,234,567.123"
+
+>> Text(1234567.1234567, ",,,\#,,,#,,,,#,")
+",#,1,235"
+
+>> Text(1234567.1234567, ",,,""#"",,,#,,,,#,")
+",#,1,235"
+
+>> Text(1234567.1234567, ",,,'#',,,#,,,,#,")
+",'1,2',35"
+
+>> Text(1234567.1234567, ",,,\K,,,#,,,,#,")
+",K,1,235"
+
+>> Text(1234567.1234567, ",,,""K"",,,#,,,,#,")
+",K,1,235"
+
+>> Text(1234567.1234567, ",,,'K',,,#,,,,#,")
+",'K',1,235"
+
+>> Text(1234567.1234567, ",,,\#,,,#,,,,#,,")
+",#,1"
+
+>> Text(1234567.1234567, ",,,""#"",,,#,,,,#,,")
+",#,1"
+
+>> Text(1234567.1234567, ",,,'#',,,#,,,,#,,")
+",'',1"
+
+>> Text(1234567.1234567, ",,,\K,,,#,,,,#,,")
+",K,1"
+
+>> Text(1234567.1234567, ",,,""K"",,,#,,,,#,,")
+",K,1"
+
+>> Text(1234567.1234567, ",,,'K',,,#,,,,#,,")
+",'K',1"
+
+>> Text(1234567.1234567, ",,,,\#,,,#,,,,#.0,,0,,,#,")
+",#,1,234.567"
+
+>> Text(1234567.1234567, ",,,,""#"",,,#,,,,#.0,,0,,,#,")
+",#,1,234.567"
+
+>> Text(1234567.1234567, ",,,,'#',,,#,,,,#.0,,0,,,#,")
+",'1,2',34.567"
+
+>> Text(1234567.1234567, ",,,,\K,,,#,,,,#.0,,0,,,#,")
+",K,1,234.567"
+
+>> Text(1234567.1234567, ",,,,""K"",,,#,,,,#.0,,0,,,#,")
+",K,1,234.567"
+
+>> Text(1234567.1234567, ",,,,'K',,,#,,,,#.0,,0,,,#,")
+",'K',1,234.567"
+
+>> Text(1234567.1234567, ",,,,\#,,,#,,,,#,.0,,0,,,#,")
+",#,1.235"
+
+>> Text(1234567.1234567, ",,,,""#"",,,#,,,,#,.0,,0,,,#,")
+",#,1.235"
+
+>> Text(1234567.1234567, ",,,,'#',,,#,,,,#,.0,,0,,,#,")
+",'',1.235"
+
+>> Text(1234567.1234567, ",,,,\K,,,#,,,,#,.0,,0,,,#,")
+",K,1.235"
+
+>> Text(1234567.1234567, ",,,,""K"",,,#,,,,#,.0,,0,,,#,")
+",K,1.235"
+
+>> Text(1234567.1234567, ",,,,'K',,,#,,,,#,.0,,0,,,#,")
+",'K',1.235"
+
+>> Text(1234567.1234567, ",,,,\#,,,#,,,,#.0,,0,,,#,,")
+",#,1.235"
+
+>> Text(1234567.1234567, ",,,,""#"",,,#,,,,#.0,,0,,,#,,")
+",#,1.235"
+
+>> Text(1234567.1234567, ",,,,'#',,,#,,,,#.0,,0,,,#,,")
+",'',1.235"
+
+>> Text(1234567.1234567, ",,,,\K,,,#,,,,#.0,,0,,,#,,")
+",K,1.235"
+
+>> Text(1234567.1234567, ",,,,""K"",,,#,,,,#.0,,0,,,#,,")
+",K,1.235"
+
+>> Text(1234567.1234567, ",,,,'K',,,#,,,,#.0,,0,,,#,,")
+",'K',1.235"
+
+>> Text(1234567.1234567, ",,\9,,,,\f,,\0,,,\.\z,,\k,,,\#,,,#,,,,#,.0,,0,,,#,")
+",9,f,0,.z,k,#,1.235"
+
+>> Text(1234567.1234567, ",,,,""October 12, 2023"",,,,""#"",,,""0"",,,#,,,,#,.0,,0,,,#,")
+",October 12, 2023,#,0,1.235"
+
+>> Text(1234567.1234567, "'z','#',,,,'k',,,,,,'t',,,,'c',,,,'f',,,,'i',,#,,,#.0,,0,,,#,")
+"'z','1,2','k','t','c','f','i',34.567"
+
+// Sections for DateTime format
+>> Text(Date(2023,10,26), "yyyy-mm-dd")
+"2023-10-26"
+
+>> Text(Date(1000,7,4), "yyyy-mm-dd")
+"1000-07-04"
+
+>> Text(Date(1899,12,30), "yyyy-mm-dd")
+"1899-12-30"
+
+>> Text(Date(2023,10,26), "yyyy-mm-dd;mm/dd/yyyy")
+"2023-10-26"
+
+>> Text(Date(1000,7,4), "yyyy-mm-dd;mm/dd/yyyy")
+"07/04/1000"
+
+>> Text(Date(1899,12,30), "yyyy-mm-dd;mm/dd/yyyy")
+"1899-12-30"
+
+>> Text(Date(2023,10,26), "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"2023-10-26"
+
+>> Text(Date(1000,7,4), "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"07/04/1000"
+
+>> Text(Date(1899,12,30), "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"December 30 1899"
+
+>> Text(Date(2023,10,26), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy")
+"T:2023-10-26"
+
+>> Text(Date(1000,7,4), """T:""yyyy-mm-dd;""Z:""mm/dd/yyyy")
+"Z:07/04/1000"
+
+>> Text(Date(1899,12,30), """T:""yyyy-mm-dd;""Z:""mm/dd/yyyy")
+"T:1899-12-30"
+
+>> Text(Date(2023,10,26), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy;\K\:mmmm dd yyyy")
+"T:2023-10-26"
+
+>> Text(Date(1000,7,4), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy;\K\:mmmm dd yyyy")
+"Z:07/04/1000"
+
+>> Text(Date(1899,12,30), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy;\K\:mmmm dd yyyy")
+"K:December 30 1899"
+
+>> Text(Date(2023,10,26), "yyyy-mm-dd\;mm/dd/yyyy")
+"2023-10-26;10/26/2023"
+
+>> Text(Date(1000,7,4), "yyyy-mm-dd\;mm/dd/yyyy")
+"1000-07-04;07/04/1000"
+
+>> Text(Date(1899,12,30), "yyyy-mm-dd\;mm/dd/yyyy")
+"1899-12-30;12/30/1899"
+
+>> Text(Date(2023,10,26), "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"2023-10-26;10/26/2023;October 26 2023"
+
+>> Text(Date(1000,7,4), "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"1000-07-04;07/04/1000;July 04 1000"
+
+>> Text(Date(1899,12,30), "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"1899-12-30;12/30/1899;December 30 1899"
+
+>> Text(Date(2023,10,26), "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"2023-10-26;10/26/2023;October 26 2023"
+
+>> Text(Date(1000,7,4), "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"1000-07-04;07/04/1000;July 04 1000"
+
+>> Text(Date(1899,12,30), "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"1899-12-30;12/30/1899;December 30 1899"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "yyyy-mm-dd")
+"2023-10-26"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), "yyyy-mm-dd")
+"1000-02-06"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), "yyyy-mm-dd")
+"1899-12-30"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "yyyy-mm-dd;mm/dd/yyyy")
+"2023-10-26"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), "yyyy-mm-dd;mm/dd/yyyy")
+"02/06/1000"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), "yyyy-mm-dd;mm/dd/yyyy")
+"1899-12-30"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"2023-10-26"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"02/06/1000"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"1899-12-30"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy")
+"T:2023-10-26"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), """T:""yyyy-mm-dd;""Z:""mm/dd/yyyy")
+"Z:02/06/1000"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), """T:""yyyy-mm-dd;""Z:""mm/dd/yyyy")
+"T:1899-12-30"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy;\K\:mmmm dd yyyy")
+"T:2023-10-26"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy;\K\:mmmm dd yyyy")
+"Z:02/06/1000"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), "\T\:yyyy-mm-dd;\Z\:mm/dd/yyyy;\K\:mmmm dd yyyy")
+"T:1899-12-30"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "yyyy-mm-dd\;mm/dd/yyyy")
+"2023-10-26;10/26/2023"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), "yyyy-mm-dd\;mm/dd/yyyy")
+"1000-02-06;02/06/1000"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), "yyyy-mm-dd\;mm/dd/yyyy")
+"1899-12-30;12/30/1899"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"2023-10-26;10/26/2023;October 26 2023"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"1000-02-06;02/06/1000;February 06 1000"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"1899-12-30;12/30/1899;December 30 1899"
+
+>> Text(DateTime(2023, 10, 26, 2, 53, 9, 0), "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"2023-10-26;10/26/2023;October 26 2023"
+
+>> Text(DateTime(1000, 2, 6, 7, 14, 25, 0), "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"1000-02-06;02/06/1000;February 06 1000"
+
+>> Text(DateTime(1899, 12, 30, 5, 12, 15, 0), "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"1899-12-30;12/30/1899;December 30 1899"
+
+>> Text(Time(14, 32, 25, 678), "hh:mm:ss.00")
+"14:32:25.67"
+
+>> Text(Time(-5, 23, 15, 356), "hh:mm:ss.00")
+"19:23:15.35"
+
+>> Text(Time(0, 0, 0, 0), "hh:mm:ss.00")
+"00:00:00.00"
+
+>> Text(Time(14, 32, 25, 678), "hh:mm:ss.00;hh/mm/ss")
+"14:32:25.67"
+
+>> Text(Time(-5, 23, 15, 356), "hh:mm:ss.00;hh/mm/ss")
+"19/23/15"
+
+>> Text(Time(0, 0, 0, 0), "hh:mm:ss.00;hh/mm/ss")
+"00:00:00.00"
+
+>> Text(Time(14, 32, 25, 678), "hh:mm:ss.00;hh/mm/ss;hh mm ss")
+"14:32:25.67"
+
+>> Text(Time(-5, 23, 15, 356), "hh:mm:ss.00;hh/mm/ss;hh mm ss")
+"19/23/15"
+
+>> Text(Time(0, 0, 0, 0), "hh:mm:ss.00;hh/mm/ss;hh mm ss")
+"00 00 00"
+
+>> Text(Time(14, 32, 25, 678), "\T\:hh:mm:ss.00;\Z\:hh/mm/ss")
+"T:14:32:25.67"
+
+>> Text(Time(-5, 23, 15, 356), """T:""hh:mm:ss.00;""Z:""hh/mm/ss")
+"Z:19/23/15"
+
+>> Text(Time(0, 0, 0, 0), """T:""hh:mm:ss.00;""Z:""hh/mm/ss")
+"T:00:00:00.00"
+
+>> Text(Time(14, 32, 25, 678), "\T\:hh:mm:ss.00;\Z\:hh/mm/ss;\K\:hh mm ss")
+"T:14:32:25.67"
+
+>> Text(Time(-5, 23, 15, 356), "\T\:hh:mm:ss.00;\Z\:hh/mm/ss;\K\:hh mm ss")
+"Z:19/23/15"
+
+>> Text(Time(0, 0, 0, 0), "\T\:hh:mm:ss.00;\Z\:hh/mm/ss;\K\:hh mm ss")
+"K:00 00 00"
+
+>> Text(Time(14, 32, 25, 678), "hh:mm:ss.00\;hh/mm/ss")
+"14:32:25.67;14/32/25"
+
+>> Text(Time(-5, 23, 15, 356), "hh:mm:ss.00\;hh/mm/ss")
+"19:23:15.35;19/23/15"
+
+>> Text(Time(0, 0, 0, 0), "hh:mm:ss.00\;hh/mm/ss")
+"00:00:00.00;00/00/00"
+
+>> Text(Time(14, 32, 25, 678), "hh:mm:ss.00\;hh/mm/ss\;hh mm ss")
+"14:32:25.67;14/32/25;14 32 25"
+
+>> Text(Time(-5, 23, 15, 356), "hh:mm:ss.00\;hh/mm/ss\;hh mm ss")
+"19:23:15.35;19/23/15;19 23 15"
+
+>> Text(Time(0, 0, 0, 0), "hh:mm:ss.00\;hh/mm/ss\;hh mm ss")
+"00:00:00.00;00/00/00;00 00 00"
+
+>> Text(Time(14, 32, 25, 678), "hh:mm:ss.00"";""hh/mm/ss"";""hh mm ss")
+"14:32:25.67;14/32/25;14 32 25"
+
+>> Text(Time(-5, 23, 15, 356), "hh:mm:ss.00"";""hh/mm/ss"";""hh mm ss")
+"19:23:15.35;19/23/15;19 23 15"
+
+>> Text(Time(0, 0, 0, 0), "hh:mm:ss.00"";""hh/mm/ss"";""hh mm ss")
+"00:00:00.00;00/00/00;00 00 00"
+
+>> Text(25, "yyyy-mm-dd;mm/dd/yyyy")
+"1900-01-24"
+
+>> Text(-25, "yyyy-mm-dd;mm/dd/yyyy")
+"12/05/1899"
+
+>> Text(0, "yyyy-mm-dd;mm/dd/yyyy")
+"1899-12-30"
+
+>> Text(25, "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"1900-01-24"
+
+>> Text(-25, "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"12/05/1899"
+
+>> Text(0, "yyyy-mm-dd;mm/dd/yyyy;mmmm dd yyyy")
+"December 30 1899"
+
+>> Text(25, "yyyy-mm-dd\;mm/dd/yyyy")
+"1900-01-24;01/24/1900"
+
+>> Text(-25, "yyyy-mm-dd\;mm/dd/yyyy")
+"1899-12-05;12/05/1899"
+
+>> Text(0, "yyyy-mm-dd\;mm/dd/yyyy")
+"1899-12-30;12/30/1899"
+
+>> Text(25, "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"1900-01-24;01/24/1900;January 24 1900"
+
+>> Text(-25, "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"1899-12-05;12/05/1899;December 05 1899"
+
+>> Text(0, "yyyy-mm-dd\;mm/dd/yyyy\;mmmm dd yyyy")
+"1899-12-30;12/30/1899;December 30 1899"
+
+>> Text(1246.22265625, "hh:mm:ss.00;hh/mm/ss;hh mm ss")
+"05:20:37.50"
+
+>> Text(-34.55859375, "hh:mm:ss.00;hh/mm/ss;hh mm ss")
+"10/35/37"
+
+>> Text(0, "hh:mm:ss.00;hh/mm/ss;hh mm ss")
+"00 00 00"
+
+>> Text(25, "yyyy-mm-dd"";""mm/dd/yyyy")
+"1900-01-24;01/24/1900"
+
+>> Text(-25, "yyyy-mm-dd"";""mm/dd/yyyy")
+"1899-12-05;12/05/1899"
+
+>> Text(0, "yyyy-mm-dd"";""mm/dd/yyyy")
+"1899-12-30;12/30/1899"
+
+>> Text(25, "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"1900-01-24;01/24/1900;January 24 1900"
+
+>> Text(-25, "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"1899-12-05;12/05/1899;December 05 1899"
+
+>> Text(0, "yyyy-mm-dd"";""mm/dd/yyyy"";""mmmm dd yyyy")
+"1899-12-30;12/30/1899;December 30 1899"
+
+// Block exponential notation with decimals, escaping character and scaling modifier
+>> With({fmt: "0.00E+0.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.000E+0.000"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#.#E+#.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.0E+#.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0E+0.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#E+#.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E-0.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.000E-0.000"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#.#E-#.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.0E-#.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0E-0.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#E-#.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e+0.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.000e+0.000"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#.#e+#.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.0e+#.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0e+0.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#e+#.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-0.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.000e-0.000"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#.#e-#.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.0e-#.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0e-0.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#e-#.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E+0\.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.000E+0\.000"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#.#E+#\.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.0E+#\.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0E+0\.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#E+#\.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E-0\.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.000E-0\.000"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#.#E-#\.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.0E-#\.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0E-0\.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#E-#\.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e+0\.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.000e+0\.000"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#.#e+#\.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.0e+#\.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0e+0\.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#e+#\.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-0\.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.000e-0\.000"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#.#e-#\.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.0e-#\.0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0e-0\.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#e-#\.00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-0\k0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.000e-0""k""000"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0e-0\k00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#e-#""k""00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E+00%"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.000E+0000%"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#.#E+#00%"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.0E+#%"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0E+000%"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "#E+#00%"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+// # with non numeric character after exponential notation and before numeric character
+>> With({fmt: "0.00E+#k#0#####0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E+###k#00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E+###k#0#####0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E+####0####0###k#"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E+##k##0####0###k#"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E+####0##k##0####"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E+#\##0#####0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E+###\##00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E+###\##0#####0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E+####0####0###\##"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E+##\###0####0###\##"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00E+####0##\###0####"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "(0.00E+0k#);(0.00E+#k##0##0##)"}, Text(12345.34567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "##;(0.00E+###0#k#0##)"}, Text(-12345.34567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "(0.00E+0#);##;(0.00E+#####0####0###k#0###)"}, Text(0, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "(0.00E+####0####);(0.00E+####0####0#k#)"}, Text(12345.34567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "(0.00E+####0######);(0.00E+####0####0#k#)"}, Text(-12345.34567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "(0.00E+0#);(0.00E+0##k##0##);(0.00E+####0###k##0##k##0###)"}, Text(0, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-#k#0#####0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-###k#00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-###k#0#####0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-####0####0###k#"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-##k##0####0###k#"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-####0##k##0####"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-#\##0#####0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-###\##00"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-###\##0#####0"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-####0####0###\##"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-##\###0####0###\##"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "0.00e-####0##\###0####"}, Text(1234567.1234567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "(0.00e-0k#);(0.00e-#k##0##0##)"}, Text(12345.34567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "##;(0.00e-###0#k#0##)"}, Text(-12345.34567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "(0.00e-0#);##;(0.00e-#####0####0###k#0###)"}, Text(0, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "(0.00e-####0####);(0.00e-####0####0#k#)"}, Text(12345.34567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "(0.00e-####0######);(0.00e-####0####0#k#)"}, Text(-12345.34567, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "(0.00e-0#);(0.00e-0##k##0##);(0.00e-####0###k##0##k##0###)"}, Text(0, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With({fmt: "(0.00E+0#);(0.00e-0##""k""##0##);(0.00E+####0###k##0##""k""##0###)"}, Text(0, fmt))
+Error({Kind:ErrorKind.InvalidArgument})
+
+// # after exponential notation
+>> Text(12345.34567,"0.00E+#####00")
+"1.23E+04"
+
+>> Text(12345.34567,"0.00E+#00")
+"1.23E+04"
+
+>> Text(12345.34567,"0.00E+#####0#0")
+"1.23E+04"
+
+>> Text(12345.34567,"0.00E+#0#0")
+"1.23E+04"
+
+>> Text(12345.34567,"0.00E+#####0####0")
+"1.23E+04"
+
+>> Text(12345.34567,"0.00E+#0#####0")
+"1.23E+04"
+
+>> Text(12345.34567,"0.00E+00#####")
+"1.23E+004"
+
+>> Text(12345.34567,"0.00E+#####00#")
+"1.23E+004"
+
+>> Text(12345.34567,"0.00E+#####00#####")
+"1.23E+004"
+
+>> Text(12345.34567,"0.00E+0#0#####")
+"1.23E+004"
+
+>> Text(12345.34567,"0.00E+0####0#####")
+"1.23E+004"
+
+>> Text(12345.34567,"0.00E+####0####0#####")
+"1.23E+004"
+
+>> Text(12345.34567,"(0.00E+00##);##")
+"(1.23E+004)"
+
+>> Text(-12345.34567,"(0.00E+00##);##")
+"12345"
+
+>> Text(12345.34567,"##;(0.00E+00##)")
+"12345"
+
+>> Text(-12345.34567,"##;(0.00E+00##)")
+"(1.23E+004)"
+
+>> Text(0,"(0.00E+0#);##;(0.00E+000###)")
+"(0.00E+0000)"
+
+>> Text(12345.34567,"(0.00E+0#);(0.00E+00##)")
+"(1.23E+04)"
+
+>> Text(-12345.34567,"(0.00E+0#);(0.00E+00##)")
+"(1.23E+004)"
+
+>> Text(0,"(0.00E+0#);(0.00E+00##);(0.00E+000###)")
+"(0.00E+0000)"
+
+>> Text(12345.34567,"##;(0.00E+###0##0##)")
+"12345"
+
+>> Text(-12345.34567,"##;(0.00E+###0##0##)")
+"(1.23E+004)"
+
+>> Text(0,"(0.00E+0#);##;(0.00E+#####0####0####0###)")
+"(0.00E+0000)"
+
+>> Text(12345.34567,"(0.00E+####0####);(0.00E+####0####0##)")
+"(1.23E+04)"
+
+>> Text(-12345.34567,"(0.00E+####0######);(0.00E+####0####0##)")
+"(1.23E+004)"
+
+>> Text(0,"(0.00E+0#);(0.00E+0####0##);(0.00E+####0#####0####0###)")
+"(0.00E+0000)"
+
+>> Text(12345.34567,"0.00e+#####00")
+"1.23e+04"
+
+>> Text(12345.34567,"0.00e+#00")
+"1.23e+04"
+
+>> Text(12345.34567,"0.00e+#####0#0")
+"1.23e+04"
+
+>> Text(12345.34567,"0.00e+#0#0")
+"1.23e+04"
+
+>> Text(12345.34567,"0.00e+#####0####0")
+"1.23e+04"
+
+>> Text(12345.34567,"0.00e+#0#####0")
+"1.23e+04"
+
+>> Text(12345.34567,"0.00e+00#####")
+"1.23e+004"
+
+>> Text(12345.34567,"0.00e+#####00#")
+"1.23e+004"
+
+>> Text(12345.34567,"0.00e+#####00#####")
+"1.23e+004"
+
+>> Text(12345.34567,"0.00e+0#0#####")
+"1.23e+004"
+
+>> Text(12345.34567,"0.00e+0####0#####")
+"1.23e+004"
+
+>> Text(12345.34567,"0.00e+####0####0#####")
+"1.23e+004"
+
+>> Text(12345.34567,"(0.00e+00##);##")
+"(1.23e+004)"
+
+>> Text(-12345.34567,"(0.00e+00##);##")
+"12345"
+
+>> Text(12345.34567,"##;(0.00e+00##)")
+"12345"
+
+>> Text(-12345.34567,"##;(0.00e+00##)")
+"(1.23e+004)"
+
+>> Text(0,"(0.00e+0#);##;(0.00e+000###)")
+"(0.00e+0000)"
+
+>> Text(12345.34567,"(0.00e+0#);(0.00e+00##)")
+"(1.23e+04)"
+
+>> Text(-12345.34567,"(0.00e+0#);(0.00e+00##)")
+"(1.23e+004)"
+
+>> Text(0,"(0.00e+0#);(0.00e+00##);(0.00e+000###)")
+"(0.00e+0000)"
+
+>> Text(12345.34567,"##;(0.00e+###0##0##)")
+"12345"
+
+>> Text(-12345.34567,"##;(0.00e+###0##0##)")
+"(1.23e+004)"
+
+>> Text(0,"(0.00e+0#);##;(0.00e+#####0####0####0###)")
+"(0.00e+0000)"
+
+>> Text(12345.34567,"(0.00e+####0####);(0.00e+####0####0##)")
+"(1.23e+04)"
+
+>> Text(-12345.34567,"(0.00e+####0######);(0.00e+####0####0##)")
+"(1.23e+004)"
+
+>> Text(0,"(0.00e+0#);(0.00e+0####0##);(0.00e+####0#####0####0###)")
+"(0.00e+0000)"
+
+>> Text(12345.34567,"0.00E-#####00")
+"1.23E04"
+
+>> Text(12345.34567,"0.00E-#00")
+"1.23E04"
+
+>> Text(12345.34567,"0.00E-#####0#0")
+"1.23E04"
+
+>> Text(12345.34567,"0.00E-#0#0")
+"1.23E04"
+
+>> Text(12345.34567,"0.00E-#####0####0")
+"1.23E04"
+
+>> Text(12345.34567,"0.00E-#0#####0")
+"1.23E04"
+
+>> Text(12345.34567,"0.00E-00#####")
+"1.23E004"
+
+>> Text(12345.34567,"0.00E-#####00#")
+"1.23E004"
+
+>> Text(12345.34567,"0.00E-#####00#####")
+"1.23E004"
+
+>> Text(12345.34567,"0.00E-0#0#####")
+"1.23E004"
+
+>> Text(12345.34567,"0.00E-0####0#####")
+"1.23E004"
+
+>> Text(12345.34567,"0.00E-####0####0#####")
+"1.23E004"
+
+>> Text(12345.34567,"(0.00E-00##);##")
+"(1.23E004)"
+
+>> Text(-12345.34567,"(0.00E-00##);##")
+"12345"
+
+>> Text(12345.34567,"##;(0.00E-00##)")
+"12345"
+
+>> Text(-12345.34567,"##;(0.00E-00##)")
+"(1.23E004)"
+
+>> Text(0,"(0.00E-0#);##;(0.00E-000###)")
+"(0.00E0000)"
+
+>> Text(12345.34567,"(0.00E-0#);(0.00E-00##)")
+"(1.23E04)"
+
+>> Text(-12345.34567,"(0.00E-0#);(0.00E-00##)")
+"(1.23E004)"
+
+>> Text(0,"(0.00E-0#);(0.00E-00##);(0.00E-000###)")
+"(0.00E0000)"
+
+>> Text(12345.34567,"##;(0.00E-###0##0##)")
+"12345"
+
+>> Text(-12345.34567,"##;(0.00E-###0##0##)")
+"(1.23E004)"
+
+>> Text(0,"(0.00E-0#);##;(0.00E-#####0####0####0###)")
+"(0.00E0000)"
+
+>> Text(12345.34567,"(0.00E-####0####);(0.00E-####0####0##)")
+"(1.23E04)"
+
+>> Text(-12345.34567,"(0.00E-####0######);(0.00E-####0####0##)")
+"(1.23E004)"
+
+>> Text(0,"(0.00E-0#);(0.00E-0####0##);(0.00E-####0#####0####0###)")
+"(0.00E0000)"
+
+>> Text(12345.34567,"0.00e-#####00")
+"1.23e04"
+
+>> Text(12345.34567,"0.00e-#00")
+"1.23e04"
+
+>> Text(12345.34567,"0.00e-#####0#0")
+"1.23e04"
+
+>> Text(12345.34567,"0.00e-#0#0")
+"1.23e04"
+
+>> Text(12345.34567,"0.00e-#####0####0")
+"1.23e04"
+
+>> Text(12345.34567,"0.00e-#0#####0")
+"1.23e04"
+
+>> Text(12345.34567,"0.00e-00#####")
+"1.23e004"
+
+>> Text(12345.34567,"0.00e-#####00#")
+"1.23e004"
+
+>> Text(12345.34567,"0.00e-#####00#####")
+"1.23e004"
+
+>> Text(12345.34567,"0.00e-0#0#####")
+"1.23e004"
+
+>> Text(12345.34567,"0.00e-0####0#####")
+"1.23e004"
+
+>> Text(12345.34567,"0.00e-####0####0#####")
+"1.23e004"
+
+>> Text(12345.34567,"(0.00e-00##);##")
+"(1.23e004)"
+
+>> Text(-12345.34567,"(0.00e-00##);##")
+"12345"
+
+>> Text(12345.34567,"##;(0.00e-00##)")
+"12345"
+
+>> Text(-12345.34567,"##;(0.00e-00##)")
+"(1.23e004)"
+
+>> Text(0,"(0.00e-0#);##;(0.00e-000###)")
+"(0.00e0000)"
+
+>> Text(12345.34567,"(0.00e-0#);(0.00e-00##)")
+"(1.23e04)"
+
+>> Text(-12345.34567,"(0.00e-0#);(0.00e-00##)")
+"(1.23e004)"
+
+>> Text(0,"(0.00e-0#);(0.00e-00##);(0.00e-000###)")
+"(0.00e0000)"
+
+>> Text(12345.34567,"##;(0.00e-###0##0##)")
+"12345"
+
+>> Text(-12345.34567,"##;(0.00e-###0##0##)")
+"(1.23e004)"
+
+>> Text(0,"(0.00e-0#);##;(0.00e-#####0####0####0###)")
+"(0.00e0000)"
+
+>> Text(12345.34567,"(0.00e-####0####);(0.00e-####0####0##)")
+"(1.23e04)"
+
+>> Text(-12345.34567,"(0.00e-####0######);(0.00e-####0####0##)")
+"(1.23e004)"
+
+>> Text(0,"(0.00e-0#);(0.00e-0####0##);(0.00e-####0#####0####0###)")
+"(0.00e0000)"
+
+>> Text(12345.34567,"0.00E+#####0###0####\#")
+"1.23E+004#"
+
+>> Text(12345.34567,"0.00E+00####\#")
+"1.23E+004#"
+
+>> Text(12345.34567,"0.00E+####0####0\#")
+"1.23E+04#"
+
+>> Text(12345.34567,"0.00E+#####0###0####\k")
+"1.23E+004k"
+
+>> Text(12345.34567,"0.00E+00####\k")
+"1.23E+004k"
+
+>> Text(12345.34567,"0.00E+####0####0\k")
+"1.23E+04k"
+
+>> Text(12345.34567,"0.00E+#####0###0####""k""")
+"1.23E+004k"
+
+>> Text(12345.34567,"0.00E+00####""k""")
+"1.23E+004k"
+
+>> Text(12345.34567,"0.00E+####0####0""k""")
+"1.23E+04k"

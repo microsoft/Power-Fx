@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Eine Tabelle, der Spalten hinzugefügt werden sollen.</value>
+    <value>Eine Tabelle oder ein Datensatz, dem Spalten hinzugefügt werden sollen.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Ein Tabellenwert, aus dem Spalten entfernt werden.</value>
+    <value>Ein Tabellen- oder Datensatzwert, aus dem Spalten entfernt werden sollen.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Der Name einer zu entfernenden Spalte.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Gibt eine Kopie der angegebenen Quelltabelle "Quelle" zurück, in der die Spalte "alte_Spalte" in "neue_Spalte" umbenannt wurde.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>Quelle</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>alte_Spalte</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>neue_Spalte</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Ein zu verarbeitender Tabellenwert.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Der Name einer umzubenennenden Spalte.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Der neue Name für die Spalte.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Gibt die Zeilen aus der Tabelle zurück, für die alle angegebenen Bedingungen WAHR sind.</value>
@@ -2275,6 +2304,10 @@
     <value>Ein Feld mit dem Namen „{0}“ wurde mehrfach angegeben.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Die angegebene Spalte "{0}" kann nicht zweimal umbenannt werden.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Eine Spalte mit dem Namen „{0}“ wurde mehrfach angegeben.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Ein Tabellenwert, aus dem Spalten entfernt werden.</value>
+    <value>Ein Tabellen- oder Datensatzwert, aus dem Spalten entfernt werden sollen.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Der Name einer beizubehaltenden Spalte.</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Typkonflikt zwischen Quell- und Zieltypen. Erwartet: {0}; Gefunden: {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Hiermit wird eine JSON-Textzeichenfolge für eine Tabelle, einen Datensatz oder einen Wert generiert.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>Daten</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Die Datenstruktur, die in JSON konvertiert werden soll. Es werden Tabellen, Datensätze und primitive Werte unterstützt, beliebig geschachtelt.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>Format</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Das in der JSON-Konvertierung zu verwendende Format. Der Wert ist ein Member der JSONFormat-Enumeration.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Ist diese Option aktiviert, werden Informationen in Application Insights protokolliert und Protokolle in einer Test Studio-Sitzung erstellt, die in den Testergebnissen zur Verfügung stehen.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>Nachricht</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>Schweregrad</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>Nachverfolgungsoptionen</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Die nachzuverfolgenden Informationen.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Der Schweregrad, der in Application Insights nachverfolgt werden soll.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Ein Datensatz mit benutzerdefinierten Daten, die in Application Insights nachverfolgt werden.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Zusätzliche Optionen für die Trace-Funktion.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Der Parameter "{1}" für die Funktion "{0}" muss ein konstanter Wert sein.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Die JSONFormat-Werte "{0}" und "{1}" können nicht zusammen verwendet werden.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Der an die JSON-Funktion übergebene Wert enthält Medien und wird standardmäßig nicht unterstützt. Um die JSON-Serialisierung von Medienwerten zuzulassen, stellen Sie sicher, dass Sie die Option "IncludeBinaryData" im Parameter "format" verwenden.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Die JSON-Funktion kann keine Objekte vom Typ "{0}" serialisieren.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Die JSON-Funktion kann keine Tabellen/Objekte mit einer geschachtelten Eigenschaft "{0}" des Typs "{1}" serialisieren.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Die JSON-Funktion kann binäre Daten in einem Ausdruck, der kein Verhalten ausdrückt, nicht serialisieren.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Der Parameter "{0}" enthält eine Eigenschaft vom Typ "{1}". Dies wird nicht unterstützt.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Die angegebene Spalte ist schreibgeschützt und kann nicht geändert werden: {0}.</value>
     
   </data>
 </root>

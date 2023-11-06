@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Tabela, v katero bodo dodani stolpci.</value>
+    <value>Tabela ali zapis, kamor bodo dodani stolpci.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Vrednost tabele, iz katere je treba odstraniti stolpce.</value>
+    <value>Vrednost tabele ali zapisa, iz katere bodo odstranjeni stolpci.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Ime stolpca, ki ga je treba odstraniti.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Vrne kopijo določene tabele argumenta »vir«, v kateri je stolpec »stari_stolpec« preimenovan v »novi_stolpec«.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>vir</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>stari_stolpec</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>nov_stolpec</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Vrednost tabele za obdelavo.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Ime stolpca, ki ga je treba preimenovati.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Novo ime stolpca.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Vrne tiste vrstice table, za katere so izpolnjeni vsi določeni pogoji.</value>
@@ -2275,6 +2304,10 @@
     <value>Polje z imenom »{0}« je bilo navedeno več kot enkrat v tem zapisu.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Navedenega stolpca »{0}« ni mogoče preimenovati dvakrat.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Ime stolpca »{0}« je bilo navedeno več kot enkrat.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Vrednost tabele, iz katere je treba odstraniti stolpce.</value>
+    <value>Vrednost tabele ali zapisa, iz katere bodo odstranjeni stolpci.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Ime stolpca, ki ga je treba obdržati.</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Neujemanje vrste med izvornimi in ciljnimi vrstami. Pričakovano: {0}; najdeno: {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Ustvari besedilni niz JSON za tabelo, zapis ali vrednost.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>podatki</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Struktura podatkov, ki bo pretvorjena v JSON. Tabele, zapisi in primitivne vrednosti so podprte in poljubno ugnezdene.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>oblika zapisa</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Oblika, ki bo uporabljena v pretvorbi JSON. Vrednost bo član oštevilčenja JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Beleži podatke v funkcijo Application Insights, če je omogočena, in se prijavi v sejo Test Studio, ki bo na voljo v rezultatih preskusa.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>sporočilo</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>resnost</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>zapis_po_meri</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>možnosti funkcije sledenja</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Informacije, ki jim želite slediti.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Raven resnosti, ki ji želite slediti v funkciji Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Zapis, v katerem so podatki po meri, ki bodo sledeni s funkcijo Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Dodatne možnosti za funkcijo sledenja »Trace«.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Parameter »{1}« v funkciji {0} mora biti konstantna vrednost.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Vrednosti JSONFormat »{0}« in »{1}« ni mogoče uporabiti skupaj.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Vrednost, ki je posredovana funkciji JSON, vsebuje predstavnost in ni privzeto podprta. Če želite dovoliti serializacijo vrednosti predstavnosti JSON, morate v parametru »format« uporabiti možnost »IncludeBinaryData«.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Funkcija JSON ne more serializirati predmetov vrste »{0}«.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Funkcija JSON ne more serializirati tabel/predmetov z ugnezdeno lastnostjo vrste »{1}«, imenovano »{0}«.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Funkcija JSON ne more serializirati binarnih podatkov v izrazu, ki ni povezan z vedenjem.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parameter {0} vsebuje lastnost vrste {1}, ki ni podprta.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Navedeni stolpec je samo za branje, zato ga ni mogoče spremeniti: {0}.</value>
     
   </data>
 </root>

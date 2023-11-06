@@ -1,0 +1,2984 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Power Platform for Admins",
+    "description": "Power Platform Management Connector provides access to environment lifecycle management capabilities, DLP policy management, and other admin capabilities provided in the BAP API.",
+    "version": "1.0",
+    "x-ms-api-annotation": {
+      "status": "Production"
+    },
+    "contact": {
+      "name": "Microsoft Power Apps Support",
+      "url": "https://powerapps.microsoft.com/en-us/support/"
+    }
+  },
+  "host": "api.bap.microsoft.com",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [],
+  "produces": [],
+  "paths": {
+    "/environments": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK.",
+            "schema": {
+              "$ref": "#/definitions/ResourceArray[Environment]"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "operationId": "Get-AdminEnvironment",
+        "summary": "List Environments as Admin",
+        "description": "Returns a list of Environments.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "$skiptoken",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "The input used to get the next page of the response.",
+            "x-ms-summary": "Skip Token",
+            "x-ms-visibility": "advanced"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "type": "integer",
+            "required": false,
+            "x-ms-summary": "Page size",
+            "description": "Number of Environments in the response.",
+            "x-ms-visibility": "advanced"
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "x-ms-summary": "Expand properties",
+            "description": "Allows access to expand response properties.",
+            "x-ms-visibility": "advanced"
+          }
+        ]
+      },
+      "post": {
+        "operationId": "NewAdminEnvironment",
+        "summary": "Create Environment",
+        "description": "Creates a new Environment.",
+        "parameters": [
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "2020-05-01",
+            "description": "The date value of the API.",
+            "x-ms-summary": "API Version",
+            "x-ms-visibility": "advanced"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "default": "/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments",
+            "type": "string",
+            "description": "Environment Id to create a new environment.",
+            "x-ms-summary": "Environment Id",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "type": "string",
+                  "x-ms-summary": "Location",
+                  "description": "Region the Environment is deployed in.",
+                  "x-ms-dynamic-values": {
+                    "operationId": "ListSupportedLocations",
+                    "value-collection": "value",
+                    "value-path": "name",
+                    "value-title": "properties/displayName",
+                    "parameters": {
+                      "api-version": "2020-05-01"
+                    }
+                  }
+                },
+                "properties": {
+                  "type": "object",
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "x-ms-summary": "Display Name",
+                      "description": "Vanity name of the Environment."
+                    },
+                    "environmentSku": {
+                      "type": "string",
+                      "x-ms-summary": "Environment Sku",
+                      "description": "Type of Environment.",
+                      "enum": [
+                        "Production",
+                        "Sandbox",
+                        "Trial"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "displayName",
+                    "environmentSku"
+                  ]
+                }
+              },
+              "required": [
+                "location",
+                "properties"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Environment"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      }
+    },
+    "/environments/{environment}": {
+      "get": {
+        "operationId": "GetSingleEnvironment",
+        "summary": "Get Environment as Admin",
+        "description": "Returns a single Environment as Admin.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EnvironmentParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Environment"
+            }
+          }
+        }
+      },
+      "delete": {
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "schema": {
+              "$ref": "#/definitions/Environment"
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        },
+        "operationId": "Remove-AdminEnvironment",
+        "summary": "Delete Environment",
+        "description": "Deletes an Environment.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EnvironmentParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ]
+      }
+    },
+    "/environments/{environment}/roleAssignments": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "$ref": "#/definitions/ResourceArray[RoleAssignment]"
+            }
+          }
+        },
+        "operationId": "Get-AdminEnvironmentRoleAssignment",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EnvironmentParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "summary": "List Environment Role Assignments",
+        "description": "Returns a list of permissions for an Environment without CDS for Apps."
+      }
+    },
+    "/environments/{environment}/modifyRoleAssignments": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK.",
+            "schema": {
+              "$ref": "#/definitions/RoleAssignment"
+            }
+          }
+        },
+        "operationId": "Edit-AdminEnvironmentRoleAssignment",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EnvironmentParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ManageRoleAssignment"
+            }
+          }
+        ],
+        "summary": "Edit Environment Role Assignment",
+        "description": "Sets permissions for an Environment."
+      }
+    },
+    "/apiPolicies": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK.",
+            "schema": {
+              "$ref": "#/definitions/ResourceArray[Policy]"
+            }
+          }
+        },
+        "operationId": "Get-AdminDlpPolicies",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "summary": "List DLP Policies",
+        "description": "Returns a list of all Tenant and Environment DLP Policies."
+      },
+      "post": {
+        "operationId": "NewTenantPolicy",
+        "summary": "Create Tenant DLP Policy",
+        "description": "Creates a new Tenant DLP Policy.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ManagedTenantPolicy"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Policy"
+            }
+          }
+        }
+      }
+    },
+    "/apiPolicies/{policy}": {
+      "put": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Policy"
+            }
+          }
+        },
+        "operationId": "Edit-AdminDlpPolicy",
+        "summary": "Update Tenant DLP Policy",
+        "description": "Updates the fields in a DLP Policy.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PolicyParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ManagedTenantPolicy"
+            }
+          }
+        ]
+      },
+      "get": {
+        "operationId": "GetTenantPolicy",
+        "summary": "Get Tenant DLP Policy",
+        "description": "Returns a Tenant DLP Policy.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PolicyParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Policy"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "RemoveTenantPolicy",
+        "summary": "Delete Tenant DLP Policy",
+        "description": "Deletes a Tenant DLP Policy.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PolicyParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      }
+    },
+    "/locations": {
+      "get": {
+        "operationId": "ListSupportedLocations",
+        "summary": "List Supported Locations",
+        "description": "Returns a list of Locations where BAP service is supported.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Locations"
+            }
+          }
+        }
+      }
+    },
+    "/locations/{environmentLocation}/environmentLanguages": {
+      "get": {
+        "operationId": "ListEnvironmentLanguages",
+        "summary": "List Supported Environment Languages",
+        "description": "Returns a list of supported Languages based on the location.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/LocationParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Languages"
+            }
+          }
+        }
+      }
+    },
+    "/locations/{environmentLocation}/environmentCurrencies": {
+      "get": {
+        "operationId": "ListEnvironmentCurrencies",
+        "summary": "List Supported Environment Currencies",
+        "description": "Returns a list of supported Currencies based on the location.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/LocationParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Currencies"
+            }
+          }
+        }
+      }
+    },
+    "/environments/{environment}/provisionInstance": {
+      "post": {
+        "operationId": "ProvisionInstance",
+        "summary": "Create CDS Database",
+        "description": "Creates a new CDS instance in the specified Environment.",
+        "parameters": [
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "2018-01-01",
+            "description": "The date value of the API.",
+            "x-ms-summary": "API Version",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "$ref": "#/parameters/EnvironmentParameterApiVersion20180101"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "baseLanguage": {
+                  "type": "integer",
+                  "x-ms-summary": "Base language",
+                  "description": "Any language returned from List Environment Languages."
+                },
+                "currency": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "x-ms-summary": "Currency code",
+                      "description": "Any currency code returned from List Environment Currencies."
+                    }
+                  }
+                },
+                "templates": {
+                  "type": "array",
+                  "x-ms-summary": "Templates",
+                  "description": "Validated list of CRM templates to pass to the provision call.",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "schema": {
+              "$ref": "#/definitions/Environment"
+            }
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Environment"
+            }
+          }
+        }
+      }
+    },
+    "/environments/{environment}/provisionOperations/{operationName}": {
+      "get": {
+        "operationId": "GetProvisionOperation",
+        "summary": "Get CDS Provisioning Status",
+        "description": "Used to check the status of a provisioning operation.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EnvironmentParameter"
+          },
+          {
+            "name": "operationName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Operation.",
+            "x-ms-summary": "Operation"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "500": {
+            "description": "InternalServerError"
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.BusinessAppPlatform/environments/{environment}/provisionOperations/{operationName}": {
+      "get": {
+        "operationId": "GetProvisionOperationV2",
+        "summary": "Get database provisioning status",
+        "description": "Used to check the status of a provisioning operation.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EnvironmentParameter"
+          },
+          {
+            "name": "operationName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the operation. This entire URI will be returned as the Location header from /provisionInstance, and will include this value. ",
+            "x-ms-summary": "Operation"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "500": {
+            "description": "InternalServerError"
+          }
+        }
+      }
+    },
+
+    "/scopes/admin/environments/{environment}/operations/{operationName}": {
+      "get": {
+        "operationId": "GetEnvironmentOperation",
+        "summary": "Get Environment Operation Status",
+        "description": "Used to check the status of an environment operation, sucn as deletion.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EnvironmentParameter"
+          },
+          {
+            "name": "operationName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Name of the Operation.",
+            "x-ms-summary": "Operation"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "500": {
+            "description": "InternalServerError"
+          }
+        },
+        "x-ms-api-annotation": {
+          "status": "Preview",
+          "family": "GetEnvironmentOperation",
+          "revision": 1
+        }
+      }
+    },
+    "/environments/{environment}/addUser": {
+      "post": {
+        "operationId": "Add-AdminPowerAppsSyncUser",
+        "summary": "Force Sync user",
+        "description": "Used to sync PowerApps user to CRM.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EnvironmentParameterApiVersion20190501"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserIdentity"
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2019-05-01",
+            "description": "The date value of the API.",
+            "x-ms-summary": "API Version",
+            "x-ms-visibility": "advanced"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "InternalServerError"
+          }
+        }
+      }
+    },
+    "/environments/{environment}/validateDelete": {
+      "post": {
+        "operationId": "ValidateDelete",
+        "summary": "Validate Environment Delete",
+        "description": "Used to check if an Environment can be deleted.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EnvironmentParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ValidateDeleteResponse"
+            }
+          }
+        }
+      }
+    },
+    "/environments/{environment}/apiPolicies": {
+      "post": {
+        "operationId": "NewEnvironmentPolicy",
+        "summary": "Create Environment DLP Policy",
+        "description": "Creates an Environment DLP Policy.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/EnvironmentParameter"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ManagedEnvironmentPolicy"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Policy"
+            }
+          }
+        }
+      }
+    },
+    "/environments/{environment}/apiPolicies/{policy}": {
+      "get": {
+        "operationId": "GetEnvironmentPolicy",
+        "summary": "Get Environment DLP Policy",
+        "description": "Returns an Environment DLP Policy.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EnvironmentParameter"
+          },
+          {
+            "$ref": "#/parameters/PolicyParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Policy"
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "EditEnvironmentPolicy",
+        "summary": "Update Environment DLP Policy",
+        "description": "Updates an Environment DLP Policy.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EnvironmentParameter"
+          },
+          {
+            "$ref": "#/parameters/PolicyParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ManagedEnvironmentPolicy"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Policy"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "RemoveEnvironmentPolicy",
+        "summary": "Delete Environment DLP Policy",
+        "description": "Deletes an Environment DLP Policy.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EnvironmentParameter"
+          },
+          {
+            "$ref": "#/parameters/PolicyParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      }
+    },
+    "/providers/PowerPlatform.Governance/v1/policies": {
+      "get": {
+        "operationId": "ListPoliciesV2",
+        "summary": "List DLP Policies V2",
+        "description": "Returns an list of all DLP policies the account can access.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResourceArray[PolicyV2]"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "CreatePolicyV2",
+        "summary": "Create DLP Policy V2",
+        "description": "Creates a new DLP policy.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ManagedPolicyV2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PolicyV2"
+            }
+          }
+        }
+      }
+    },
+    "/providers/PowerPlatform.Governance/v1/policies/{policy}": {
+      "get": {
+        "operationId": "GetPolicyV2",
+        "summary": "Get DLP Policy V2",
+        "description": "Returns a DLP Policy.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PolicyParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PolicyV2"
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "UpdatePolicyV2",
+        "summary": "Update DLP Policy V2",
+        "description": "Updates a DLP Policy.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PolicyParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ManagedPolicyV2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PolicyV2"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DeletePolicyV2",
+        "summary": "Delete DLP Policy V2",
+        "description": "Deletes a DLP Policy.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PolicyParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.BusinessAppPlatform/environments/{environment}": {
+      "patch": {
+        "operationId": "UpdateEnvironment",
+        "summary": "Update Environment",
+        "description": "Updates properties of an environment.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EnvironmentParameter"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2020-10-01",
+            "description": "The date value of the API.",
+            "x-ms-summary": "API Version",
+            "x-ms-visibility": "advanced"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "properties": {
+                  "type": "object",
+                  "properties": {
+                    "description": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "linkedEnvironmentMetadata": {
+                      "type": "object",
+                      "properties": {
+                        "securityGroupId": {
+                          "type": "string",
+                          "x-ms-visibility": "advanced"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/providers/Microsoft.BusinessAppPlatform/lifecycleOperations/{lifecycleOperationId}": {
+      "get": {
+        "operationId": "GetLifecycleOperationStatus",
+        "summary": "Get Lifecycle Operation Status",
+        "description": "Returns the current status of the lifecycle operation that occurs after an environment patch.",
+        "parameters": [
+          {
+            "name": "lifecycleOperationId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The Id of the lifecycle operation.",
+            "x-ms-summary": "Lifecycle Operation"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2020-10-01",
+            "description": "The date value of the API.",
+            "x-ms-summary": "API Version",
+            "x-ms-visibility": "advanced"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/providers/PowerPlatform.Governance/v1/connectors/metadata/unblockable": {
+      "get": {
+        "operationId": "ListUnblockableConnectors",
+        "summary": "List Unblockable Connectors",
+        "description": "Returns a list of connectors that cannot be blocked with a DLP policy.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "properties": {
+                      "unblockable": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "metadata"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/providers/PowerPlatform.Governance/v1/connectors/metadata/virtual": {
+      "get": {
+        "operationId": "ListVirtualConnectors",
+        "summary": "List Virtual Connectors",
+        "description": "Returns a list of virtual connectors.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "properties": {
+                      "virtualConnector": {
+                        "type": "boolean"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "iconUri": {
+                        "type": "string"
+                      },
+                      "displayName": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "metadata"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ResourceArray[Policy]": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Policy"
+          }
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "Policy": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Policy ID field.",
+          "title": "Policy ID",
+          "x-ms-summary": "Policy ID",
+          "x-ms-visibility": "advanced"
+        },
+        "type": {
+          "type": "string",
+          "description": "Policy type field.",
+          "title": "Policy Type",
+          "x-ms-summary": "Policy Type"
+        },
+        "name": {
+          "type": "string",
+          "description": "Policy name field.",
+          "title": "Policy Name",
+          "x-ms-summary": "Policy Name",
+          "x-ms-visibility": "advanced"
+        },
+        "properties": {
+          "type": "object",
+          "description": "Api Policy properties object.",
+          "properties": {
+            "displayName": {
+              "type": "string",
+              "description": "Api Policy display name.",
+              "title": "Display Name",
+              "x-ms-summary": "Display Name"
+            },
+            "createdTime": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Api Policy created time.",
+              "title": "Created time",
+              "x-ms-summary": "Created time",
+              "x-ms-visibility": "advanced"
+            },
+            "createdBy": {
+              "$ref": "#/definitions/Principal[CreatedBy]"
+            },
+            "lastModifiedTime": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Api Policy modified time.",
+              "title": "Modified time",
+              "x-ms-summary": "Modified time",
+              "x-ms-visibility": "advanced"
+            },
+            "lastModifiedBy": {
+              "$ref": "#/definitions/Principal[ModifiedBy]"
+            },
+            "definition": {
+              "type": "object",
+              "description": "Api Policy definition object.",
+              "properties": {
+                "$schema": {
+                  "$ref": "#/definitions/PolicySchema"
+                },
+                "constraints": {
+                  "type": "object",
+                  "title": "Contstraints",
+                  "x-ms-summary": "Policy contstraints",
+                  "x-ms-visibility": "advanced",
+                  "description": "Policy constraints object.",
+                  "properties": {
+                    "environmentFilter1": {
+                      "type": "object",
+                      "title": "EnvironmentFilter",
+                      "x-ms-summary": "Policy Environment filter",
+                      "x-ms-visibility": "advanced",
+                      "description": "Policy constraint environmentFilter object.",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "Policy environmentFilter type.",
+                          "title": "Type",
+                          "x-ms-summary": "Constraint type",
+                          "x-ms-visibility": "advanced"
+                        },
+                        "parameters": {
+                          "type": "object",
+                          "title": "Parameter",
+                          "x-ms-summary": "Constraint parameters",
+                          "description": "Constraints parameters object.",
+                          "x-ms-visibility": "advanced",
+                          "properties": {
+                            "environments": {
+                              "$ref": "#/definitions/PolicyEnvironments"
+                            },
+                            "filterType": {
+                              "type": "string",
+                              "description": "Api Policy constraint environmentFilter1 parameter filterType.",
+                              "title": "Filter Type",
+                              "x-ms-summary": "Environment filter type",
+                              "x-ms-visibility": "advanced"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "apiGroups": {
+                  "$ref": "#/definitions/PolicyApiGroups"
+                },
+                "defaultApiGroup": {
+                  "$ref": "#/definitions/PolicyDefaultApiGroup"
+                },
+                "rules": {
+                  "$ref": "#/definitions/PolicyRules"
+                }
+              },
+              "required": [
+                "rules"
+              ]
+            }
+          },
+          "required": [
+            "definition"
+          ]
+        }
+      },
+      "required": [
+        "properties"
+      ]
+    },
+    "ResourceArray[PolicyV2]": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PolicyV2"
+          }
+        }
+      }
+    },
+    "PolicyV2": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "defaultConnectorsClassification": {
+          "type": "string"
+        },
+        "connectorGroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "classification": {
+                "type": "string"
+              },
+              "connectors": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "type"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "classification",
+              "connectors"
+            ]
+          }
+        },
+        "environmentType": {
+          "type": "string"
+        },
+        "environments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "name"
+            ]
+          }
+        },
+        "createdBy": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "displayName": {
+              "type": "string"
+            }
+          }
+        },
+        "createdTime": {
+          "type": "string"
+        },
+        "lastModifiedBy": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "displayName": {
+              "type": "string"
+            }
+          }
+        },
+        "lastModifiedTime": {
+          "type": "string"
+        },
+        "isLegacySchemaVersion": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "displayName",
+        "defaultConnectorsClassification",
+        "connectorGroups",
+        "environmentType",
+        "environments",
+        "createdBy",
+        "createdTime",
+        "lastModifiedBy",
+        "lastModifiedTime",
+        "isLegacySchemaVersion"
+      ]
+    },
+    "ManagedPolicyV2": {
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "x-ms-summary": "Display name"
+        },
+        "defaultConnectorsClassification": {
+          "type": "string",
+          "x-ms-summary": "Default connectors classification",
+          "enum": [
+            "Confidential",
+            "General",
+            "Blocked"
+          ]
+        },
+        "connectorGroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "classification": {
+                "type": "string"
+              },
+              "connectors": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "type",
+                    "name"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "classification",
+              "connectors"
+            ]
+          }
+        },
+        "environmentType": {
+          "type": "string",
+          "x-ms-summary": "Policy environment type",
+          "enum": [
+            "AllEnvironments",
+            "OnlyEnvironments",
+            "ExceptEnvironments",
+            "SingleEnvironment"
+          ]
+        },
+        "environments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "name"
+            ]
+          }
+        }
+      }
+    },
+    "ResourceArray[Environment]": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Environment"
+          },
+          "description": "Environment value object array."
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The URL to get the next page of the Environments list.",
+          "title": "Next Link"
+        }
+      }
+    },
+    "Environment": {
+      "type": "object",
+      "description": "Environment object.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Environment ID field.",
+          "x-ms-summary": "ID",
+          "title": "ID"
+        },
+        "type": {
+          "type": "string",
+          "description": "Environment type field.",
+          "x-ms-summary": "Type",
+          "title": "Type"
+        },
+        "name": {
+          "type": "string",
+          "description": "Environment name field.",
+          "x-ms-summary": "Name",
+          "title": "Name"
+        },
+        "location": {
+          "type": "string",
+          "description": "Environment location field.",
+          "x-ms-summary": "Location",
+          "title": "Location"
+        },
+        "properties": {
+          "type": "object",
+          "description": "Environment properties object.",
+          "properties": {
+            "azureRegionHint": {
+              "type": "string",
+              "description": "Environment azureRegionHint field.",
+              "title": "Azure Region Hint"
+            },
+            "displayName": {
+              "type": "string",
+              "description": "Display Name of Environment.",
+              "title": "Display Name"
+            },
+            "createdTime": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Created Time of Environment.",
+              "title": "Created Time"
+            },
+            "createdBy": {
+              "$ref": "#/definitions/Principal[CreatedBy]"
+            },
+            "lastModifiedTime": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Environment lastModified date and time."
+            },
+            "lastModifiedBy": {
+              "$ref": "#/definitions/Principal[ModifiedBy]"
+            },
+            "provisioningState": {
+              "type": "string",
+              "description": "Environment provisioningState.",
+              "title": "Provisioning State"
+            },
+            "capacity": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "capacityType": {
+                    "type": "string"
+                  },
+                  "actualConsumption": {
+                    "type": "number"
+                  },
+                  "ratedConsumption": {
+                    "type": "number"
+                  },
+                  "capacityUnit": {
+                    "type": "string"
+                  },
+                  "updatedOn": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "capacityType",
+                  "actualConsumption",
+                  "ratedConsumption",
+                  "capacityUnit",
+                  "updatedOn"
+                ]
+              }
+            },
+            "addons": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "addonType": {
+                    "type": "string"
+                  },
+                  "allocated": {
+                    "type": "number"
+                  },
+                  "addonUnit": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "addonType",
+                  "allocated",
+                  "addonUnit"
+                ]
+              }
+            },
+            "creationType": {
+              "type": "string",
+              "description": "Creation Type of Environment.",
+              "title": "Creation Type"
+            },
+            "environmentSku": {
+              "type": "string",
+              "description": "Sku ID of Environment.",
+              "title": "Environment Sku"
+            },
+            "environmentType": {
+              "type": "string",
+              "description": "Type of Environment.",
+              "title": "Environment Type"
+            },
+            "isDefault": {
+              "type": "boolean",
+              "description": "Is Default Environment or not.",
+              "title": "Is Default"
+            },
+            "runtimeEndpoints": {
+              "type": "object",
+              "description": "Environment runtimeEndpoints object.",
+              "title": "Runtime Endpoints",
+              "properties": {
+                "microsoft.BusinessAppPlatform": {
+                  "type": "string",
+                  "description": "BusinessAppPlatform runtime endpoint.",
+                  "title": "Business App Platform"
+                },
+                "microsoft.CommonDataModel": {
+                  "type": "string",
+                  "description": "CommonDataModel runtime endpoint.",
+                  "title": "Common Data Model"
+                },
+                "microsoft.PowerApps": {
+                  "type": "string",
+                  "description": "PowerApps runtime endpoint.",
+                  "title": "PowerApps"
+                },
+                "microsoft.Flow": {
+                  "type": "string",
+                  "description": "Flow runtime endpoint.",
+                  "title": "Flow"
+                }
+              }
+            },
+            "softDeletedTime": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Environment softDeletedTime.",
+              "title": "Soft Deleted Time"
+            },
+            "linkedEnvironmentMetadata": {
+              "type": "object",
+              "description": "Environment linkedEnvironmentMetadata object.",
+              "title": "Linked Metadata",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "Environment linkedEnvironmentMetadata type.",
+                  "title": "Type"
+                },
+                "resourceId": {
+                  "type": "string",
+                  "description": "Environment linkedEnvironmentMetadata resourceId.",
+                  "title": "Resource Id"
+                },
+                "friendlyName": {
+                  "type": "string",
+                  "description": "Environment linkedEnvironmentMetadata  friendlyName.",
+                  "title": "Friendly Name"
+                },
+                "uniqueName": {
+                  "type": "string",
+                  "description": "Environment linkedEnvironmentMetadata uniqueName.",
+                  "title": "Unique Name"
+                },
+                "domainName": {
+                  "type": "string",
+                  "description": "Environment linkedEnvironmentMetadata domainName.",
+                  "title": "Domain Name"
+                },
+                "version": {
+                  "type": "string",
+                  "description": "Environment linkedEnvironmentMetadata version.",
+                  "title": "Version"
+                },
+                "instanceUrl": {
+                  "type": "string",
+                  "description": "Environment linkedEnvironmentMetadata instanceUrl.",
+                  "title": "Instance URL"
+                },
+                "instanceApiUrl": {
+                  "type": "string",
+                  "description": "Environment linkedEnvironmentMetadata instanceApiUrl.",
+                  "title": "Instance API URL"
+                },
+                "baseLanguage": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "Environment linkedEnvironmentMetadata baseLanguage.",
+                  "title": "Base Language"
+                },
+                "instanceState": {
+                  "type": "string",
+                  "description": "Environment linkedEnvironmentMetadata instanceState.",
+                  "title": "Instance State"
+                },
+                "createdTime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Environment linkedEnvironmentMetadata createdTime.",
+                  "title": "Created Time"
+                },
+                "modifiedTime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Environment linkedEnvironmentMetadata modifiedTime.",
+                  "title": "Modified Time"
+                },
+                "hostNameSuffix": {
+                  "type": "string",
+                  "description": "Environment linkedEnvironmentMetadata hostNameSuffix.",
+                  "title": "Host Name Suffix"
+                },
+                "bapSolutionId": {
+                  "type": "string",
+                  "description": "Environment linkedEnvironmentMetadata bapSolutionId.",
+                  "title": "BAP Solution Id"
+                },
+                "creationTemplates": {
+                  "type": "array",
+                  "title": "Creation Templates",
+                  "description": "Environment linkedEnvironmentMetadata creationTemplates.",
+                  "items": {
+                    "type": "string",
+                    "title": "Template"
+                  }
+                },
+                "managementPackageVersion": {
+                  "type": "string",
+                  "description": "Environment linkedEnvironmentMetadata managementPackageVersion.",
+                  "title": "Management Package Version"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ManagedEnvironmentPolicy": {
+      "type": "object",
+      "required": [
+        "type",
+        "properties"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "x-ms-summary": "Policy Type",
+          "description": "Api Policy type field.",
+          "default": "Microsoft.BusinessAppPlatform/scopes/environments/apiPolicies",
+          "x-ms-visibility": "internal"
+        },
+        "properties": {
+          "type": "object",
+          "required": [
+            "displayName",
+            "definition"
+          ],
+          "properties": {
+            "displayName": {
+              "type": "string",
+              "x-ms-summary": "Display Name",
+              "description": "Api Policy display name."
+            },
+            "definition": {
+              "type": "object",
+              "required": [
+                "$schema",
+                "constraints",
+                "apiGroups",
+                "defaultApiGroup",
+                "rules"
+              ],
+              "properties": {
+                "$schema": {
+                  "$ref": "#/definitions/PolicySchema"
+                },
+                "constraints": {
+                  "type": "object",
+                  "properties": {
+                    "environmentFilter1": {
+                      "type": "object",
+                      "required": [
+                        "type",
+                        "parameters"
+                      ],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "Api Policy environmentFilter type.",
+                          "default": "environmentFilter",
+                          "x-ms-visibility": "internal",
+                          "enum": [
+                            "environmentFilter"
+                          ]
+                        },
+                        "parameters": {
+                          "type": "object",
+                          "required": [
+                            "environments",
+                            "filterType"
+                          ],
+                          "properties": {
+                            "environments": {
+                              "$ref": "#/definitions/PolicyEnvironments"
+                            },
+                            "filterType": {
+                              "type": "string",
+                              "x-ms-summary": "Filter Type",
+                              "description": "Api Policy constraint environmentFilter1 parameter filterType.",
+                              "default": "include",
+                              "x-ms-visibility": "internal",
+                              "enum": [
+                                "include",
+                                "exclude"
+                              ],
+                              "title": "Filter Type"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "environmentFilter1"
+                  ]
+                },
+                "apiGroups": {
+                  "$ref": "#/definitions/PolicyApiGroups"
+                },
+                "defaultApiGroup": {
+                  "$ref": "#/definitions/PolicyDefaultApiGroup"
+                },
+                "rules": {
+                  "$ref": "#/definitions/PolicyRules"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ManagedTenantPolicy": {
+      "type": "object",
+      "required": [
+        "type",
+        "properties"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Api Policy type field.",
+          "default": "Microsoft.BusinessAppPlatform/scopes/apiPolicies",
+          "x-ms-visibility": "internal"
+        },
+        "name": {
+          "type": "string",
+          "description": "Policy name field (optional).",
+          "x-ms-visibility": "internal",
+          "x-ms-summary": "Policy Name"
+        },
+        "id": {
+          "type": "string",
+          "description": "Api Policy type field.",
+          "x-ms-summary": "Policy ID",
+          "x-ms-visibility": "internal"
+        },
+        "properties": {
+          "type": "object",
+          "required": [
+            "displayName",
+            "definition"
+          ],
+          "properties": {
+            "displayName": {
+              "type": "string",
+              "x-ms-summary": "Display Name",
+              "description": "Api Policy display name."
+            },
+            "definition": {
+              "type": "object",
+              "required": [
+                "$schema",
+                "apiGroups",
+                "defaultApiGroup",
+                "rules"
+              ],
+              "properties": {
+                "$schema": {
+                  "$ref": "#/definitions/PolicySchema"
+                },
+                "constraints": {
+                  "type": "object",
+                  "properties": {
+                    "environmentFilter1": {
+                      "type": "object",
+                      "x-ms-summary": "Environment Filter",
+                      "required": [
+                        "type"
+                      ],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "x-ms-summary": "Constraint Type",
+                          "description": "Policy constraint type, leave blank to apply policy to all Environments.",
+                          "x-ms-visibility": "advanced",
+                          "enum": [
+                            "environmentFilter"
+                          ]
+                        },
+                        "parameters": {
+                          "type": "object",
+                          "required": [
+                            "environments",
+                            "filterType"
+                          ],
+                          "properties": {
+                            "environments": {
+                              "$ref": "#/definitions/PolicyEnvironments"
+                            },
+                            "filterType": {
+                              "type": "string",
+                              "x-ms-summary": "Environment Filter Type",
+                              "description": "Api Policy constraint environmentFilter1 parameter filterType.",
+                              "x-ms-visibility": "advanced",
+                              "enum": [
+                                "include",
+                                "exclude"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "apiGroups": {
+                  "$ref": "#/definitions/PolicyApiGroups"
+                },
+                "defaultApiGroup": {
+                  "$ref": "#/definitions/PolicyDefaultApiGroup"
+                },
+                "rules": {
+                  "$ref": "#/definitions/PolicyRules"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "PolicyEnvironments": {
+      "type": "array",
+      "title": "Environments",
+      "x-ms-summary": "Environments",
+      "description": "Policy Environment.",
+      "items": {
+        "type": "object",
+        "title": "Environment",
+        "x-ms-summary": "Environment",
+        "required": [
+          "name",
+          "id",
+          "type"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "x-ms-summary": "Name",
+            "title": "Name",
+            "description": "Policy Environment name field."
+          },
+          "id": {
+            "type": "string",
+            "x-ms-summary": "ID",
+            "title": "ID",
+            "description": "Policy Environment ID field."
+          },
+          "type": {
+            "type": "string",
+            "x-ms-summary": "Type",
+            "title": "Type",
+            "description": "Policy Environment type field."
+          }
+        }
+      }
+    },
+    "PolicyRules": {
+      "type": "object",
+      "description": "Policy rules object.",
+      "properties": {
+        "dataFlowRule": {
+          "type": "object",
+          "required": [
+            "type",
+            "actions",
+            "parameters"
+          ],
+          "description": "Policy rule dataFlowRule object.",
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "Policy rule dataFlowRule type.",
+              "default": "DataFlowRestriction",
+              "x-ms-visibility": "internal"
+            },
+            "parameters": {
+              "type": "object",
+              "required": [
+                "sourceApiGroup",
+                "destinationApiGroup"
+              ],
+              "properties": {
+                "sourceApiGroup": {
+                  "type": "string",
+                  "description": "Policy rule dataFlowRule parameter sourceApiGroup.",
+                  "default": "hbi",
+                  "x-ms-visibility": "internal"
+                },
+                "destinationApiGroup": {
+                  "type": "string",
+                  "description": "Policy rule dataFlowRule parameter destinationApiGroup.",
+                  "default": "lbi",
+                  "x-ms-visibility": "internal"
+                }
+              },
+              "description": "Api Policy rule dataFlowRule parameters object."
+            },
+            "actions": {
+              "type": "object",
+              "required": [
+                "blockAction"
+              ],
+              "description": "Policy rule dataFlowRule actions object.",
+              "properties": {
+                "blockAction": {
+                  "type": "object",
+                  "required": [
+                    "type"
+                  ],
+                  "description": "Policy rule dataFlowRule action blockAction object.",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "Policy rule dataFlowRule action blockAction type.",
+                      "default": "Block",
+                      "x-ms-visibility": "internal",
+                      "title": "Block Action type"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "apiGroupRule": {
+          "type": "object",
+          "required": [
+            "type",
+            "actions",
+            "parameters"
+          ],
+          "description": "Policy rule apiGroupRule object.",
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "Policy rule apiGroupRule type.",
+              "default": "ApiGroupRestriction"
+            },
+            "parameters": {
+              "type": "object",
+              "required": [
+                "apiGroup"
+              ],
+              "properties": {
+                "apiGroup": {
+                  "type": "string",
+                  "description": "Policy rule apiGroupRule parameter apiGroup.",
+                  "default": "lbi"
+                }
+              },
+              "description": "Api Policy rule apiGroupRule parameters object."
+            },
+            "actions": {
+              "type": "object",
+              "required": [
+                "blockAction"
+              ],
+              "description": "Policy rule apiGroupRule actions object.",
+              "properties": {
+                "blockAction": {
+                  "type": "object",
+                  "required": [
+                    "type"
+                  ],
+                  "description": "Policy rule apiGroupRule action blockAction object.",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "x-ms-summary": "Block Action Type",
+                      "description": "Block action type, leave blank if adding a block is not desired.",
+                      "x-ms-visibility": "advanced",
+                      "enum": [
+                        "Block"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "dataFlowRule"
+      ]
+    },
+    "PolicySchema": {
+      "type": "string",
+      "x-ms-summary": "Schema Version",
+      "description": "Api Policy definition $schema.",
+      "default": "https://schema.management.azure.com/providers/Microsoft.BusinessAppPlatform/schemas/2016-10-01-preview/apiPolicyDefinition.json#",
+      "x-ms-visibility": "advanced",
+      "enum": [
+        "https://schema.management.azure.com/providers/Microsoft.BusinessAppPlatform/schemas/2016-10-01-preview/apiPolicyDefinition.json#",
+        "https://schema.management.azure.com/providers/Microsoft.BusinessAppPlatform/schemas/2018-11-01/apiPolicyDefinition.json#"
+      ]
+    },
+    "PolicyConnector": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "API ID field."
+        },
+        "name": {
+          "type": "string",
+          "description": "API name field."
+        },
+        "type": {
+          "type": "string",
+          "description": "API type field."
+        }
+      }
+    },
+    "PolicyApiGroups": {
+      "type": "object",
+      "required": [
+        "hbi",
+        "lbi"
+      ],
+      "properties": {
+        "hbi": {
+          "$ref": "#/definitions/PolicyHbi"
+        },
+        "lbi": {
+          "$ref": "#/definitions/PolicyLbi"
+        }
+      }
+    },
+    "PolicyHbi": {
+      "type": "object",
+      "description": "Policy Hbi group.",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Policy business data group description.",
+          "x-ms-summary": "Business Data description",
+          "title": "Business Data description",
+          "default": "Business Data Only",
+          "x-ms-visibility": "advanced"
+        },
+        "apis": {
+          "type": "array",
+          "x-ms-summary": "Business Data",
+          "description": "Business Data APIs.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "x-ms-summary": "Connector ID",
+                "description": "Business Data connector ID field."
+              },
+              "name": {
+                "type": "string",
+                "x-ms-summary": "Connector Name",
+                "description": "Business Data connector name field."
+              },
+              "type": {
+                "type": "string",
+                "x-ms-summary": "Connector Type",
+                "description": "Business Data connector type field."
+              }
+            }
+          }
+        }
+      }
+    },
+    "PolicyLbi": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Policy non business data group description.",
+          "default": "Non Business Data Only",
+          "x-ms-visibility": "advanced",
+          "title": "Non Business Data description"
+        },
+        "apis": {
+          "type": "array",
+          "description": "Non Business Data APIs.",
+          "x-ms-summary": "Non Business Data",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "x-ms-summary": "Connector ID",
+                "description": "Non Business Data connector ID field."
+              },
+              "name": {
+                "type": "string",
+                "x-ms-summary": "Connector Name",
+                "description": "Non Business Data connector name field."
+              },
+              "type": {
+                "type": "string",
+                "x-ms-summary": "Connector Type",
+                "description": "Non Business Data connector type field."
+              }
+            }
+          }
+        }
+      }
+    },
+    "PolicyDefaultApiGroup": {
+      "type": "string",
+      "x-ms-summary": "Default Group",
+      "description": "Group a new connector is automatically added to.",
+      "default": "lbi",
+      "x-ms-visibility": "advanced",
+      "enum": [
+        "hbi",
+        "lbi"
+      ]
+    },
+    "ValidateDeleteResponse": {
+      "type": "object",
+      "properties": {
+        "canInitiateDelete": {
+          "type": "boolean",
+          "description": "Environment can be deleted.",
+          "x-ms-summary": "Can Delete",
+          "title": "Can Delete"
+        },
+        "errors": {
+          "type": "array",
+          "description": "Errors array",
+          "x-ms-summary": "Errors",
+          "title": "Errors array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "object",
+                "description": "Error object.",
+                "x-ms-summary": "Error",
+                "title": "Error",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "description": "Error code for validate delete.",
+                    "x-ms-summary": "Error code",
+                    "title": "Code"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Error message.",
+                    "x-ms-summary": "Error message",
+                    "title": "Message"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "resourcesToBeDeleted": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "Resource to be deleted.",
+            "x-ms-summary": "Resource",
+            "title": "Resource",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Resource to be deleted ID.",
+                "x-ms-summary": "Resource ID",
+                "title": "ID"
+              },
+              "name": {
+                "type": "string",
+                "description": "Resource to be deleted name.",
+                "x-ms-summary": "Resource Name",
+                "title": "Name"
+              },
+              "type": {
+                "type": "string",
+                "description": "Resource to be deleted type.",
+                "x-ms-summary": "Resource Type",
+                "title": "Type"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ResourceArray[RoleAssignment]": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Environment Role Assignment ID field."
+              },
+              "type": {
+                "type": "string",
+                "description": "Environment Role Assignment type field."
+              },
+              "name": {
+                "type": "string",
+                "description": "Environment Role Assignment field name."
+              },
+              "properties": {
+                "type": "object",
+                "properties": {
+                  "scope": {
+                    "type": "string",
+                    "description": "Environment Role Assignment scope."
+                  },
+                  "roleDefinition": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Environment Role Assignment roleDefinition ID field."
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "Environment Role Assignment roleDefinition type field."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Environment Role Assignment roleDefinition field name."
+                      }
+                    },
+                    "description": "Environment Role Assignment roleDefinition object."
+                  },
+                  "principal": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Environment Role Assignment principal object ID."
+                      },
+                      "displayName": {
+                        "type": "string",
+                        "description": "Environment Role Assignment principal displayName."
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "Environment Role Assignment principal email."
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "Environment Role Assignment principal type."
+                      }
+                    },
+                    "description": "Environment Role Assignment principal object."
+                  }
+                },
+                "description": "Environment Role Assignment properties object."
+              }
+            }
+          },
+          "description": "Environment Role Assignment value object array."
+        }
+      }
+    },
+    "RoleAssignment": {
+      "type": "object",
+      "properties": {
+        "add": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "roleAssignment": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Environment Role Assignment roleAssignment ID field."
+                  },
+                  "type": {
+                    "type": "string",
+                    "description": "Environment Role Assignment roleAssignment type field."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Environment Role Assignment roleAssignment name field."
+                  },
+                  "properties": {
+                    "type": "object",
+                    "properties": {
+                      "scope": {
+                        "type": "string",
+                        "description": "Environment Role Assignment scope."
+                      },
+                      "roleDefinition": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Environment Role Assignment roleDefinition ID field."
+                          },
+                          "type": {
+                            "type": "string",
+                            "description": "Environment Role Assignment roleDefinition ID field."
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Environment Role Assignment roleDefinition name field."
+                          }
+                        },
+                        "description": "Environment Role Assignment roleDefinition object."
+                      },
+                      "principal": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Environment Role Assignment principal object ID."
+                          },
+                          "displayName": {
+                            "type": "string",
+                            "description": "Environment Role Assignment principal displayName."
+                          },
+                          "email": {
+                            "type": "string",
+                            "description": "Environment Role Assignment principal email."
+                          },
+                          "type": {
+                            "type": "string",
+                            "description": "Environment Role Assignment principal type."
+                          }
+                        },
+                        "description": "Environment Role Assignment principal object."
+                      }
+                    },
+                    "description": "Environment Role Assignment roleAssignment properties object."
+                  }
+                },
+                "description": "Environment Role Assignment roleAssignment object."
+              },
+              "httpStatus": {
+                "type": "string",
+                "description": "Environment Role Assignment httpStatus."
+              }
+            }
+          },
+          "description": "Environment Role Assignment add object."
+        }
+      }
+    },
+    "ManageRoleAssignment": {
+      "type": "object",
+      "properties": {
+        "add": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "properties": {
+                "type": "object",
+                "properties": {
+                  "principal": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "description": "The principal email of the user.",
+                        "title": "Principal Email"
+                      },
+                      "tenantId": {
+                        "type": "string",
+                        "description": "The principal tenant ID of the user.",
+                        "title": "Principal Tenant ID"
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "The principal object ID of the user.",
+                        "title": "Principal Object ID"
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "The principal type of the user.",
+                        "title": "Principal Type"
+                      }
+                    },
+                    "description": "principal"
+                  },
+                  "roleDefinition": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The role definition ID. Format: /providers/Microsoft.BusinessAppPlatform/scopes/admin/environments/{environment}/{roleName}.",
+                        "title": "Role Definition ID"
+                      }
+                    },
+                    "description": "roleDefinition."
+                  }
+                },
+                "description": "properties."
+              }
+            }
+          },
+          "description": "add."
+        },
+        "remove": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The id field."
+              }
+            }
+          },
+          "description": "remove."
+        }
+      }
+    },
+    "Principal[ModifiedBy]": {
+      "type": "object",
+      "title": "Modified by",
+      "x-ms-summary": "Modified by",
+      "x-ms-visibility": "advanced",
+      "description": "Policy modified by principal object.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Modified by principal object ID.",
+          "title": "ID",
+          "x-ms-summary": "Modified by ID",
+          "x-ms-visibility": "advanced"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Modified by principal displayName.",
+          "title": "Display name",
+          "x-ms-summary": "Modified by display name",
+          "x-ms-visibility": "advanced"
+        },
+        "email": {
+          "type": "string",
+          "description": "Modified by principal.",
+          "title": "Email",
+          "x-ms-summary": "Modified by email",
+          "x-ms-visibility": "advanced"
+        },
+        "type": {
+          "type": "string",
+          "description": "Modified by principal type.",
+          "title": "Type",
+          "x-ms-summary": "Modified by type",
+          "x-ms-visibility": "advanced"
+        },
+        "tenantId": {
+          "type": "string",
+          "description": "Modified by principal tenant ID.",
+          "title": "Tenant ID",
+          "x-ms-summary": "Modified by tenant ID",
+          "x-ms-visibility": "advanced"
+        },
+        "userPrincipalName": {
+          "type": "string",
+          "description": "Modified by userPrincipalName.",
+          "title": "UPN",
+          "x-ms-summary": "Modified by UPN",
+          "x-ms-visibility": "advanced"
+        }
+      }
+    },
+    "Principal[CreatedBy]": {
+      "type": "object",
+      "title": "Created by",
+      "x-ms-summary": "Created by",
+      "x-ms-visibility": "advanced",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Api Policy creator principal object ID.",
+          "title": "ID",
+          "x-ms-summary": "Created by user ID",
+          "x-ms-visibility": "advanced"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Api Policy creator principal displayName.",
+          "title": "Display name",
+          "x-ms-summary": "Created by display name",
+          "x-ms-visibility": "advanced"
+        },
+        "email": {
+          "type": "string",
+          "description": "Api Policy creator principal email.",
+          "title": "Email",
+          "x-ms-summary": "Created by email",
+          "x-ms-visibility": "advanced"
+        },
+        "type": {
+          "type": "string",
+          "description": "Api Policy creator principal type.",
+          "title": "Type",
+          "x-ms-summary": "Created by type",
+          "x-ms-visibility": "advanced"
+        },
+        "tenantId": {
+          "type": "string",
+          "description": "Api Policy creator principal tenant ID.",
+          "title": "Tenant ID",
+          "x-ms-summary": "Created by tenant ID",
+          "x-ms-visibility": "advanced"
+        },
+        "userPrincipalName": {
+          "type": "string",
+          "description": "Api Policy creator userPrincipalName.",
+          "title": "UPN",
+          "x-ms-summary": "Created by UPN",
+          "x-ms-visibility": "advanced"
+        }
+      },
+      "description": "Policy created by principal object."
+    },
+    "Locations": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "Location object.",
+            "title": "Location",
+            "x-ms-summary": "Location",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Location ID.",
+                "title": "ID",
+                "x-ms-summary": "Location ID"
+              },
+              "name": {
+                "type": "string",
+                "description": "Location Name.",
+                "title": "Name",
+                "x-ms-summary": "Location Name"
+              },
+              "properties": {
+                "type": "object",
+                "properties": {
+                  "displayName": {
+                    "type": "string",
+                    "description": "Location display name.",
+                    "title": "Display Name",
+                    "x-ms-summary": "Display Name"
+                  },
+                  "isDefault": {
+                    "type": "boolean",
+                    "description": "Is the default location.",
+                    "title": "Is Default",
+                    "x-ms-summary": "Is Default"
+                  },
+                  "isDisabled": {
+                    "type": "boolean",
+                    "description": "Location is Disabled.",
+                    "title": "Is Disabled",
+                    "x-ms-summary": "Is Disabled"
+                  }
+                }
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "properties"
+            ]
+          }
+        }
+      }
+    },
+    "Currencies": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Currency ID.",
+                "title": "ID",
+                "x-ms-summary": "Currency ID"
+              },
+              "name": {
+                "type": "string",
+                "description": "Currency name.",
+                "title": "Name",
+                "x-ms-summary": "Currency name"
+              },
+              "properties": {
+                "type": "object",
+                "properties": {
+                  "localeId": {
+                    "type": "integer",
+                    "description": "Locale ID of the currency.",
+                    "title": "Locale ID",
+                    "x-ms-summary": "Locale ID"
+                  },
+                  "localizedName": {
+                    "type": "string",
+                    "description": "Localized name of the currency.",
+                    "title": "Localized Name",
+                    "x-ms-summary": "Localized Name"
+                  },
+                  "displayName": {
+                    "type": "string",
+                    "description": "Currency display name.",
+                    "title": "Display Name",
+                    "x-ms-summary": "Display Name"
+                  }
+                }
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "properties"
+            ]
+          }
+        }
+      }
+    },
+    "Languages": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "Language object.",
+            "title": "Language",
+            "x-ms-summary": "Language",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Language name field.",
+                "title": "Name",
+                "x-ms-summary": "Language Name"
+              },
+              "id": {
+                "type": "string",
+                "description": "Language ID field.",
+                "title": "ID",
+                "x-ms-summary": "Language ID"
+              },
+              "type": {
+                "type": "string",
+                "description": "Language type field.",
+                "title": "Type",
+                "x-ms-summary": "Language Type"
+              },
+              "properties": {
+                "type": "object",
+                "properties": {
+                  "localeId": {
+                    "type": "integer",
+                    "description": "Language locale ID field.",
+                    "title": "Locale ID",
+                    "x-ms-summary": "Locale ID"
+                  },
+                  "localizedName": {
+                    "type": "string",
+                    "description": "Language localized name field.",
+                    "title": "Localized Name",
+                    "x-ms-summary": "Localized Name"
+                  },
+                  "displayName": {
+                    "type": "string",
+                    "description": "Language display name field.",
+                    "title": "Display Name",
+                    "x-ms-summary": "Language Display Name"
+                  },
+                  "isTenantDefault": {
+                    "type": "boolean",
+                    "description": "Language is tenant default field.",
+                    "title": "Is Tenant Default",
+                    "x-ms-summary": "Is Tenant Default"
+                  }
+                }
+              }
+            },
+            "required": [
+              "name",
+              "id",
+              "type",
+              "properties"
+            ]
+          }
+        }
+      }
+    },
+    "UserIdentity": {
+      "type": "object",
+      "required": [
+        "ObjectId"
+      ],
+      "properties": {
+        "ObjectId": {
+          "type": "string",
+          "description": "User object Id."
+        }
+      }
+    }
+  },
+  "parameters": {
+    "EnvironmentParameter": {
+      "name": "environment",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "Name of the Environment.",
+      "x-ms-summary": "Environment",
+      "x-ms-dynamic-values": {
+        "operationId": "Get-AdminEnvironment",
+        "value-collection": "value",
+        "value-path": "name",
+        "value-title": "properties/displayName",
+        "parameters": {
+          "api-version": {
+            "parameter": "api-version"
+          }
+        }
+      }
+    },
+    "EnvironmentParameterApiVersion20180101": {
+      "name": "environment",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "Name of the Environment.",
+      "x-ms-summary": "Environment",
+      "x-ms-dynamic-values": {
+        "operationId": "Get-AdminEnvironment",
+        "value-collection": "value",
+        "value-path": "name",
+        "value-title": "properties/displayName",
+        "parameters": {
+          "api-version": "2018-01-01"
+        }
+      }
+    },
+    "EnvironmentParameterApiVersion20190501": {
+      "name": "environment",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "Name of the Environment.",
+      "x-ms-summary": "Environment",
+      "x-ms-dynamic-values": {
+        "operationId": "Get-AdminEnvironment",
+        "value-collection": "value",
+        "value-path": "name",
+        "value-title": "properties/displayName",
+        "parameters": {
+          "api-version": "2019-05-01"
+        }
+      }
+    },
+    "PolicyParameter": {
+      "name": "policy",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The name field of the Policy.",
+      "x-ms-summary": "Policy",
+      "x-ms-dynamic-values": {
+        "operationId": "Get-AdminDlpPolicies",
+        "value-collection": "value",
+        "value-path": "name",
+        "value-title": "properties/displayName",
+        "parameters": {
+          "api-version": {
+            "parameter": "api-version"
+          }
+        }
+      }
+    },
+    "ApiVersionParameter": {
+      "name": "api-version",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "default": "2018-10-01",
+      "description": "The date value of the API.",
+      "x-ms-summary": "API Version",
+      "x-ms-visibility": "advanced"
+    },
+    "LocationParameter": {
+      "name": "environmentLocation",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The location of the Environment.",
+      "x-ms-summary": "Location",
+      "x-ms-dynamic-values": {
+        "operationId": "ListSupportedLocations",
+        "value-collection": "value",
+        "value-path": "name",
+        "value-title": "properties/displayName",
+        "parameters": {
+          "api-version": {
+            "parameter": "api-version"
+          }
+        }
+      }
+    }
+  },
+  "responses": {},
+  "securityDefinitions": {
+    "oauth2_auth": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://login.windows.net/common/oauth2/authorize",
+      "tokenUrl": "https://login.windows.net/common/oauth2/authorize",
+      "scopes": {}
+    }
+  },
+  "security": [
+    {
+      "oauth2_auth": []
+    }
+  ],
+  "tags": [],
+  "x-ms-connector-metadata": [
+    {
+      "propertyName": "Website",
+      "propertyValue": "https://admin.powerplatform.microsoft.com/"
+    },
+    {
+      "propertyName": "Privacy policy",
+      "propertyValue": "https://privacy.microsoft.com/en-us/privacystatement"
+    }
+  ]
+}

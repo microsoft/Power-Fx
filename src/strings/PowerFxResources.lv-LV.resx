@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Tabula, kam pievienot kolonnas.</value>
+    <value>Tabula vai ieraksts, kam pievienot kolonnas.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Tabulas vērtība, no kuras noņemt kolonnas.</value>
+    <value>Tabulas vai ieraksta vērtība, no kuras noņemt kolonnas.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Noņemamās kolonnas nosaukums.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Atgriež norādītās tabulas "source" kopiju, kur kolonna "old_column" pārdēvēta par "new_column".</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>avots</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>vecā­_kolonna</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>jauna_kolonna</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Apstrādājamā tabulas vērtība.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Pārdēvējamās kolonnas nosaukums.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Kolonnas jaunas nosaukums.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Atgriež rindas no tabulas, kurām visi norādītie nosacījumi ir patiesi.</value>
@@ -2275,6 +2304,10 @@
     <value>Lauks ar nosaukumu {0} tika norādīts vairākkārt šajā ierakstā.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Norādīto kolonnu “{0}” nevar pārdēvēt divas reizes.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Kolonna ar nosaukumu {0} tika norādīta vairākkārt.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Tabulas vērtība, no kuras noņemt kolonnas.</value>
+    <value>Tabulas vai ieraksta vērtība, no kuras noņemt kolonnas.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Saglabājamās kolonnas nosaukums.</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Avota un mērķa tipu neatbilstība. Paredzēts {0}; atrasts {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Šī funkcija ģenerē JSON teksta virkni tabulai, ierakstam vai vērtībai.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>dati</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Datu struktūra, kas jākonvertē JSON formātā. Tiek atbalstītas tabulas, ieraksti un primitīvas vērtības, un to dati tiek patvaļīgi ligzdoti.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>formāts</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON konvertēšanai izmantojamais formāts. Šī vērtība būs JSONFormat uzskaitījuma elements.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Veic informācijas reģistrēšanu līdzeklī Application Insights, ja tas ir iespējots, un Test Studio sesijā, kas būs pieejama testa rezultātos.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>ziņojums</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>nozīmīgums</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>izsekošanas_opcijas</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Izsekojamā informācija.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Nozīmīguma līmenis, kas ir jāizseko, izmantojot Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Ieraksts, kas satur pielāgotus datus, kuri tiks izsekoti, izmantojot Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Funkcijas Trace papildu opcijas.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Funkcijas “{0}” parametram “{1}” ir jābūt konstantai vērtībai.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Nevar kopā lietot JSONFormat vērtību “{0}” un “{1}”.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>JSON funkcijai norādītajā vērtībā ir iekļauts multivides saturs, un tā pēc noklusējuma netiek atbalstīta. Lai atļautu multivides vērtību JSON serializēšanu, parametrā “format” jāizmanto opcija IncludeBinaryData.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON funkcija nevar serializēt objektus, kuru tips ir “{0}”.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON funkcija nevar serializēt tabulas/objektus, kuros ir ligzdots rekvizīts ar nosaukumu “{0}” un tipu “{1}”.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON funkcija nevar serializēt bināros datus izteiksmē, kas nav uzvedības izteiksme.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parametrs {0} satur rekvizītu ar tipu {1}, kas netiek atbalstīts.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Norādītā kolonna ir tikai lasāma un to nevar modificēt: {0}.</value>
     
   </data>
 </root>

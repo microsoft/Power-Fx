@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>En tabell til å legge til kolonner i.</value>
+    <value>En tabell eller oppføring å legge til kolonner i.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>En tabellverdi det skal fjernes kolonner fra.</value>
+    <value>En tabellverdi eller oppføringsverdi det skal fjernes kolonner fra.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Navnet på en kolonne som skal fjernes.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Returnerer en kopi av den angitte kildetabellen, der kolonnen 'old_column' har endret navn til 'new_column'.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>gammel_kolonne</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>ny_kolonne</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>En tabellverdi som skal behandles.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Navnet på en kolonne som skal gis nytt navn.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Det nye navnet for kolonnen.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Returnerer radene fra tabellen der alle de angitte betingelsene er oppfylt.</value>
@@ -2275,6 +2304,10 @@
     <value>Et felt med navnet {0} ble angitt mer enn én gang i denne posten.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Den angitte kolonnen '{0}' kan ikke gis nytt navn to ganger.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>En kolonne med navnet {0} ble angitt mer enn én gang.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>En tabellverdi det skal fjernes kolonner fra.</value>
+    <value>En tabellverdi eller oppføringsverdi det skal fjernes kolonner fra.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Navnet på en kolonne som skal beholdes.</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Manglende samsvar mellom kilde- og måloppføringstyper. Forventet: {0}, fant {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Genererer en JSON-tekststreng for en tabell, oppføring eller verdi.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Datastrukturen som skal konverteres til JSON. Tabeller, oppføringer og primitive verdier støttes, vilkårlig nestet.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Formatet som skal brukes i JSON-konverteringen. Verdien blir et medlem av JSONFormat-opplistingen.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Logger informasjon til Application Insights når aktivert, og logger informasjon i en Test Studio-økt som vil være tilgjengelig i testresultatene.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>melding</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>alvorsgrad</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>egendefinert_post</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Informasjonen som skal spores.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Sikkerhetsnivået som skal spores til Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>En post som inneholder egendefinerte data som vil bli sporet til Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Tilleggsalternativer for Trace-funksjonen.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Parameteren '{1}' for funksjonen {0} må være en fast verdi.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormat-verdiene "{0}" og "{1}" kan ikke brukes sammen.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Verdien som sendes til JSON-funksjonen inneholder medier og den støttes ikke som standard. For å tillate JSON-serialisering av medieverdier, må du påse å bruke IncludeBinaryData-alternativet i parameteren format.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON-funksjonen kan ikke serialisere objekter av typen '{0}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON-funksjonen kan ikke serialisere tabeller/objekter med en nestet egenskap kalt '{0}' av typen '{1}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON-funksjonen kan ikke serialisere binære data i ikke-atferdsuttrykk.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parameteren {0} inneholder en egenskap av typen {1}, som ikke støttes.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Den angitte kolonnen er skrivebeskyttet og kan ikke endres: {0}.</value>
     
   </data>
 </root>

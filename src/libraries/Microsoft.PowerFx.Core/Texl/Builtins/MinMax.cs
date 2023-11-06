@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     for (var i = 0; i < argTypes.Length; i++)
                     {
-                        if (argTypes[i].Kind == DKind.Date && argTypes[i].CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: false))
+                        if (argTypes[i].Kind == DKind.Date && argTypes[i].CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, context.Features))
                         {
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.DateTime, allowDupes: true);
                             returnType = DType.DateTime;

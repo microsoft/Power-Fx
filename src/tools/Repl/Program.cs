@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -76,10 +77,11 @@ namespace Microsoft.PowerFx
             config.EnableJsonFunctions();
 
             config.AddFunction(new ResetFunction());
-            config.AddFunction(new ExitFunction());
             config.AddFunction(new Option0Function());
             config.AddFunction(new Option1Function());
             config.AddFunction(new Option2Function());
+            config.AddFunction(new Run1Function());
+            config.AddFunction(new Run2Function());
 
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
@@ -106,7 +108,7 @@ namespace Microsoft.PowerFx
             Console.WriteLine("Enter Excel formulas.  Use \"Help()\" for details, \"Option()\" for options.");
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
 
-            REPL();
+            REPL(Console.In, prompt: true, echo: false, printResult: true, lineNumber: null);
         }
 
         // Hook repl engine with customizations.
@@ -141,17 +143,34 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public static void REPL()
+        public static void REPL(TextReader input, bool prompt, bool echo, bool printResult, uint? lineNumber)
         {
             while (true)
             {
-                var repl = new MyRepl();
+                var repl = new MyRepl() { Echo = echo, PrintResult = printResult };
 
                 while (!_reset)
                 {
-                    repl.WritePromptAsync().Wait();
-                    var line = Console.ReadLine();
-                    repl.HandleLineAsync(line).Wait();
+                    if (prompt)
+                    {
+                        repl.WritePromptAsync().Wait();
+                    }
+
+                    var line = input.ReadLine();
+
+                    // End of file
+                    if (line == null)
+                    {
+                        return;
+                    }
+
+                    repl.HandleLineAsync(line, lineNumber: lineNumber++).Wait();
+
+                    // Exit() function called
+                    if (repl.ExitRequested)
+                    {
+                        return;
+                    }
                 }
 
                 _reset = false;
@@ -167,11 +186,43 @@ namespace Microsoft.PowerFx
             }
         }
 
-        private class ExitFunction : ReflectionFunction
+        private class Run1Function : ReflectionFunction
         {
-            public BooleanValue Execute()
+            public Run1Function()
+                : base("Run", FormulaType.Boolean, new[] { FormulaType.String })
             {
-                System.Environment.Exit(0);
+            }
+
+            public FormulaValue Execute(StringValue file)
+            {
+                var run2 = new Run2Function();
+                return run2.Execute(file, FormulaValue.New(false));
+            }
+        }
+
+        private class Run2Function : ReflectionFunction
+        {
+            public Run2Function()
+                : base("Run", FormulaType.Boolean, new[] { FormulaType.String, FormulaType.Boolean })
+            {
+            }
+
+            public FormulaValue Execute(StringValue file, BooleanValue echo)
+            {
+                try
+                {
+                    var reader = new StreamReader(file.Value);
+                    REPL(reader, prompt: false, echo: echo.Value, printResult: echo.Value, lineNumber: 1);
+                    reader.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Error: " + ex.Message);
+                    Console.ResetColor();
+                    return FormulaValue.New(false);
+                }
+
                 return FormulaValue.New(true);
             }
         }

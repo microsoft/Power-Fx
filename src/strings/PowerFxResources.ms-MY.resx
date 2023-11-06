@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Jadual untuk ditambahkan lajur.</value>
+    <value>Jadual atau rekod untuk ditambahkan lajur.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Nilai jadual untuk dialih keluar jalur.</value>
+    <value>Nilai jadual atau rekod untuk dialih keluar lajur.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Nama lajur untuk dialih keluar.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Mengembalikan satu salinan jadual 'sumber' yang ditentukan, dengan lajur 'lajur_lama' dinamakan semula kepada 'lajur_baru'.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>sumber</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>lajur_lama</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>lajur_baru</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Nilai jadual untuk diproses.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Nama lajur untuk dinamakan semula.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Nama baru untuk lajur.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Mengembalikan baris daripada jadual yang semua syarat yang ditentukan adalah benar.</value>
@@ -2275,6 +2304,10 @@
     <value>Medan bernama '{0}' telah ditentukan lebih daripada sekali dalam rekod ini.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Lajur yang ditentukan '{0}' tidak boleh dinamakan semula dua kali.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Lajur bernama '{0}' telah ditentukan lebih daripada sekali.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Nilai jadual untuk dialih keluar jalur.</value>
+    <value>Nilai jadual atau rekod untuk dialih keluar lajur.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Nama lajur untuk disimpan.</value>
@@ -5085,7 +5118,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Perisytiharan harfiah jenis tidak sah</value>
+    <value>Perisytiharan literal jenis tidak sah</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Jenis yang tidak sepadan antara jenis sumber dengan sasaran. {0} dijangkakan; {1} ditemukan.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Menjana rentetan teks JSON untuk jadual, rekod atau nilai.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Struktur data untuk ditukarkan kepada JSON. Jadual, rekod dan nilai primitif disokong, tersarang secara arbitrari.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Format yang digunakan dalam penukaran JSON. Nilainya akan menjadi ahli perhitungan JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Log maklumat kepada Application Insights apabila didayakan dan log dalam sesi Test Studio yang akan tersedia dalam hasil ujian.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>mesej</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>keterukan</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>rekod_tersuai</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Maklumat untuk dijejak.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Aras keterukan yang akan dikesan pada Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Rekod yang mengandungi data tersuai yang akan dikesan pada Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Pilihan tambahan untuk fungsi Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Parameter '{1}' untuk fungsi {0} mestilah nilai pemalar.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Nilai '{0}' dan '{1}' JSONFormat tidak boleh digunakan bersama-sama.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Nilai yang dihantar ke fungsi JSON mengandungi media dan ia tidak disokong secara lalai. Untuk membenarkan pensirian JSON untuk nilai media, pastikan untuk menggunakan opsyen parameter IncludeBinaryData dalam 'format' parameter.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Fungsi JSON tidak boleh menyirikan objek daripada jenis '{0}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Fungsi JSON tidak dapat diterbitkan sebagai jadual / objek dengan sifat bersarang yang dipanggil '{0}' daripada jenis '{1}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Fungsi JSON tidak boleh menyirikan data perduaan dalam ungkapan bukan tingkah laku.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parameter {0} mengandungi sifat jenis {1} yang tidak disokong.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Lajur yang ditentukan adalah baca sahaja dan tidak boleh diubah suai: {0}.</value>
     
   </data>
 </root>

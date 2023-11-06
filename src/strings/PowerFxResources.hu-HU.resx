@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Az a tábla, amelybe fel kell venni az értékeket.</value>
+    <value>Az a tábla vagy rekord, amelybe fel kell venni az értékeket.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Az a tábla, amelyből oszlopokat kell eltávolítani.</value>
+    <value>Az a tábla vagy rekord, amelyből oszlopokat kell eltávolítani.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Az eltávolítandó oszlop neve.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>A megadott forrástábla egy példányát adja vissza, amelyben a „régi_oszlop” át van nevezve az „új_oszlop” argumentumban megadott névre.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>forrás</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>régi_oszlop</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>új_oszlop</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Egy feldolgozandó táblaérték.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Az átnevezendő oszlop neve.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Az oszlop új neve.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Azokat a sorait adja vissza a táblázatnak, amelyekre minden megadott feltétel igaz.</value>
@@ -2275,6 +2304,10 @@
     <value>A(z) {0} mezőnév egynél többször van megadva ebben a rekordban.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>A megadott oszlop ({0}) nem nevezhető át kétszer.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>A(z) {0} nevű oszlop egynél többször van megadva.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Az a tábla, amelyből oszlopokat kell eltávolítani.</value>
+    <value>Az a tábla vagy rekord, amelyből oszlopokat kell eltávolítani.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>A megtartandó oszlop neve.</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Típuseltérés a forrás- és céltípusok között. Várt {0}; Talált {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>JSON-sztring létrehozása egy táblához, rekordhoz vagy értékhez.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>adatok</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>A JSON-ba konvertálandó adatstruktúra. A táblák, a rekordok és a primitív értékek támogatottak, önkényesen beágyazva.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>formátum</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>A JSON-átalakításban használandó formátum. Az érték a JSONFormat enumerálás tagja lesz.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Az adatok Application Insights-ba való naplózása, ha engedélyezve van, és naplózás egy Test Studio-munkamenetben, amelynek adatai elérhetők lesznek a teszteredmények között.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>üzenet</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>súlyosság</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>egyéni_rekord</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>nyomkövetési_beállítások</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>A naplózandó adatok.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Az Application Insights-ba naplózandó súlyossági szint.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Olyan egyéni adatokat tartalmazó rekord, amely az Application Insights-ba lesz naplózva.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>A Trace funkció további beállításai.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>A {0} függvény {1} paraméterének konstans értéknek kell lennie.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>A(z) {0} és a(z) {1} JSONFormat-érték nem használható együtt.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>A JSON-függvénynek átadott érték multimédiát tartalmaz, és alapértelmezés szerint nem támogatott. Ha engedélyezni szeretné a médiaértékek JSON-szerializálását, használja az IncludeBinaryData beállítást a „format” paraméterben.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>A JSON-függvény nem tudja szerializálni a(z) {0} típusú objektumokat.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>A JSON-függvény nem tudja szerializálni a(z) {1} típusú, {0} nevű beágyazott tulajdonsággal rendelkező táblákat/objektumokat.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>A JSON függvény nem tudja szerializálni a bináris adatokat nem viselkedési kifejezésben.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>A(z) {0} paraméter nem támogatott, {1} típusú tulajdonságot tartalmaz.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>A megadott oszlop írásvédett, ezért nem módosítható: {0}.</value>
     
   </data>
 </root>

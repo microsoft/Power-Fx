@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Бағандар қосылатын кесте.</value>
+    <value>Бағандар қосылатын кесте немесе жазба.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Бағандар жойылатын кесте мәні.</value>
+    <value>Бағандары жойылатын кесте немесе жазба.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Жойылатын баған атауы.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Көрсетілген бастапқы кестенің көшірмесін қайтарады, мұнда "ескі_баған" атауы "жаңа_баған" етіп өзгертіледі.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>деректер_көзі</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>ескі_баған</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>жаңа_баған</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Өңделетін кестелік мән.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Атауы өзгертілетін бағанның атауы.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Бағанның жаңа атауы.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Барлық көрсетілген шарттар шын болатын кестеден жолдарды қайтарады.</value>
@@ -2275,6 +2304,10 @@
     <value>"{0}" деп аталатын өріс осы жазбада бірнеше рет көрсетілген.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Көрсетілген "{0}" бағанының атауын екі рет өзгерту мүмкін емес.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>"{0}" деп аталатын баған бірнеше рет көрсетілді.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Бағандар жойылатын кесте мәні.</value>
+    <value>Бағандары жойылатын кесте немесе жазба.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Сақталатын бағанның атауы.</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. {0} күтілді; {1} табылды.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Кесте, жазба немесе мән үшін JSON мәтіндік жолын жасайды.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>деректер</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>JSON пішіміне түрлендірілетін деректер құрылымы. Кестелерге, жазбаларға және қарапайым мәндерге қолдау көрсетіледі, еркін түрде енгізіледі.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>пішім</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON түрлендіруінде пайдаланылатын пішім. Мән JSONFormat тізімінің мүшесі болады.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Іске қосылса, ақпаратты Application Insights қызметіне тіркейді және сынақ нәтижелерінде қолжетімді болатын Test Studio сеансына кіреді.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>хабар</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>күрделілік</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>реттелетін_жазба</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Қадағаланатын ақпарат.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Application Insights қызметіне қадағаланатын қиындық деңгейі.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Application Insights қызметіне қадағаланатын реттелетін деректерді қамтитын жазба.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Trace функциясының қосымша опциялары.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>{0} функциясы үшін "{1}" параметрі тұрақты мән болуы тиіс.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>"{0}" және "{1}" JSONFormat мәндерін бірге пайдалану мүмкін емес.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>JSON функциясына берілген мәнде медиа бар және оған әдепкіде қолдау көрсетілмейді. JSON үшін медиа мәндерін сериализациялауға рұқсат ету үшін "пішім" параметрінде IncludeBinaryData опциясын пайдаланыңыз.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON функциясы "{0}" түріндегі нысандарды сериализациялай алмайды.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON функциясы "{1}" түріндегі "{0}" деп аталатын кірістірілген сипаты бар кестелерді/нысандарды сериализациялай алмайды.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON функциясы тәртіптік емес өрнекте екілік деректерді қатарластыра алмайды.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>{0} параметрінде қолдау көрсетілмейтін {1} түріне жататын сипат бар.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Көрсетілген баған тек оқуға арналған және оны өзгерту мүмкін емес: {0}.</value>
     
   </data>
 </root>

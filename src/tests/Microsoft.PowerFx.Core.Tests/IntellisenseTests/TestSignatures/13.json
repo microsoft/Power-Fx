@@ -1,0 +1,52 @@
+{
+  "Signatures": [
+    {
+      "Label": "Max(number, number, ...)",
+      "Documentation": "Returns the largest value in a set of values. Ignores logical values and text.",
+      "Parameters": [
+        {
+          "Label": "number",
+          "Documentation": "A numeric value for this max operation."
+        },
+        {
+          "Label": "number",
+          "Documentation": "A numeric value for this max operation."
+        }
+      ]
+    },
+    {
+      "Label": "Max(number, number, number, ...)",
+      "Documentation": "Returns the largest value in a set of values. Ignores logical values and text.",
+      "Parameters": [
+        {
+          "Label": "number",
+          "Documentation": "A numeric value for this max operation."
+        },
+        {
+          "Label": "number",
+          "Documentation": "A numeric value for this max operation."
+        },
+        {
+          "Label": "number",
+          "Documentation": "A numeric value for this max operation."
+        }
+      ]
+    },
+    {
+      "Label": "Max(source, expression)",
+      "Documentation": "Returns the largest value the expression evaluates to in the context of the table.",
+      "Parameters": [
+        {
+          "Label": "source",
+          "Documentation": "A table over which this max operation will be computed."
+        },
+        {
+          "Label": "expression",
+          "Documentation": "An expression evaluated over each row in the input table, that provides numeric values for this max operation."
+        }
+      ]
+    }
+  ],
+  "ActiveSignature": 0,
+  "ActiveParameter": 1
+}

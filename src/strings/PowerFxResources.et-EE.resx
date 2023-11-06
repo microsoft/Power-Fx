@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Tabel, kuhu veerud lisatakse.</value>
+    <value>Tabel või kirje, kuhu veerud lisatakse.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Tabeliväärtus, millest veerud eemaldatakse.</value>
+    <value>Tabeli- või kirjeväärtus, millest veerud eemaldatakse.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Eemaldatava veeru nimi.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Tagastab määratud allika tabeli koopia, kus veerg "vana_veerg" on ümber nimetatud veeruks "uus_veerg".</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>vana_veerg</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>uus_veerg</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Töödeldav tabeliväärtus.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Ümbernimetatava veeru nimi.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Veeru uus nimi.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Tagastab tabelist read, mille kõik määratud tingimused on tõesed.</value>
@@ -2275,6 +2304,10 @@
     <value>Väli nimega {0} on selles kirjes määratud mitu korda.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Määratud veergu '{0}' ei saa kaks korda ümber nimetada.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Veerg nimega {0} on määratud mitu korda.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Tabeliväärtus, millest veerud eemaldatakse.</value>
+    <value>Tabeli- või kirjeväärtus, millest veerud eemaldatakse.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Säilitatava veeru nimi.</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Lähte- ja sihtkirje tüüpide tüübi lahknevus. Eeldatud {0}; leiti {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Loob tabelile, kirjele või väärtusele JSON-i tekstistringi.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>andmed</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>JSON-iks teisendatav andmestruktuur. Tabelid, kirjed ja primitiivsed väärtused on toetatud, suvaliselt pesastatud.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>vorming</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON-i teisenduses kasutatav vorming. Väärtus on loetelu JSONFormat liige.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Kui see on lubatud, logib teavet Application Insightsi, ja logib Test Studio seansi, mis on saadaval testitulemites.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>sõnum</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>raskusaste</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>kohandatud_kirje</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>jälituse_suvandid</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Jälitatav teave.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Raskusaste, mida jälitatakse Application Insightsi.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Kirje, mis sisaldab kohandatud andmeid, mida jälitatakse Application Insightsi.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Funktsiooni Trace lisasuvandid.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Funktsiooni {0} parameeter '{1}' peab olema konstantne väärtus.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormati väärtuseid '{0}' ja '{1}' ei saa koos kasutada.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Funktsiooni JSON edastatud väärtus sisaldab meediumeid ja seda ei toetata vaikimisi. Meediumiväärtuste JSON-i serialiseerimise lubamiseks kasutage parameetris 'format' kindlasti suvandit IncludeBinaryData.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Funktsioon JSON ei saa serialiseerida objekte tüübiga '{0}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Funktsioon JSON ei saa serialiseerida tabeleid/objekte, millel on pesastatud atribuut tüübiga '{1}' ja nimega '{0}'.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON-i funktsioon ei saa kahendandmeid mittekäitumuslikus avaldises serialiseerida.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Parameeter {0} sisaldab atribuudi tüüpi {1}, mida ei toetata.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Määratud veerg on kirjutuskaitstud ja seda ei saa muuta: {0}.</value>
     
   </data>
 </root>

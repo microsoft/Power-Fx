@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Таблиця, куди потрібно додати стовпці.</value>
+    <value>Таблиця або запис, куди потрібно додати стовпці.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Значення таблиці, звідки потрібно вилучити стовпці.</value>
+    <value>Значення таблиці або запису, звідки потрібно вилучити стовпці.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Ім’я стовпця, який потрібно вилучити.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Повертає копію вказаної вихідної таблиці, де стовпець "старий_стовпець" перейменовано на значення "новий_стовпець".</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>джерело</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>старий_стовпець</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>новий_стовпець</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Значення таблиці, яке потрібно обробити.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Ім’я стовпця, яке потрібно змінити.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Нове ім’я для стовпця.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Повертає рядки з таблиці, що відповідає всім визначеним умовам.</value>
@@ -2275,6 +2304,10 @@
     <value>Поле з ім’ям "{0}" зустрічається в цьому записі більше одного разу.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Указаний стовпець "{0}" не можна перейменувати двічі.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Стовпець з ім’ям "{0}" указано більше одного разу.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Значення таблиці, звідки потрібно вилучити стовпці.</value>
+    <value>Значення таблиці або запису, звідки потрібно вилучити стовпці.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Ім’я стовпця, який потрібно залишити.</value>
@@ -5093,7 +5126,7 @@
     
   </data>
   <data name="ErrExpectedRVMissingFields" xml:space="preserve">
-    <value>Невідповідність між вихідним і кінцевим типами записів. У заданому типі відсутні поля:{0}.</value>
+    <value>Невідповідність між вихідним і кінцевим типами записів. У заданому типі відсутні поля: {0}.</value>
     
   </data>
   <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Невідповідність між вихідним і кінцевим типами. Очікувалося {0}; знайдено {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Створює текстовий рядок JSON для таблиці, запису або значення.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>дані</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Структура даних, яку потрібно конвертувати у формат JSON. Підтримуються таблиці, записи й примітивні значення, вкладені довільно.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>формат</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Формат, що використовуватиметься під час перетворення JSON. Значення буде елементом перелічення JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Якщо активувати цей параметр, інформація реєструватиметься в Application Insights, а також у сеансі Test Studio, що буде доступний у результатах перевірки.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>повідомлення</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>важливість</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Інформація, для якої потрібно виконати трасування.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Рівень важливості інформації, для якої потрібно виконати трасування до Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Ви зможете виконати трасування запису, що містить спеціальні дані, до Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Додаткові параметри для функції Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Параметр "{1}" функції "{0}" має бути постійним значенням.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Значення JSONFormat "{0}" і "{1}" не можна використовувати разом.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Значення, передане до функції JSON, містить медіадані та не підтримується за замовчуванням. Щоб дозволити серіалізацію JSON для значень медіаданих, виберіть для параметра "формат" варіант "IncludeBinaryData".</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Функція JSON не може серіалізувати об’єкти типу "{0}".</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Функція JSON не може серіалізувати таблиці або об’єкти з вкладеною властивістю "{0}" типу "{1}".</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Функція JSON не може серіалізувати двійкові дані у неповедінковому виразі.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Параметр {0} містить непідтримувану властивість типу "{1}".</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Указаний стовпець доступний лише для читання, і в нього не можна вносити зміни: {0}.</value>
     
   </data>
 </root>

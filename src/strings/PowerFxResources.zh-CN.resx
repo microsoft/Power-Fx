@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>要向其中添加列的表。</value>
+    <value>要向其中添加列的表或记录。</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>要从中删除列的表值。</value>
+    <value>要从中删除列的表或记录值。</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>要删除的列的名称。</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>返回指定 "source" 表的副本，将 "old_column" 列重命名为 "new_column"。</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>源</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>旧列</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>新列</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>要处理的表值。</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>要重命名的列的名称。</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>新的列名称。</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>从表中返回所有指定条件都是 true 的行。</value>
@@ -2275,6 +2304,10 @@
     <value>此记录中多次指定了名为 '{0}' 的字段。</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>不能将指定的列“{0}”重命名两次。</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>多次指定了名为 '{0}' 的列。</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>要从中删除列的表值。</value>
+    <value>要从中删除列的表或记录值。</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>要保持的列的名称。</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>源类型与目标类型不匹配。需要 {0}；找到 {1}。</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>生成表、记录或值的 JSON 文本字符串。</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>数据</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>要转换为 JSON 的数据结构。表、记录和基元值受支持，可任意嵌套。</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>格式</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>JSON 转换中使用的格式。该值将是 JSONFormat 枚举的成员。</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>启用后将信息记录到 Application Insights，并记录到将在测试结果中显示的 Test Studio 会话中。</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>消息</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>严重性</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>要跟踪的信息。</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>要跟踪到 Application Insights 的严重性级别。</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>包含将跟踪到 Application Insights 的自定义数据的记录。</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Trace 功能的其他选项。</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>{0} 函数的“{1}”参数必须是常数值。</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormat 值“{0}”和“{1}”不能同时使用。</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>传递给 JSON 函数的值包含媒体，且默认不受支持。要允许媒体值的 JSON 序列化，请确保使用 "format" 参数中的 IncludeBinaryData 选项。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>JSON 函数无法序列化“{0}”类型的对象。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>JSON 函数无法使用类型“{1}”的嵌套属性“{0}”来序列化表/对象。</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>JSON 函数无法对非行为表达式中的二进制数据进行序列化。</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>参数 {0} 包含类型为 {1} 的属性，而该属性不受支持。</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>指定列为只读状态，无法修改: {0}。</value>
     
   </data>
 </root>

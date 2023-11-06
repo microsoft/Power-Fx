@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Табела у коју се додају колоне.</value>
+    <value>Табела или запис у које треба додати колоне.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Вредност табеле из које треба уклонити колоне.</value>
+    <value>Вредност табеле или записа из којих треба уклонити колоне.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Име колоне коју треба уклонити.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Враћа копију наведене табеле „извор“ са колоном „old_column“ преименованом у „new_column“.</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>стара_колона</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>нова_колона</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Вредност табеле за обраду.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Име колоне које треба преименовати.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Ново име за колону.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Враћа ред из табеле за коју су сви наведени услови исправни.</value>
@@ -2275,6 +2304,10 @@
     <value>Поље са именом „{0}“ наведено је више пута у овом запису.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Не можете двапут преименовати наведену колону „{0}“.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Колона са именом „{0}“ наведена је више пута.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Вредност табеле из које треба уклонити колоне.</value>
+    <value>Вредност табеле или записа из којих треба уклонити колоне.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Име колоне коју треба задржати.</value>
@@ -5089,19 +5122,19 @@
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
-    <value>Изворни и одредишни тип записа се не подударају. Дати тип има додатна поља: {0}.</value>
+    <value>Изворна и одредишна врста записа се не подударају. Дати тип има додатна поља: {0}.</value>
     
   </data>
   <data name="ErrExpectedRVMissingFields" xml:space="preserve">
-    <value>Изворни и одредишни тип записа се не подударају. Дати тип има поља која недостају: {0}.</value>
+    <value>Изворна и одредишна врста записа се не подударају. Дати тип има поља која недостају: {0}.</value>
     
   </data>
   <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
-    <value>Изворни и одредишни тип записа се не подударају. Назив поља: {0} није пронађен.</value>
+    <value>Изворна и одредишна врста записа се не подударају. Назив поља: {0} није пронађен.</value>
     
   </data>
   <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
-    <value>Изворни и одредишни тип записа се не подударају. Назив поља: {0} Очекивано {1}; Пронађено {2}.</value>
+    <value>Изворна и одредишна врста записа се не подударају. Назив поља: {0} Очекивано {1}; Пронађено {2}.</value>
     
   </data>
   <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Изворни и одредишни тип се не подударају. Очекивано {0}; Пронађено {1}.</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Генерише JSON текстуалну ниску за табелу, запис или вредност.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>подаци</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Структура података ће се конвертовати у JSON. Табеле, записи и примитивне вредности су подржане, произвољно угнежђене.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>формат</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Формат који ће се користити у у JSON конвертовању. Вредност ће бити члан JSONFormat набрајања.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>Евидентира информације о функцији Application Insights када је омогућена, као и сесију у услузи Test Studio која ће бити доступна у резултатима тестирања.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>порука</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>озбиљност</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>прилагођени_запис</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>опције_праћења</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Информације које треба пратити.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Степен значаја који треба пратити до функције Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Запис који садржи прилагођене податке који ће се пратити до функције Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Додатне опције функције Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Параметар „{1}“ за функцију {0} мора да буде вредност константе.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>JSONFormat вредности „{0}“ и „{1}“ не могу се користити заједно.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Вредност прослеђена функцији JSON садржи медије, а није подржана по подразумеваној вредности. Да бисте дозволили JSON серијализацију медијских вредности, уверите се да користите опцију IncludeBinaryData у параметру „формат“.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Функција JSON не може да серијализује објекте типа „{0}“.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Функција JSON не може да серијализује табеле/објекте са угнежђеним својством „{0}“ типа „{1}“.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Функција JSON не може да серијализује бинарне податке у изразу који се не односи на понашање.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Параметар {0} садржи својство типа {1}, што није подржано.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Наведена колона је само за читање и није је могуће изменити: {0}.</value>
     
   </data>
 </root>

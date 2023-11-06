@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Таблица для добавления столбцов.</value>
+    <value>Таблица или запись для добавления столбцов.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -371,10 +371,39 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Табличное значение для удаления столбцов.</value>
+    <value>Значение таблицы или записи для удаления столбцов.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Имя столбца для удаления.</value>
+  </data>
+  <data name="AboutRenameColumns" xml:space="preserve">
+    <value>Возвращает копию указанной таблицы "источника", в которой "старый_столбец" переименован в "новый_столбец".</value>
+    
+  </data>
+  <data name="RenameColumnsArg1" xml:space="preserve">
+    <value>источник</value>
+    
+  </data>
+  <data name="RenameColumnsArg2" xml:space="preserve">
+    <value>старый_столбец</value>
+    
+  </data>
+  <data name="RenameColumnsArg3" xml:space="preserve">
+    <value>новый_столбец</value>
+    
+  </data>
+  <data name="AboutRenameColumns_source" xml:space="preserve">
+    <value>Табличное значение для обработки.</value>
+  </data>
+  <data name="AboutRenameColumns_old_column" xml:space="preserve">
+    <value>Имя столбца для переименования.</value>
+  </data>
+  <data name="AboutRenameColumns_new_column" xml:space="preserve">
+    <value>Новое имя для столбца.</value>
+  </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>The specified column '{0}' cannot be renamed twice.</value>
+    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Возвращает строки таблицы, для которых все указанные условия верны.</value>
@@ -2275,6 +2304,10 @@
     <value>Поле с именем "{0}" указано в этой записи больше одного раза.</value>
     
   </data>
+  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
+    <value>Указанный столбец "{0}" невозможно переименовать дважды.</value>
+    
+  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Цвет "{0}" был указан несколько раз.</value>
     
@@ -2764,7 +2797,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Табличное значение для удаления столбцов.</value>
+    <value>Значение таблицы или записи для удаления столбцов.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Имя столбца для сохранения.</value>
@@ -5110,6 +5143,93 @@
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Несоответствие типов между исходными и целевыми типами. Ожидаемое: "{0}"; найдено: "{1}".</value>
+    
+  </data>
+  <data name="AboutJSON" xml:space="preserve">
+    <value>Создает текстовую строку JSON для таблицы, записи или значения.</value>
+    
+  </data>
+  <data name="JSONArg1" xml:space="preserve">
+    <value>данные</value>
+    
+  </data>
+  <data name="AboutJSON_data" xml:space="preserve">
+    <value>Структура данных, преобразуемая в JSON. Поддерживаются таблицы, записи и примитивные значения с произвольным вложением.</value>
+    
+  </data>
+  <data name="JSONArg2" xml:space="preserve">
+    <value>формат</value>
+    
+  </data>
+  <data name="AboutJSON_format" xml:space="preserve">
+    <value>Формат, используемый при преобразовании JSON. Значение будет членом перечисления JSONFormat.</value>
+    
+  </data>
+  <data name="AboutTrace" xml:space="preserve">
+    <value>При работе регистрирует сведения в Application Insights, а также заносит в журнал сеанс Test Studio, который будет доступен в результатах теста.</value>
+    
+  </data>
+  <data name="TraceArg1" xml:space="preserve">
+    <value>сообщение</value>
+    
+  </data>
+  <data name="TraceArg2" xml:space="preserve">
+    <value>серьезность</value>
+    
+  </data>
+  <data name="TraceArg3" xml:space="preserve">
+    <value>custom_record</value>
+    
+  </data>
+  <data name="TraceArg4" xml:space="preserve">
+    <value>trace_options</value>
+    
+  </data>
+  <data name="AboutTrace_message" xml:space="preserve">
+    <value>Сведения для отслеживания.</value>
+    
+  </data>
+  <data name="AboutTrace_severity" xml:space="preserve">
+    <value>Уровень серьезности для трассировки до Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_custom_record" xml:space="preserve">
+    <value>Запись, содержащая настраиваемые данные, для которых будет выполняться трассировка до Application Insights.</value>
+    
+  </data>
+  <data name="AboutTrace_trace_options" xml:space="preserve">
+    <value>Дополнительные параметры для функции Trace.</value>
+    
+  </data>
+  <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
+    <value>Параметр "{1}" для функции {0} должен иметь значение-константу.</value>
+    
+  </data>
+  <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
+    <value>Значения JSONFormat "{0}" и "{1}" невозможно использовать одновременно.</value>
+    
+  </data>
+  <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
+    <value>Значение, передаваемое функции JSON, содержит медиаданные и по умолчанию не поддерживается. Чтобы включить сериализацию значений медиаданных для JSON, в качестве параметра "формат" используйте IncludeBinaryData.</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
+    <value>Функция JSON не может сериализовать объекты типа "{0}".</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
+    <value>Функция JSON не может сериализовать таблицы или объекты со вложенным свойством "{0}" типа "{1}".</value>
+    
+  </data>
+  <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
+    <value>Функция JSON не может сериализовать двоичные данные в неповеденческом выражении.</value>    
+  </data>
+  <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
+    <value>Параметр {0} содержит свойство типа {1}, которое не поддерживается.</value>
+    
+  </data>
+  <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
+    <value>Указанный столбец доступен только для чтения, и его невозможно изменить: {0}.</value>
     
   </data>
 </root>

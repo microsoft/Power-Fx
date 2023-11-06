@@ -232,7 +232,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                         }
                         else if (propertySchema.Format == "date-no-tz")
                         {
-                            WriteDateTimeValue(dtv.GetConvertedValue(TimeZoneInfo.Utc));
+                            WriteDateValue(dtv.GetConvertedValue(TimeZoneInfo.Utc));
                         }
                         else
                         {
