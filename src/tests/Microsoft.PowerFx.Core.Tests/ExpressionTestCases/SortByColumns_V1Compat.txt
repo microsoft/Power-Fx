@@ -24,6 +24,27 @@ Errors: Error 63-91: Argument 'If(1 > 0, "columndoesnotexist")' is invalid, expe
 >> SortByColumns(Table({a:1,b:"one"}, {a:2, b:"two"}, {a:1,b:"onebis"},{a:3, b:"three"}, {a:4, b:"four"}, {a:3, b:"threebis"}), "a", SortOrder.Ascending, Left("b1", 2), SortOrder.Descending)
 Errors: Error 151-164: Argument 'Left("b1", 2)' is invalid, expected a text literal.|Error 0-187: The function 'SortByColumns' has some invalid arguments.
 
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },
+  { First: "Alice", Last: "Smith", Age: 5, Gender: "Female", Vaccinated: true, HasDog: true },
+  { First: Blank(), Last: "Clark", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Allen", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Brown", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false },
+  { First: "Emily", Last: "Jones", Age: 29, Gender: "Female", Vaccinated: true, HasDog: Blank() },
+  { First: "Helio", Last: Blank(), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
+  { First: "Titan", Last: Blank(), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Walker", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Andrew", Last: "Lee", Age: 27, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Nizam", Last: "Lewis", Age: 32, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Amelia", Last: "Bedelia", Age: 40, Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Dora", Last: "TheExplorer", Age: 4, Gender: "Female", Vaccinated: Blank(), HasDog: true },
+  { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
+  { First: Blank(), Last: "Rodriguez", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }),Left("Hello", -1), SortOrder.Ascending,"Age", SortOrder.Descending)
+Errors: Error 1854-1871: Argument 'Left("Hello", -1)' is invalid, expected a text literal.|Error 0-1921: The function 'SortByColumns' has some invalid arguments.
+
 // ###### SortByColumns, column + order table overload ######
 
 >> SortByColumns([1,3,2],Left("Value234", 5), [2,3,1])
