@@ -649,7 +649,7 @@ namespace Microsoft.PowerFx.Connectors
 
         private static JsonElement ExtractFromJson(JsonElement je, string location)
         {
-            foreach (string vpPart in location.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string vpPart in (location ?? string.Empty).Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (je.ValueKind != JsonValueKind.Object)
                 {
@@ -733,7 +733,7 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            JsonElement je = ExtractFromJson(sv, cdv.ValueCollection ?? "value");
+            JsonElement je = ExtractFromJson(sv, cdv.ValueCollection);
 
             if (je.ValueKind == JsonValueKind.Array)
             {

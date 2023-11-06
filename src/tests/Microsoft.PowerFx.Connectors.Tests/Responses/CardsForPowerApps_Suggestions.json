@@ -1,0 +1,22 @@
+[
+  {
+    "id": "00ba7a3f-1779-ee11-8178-002248281f9c",
+    "environmentId": "",
+    "name": "test",
+    "description": "",
+    "author": "",
+    "connections": {},
+    "inputs": { "type": "object" },
+    "output": { "type": "object" }
+  },
+  {
+    "id": "0a5b3673-ac79-ee11-8178-002248281f9c",
+    "environmentId": "",
+    "name": "testWithInputs",
+    "description": "",
+    "author": "",
+    "connections": {},
+    "inputs": { "type": "object" },
+    "output": { "type": "object" }
+  }
+]
