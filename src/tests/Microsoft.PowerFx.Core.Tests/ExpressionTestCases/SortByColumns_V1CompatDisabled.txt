@@ -19,10 +19,10 @@ Table({a:4,b:"four"},{a:1,b:"one"},{a:3,b:"three"},{a:2,b:"two"})
 Table({a:1,b:"onebis"},{a:1,b:"one"},{a:2,b:"two"},{a:3,b:"threebis"},{a:3,b:"three"},{a:4,b:"four"})
 
 >> SortByColumns(Table({a:1, b:1111}, {a:2, b:222}, {a:3, b:33}), If(1>0,"columndoesnotexist"))
-Error({Kind:ErrorKind.InvalidArgument})
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 >> SortByColumns(Table({a:1,b:"one"}, {a:2, b:"two"}, {a:1,b:"onebis"},{a:3, b:"three"}, {a:4, b:"four"}, {a:3, b:"threebis"}), "a", SortOrder.Ascending, Left("b1", 2), SortOrder.Descending)
-Error({Kind:ErrorKind.InvalidArgument})
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 // ###### SortByColumns, column + order table overload ######
 
@@ -37,4 +37,4 @@ Table({a:4,b:"four"},{a:3,b:"three"},{a:2,b:"two"},{a:1,b:"one"})
 Table({a:1,b:"one"},{a:2,b:"two"},{a:3,b:"three"},{a:4,b:"four"})
 
 >> SortByColumns(Table({a:1, b:1111}, {a:2, b:222}, {a:3, b:33}), If(1>0,"columndoesnotexist"), [1,2,3])
-Error({Kind:ErrorKind.InvalidArgument})
+Error({Kind:ErrorKind.InvalidFunctionUsage})

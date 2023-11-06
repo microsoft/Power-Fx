@@ -672,7 +672,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 Message = string.Format(cultureInfo, invalidSortColumnTemplate, columnName),
                 Span = irContext.SourceContext,
-                Kind = ErrorKind.InvalidArgument
+                Kind = ErrorKind.InvalidFunctionUsage
             });
         }
 
