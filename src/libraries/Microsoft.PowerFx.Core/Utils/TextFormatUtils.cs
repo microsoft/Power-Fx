@@ -219,8 +219,8 @@ namespace Microsoft.PowerFx.Core.Utils
                         if (formatStr[i] == '#')
                         {
                             formatStr = formatStr.Remove(i, 1);
-                            i--;
                             poundAfterExponentialIdx = i;
+                            i--;
                         }
                         else
                         {
