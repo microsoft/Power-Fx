@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
@@ -984,6 +985,33 @@ POST https://tip1-shared.azure-apim.net/invoke
 
             OpenApiParser.GetFunctions("namespace", doc);
             powerFxConfig.AddActionConnector("namespace", doc);
+        }
+
+        [Fact]
+        public async Task PowerAppsCardsTest()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\CardsForPowerApps.json");
+            using var httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "7592282b-e371-e3f6-8e04-e8f23e64227c" /* environment Id */, "shared-cardsforpower-eafc4fa0-c560-4eba-a5b2-3e1ebc63193a" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
+
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
+            ConnectorFunction createCardInstance = functions.First(f => f.Name == "CreateCardInstance");
+
+            testConnector.SetResponseFromFile(@"Responses\CardsForPowerApps_Suggestions.json");
+            ConnectorParameters parameters = await createCardInstance.GetParameterSuggestionsAsync(
+                new NamedValue[]
+                {
+                },
+                createCardInstance.RequiredParameters[0], // cardid
+                runtimeContext,
+                CancellationToken.None).ConfigureAwait(false);
+
+            ConnectorParameterWithSuggestions suggestions = parameters.ParametersWithSuggestions[0];
+            Assert.Equal(2, suggestions.Suggestions.Count);
+            Assert.Equal("test", suggestions.Suggestions[0].DisplayName);
+            Assert.Equal("testWithInputs", suggestions.Suggestions[1].DisplayName);
         }
     }
 

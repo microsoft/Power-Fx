@@ -1,0 +1,1222 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Cards for Power Apps",
+    "version": "1.0.0",
+    "description": "This connector is to create card instance and get the card description",
+    "contact": {
+      "name": "Microsoft",
+      "url": "https://learn.microsoft.com/en-us/power-apps/cards/overview",
+      "email": "pa-cards-core@microsoft.com"
+    },
+    "x-ms-api-annotation": { "status": "Production" }
+  },
+  "host": "tip1002-002.azure-apihub.net",
+  "basePath": "/apim/cardsforpowerapps",
+  "schemes": [ "https" ],
+  "consumes": [],
+  "produces": [],
+  "paths": {
+    "/{connectionId}/cards/cards": {
+      "get": {
+        "tags": [ "Search Cards" ],
+        "operationId": "SearchCards",
+        "x-ms-visibility": "internal",
+        "produces": [ "application/json" ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/PowerCardDescription" }
+            }
+          }
+        },
+        "summary": "Get card in environment",
+        "description": "This operation is used to get list of cards in environment.",
+        "externalDocs": { "url": "https://docs.microsoft.com/connectors/cardsforpowerapps/#get-card-in-environment" },
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
+      }
+    },
+    "/{connectionId}/cards/cards/{cardId}/instances": {
+      "post": {
+        "tags": [ "Create Card Instance" ],
+        "operationId": "CreateCardInstance",
+        "consumes": [ "application/json-patch+json", "application/json", "text/json", "application/*+json" ],
+        "produces": [ "application/json" ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          { "$ref": "#/parameters/card_id" },
+          {
+            "name": "cardRequest",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/CreateCardRequest" },
+            "x-nullable": false,
+            "x-ms-summary": "Card Request",
+            "description": "Card create instance request"
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "Create card instace was successful",
+            "schema": { "$ref": "#/definitions/CreateCardResult" }
+          }
+        },
+        "summary": "Create card instance",
+        "description": "This operation is used to create the card instance. User should select the card from drop down to create an instance.",
+        "externalDocs": { "url": "https://docs.microsoft.com/connectors/cardsforpowerapps/#create-card-instance" }
+      }
+    },
+    "/{connectionId}/cards/cards/{cardId}/instances/{instanceId}": {
+      "get": {
+        "tags": [ "Get Card Instance" ],
+        "operationId": "GetCardInstance",
+        "deprecated": true,
+        "produces": [ "application/json" ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          { "$ref": "#/parameters/card_id" },
+          {
+            "type": "string",
+            "name": "instanceId",
+            "in": "path",
+            "required": true,
+            "x-nullable": true,
+            "x-ms-summary": "Instance Id",
+            "description": "Set Instance Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "Get card instance was successful",
+            "schema": { "$ref": "#/definitions/AdaptiveCard" }
+          }
+        },
+        "summary": "Get the card instance (deprecated)",
+        "description": "This operation is used to retrieve the card instance. User should select the card from drop down and provide an instance id of the selected card (deprecated).",
+        "externalDocs": { "url": "https://docs.microsoft.com/connectors/cardsforpowerapps/#get-the-card-instance-(deprecated)-%5bdeprecated%5d" }
+      }
+    },
+    "/{connectionId}/cards/cards/{cardId}": {
+      "get": {
+        "tags": [ "Get Card Description" ],
+        "operationId": "GetCardDescription",
+        "produces": [ "application/json" ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          { "$ref": "#/parameters/card_id" }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "Get card definition was successful",
+            "schema": { "$ref": "#/definitions/PowerCardDescription" }
+          }
+        },
+        "summary": "Get the card description",
+        "description": "This operation is used to get the card description. User should select the card from drop down to its description.",
+        "externalDocs": { "url": "https://docs.microsoft.com/connectors/cardsforpowerapps/#get-the-card-description" }
+      }
+    }
+  },
+  "definitions": {
+    "PowerCardDescription": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "environmentId": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "author": { "type": "string" },
+        "connections": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/Connection" }
+        },
+        "inputs": { "$ref": "#/definitions/JSchema" },
+        "output": { "$ref": "#/definitions/JSchema" }
+      }
+    },
+    "Connection": {
+      "type": "object",
+      "properties": {
+        "apiName": { "type": "string" },
+        "displayName": { "type": "string" }
+      }
+    },
+    "JSchema": {
+      "type": "object",
+      "required": [ "properties", "items", "itemsPositionValidation", "required", "allOf", "anyOf", "oneOf", "enum", "uniqueItems", "exclusiveMinimum", "exclusiveMaximum", "extensionData", "dependencies", "dependentRequired", "dependentSchemas", "patternProperties", "allowAdditionalProperties", "allowAdditionalPropertiesSpecified", "allowAdditionalItems", "allowAdditionalItemsSpecified", "validators" ],
+      "properties": {
+        "schemaVersion": {
+          "type": "string",
+          "format": "uri"
+        },
+        "valid": { "type": "boolean" },
+        "reference": {
+          "type": "string",
+          "format": "uri"
+        },
+        "ref": { "$ref": "#/definitions/JSchema" },
+        "recursiveReference": {
+          "type": "string",
+          "format": "uri"
+        },
+        "recursiveAnchor": { "type": "boolean" },
+        "id": {
+          "type": "string",
+          "format": "uri"
+        },
+        "anchor": { "type": "string" },
+        "type": { "$ref": "#/definitions/JSchemaType" },
+        "default": {},
+        "properties": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/JSchema" }
+        },
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/JSchema" }
+        },
+        "itemsPositionValidation": { "type": "boolean" },
+        "required": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "allOf": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/JSchema" }
+        },
+        "anyOf": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/JSchema" }
+        },
+        "oneOf": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/JSchema" }
+        },
+        "if": { "$ref": "#/definitions/JSchema" },
+        "then": { "$ref": "#/definitions/JSchema" },
+        "else": { "$ref": "#/definitions/JSchema" },
+        "not": { "$ref": "#/definitions/JSchema" },
+        "contains": { "$ref": "#/definitions/JSchema" },
+        "propertyNames": { "$ref": "#/definitions/JSchema" },
+        "enum": {
+          "type": "array",
+          "items": {}
+        },
+        "const": {},
+        "uniqueItems": { "type": "boolean" },
+        "minimumLength": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "maximumLength": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "minimum": {
+          "type": "number",
+          "format": "double"
+        },
+        "maximum": {
+          "type": "number",
+          "format": "double"
+        },
+        "exclusiveMinimum": { "type": "boolean" },
+        "exclusiveMaximum": { "type": "boolean" },
+        "minimumItems": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "maximumItems": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "minimumProperties": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "maximumProperties": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "minimumContains": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "maximumContains": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "contentEncoding": { "type": "string" },
+        "contentMediaType": { "type": "string" },
+        "writeOnly": { "type": "boolean" },
+        "readOnly": { "type": "boolean" },
+        "extensionData": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "multipleOf": {
+          "type": "number",
+          "format": "double"
+        },
+        "pattern": { "type": "string" },
+        "dependencies": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "dependentRequired": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "dependentSchemas": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/JSchema" }
+        },
+        "patternProperties": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/JSchema" }
+        },
+        "additionalProperties": { "$ref": "#/definitions/JSchema" },
+        "allowAdditionalProperties": { "type": "boolean" },
+        "allowAdditionalPropertiesSpecified": { "type": "boolean" },
+        "unevaluatedProperties": { "$ref": "#/definitions/JSchema" },
+        "allowUnevaluatedProperties": { "type": "boolean" },
+        "additionalItems": { "$ref": "#/definitions/JSchema" },
+        "allowAdditionalItems": { "type": "boolean" },
+        "allowAdditionalItemsSpecified": { "type": "boolean" },
+        "unevaluatedItems": { "$ref": "#/definitions/JSchema" },
+        "allowUnevaluatedItems": { "type": "boolean" },
+        "format": { "type": "string" },
+        "validators": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/JsonValidator" }
+        }
+      }
+    },
+    "JSchemaType": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [ "None", "String", "Number", "Integer", "Boolean", "Object", "Array", "Null" ],
+      "enum": [ 0, 1, 2, 4, 8, 16, 32, 64 ]
+    },
+    "JsonValidator": {
+      "type": "object",
+      "x-abstract": true
+    },
+    "CreateCardResult": {
+      "type": "object",
+      "properties": { "Card": { "$ref": "#/definitions/AdaptiveCard" } }
+    },
+    "AdaptiveCard": {
+      "allOf": [
+        { "$ref": "#/definitions/AdaptiveTypedElement" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "required": [ "type", "minHeight", "verticalContentAlignment" ],
+          "properties": {
+            "type": { "type": "string" },
+            "version": { "$ref": "#/definitions/AdaptiveSchemaVersion" },
+            "minVersion": {
+              "x-deprecated": true,
+              "x-deprecatedMessage": "Use the Version property instead",
+              "allOf": [ { "$ref": "#/definitions/AdaptiveSchemaVersion" } ]
+            },
+            "fallbackText": { "type": "string" },
+            "speak": { "type": "string" },
+            "lang": { "type": "string" },
+            "title": {
+              "type": "string",
+              "x-deprecated": true,
+              "x-deprecatedMessage": "The Title property is not officially supported right now and should not be used"
+            },
+            "height": { "$ref": "#/definitions/AdaptiveHeight" },
+            "body": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/AdaptiveElement" }
+            },
+            "actions": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/AdaptiveAction" }
+            },
+            "minHeight": {
+              "type": "integer",
+              "default": 0
+            },
+            "verticalContentAlignment": {
+              "default": "Top",
+              "allOf": [ { "$ref": "#/definitions/AdaptiveVerticalContentAlignment" } ]
+            },
+            "selectAction": { "$ref": "#/definitions/AdaptiveAction" },
+            "refresh": { "$ref": "#/definitions/AdaptiveRefresh" },
+            "authentication": { "$ref": "#/definitions/AdaptiveAuthentication" }
+          }
+        }
+      ]
+    },
+    "AdaptiveSchemaVersion": {
+      "type": "object",
+      "required": [ "major", "minor" ],
+      "properties": {
+        "major": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "minor": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "AdaptiveImageFillMode": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [ "Cover", "RepeatHorizontally", "RepeatVertically", "Repeat" ],
+      "enum": [ "cover", "repeatHorizontally", "repeatVertically", "repeat" ]
+    },
+    "AdaptiveHorizontalAlignment": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [ "Left", "Center", "Right", "Stretch" ],
+      "enum": [ "left", "center", "right", "stretch" ]
+    },
+    "AdaptiveVerticalAlignment": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [ "Top", "Center", "Bottom" ],
+      "enum": [ "top", "center", "bottom" ]
+    },
+    "AdaptiveHeight": {
+      "type": "object",
+      "required": [ "heightType" ],
+      "properties": {
+        "heightType": { "$ref": "#/definitions/AdaptiveHeightType" },
+        "unit": { "type": "integer" }
+      }
+    },
+    "AdaptiveHeightType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [ "Auto", "Stretch", "Pixel" ],
+      "enum": [ "stretch", "pixel" ]
+    },
+    "AdaptiveElement": {
+      "allOf": [
+        { "$ref": "#/definitions/AdaptiveTypedElement" },
+        {
+          "type": "object",
+          "x-abstract": true,
+          "additionalProperties": {},
+          "required": [ "spacing", "separator", "isVisible" ],
+          "properties": {
+            "spacing": {
+              "default": "Default",
+              "allOf": [ { "$ref": "#/definitions/AdaptiveSpacing" } ]
+            },
+            "separator": {
+              "type": "boolean",
+              "default": false
+            },
+            "speak": {
+              "type": "string",
+              "x-deprecated": true,
+              "x-deprecatedMessage": "CardElement.Speak has been deprecated.  Use AdaptiveCard.Speak"
+            },
+            "height": { "$ref": "#/definitions/AdaptiveHeight" },
+            "isVisible": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        }
+      ]
+    },
+    "AdaptiveSpacing": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [ "Default", "None", "Small", "Medium", "Large", "ExtraLarge", "Padding" ],
+      "enum": [ "none", "small", "medium", "large", "extraLarge", "padding" ]
+    },
+    "AdaptiveTypedElement": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": {},
+      "properties": {
+        "id": { "type": "string" },
+        "fallback": { "$ref": "#/definitions/AdaptiveFallbackElement" },
+        "requires": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "AdaptiveFallbackElement": { "type": "object" },
+    "AdaptiveAction": {
+      "allOf": [
+        { "$ref": "#/definitions/AdaptiveTypedElement" },
+        {
+          "type": "object",
+          "x-abstract": true,
+          "additionalProperties": {},
+          "properties": {
+            "title": { "type": "string" },
+            "speak": {
+              "type": "string",
+              "x-deprecated": true,
+              "x-deprecatedMessage": "ActionBase.Speak has been deprecated.  Use AdaptiveCard.Speak"
+            },
+            "iconUrl": { "type": "string" },
+            "style": {
+              "type": "string",
+              "default": "default"
+            }
+          }
+        }
+      ]
+    },
+    "AdaptiveVerticalContentAlignment": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [ "Top", "Center", "Bottom" ],
+      "enum": [ "center", "bottom" ]
+    },
+    "AdaptiveRefresh": {
+      "type": "object",
+      "properties": {
+        "action": { "$ref": "#/definitions/AdaptiveExecuteAction" },
+        "userIds": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "AdaptiveExecuteAction": {
+      "allOf": [
+        { "$ref": "#/definitions/AdaptiveAction" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "required": [ "type", "associatedInputs" ],
+          "properties": {
+            "type": { "type": "string" },
+            "data": {},
+            "associatedInputs": {
+              "default": "Auto",
+              "allOf": [ { "$ref": "#/definitions/AdaptiveAssociatedInputs" } ]
+            },
+            "verb": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "AdaptiveAssociatedInputs": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [ "Auto", "None" ],
+      "enum": [ "none" ]
+    },
+    "AdaptiveAuthentication": {
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "connectionName": { "type": "string" },
+        "tokenExchangeResource": { "$ref": "#/definitions/AdaptiveTokenExchangeResource" },
+        "buttons": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/AdaptiveAuthCardButton" }
+        }
+      }
+    },
+    "AdaptiveTokenExchangeResource": {
+      "type": "object",
+      "required": [ "id", "uri", "providerId" ],
+      "properties": {
+        "id": { "type": "string" },
+        "uri": { "type": "string" },
+        "providerId": { "type": "string" }
+      }
+    },
+    "AdaptiveAuthCardButton": {
+      "type": "object",
+      "required": [ "type", "value" ],
+      "properties": {
+        "type": { "type": "string" },
+        "title": { "type": "string" },
+        "image": { "type": "string" },
+        "value": { "type": "string" }
+      }
+    },
+    "CreateCardRequest": {
+      "type": "object",
+      "properties": {
+        "inputs": {
+          "x-ms-dynamic-schema": {
+            "operationId": "GetCardDescription",
+            "value-path": "inputs",
+            "parameters": { "cardId": { "parameter": "cardId" } }
+          }
+        }
+      }
+    },
+    "CardNotifyRequest": {
+      "type": "object",
+      "properties": {
+        "cardUrl": { "type": "string" },
+        "callbackUrl": { "type": "string" }
+      }
+    },
+    "RefreshConnectionRequest": {
+      "type": "object",
+      "properties": { "tableLogicalName": { "type": "string" } }
+    },
+    "Activity": {
+      "type": "object",
+      "additionalProperties": {},
+      "properties": {
+        "type": { "type": "string" },
+        "id": { "type": "string" },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "localTimestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "localTimezone": { "type": "string" },
+        "serviceUrl": { "type": "string" },
+        "channelId": { "type": "string" },
+        "from": { "$ref": "#/definitions/ChannelAccount" },
+        "conversation": { "$ref": "#/definitions/ConversationAccount" },
+        "recipient": { "$ref": "#/definitions/ChannelAccount" },
+        "textFormat": { "type": "string" },
+        "attachmentLayout": { "type": "string" },
+        "membersAdded": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ChannelAccount" }
+        },
+        "membersRemoved": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ChannelAccount" }
+        },
+        "reactionsAdded": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/MessageReaction" }
+        },
+        "reactionsRemoved": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/MessageReaction" }
+        },
+        "topicName": { "type": "string" },
+        "historyDisclosed": { "type": "boolean" },
+        "locale": { "type": "string" },
+        "text": { "type": "string" },
+        "speak": { "type": "string" },
+        "inputHint": { "type": "string" },
+        "summary": { "type": "string" },
+        "suggestedActions": { "$ref": "#/definitions/SuggestedActions" },
+        "attachments": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Attachment" }
+        },
+        "entities": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Entity" }
+        },
+        "channelData": {},
+        "action": { "type": "string" },
+        "replyToId": { "type": "string" },
+        "label": { "type": "string" },
+        "valueType": { "type": "string" },
+        "value": {},
+        "name": { "type": "string" },
+        "relatesTo": { "$ref": "#/definitions/ConversationReference" },
+        "code": { "type": "string" },
+        "expiration": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "importance": { "type": "string" },
+        "deliveryMode": { "type": "string" },
+        "listenFor": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "textHighlights": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/TextHighlight" }
+        },
+        "semanticAction": { "$ref": "#/definitions/SemanticAction" },
+        "callerId": { "type": "string" }
+      }
+    },
+    "ChannelAccount": {
+      "type": "object",
+      "additionalProperties": {},
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "aadObjectId": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
+    "ConversationAccount": {
+      "type": "object",
+      "additionalProperties": {},
+      "properties": {
+        "isGroup": { "type": "boolean" },
+        "conversationType": { "type": "string" },
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "aadObjectId": { "type": "string" },
+        "role": { "type": "string" },
+        "tenantId": { "type": "string" }
+      }
+    },
+    "MessageReaction": {
+      "type": "object",
+      "properties": { "type": { "type": "string" } }
+    },
+    "SuggestedActions": {
+      "type": "object",
+      "properties": {
+        "to": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "actions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/CardAction" }
+        }
+      }
+    },
+    "CardAction": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string" },
+        "title": { "type": "string" },
+        "image": { "type": "string" },
+        "text": { "type": "string" },
+        "displayText": { "type": "string" },
+        "value": {},
+        "channelData": {},
+        "imageAltText": { "type": "string" }
+      }
+    },
+    "Attachment": {
+      "type": "object",
+      "additionalProperties": {},
+      "properties": {
+        "contentType": { "type": "string" },
+        "contentUrl": { "type": "string" },
+        "content": {},
+        "name": { "type": "string" },
+        "thumbnailUrl": { "type": "string" }
+      }
+    },
+    "Entity": {
+      "type": "object",
+      "additionalProperties": {},
+      "properties": { "type": { "type": "string" } }
+    },
+    "ConversationReference": {
+      "type": "object",
+      "properties": {
+        "activityId": { "type": "string" },
+        "user": { "$ref": "#/definitions/ChannelAccount" },
+        "bot": { "$ref": "#/definitions/ChannelAccount" },
+        "conversation": { "$ref": "#/definitions/ConversationAccount" },
+        "channelId": { "type": "string" },
+        "locale": { "type": "string" },
+        "serviceUrl": { "type": "string" }
+      }
+    },
+    "TextHighlight": {
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "occurrence": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "SemanticAction": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "entities": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/Entity" }
+        },
+        "state": { "type": "string" }
+      }
+    },
+    "LaunchAppDefinition": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "properties": {
+            "app": { "$ref": "#/definitions/AppDefinition" },
+            "apis": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/ApiDefinition" }
+            },
+            "appConnections": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/ConnectionDefinition" }
+            },
+            "connections": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/ConnectionDefinition" }
+            }
+          }
+        }
+      ]
+    },
+    "AppDefinition": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "properties": {
+            "id": { "$ref": "#/definitions/AppResourceId" },
+            "name": { "$ref": "#/definitions/AppName" },
+            "type": { "type": "string" },
+            "properties": { "$ref": "#/definitions/AppPropertiesDefinition" }
+          }
+        }
+      ]
+    },
+    "AppResourceId": {
+      "allOf": [
+        { "$ref": "#/definitions/PowerAppResourceIdOfAppResourceId" },
+        {
+          "type": "object",
+          "properties": { "name": { "$ref": "#/definitions/AppName" } }
+        }
+      ]
+    },
+    "AppName": {
+      "allOf": [
+        { "$ref": "#/definitions/IdentifierOfAppName" },
+        { "type": "object" }
+      ]
+    },
+    "IdentifierOfAppName": {
+      "allOf": [
+        { "$ref": "#/definitions/TypedOfAppNameAndString" },
+        {
+          "type": "object",
+          "x-abstract": true
+        }
+      ]
+    },
+    "TypedOfAppNameAndString": {
+      "type": "object",
+      "x-abstract": true,
+      "properties": { "item": { "type": "string" } }
+    },
+    "PowerAppResourceIdOfAppResourceId": {
+      "allOf": [
+        { "$ref": "#/definitions/RegexTypedOfAppResourceId" },
+        {
+          "type": "object",
+          "x-abstract": true
+        }
+      ]
+    },
+    "RegexTypedOfAppResourceId": {
+      "allOf": [
+        { "$ref": "#/definitions/TypedOfAppResourceIdAndString" },
+        {
+          "type": "object",
+          "x-abstract": true
+        }
+      ]
+    },
+    "TypedOfAppResourceIdAndString": {
+      "type": "object",
+      "x-abstract": true,
+      "properties": { "item": { "type": "string" } }
+    },
+    "AppPropertiesDefinition": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "required": [ "appVersion" ],
+          "properties": {
+            "appVersion": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "displayName": { "type": "string" },
+            "connectionReferences": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/AppConnectionReference" }
+            }
+          }
+        }
+      ]
+    },
+    "AppConnectionReference": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "properties": {
+            "id": { "$ref": "#/definitions/ApiResourceId" },
+            "displayName": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "ApiResourceId": {
+      "allOf": [
+        { "$ref": "#/definitions/PowerAppResourceIdOfAppResourceId" },
+        {
+          "type": "object",
+          "properties": { "name": { "$ref": "#/definitions/ApiName" } }
+        }
+      ]
+    },
+    "ApiName": {
+      "allOf": [
+        { "$ref": "#/definitions/IdentifierOfApiName" },
+        { "type": "object" }
+      ]
+    },
+    "IdentifierOfApiName": {
+      "allOf": [
+        { "$ref": "#/definitions/TypedOfApiNameAndString" },
+        {
+          "type": "object",
+          "x-abstract": true
+        }
+      ]
+    },
+    "TypedOfApiNameAndString": {
+      "type": "object",
+      "x-abstract": true,
+      "properties": { "item": { "type": "string" } }
+    },
+    "HasExtensionData": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": {}
+    },
+    "ApiDefinition": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "properties": {
+            "id": { "$ref": "#/definitions/ApiResourceId" },
+            "name": { "type": "string" },
+            "type": { "type": "string" },
+            "properties": { "$ref": "#/definitions/ApiPropertiesDefinition" }
+          }
+        }
+      ]
+    },
+    "ApiPropertiesDefinition": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "properties": { "displayName": { "type": "string" } }
+        }
+      ]
+    },
+    "ConnectionDefinition": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "properties": {
+            "name": { "$ref": "#/definitions/ConnectionId" },
+            "properties": { "$ref": "#/definitions/ConnectionPropertiesDefinition" }
+          }
+        }
+      ]
+    },
+    "ConnectionId": {
+      "allOf": [
+        { "$ref": "#/definitions/IdentifierOfConnectionId" },
+        { "type": "object" }
+      ]
+    },
+    "IdentifierOfConnectionId": {
+      "allOf": [
+        { "$ref": "#/definitions/TypedOfConnectionIdAndString" },
+        {
+          "type": "object",
+          "x-abstract": true
+        }
+      ]
+    },
+    "TypedOfConnectionIdAndString": {
+      "type": "object",
+      "x-abstract": true,
+      "properties": { "item": { "type": "string" } }
+    },
+    "ConnectionPropertiesDefinition": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "required": [ "allowSharing" ],
+          "properties": {
+            "apiId": { "$ref": "#/definitions/ApiResourceId" },
+            "displayName": { "type": "string" },
+            "reference": { "$ref": "#/definitions/ReferenceId" },
+            "allowSharing": { "type": "boolean" },
+            "environment": { "$ref": "#/definitions/EnvironmentDefinition" },
+            "connectionParameters": {},
+            "testLinks": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/TestLink" }
+            },
+            "statuses": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/ConnectionStatus" }
+            }
+          }
+        }
+      ]
+    },
+    "ReferenceId": {
+      "allOf": [
+        { "$ref": "#/definitions/IdentifierOfReferenceId" },
+        { "type": "object" }
+      ]
+    },
+    "IdentifierOfReferenceId": {
+      "allOf": [
+        { "$ref": "#/definitions/TypedOfReferenceIdAndString" },
+        {
+          "type": "object",
+          "x-abstract": true
+        }
+      ]
+    },
+    "TypedOfReferenceIdAndString": {
+      "type": "object",
+      "x-abstract": true,
+      "properties": { "item": { "type": "string" } }
+    },
+    "EnvironmentDefinition": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "properties": {
+            "id": { "$ref": "#/definitions/EnvironmentResourceId" },
+            "name": { "type": "string" },
+            "properties": { "$ref": "#/definitions/EnvironmentProperties" }
+          }
+        }
+      ]
+    },
+    "EnvironmentResourceId": {
+      "allOf": [
+        { "$ref": "#/definitions/PowerAppResourceIdOfAppResourceId" },
+        { "type": "object" }
+      ]
+    },
+    "EnvironmentProperties": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {}
+        }
+      ]
+    },
+    "TestLink": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "properties": {
+            "requestUri": {
+              "type": "string",
+              "format": "uri"
+            },
+            "method": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "ConnectionStatus": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "required": [ "status" ],
+          "properties": {
+            "status": { "$ref": "#/definitions/ConnectionStatusEnum" },
+            "target": { "type": "string" },
+            "error": { "$ref": "#/definitions/ConnectionError" }
+          }
+        }
+      ]
+    },
+    "ConnectionStatusEnum": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [ "Error", "Ready", "Connected" ],
+      "enum": [ 0, 1, 2 ]
+    },
+    "ConnectionError": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "properties": {
+            "code": { "type": "string" },
+            "message": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "ConnectionUsageDefinition": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "properties": { "properties": { "$ref": "#/definitions/ConnectionUsageProperties" } }
+        }
+      ]
+    },
+    "ConnectionUsageProperties": {
+      "allOf": [
+        { "$ref": "#/definitions/HasExtensionData" },
+        {
+          "type": "object",
+          "additionalProperties": {},
+          "properties": {
+            "resourceId": { "$ref": "#/definitions/AppResourceId" },
+            "reference": { "$ref": "#/definitions/ReferenceId" }
+          }
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "tenant_id": {
+      "type": "string",
+      "name": "tenantId",
+      "in": "path",
+      "required": true,
+      "x-nullable": true,
+      "x-ms-summary": "Tenant id",
+      "description": "Set tenant id"
+    },
+    "environment_id": {
+      "type": "string",
+      "name": "environmentId",
+      "in": "path",
+      "required": true,
+      "x-nullable": true,
+      "x-ms-summary": "Environment id",
+      "description": "Set environment id"
+    },
+    "card_id": {
+      "type": "string",
+      "name": "cardId",
+      "in": "path",
+      "required": true,
+      "x-ms-dynamic-values": {
+        "operationId": "SearchCards",
+        "parameters": {},
+        "value-path": "id",
+        "value-title": "name"
+      },
+      "x-nullable": true,
+      "x-ms-summary": "Card",
+      "description": "Select card"
+    }
+  },
+  "responses": {},
+  "securityDefinitions": {
+    "oauth2-auth": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://login.windows.net/common/oauth2/authorize",
+      "tokenUrl": "https://login.windows.net/common/oauth2/authorize",
+      "scopes": { "access_as_user": "access_as_user" },
+      "description": "Azure Active Directory OAuth2 Flow."
+    }
+  },
+  "security": [ { "oauth2-auth": [ "access_as_user" ] } ],
+  "tags": [],
+  "x-generator": "NSwag v13.16.1.0 (NJsonSchema v10.7.2.0 (Newtonsoft.Json v13.0.0.0))",
+  "x-ms-connector-metadata": [
+    {
+      "propertyName": "Website",
+      "propertyValue": "https://learn.microsoft.com/power-apps/cards/overview"
+    },
+    {
+      "propertyName": "Privacy policy",
+      "propertyValue": "https://privacy.microsoft.com/privacystatement"
+    },
+    {
+      "propertyName": "Categories",
+      "propertyValue": " Collaboration;Communication"
+    }
+  ],
+  "externalDocs": { "url": "https://docs.microsoft.com/connectors/cardsforpowerapps" }
+}
