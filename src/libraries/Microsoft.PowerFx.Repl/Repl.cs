@@ -64,7 +64,9 @@ namespace Microsoft.PowerFx
         public ParserOptions ParserOptions { get; set; } = new ParserOptions() { AllowsSideEffects = true };
 
         // example override, switching to [1], [2] etc.
-        public virtual string Prompt => ">> ";
+        public virtual string PromptWithLineFeed => "\n>> ";
+
+        public virtual string PromptNoLineFeed => ">> ";
 
         // prompt for multiline continuation
         public virtual string PromptContinuation => ".. ";
@@ -171,15 +173,16 @@ namespace Microsoft.PowerFx
         /// Print the prompt - call this before input. The prompt can change based on whether this is the first
         /// line of input or a contination within a multiline. 
         /// </summary>
+        /// <param name="noLineFeed"></param>
         /// <param name="cancel"></param>
         /// <returns></returns>
-        public virtual async Task WritePromptAsync(CancellationToken cancel = default)
+        public virtual async Task WritePromptAsync(bool noLineFeed = false, CancellationToken cancel = default)
         {
             string prompt;
 
             if (this.MultilineProcessor.IsFirstLine)
             {
-                prompt = this.Prompt;
+                prompt = noLineFeed ? this.PromptNoLineFeed : this.PromptWithLineFeed;
             }
             else
             {
@@ -197,22 +200,23 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="line">A line of input.</param>
         /// <param name="lineNumber">Line number.</param>
+        /// <param name="noLineFeedInPrompt"></param>
         /// <param name="suggest">Provide suggestions instead of evaluating the expression.</param>
         /// <param name="cancel"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException">If cancelled.</exception>
-        public async Task<ReplResult> HandleLineAsync(string line, bool suggest = false, uint? lineNumber = null, CancellationToken cancel = default)
+        public async Task<ReplResult> HandleLineAsync(string line, bool suggest = false, uint? lineNumber = null, bool noLineFeedInPrompt = false, CancellationToken cancel = default)
         {
             if (this.Engine == null)
             {
                 throw new InvalidOperationException($"Engine is not set.");
             }
 
-            string expression = this.MultilineProcessor.HandleLine(line);
+            string expression = this.MultilineProcessor.HandleLine(line, suggest);
 
             if (expression != null)
             {
-                return await this.HandleCommandAsync(expression, suggest, lineNumber, cancel);
+                return await this.HandleCommandAsync(expression, suggest, lineNumber, noLineFeedInPrompt, cancel);
             }
 
             return null;
@@ -225,9 +229,10 @@ namespace Microsoft.PowerFx
         /// <param name="suggest">Provide suggestions instead of evaluating the expression.</param>
         /// <param name="cancel">cancellation token.</param>
         /// <param name="lineNumber">line number to attribute errors to.</param>
+        /// <param name="noLineFeed"></param>
         /// <returns>status object with details.</returns>
         /// <exception cref="InvalidOperationException">invalid.</exception>
-        public virtual async Task<ReplResult> HandleCommandAsync(string expression, bool suggest = false, uint? lineNumber = null, CancellationToken cancel = default)
+        public virtual async Task<ReplResult> HandleCommandAsync(string expression, bool suggest = false, uint? lineNumber = null, bool noLineFeed = false, CancellationToken cancel = default)
         {
             string lineError = lineNumber == null ? string.Empty : $"Line {lineNumber}: ";
 
@@ -243,7 +248,7 @@ namespace Microsoft.PowerFx
 
             if (this.Echo)
             {
-                await this.WritePromptAsync(cancel);
+                await this.WritePromptAsync(noLineFeed, cancel);
 
                 // better to strip any newline and add one ourselves (with WriteLine), in case the expression didn't come in with one
                 await this.Output.WriteLineAsync(expression.TrimEnd(), OutputKind.Repl, cancel);
@@ -491,7 +496,7 @@ namespace Microsoft.PowerFx
     }
 
     /// <summary>
-    /// Result from <see cref="PowerFxREPL.HandleCommandAsync(string, bool, uint?, CancellationToken)"/>.
+    /// Result from <see cref="PowerFxREPL.HandleCommandAsync(string, bool, uint?, bool, CancellationToken)"/>.
     /// </summary>
     public class ReplResult
     {

@@ -4,15 +4,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Repl;
 using Microsoft.PowerFx.Repl.Functions;
 using Microsoft.PowerFx.Repl.Services;
@@ -22,29 +19,26 @@ namespace Microsoft.PowerFx
 {
     public static class ConsoleRepl
     {
-        private const string OptionFormatTable = "FormatTable";
-
-        private const string OptionNumberIsFloat = "NumberIsFloat";
-        private static bool _numberIsFloat = false;
-
-        private const string OptionLargeCallDepth = "LargeCallDepth";
-        private static bool _largeCallDepth = false;
-
         private const string OptionFeaturesNone = "FeaturesNone";
-
-        private const string OptionPowerFxV1 = "PowerFxV1";
-
+        private const string OptionFormatTable = "FormatTable";
         private const string OptionHashCodes = "HashCodes";
-
+        private const string OptionLargeCallDepth = "LargeCallDepth";
+        private const string OptionNumberIsFloat = "NumberIsFloat";        
+        private const string OptionPowerFxV1 = "PowerFxV1";
+        private const string OptionsNoLineFeedInPrompt = "NoLineFeedInPrompt";
+        private const string OptionsIntellisenseEnabled = "IntellisenseEnabled";
         private const string OptionStackTrace = "StackTrace";
+
+        private static bool _intellisenseEnabled = false;
+        private static bool _largeCallDepth = false;
+        private static bool _noLineNeedInPrompt = false;
+        private static bool _numberIsFloat = false;
+        private static bool _reset;
         private static bool _stackTrace = false;
 
         private static readonly Features _features = Features.PowerFxV1;
-
         private static StandardFormatter _standardFormatter;
-
-        private static bool _reset;
-
+        
         private static RecalcEngine ReplRecalcEngine()
         {
             var config = new PowerFxConfig(_features);
@@ -62,7 +56,9 @@ namespace Microsoft.PowerFx
                 { OptionFeaturesNone, OptionFeaturesNone },
                 { OptionPowerFxV1, OptionPowerFxV1 },
                 { OptionHashCodes, OptionHashCodes },
-                { OptionStackTrace, OptionStackTrace }
+                { OptionStackTrace, OptionStackTrace },
+                { OptionsNoLineFeedInPrompt, OptionsNoLineFeedInPrompt },
+                { OptionsIntellisenseEnabled, OptionsIntellisenseEnabled }
             };
 
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
@@ -147,175 +143,12 @@ namespace Microsoft.PowerFx
             while (true)
             {
                 var repl = new MyRepl() { Echo = echo, PrintResult = printResult };
-                List<string> expressions = new List<string>();
+                var readLine = new ReadLine(repl, prompt);
 
                 while (!_reset)
                 {
-                    if (prompt)
-                    {
-                        repl.WritePromptAsync().Wait();
-                    }
-
-                    string line = string.Empty;
-
-                    // intellisense context
-                    int iStart = -1;
-                    int iEnd = -1;
-                    int tabCount = 0;
-                    string tabLine = null;
-                    List<IIntellisenseSuggestion> list = null;
-
-                    // history context
-                    int index = 0;
-
-                    while (true)
-                    {
-                        ConsoleKeyInfo cki = Console.ReadKey(true);
-                        ClearIntellisense(ref iStart, iEnd);
-
-                        // SHIFT-ESC = clear line
-                        if (cki.Key == ConsoleKey.Escape && (cki.Modifiers & ConsoleModifiers.Shift) != 0)
-                        {
-                            ClearIntellisense(ref iStart, iEnd);
-                            line = string.Empty;
-                            DisplayCurrentLine(repl, line);
-                            tabCount = 0;
-                            index = 0;
-                            continue;
-                        }
-
-                        // TAB or ESC = intellisense
-                        if ((cki.Key == ConsoleKey.Tab && tabCount == 0) || cki.Key == ConsoleKey.Escape)
-                        {
-                            ReplResult rr = repl.HandleLineAsync(line, suggest: true).Result;
-
-                            if (rr?.IntellisenseResult != null && rr.IntellisenseResult.Suggestions != null && rr.IntellisenseResult.Suggestions.Any())
-                            {
-                                tabLine = line;
-                                list = rr.IntellisenseResult.Suggestions.OrderBy(s => s.DisplayText.HighlightStart.ToString("0000", CultureInfo.InvariantCulture) + s.DisplayText.Text, StringComparer.OrdinalIgnoreCase).ToList();
-                            }
-                            else
-                            {
-                                list = null;
-                            }
-                        }
-
-                        if (cki.Key == ConsoleKey.Tab || cki.Key == ConsoleKey.Escape)
-                        {
-                            // TAB = complete with 1st suggestion (and next ones on subsequent TABs)
-                            if (cki.Key == ConsoleKey.Tab && list != null)
-                            {                                
-                                IIntellisenseSuggestion suggestion = list.Skip(tabCount % list.Count).First();
-                                int hs = suggestion.DisplayText.HighlightStart;
-                                int he = suggestion.DisplayText.HighlightEnd;
-                                line = string.Concat(tabLine.AsSpan(0, tabLine.Length - he + hs), suggestion.DisplayText.Text);                                
-                                DisplayCurrentLine(repl, line);
-                                tabCount++;
-                            }
-
-                            // ESC = show suggestions we have found
-                            if (cki.Key == ConsoleKey.Escape && list != null)
-                            {
-                                ClearIntellisense(ref iStart, iEnd);
-
-                                int cl = Console.CursorLeft;
-                                int ct = Console.CursorTop;
-
-                                iStart = ct + 1;
-                                Console.ForegroundColor = ConsoleColor.DarkGray;
-
-                                foreach (var suggestion in list)
-                                {
-                                    Console.WriteLine();
-
-                                    bool lastLine = Console.CursorTop == Console.BufferHeight - 1;
-                                    Console.Write(suggestion.DisplayText.Text + (lastLine ? $" (... {list.Count() - Console.BufferHeight + ct + 1} more)" : string.Empty));
-
-                                    if (lastLine)
-                                    {
-                                        break;
-                                    }
-                                }
-
-                                iEnd = Console.CursorTop;
-                                Console.ResetColor();
-                                Console.SetCursorPosition(cl, ct);
-                            }
-
-                            index = 0;
-                            continue;
-                        }
-
-                        tabCount = 0;                        
-                        
-                        // UP and DOWN, search in history
-                        if (cki.Key == ConsoleKey.UpArrow || cki.Key == ConsoleKey.DownArrow)
-                        {                            
-                            if (expressions.Count > 0)
-                            {
-                                // Keep an empty expression at the end of the list so that we can add new expressions
-                                if (expressions.Last() != string.Empty)
-                                {
-                                    expressions.Add(string.Empty);
-                                }
-
-                                if (cki.Key == ConsoleKey.UpArrow)
-                                {
-                                    index++;
-                                }
-
-                                if (cki.Key == ConsoleKey.DownArrow)
-                                {
-                                    index--;
-                                }
-
-                                if (index < 0)
-                                {
-                                    index = expressions.Count - 1;
-                                }
-
-                                List<string> e = new List<string>(expressions);
-                                e.Reverse();
-                                line = e[index % e.Count];
-                                DisplayCurrentLine(repl, line);                           
-                            }
-
-                            continue;
-                        }
-
-                        index = 0;
-
-                        // CTRL-Z = Exit
-                        if ((cki.Modifiers & ConsoleModifiers.Control) != 0 && cki.Key == ConsoleKey.Z)
-                        {
-                            Console.WriteLine("Exiting...");
-                            return;
-                        }
-                       
-                        // backspace
-                        if (cki.KeyChar == 8)
-                        {
-                            if (line.Length > 0)
-                            {
-                                Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
-                                Console.Write(' ');
-                                Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
-                                line = line.Substring(0, line.Length - 1);
-                            }
-
-                            continue;
-                        }
-
-                        // CR / LF = end of line
-                        if (cki.KeyChar == 13 || cki.KeyChar == 10)
-                        {
-                            Console.WriteLine();
-                            break;
-                        }
-
-                        Console.Write(cki.KeyChar);
-                        line += cki.KeyChar;
-                    }
+                    readLine.SetOptions(_noLineNeedInPrompt, _intellisenseEnabled);
+                    string line = readLine.GetLine();
 
                     // End of file
                     if (line == null)
@@ -323,62 +156,19 @@ namespace Microsoft.PowerFx
                         return;
                     }
 
-                    repl.HandleLineAsync(line, lineNumber: lineNumber++).Wait();
+                    repl.HandleLineAsync(line, lineNumber: lineNumber++, noLineFeedInPrompt: _noLineNeedInPrompt).Wait();
 
                     // Exit() function called
                     if (repl.ExitRequested)
                     {
                         return;
                     }
-
-                    if (expressions.Any() && expressions.Last() == string.Empty)
-                    {
-                        expressions.RemoveAt(expressions.Count - 1);
-                    }
-
-                    if (expressions.Count >= 19)
-                    {
-                        expressions.RemoveAt(0);
-                    }
-
-                    expressions.Add(line);
                 }
 
                 _reset = false;
             }
         }
-
-#pragma warning disable CS0618 // Type or member is obsolete
-        private static void DisplayCurrentLine(PowerFxREPL repl, string line)
-#pragma warning restore CS0618 // Type or member is obsolete
-        {
-            Console.SetCursorPosition(0, Console.CursorTop);
-            Console.Write(new string(' ', Console.BufferWidth));
-            Console.SetCursorPosition(0, Console.CursorTop);
-            repl.WritePromptAsync().Wait();
-            Console.Write(line);
-        }
-
-        private static void ClearIntellisense(ref int iStart, int iEnd)
-        {
-            if (iStart == -1)
-            {
-                return;
-            }
-
-            int cl = Console.CursorLeft;
-            int ct = Console.CursorTop;
-
-            for (int i = iStart; i <= Math.Min(iEnd, Console.BufferHeight - 1); i++)
-            {
-                Console.SetCursorPosition(0, i);
-                Console.Write(new string(' ', Console.BufferWidth));
-            }
-
-            Console.SetCursorPosition(cl, ct);
-            iStart = -1;
-        }       
-
+     
         private class ResetFunction : ReflectionFunction
         {
             public BooleanValue Execute()
@@ -447,6 +237,8 @@ namespace Microsoft.PowerFx
                 sb.Append($"{"NumberIsFloat:",-42}{_numberIsFloat}\n");
                 sb.Append($"{"LargeCallDepth:",-42}{_largeCallDepth}\n");
                 sb.Append($"{"StackTrace:",-42}{_stackTrace}\n");
+                sb.Append($"{"NoLineFeedInPrompt:",-42}{_noLineNeedInPrompt}\n");
+                sb.Append($"{"IntellisenseEnabled:",-42}{_intellisenseEnabled}\n");
 
                 foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
@@ -478,6 +270,16 @@ namespace Microsoft.PowerFx
                 if (string.Equals(option.Value, OptionNumberIsFloat, StringComparison.OrdinalIgnoreCase))
                 {
                     return BooleanValue.New(_numberIsFloat);
+                }
+
+                if (string.Equals(option.Value, OptionsNoLineFeedInPrompt, StringComparison.OrdinalIgnoreCase))
+                {
+                    return BooleanValue.New(_noLineNeedInPrompt);
+                }
+
+                if (string.Equals(option.Value, OptionsIntellisenseEnabled, StringComparison.OrdinalIgnoreCase))
+                {
+                    return BooleanValue.New(_intellisenseEnabled);
                 }
 
                 if (string.Equals(option.Value, OptionLargeCallDepth, StringComparison.OrdinalIgnoreCase))
@@ -524,6 +326,18 @@ namespace Microsoft.PowerFx
                 if (string.Equals(option.Value, OptionNumberIsFloat, StringComparison.OrdinalIgnoreCase))
                 {
                     _numberIsFloat = value.Value;
+                    return value;
+                }
+
+                if (string.Equals(option.Value, OptionsNoLineFeedInPrompt, StringComparison.OrdinalIgnoreCase))
+                {
+                    _noLineNeedInPrompt = value.Value;
+                    return value;
+                }
+
+                if (string.Equals(option.Value, OptionsIntellisenseEnabled, StringComparison.OrdinalIgnoreCase))
+                {
+                    _intellisenseEnabled = value.Value;
                     return value;
                 }
 
@@ -608,22 +422,29 @@ Options.HashCodes
     When printing, includes hash codes of each object to better understand references.
     This can be very helpful for debugging copy-on-mutation semantics.
 
+Options.IntellisenseEnabled
+    Enables Intellisense suggestions. Use TAB for auto-completion.
+    Use ESC to show suggestions, SHIFT-ESC to clear.
+
+Options.LargeCallDepth
+    Expands the call stack for testing complex user defined functions.
+
+Options.NoLineFeedInPrompt
+    Removes the line feed in the prompt.
+
+Options.None
+    Removed all the feature flags, which is even less than Canvas uses.
+
 Options.NumberIsFloat
     By default, literal numeric values such as ""1.23"" and the return type from the 
     Value function are treated as decimal values.  Turning this flag on changes that
     to floating point instead.  To test, ""1e300"" is legal in floating point but not decimal.
 
-Options.LargeCallDepth
-    Expands the call stack for testing complex user defined functions.
-
-Options.StackTrace
-    Displays the full stack trace when an exception is encountered.
-
 Options.PowerFxV1
     Sets all the feature flags for Power Fx 1.0.
 
-Options.None
-    Removed all the feature flags, which is even less than Canvas uses.
+Options.StackTrace
+    Displays the full stack trace when an exception is encountered.
 
 ";
 

@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Localization;
@@ -16,7 +17,7 @@ namespace Microsoft.PowerFx.Repl.Services
     // Handle accepting partial lines and determining when the command is complete. 
     public class MultilineProcessor
     {
-        protected readonly StringBuilder _commandBuffer = new StringBuilder();
+        protected StringBuilder _commandBuffer = new StringBuilder();
 
         // Useful for generating a prompt:
         // true if we're on the first line. 
@@ -25,8 +26,9 @@ namespace Microsoft.PowerFx.Repl.Services
 
         // Return null if we need more input. 
         // else return string containing multiple lines together. 
-        public virtual string HandleLine(string line)
+        public virtual string HandleLine(string line, bool suggest = false)
         {
+            StringBuilder oldBuffer = new StringBuilder(_commandBuffer.ToString());
             _commandBuffer.AppendLine(line);
 
             string commandBufferString = _commandBuffer.ToString();
@@ -62,10 +64,13 @@ namespace Microsoft.PowerFx.Repl.Services
                 Clear();
                 return commandBufferString;
             }
-            else
+
+            if (suggest)
             {
-                return null;
+                _commandBuffer = oldBuffer;
             }
+
+            return null;
         }
 
         public void Clear()
