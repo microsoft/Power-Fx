@@ -123,39 +123,46 @@ namespace Microsoft.PowerFx.Connectors.Execution
             switch (propertySchema.Type)
             {
                 case "array":
-                    // array
-                    if (fv is not TableValue tableValue)
+
+                    if (fv is BlankValue)
+                    {
+                        StartArray(propertyName);
+                        WriteValue(null);
+                    }
+                    else if (fv is TableValue tableValue)
+                    {
+                        StartArray(propertyName);
+
+                        foreach (DValue<RecordValue> item in tableValue.Rows)
+                        {
+                            StartArrayElement(propertyName);
+                            RecordValue rva = item.Value;
+
+                            // If we have an object schema, we will try to follow it
+                            if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
+                            {
+                                WriteProperty(null, propertySchema.Items, rva);
+                                continue;
+                            }
+
+                            // Else, we write primitive types only
+                            if (rva.Fields.Count() != 1)
+                            {
+                                throw new ArgumentException($"Incompatible Table for supporting array, RecordValue has more than one column - propertyName {propertyName}, number of fields {rva.Fields.Count()}");
+                            }
+
+                            if (rva.Fields.First().Name != "Value")
+                            {
+                                throw new ArgumentException($"Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName {propertyName}");
+                            }
+
+                            WriteValue(rva.Fields.First().Value);
+                        }
+                    }
+                    else
                     {
                         throw new ArgumentException($"Expected TableValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
-                    }
-
-                    StartArray(propertyName);
-
-                    foreach (DValue<RecordValue> item in tableValue.Rows)
-                    {
-                        StartArrayElement(propertyName);
-                        RecordValue rva = item.Value;
-
-                        // If we have an object schema, we will try to follow it
-                        if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
-                        {
-                            WriteProperty(null, propertySchema.Items, rva);
-                            continue;
-                        }
-
-                        // Else, we write primitive types only
-                        if (rva.Fields.Count() != 1)
-                        {
-                            throw new ArgumentException($"Incompatible Table for supporting array, RecordValue has more than one column - propertyName {propertyName}, number of fields {rva.Fields.Count()}");
-                        }
-
-                        if (rva.Fields.First().Name != "Value")
-                        {
-                            throw new ArgumentException($"Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName {propertyName}");
-                        }
-
-                        WriteValue(rva.Fields.First().Value);
-                    }
+                    }                    
 
                     EndArray();
                     break;
@@ -176,6 +183,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         WriteDecimalValue(decimalValue.Value);
                     }
+                    else if (fv is BlankValue)
+                    {
+                        WriteDecimalValue(0);
+                    }
                     else
                     {
                         throw new ArgumentException($"Expected NumberValue (number) and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
@@ -189,6 +200,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     if (fv is BooleanValue booleanValue)
                     {
                         WriteBooleanValue(booleanValue.Value);
+                    }
+                    else if (fv is BlankValue)
+                    {
+                        WriteBooleanValue(false);
                     }
                     else
                     {
@@ -208,6 +223,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     else if (fv is DecimalValue decimalValue)
                     {
                         WriteDecimalValue(decimalValue.Value);
+                    }
+                    else if (fv is BlankValue)
+                    {
+                        WriteDecimalValue(0);
                     }
                     else
                     {
@@ -242,6 +261,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     else if (fv is DateValue dv)
                     {
                         WriteDateValue(dv.GetConvertedValue(null));
+                    }
+                    else if (fv is BlankValue)
+                    {
+                        WriteStringValue(string.Empty);
                     }
                     else
                     {

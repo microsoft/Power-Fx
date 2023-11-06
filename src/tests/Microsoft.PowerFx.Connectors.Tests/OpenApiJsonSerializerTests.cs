@@ -25,6 +25,20 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void JsonSerializer_Blank()
+        {
+            Assert.Equal(@"{""a"":0}", SerializeSchemaAgainstBlankValue(SchemaNumber));
+            Assert.Equal(@"{""a"":0}", SerializeSchemaAgainstBlankValue(SchemaInteger));
+            Assert.Equal(@"{""a"":""""}", SerializeSchemaAgainstBlankValue(SchemaString));
+            Assert.Equal(@"{""a"":false}", SerializeSchemaAgainstBlankValue(SchemaBoolean));
+            Assert.Equal(@"{""a"":[null]}", SerializeSchemaAgainstBlankValue(SchemaArrayInteger));
+            Assert.Equal(@"{""a"":[null]}", SerializeSchemaAgainstBlankValue(SchemaArrayString));
+            Assert.Equal(@"{""a"":[null]}", SerializeSchemaAgainstBlankValue(SchemaArrayObject));
+            Assert.Equal(@"{""a"":[null]}", SerializeSchemaAgainstBlankValue(SchemaArrayDateTime));
+            Assert.Equal(@"{""a"":""""}", SerializeSchemaAgainstBlankValue(SchemaDateTime));
+        }    
+
+        [Fact]
         public void JsonSerializer_SingleInteger()
         {
             var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
@@ -355,6 +369,14 @@ namespace Microsoft.PowerFx.Tests
         private class DateTimeArrayType
         {
             public DateTime[] A { get; set; }
+        }
+
+        private string SerializeSchemaAgainstBlankValue(OpenApiSchema schema)
+        {
+            return SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            {
+                ["a"] = (schema, FormulaValue.NewBlank())
+            });
         }
     }
 }
