@@ -27,15 +27,17 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void JsonSerializer_Blank()
         {
-            Assert.Equal(@"{""a"":0}", SerializeSchemaAgainstBlankValue(SchemaNumber));
-            Assert.Equal(@"{""a"":0}", SerializeSchemaAgainstBlankValue(SchemaInteger));
-            Assert.Equal(@"{""a"":""""}", SerializeSchemaAgainstBlankValue(SchemaString));
-            Assert.Equal(@"{""a"":false}", SerializeSchemaAgainstBlankValue(SchemaBoolean));
-            Assert.Equal(@"{""a"":[null]}", SerializeSchemaAgainstBlankValue(SchemaArrayInteger));
-            Assert.Equal(@"{""a"":[null]}", SerializeSchemaAgainstBlankValue(SchemaArrayString));
-            Assert.Equal(@"{""a"":[null]}", SerializeSchemaAgainstBlankValue(SchemaArrayObject));
-            Assert.Equal(@"{""a"":[null]}", SerializeSchemaAgainstBlankValue(SchemaArrayDateTime));
-            Assert.Equal(@"{""a"":""""}", SerializeSchemaAgainstBlankValue(SchemaDateTime));
+            string expected = "{}";
+
+            Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaNumber));
+            Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaInteger));
+            Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaString));
+            Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaBoolean));
+            Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaArrayInteger));
+            Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaArrayString));
+            Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaArrayObject));
+            Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaArrayDateTime));
+            Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaDateTime));
         }    
 
         [Fact]

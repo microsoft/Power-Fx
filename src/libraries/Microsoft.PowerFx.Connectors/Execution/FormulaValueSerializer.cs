@@ -115,6 +115,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         private void WriteProperty(string propertyName, OpenApiSchema propertySchema, FormulaValue fv)
         {
+            if (fv is BlankValue)
+            {
+                return;
+            }
+
             if (propertySchema == null)
             {
                 throw new ArgumentException($"Missing schema for property {propertyName}");
@@ -123,13 +128,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             switch (propertySchema.Type)
             {
                 case "array":
-
-                    if (fv is BlankValue)
-                    {
-                        StartArray(propertyName);
-                        WriteValue(null);
-                    }
-                    else if (fv is TableValue tableValue)
+                    if (fv is TableValue tableValue)
                     {
                         StartArray(propertyName);
 
@@ -183,10 +182,6 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         WriteDecimalValue(decimalValue.Value);
                     }
-                    else if (fv is BlankValue)
-                    {
-                        WriteDecimalValue(0);
-                    }
                     else
                     {
                         throw new ArgumentException($"Expected NumberValue (number) and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
@@ -201,10 +196,6 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         WriteBooleanValue(booleanValue.Value);
                     }
-                    else if (fv is BlankValue)
-                    {
-                        WriteBooleanValue(false);
-                    }
                     else
                     {
                         throw new ArgumentException($"Expected BooleanValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
@@ -213,7 +204,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     break;
 
                 case "integer":
-                    // int16, int32, int64                    
+                    // int16, int32, int64  
                     WritePropertyName(propertyName);
 
                     if (fv is NumberValue integerValue)
@@ -223,10 +214,6 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     else if (fv is DecimalValue decimalValue)
                     {
                         WriteDecimalValue(decimalValue.Value);
-                    }
-                    else if (fv is BlankValue)
-                    {
-                        WriteDecimalValue(0);
                     }
                     else
                     {
@@ -261,10 +248,6 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     else if (fv is DateValue dv)
                     {
                         WriteDateValue(dv.GetConvertedValue(null));
-                    }
-                    else if (fv is BlankValue)
-                    {
-                        WriteStringValue(string.Empty);
                     }
                     else
                     {
