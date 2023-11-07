@@ -115,6 +115,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         private void WriteProperty(string propertyName, OpenApiSchema propertySchema, FormulaValue fv)
         {
+            if (fv is BlankValue || fv is ErrorValue)
+            {
+                return;
+            }
+
             if (propertySchema == null)
             {
                 throw new ArgumentException($"Missing schema for property {propertyName}");
@@ -123,39 +128,40 @@ namespace Microsoft.PowerFx.Connectors.Execution
             switch (propertySchema.Type)
             {
                 case "array":
-                    // array
-                    if (fv is not TableValue tableValue)
+                    if (fv is TableValue tableValue)
+                    {
+                        StartArray(propertyName);
+
+                        foreach (DValue<RecordValue> item in tableValue.Rows)
+                        {
+                            StartArrayElement(propertyName);
+                            RecordValue rva = item.Value;
+
+                            // If we have an object schema, we will try to follow it
+                            if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
+                            {
+                                WriteProperty(null, propertySchema.Items, rva);
+                                continue;
+                            }
+
+                            // Else, we write primitive types only
+                            if (rva.Fields.Count() != 1)
+                            {
+                                throw new ArgumentException($"Incompatible Table for supporting array, RecordValue has more than one column - propertyName {propertyName}, number of fields {rva.Fields.Count()}");
+                            }
+
+                            if (rva.Fields.First().Name != "Value")
+                            {
+                                throw new ArgumentException($"Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName {propertyName}");
+                            }
+
+                            WriteValue(rva.Fields.First().Value);
+                        }
+                    }
+                    else
                     {
                         throw new ArgumentException($"Expected TableValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
-                    }
-
-                    StartArray(propertyName);
-
-                    foreach (DValue<RecordValue> item in tableValue.Rows)
-                    {
-                        StartArrayElement(propertyName);
-                        RecordValue rva = item.Value;
-
-                        // If we have an object schema, we will try to follow it
-                        if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
-                        {
-                            WriteProperty(null, propertySchema.Items, rva);
-                            continue;
-                        }
-
-                        // Else, we write primitive types only
-                        if (rva.Fields.Count() != 1)
-                        {
-                            throw new ArgumentException($"Incompatible Table for supporting array, RecordValue has more than one column - propertyName {propertyName}, number of fields {rva.Fields.Count()}");
-                        }
-
-                        if (rva.Fields.First().Name != "Value")
-                        {
-                            throw new ArgumentException($"Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName {propertyName}");
-                        }
-
-                        WriteValue(rva.Fields.First().Value);
-                    }
+                    }                    
 
                     EndArray();
                     break;
@@ -198,7 +204,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     break;
 
                 case "integer":
-                    // int16, int32, int64                    
+                    // int16, int32, int64  
                     WritePropertyName(propertyName);
 
                     if (fv is NumberValue integerValue)
