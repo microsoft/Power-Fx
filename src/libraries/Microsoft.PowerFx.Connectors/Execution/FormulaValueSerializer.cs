@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         private void WriteProperty(string propertyName, OpenApiSchema propertySchema, FormulaValue fv)
         {
-            if (fv is BlankValue)
+            if (fv is BlankValue || fv is ErrorValue)
             {
                 return;
             }

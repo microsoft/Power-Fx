@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Threading;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
@@ -29,6 +30,7 @@ namespace Microsoft.PowerFx.Tests
         {
             string expected = "{}";
 
+            // Test against blank value
             Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaNumber));
             Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaInteger));
             Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaString));
@@ -38,6 +40,17 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaArrayObject));
             Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaArrayDateTime));
             Assert.Equal(expected, SerializeSchemaAgainstBlankValue(SchemaDateTime));
+
+            // Test against error value
+            Assert.Equal(expected, SerializeSchemaAgainstErrorValue(SchemaNumber));
+            Assert.Equal(expected, SerializeSchemaAgainstErrorValue(SchemaInteger));
+            Assert.Equal(expected, SerializeSchemaAgainstErrorValue(SchemaString));
+            Assert.Equal(expected, SerializeSchemaAgainstErrorValue(SchemaBoolean));
+            Assert.Equal(expected, SerializeSchemaAgainstErrorValue(SchemaArrayInteger));
+            Assert.Equal(expected, SerializeSchemaAgainstErrorValue(SchemaArrayString));
+            Assert.Equal(expected, SerializeSchemaAgainstErrorValue(SchemaArrayObject));
+            Assert.Equal(expected, SerializeSchemaAgainstErrorValue(SchemaArrayDateTime));
+            Assert.Equal(expected, SerializeSchemaAgainstErrorValue(SchemaDateTime));
         }    
 
         [Fact]
@@ -378,6 +391,14 @@ namespace Microsoft.PowerFx.Tests
             return SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (schema, FormulaValue.NewBlank())
+            });
+        }
+
+        private string SerializeSchemaAgainstErrorValue(OpenApiSchema schema)
+        {
+            return SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            {
+                ["a"] = (schema, CommonErrors.DivByZeroError(IRContext.NotInSource(FormulaType.Decimal)))
             });
         }
     }
