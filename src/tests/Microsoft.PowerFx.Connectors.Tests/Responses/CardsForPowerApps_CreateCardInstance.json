@@ -1,0 +1,13 @@
+{
+  "type": "AdaptiveCard",
+  "body": [
+    {
+      "type": "TextBlock",
+      "size": "medium",
+      "weight": "bolder",
+      "text": "title",
+      "style": "heading",
+      "wrap": true
+    }
+  ]
+}

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Newtonsoft.Json;
@@ -988,7 +989,50 @@ POST https://tip1-shared.azure-apim.net/invoke
         }
 
         [Fact]
-        public async Task PowerAppsCardsTest()
+        public async Task CardsForPowerApps_Invoke()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\CardsForPowerApps.json");
+            using var httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "7592282b-e371-e3f6-8e04-e8f23e64227c" /* environment Id */, "shared-cardsforpower-eafc4fa0-c560-4eba-a5b2-3e1ebc63193a" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
+
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
+            ConnectorFunction createCardInstance = functions.First(f => f.Name == "CreateCardInstance");
+
+            testConnector.SetResponseFromFile(@"Responses\CardsForPowerApps_CreateCardInstance.json");
+            var result = await createCardInstance.InvokeAsync(
+                new FormulaValue[]
+                {
+                   FormulaValue.New("card"),
+                   FormulaValue.NewRecordFromFields(
+                           new NamedValue("inputs", FormulaValue.NewRecordFromFields(
+                                new NamedValue("property1", FormulaValue.New("test1")),
+                                new NamedValue("property2", FormulaValue.New("test2"))))),
+                },
+                runtimeContext,
+                CancellationToken.None).ConfigureAwait(false);
+
+            string input = testConnector._log.ToString();
+            Assert.Equal("AdaptiveCard", (((RecordValue)result).GetField("type") as StringValue).Value);
+            Assert.Equal(
+                @"POST https://tip1002-002.azure-apihub.net/invoke
+ authority: tip1002-002.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/7592282b-e371-e3f6-8e04-e8f23e64227c
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/cardsforpowerapps/shared-cardsforpower-eafc4fa0-c560-4eba-a5b2-3e1ebc63193a/cards/cards/card/instances
+ x-ms-user-agent: PowerFx/1.3.0-local
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {""inputs"":{""property1"":""test1"",""property2"":""test2""}}
+", input);
+        }
+
+        [Fact]
+        public async Task CardsForPowerApps_Suggestion()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\CardsForPowerApps.json");
             using var httpClient = new HttpClient(testConnector);
