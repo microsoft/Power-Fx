@@ -1,0 +1,12 @@
+{
+  "value": [
+    {
+      "id": "channelId",
+      "displayName": "channelName"
+    },
+    {
+      "id": "channelId2",
+      "displayName": "channelName2"
+    }
+  ]
+}
