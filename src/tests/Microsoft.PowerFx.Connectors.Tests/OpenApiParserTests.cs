@@ -1016,7 +1016,7 @@ POST https://tip1-shared.azure-apim.net/invoke
             string input = testConnector._log.ToString();
             Assert.Equal("AdaptiveCard", (((RecordValue)result).GetField("type") as StringValue).Value);
             Assert.Equal(
-                @"POST https://tip1002-002.azure-apihub.net/invoke
+                $@"POST https://tip1002-002.azure-apihub.net/invoke
  authority: tip1002-002.azure-apihub.net
  Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...
  path: /invoke
@@ -1025,9 +1025,9 @@ POST https://tip1-shared.azure-apim.net/invoke
  x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
  x-ms-request-method: POST
  x-ms-request-url: /apim/cardsforpowerapps/shared-cardsforpower-eafc4fa0-c560-4eba-a5b2-3e1ebc63193a/cards/cards/card/instances
- x-ms-user-agent: PowerFx/1.3.0-local
+ x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
  [content-header] Content-Type: application/json; charset=utf-8
- [body] {""inputs"":{""property1"":""test1"",""property2"":""test2""}}
+ [body] {{""inputs"":{{""property1"":""test1"",""property2"":""test2""}}}}
 ", input);
         }
 
