@@ -125,47 +125,43 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 throw new ArgumentException($"Missing schema for property {propertyName}");
             }
 
+            // if connector has null as a type but "array" is provided, let's write it down. this is possible in case of x-ms-dynamic-properties
+            if (fv is TableValue tableValue && ((propertySchema.Type ?? "array") == "array")) 
+            {
+                StartArray(propertyName);
+
+                foreach (DValue<RecordValue> item in tableValue.Rows)
+                {
+                    StartArrayElement(propertyName);
+                    RecordValue rva = item.Value;
+
+                    // If we have an object schema, we will try to follow it
+                    if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
+                    {
+                        WriteProperty(null, propertySchema.Items, rva);
+                        continue;
+                    }
+
+                    // Else, we write primitive types only
+                    if (rva.Fields.Count() != 1)
+                    {
+                        throw new ArgumentException($"Incompatible Table for supporting array, RecordValue has more than one column - propertyName {propertyName}, number of fields {rva.Fields.Count()}");
+                    }
+
+                    if (rva.Fields.First().Name != "Value")
+                    {
+                        throw new ArgumentException($"Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName {propertyName}");
+                    }
+
+                    WriteValue(rva.Fields.First().Value);
+                }
+
+                EndArray();
+                return;
+            }
+
             switch (propertySchema.Type)
             {
-                case "array":
-                    if (fv is TableValue tableValue)
-                    {
-                        StartArray(propertyName);
-
-                        foreach (DValue<RecordValue> item in tableValue.Rows)
-                        {
-                            StartArrayElement(propertyName);
-                            RecordValue rva = item.Value;
-
-                            // If we have an object schema, we will try to follow it
-                            if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
-                            {
-                                WriteProperty(null, propertySchema.Items, rva);
-                                continue;
-                            }
-
-                            // Else, we write primitive types only
-                            if (rva.Fields.Count() != 1)
-                            {
-                                throw new ArgumentException($"Incompatible Table for supporting array, RecordValue has more than one column - propertyName {propertyName}, number of fields {rva.Fields.Count()}");
-                            }
-
-                            if (rva.Fields.First().Name != "Value")
-                            {
-                                throw new ArgumentException($"Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName {propertyName}");
-                            }
-
-                            WriteValue(rva.Fields.First().Value);
-                        }
-                    }
-                    else
-                    {
-                        throw new ArgumentException($"Expected TableValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
-                    }                    
-
-                    EndArray();
-                    break;
-
                 case "null":
                     // nullable
                     throw new NotImplementedException($"null schema type not supported yet for property {propertyName}");
@@ -256,9 +252,19 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
                     break;
 
+                // some connectors don't set "type" when they have dynamic schema
+                // let's be tolerant and always write the passed record if the type was not provided
+                case null:
                 case "object":
-                    // collection of property/value pairs                                                         
-                    WriteObject(propertyName, propertySchema, (fv as RecordValue).Fields);
+                    if (fv is RecordValue recordValue)
+                    {
+                        WriteObject(propertyName, propertySchema, recordValue.Fields);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException($"Expected to get {propertySchema?.Type ?? "record"} for property {propertyName} but got {fv?.GetType().Name}");
+                    }
+
                     break;
 
                 default:
