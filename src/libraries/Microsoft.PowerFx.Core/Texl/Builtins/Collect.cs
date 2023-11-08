@@ -221,13 +221,16 @@ namespace Microsoft.AppMagic.Authoring.Texl
                 }
             }
 
-            if ((binding.NameResolver?.CurrentEntity as ControlInfo)?.Template.IsDataComponent == true && !isConnected)
-            {
-                // Stateful actions including using in-memory data sources are not allowed within data components.
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.err);
-            }
+            // !!! 
+            //if ((binding.NameResolver?.CurrentEntity as ControlInfo)?.Template.IsDataComponent == true && !isConnected)
+            //{
+            //    // Stateful actions including using in-memory data sources are not allowed within data components.
+            //    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.err);
+            //}
 
-            FunctionUtils.ManipulatesCollectionsCheckSemantics(binding, this, args, argTypes, errors);
+
+            // !!!
+            //FunctionUtils.ManipulatesCollectionsCheckSemantics(binding, this, args, argTypes, errors);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -303,37 +306,38 @@ namespace Microsoft.AppMagic.Authoring.Texl
             return DType.CreateRecord(new TypedName[] { new TypedName(argType, new DName(fieldName)) });
         }
 
-        public static void PushCustomJsArgs(TexlFunction func, JsTranslator translator, TexlBinding binding, CallNode node, List<Fragment> argFragments)
-        {
-            var collectFunc = (CollectFunction)func;
+        // !!!
+//        public static void PushCustomJsArgs(TexlFunction func, JsTranslator translator, TexlBinding binding, CallNode node, List<Fragment> argFragments)
+//        {
+//            var collectFunc = (CollectFunction)func;
 
-            // Only scalar collection functions require the scalar field name.
-            if (!collectFunc.IsScalar)
-            {
-                return;
-            }
+//            // Only scalar collection functions require the scalar field name.
+//            if (!collectFunc.IsScalar)
+//            {
+//                return;
+//            }
 
-            // CollectS needs to also inject the field name for these scalars; e.g. Collect(x,"a","b") -> Collect(x,"a","b","Value").
-            // Note that a single name is sufficient. Since the scalars being pushed are of the same type, they will be collected
-            // into the exact same column, whose name is needed (and will be pushed) here.
-            var args = node.Args.Children;
-            string fieldName = Contracts.VerifyValue(CollectScalarFunction.GetInvariantNameForRecord(binding.Features, binding.GetType(args[1]).Kind));
-#if DEBUG
-            for (int i = 1; i < argFragments.Count; i++)
-            {
-                Contracts.Assert(fieldName == Contracts.VerifyValue(CollectScalarFunction.GetInvariantNameForRecord(binding.Features, binding.GetType(args[i]).Kind)));
-            }
-#endif
+//            // CollectS needs to also inject the field name for these scalars; e.g. Collect(x,"a","b") -> Collect(x,"a","b","Value").
+//            // Note that a single name is sufficient. Since the scalars being pushed are of the same type, they will be collected
+//            // into the exact same column, whose name is needed (and will be pushed) here.
+//            var args = node.Args.Children;
+//            string fieldName = Contracts.VerifyValue(CollectScalarFunction.GetInvariantNameForRecord(binding.Features, binding.GetType(args[1]).Kind));
+//#if DEBUG
+//            for (int i = 1; i < argFragments.Count; i++)
+//            {
+//                Contracts.Assert(fieldName == Contracts.VerifyValue(CollectScalarFunction.GetInvariantNameForRecord(binding.Features, binding.GetType(args[i]).Kind)));
+//            }
+//#endif
 
-            var builder = new PAStringBuilder(fieldName.Length + 2);
-            builder.AppendAsPlainText(fieldName);
+//            var builder = new PAStringBuilder(fieldName.Length + 2);
+//            builder.AppendAsPlainText(fieldName);
 
-            argFragments.Add(translator.CreateFragment(builder));
-        }
+//            argFragments.Add(translator.CreateFragment(builder));
+//        }
 
         protected static string CreateInvariantFieldName(PowerFx.Features features, DKind dKind)
         {
-            Contracts.Assert(DKind._Min <= dKind && dKind < DKind._Lim);
+            Contracts.Assert(dKind >= DKind._Min && dKind < DKind._Lim);
 
             return Helpers.GetScalarSingleColumnNameForType(features, dKind);
         }
