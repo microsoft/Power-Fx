@@ -1483,15 +1483,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 };
 
                 var expectedDType = TestUtils.DT(expectedType);
-                if (pfxV1)
-                {
-                    // Only identifiers in PFx1.0
-                    TestBindingErrors(script, expectedDType, features: features);
-                }
-                else
-                {
-                    TestSimpleBindingSuccess(script, expectedDType, features: features);
-                }
+                TestSimpleBindingSuccess(script, expectedDType, features: features);
             }
         }
 

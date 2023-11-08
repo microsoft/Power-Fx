@@ -51,6 +51,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             RunExpressionTestCase(testCase, features, numberIsFloat: true);
         }
 
+        // Canvas currently does not support decimal, but since this interpreter does, we can run tests with decimal here.
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,NumberIsFloat,DecimalSupport")]
+        [InterpreterTheory]
+        public void Canvas_Float_PFxV1(ExpressionTestCase testCase)
+        {
+            // current default features in Canvas abc
+            var features = new Features()
+            {
+                TableSyntaxDoesntWrapRecords = true,
+                ConsistentOneColumnTableResult = true,
+                PowerFxV1CompatibilityRules = true,
+            };
+
+            RunExpressionTestCase(testCase, features, numberIsFloat: true);
+        }
+
         [InterpreterTheory]
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat,DecimalSupport")]
         public void V1_Decimal(ExpressionTestCase testCase)

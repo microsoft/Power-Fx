@@ -141,13 +141,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else if ((!supportColumnNamesAsIdentifiers || !pfxV1) && colNameArgType.Kind == DKind.String)
             {
-                if (pfxV1)
-                {
-                    // Only support for identifiers in PFx1.0
-                    errors.EnsureError(DocumentErrorSeverity.Severe, colNameArg, TexlStrings.ErrExpectedIdentifierArg_Name, colNameArg.ToString());
-                    return false;
-                }
-
                 if (colNameArg is StrLitNode strLitNode)
                 {
                     if (!DName.IsValidDName(strLitNode.Value))

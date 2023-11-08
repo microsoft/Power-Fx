@@ -1,4 +1,4 @@
-#SETUP: disable:SupportColumnNamesAsIdentifiers,PowerFxV1CompatibilityRules
+#SETUP: SupportColumnNamesAsIdentifiers,PowerFxV1CompatibilityRules
 
 // ###### SortByColumns, column + ascending/descending overload ######
 
