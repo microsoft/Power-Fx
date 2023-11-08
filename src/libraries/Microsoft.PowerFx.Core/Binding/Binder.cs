@@ -2995,7 +2995,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 UpdateBindKindUseFlags(lookupInfo.Kind);
 
                 // Update statefulness of global datasources excluding dynamic datasources.
-                if (lookupInfo.Kind == BindKind.Data && !_txb._glue.IsDynamicDataSourceInfo(lookupInfo.Data))
+                if (_txb.IsInfoKindDataSource(fnInfo) && !_txb._glue.IsDynamicDataSourceInfo(lookupInfo.Data))
                 {
                     _txb.SetStateful(node, true);
                 }
