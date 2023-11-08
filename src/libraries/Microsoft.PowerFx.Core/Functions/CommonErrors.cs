@@ -216,15 +216,5 @@ namespace Microsoft.PowerFx.Functions
                 Kind = ErrorKind.InvalidArgument
             });
         }
-
-        internal static ErrorValue NonFiniteNumber(IRContext irContext)
-        {
-            return new ErrorValue(irContext, new ExpressionError()
-            {
-                Message = $"The result is a non-finite number.",
-                Span = irContext.SourceContext,
-                Kind = ErrorKind.Numeric
-            });
-        }
     }
 }
