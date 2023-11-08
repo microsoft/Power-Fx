@@ -319,6 +319,18 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Fact]
+        public void AssociatedDataSourcesTest()
+        {
+            DType myTableType = TestUtils.DT("*[a:n,b:s,c:b]");
+            var myDataSource = new TestDataSource("myDS", myTableType);
+            var myTypeWithAssociatedDataSource = DType.AttachDataSourceInfo(myTableType, myDataSource);
+
+            Assert.Empty(myTableType.AssociatedDataSources);
+            Assert.Single(myTypeWithAssociatedDataSource.AssociatedDataSources);
+            Assert.Equal(myDataSource, myTypeWithAssociatedDataSource.AssociatedDataSources.Single());
+        }
+
         [Theory]
         [InlineData(false)]
         [InlineData(true)]

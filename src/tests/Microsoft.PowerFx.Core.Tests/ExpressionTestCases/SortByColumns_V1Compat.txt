@@ -4,25 +4,25 @@
 
 // Legacy behavior: we can pass non-string literals to the column name in SortByColumns
 >> SortByColumns([1,3,2],Left("Value234", 5))
-Errors: Error 22-41: Argument 'Left("Value234", 5)' is invalid, expected a text literal.|Error 0-42: The function 'SortByColumns' has some invalid arguments.
+Errors: Error 22-41: Expected identifier name|Error 0-42: The function 'SortByColumns' has some invalid arguments.
 
 >> SortByColumns([1,3,2],Left("Value234", 5), SortOrder.Descending)
-Errors: Error 22-41: Argument 'Left("Value234", 5)' is invalid, expected a text literal.|Error 0-64: The function 'SortByColumns' has some invalid arguments.
+Errors: Error 22-41: Expected identifier name|Error 0-64: The function 'SortByColumns' has some invalid arguments.
 
 >> SortByColumns(Table({a:1, b:"one"}, {a:2, b:"two"}, {a:3, b:"three"}, {a:4, b:"four"}), If(1>0,"a","b"))
-Errors: Error 88-103: Argument 'If(1 > 0, "a", "b")' is invalid, expected a text literal.|Error 0-104: The function 'SortByColumns' has some invalid arguments.
+Errors: Error 88-103: Expected identifier name|Error 0-104: The function 'SortByColumns' has some invalid arguments.
 
 >> SortByColumns(Table({a:1, b:"one"}, {a:2, b:"two"}, {a:3, b:"three"}, {a:4, b:"four"}), If(1<0,"a","b"))
-Errors: Error 88-103: Argument 'If(1 < 0, "a", "b")' is invalid, expected a text literal.|Error 0-104: The function 'SortByColumns' has some invalid arguments.
+Errors: Error 88-103: Expected identifier name|Error 0-104: The function 'SortByColumns' has some invalid arguments.
 
 >> SortByColumns(Table({a:1,b:"one"}, {a:2, b:"two"}, {a:1,b:"onebis"},{a:3, b:"three"}, {a:4, b:"four"}, {a:3, b:"threebis"}), "a", SortOrder.Ascending, Left("b1", 1), SortOrder.Descending)
-Errors: Error 151-164: Argument 'Left("b1", 1)' is invalid, expected a text literal.|Error 0-187: The function 'SortByColumns' has some invalid arguments.
+Errors: Error 125-128: Expected identifier name|Error 151-164: Expected identifier name|Error 0-187: The function 'SortByColumns' has some invalid arguments.
 
 >> SortByColumns(Table({a:1, b:1111}, {a:2, b:222}, {a:3, b:33}), If(1>0,"columndoesnotexist"))
-Errors: Error 63-91: Argument 'If(1 > 0, "columndoesnotexist")' is invalid, expected a text literal.|Error 0-92: The function 'SortByColumns' has some invalid arguments.
+Errors: Error 63-91: Expected identifier name|Error 0-92: The function 'SortByColumns' has some invalid arguments.
 
 >> SortByColumns(Table({a:1,b:"one"}, {a:2, b:"two"}, {a:1,b:"onebis"},{a:3, b:"three"}, {a:4, b:"four"}, {a:3, b:"threebis"}), "a", SortOrder.Ascending, Left("b1", 2), SortOrder.Descending)
-Errors: Error 151-164: Argument 'Left("b1", 2)' is invalid, expected a text literal.|Error 0-187: The function 'SortByColumns' has some invalid arguments.
+Errors: Error 125-128: Expected identifier name|Error 151-164: Expected identifier name|Error 0-187: The function 'SortByColumns' has some invalid arguments.
 
 >> SortByColumns(Table(
   { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },
@@ -43,19 +43,19 @@ Errors: Error 151-164: Argument 'Left("b1", 2)' is invalid, expected a text lite
   { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
   { First: Blank(), Last: "Rodriguez", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
   { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }),Left("Hello", -1), SortOrder.Ascending,"Age", SortOrder.Descending)
-Errors: Error 1854-1871: Argument 'Left("Hello", -1)' is invalid, expected a text literal.|Error 0-1921: The function 'SortByColumns' has some invalid arguments.
+Errors: Error 1854-1871: Expected identifier name|Error 1893-1898: Expected identifier name|Error 0-1921: The function 'SortByColumns' has some invalid arguments.
 
 // ###### SortByColumns, column + order table overload ######
 
 >> SortByColumns([1,3,2],Left("Value234", 5), [2,3,1])
-Errors: Error 22-41: Argument 'Left("Value234", 5)' is invalid, expected a text literal.|Error 0-51: The function 'SortByColumns' has some invalid arguments.
+Errors: Error 22-41: Expected identifier name|Error 0-51: The function 'SortByColumns' has some invalid arguments.
 
 >> SortByColumns(Table({a:1, b:"one"}, {a:2, b:"two"}, {a:3, b:"three"}, {a:4, b:"four"}), If(1<0,"a","b"), ["four", "three", "two", "one"])
-Errors: Error 88-103: Argument 'If(1 < 0, "a", "b")' is invalid, expected a text literal.|Error 0-137: The function 'SortByColumns' has some invalid arguments.
+Errors: Error 88-103: Expected identifier name|Error 0-137: The function 'SortByColumns' has some invalid arguments.
 
 // If order table does not match the column to be sorted, results are unchanged
 >> SortByColumns(Table({a:1, b:"one"}, {a:2, b:"two"}, {a:3, b:"three"}, {a:4, b:"four"}), If(1>0,"a","b"), ["four", "three", "two", "one"])
-Errors: Error 88-103: Argument 'If(1 > 0, "a", "b")' is invalid, expected a text literal.|Error 0-137: The function 'SortByColumns' has some invalid arguments.
+Errors: Error 88-103: Expected identifier name|Error 0-137: The function 'SortByColumns' has some invalid arguments.
 
 >> SortByColumns(Table({a:1, b:1111}, {a:2, b:222}, {a:3, b:33}), If(1>0,"columndoesnotexist"), [1,2,3])
-Errors: Error 63-91: Argument 'If(1 > 0, "columndoesnotexist")' is invalid, expected a text literal.|Error 0-101: The function 'SortByColumns' has some invalid arguments.
+Errors: Error 63-91: Expected identifier name|Error 0-101: The function 'SortByColumns' has some invalid arguments.

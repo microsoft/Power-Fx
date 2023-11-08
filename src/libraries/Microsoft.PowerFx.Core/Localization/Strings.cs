@@ -712,6 +712,8 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey InvalidCast = new ErrorResourceKey("InvalidCast");
 
+        public static ErrorResourceKey WrnSortByColumnsNonConstantColumnName = new ErrorResourceKey("WrnSortByColumnsNonConstantColumnName");
+
         public static ErrorResourceKey WrnDelegationTableNotSupported = new ErrorResourceKey("WrnDelegationTableNotSupported");
         public static ErrorResourceKey WrnDelegationPredicate = new ErrorResourceKey("WrnDelegationPredicate");
         public static ErrorResourceKey WrnDelegationOnlyPrimaryKeyField = new ErrorResourceKey("WrnDelegationOnlyPrimaryKeyField");

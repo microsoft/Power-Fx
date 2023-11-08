@@ -5135,6 +5135,10 @@
     <value>Type conversion failed because the given value was of type '{0}', expected '{1}' type.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>The expression '{0}' may represent a column that is not part of the data source or has not been downloaded. Consider using the column name directly instead.</value>
+    <comment>Warning message.</comment>
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     <comment>Warning message.</comment>
