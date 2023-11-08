@@ -1013,6 +1013,52 @@ POST https://tip1-shared.azure-apim.net/invoke
             Assert.Equal("test", suggestions.Suggestions[0].DisplayName);
             Assert.Equal("testWithInputs", suggestions.Suggestions[1].DisplayName);
         }
+
+        [Fact]
+        public async Task Teams_GetMessageDetails_WithComplexParameterReference()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Teams.json");
+            using var httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "7592282b-e371-e3f6-8e04-e8f23e64227c" /* environment Id */, "shared-cardsforpower-eafc4fa0-c560-4eba-a5b2-3e1ebc63193a" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
+
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
+            ConnectorFunction getMessageDetails = functions.First(f => f.Name == "GetMessageDetails");
+
+            testConnector.SetResponseFromFile(@"Responses\Teams_GetMessageDetails_InputType.json");
+            ConnectorParameters parameters = await getMessageDetails.GetParameterSuggestionsAsync(
+                new NamedValue[]
+                {
+                    new NamedValue("messageId", FormulaValue.New("messageId")),
+                    new NamedValue("threadType", FormulaValue.New("channel")),
+                },
+                getMessageDetails.RequiredParameters[2], // body
+                runtimeContext,
+                CancellationToken.None).ConfigureAwait(false);
+
+            var bodyConnectorType = parameters.ParametersWithSuggestions[2].ConnectorType;
+            
+            ConnectorParameterWithSuggestions suggestions = parameters.ParametersWithSuggestions[2];
+            testConnector.SetResponseFromFile(@"Responses\Teams_GetMessageDetails_GetSuggestionsForChannel.json");
+
+            var connectorTypeWithSuggestions = await getMessageDetails.GetConnectorSuggestionsAsync(
+                new NamedValue[]
+                {
+                                new NamedValue("messageId", FormulaValue.New("messageId")),
+                                new NamedValue("threadType", FormulaValue.New("channel")),
+                                new NamedValue("body", FormulaValue.NewRecordFromFields(
+                                    new NamedValue("recipient", FormulaValue.NewRecordFromFields(
+                                        new NamedValue("groupId", FormulaValue.New("groupIdValue")))))),
+                },
+                bodyConnectorType.Fields[0].Fields[1], // channelId
+                runtimeContext,
+                CancellationToken.None).ConfigureAwait(false);
+
+            Assert.Equal(2, connectorTypeWithSuggestions.ConnectorSuggestions.Suggestions.Count);
+            Assert.Equal("channelName", connectorTypeWithSuggestions.ConnectorSuggestions.Suggestions[0].DisplayName);
+            Assert.Equal("channelName2", connectorTypeWithSuggestions.ConnectorSuggestions.Suggestions[1].DisplayName);
+        }
     }
 
     public static class Extensions
