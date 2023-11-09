@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -967,9 +966,9 @@ namespace Microsoft.PowerFx.Functions
 
                     // If negative, we are trying to round to the next tens/ hundreds / ...
                     // This can result in something like 9999.9, which needs to be round up to the closest whole number.
-                    if (dg < 0 && Math.Log10(number) < -dg)
+                    if (dg < 0 && Math.Log10(n) < -dg)
                     {
-                        result = Math.Pow(10, -dg);
+                        result = s * Math.Pow(10, -dg);
                     }
 
                     return new NumberValue(irContext, result);

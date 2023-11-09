@@ -233,3 +233,5 @@ Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 >> ForAll(Sequence(16,-1,-1), RoundUp( Float(123.12345678919), Value ))
 Table({Value:130},{Value:200},{Value:1000},{Value:10000},{Value:100000},{Value:1000000},{Value:10000000},{Value:100000000},{Value:1000000000},{Value:10000000000},{Value:100000000000},{Value:1000000000000},{Value:10000000000000},{Value:100000000000000},{Value:1000000000000000},{Value:10000000000000000})
 
+>> ForAll(Sequence(16,-1,-1), RoundUp( Float(-123.12345678919), Value ))
+Table({Value:-130},{Value:-200},{Value:-1000},{Value:-10000},{Value:-100000},{Value:-1000000},{Value:-10000000},{Value:-100000000},{Value:-1000000000},{Value:-10000000000},{Value:-100000000000},{Value:-1000000000000},{Value:-10000000000000},{Value:-100000000000000},{Value:-1000000000000000},{Value:-10000000000000000})
