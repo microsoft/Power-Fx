@@ -360,14 +360,25 @@ namespace Microsoft.PowerFx.Core.IR
                     var argContext = i == 0 && func.MutatesArg0 ? new IRTranslatorContext(context, isMutation: true) : context;
 
                     var supportColumnNamesAsIdentifiers = _features.SupportColumnNamesAsIdentifiers;
-                    if (supportColumnNamesAsIdentifiers && func.IsIdentifierParam(i))
+                    if (supportColumnNamesAsIdentifiers && func.ParameterCanBeIdentifier(i))
                     {
                         var identifierNode = arg.AsFirstName();
-                        Contracts.Assert(identifierNode != null);
+                        if (func.GetIdentifierParamStatus(i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
+                        {
+                            Contracts.Assert(identifierNode != null);
+                        }
 
-                        // Transform the identifier node as a string literal
-                        var nodeName = context.Binding.TryGetReplacedIdentName(identifierNode.Ident, out var newIdent) ? new DName(newIdent) : identifierNode.Ident.Name;
-                        args.Add(new TextLiteralNode(argContext.GetIRContext(arg, DType.String), nodeName.Value));
+                        if (identifierNode != null)
+                        {
+                            // Transform the identifier node as a string literal
+                            var nodeName = context.Binding.TryGetReplacedIdentName(identifierNode.Ident, out var newIdent) ? new DName(newIdent) : identifierNode.Ident.Name;
+                            args.Add(new TextLiteralNode(argContext.GetIRContext(arg, DType.String), nodeName.Value));
+                        }
+                        else
+                        {
+                            // It's a string argument
+                            args.Add(arg.Accept(this, argContext));
+                        }
                     }
                     else if (func.IsLazyEvalParam(i, _features))
                     {

@@ -221,12 +221,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index >= 2 && ((index & 1) == 0);
         }
 
-        public override bool IsIdentifierParam(int index)
+        public override ParamIdentifierStatus GetIdentifierParamStatus(int index)
         {
             Contracts.Assert(index >= 0);
 
             // Left to right mask (infinite): ...010101010 
-            return (index & 1) == 1;
+            return (index & 1) == 1 ? ParamIdentifierStatus.AlwaysIdentifier : ParamIdentifierStatus.NeverIdentifier;
         }
 
         public override bool AllowsRowScopedParamDelegationExempted(int index)

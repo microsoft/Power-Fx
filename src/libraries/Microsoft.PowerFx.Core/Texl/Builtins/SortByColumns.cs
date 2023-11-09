@@ -558,9 +558,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return retVal;
         }
 
-        public override bool IsIdentifierParam(int index)
+        public override ParamIdentifierStatus GetIdentifierParamStatus(int index)
         {
-            return (index % 2) == 1;
+            return (index % 2) == 1 ? ParamIdentifierStatus.PossiblyIdentifier : ParamIdentifierStatus.NeverIdentifier;
         }
     }
 }

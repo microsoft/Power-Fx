@@ -473,7 +473,7 @@ namespace Microsoft.PowerFx.Core.Functions
             for (var i = 0; i < count; i++)
             {
                 // Identifiers don't have a type
-                if (IsIdentifierParam(i))
+                if (ParameterCanBeIdentifier(i))
                 {
                     continue;
                 }
@@ -508,7 +508,7 @@ namespace Microsoft.PowerFx.Core.Functions
             for (var i = count; i < args.Length; i++)
             {
                 // Identifiers don't have a type
-                if (IsIdentifierParam(i))
+                if (ParameterCanBeIdentifier(i))
                 {
                     continue;
                 }
@@ -572,16 +572,37 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
+        public enum ParamIdentifierStatus
+        {
+            NeverIdentifier,
+            PossiblyIdentifier,
+            AlwaysIdentifier,
+        }
+
         /// <summary>
-        /// Returns true if the parameter is an identifier.
+        /// Returns whether the parameter can be represented by an identifier.
         /// </summary>
         /// <param name="index">Parameter's index.</param>
-        /// <returns>Boolean representing if the parameter is an identifier.</returns>
-        public virtual bool IsIdentifierParam(int index)
+        /// <returns>Value from <see cref="ParamIdentifierStatus"/> which tells whether
+        /// the parameter in the given index can be an identifier.</returns>
+        public virtual ParamIdentifierStatus GetIdentifierParamStatus(int index)
         {
             Contracts.Assert(index >= 0);
 
-            return false;
+            return ParamIdentifierStatus.NeverIdentifier;
+        }
+
+        /// <summary>
+        /// Returns whether the parameter can be represented by an identifier.
+        /// </summary>
+        /// <param name="index">Parameter's index.</param>
+        /// <returns>true if the parameter can be an identifier, false otherwise.</returns>
+        public bool ParameterCanBeIdentifier(int index)
+        {
+            var paramIdentifierStatus = GetIdentifierParamStatus(index);
+            return paramIdentifierStatus ==
+                ParamIdentifierStatus.AlwaysIdentifier ||
+                paramIdentifierStatus == ParamIdentifierStatus.PossiblyIdentifier;
         }
 
         public virtual bool AllowsRowScopedParamDelegationExempted(int index)
