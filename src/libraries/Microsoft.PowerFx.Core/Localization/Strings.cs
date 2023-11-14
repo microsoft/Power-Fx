@@ -180,10 +180,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter SortByColumnsArg1 = (b) => StringResources.Get("SortByColumnsArg1", b);
         public static StringGetter SortByColumnsArg2 = (b) => StringResources.Get("SortByColumnsArg2", b);
         public static StringGetter SortByColumnsArg3 = (b) => StringResources.Get("SortByColumnsArg3", b);
-
-        public static StringGetter AboutSortByColumnsWithOrderValues = (b) => StringResources.Get("AboutSortByColumnsWithOrderValues", b);
-        public static StringGetter SortByColumnsWithOrderValuesArg1 = (b) => StringResources.Get("SortByColumnsWithOrderValuesArg1", b);
-        public static StringGetter SortByColumnsWithOrderValuesArg2 = (b) => StringResources.Get("SortByColumnsWithOrderValuesArg2", b);
         public static StringGetter SortByColumnsWithOrderValuesArg3 = (b) => StringResources.Get("SortByColumnsWithOrderValuesArg3", b);
 
         public static StringGetter AboutRand = (b) => StringResources.Get("AboutRand", b);
@@ -715,6 +711,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey OptionSetOptionNotSupported = new ErrorResourceKey("OptionSetOptionNotSupported");
 
         public static ErrorResourceKey InvalidCast = new ErrorResourceKey("InvalidCast");
+
+        public static ErrorResourceKey WrnSortByColumnsNonConstantColumnName = new ErrorResourceKey("WrnSortByColumnsNonConstantColumnName");
 
         public static ErrorResourceKey WrnDelegationTableNotSupported = new ErrorResourceKey("WrnDelegationTableNotSupported");
         public static ErrorResourceKey WrnDelegationPredicate = new ErrorResourceKey("WrnDelegationPredicate");

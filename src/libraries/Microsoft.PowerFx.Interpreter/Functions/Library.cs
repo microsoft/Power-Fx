@@ -1456,6 +1456,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: SortTable)
             },
             {
+                BuiltinFunctionsCore.SortByColumns,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.SortByColumns.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: SortByColumnsTypeChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: SortByColumns)
+            },
+            {
                 BuiltinFunctionsCore.Split,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Split.Name,

@@ -4534,7 +4534,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     var isIdentifier = args[i] is FirstNameNode &&
                         _features.SupportColumnNamesAsIdentifiers &&
-                        maybeFunc.IsIdentifierParam(i);
+                        maybeFunc.ParameterCanBeIdentifier(i);
 
                     // Use the new scope only for lambda args.
                     _currentScope = (maybeFunc.IsLambdaParam(i) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent;
@@ -4581,7 +4581,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     foreach (var arg in args)
                     {
-                        if (arg is FirstNameNode firstNameNode && maybeFunc.IsIdentifierParam(i))
+                        if (arg is FirstNameNode firstNameNode && maybeFunc.ParameterCanBeIdentifier(i))
                         {
                             _ = GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
                         }

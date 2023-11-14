@@ -194,7 +194,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction SinT = _library.Add(new SinTableFunction());
         public static readonly TexlFunction Sort = _library.Add(new SortFunction());
         public static readonly TexlFunction SortByColumns = _library.Add(new SortByColumnsFunction());
-        public static readonly TexlFunction SortByColumnsOrderTable = _library.Add(new SortByColumnsOrderTableFunction());
         public static readonly TexlFunction Split = _library.Add(new SplitFunction());
         public static readonly TexlFunction Sqrt = _library.Add(new SqrtFunction());
         public static readonly TexlFunction SqrtT = _library.Add(new SqrtTableFunction());

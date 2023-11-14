@@ -1,0 +1,61 @@
+#SETUP: SupportColumnNamesAsIdentifiers,disable:PowerFxV1CompatibilityRules
+
+// ###### SortByColumns, column + ascending/descending overload ######
+
+// Legacy behavior: we can pass non-string literals to the column name in SortByColumns
+>> SortByColumns([1,3,2],Left("Value234", 5))
+Table({Value:1},{Value:2},{Value:3})
+
+>> SortByColumns([1,3,2],Left("Value234", 5), SortOrder.Descending)
+Table({Value:3},{Value:2},{Value:1})
+
+>> SortByColumns(Table({a:1, b:"one"}, {a:2, b:"two"}, {a:3, b:"three"}, {a:4, b:"four"}), If(1>0,"a","b"))
+Table({a:1,b:"one"},{a:2,b:"two"},{a:3,b:"three"},{a:4,b:"four"})
+
+>> SortByColumns(Table({a:1, b:"one"}, {a:2, b:"two"}, {a:3, b:"three"}, {a:4, b:"four"}), If(1<0,"a","b"))
+Table({a:4,b:"four"},{a:1,b:"one"},{a:3,b:"three"},{a:2,b:"two"})
+
+>> SortByColumns(Table({a:1,b:"one"}, {a:2, b:"two"}, {a:1,b:"onebis"},{a:3, b:"three"}, {a:4, b:"four"}, {a:3, b:"threebis"}), "a", SortOrder.Ascending, Left("b1", 1), SortOrder.Descending)
+Table({a:1,b:"onebis"},{a:1,b:"one"},{a:2,b:"two"},{a:3,b:"threebis"},{a:3,b:"three"},{a:4,b:"four"})
+
+>> SortByColumns(Table({a:1, b:1111}, {a:2, b:222}, {a:3, b:33}), If(1>0,"columndoesnotexist"))
+Error({Kind:ErrorKind.InvalidFunctionUsage})
+
+>> SortByColumns(Table({a:1,b:"one"}, {a:2, b:"two"}, {a:1,b:"onebis"},{a:3, b:"three"}, {a:4, b:"four"}, {a:3, b:"threebis"}), "a", SortOrder.Ascending, Left("b1", 2), SortOrder.Descending)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
+
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },
+  { First: "Alice", Last: "Smith", Age: 5, Gender: "Female", Vaccinated: true, HasDog: true },
+  { First: Blank(), Last: "Clark", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Allen", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Brown", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false },
+  { First: "Emily", Last: "Jones", Age: 29, Gender: "Female", Vaccinated: true, HasDog: Blank() },
+  { First: "Helio", Last: Blank(), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
+  { First: "Titan", Last: Blank(), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Walker", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Andrew", Last: "Lee", Age: 27, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Nizam", Last: "Lewis", Age: 32, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Amelia", Last: "Bedelia", Age: 40, Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Dora", Last: "TheExplorer", Age: 4, Gender: "Female", Vaccinated: Blank(), HasDog: true },
+  { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
+  { First: Blank(), Last: "Rodriguez", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }),Left("Hello", -1), SortOrder.Ascending,"Age", SortOrder.Descending)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ###### SortByColumns, column + order table overload ######
+
+>> SortByColumns([1,3,2],Left("Value234", 5), [2,3,1])
+Table({Value:2},{Value:3},{Value:1})
+
+>> SortByColumns(Table({a:1, b:"one"}, {a:2, b:"two"}, {a:3, b:"three"}, {a:4, b:"four"}), If(1<0,"a","b"), ["four", "three", "two", "one"])
+Table({a:4,b:"four"},{a:3,b:"three"},{a:2,b:"two"},{a:1,b:"one"})
+
+// If order table does not match the column to be sorted, results are unchanged
+>> SortByColumns(Table({a:1, b:"one"}, {a:2, b:"two"}, {a:3, b:"three"}, {a:4, b:"four"}), If(1>0,"a","b"), ["four", "three", "two", "one"])
+Table({a:1,b:"one"},{a:2,b:"two"},{a:3,b:"three"},{a:4,b:"four"})
+
+>> SortByColumns(Table({a:1, b:1111}, {a:2, b:222}, {a:3, b:33}), If(1>0,"columndoesnotexist"), [1,2,3])
+Error({Kind:ErrorKind.InvalidFunctionUsage})
