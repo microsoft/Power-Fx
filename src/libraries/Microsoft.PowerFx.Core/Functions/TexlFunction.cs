@@ -572,10 +572,27 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
+        /// <summary>
+        /// Defines whether a function parameter must / can / cannot be represented by an identifier.
+        /// Used in functions which take column names as arguments.
+        /// </summary>
         public enum ParamIdentifierStatus
         {
+            /// <summary>
+            /// The parameter can never be represented by an identifier.
+            /// </summary>
             NeverIdentifier,
+
+            /// <summary>
+            /// The parameter can be represented by an identifier, or by a string (with the value of
+            /// the column logical name)
+            /// </summary>
             PossiblyIdentifier,
+
+            /// <summary>
+            /// The parameter can only be represented by an identifier (representing the column logical
+            /// or display name).
+            /// </summary>
             AlwaysIdentifier,
         }
 

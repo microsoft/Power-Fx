@@ -880,9 +880,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (x is StringValue sv1 && y is StringValue sv2)
                 {
-#pragma warning disable CA1309 // Use ordinal string comparison
-                    return string.Compare(sv1.Value, sv2.Value, StringComparison.CurrentCulture) * modifier;
-#pragma warning restore CA1309 // Use ordinal string comparison
+                    return Runner.CultureInfo.CompareInfo.Compare(sv1.Value, sv2.Value) * modifier;
                 }
 
                 if (x is DateValue dv1 && y is DateValue dv2)
