@@ -154,7 +154,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else
                 {
                     // Support strings, but warn if non-literal
-                    errors.EnsureError(DocumentErrorSeverity.Warning, colNameArg, TexlStrings.WrnSortByColumnsNonConstantColumnName, colNameArg.ToString());
+                    if (sourceType.AssociatedDataSources.Any())
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Warning, colNameArg, TexlStrings.WrnSortByColumnsNonConstantColumnName, colNameArg.ToString());
+                    }
                 }
             }
             else
