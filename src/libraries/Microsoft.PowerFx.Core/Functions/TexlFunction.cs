@@ -622,6 +622,98 @@ namespace Microsoft.PowerFx.Core.Functions
                 paramIdentifierStatus == ParamIdentifierStatus.PossiblyIdentifier;
         }
 
+        /// <summary>
+        /// Tries to retrieve the column logical name from the argument node.
+        /// </summary>
+        /// <param name="sourceType">Type from which the column comes from. Can be null if
+        /// we are adding a new column name.</param>
+        /// <param name="supportColumnNamesAsIdentifiers">Flag indicating whether <see
+        /// cref="Features.SupportColumnNamesAsIdentifiers"/> is enabled.</param>
+        /// <param name="argNode">The function argument node for the function.</param>
+        /// <param name="errors">An error container to store an error if the name cannot be
+        /// retrieved or it is invalid.</param>
+        /// <param name="columnName">The name for the column retrieved from the argument, or null
+        /// if it cannot be retrieved.</param>
+        /// <returns>True if the column logical name can be retrieved; false otherwise.</returns>
+        protected bool TryGetColumnLogicalName(DType sourceType, bool supportColumnNamesAsIdentifiers, TexlNode argNode, IErrorContainer errors, out DName columnName)
+        {
+            return TryGetColumnLogicalName(sourceType, supportColumnNamesAsIdentifiers, argNode, errors, out columnName, out var _);
+        }
+
+        /// <summary>
+        /// Tries to retrieve the column logical name from the argument node.
+        /// </summary>
+        /// <param name="sourceType">Type from which the column comes from. Can be null if
+        /// we are adding a new column name.</param>
+        /// <param name="supportColumnNamesAsIdentifiers">Flag indicating whether <see
+        /// cref="Features.SupportColumnNamesAsIdentifiers"/> is enabled.</param>
+        /// <param name="argNode">The function argument node for the function.</param>
+        /// <param name="errors">An error container to store an error if the name cannot be
+        /// retrieved or it is invalid.</param>
+        /// <param name="columnName">The name for the column retrieved from the argument, or null
+        /// if it cannot be retrieved.</param>
+        /// <param name="columnType">The type for the column retrieved from the argument if
+        /// the source type was passed, or null if it cannot be retrieved.</param>
+        /// <returns>True if the column logical name can be retrieved; false otherwise.</returns>
+        protected bool TryGetColumnLogicalName(DType sourceType, bool supportColumnNamesAsIdentifiers, TexlNode argNode, IErrorContainer errors, out DName columnName, out DType columnType)
+        {
+            columnName = default;
+            columnType = null;
+
+            if (supportColumnNamesAsIdentifiers)
+            {
+                if (argNode is not FirstNameNode identifierNode)
+                {
+                    // Argument '{0}' is invalid, expected an identifier.
+                    errors.EnsureError(DocumentErrorSeverity.Severe, argNode, TexlStrings.ErrExpectedIdentifierArg_Name, argNode.ToString());
+                    return false;
+                }
+
+                var possibleColumnName = identifierNode.Ident.Name;
+
+                if (sourceType != null && DType.TryGetLogicalNameForColumn(sourceType, possibleColumnName.Value, out var logicalName))
+                {
+                    possibleColumnName = new DName(logicalName);
+                }
+
+                if (sourceType != null && !sourceType.TryGetType(possibleColumnName, out columnType))
+                {
+                    sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, possibleColumnName, argNode);
+                    return false;
+                }
+
+                columnName = possibleColumnName;
+            }
+            else
+            {
+                if (argNode is not StrLitNode stringLitNode)
+                {
+                    // Argument '{0}' is invalid, expected a text literal.
+                    errors.EnsureError(DocumentErrorSeverity.Severe, argNode, TexlStrings.ErrExpectedStringLiteralArg_Name, argNode.ToString());
+                    return false;
+                }
+
+                // Verify that the name is valid.
+                if (!DName.IsValidDName(stringLitNode.Value))
+                {
+                    // Argument '{0}' is not a valid identifier.
+                    errors.EnsureError(DocumentErrorSeverity.Severe, argNode, TexlStrings.ErrArgNotAValidIdentifier_Name, stringLitNode.Value);
+                    return false;
+                }
+
+                var possibleColumnName = new DName(stringLitNode.Value);
+                if (sourceType != null && !sourceType.TryGetType(possibleColumnName, out columnType))
+                {
+                    sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, possibleColumnName, argNode);
+                    return false;
+                }
+
+                columnName = possibleColumnName;
+            }
+
+            return true;
+        }
+
         public virtual bool AllowsRowScopedParamDelegationExempted(int index)
         {
             return false;
