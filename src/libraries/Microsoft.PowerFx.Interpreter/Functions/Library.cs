@@ -1383,6 +1383,19 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: RoundDown)
             },
+
+            //$$$ maybe change DoNotReplaceBlank
+            {
+                BuiltinFunctionsCore.Search,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.Search.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: SearchImpl)
+            },
             {
                 BuiltinFunctionsCore.Second,
                 StandardErrorHandling<FormulaValue>(
