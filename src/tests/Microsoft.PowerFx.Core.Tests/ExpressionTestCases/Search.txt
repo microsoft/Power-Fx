@@ -152,3 +152,7 @@ Table({Age:27,Employer:"Microsoft",HasDog:true,Name:"Christina Miller",Vaccinate
   { Name: "Jim Poe", Age: 36, Vaccinated: true, HasDog: true, Employer: "XYZ Corp" },
   { Name: "Drexler Jones", Age: 36, Vaccinated: true, HasDog: true, Employer: "Microsoft" }),"X","Name","Employer")
 Table({Age:33,Employer:"Microsoft",HasDog:true,Name:"Xander Cage",Vaccinated:true},{Age:36,Employer:"XYZ Corp",HasDog:true,Name:"Jim Poe",Vaccinated:true},{Age:36,Employer:"Microsoft",HasDog:true,Name:"Drexler Jones",Vaccinated:true})
+
+// If search Column has error, return error.
+>> Search(Table({Name:"test"}, {Name: 1/0}), "t", "Name")
+Error({Kind:ErrorKind.Div0})
