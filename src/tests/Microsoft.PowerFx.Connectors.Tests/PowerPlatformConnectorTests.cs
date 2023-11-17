@@ -344,6 +344,25 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(7m, ((DecimalValue)fv).Value);
         }
 
+        [Theory]
+        [InlineData("Office365Outlook.FindMeetingTimesV2(")]
+        public void IntellisenseHelpStringsOptionalParms(string expr)
+        {
+            var apiDocOutlook = Helpers.ReadSwagger(@"Swagger\Office_365_Outlook.json");
+
+            var config = new PowerFxConfig();
+            config.AddActionConnector("Office365Outlook", apiDocOutlook, new ConsoleLogger(_output));
+
+            var engine = new Engine(config);
+            var check = engine.Check(expr, RecordType.Empty(), new ParserOptions() { AllowsSideEffects = true });
+
+            var result = engine.Suggest(check, expr.Length);
+
+            var overload = result.FunctionOverloads.Single();
+            Assert.Equal(Intellisense.SuggestionKind.Function, overload.Kind);
+            Assert.Equal("FindMeetingTimesV2({RequiredAttendees:String,OptionalAttendees:String,ResourceAttendees:String,MeetingDuration:Decimal,Start:DateTime,End:DateTime,MaxCandidates:Decimal,MinimumAttendeePercentage:String,IsOrganizerOptional:Boolean,ActivityDomain:String})", overload.DisplayText.Text);
+        }
+
         // Very documentation strings from the Swagger show up in the intellisense.
         [Theory]
         [InlineData("MSNWeather.CurrentWeather(", false, false)]
