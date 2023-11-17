@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Returns true if the function expect identifiers, false otherwise.
         /// Needs to be overloaded for functions having identifier parameters.
-        /// Also overload IsIdentifierParam method. 
+        /// Also overload <see cref="GetIdentifierParamStatus(int)"/> method. 
         /// </summary>
         public virtual bool HasColumnIdentifiers => false;
 
@@ -605,6 +605,11 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual ParamIdentifierStatus GetIdentifierParamStatus(int index)
         {
             Contracts.Assert(index >= 0);
+
+            if (HasColumnIdentifiers)
+            {
+                throw new InvalidOperationException($"Override {nameof(GetIdentifierParamStatus)}, if {nameof(HasColumnIdentifiers)} is overridden.");
+            }
 
             return ParamIdentifierStatus.NeverIdentifier;
         }

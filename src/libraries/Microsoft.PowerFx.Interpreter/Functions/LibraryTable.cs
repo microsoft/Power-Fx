@@ -1012,7 +1012,6 @@ namespace Microsoft.PowerFx.Functions
                 {
                     var columnValue = await row.Value.GetFieldAsync(columnName, runner.CancellationToken).ConfigureAwait(false);
 
-                    // $$$ verify
                     if (columnValue is ErrorValue)
                     {
                         return columnValue;

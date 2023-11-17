@@ -29,9 +29,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
+        public override bool HasColumnIdentifiers => true;
+
         public SearchFunction()
             : base("Search", TexlStrings.AboutSearch, FunctionCategories.Table, DType.EmptyTable, 0, 3, int.MaxValue, DType.EmptyTable, DType.String, DType.String)
         { 
+            ScopeInfo = new FunctionScopeInfo(this, supportsAsyncLambdas: false);
+        }
+
+        public override ParamIdentifierStatus GetIdentifierParamStatus(int index)
+        {
+            return index > 1 ? ParamIdentifierStatus.AlwaysIdentifier : ParamIdentifierStatus.NeverIdentifier;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -97,6 +105,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var argLen = args.Length;
             returnType = argTypes[0];
             DType sourceType = argTypes[0];
+
+            var supportColumnNamesAsIdentifiers = context.Features.SupportColumnNamesAsIdentifiers;
             if (argTypes[1].Kind != DKind.String)
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrStringExpected);
@@ -112,36 +122,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 2; i < argLen; i++)
             {
-                TexlNode colNameArg = args[i];
-                DType colNameArgType = argTypes[i];
-                StrLitNode nameNode;
-
-                if (colNameArgType.Kind != DKind.String || (nameNode = colNameArg.AsStrLit()) == null)
+                var nameArg = args[i];
+                if (!base.TryGetColumnLogicalName(argTypes[0], supportColumnNamesAsIdentifiers, nameArg, errors, out var columnName))
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, colNameArg, TexlStrings.ErrStringExpected);
                     fValid = false;
-                }
-                else if (DName.IsValidDName(nameNode.Value))
-                {
-                    // Verify that the name is valid.
-                    DName columnName = new DName(nameNode.Value);
-
-                    // Verify that the name exists.
-                    if (!sourceType.TryGetType(columnName, out DType columnType))
-                    {
-                        sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, args[i]);
-                        fValid = false;
-                    }
-                    else if (!IsValidSearchableColumnType(columnType))
-                    {
-                        fValid = false;
-                        errors.EnsureError(colNameArg, TexlStrings.ErrSearchWrongType);
-                    }
-                }
-                else
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, nameNode, TexlStrings.ErrArgNotAValidIdentifier_Name, nameNode.Value);
-                    fValid = false;
+                    continue;
                 }
             }
 
@@ -214,14 +199,24 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (int i = 2; i < cargs; i++)
             {
-                DType columnType = binding.GetType(args[i]);
-                StrLitNode columnNode = args[i].AsStrLit();
-                if (columnType.Kind != DKind.String || columnNode == null)
+                string columnName;
+                DType columnType;
+                if (binding.Features.SupportColumnNamesAsIdentifiers)
                 {
-                    continue;
+                    columnName = ((FirstNameNode)args[i]).Ident.Name;
+                    columnType = dsType.GetType(new DName(columnName));
                 }
+                else
+                {
+                    columnType = binding.GetType(args[i]);
+                    StrLitNode columnNode = args[i].AsStrLit();
+                    if (columnType.Kind != DKind.String || columnNode == null)
+                    {
+                        continue;
+                    }
 
-                string columnName = columnNode.Value;
+                    columnName = columnNode.Value;
+                }
 
                 Contracts.Assert(dsType.Contains(new DName(columnName)));
 

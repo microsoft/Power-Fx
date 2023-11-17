@@ -50,7 +50,6 @@
 
   <ItemGroup>
     <None Remove="expressiontestcases\README.md" />
-    <None Remove="ExpressionTestCases\Search.txt" />
   </ItemGroup>
   
   <ItemGroup>
