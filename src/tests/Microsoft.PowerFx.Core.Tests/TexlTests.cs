@@ -3622,6 +3622,100 @@ namespace Microsoft.PowerFx.Core.Tests
             TestSimpleBindingSuccess(script, expectedType, symbol);
         }
 
+        [Theory]
+        [InlineData("Search(T, \"a\", \"Name\")", "*[Name:s]")]
+        [InlineData("Search(T, If(1<0,\"a\"), \"Name\")", "*[Name:s]")]
+        [InlineData("Search(T2,\"a\", \"Name\", \"Address\")", "*[Name:s,Age:n,Address:s]")]
+        public void TexlFunctionTypeSemanticsSearch(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Name:s,Age:n,Address:s]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol);
+        }
+
+        [Theory]
+        [InlineData("Search(T, \"a\", Name)", "*[Name:s]")]
+        [InlineData("Search(T, If(1<0,\"a\"), Name)", "*[Name:s]")]
+        [InlineData("Search(T2,\"a\", Name, Address)", "*[Name:s,Age:n,Address:s]")]
+        public void TexlFunctionTypeSemanticsSearch_StronglyTypedBuiltinEnums(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Name:s,Age:n,Address:s]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol,
+                new Features { SupportColumnNamesAsIdentifiers = true });
+        }
+
+        [Theory]
+
+        // missing 3rd arg
+        [InlineData("Search(T, \"a\")", "*[]")]
+
+        // Age is number, only string supported.
+        [InlineData("Search(T2, \"a\", \"Age\")", "*[Address:s, Age:n, Name:s]")]
+        [InlineData("Search(T3, \"a\", \"Age\")", "*[Age:n]")]
+
+        // 3rd onwards Arg should always be constant string.
+        [InlineData("Search(T2, \"a\", If(1<0, \"Name\"))", "*[Address:s, Age:n, Name:s]")]
+
+        // 2nd Arg should only be a string.
+        [InlineData("Search(T2, 1, \"Name\")", "*[]")]
+
+        // missing field.
+        [InlineData("Search(T2, \"a\", \"Name\", \"Address\", \"Does not exist\")", "*[Address:s, Age:n, Name:s]")]
+        public void TexlFunctionTypeSemanticsSearch_Negative(string script, string expectedSchema)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Name:s,Age:n,Address:s]")));
+            symbol.AddVariable("T3", new TableType(TestUtils.DT("*[Age:n]")));
+
+            TestBindingErrors(
+                script,
+                TestUtils.DT(expectedSchema),
+                symbolTable: symbol);
+        }
+
+        [Theory]
+
+        // missing 3rd arg
+        [InlineData("Search(T, \"a\")", "*[]")]
+
+        // Age is number, only string supported.
+        [InlineData("Search(T2, \"a\", Age)", "*[Address:s, Age:n, Name:s]")]
+        [InlineData("Search(T3, \"a\", Age)", "*[Age:n]")]
+
+        // 3rd onwards Arg should always be constant string.
+        [InlineData("Search(T2, \"a\", If(1<0, Name))", "*[Address:s, Age:n, Name:s]")]
+
+        // 2nd Arg should only be a string.
+        [InlineData("Search(T2, 1, Name)", "*[]")]
+
+        // missing field.
+        [InlineData("Search(T2, \"a\", Name, Address, 'Does not exist')", "*[Address:s, Age:n, Name:s]")]
+        public void TexlFunctionTypeSemanticsSearch_StronglyTypedBuiltinEnums_Negative(string script, string expectedSchema)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Name:s,Age:n,Address:s]")));
+            symbol.AddVariable("T3", new TableType(TestUtils.DT("*[Age:n]")));
+
+            TestBindingErrors(
+                script,
+                TestUtils.DT(expectedSchema),
+                symbolTable: symbol,
+                features: new Features { SupportColumnNamesAsIdentifiers = true });
+        }
+
         [Fact]
         public void TestAttachmentIf()
         {

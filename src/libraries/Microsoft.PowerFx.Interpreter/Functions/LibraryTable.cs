@@ -968,7 +968,7 @@ namespace Microsoft.PowerFx.Functions
             var source = args[0];
             var textToSearchArg = args[1];
 
-            if (source is BlankValue || source is ErrorValue || textToSearchArg is BlankValue)
+            if (source is BlankValue)
             {
                 return source;
             }
@@ -984,15 +984,7 @@ namespace Microsoft.PowerFx.Functions
             // If no column names are provided, search all columns
             bool searchAllColumns = args.Length < 3;
 
-            string[] columnsToSearch;
-            if (searchAllColumns)
-            {
-                columnsToSearch = sourceTable.Type.FieldNames.ToArray();
-            }
-            else
-            {
-                columnsToSearch = args.Skip(2).OfType<StringValue>().Select(sv => sv.Value).ToArray();
-            }
+            var columnsToSearch = args.Skip(2).OfType<StringValue>().Select(sv => sv.Value).ToArray();
 
             var rows = new List<DValue<RecordValue>>();
 

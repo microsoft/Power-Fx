@@ -13,7 +13,6 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -33,8 +32,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public SearchFunction()
             : base("Search", TexlStrings.AboutSearch, FunctionCategories.Table, DType.EmptyTable, 0, 3, int.MaxValue, DType.EmptyTable, DType.String, DType.String)
-        { 
-            ScopeInfo = new FunctionScopeInfo(this, supportsAsyncLambdas: false);
+        {
+            ScopeInfo = new FunctionScopeInfo(this);
         }
 
         public override ParamIdentifierStatus GetIdentifierParamStatus(int index)
@@ -123,16 +122,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             for (var i = 2; i < argLen; i++)
             {
                 var nameArg = args[i];
-                if (!base.TryGetColumnLogicalName(argTypes[0], supportColumnNamesAsIdentifiers, nameArg, errors, out var columnName))
+                if (!base.TryGetColumnLogicalName(argTypes[0], supportColumnNamesAsIdentifiers, nameArg, errors, out var columnName, out var columnType))
                 {
                     fValid = false;
                     continue;
+                }
+                else if (!IsValidSearchableColumnType(columnType))
+                {
+                    fValid = false;
+                    errors.EnsureError(args[i], TexlStrings.ErrSearchWrongType);
                 }
             }
 
             return fValid;
         }
-        
+
         internal static bool IsValidSearchableColumnType(DType type)
         {
             Contracts.AssertValid(type);
@@ -231,8 +235,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
 
-            if (!CheckArgsCount(callNode, binding)) 
-            { 
+            if (!CheckArgsCount(callNode, binding))
+            {
                 return false;
             }
 
@@ -249,15 +253,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 if (!IsValidSearchableColumnNode(args[i], binding, dataSource))
                 {
-#pragma warning disable CA1305 // Specify IFormatProvider
-                    var message = string.Format("ColumnSearchable: false");
-#pragma warning restore CA1305 // Specify IFormatProvider
+                    var message = "ColumnSearchable: false";
                     AddSuggestionMessageToTelemetry(message, args[i], binding);
                     return false;
                 }
             }
 
             return true;
+        }
+
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
+        {
+            return index == 1 ? ArgPreprocessor.ReplaceBlankWithEmptyString : base.GetArgPreprocessor(index, argCount);
         }
     }
 }

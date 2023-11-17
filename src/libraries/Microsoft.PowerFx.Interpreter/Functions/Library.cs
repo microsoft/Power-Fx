@@ -1388,8 +1388,8 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandlingAsync<FormulaValue>(
                     BuiltinFunctionsCore.Search.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ShowColumnsTypeChecker,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: SearchImpl)
