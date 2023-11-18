@@ -816,6 +816,24 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(DType.Boolean, result);
         }
 
+        [Theory]
+        [InlineData("*[A:s]", "B")]
+        [InlineData("*[A:s]", "B.C")]
+        [InlineData("*[A:s,B:![D:n]]", "A.C")]
+        [InlineData("*[A:s,B:![D:n]]", "B.C")]
+        public void TryGetTypeNegativeTests(string dType, string dPath)
+        {
+            var type = TestUtils.DT(dType);
+            var path = DPath.Root;
+            foreach (var pathPart in dPath.Split('.'))
+            {
+                path = path.Append(new DName(pathPart));
+            }
+
+            Assert.False(type.TryGetType(path, out var result));
+            Assert.Equal(DType.Invalid, result);
+        }
+
         [Fact]
         public void RecordAndTableDTypeTests()
         {
