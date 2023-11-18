@@ -1242,6 +1242,11 @@ namespace Microsoft.PowerFx.Core.Types
 
             var fRet = TryGetType(path.Parent, out type);
 
+            if (!fRet)
+            {
+                return false;
+            }
+
             if (type.IsEnum)
             {
                 type = type.GetEnumSupertype();
