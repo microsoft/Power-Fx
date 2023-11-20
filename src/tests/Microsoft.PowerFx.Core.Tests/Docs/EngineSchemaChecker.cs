@@ -24,15 +24,15 @@ namespace Microsoft.PowerFx.Core.Tests
         /// <exception cref="InvalidOperationException">on failure.</exception>
         public static void Check(Engine engine, string pathInput)
         {
-            EngineSchema schema;
+            EngineDocumentation schema;
             if (pathInput != null)
             {
                 var json = File.ReadAllText(pathInput);
-                schema = JsonSerializer.Deserialize<EngineSchema>(json);
+                schema = JsonSerializer.Deserialize<EngineDocumentation>(json);
             }
             else
             {
-                schema = new EngineSchema();
+                schema = new EngineDocumentation();
             }
 
             schema.Normalize();
@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var actualNames = engine.GetAllFunctionNames().ToArray();
             Array.Sort(actualNames);
 
-            var schemaActual = new EngineSchema
+            var schemaActual = new EngineDocumentation
             {
                 FunctionNames = actualNames,
                 HostObjects = schema.HostObjects // copy over 
