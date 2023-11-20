@@ -678,6 +678,16 @@ namespace Microsoft.PowerFx.Functions
             return ExactValueTypeOrBlank<StringValue>(irContext, index, arg);
         }
 
+        private static FormulaValue SearchTypeChecker(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (index == 0)
+            {
+                return ExactValueTypeOrBlank<TableValue>(irContext, index, arg);
+            }
+
+            return ExactValueTypeOrBlank<StringValue>(irContext, index, arg);
+        }
+
         private static FormulaValue DateOrDateTime(IRContext irContext, int index, FormulaValue arg)
         {
             if (arg is DateValue || arg is DateTimeValue || arg is BlankValue || arg is ErrorValue)

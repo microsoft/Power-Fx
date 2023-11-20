@@ -5420,4 +5420,37 @@
     <value>The specified column is read-only and can't be modified: {0}.</value>
     <comment>Error shown to the user when they try to change the value of a read-only field.</comment>
   </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Searches text in 'source'. Returns rows where text is found. Comparison is done in case-insensitive manner.</value>
+    <comment>Description of 'Search' function.</comment>
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Table to search.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Search text.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Column to search.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - First argument to the Search function - the data source (table / collection) to search.</comment>
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>text</value>
+    <comment>function_parameter - Second argument to the Search function - the text to search.</comment>
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>column</value>
+    <comment>function_parameter - Third argument to the Search function - the column to search.</comment>
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Wrong column type. Expects text type.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Table doesn't contain any column of text type.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>
