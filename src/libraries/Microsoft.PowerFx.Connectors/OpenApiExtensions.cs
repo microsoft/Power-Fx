@@ -369,9 +369,8 @@ namespace Microsoft.PowerFx.Connectors
                         case "date":
                             return new ConnectorType(schema, openApiParameter, FormulaType.Date);
                         case "date-time":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.DateTime);
                         case "date-no-tz":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.DateTimeNoTimeZone);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.DateTime);
 
                         case "binary":
                             return new ConnectorType(schema, openApiParameter, FormulaType.String, binary: true);
