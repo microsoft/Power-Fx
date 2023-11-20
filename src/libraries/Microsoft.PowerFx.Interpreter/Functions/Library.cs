@@ -1389,7 +1389,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Search.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: ShowColumnsTypeChecker,
+                    checkRuntimeTypes: SearchTypeChecker,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: SearchImpl)

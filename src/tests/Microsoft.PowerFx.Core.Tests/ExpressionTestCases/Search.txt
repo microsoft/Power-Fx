@@ -157,3 +157,6 @@ Table({Age:33,Employer:"Microsoft",HasDog:true,Name:"Xander Cage",Vaccinated:tru
 // If search Column has error, return error.
 >> Search(Table({Name:"test"}, {Name: 1/0}), "t", Name)
 Error({Kind:ErrorKind.Div0})
+
+>> Search(Table({Name:"test"}, {Name: "test2"}), $"t {1/0}", Name)
+Error({Kind:ErrorKind.Div0})

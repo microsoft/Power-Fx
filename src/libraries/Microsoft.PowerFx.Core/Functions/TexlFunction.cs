@@ -153,7 +153,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function manipulates collections.
         public virtual bool ManipulatesCollections => false;
 
-        // Return true if the function uses an input's column names to inform Intellisense's suggestions.
+        /// <summary>
+        ///  Return true if the function uses an input's column names to inform Intellisense's suggestions. Also, consider overriding <see cref="TryGetTypeForArgSuggestionAt(int, out DType)"/>.
+        /// </summary>
         public virtual bool CanSuggestInputColumns => false;
 
         /// <summary>

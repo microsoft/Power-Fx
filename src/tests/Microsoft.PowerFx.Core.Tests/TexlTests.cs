@@ -3642,7 +3642,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Search(T, \"a\", Name)", "*[Name:s]")]
         [InlineData("Search(T, If(1<0,\"a\"), Name)", "*[Name:s]")]
         [InlineData("Search(T2,\"a\", Name, Address)", "*[Name:s,Age:n,Address:s]")]
-        public void TexlFunctionTypeSemanticsSearch_StronglyTypedBuiltinEnums(string script, string expectedType)
+        public void TexlFunctionTypeSemanticsSearch_SupportColumnNamesAsIdentifiers(string script, string expectedType)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
@@ -3656,6 +3656,9 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+
+        // 1st arg needs to be a table.
+        [InlineData("Search({Name: \"test\"}, \"a\", \"Name\")", "*[]")]
 
         // missing 3rd arg
         [InlineData("Search(T, \"a\")", "*[]")]
@@ -3686,6 +3689,9 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        
+        // 1st arg needs to be a table.
+        [InlineData("Search({Name: \"test\"}, \"a\", Name)", "*[]")]
 
         // missing 3rd arg
         [InlineData("Search(T, \"a\")", "*[]")]
@@ -3694,7 +3700,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Search(T2, \"a\", Age)", "*[Address:s, Age:n, Name:s]")]
         [InlineData("Search(T3, \"a\", Age)", "*[Age:n]")]
 
-        // 3rd onwards Arg should always be constant string.
+        // 3rd onwards Arg should always be identifier.
         [InlineData("Search(T2, \"a\", If(1<0, Name))", "*[Address:s, Age:n, Name:s]")]
 
         // 2nd Arg should only be a string.
@@ -3702,7 +3708,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // missing field.
         [InlineData("Search(T2, \"a\", Name, Address, 'Does not exist')", "*[Address:s, Age:n, Name:s]")]
-        public void TexlFunctionTypeSemanticsSearch_StronglyTypedBuiltinEnums_Negative(string script, string expectedSchema)
+        public void TexlFunctionTypeSemanticsSearch_SupportColumnNamesAsIdentifiers_Negative(string script, string expectedSchema)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
