@@ -263,7 +263,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return true;
         }
 
-        private bool IsValidSortableColumnNode(TexlNode node, TexlBinding binding, SortOpMetadata metadata)
+        private bool IsValidSortableColumnNode(DType dataSourceType, TexlNode node, TexlBinding binding, SortOpMetadata metadata)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
@@ -274,26 +274,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            DName columnName;
-            if (binding.Features.SupportColumnNamesAsIdentifiers)
-            {
-                if (node is not FirstNameNode identifierNode)
-                {
-                    return false;
-                }
-
-                columnName = identifierNode.Ident.Name;
-            }
-            else
-            {
-                if (node.Kind != NodeKind.StrLit)
-                {
-                    return false;
-                }
-
-                columnName = new DName(node.AsStrLit().VerifyValue().Value);
-            }
-            
+            base.TryGetColumnLogicalName(dataSourceType, binding.Features.SupportColumnNamesAsIdentifiers, node, DefaultErrorContainer, out var columnName).Verify();
             return IsColumnSortable(node, columnName, binding, metadata);
         }
 
@@ -353,12 +334,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (callNode.Args.Count == 3)
             {
                 // Check if using the SortByColumns(source, column, ordertable) overload, which is not delegable
-                var secondArgType = binding.GetType(callNode.Args.ChildNodes[2]);
-                if (secondArgType.IsTable)
+                var thirdArgType = binding.GetType(callNode.Args.ChildNodes[2]);
+                if (thirdArgType.IsTable)
                 {
                     return false;
                 }
             }
+
+            var dsType = binding.GetType(callNode.Args.ChildNodes[0]);
 
             SortOpMetadata metadata = null;
             if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
@@ -388,21 +371,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 1; i < cargs; i += 2)
             {
-                if (!IsValidSortableColumnNode(args[i], binding, metadata))
+                if (!IsValidSortableColumnNode(dsType, args[i], binding, metadata))
                 {
                     SuggestDelegationHint(args[i], binding);
                     return false;
                 }
 
-                DName columnName;
-                if (binding.Features.SupportColumnNamesAsIdentifiers)
-                {
-                    columnName = args[i].AsFirstName().VerifyValue().Ident.Name;
-                }
-                else
-                {
-                    columnName = new DName(args[i].AsStrLit().VerifyValue().Value);
-                }
+                base.TryGetColumnLogicalName(dsType, binding.Features.SupportColumnNamesAsIdentifiers, args[i], DefaultErrorContainer, out var columnName).Verify();
 
                 var sortOrderNode = (i + 1) < cargs ? args[i + 1] : null;
                 var sortOrder = sortOrderNode == null ? defaultSortOrder : string.Empty;
@@ -494,67 +469,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (callNode.Args.Count == 3 && binding.GetType(callNode.Args.ChildNodes[2]).IsTableNonObjNull)
             {
-                // Using the SortByColumns(source, column, ordertable) overload
-                if (binding.Features.SupportColumnNamesAsIdentifiers)
-                {
-                    var firstName = args[1].AsFirstName();
-                    if (firstName == null)
-                    {
-                        return false;
-                    }
-
-                    columnName = firstName.Ident.Name;
-                }
-                else
-                {
-                    var strLitNode = args[1].AsStrLit();
-                    if (strLitNode == null)
-                    {
-                        return false;
-                    }
-
-                    columnName = new DName(strLitNode.Value);
-                }
-
-                Contracts.Assert(dsType.Contains(new DName(columnName)));
-
-                if (!dsType.TryGetType(columnName, out columnType))
-                {
-                    return false;
-                }
-
+                base.TryGetColumnLogicalName(dsType, binding.Features.SupportColumnNamesAsIdentifiers, args[1], DefaultErrorContainer, out columnName, out columnType).Verify();
                 return dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
             }
 
             for (var i = 1; i < args.Count; i += 2)
             {
-                if (binding.Features.SupportColumnNamesAsIdentifiers)
-                {
-                    var firstName = args[i].AsFirstName();
-                    if (firstName == null)
-                    {
-                        continue;
-                    }
-
-                    columnName = firstName.Ident.Name;
-                }
-                else
-                {
-                    var strLitNode = args[i].AsStrLit();
-                    if (strLitNode == null)
-                    {
-                        continue;
-                    }
-
-                    columnName = new DName(strLitNode.Value);
-                }
-
-                Contracts.Assert(dsType.Contains(columnName));
-                if (!dsType.TryGetType(columnName, out columnType))
-                {
-                    continue;
-                }
-
+                base.TryGetColumnLogicalName(dsType, binding.Features.SupportColumnNamesAsIdentifiers, args[i], DefaultErrorContainer, out columnName, out columnType).Verify();
                 retVal |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
             }
 

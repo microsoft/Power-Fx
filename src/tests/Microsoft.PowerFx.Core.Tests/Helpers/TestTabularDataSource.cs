@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -169,11 +170,19 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
     {
         internal IExternalDataEntityMetadataProvider ExternalDataEntityMetadataProvider;
 
-        internal TestDataSource(string name, DType schema)
+        private readonly string[] _keyColumns;
+        private readonly HashSet<string> _selectableColumns;
+        private readonly TabularDataQueryOptions _tabularDataQueryOptions;
+
+        internal TestDataSource(string name, DType schema, string[] keyColumns = null, IEnumerable<string> selectableColumns = null)
         {
             ExternalDataEntityMetadataProvider = new ExternalDataEntityMetadataProvider();
             Type = DType.AttachDataSourceInfo(schema, this);
             Name = name;
+            DisplayNameMapping = new BidirectionalDictionary<string, string>();
+            _keyColumns = keyColumns;
+            _selectableColumns = new HashSet<string>(selectableColumns ?? Enumerable.Empty<string>());
+            _tabularDataQueryOptions = new TabularDataQueryOptions(this);
         }
 
         public string Name { get; }
@@ -198,11 +207,11 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public bool IsPageable => false;
 
-        public virtual TabularDataQueryOptions QueryOptions => throw new NotImplementedException();
+        public virtual TabularDataQueryOptions QueryOptions => _tabularDataQueryOptions;
 
         public bool IsConvertingDisplayNameMapping => false;
 
-        public BidirectionalDictionary<string, string> DisplayNameMapping => new BidirectionalDictionary<string, string>();
+        public BidirectionalDictionary<string, string> DisplayNameMapping { get; }
 
         public BidirectionalDictionary<string, string> PreviousDisplayNameMapping => null;
 
@@ -222,7 +231,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public virtual bool CanIncludeSelect(string selectColumnName)
         {
-            throw new NotImplementedException();
+            return _selectableColumns.Contains(selectColumnName);
         }
 
         public bool CanIncludeSelect(IExpandInfo expandInfo, string selectColumnName)
@@ -232,7 +241,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public virtual IReadOnlyList<string> GetKeyColumns()
         {
-            throw new NotImplementedException();
+            return _keyColumns;
         }
 
         public IEnumerable<string> GetKeyColumns(IExpandInfo expandInfo)
