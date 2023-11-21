@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -9,6 +10,7 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -102,12 +104,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var args = callNode.Args.Children.VerifyValue();
-            if (args.Count > 2 && binding.IsDelegatable(args[2]))
-            {
-                SuggestDelegationHint(args[2], binding);
-                return false;
-            }
-
             if (args.Count < 2)
             {
                 return false;
@@ -120,6 +116,138 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             // Only the second argument for lookup is an ECS excempted lambda
             return index == 1;
+        }
+
+        public override ICallNodeDelegatableNodeValidationStrategy GetCallNodeDelegationStrategy()
+        {
+            return new LookUpCallNodeDelegationStrategy(this);
+        }
+
+        public bool IsValidDelegatableReductionNode(CallNode callNode, TexlNode node, TexlBinding binding)
+        {
+            // TODO: how to separate out this logic without duplications
+            FilterOpMetadata filterMetadata = null;
+            if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
+            {
+                if (!TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.ArrayLookup, out _))
+                {
+                    SuggestDelegationHint(callNode, binding);
+                    return false;
+                }
+
+                filterMetadata = delegationMetadata.FilterDelegationMetadata.VerifyValue();
+            }
+            else
+            {
+                if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out var dataSource))
+                {
+                    return false;
+                }
+
+                filterMetadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
+            }
+
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(binding);
+
+            var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
+            var dottedNameStrategy = GetDottedNameNodeDelegationStrategy();
+            var cNodeStrategy = GetCallNodeDelegationStrategy();
+
+            NodeKind kind;
+            kind = node.Kind;
+
+            // what cases actually need to be handled here?
+            switch (kind)
+            {
+                case NodeKind.BinaryOp:
+                    {
+                        var opNode = node.AsBinaryOp();
+                        var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
+                        Contracts.AssertValue(opNode);
+
+                        if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
+                        {
+                            return false;
+                        }
+
+                        break;
+                    }
+
+                case NodeKind.FirstName:
+                    {
+                        if (!firstNameStrategy.IsValidFirstNameNode(node.AsFirstName(), binding, null))
+                        {
+                            return false;
+                        }
+
+                        break;
+                    }
+
+                case NodeKind.DottedName:
+                    {
+                        if (!dottedNameStrategy.IsValidDottedNameNode(node.AsDottedName(), binding, filterMetadata, null))
+                        {
+                            return false;
+                        }
+
+                        break;
+                    }
+
+                case NodeKind.UnaryOp:
+                    {
+                        var opNode = node.AsUnaryOpLit();
+                        var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
+                        Contracts.AssertValue(opNode);
+
+                        if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
+                        {
+                            SuggestDelegationHint(node, binding);
+                            return false;
+                        }
+
+                        break;
+                    }
+
+                case NodeKind.Call:
+                    {
+                        if (!cNodeStrategy.IsValidCallNode(node.AsCall(), binding, filterMetadata))
+                        {
+                            return false;
+                        }
+
+                        break;
+                    }
+
+                default:
+                    SuggestDelegationHint(node, binding, string.Format(CultureInfo.InvariantCulture, "Not supported node {0}.", kind));
+                    return false;
+            }
+
+            return true;
+        }
+    }
+
+    internal sealed class LookUpCallNodeDelegationStrategy : DelegationValidationStrategy
+    {
+        public LookUpCallNodeDelegationStrategy(TexlFunction function)
+            : base(function)
+        {
+        }
+
+        public override bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null)
+        {
+            var function = binding.GetInfo(node)?.Function;
+            var args = node.Args.Children.VerifyValue();          
+
+            // TODO: for now, try to use the top level filtering logic for filters
+            if (function is LookUpFunction lookup && args.Count > 2 && !lookup.IsValidDelegatableReductionNode(node, args[2], binding))
+            {
+                this.SuggestDelegationHint(args[2], binding);
+                return false;
+            }
+
+            return IsValidCallNodeInternal(node, binding, metadata, trackingFunction ?? Function);
         }
     }
 }
