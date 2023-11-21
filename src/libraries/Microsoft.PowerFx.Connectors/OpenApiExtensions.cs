@@ -737,6 +737,13 @@ namespace Microsoft.PowerFx.Connectors
                 apiObj.WhenPresent("capability", (op_capStr) => cdv.Capability = op_capStr);
                 apiObj.WhenPresent("builtInOperation", (op_bioStr) => cdv.BuiltInOperation = op_bioStr);
 
+                if (!string.IsNullOrEmpty(cdv.BuiltInOperation) || !string.IsNullOrEmpty(cdv.Capability))
+                {
+                    // we don't support BuiltInOperations or capabilities right now
+                    // return null to indicate that the call to get suggestions is not needed for this parameter
+                    return null;
+                }
+
                 return cdv;
             }
 
