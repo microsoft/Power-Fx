@@ -734,8 +734,11 @@ namespace Microsoft.PowerFx.Connectors
                 apiObj.WhenPresent("value-title", (opValTitle) => cdv.ValueTitle = opValTitle);
                 apiObj.WhenPresent("value-path", (opValPath) => cdv.ValuePath = opValPath);
                 apiObj.WhenPresent("value-collection", (opValCollection) => cdv.ValueCollection = opValCollection);
-                apiObj.WhenPresent("capability", (op_capStr) => cdv.Capability = op_capStr);
-                apiObj.WhenPresent("builtInOperation", (op_bioStr) => cdv.BuiltInOperation = op_bioStr);
+
+                // we don't support BuiltInOperations or capabilities right now
+                // return null to indicate that the call to get suggestions is not needed for this parameter
+                apiObj.WhenPresent("capability", (string op_capStr) => cdv = null);
+                apiObj.WhenPresent("builtInOperation", (string op_bioStr) => cdv = null);
 
                 return cdv;
             }
