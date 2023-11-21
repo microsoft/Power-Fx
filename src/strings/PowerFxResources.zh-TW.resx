@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending 或 SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>根據指定資料行中相符值的索引，排序 'source'。</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>來源</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>資料行</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>值</value>
     
@@ -4951,6 +4939,10 @@
     <value>類型轉換失敗，因為指定值的類型為 '{0}'，必須是 '{1}' 類型。</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>運算式 '{0}' 可能代表不屬於資料來源或尚未下載的資料行。請考慮直接使用資料行名稱。</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>資料表 '{0}' 如果超過 {1} 列，則此作業可能無法運作。</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>指定的資料行是唯讀資料行，無法修改: {0}。</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>搜尋 'source' 中的文字。傳回找到該文字的資料列。比較結果不會區分大小寫。</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>要搜尋的資料表。</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>搜尋文字。</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>要搜尋的資料行。</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>來源</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>文字</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>資料行</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>資料行類型錯誤。應為文字類型。</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>資料表不包含文字類型的任何資料行。</value>
     
   </data>
 </root>

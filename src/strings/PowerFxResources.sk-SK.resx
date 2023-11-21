@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending alebo SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Zoradí zdroj podľa stĺpca na základe indexu zhodných hodnôt v zadanom stĺpci.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>zdroj</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>stĺpec</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>hodnoty</value>
     
@@ -4951,6 +4939,10 @@
     <value>Konverzia typu zlyhala, pretože zadaná hodnota bola typu {0}, no očakávaný bol typ {1}.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Výraz {0} môže predstavovať stĺpec, ktorý nie je súčasťou zdroja údajov alebo sa nestiahol. Namiesto toho zvážte priame použitie názvu stĺpca.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Táto operácia v tabuľke {0} možno nebude fungovať, ak je počet jej riadkov vyšší ako {1}.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Zadaný stĺpec je určený iba na čítanie a nemožno ho upravovať: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Hľadá text v zdroji. Vráti riadky, v ktorých sa text našiel. Pri porovnávaní sa nerozlišujú veľké a malé písmená.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Tabuľka na vyhľadanie.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Vyhľadať text.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Stĺpec, ktorý sa má prehľadať.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>zdroj</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>stĺpec</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Nesprávny typ stĺpca. Očakáva sa textový typ.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Tabuľka neobsahuje žiadny stĺpec textového typu.</value>
     
   </data>
 </root>

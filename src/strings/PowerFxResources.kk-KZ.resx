@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending немесе SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Көзді көрсетілген бағандағы сәйкес мәндердің индексіне негізделіп сұрыптайды.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>деректер_көзі</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>баған</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>мәндер</value>
     
@@ -4951,6 +4939,10 @@
     <value>Түрі түрлендірілмеді, өйткені берілген мәннің түрі "{0}", күтілген түрі "{1}" болды.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>"{0}" өрнегі дереккөздің бір бөлігі болып табылмайтын бағанды білдірмеуі мүмкін немесе жүктеп алынған жоқ. Оның орнына баған атауын тікелей пайдаланып көріңіз.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>"{0}" кестесінде {1} қатардан көп болса, ондағы бұл әрекет істемеуі мүмкін.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Көрсетілген баған тек оқуға арналған және оны өзгерту мүмкін емес: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Көздегі мәтінді іздейді. Мәтін табылған жолдарды қайтарады. Салыстыру регистрді ескермей орындалады.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Іздеу орындалатын кесте.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Мәтінді іздеу.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Іздеу орындалатын баған.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>деректер_көзі</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>мәтін</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>баған</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Баған түрі дұрыс емес. Мәтін түрі күтіледі.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Кестеде мәтін түріндегі баған жоқ.</value>
     
   </data>
 </root>

@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending veya SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>'source' öğesini belirtilen sütundaki eşleşen değerler dizinine göre sıralar.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>kaynak</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>sütun</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>değerler</value>
     
@@ -4951,6 +4939,10 @@
     <value>Verilen değer '{0}' türünde olduğu için tür dönüşümü başarısız oldu; '{1}' türü bekleniyor.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>'{0}' ifadesi, veri kaynağının parçası olmayan veya indirilmemiş bir sütunu temsil edebilir. Bunun yerine doğrudan sütun adını kullanabilirsiniz.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>'{0}' tablosu üzerindeki bu işlem, {1} üzeri sayıda satıra sahipse çalışmayabilir.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Belirtilen sütun salt okunur ve değiştirilemez: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>'source' içinde metin araması yapar. Metin içeren satırları döndürür. Karşılaştırma büyük/küçük harfe duyarsız olarak gerçekleştirilir.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Arama yapılacak olan tablo.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Aranacak metin.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Arama yapılacak olan sütun.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>sütun</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Yanlış sütun türü. Metin türünde sütun bekleniyor.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Tablo hiç metin türünde sütun içermiyor.</value>
     
   </data>
 </root>

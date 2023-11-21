@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending 或 SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>基于指定列中匹配值的索引对 "source" 排序。</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>源</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>列</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>值</value>
     
@@ -4951,6 +4939,10 @@
     <value>类型转换失败，因为给定的值为 '{0}' 类型，但应为 '{1}' 类型。</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>表达式 '{0}' 可能代表不属于数据源或尚未下载的列。请考虑直接改用列名称。</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>如果表 '{0}' 超过 {1} 行，则此操作对该表可能不起作用。</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>指定列为只读状态，无法修改: {0}。</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>搜索 "source" 中的文本。返回文本所在的行。以区分大小写的方式执行比较。</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>要搜索的表。</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>搜索文本。</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>要搜索的列。</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>源</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>文本</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>列</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>列类型错误。需要文本类型。</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>表不包含文本类型的任何列。</value>
     
   </data>
 </root>

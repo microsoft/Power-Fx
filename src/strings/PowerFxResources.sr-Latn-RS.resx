@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending ili SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Sortira „izvor“ na osnovu indeksa podudarnih vrednosti u navedenoj koloni.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>izvor</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>kolona</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>vrednosti</value>
     
@@ -4951,6 +4939,10 @@
     <value>Konverzija tipa nije uspela jer je data vrednost bila tipa „{0}“, a očekuje se tip „{1}“.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Izraz „{0}“ može da predstavlja kolonu koja nije deo izvora podataka ili nije preuzeta. Umesto toga razmislite o direktnom korišćenju naziva kolone.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Ova operacija na tabeli „{0}'“ možda neće funkcionisati ako ima više od ovoliko redova: {1}.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Navedena kolona je samo za čitanje i nije je moguće izmeniti: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Pretražuje tekst u „izvoru“. Vraća redove u kojima je pronađen tekst. Poređenje se vrši na način koji ne razlikuje mala i velika slova.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Tabela za pretragu.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Tekst za pretragu.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Kolona za pretragu.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>izvor</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>kolona</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Pogrešan tip kolone. Očekuje se tip teksta.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Tabela ne sadrži nijednu kolonu tipa teksta.</value>
     
   </data>
 </root>

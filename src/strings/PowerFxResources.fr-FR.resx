@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending ou SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Trie la « source » sur la base de l’index des valeurs de correspondance dans la colonne spécifiée.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>source</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>colonne</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>valeurs</value>
     
@@ -4951,6 +4939,10 @@
     <value>Échec de la conversion de type, car la valeur donnée était de type « {0} », type attendu : « {1} ».</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>L’expression '{0}' peut représenter une colonne qui ne fait pas partie de la source de données ou qui n’a pas été téléchargée. Envisagez d’utiliser le nom de colonne directement à la place.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Cette opération sur la table « {0} » peut ne pas fonctionner si elle a plus de {1} lignes.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>La colonne indiquée est en lecture seule et ne peut pas être modifiée : {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Recherche du texte dans « source ». Retourne les lignes dans lesquelles le texte est trouvé. Effectue une comparaison en ignorant la casse.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Table dans laquelle rechercher.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Texte recherché.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Colonne dans laquelle rechercher.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>source</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>texte</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>colonne</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Type de colonne incorrect. Attend un type de texte.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>La table ne contient aucune colonne de type de texte.</value>
     
   </data>
 </root>
