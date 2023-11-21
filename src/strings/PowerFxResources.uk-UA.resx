@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending або SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Сортує дані джерела на основі індексу відповідних значень в указаному стовпці.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>джерело</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>стовпець</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>значення</value>
     
@@ -4951,6 +4939,10 @@
     <value>Не вдалося перетворити тип, оскільки надано значення типу "{0}", а очікується тип "{1}".</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Вираз ’"{0}" може представляти стовпець, який не є частиною джерела даних або не був завантажений. Спробуйте натомість використати саму назву стовпця.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Ця операція з таблицею "{0}" може не працювати, якщо вона містить більше такої кількості рядків: {1}.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Указаний стовпець доступний лише для читання, і в нього не можна вносити зміни: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Шукає текст у джерелі й повертає рядки, де знайдено текст (без урахування регістра).</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Таблиці, де потрібно шукати.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Пошуковий запит.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Стовпець, де потрібно шукати.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>джерело</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>стовпець</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Неправильний тип стовпця. Очікується текстовий тип.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Таблиця не містить жодного текстового стовпця.</value>
     
   </data>
 </root>

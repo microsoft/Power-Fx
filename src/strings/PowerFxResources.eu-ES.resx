@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending edo SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>"source" ordenatzen du zehaztutako zutabean bat datozen balioen aurkibidean oinarrituta.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>iturburua</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>zutabea</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>balioak</value>
     
@@ -4951,6 +4939,10 @@
     <value>Mota-bihurketak huts egin du, emandako balioa "{0}" motakoa zelako eta "{1}" motakoa espero zelako.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>"{0}" adierazpenak datu-iturburuaren parte ez den edo deskargatu ez den zutabe bat adieraz dezake. Horren ordez, zutabearen izena zuzenean erabil dezakezu.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>"{0}" taulako eragiketak ez du funtzionatuko {1} errenkada baino gehiago baditu.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Zehaztutako zutabea irakurtzeko soilik da eta ezin da aldatu: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Testua bilatzen du "source" taulan eta testua duten errenkadak itzultzen ditu. Konparazioak egitean, maiuskulak eta minuskulak bereizten dira.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Bilatuko den taula.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Bilatu testuan.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Bilatuko den zutabea.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>iturburua</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>testua</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>zutabea</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Zutabe mota okerra. Testu motakoa espero da.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Taulak ez du testu motako zutaberik.</value>
     
   </data>
 </root>

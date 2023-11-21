@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending vagy SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>A megadott oszlopban szereplő megfelelő értékek indexe alapján rendezi a forrást.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>forrás</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>oszlop</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>értékek</value>
     
@@ -4951,6 +4939,10 @@
     <value>A típus átalakítása nem sikerült, mert a megadott érték „{0}” típusú, a várt érték pedig „{1}” típusú.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>A(z) '{0}' kifejezés olyan oszlopot jelenthet, amely nem része az adatforrásnak, vagy nincs letöltve. Fontolja meg, hogy közvetlenül az oszlop nevét használja.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Ez a művelet a(z) '{0}' táblán adott esetben nem működik, ha több mint {1} sorral rendelkezik.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>A megadott oszlop írásvédett, ezért nem módosítható: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Megkeres egy szöveges értéket a forrásban. Azokat a sorokat adja vissza, amelyben megtalálható a szöveges érték. Az összehasonlításban nem számítanak különbözőnek a kis- és a nagybetűk.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Ebben a táblában kell keresni.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>A keresett szöveg.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Ebben az oszlopban kell keresni.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>forrás</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>szöveg</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>oszlop</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Helytelen oszloptípus. Az elvárás a szöveg típus.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>A tábla nem tartalmaz szöveg típusú oszlopot.</value>
     
   </data>
 </root>

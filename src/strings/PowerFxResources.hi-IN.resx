@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending या SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>निर्दिष्ट स्तंभ में मेल खाने वाले मानों की इंडेक्स के आधार पर 'source' को सॉर्ट करता है.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>स्रोत</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>स्तंभ</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>मान</value>
     
@@ -4951,6 +4939,10 @@
     <value>प्रकार रूपांतरण विफल रहा क्योंकि दिया गया मूल्य '{0}' प्रकार का था, जिसकी उम्मीद '{1}' प्रकार थी.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>अभिव्यक्ति '{0}' एक ऐसे कॉलम का प्रतिनिधित्व कर सकती है जो डेटा स्रोत का हिस्सा नहीं है या डाउनलोड नहीं किया गया है. इसके बजाय सीधे कॉलम नाम का उपयोग करने पर विचार करें.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>अगर इसमें {1} से अधिक पंक्तियाँ हैं, तो तालिका '{0}' पर यह कार्रवाई काम नहीं कर सकती है.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>निर्दिष्ट स्तंभ केवल पढ़ने के लिए है और संशोधित नहीं किया जा सकता: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>source' में पाठ खोजता है. वह पंक्तियाँ लौटाता है जहाँ पाठ मिला है. तुलना केस-संवेदी तरीके से की गई है.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>खोजने वाली तालिका.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>पाठ खोजें.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>खोजने वाले स्तंभ.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>स्रोत</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>पाठ</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>स्तंभ</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>ग़लत स्तंभ प्रकार. पाठ प्रकार अपेक्षित है.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>तालिका में पाठ प्रकार का कोई भी स्तंभ नहीं है.</value>
     
   </data>
 </root>

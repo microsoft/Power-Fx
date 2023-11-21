@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending eller SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Sorterer 'kilde' på baggrund af indekset for matchende værdier i den angivne kolonne.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>kilde</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>kolonne</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>værdier</value>
     
@@ -4951,6 +4939,10 @@
     <value>Typekonverteringen mislykkedes, fordi den angivne værdi var af typen "{0}", der forventes typen "{1}".</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Udtrykket '{0}' kan repræsentere en kolonne, der ikke er en del af datakilden, eller som ikke er hentet. Overvej i stedet at bruge kolonnenavnet direkte.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Denne handling på tabellen '{0}' virker muligvis ikke, hvis den har mere end {1} rækker.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Den angivne kolonne er skrivebeskyttet og kan ikke ændres: {0}</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Søger tekst i 'kilde'. Returnerer rækker, hvor der findes tekst. Sammenligning sker, uden at der skelnes mellem store og små bogstaver.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Tabel, der skal søges i.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Søgetekst.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Kolonne, der skal søges i.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>kolonne</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Forkert kolonnetype. Forventer teksttype.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Tabel indeholder ikke nogen teksttypekolonner.</value>
     
   </data>
 </root>

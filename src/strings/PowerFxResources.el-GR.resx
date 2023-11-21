@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending ή SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Ταξινομεί την "προέλευση" με βάση το δείκτη αντιστοίχισης τιμών στην καθορισμένη στήλη.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>προέλευση</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>στήλη</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>τιμές</value>
     
@@ -4951,6 +4939,10 @@
     <value>Η μετατροπή τύπου απέτυχε επειδή η δεδομένη τιμή ήταν τύπου «{0}», αναμενόμενου τύπου «{1}».</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Η παράσταση '{0}' μπορεί να αντιπροσωπεύει μια στήλη που δεν αποτελεί μέρος της προέλευσης δεδομένων ή δεν έχει γίνει λήψη της. Εξετάστε το ενδεχόμενο να χρησιμοποιήσετε απευθείας το όνομα στήλης.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Αυτή η λειτουργία στον πίνακα '{0}' ενδέχεται να μην λειτουργεί, εάν έχει περισσότερες από {1} γραμμές.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Η καθορισμένη στήλη είναι μόνο για ανάγνωση και δεν είναι δυνατή η τροποποίησή της: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Αναζητά κείμενο στην "προέλευση". Επιστρέφει σειρές στις οποίες εντοπίζεται κείμενο. Η σύγκριση γίνεται χωρίς διάκριση πεζών-κεφαλαίων.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Πίνακας για αναζήτηση.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Κείμενο αναζήτησης.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Στήλη για αναζήτηση.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>προέλευση</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>κείμενο</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>στήλη</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Εσφαλμένος τύπος στήλης. Αναμένει τύπο κειμένου.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Ο πίνακας δεν περιέχει καμία στήλη τύπου κειμένου.</value>
     
   </data>
 </root>

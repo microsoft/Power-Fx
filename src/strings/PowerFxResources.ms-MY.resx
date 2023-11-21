@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending atau SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Mengisih 'sumber' berdasarkan indeks nilai sepadan dalam lajur yang ditentukan.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>sumber</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>lajur</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>nilai</value>
     
@@ -4951,6 +4939,10 @@
     <value>Penukaran jenis gagal kerana nilai yang diberikan ialah jenis '{0}', jenis '{1}' dijangkakan.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Ekspresi '{0}' mungkin mewakili lajur yang bukan sebahagian daripada sumber data atau belum dimuat turun. Sebaliknya, pertimbangkan untuk menggunakan nama lajur secara langsung.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Operasi ini pada jadual '{0}' mungkin tidak berfungsi jika mempunyai lebih daripada {1} baris.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Lajur yang ditentukan adalah baca sahaja dan tidak boleh diubah suai: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Mencari teks dalam 'sumber'. Mengembalikan baris, lokasi teks ditemui. Perbandingan dilakukan dalam keadaan tidak sensitif huruf.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Jadual untuk dicari.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Cari teks.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Lajur untuk carian.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>sumber</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>teks</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>lajur</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Jenis lajur salah. Menjangkakan jenis teks.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Jadual tidak mengandungi sebarang lajur jenis teks.</value>
     
   </data>
 </root>
