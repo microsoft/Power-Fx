@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending eller SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Sorterer kilden basert på indeksen av samsvarende verdier i den angitte kolonnen.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>kilde</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>kolonne</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>verdier</value>
     
@@ -4951,6 +4939,10 @@
     <value>Konverteringstypen mislyktes fordi den angitte verdien var av typen {0}, forventet typen {1}.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Uttrykket {0} kan representere en kolonne som ikke er en del av datakilden eller som ikke er lastet ned. Vurder å bruke kolonnenavnet direkte i stedet.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Denne operasjonen på tabellen {0} fungerer kanskje ikke hvis den har mer enn {1} rader.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Den angitte kolonnen er skrivebeskyttet og kan ikke endres: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Søker i tekst i kilden. Returnerer rader der teksten blir funnet. Sammenligningen gjøres ved å skille mellom små og store bokstaver.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Tabell det skal søkes i.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Søketekst.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Kolonne det skal søkes i.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>kolonne</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Ugyldig kolonnetype. Forventer teksttype.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Tabellen inneholder ikke en kolonne av typen tekst.</value>
     
   </data>
 </root>

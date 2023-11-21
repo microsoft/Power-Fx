@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending sau SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Sortează „sursa” pe baza indexului valorilor potrivite din coloana specificată.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>sursă</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>coloană</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>valori</value>
     
@@ -4951,6 +4939,10 @@
     <value>Conversia de tip nu a reușit, deoarece valoarea dată a fost de tip „{0}”, tipul așteptat „{1}”.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Expresia „{0}” poate prezenta o coloană care nu face parte din sursa de date sau care nu a fost descărcată. Vă recomandăm să folosiți în schimb direct numele coloanei.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Această operațiune pe tabel pe „{0}” este posibil să nu funcționeze dacă are mai mult de {1} rânduri.</value>
     
@@ -5130,7 +5122,7 @@
     
   </data>
   <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
-    <value>Nepotrivire de tip între tipurile de înregistrări sursă și țintă. Numele de câmp : {0} nu s-a găsit.</value>
+    <value>Nepotrivire de tip între tipurile de înregistrări sursă și țintă. Numele de câmp: {0} nu s-a găsit.</value>
     
   </data>
   <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Coloana specificată este doar în citire și nu poate fi modificată. {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Caută în textul din „sursă”. Returnează rândurile unde se găsește textul. Comparația se face fără a ține cont de diferența dintre literele mari și mici.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Tabel în care să se caute.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Căutare text.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Coloană de căutat.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>coloană</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Tipul de coloană nu este potrivit. Se așteaptă tipul text.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Tabelul nu conține nicio coloană de tip text.</value>
     
   </data>
 </root>

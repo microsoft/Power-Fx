@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending または SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>指定された列の一致する値のインデックスに基づいて 'ソース' を並べ替えます。</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>ソース</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>列</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>値</value>
     
@@ -4951,6 +4939,10 @@
     <value>必要な種類 '{1}' に対して種類 '{0}' の値を指定したため、種類の変換が失敗しました。</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>式 '{0}' には、データ ソースに含まれていない列、またはダウンロードされていない列が表現されている可能性があります。列名を直接使用することをお勧めします。</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>テーブル '{0}' の行数が {1} を超える場合、この操作は機能しない可能性があります。</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>指定された列 {0} は読み取り専用です。変更できません。</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>'ソース' 内のテキストを検索します。テキストが見つかった行を返します。比較は大文字と小文字を区別しないで行われます。</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>検索するテーブル。</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>検索文字列。</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>検索する列。</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>ソース</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>テキスト</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>列</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>列の型が正しくありません。テキスト型が必要です。</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>テーブルにテキスト型の列が含まれていません。</value>
     
   </data>
 </root>

@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending oder SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Sortiert „Quelle“ basierend auf dem Index übereinstimmender Werte in der angegebenen Spalte.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>Quelle</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>Spalte</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>Werte</value>
     
@@ -4951,6 +4939,10 @@
     <value>Fehler bei der Typkonvertierung, da der angegebene Wert vom Typ „{0}“ war. Erwarteter Typ: „{1}“.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Der Ausdruck „{0}“ kann eine Spalte darstellen, die nicht Teil der Datenquelle ist oder nicht heruntergeladen wurde. Erwägen Sie stattdessen, den Spaltennamen direkt zu verwenden.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Dieser Vorgang für Tabelle „{0}“ funktioniert möglicherweise nicht, wenn sie mehr als {1} Zeilen enthält.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Die angegebene Spalte ist schreibgeschützt und kann nicht geändert werden: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Durchsucht Text in "Quelle". Gibt Zeilen zurück, in denen Text gefunden wird. Beim Vergleich wird Groß-/Kleinschreibung ignoriert.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Zu durchsuchende Tabelle</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Suchtext</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Zu durchsuchende Spalte</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>Quelle</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>Text</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>Spalte</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Falscher Spaltentyp. Der Typ "text" wird erwartet.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Die Tabelle enthält keine Spalten vom Texttyp.</value>
     
   </data>
 </root>
