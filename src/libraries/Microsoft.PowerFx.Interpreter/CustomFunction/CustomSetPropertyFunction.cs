@@ -34,8 +34,8 @@ namespace Microsoft.PowerFx
 
         public Func<FormulaValue[], Task<FormulaValue>> _impl;
 
-        public CustomSetPropertyFunction(string name, string[] argNames)
-            : base(DPath.Root, name, name, CustomFunctionUtility.SG(name), FunctionCategories.Behavior, DType.Boolean, 0, 2, 2)
+        public CustomSetPropertyFunction(DPath ns, string name, string[] argNames)
+            : base(ns, name, name, CustomFunctionUtility.SG(name), FunctionCategories.Behavior, DType.Boolean, 0, 2, 2)
         {
             _argNames = argNames;
         }

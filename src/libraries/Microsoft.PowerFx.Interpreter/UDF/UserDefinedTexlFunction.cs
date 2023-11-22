@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
 
@@ -22,7 +23,7 @@ namespace Microsoft.PowerFx.Interpreter
         public override bool IsSelfContained => !_check.ParserOptions.AllowsSideEffects;
 
         public UserDefinedTexlFunction(string name, FormulaType returnType, IEnumerable<NamedFormulaType> parameterNames, CheckWrapper lazyCheck)
-            : base(name, FunctionCategories.UserDefined, returnType, parameterNames.Select(x => x.Name.Value).ToArray(), parameterNames.Select(x => x.Type).ToArray())
+            : base(DPath.Root, name, FunctionCategories.UserDefined, returnType, parameterNames.Select(x => x.Name.Value).ToArray(), parameterNames.Select(x => x.Type).ToArray())
         {
             _parameterNames = parameterNames;
             _check = lazyCheck;
