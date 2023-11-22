@@ -36,13 +36,13 @@ namespace Microsoft.PowerFx
 
         public override bool CanSuggestInputColumns => true;
 
-        public CustomTexlFunction(string name, FunctionCategories functionCategory, FormulaType returnType, string[] argNames, params FormulaType[] paramTypes)
-            : this(name, functionCategory, returnType._type, argNames, Array.ConvertAll(paramTypes, x => x._type))
+        public CustomTexlFunction(DPath ns, string name, FunctionCategories functionCategory, FormulaType returnType, string[] argNames, params FormulaType[] paramTypes)
+            : this(ns, name, functionCategory, returnType._type, argNames, Array.ConvertAll(paramTypes, x => x._type))
         {
         }
 
-        public CustomTexlFunction(string name, FunctionCategories functionCategory, DType returnType, string[] argNames, params DType[] paramTypes)
-            : base(DPath.Root, name, name, CustomFunctionUtility.SG("Custom func " + name), functionCategory, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
+        public CustomTexlFunction(DPath ns, string name, FunctionCategories functionCategory, DType returnType, string[] argNames, params DType[] paramTypes)
+            : base(ns, name, name, CustomFunctionUtility.SG("Custom func " + name), functionCategory, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
         {
             _isBehavior = functionCategory == FunctionCategories.Behavior;
             _argNames = argNames;

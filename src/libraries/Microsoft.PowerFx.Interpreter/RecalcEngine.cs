@@ -14,7 +14,6 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
