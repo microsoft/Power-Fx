@@ -35,9 +35,12 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             TabularDataSourceInfo = tabularDataSourceInfo;
             _selects = new HashSet<string>();
             var keyColumns = tabularDataSourceInfo.GetKeyColumns();
-            foreach (var keyColumn in keyColumns)
+            if (keyColumns != null)
             {
-                _selects.Add(keyColumn);
+                foreach (var keyColumn in keyColumns)
+                {
+                    _selects.Add(keyColumn);
+                }
             }
 
             ExpandQueryOptions = new Dictionary<ExpandPath, ExpandQueryOptions>();

@@ -463,20 +463,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            DName columnName;
-            DType columnType;
             var retVal = false;
-
-            if (callNode.Args.Count == 3 && binding.GetType(callNode.Args.ChildNodes[2]).IsTableNonObjNull)
-            {
-                base.TryGetColumnLogicalName(dsType, binding.Features.SupportColumnNamesAsIdentifiers, args[1], DefaultErrorContainer, out columnName, out columnType).Verify();
-                return dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
-            }
 
             for (var i = 1; i < args.Count; i += 2)
             {
-                base.TryGetColumnLogicalName(dsType, binding.Features.SupportColumnNamesAsIdentifiers, args[i], DefaultErrorContainer, out columnName, out columnType).Verify();
-                retVal |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
+                if (base.TryGetColumnLogicalName(dsType, binding.Features.SupportColumnNamesAsIdentifiers, args[i], DefaultErrorContainer, out DName columnName, out DType columnType))
+                {
+                    retVal |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
+                }
             }
 
             return retVal;
