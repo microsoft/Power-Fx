@@ -180,7 +180,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
             Type = DType.AttachDataSourceInfo(schema, this);
             Name = name;
             DisplayNameMapping = new BidirectionalDictionary<string, string>();
-            _keyColumns = keyColumns;
+            _keyColumns = keyColumns ?? Array.Empty<string>();
             _selectableColumns = new HashSet<string>(selectableColumns ?? Enumerable.Empty<string>());
             _tabularDataQueryOptions = new TabularDataQueryOptions(this);
         }
