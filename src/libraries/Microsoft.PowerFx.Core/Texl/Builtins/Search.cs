@@ -164,14 +164,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
             Contracts.AssertValue(dataSource);
 
-            if (binding.ErrorContainer.HasErrors(node) || node.Kind != NodeKind.StrLit)
+            if (binding.ErrorContainer.HasErrors(node))
             {
                 return false;
             }
 
-            StrLitNode columnNode = Contracts.VerifyValue(node.AsStrLit());
-            string columnName = columnNode.Value;
-            if (string.IsNullOrEmpty(columnName) || !IsColumnSearchable(DPath.Root.Append(new DName(columnName)), dataSource))
+            if (!base.TryGetColumnLogicalName(dataSource.Type, binding.Features.SupportColumnNamesAsIdentifiers, node, DefaultErrorContainer, out var columnName))
+            {
+                return false;
+            }
+
+            if (!IsColumnSearchable(DPath.Root.Append(columnName), dataSource))
             {
                 SuggestDelegationHint(node, binding);
                 return false;

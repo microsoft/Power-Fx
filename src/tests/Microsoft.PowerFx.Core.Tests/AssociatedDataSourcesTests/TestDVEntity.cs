@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
     internal static class AccountsTypeHelper
     {
-        internal const string SimplifiedAccountsSchema = "*[accountid:g, accountnumber:s, address1_addresstypecode:l, address1_city:s, address1_composite:s, address1_country:s, address1_county:s, address1_fax:s, address1_freighttermscode:l, address1_latitude:n, address1_line1:s, address1_line2:s, address1_line3:s, address1_longitude:n, address1_name:s, address1_postalcode:s, address1_postofficebox:s, address1_primarycontactname:s, address1_shippingmethodcode:l, address1_stateorprovince:s, address1_telephone1:s, address1_telephone2:s, address1_telephone3:s, address1_upszone:s, address1_utcoffset:n, createdon:d, description:s, emailaddress1:s, emailaddress2:s, emailaddress3:s, modifiedon:d, name:s, numberofemployees:n, primarytwitterid:s, stockexchange:s, telephone1:s, telephone2:s, telephone3:s, tickersymbol:s, versionnumber:n, websiteurl:h]";
+        internal const string SimplifiedAccountsSchema = "*[accountid:g, accountnumber:s, address1_addresstypecode:l, address1_city:s, address1_composite:s, address1_country:s, address1_county:s, address1_fax:s, address1_freighttermscode:l, address1_latitude:n, address1_line1:s, address1_line2:s, address1_line3:s, address1_longitude:n, address1_name:s, address1_postalcode:s, address1_postofficebox:s, address1_primarycontactname:s, address1_shippingmethodcode:l, address1_stateorprovince:s, address1_telephone1:s, address1_telephone2:s, address1_telephone3:s, address1_upszone:s, address1_utcoffset:n, createdon:d, description:s, emailaddress1:s, emailaddress2:s, emailaddress3:s, modifiedon:d, name:s, numberofemployees:n, primarytwitterid:s, stockexchange:s, telephone1:s, telephone2:s, telephone3:s, tickersymbol:s, versionnumber:n, websiteurl:h, nonsearchablestringcol:s, nonsortablestringcolumn:s]";
 
         public static DType GetDType()
         {
@@ -57,6 +57,8 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             displayNameMapping.Add("name", "Account Name");
             displayNameMapping.Add("address1_city", "Address 1: City");
             displayNameMapping.Add("address1_line1", "Address 1: Street 1");
+            displayNameMapping.Add("nonsearchablestringcol", "Non-searchable string column");
+            displayNameMapping.Add("nonsortablestringcolumn", "Non-sortable string column");
             return DType.AttachDataSourceInfo(accountsType, dataSource);
         }
     }
@@ -69,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
         public DelegationCapability TableCapabilities => new DelegationCapability(DelegationCapability.SupportsAll);
 
-        public SortOpMetadata SortDelegationMetadata => new SortOpMetadata(Schema, new Dictionary<DPath, DelegationCapability>());
+        public SortOpMetadata SortDelegationMetadata { get; }
 
         public FilterOpMetadata FilterDelegationMetadata { get; }
 
@@ -80,49 +82,21 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         public AccountsDelegationMetadata()
         {
             FilterDelegationMetadata = new FilterOpMetadata(
-                Schema,
-                new Dictionary<DPath, DelegationCapability>(),
-                new Dictionary<DPath, DelegationCapability>(),
-                DelegationCapability.SupportsAll,
-                DelegationCapability.SupportsAll);
-        }
-    }
+                tableSchema: Schema,
+                columnRestrictions: new Dictionary<DPath, DelegationCapability>
+                {
+                    { DPath.Root.Append(new DName("nonsearchablestringcol")), DelegationCapability.Filter }
+                },
+                columnCapabilities: new Dictionary<DPath, DelegationCapability>(),
+                filterFunctionsSupportedByAllColumns: DelegationCapability.SupportsAll,
+                filterFunctionsSupportedByTable: DelegationCapability.SupportsAll);
 
-    internal class TestDVEntity
-    {
-        private class MyExpandInfo : IExpandInfo
-        {
-            public string Identity => "An identity";
-
-            public bool IsTable => true;
-
-            public string Name => "Name";
-
-            public string PolymorphicParent => throw new NotImplementedException();
-
-            public IExternalDataSource ParentDataSource => throw new NotImplementedException();
-
-            public ExpandPath ExpandPath => throw new NotImplementedException();
-
-            public IExpandInfo Clone()
-            {
-                throw new NotImplementedException();
-            }
-
-            public string ToDebugString()
-            {
-                throw new NotImplementedException();
-            }
-
-            public void UpdateEntityInfo(IExternalDataSource dataSource, string relatedEntityPath)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public static DType Create()
-        {
-            return DType.CreateExpandType(new MyExpandInfo());
+            SortDelegationMetadata = new SortOpMetadata(
+                schema: Schema,
+                columnRestrictions: new Dictionary<DPath, DelegationCapability>
+                {
+                    { DPath.Root.Append(new DName("nonsortablestringcolumn")), DelegationCapability.Sort }
+                });
         }
     }
 }
