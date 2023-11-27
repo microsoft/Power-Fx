@@ -29,6 +29,9 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         [InlineData("CountIf(Accounts, IsBlank('Address 1: City'))", true)]
         [InlineData("CountIf(Accounts, Sqrt(ThisRecord.numberofemployees) > 1)", false)]
         [InlineData("Filter(Accounts, And(Not IsBlank('Address 1: City'), numberofemployees > 100))", true)]
+        [InlineData("Sort(Accounts, 'Account Name')", true)]
+        [InlineData("Sort(Accounts, 'Account Name', SortOrder.Descending)", true)]
+        [InlineData("Sort(Accounts, 'Non-sortable string column', SortOrder.Ascending)", false)]
         public void TestDelegableExpressions(string expression, bool isDelegable)
         {
             var symbolTable = new DelegatableSymbolTable();
