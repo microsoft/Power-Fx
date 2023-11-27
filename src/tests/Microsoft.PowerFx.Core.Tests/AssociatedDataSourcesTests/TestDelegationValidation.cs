@@ -25,6 +25,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         [InlineData("Search(Accounts, \"something to search\", 'Account Name', 'Non-searchable string column', 'Address 1: City')", false)]
         [InlineData("Filter(Accounts, IsBlank('Address 1: City'))", true)]
         [InlineData("Filter(Accounts, IsBlank(ThisRecord.'Address 1: City'))", true)]
+        [InlineData("Filter(Accounts, Sqrt(ThisRecord.accountnumber) > 1)", false)]
         [InlineData("CountIf(Accounts, IsBlank('Address 1: City'))", true)]
         [InlineData("CountIf(Accounts, Sqrt(ThisRecord.accountnumber) > 1)", false)]
         public void TestDelegableExpressions(string expression, bool isDelegable)
