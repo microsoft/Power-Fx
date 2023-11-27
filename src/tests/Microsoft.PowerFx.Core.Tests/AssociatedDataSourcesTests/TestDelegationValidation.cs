@@ -25,9 +25,10 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         [InlineData("Search(Accounts, \"something to search\", 'Account Name', 'Non-searchable string column', 'Address 1: City')", false)]
         [InlineData("Filter(Accounts, IsBlank('Address 1: City'))", true)]
         [InlineData("Filter(Accounts, IsBlank(ThisRecord.'Address 1: City'))", true)]
-        [InlineData("Filter(Accounts, Sqrt(ThisRecord.accountnumber) > 1)", false)]
+        [InlineData("Filter(Accounts, Sqrt(ThisRecord.numberofemployees) > 1)", false)]
         [InlineData("CountIf(Accounts, IsBlank('Address 1: City'))", true)]
-        [InlineData("CountIf(Accounts, Sqrt(ThisRecord.accountnumber) > 1)", false)]
+        [InlineData("CountIf(Accounts, Sqrt(ThisRecord.numberofemployees) > 1)", false)]
+        [InlineData("Filter(Accounts, And(Not IsBlank('Address 1: City'), numberofemployees > 100))", true)]
         public void TestDelegableExpressions(string expression, bool isDelegable)
         {
             var symbolTable = new DelegatableSymbolTable();
@@ -46,7 +47,6 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             Assert.NotNull(callNode);
 
             var callInfo = result.Binding.GetInfo(callNode);
-            var dataSourceToQueryOptionsMap = new DataSourceToQueryOptionsMap();
 
             var actualIsDelegable = callInfo.Function.IsServerDelegatable(callNode, result.Binding);
             Assert.Equal(isDelegable, actualIsDelegable);
@@ -84,7 +84,6 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             Assert.NotNull(callNode);
 
             var callInfo = result.Binding.GetInfo(callNode);
-            var dataSourceToQueryOptionsMap = new DataSourceToQueryOptionsMap();
 
             var actualIsDelegable = callInfo.Function.IsServerDelegatable(callNode, result.Binding);
             Assert.Equal(isDelegable, actualIsDelegable);
