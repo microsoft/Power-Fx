@@ -203,27 +203,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (int i = 2; i < cargs; i++)
             {
-                string columnName;
-                DType columnType;
-                if (binding.Features.SupportColumnNamesAsIdentifiers)
-                {
-                    columnName = ((FirstNameNode)args[i]).Ident.Name;
-                    columnType = dsType.GetType(new DName(columnName));
-                }
-                else
-                {
-                    columnType = binding.GetType(args[i]);
-                    StrLitNode columnNode = args[i].AsStrLit();
-                    if (columnType.Kind != DKind.String || columnNode == null)
-                    {
-                        continue;
-                    }
-
-                    columnName = columnNode.Value;
-                }
-
-                Contracts.Assert(dsType.Contains(new DName(columnName)));
-
+                base.TryGetColumnLogicalName(dsType, binding.Features.SupportColumnNamesAsIdentifiers, args[i], DefaultErrorContainer, out DName columnName, out DType columnType).Verify();
                 retval |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
             }
 

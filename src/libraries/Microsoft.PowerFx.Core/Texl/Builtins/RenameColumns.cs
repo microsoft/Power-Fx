@@ -233,38 +233,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 1; i < args.Count - 1; i += 2)
             {
-                string columnName;
-                DType columnType;
-                if (binding.Features.SupportColumnNamesAsIdentifiers)
-                {
-                    FirstNameNode columnNode = args[i].AsFirstName();
-
-                    // This is a bug in the existing implementation - with column names as
-                    // string this will always return a string, although it seems like it
-                    // intended to return the type of the column being renamed. Since this code
-                    // will be obsoleted soon, just keep the existing logic for now.
-                    columnType = DType.String;
-
-                    if (columnType.Kind != DKind.String || columnNode == null)
-                    {
-                        continue;
-                    }
-
-                    columnName = columnNode.Ident.Name.Value;
-                }
-                else
-                {
-                    columnType = binding.GetType(args[i]);
-                    StrLitNode columnNode = args[i].AsStrLit();
-                    if (columnType.Kind != DKind.String || columnNode == null)
-                    {
-                        continue;
-                    }
-
-                    columnName = columnNode.Value;
-                }
-
-                Contracts.Assert(dsType.Contains(new DName(columnName)));
+                base.TryGetColumnLogicalName(dsType, binding.Features.SupportColumnNamesAsIdentifiers, args[i], DefaultErrorContainer, out var columnName, out var columnType).Verify();
+                Contracts.Assert(dsType.Contains(columnName));
 
                 retval |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
             }
