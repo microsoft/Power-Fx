@@ -12,15 +12,16 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 {
-    public class TestUpdateDataQuery
+    public class TestUpdateDataQuerySelects
     {
         [Theory]
-        [InlineData("SortByColumns(Accounts, Name, SortOrder.Ascending)", "accountid,name")]
-        [InlineData("SortByColumns(Accounts, Name, SortOrder.Ascending, 'Address 1: City')", "accountid,name,address1_city")]
-        [InlineData("SortByColumns(Accounts, Name, SortOrder.Descending, 'Address 1: Street 1')", "accountid,name,address1_line1")]
+        [InlineData("SortByColumns(Accounts, 'Account Name', SortOrder.Ascending)", "accountid,name")]
+        [InlineData("SortByColumns(Accounts, 'Account Name', SortOrder.Ascending, 'Address 1: City')", "accountid,name,address1_city")]
+        [InlineData("SortByColumns(Accounts, 'Account Name', SortOrder.Descending, 'Address 1: Street 1')", "accountid,name,address1_line1")]
         [InlineData("SortByColumns(Accounts, name, SortOrder.Descending, address1_line1)", "accountid,name,address1_line1")]
-        [InlineData("ShowColumns(Accounts, Name, 'Address 1: City')", "accountid,name,address1_city")]
-        [InlineData("RenameColumns(Accounts, Name, 'The name', 'Address 1: City', 'The city')", "accountid,name,address1_city")]
+        [InlineData("ShowColumns(Accounts, 'Account Name', 'Address 1: City')", "accountid,name,address1_city")]
+        [InlineData("RenameColumns(Accounts, 'Account Name', 'The name', 'Address 1: City', 'The city')", "accountid,name,address1_city")]
+        [InlineData("Search(Accounts, \"something to search\", 'Account Name', address1_line1, 'Address 1: City')", "accountid,name,address1_city,address1_line1")]
         public void TestSelects(string expression, string expectedSelects)
         {
             var symbolTable = new DelegatableSymbolTable();

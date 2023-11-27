@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
                 keyColumns: new[] { "accountid" },
                 selectableColumns: new[] { "name", "address1_city", "accountid", "address1_country", "address1_line1" });
             var displayNameMapping = dataSource.DisplayNameMapping;
-            displayNameMapping.Add("name", "Name");
+            displayNameMapping.Add("name", "Account Name");
             displayNameMapping.Add("address1_city", "Address 1: City");
             displayNameMapping.Add("address1_line1", "Address 1: Street 1");
             return DType.AttachDataSourceInfo(accountsType, dataSource);
@@ -71,11 +71,21 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
         public SortOpMetadata SortDelegationMetadata => new SortOpMetadata(Schema, new Dictionary<DPath, DelegationCapability>());
 
-        public FilterOpMetadata FilterDelegationMetadata => throw new NotImplementedException();
+        public FilterOpMetadata FilterDelegationMetadata { get; }
 
         public GroupOpMetadata GroupDelegationMetadata => throw new NotImplementedException();
 
         public Dictionary<DPath, DPath> ODataPathReplacementMap => throw new NotImplementedException();
+
+        public AccountsDelegationMetadata()
+        {
+            FilterDelegationMetadata = new FilterOpMetadata(
+                Schema,
+                new Dictionary<DPath, DelegationCapability>(),
+                new Dictionary<DPath, DelegationCapability>(),
+                DelegationCapability.SupportsAll,
+                DelegationCapability.SupportsAll);
+        }
     }
 
     internal class TestDVEntity
