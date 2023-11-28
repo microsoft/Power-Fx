@@ -164,14 +164,37 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
             Contracts.AssertValue(dataSource);
 
-            if (binding.ErrorContainer.HasErrors(node) || node.Kind != NodeKind.StrLit)
+            if (binding.ErrorContainer.HasErrors(node))
             {
                 return false;
             }
 
-            StrLitNode columnNode = Contracts.VerifyValue(node.AsStrLit());
-            string columnName = columnNode.Value;
-            if (string.IsNullOrEmpty(columnName) || !IsColumnSearchable(DPath.Root.Append(new DName(columnName)), dataSource))
+            var columnsAsIdentifiers = binding.Features.SupportColumnNamesAsIdentifiers;
+            DName columnName = default;
+            if (!columnsAsIdentifiers && node.Kind == NodeKind.StrLit)
+            {
+                columnName = new DName(node.AsStrLit().Value);
+            }
+            else if (columnsAsIdentifiers && node.Kind == NodeKind.FirstName)
+            {
+                columnName = node.AsFirstName().Ident.Name;
+                var dsNode = node.Parent.AsList()?.Children[0];
+                if (dsNode != null)
+                {
+                    var dsType = binding.GetType(dsNode);
+                    if (DType.TryGetLogicalNameForColumn(dsType, columnName.Value, out var logicalName))
+                    {
+                        columnName = new DName(logicalName);
+                    }
+                }
+            }
+
+            if (!columnName.IsValid)
+            {
+                return false;
+            }
+
+            if (!IsColumnSearchable(DPath.Root.Append(columnName), dataSource))
             {
                 SuggestDelegationHint(node, binding);
                 return false;

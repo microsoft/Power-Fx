@@ -274,7 +274,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            base.TryGetColumnLogicalName(dataSourceType, binding.Features.SupportColumnNamesAsIdentifiers, node, DefaultErrorContainer, out var columnName).Verify();
+            if (!base.TryGetColumnLogicalName(dataSourceType, binding.Features.SupportColumnNamesAsIdentifiers, node, DefaultErrorContainer, out var columnName))
+            {
+                return false;
+            }
+
             return IsColumnSortable(node, columnName, binding, metadata);
         }
 
