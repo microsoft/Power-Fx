@@ -169,7 +169,27 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            if (!base.TryGetColumnLogicalName(dataSource.Type, binding.Features.SupportColumnNamesAsIdentifiers, node, DefaultErrorContainer, out var columnName))
+            var columnsAsIdentifiers = binding.Features.SupportColumnNamesAsIdentifiers;
+            DName columnName = default;
+            if (!columnsAsIdentifiers && node.Kind == NodeKind.StrLit)
+            {
+                columnName = new DName(node.AsStrLit().Value);
+            }
+            else if (columnsAsIdentifiers && node.Kind == NodeKind.FirstName)
+            {
+                columnName = node.AsFirstName().Ident.Name;
+                var dsNode = node.Parent.AsList()?.Children[0];
+                if (dsNode != null)
+                {
+                    var dsType = binding.GetType(dsNode);
+                    if (DType.TryGetLogicalNameForColumn(dsType, columnName.Value, out var logicalName))
+                    {
+                        columnName = new DName(logicalName);
+                    }
+                }
+            }
+
+            if (!columnName.IsValid)
             {
                 return false;
             }

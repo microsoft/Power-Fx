@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
@@ -32,27 +33,21 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         [InlineData("Sort(Accounts, 'Account Name')", true)]
         [InlineData("Sort(Accounts, 'Account Name', SortOrder.Descending)", true)]
         [InlineData("Sort(Accounts, 'Non-sortable string column', SortOrder.Ascending)", false)]
-        public void TestDelegableExpressions(string expression, bool isDelegable)
+        public void TestDelegableExpressions_PowerFxV1(string expression, bool isDelegable)
         {
-            var symbolTable = new DelegatableSymbolTable();
-            symbolTable.AddEntity(new AccountsEntity());
+            TestDelegableExpressions(Features.PowerFxV1, expression, isDelegable);
+        }
 
-            var config = new PowerFxConfig()
+        [Theory]
+        [InlineData("SortByColumns(Accounts, Left(\"name\", 4), SortOrder.Descending, address1_line1)", false)]
+        public void TestDelegableExpressions_PrePowerFxV1(string expression, bool isDelegable)
+        {
+            var features = new Features(Features.PowerFxV1)
             {
-                SymbolTable = symbolTable
+                PowerFxV1CompatibilityRules = false
             };
 
-            var engine = new Engine(config);
-            var result = engine.Check(expression);
-            Assert.True(result.IsSuccess);
-
-            var callNode = result.Binding.Top.AsCall();
-            Assert.NotNull(callNode);
-
-            var callInfo = result.Binding.GetInfo(callNode);
-
-            var actualIsDelegable = callInfo.Function.IsServerDelegatable(callNode, result.Binding);
-            Assert.Equal(isDelegable, actualIsDelegable);
+            TestDelegableExpressions(features, expression, isDelegable);
         }
 
         [Theory]
@@ -60,19 +55,27 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         [InlineData("SortByColumns(Accounts, \"name\", SortOrder.Ascending, \"address1_city\")", true)]
         [InlineData("SortByColumns(Accounts, \"name\", SortOrder.Descending, \"nonsortablestringcolumn\")", false)]
         [InlineData("SortByColumns(Accounts, \"name\", SortOrder.Descending, \"address1_line1\")", true)]
+        [InlineData("SortByColumns(Accounts, varString, SortOrder.Descending)", false)]
+        [InlineData("SortByColumns(Accounts, Left(\"name\", 4), SortOrder.Descending)", false)]
         [InlineData("ShowColumns(Accounts, \"name\", \"address1_city\")", false)]
         [InlineData("RenameColumns(Accounts, \"name\", \"The name\", \"address1_city\", \"The city\")", false)]
         [InlineData("Search(Accounts, \"something to search\", \"name\", \"address1_line1\", \"address1_city\")", true)]
         [InlineData("Search(Accounts, \"something to search\", \"name\", \"nonsearchablestringcol\", \"address1_city\")", false)]
         public void TestDelegableExpressions_ColumnNamesAsLiteralStrings(string expression, bool isDelegable)
         {
-            var symbolTable = new DelegatableSymbolTable();
-            symbolTable.AddEntity(new AccountsEntity());
-
             var features = new Features(Features.PowerFxV1)
             {
                 SupportColumnNamesAsIdentifiers = false
             };
+
+            TestDelegableExpressions(features, expression, isDelegable);
+        }
+
+        private void TestDelegableExpressions(Features features, string expression, bool isDelegable)
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            symbolTable.AddEntity(new AccountsEntity());
+            symbolTable.AddVariable("varString", FormulaType.String);
 
             var config = new PowerFxConfig(features)
             {
