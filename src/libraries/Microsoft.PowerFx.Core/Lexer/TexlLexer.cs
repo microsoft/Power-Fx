@@ -962,6 +962,7 @@ namespace Microsoft.PowerFx.Syntax
             private readonly bool _textFirst;
             private bool _textFirstStartToken;
             private bool _textFirstEndToken;
+            private readonly LexerMode _initialLexerMode = LexerMode.Normal;
 
             private int _currentTokenPos; // The start of the current token.
             private int _lastCommentTokenPos; // The last seen comment token position.
@@ -983,8 +984,6 @@ namespace Microsoft.PowerFx.Syntax
 
                 _modeStack = new Stack<LexerMode>();
 
-                var initialLexerMode = LexerMode.Normal;
-
                 if (_textFirst)
                 {
                     int ich = 0;
@@ -1000,15 +999,13 @@ namespace Microsoft.PowerFx.Syntax
                     }
                     else
                     {
-                        initialLexerMode = LexerMode.TextFirst;
+                        _initialLexerMode = LexerMode.TextFirst;
                     }
                 }
-
-                _modeStack.Push(initialLexerMode);
             }
 
             // If the mode stack is empty, this is already an parse, use NormalMode as a default
-            private LexerMode CurrentMode => _modeStack.Peek();
+            private LexerMode CurrentMode => _modeStack.Count != 0 ? _modeStack.Peek() : _initialLexerMode;
 
             private void EnterMode(LexerMode newMode)
             {
@@ -1017,7 +1014,7 @@ namespace Microsoft.PowerFx.Syntax
 
             private void ExitMode()
             {
-                if (_modeStack.Count >= 1)
+                if (_modeStack.Count != 0)
                 {
                     _modeStack.Pop();
                 }
