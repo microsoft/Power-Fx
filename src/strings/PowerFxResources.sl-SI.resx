@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending ali SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Razvrsti »vir« glede na indeks ujemajočih se vrednosti v določenem stolpcu.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>vir</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>stolpec</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>vrednosti</value>
     
@@ -4951,6 +4939,10 @@
     <value>Vrste ni bilo mogoče pretvoriti, ker je imela navedena vrednost vrsto »{0}«, pričakovana pa je vrsta »{1}«.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Izraz '{0}' lahko predstavlja stolpec, ki ni del vira podatkov ali ni bil prenesen. Namesto tega razmislite o neposredni uporabi imena stolpca.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Ta postopek morda ne bo deloval v tabeli »{0}«, če ima več kot {1} vrstic.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Navedeni stolpec je samo za branje, zato ga ni mogoče spremeniti: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Poišče besedilo v argumentu »vir«. Vrne vrstice, v katerih je besedilo najdeno. Primerjava ne razlikuje med velikimi in malimi črkami.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Tabela, ki jo je treba preiskati.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Iskano besedilo.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Stolpec, ki ga je treba preiskati.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>vir</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>besedilo</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>stolpec</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Napačen tip stolpca. Pričakovan je besedilni tip.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Tabela ne vsebuje besedilnih stolpcev.</value>
     
   </data>
 </root>

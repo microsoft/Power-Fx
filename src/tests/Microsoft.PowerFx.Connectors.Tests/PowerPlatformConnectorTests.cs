@@ -681,8 +681,10 @@ namespace Microsoft.PowerFx.Tests
             public DateTime UtcNow { get; set; } = new DateTime(2023, 6, 2, 3, 15, 7, DateTimeKind.Utc);
         }
 
-        [Fact]
-        public async Task Office365Outlook_V4CalendarPostItem()
+        [Theory]
+        [InlineData(@"Office365Outlook.V4CalendarPostItem(""Calendar"", ""Subject"", Today(), Today(), ""(UTC+01:00) Brussels, Copenhagen, Madrid, Paris"")")]
+        [InlineData(@"Office365Outlook.V4CalendarPostItem(""Calendar"", ""Subject"", DateTime(2023, 6, 2, 11, 00, 00), DateTime(2023, 6, 2, 11, 30, 00), ""(UTC+01:00) Brussels, Copenhagen, Madrid, Paris"")")]
+        public async Task Office365Outlook_V4CalendarPostItem(string expr)
         {
             using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
             var apiDoc = testConnector._apiDocument;
@@ -710,7 +712,7 @@ namespace Microsoft.PowerFx.Tests
             runtimeConfig.AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));            
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook V4CalendarPostItem.json");
-            FormulaValue result = await engine.EvalAsync(@"Office365Outlook.V4CalendarPostItem(""Calendar"", ""Subject"", Today(), Today(), ""(UTC+01:00) Brussels, Copenhagen, Madrid, Paris"")", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             Assert.Equal(@"![body:s, categories:*[Value:s], createdDateTime:d, end:d, endWithTimeZone:d, iCalUId:s, id:s, importance:s, isAllDay:b, isHtml:b, isReminderOn:b, lastModifiedDateTime:d, location:s, numberOfOccurences:w, optionalAttendees:s, organizer:s, recurrence:s, recurrenceEnd:D, reminderMinutesBeforeStart:w, requiredAttendees:s, resourceAttendees:s, responseRequested:b, responseTime:d, responseType:s, selectedDaysOfWeek:N, sensitivity:s, seriesMasterId:s, showAs:s, start:d, startWithTimeZone:d, subject:s, timeZone:s, webLink:s]", result.Type._type.ToString());
 
             var actual = testConnector._log.ToString();            
@@ -1444,6 +1446,44 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 ";
 
             Assert.Equal(expected, actual);
+        }
+
+        // ConnectorCompatibility element will determine if an internal parameters will be suggested.
+        [Theory]
+        [InlineData(ConnectorCompatibility.Default, "Office365Users.SearchUserV2(", "SearchUserV2({searchTerm:String,top:Decimal,isSearchTermRequired:Boolean,skipToken:String})")]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, "Office365Users.SearchUserV2(", "SearchUserV2({searchTerm:String,top:Decimal,isSearchTermRequired:Boolean})")]
+        public async Task ConnectorCompatibilityIntellisenseTest(ConnectorCompatibility compact, string expression, string expected)
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "firstrelease-001.azure-apim.net",               // endpoint
+                    "839eace6-59ab-4243-97ec-a5b8fcc104e4",          // environment
+                    "72c42ee1b3c7403c8e73aa9c02a7fbcc",              // connectionId
+                    () => "Some JWT token",
+                    httpClient)
+            {
+                SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
+            };
+
+            var split = expression.Split(".");
+
+            ConnectorSettings connectorSettings = new ConnectorSettings(split[0])
+            {
+                Compatibility = compact
+            };
+
+            config.AddActionConnector(connectorSettings, apiDoc, new ConsoleLogger(_output));
+
+            var engine = new RecalcEngine(config);
+            var suggestions = engine.Suggest(expression, null, expression.Length);
+            var overload = suggestions.FunctionOverloads.First();
+
+            Assert.Equal(overload.DisplayText.Text, expected);
         }
     }
 }

@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending hoặc SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Sắp xếp 'nguồn' dựa trên chỉ mục của các giá trị khớp trong cột được chỉ định.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>nguồn</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>cột</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>giá_trị</value>
     
@@ -4951,6 +4939,10 @@
     <value>Quá trình chuyển đổi loại không thành công do giá trị đã cung cấp thuộc loại "{0}", loại dự kiến là "{1}".</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Biểu thức "{0}" có thể biểu thị một cột không thuộc nguồn dữ liệu hoặc chưa được tải xuống. Thay vào đó, hãy cân nhắc sử dụng tên cột trực tiếp.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Thao tác này trên bảng "{0}" có thể không hoạt động nếu bảng đó có nhiều hơn {1} hàng.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Cột được chỉ định là cột chỉ đọc và không sửa đổi được: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Tìm kiếm văn bản trong 'nguồn'. Trả về các hàng, nơi tìm thấy văn bản. So sánh được thực hiện trong trường hợp phân biệt chữ hoa chữ thường.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Bảng muốn tìm kiếm.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Văn bản tìm kiếm.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Cột muốn tìm kiếm.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>nguồn</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>văn_bản</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>cột</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Loại cột không chính xác. Dự kiến loại văn bản.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Bảng không chứa bất kỳ cột nào thuộc loại văn bản.</value>
     
   </data>
 </root>

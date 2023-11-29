@@ -963,6 +963,69 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        public static async ValueTask<FormulaValue> SearchImpl(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var source = args[0];
+            var textToSearchArg = args[1];
+
+            if (source is BlankValue)
+            {
+                return source;
+            }
+
+            var sourceTable = (TableValue)args[0];
+            var textToSearch = ((StringValue)textToSearchArg).Value.ToLower(runner.CultureInfo);
+
+            if (string.IsNullOrEmpty(textToSearch))
+            {
+                return source;
+            }
+
+            // If no column names are provided, search all columns
+            bool searchAllColumns = args.Length < 3;
+
+            var columnsToSearch = args.Skip(2).OfType<StringValue>().Select(sv => sv.Value).ToArray();
+
+            var rows = new List<DValue<RecordValue>>();
+
+            foreach (var row in sourceTable.Rows)
+            {
+                if (row.IsBlank)
+                {
+                    continue;
+                }
+
+                if (row.IsError)
+                {
+                    return row.Error;
+                }
+
+                foreach (var columnName in columnsToSearch)
+                {
+                    var columnValue = await row.Value.GetFieldAsync(columnName, runner.CancellationToken).ConfigureAwait(false);
+
+                    if (columnValue is ErrorValue)
+                    {
+                        return columnValue;
+                    }
+                    else if (columnValue is BlankValue)
+                    {
+                        continue;
+                    }
+
+                    var fieldValue = ((StringValue)columnValue).Value.ToLower(runner.CultureInfo);
+                    if (fieldValue.Contains(textToSearch))
+                    {
+                        rows.Add(row);
+                        break; // Found in one of the columns, no need to check further
+                    }
+                }
+            }
+
+            var result = new InMemoryTableValue(irContext, rows);
+            return result;
+        }
+
         private static bool IsValueTypeErrorOrBlank<T>(FormulaValue val)
             where T : FormulaValue
         {

@@ -461,7 +461,8 @@ namespace Microsoft.PowerFx
 
         bool INameResolver.TryLookupEnum(DName name, out NameLookupInfo lookupInfo)
         {
-            throw new NotImplementedException();
+            lookupInfo = default;
+            return false;
         }
 
         bool INameResolver.TryGetInnermostThisItemScope(out NameLookupInfo nameInfo)

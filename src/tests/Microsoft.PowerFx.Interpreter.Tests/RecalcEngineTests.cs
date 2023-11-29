@@ -916,7 +916,7 @@ namespace Microsoft.PowerFx.Tests
             public override bool IsSelfContained => true;
 
             public TestFunctionMultiply()
-                : base("Func", FunctionCategories.MathAndStat, DType.Number, null, DType.Number, DType.String)
+                : base(DPath.Root, "Func", FunctionCategories.MathAndStat, DType.Number, null, DType.Number, DType.String)
             {
             }
 
@@ -939,7 +939,7 @@ namespace Microsoft.PowerFx.Tests
             public override bool IsSelfContained => true;
 
             public TestFunctionSubstract()
-                : base("Func", FunctionCategories.MathAndStat, DType.Number, null, DType.String, DType.Number)
+                : base(DPath.Root, "Func", FunctionCategories.MathAndStat, DType.Number, null, DType.String, DType.Number)
             {
             }
 

@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Returns true if the function expect identifiers, false otherwise.
         /// Needs to be overloaded for functions having identifier parameters.
-        /// Also overload IsIdentifierParam method. 
+        /// Also overload <see cref="GetIdentifierParamStatus(int)"/> method. 
         /// </summary>
         public virtual bool HasColumnIdentifiers => false;
 
@@ -153,7 +153,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function manipulates collections.
         public virtual bool ManipulatesCollections => false;
 
-        // Return true if the function uses an input's column names to inform Intellisense's suggestions.
+        /// <summary>
+        ///  Return true if the function uses an input's column names to inform Intellisense's suggestions. Also, consider overriding <see cref="TryGetTypeForArgSuggestionAt(int, out DType)"/>.
+        /// </summary>
         public virtual bool CanSuggestInputColumns => false;
 
         /// <summary>
@@ -605,6 +607,11 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual ParamIdentifierStatus GetIdentifierParamStatus(int index)
         {
             Contracts.Assert(index >= 0);
+
+            if (HasColumnIdentifiers)
+            {
+                throw new InvalidOperationException($"Override {nameof(GetIdentifierParamStatus)}, if {nameof(HasColumnIdentifiers)} is overridden.");
+            }
 
             return ParamIdentifierStatus.NeverIdentifier;
         }

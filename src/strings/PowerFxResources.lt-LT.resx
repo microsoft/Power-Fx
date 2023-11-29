@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending arba SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Rikiuoja šaltinį pagal nurodyto stulpelio atitinkančių reikšmių indeksą.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>šaltinis</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>stulpelis</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>reikšmės</value>
     
@@ -4951,6 +4939,10 @@
     <value>Nepavyko konvertuoti tipo, nes nurodytos reikšmės tipas buvo „{0}“, o tikimasi tipo „{1}“.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Išraiška „{0}“ gali rodyti stulpelį, kuris nėra duomenų šaltinio dalis arba nebuvo atsisiųstas. Apsvarstykite galimybę vietoj to tiesiogiai naudoti stulpelio pavadinimą.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Ši operacija lentelėje „{0}“ gali neveikti, jei joje yra daugiau nei {1} eil.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Nurodytas stulpelis yra tik skaitomas, jo modifikuoti negalima: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Ieško teksto šaltinyje. Pateikia eilutes, kuriose randama teksto. Palyginimas atliekamas neatsižvelgiant į didžiąsias ir mažąsias raides.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Lentelė, kurioje ieškoma.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Ieškos tekstas.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Stulpeliai, kuriuose ieškoma.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>šaltinis</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>tekstas</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>stulpelis</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Neteisingas stulpelio tipas. Tikimasi teksto tipo.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Lentelėje nėra jokio teksto tipo stulpelio.</value>
     
   </data>
 </root>

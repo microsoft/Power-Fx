@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -44,8 +45,11 @@ namespace Microsoft.PowerFx
 
         internal BigInteger LamdaParamMask { get; }
 
-        public FunctionDescr(string name, MethodInfo method, FormulaType retType, FormulaType[] paramTypes, BigInteger lamdaParamMask, bool isAsync = false)
+        internal DPath NameSpace { get; }
+
+        public FunctionDescr(DPath ns, string name, MethodInfo method, FormulaType retType, FormulaType[] paramTypes, BigInteger lamdaParamMask, bool isAsync = false)
         {
+            NameSpace = ns;
             Name = name;
             Method = method;
             RetType = retType;

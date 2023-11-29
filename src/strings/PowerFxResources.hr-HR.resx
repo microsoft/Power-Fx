@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending ili SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Sortira "izvor" na temelju indeksa podudarnih vrijednosti u navedenom stupcu.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>izvor</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>stupac</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>vrijednosti</value>
     
@@ -4951,6 +4939,10 @@
     <value>Pretvorba vrste nije uspjela zato što je dana vrijednost bila vrste „{0}”, a očekivala se vrsta „{1}”.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Izraz „{0}” može predstavljati stupac koji nije dio izvora podataka ili nije preuzet. Umjesto toga razmislite o izravnoj uporabi naziva stupca.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Ta operacija na tablici „{0}” možda neće raditi ako ima više od ovoliko redaka: {1}.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Navedeni je stupac samo za čitanje i ne može se mijenjati: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Pretražuje tekst u "izvoru". Vraća retke gdje je tekst pronađen. U usporedbi se razlikuju mala i velika slova.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Tablica koja se pretražuje.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Tekst koji se pretražuje.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Stupac koji se pretražuje.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>izvor</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>stupac</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Pogrešna vrsta stupca. Očekuje se tekstna vrsta.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Tablica ne sadrži nijedan stupac tekstne vrste.</value>
     
   </data>
 </root>

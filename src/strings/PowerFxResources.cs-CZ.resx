@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending nebo SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Seřadí „zdroj“ na základě indexu porovnávaných hodnot v zadaném sloupci.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>zdroj</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>sloupec</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>hodnoty</value>
     
@@ -4806,7 +4794,7 @@
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
-    <value>Chybějící funkce vrací typ, například ":Number" v "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    <value>Chybějící typ návratové hodnoty funkce , například ":Number" v "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
     
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
@@ -4949,6 +4937,10 @@
   </data>
   <data name="InvalidCast" xml:space="preserve">
     <value>Převod typu se nezdařil, protože daná hodnota byla typu „{0}“, ale očekáván byl typ „{1}“.</value>
+    
+  </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Výraz '{0}' může představovat sloupec, který není součástí zdroje dat nebo nebyl stažen. Místo toho zvažte přímé použití názvu sloupce.</value>
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Zadaný sloupec je určený jen pro čtení a nelze upravit: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Vyhledá text ve zdroji. Vrátí řádky, na kterých se text nachází. Při porovnávání se nerozlišují malá a velká písmena.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Tabulka, ve které se má hledat</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Hledaný text</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Sloupec, ve kterém se má hledat</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>zdroj</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>sloupec</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Nesprávný typ sloupce, očekává se typ text.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Tabulka neobsahuje žádný sloupec typu text.</value>
     
   </data>
 </root>

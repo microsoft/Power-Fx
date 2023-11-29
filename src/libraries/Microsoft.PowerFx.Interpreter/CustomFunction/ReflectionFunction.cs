@@ -36,18 +36,49 @@ namespace Microsoft.PowerFx
         // If non-null, specify what type of runtime config this function can accept. 
         protected Type ConfigType { get; init; }
 
+        private readonly DPath _ns;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="ReflectionFunction"/> class.
+        /// Initializes a new instance of the <see cref="ReflectionFunction"/> class. And adds function to root namespace.
         /// Assume by defaults. Will reflect to get primitive types.
         /// </summary>
         protected ReflectionFunction()
+            : this(DPath.Root)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReflectionFunction"/> class. And adds function to given namespace.
+        /// Assume by defaults. Will reflect to get primitive types. 
+        /// </summary>
+        /// <param name="ns">Namespace for the function.</param>
+        protected ReflectionFunction(DPath ns)
+        {
+            _ns = ns;
             _info = null;
         }
 
-        // Explicitly provide types.
-        // Necessary for Tables/Records
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReflectionFunction"/> class. And adds function to root namespace.
+        /// Useful for Tables/Record types.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="returnType"></param>
+        /// <param name="paramTypes"></param>
         protected ReflectionFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
+            : this(DPath.Root, name, returnType, paramTypes)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReflectionFunction"/> class. And adds function to given namespace.
+        /// Useful for Tables/Record types.
+        /// </summary>
+        /// <param name="ns"></param>
+        /// <param name="name"></param>
+        /// <param name="returnType"></param>
+        /// <param name="paramTypes"></param>
+        protected ReflectionFunction(DPath ns, string name, FormulaType returnType, params FormulaType[] paramTypes)
         {
             var t = GetType();
             var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance) ?? throw new InvalidOperationException($"Missing Execute method");
@@ -59,7 +90,7 @@ namespace Microsoft.PowerFx
 
             var isAsync = m.ReturnType.BaseType == typeof(Task);
 
-            _info = new FunctionDescr(name, m, returnType, paramTypes, BigInteger.Zero, isAsync);
+            _info = new FunctionDescr(ns, name, m, returnType, paramTypes, BigInteger.Zero, isAsync);
         }
 
         private FunctionDescr Scan()
@@ -116,7 +147,7 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                functionDescription = new FunctionDescr(name, m, returnType, paramTypes.ToArray(), lamdaParamMask, isAsync);
+                functionDescription = new FunctionDescr(_ns, name, m, returnType, paramTypes.ToArray(), lamdaParamMask, isAsync);
             }
 
             functionDescription.IsConfigArgPresent = ConfigType != default;
@@ -158,13 +189,13 @@ namespace Microsoft.PowerFx
             // Special case SetProperty. Use reference equality to opt into special casing.
             if (object.ReferenceEquals(info.Name, SetPropertyName))
             {
-                return new CustomSetPropertyFunction(info.Name, info.ArgNames)
+                return new CustomSetPropertyFunction(info.NameSpace, info.Name, info.ArgNames)
                 {
                     _impl = args => InvokeAsync(null, args, CancellationToken.None)
                 };
             }
 
-            return new CustomTexlFunction(info.Name, FunctionCategories.UserDefined, info.RetType, info.ArgNames, info.ParamTypes)
+            return new CustomTexlFunction(info.NameSpace, info.Name, FunctionCategories.UserDefined, info.RetType, info.ArgNames, info.ParamTypes)
             {
                 _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken),
                 LamdaParamMask = info.LamdaParamMask,
