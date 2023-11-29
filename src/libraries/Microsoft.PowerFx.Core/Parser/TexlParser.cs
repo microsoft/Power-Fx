@@ -36,6 +36,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             // When specified, allows type literals to be parsed.
             AllowTypeLiteral = 1 << 4,
+
+            // Text first.  Implemented entirely in the Lexer.
+            TextFirst = 1 << 5,
         }
 
         private bool _hasSemicolon = false;
@@ -475,7 +478,8 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(culture);
             var lexerFlags = (flags.HasFlag(Flags.NumberIsFloat) ? TexlLexer.Flags.NumberIsFloat : 0) |
-                             (flags.HasFlag(Flags.DisableReservedKeywords) ? TexlLexer.Flags.DisableReservedKeywords : 0);
+                             (flags.HasFlag(Flags.DisableReservedKeywords) ? TexlLexer.Flags.DisableReservedKeywords : 0) |
+                             (flags.HasFlag(Flags.TextFirst) ? TexlLexer.Flags.TextFirst : 0);
             culture ??= CultureInfo.CurrentCulture; // $$$ can't use current culture
 
             return TexlLexer.GetLocalizedInstance(culture).LexSource(script, lexerFlags);

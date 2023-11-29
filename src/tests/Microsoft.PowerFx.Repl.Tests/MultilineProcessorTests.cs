@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Repl.Tests
                 bool isFirstLine = i == 0;
                 Assert.Equal(isFirstLine, _processor.IsFirstLine);
 
-                var result = _processor.HandleLine(line);
+                var result = _processor.HandleLine(line, new ParserOptions());
                 sb.AppendLine(line);
 
                 if (!isLast)

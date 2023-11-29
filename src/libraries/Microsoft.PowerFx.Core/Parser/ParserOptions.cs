@@ -26,6 +26,12 @@ namespace Microsoft.PowerFx
         public bool NumberIsFloat { get; set; }
 
         /// <summary>
+        /// If true, parse starts in text literal mode, with string interpolation islands of ${ ... }
+        /// If the starting non-whitespace charatcer is an equal sign ("="), a normal parse is used instead.
+        /// </summary>
+        public bool TextFirst { get; set; }
+
+        /// <summary>
         /// If true, various words have been reserved and are not available for identifiers.
         /// Will only be set by Canvas apps, all other Power Fx hosts should have reserved keywords always enforced.
         /// </summary>
@@ -53,11 +59,12 @@ namespace Microsoft.PowerFx
         {
         }
 
-        public ParserOptions(CultureInfo culture, bool allowsSideEffects = false, int maxExpressionLength = 0)
+        public ParserOptions(CultureInfo culture, bool allowsSideEffects = false, int maxExpressionLength = 0, bool textFirst = false)
         {
             Culture = culture;
             AllowsSideEffects = allowsSideEffects;
             MaxExpressionLength = maxExpressionLength;
+            TextFirst = textFirst;
         }
 
         internal ParseResult Parse(string script)
@@ -77,7 +84,8 @@ namespace Microsoft.PowerFx
 
             var flags = (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
                         (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0) |
-                        (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0);
+                        (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0) |
+                        (TextFirst ? TexlParser.Flags.TextFirst : 0);
 
             var result = TexlParser.ParseScript(script, features, Culture, flags);
             result.Options = this;
