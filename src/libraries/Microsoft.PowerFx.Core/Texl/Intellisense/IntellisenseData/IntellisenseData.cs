@@ -464,8 +464,27 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                 CurFunc == null && 
                 ExpectedExpressionReturnType.IsRecord) 
             {
-                FunctionRecordNameSuggestionHandler.AddSuggestionForAggregateAndParentRecord(parentNode, ExpectedExpressionReturnType, this);
+                // only top level record suggestions are added here. So we can avoid expanding the DV type.
+                var topLevelRecord = CreateTopLevelType(ExpectedExpressionReturnType);
+                FunctionRecordNameSuggestionHandler.AddSuggestionForAggregateAndParentRecord(parentNode, topLevelRecord, this);
             }
+        }
+
+        private static DType CreateTopLevelType(DType type)
+        {
+            if (!type.IsRecord)
+            {
+                throw new InvalidOperationException("Type must be a record type");
+            }
+
+            var fields = type.GetRootFieldNames();
+            var topLevelRecord = RecordType.Empty();
+            foreach (var field in fields)
+            {
+                topLevelRecord = topLevelRecord.Add(field.Value, FormulaType.Blank);
+            }
+
+            return topLevelRecord._type;
         }
 
         /// <summary>
