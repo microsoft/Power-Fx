@@ -2828,7 +2828,7 @@ namespace Microsoft.PowerFx.Core.Types
                     ((field1Type == Polymorphic && field2Type.IsRecord) ||
                     (field2Type == Polymorphic && field1Type.IsRecord)))
                 {
-                    fieldType = field1Type == Polymorphic ? field2Type : field1Type;
+                    fieldType = Polymorphic;
                 }
                 else if (field1Type.IsAggregate && field2Type.IsAggregate)
                 {
