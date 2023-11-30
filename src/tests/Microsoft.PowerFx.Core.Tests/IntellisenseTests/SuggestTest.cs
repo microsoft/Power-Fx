@@ -492,16 +492,26 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         [Theory]
         [InlineData("{|", "output1:", "output2:")]
-        [InlineData("{output1: {|", "Arg1F1:", "Arg1F2:")]
+
+        [InlineData("{output1: 1, |", "output1:", "output2:")]
+
+        // We do not suggest nested type, as this can explode if type is DV.
+        [InlineData("{output1: {|")]
 
         // output2 is tabletype, so don't show suggestion if current node is not a table.
         [InlineData("{output2: {|")]
-        [InlineData("{output2: [{|", "Arg2Field1:", "Arg2Field2:")]
+
+        // We do not suggest nested type, as this can explode if type is DV.
+        [InlineData("{output2: [{|")]
 
         // output2 is tabletype, so don't show suggestion if current node is not a table.
         [InlineData("{output1: {Arg1F1: 1, Arg1F2:\"test\"}, output2: {|")]
-        [InlineData("{output1: {Arg1F1: 1, Arg1F2:\"test\"}, output2: [{|", "Arg2Field1:", "Arg2Field2:")]
-        [InlineData("{output2: {Arg2Field1: 1, Arg2Field2:\"test\"}, output1: {|", "Arg1F1:", "Arg1F2:")]
+
+        // We do not suggest nested type, as this can explode if type is DV.
+        [InlineData("{output1: {Arg1F1: 1, Arg1F2:\"test\"}, output2: [{|")]
+
+        // We do not suggest nested type, as this can explode if type is DV.
+        [InlineData("{output2: {Arg2Field1: 1, Arg2Field2:\"test\"}, output1: {|")]
         public void SuggestAggregateReturnType(string expression, params string[] expected)
         {
             (var exp, var cursorPosition) = Decode(expression);
