@@ -3338,6 +3338,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
+                // Disable SingleColumnsAccess syntax. I.e. [1,2,3].Values.
+                // As an alternative use ShowColumns(). e.g. ShowColumns([1,2,3], Values).
+                if (leftType.IsTable && _features.PowerFxV1CompatibilityRules)
+                {
+                    SetDottedNameError(node, TexlStrings.ErrDeprecatedDotUseShowColumn);
+                    return;
+                }
+
                 object value = null;
                 var typeRhs = DType.Invalid;
                 var nameRhs = node.Right.Name;

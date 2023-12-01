@@ -749,22 +749,22 @@ namespace Microsoft.PowerFx.Tests
         public void CheckDottedBindError()
         {
             var engine = new RecalcEngine();
-            var result = engine.Check("[1,2,3].foo");
+            var result = engine.Check("First([1,2,3]).foo");
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 7-11: Name isn't valid. 'foo' isn't recognized", result.Errors.First().ToString());
+            Assert.StartsWith("Error 14-18: Name isn't valid. 'foo' isn't recognized", result.Errors.First().ToString());
         }
 
         [Fact]
         public void CheckDottedBindError2()
         {
             var engine = new RecalcEngine();
-            var result = engine.Check("[].Value");
+            var result = engine.Check("First([]).Value");
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-8: Name isn't valid. 'Value' isn't recognized", result.Errors.First().ToString());
+            Assert.StartsWith("Error 9-15: Name isn't valid. 'Value' isn't recognized", result.Errors.First().ToString());
         }
 
         [Fact]

@@ -5453,4 +5453,8 @@
     <value>Table doesn't contain any column of text type.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrDeprecatedDotUseShowColumn" xml:space="preserve">
+    <value>Deprecated use of '.'. Instead use ShowColumn().</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>

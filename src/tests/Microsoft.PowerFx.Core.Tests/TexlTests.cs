@@ -3861,6 +3861,35 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
+        [Theory]
+        [InlineData("T.A", "*[A:n]", true)]
+        [InlineData("T.B", "*[B:![C:s]]", true)]
+        [InlineData("T.A", "e", false)]
+        [InlineData("T.B", "e", false)]
+        public void TestSignleColumnAccessDependentOnTableType(string script, string expectedSchema, bool isBindingSuccess)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[A:n, B:![C:s]]")));
+
+            if (!isBindingSuccess)
+            {
+                var features = new Features() { PowerFxV1CompatibilityRules = true };
+                TestBindingErrors(
+                    script,
+                    TestUtils.DT(expectedSchema),
+                    symbol,
+                    features: features);
+            }
+            else
+            {
+                TestSimpleBindingSuccess(
+                                   script,
+                                   TestUtils.DT(expectedSchema),
+                                   symbol,
+                                   features: Features.None);
+            }
+        }
+
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig

@@ -220,10 +220,10 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig();
             var engine = new Engine(config);
-            var result = engine.Check("[1,2,3].foo");
+            var result = engine.Check("First([1,2,3]).foo");
 
             Assert.False(result.IsSuccess);
-            AssertContainsError(result, "Error 7-11: Name isn't valid. 'foo' isn't recognized");
+            AssertContainsError(result, "Error 14-18: Name isn't valid. 'foo' isn't recognized.");
         }
 
         [Fact]

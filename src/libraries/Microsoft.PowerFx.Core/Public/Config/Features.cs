@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx
             PowerFxV1CompatibilityRules = true,
             CoalesceShortCircuit = true,
             PrimaryOutputPropertyCoercionDeprecated = true,
-            AsTypeLegacyCheck = false,
+            AsTypeLegacyCheck = false
         };
 
         internal Features()
