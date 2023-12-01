@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -429,6 +431,47 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.CountRows_UO.Name, DType.EmptyTable.GetKindString(), impl);
+        }
+
+        private static readonly RecordType GetPropertiesUORecordType = new KnownRecordType(DType.EmptyRecord
+            .Add(new TypedName(DType.String, new DName(GetPropertiesFunction_UO.NameColumnName)))
+            .Add(new TypedName(DType.UntypedObject, new DName(GetPropertiesFunction_UO.ValueColumnName))));
+
+        public static FormulaValue GetProperties_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Object)
+            {
+                if (impl.TryGetPropertyNames(out var propertyNames))
+                {
+                    var rows = new List<DValue<RecordValue>>();
+                    var error = false;
+                    foreach (var propertyName in propertyNames)
+                    {
+                        if (!impl.TryGetProperty(propertyName, out var propertyValue))
+                        {
+                            error = true;
+                            break;
+                        }
+
+                        var fields = new NamedValue[]
+                        {
+                            new NamedValue(GetPropertiesFunction_UO.NameColumnName, FormulaValue.New(propertyName)),
+                            new NamedValue(GetPropertiesFunction_UO.ValueColumnName, new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), propertyValue))
+                        };
+
+                        rows.Add(DValue<RecordValue>.Of(RecordValue.NewRecordFromFields(GetPropertiesUORecordType, fields)));
+                    }
+
+                    if (!error)
+                    {
+                        return new InMemoryTableValue(irContext, rows);
+                    }
+                }
+            }
+
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.GetProperties_UO.Name, DType.EmptyRecord.GetKindString(), impl);
         }
 
         public static FormulaValue DateValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)

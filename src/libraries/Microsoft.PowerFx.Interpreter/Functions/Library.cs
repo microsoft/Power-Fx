@@ -797,6 +797,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ForAll_UO)
             },
             {
+                BuiltinFunctionsCore.GetProperties_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    BuiltinFunctionsCore.CountRows_UO.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: GetProperties_UO)
+            },
+            {
                 BuiltinFunctionsCore.GUIDNoArg,
                 NoErrorHandling(GuidNoArg)
             },

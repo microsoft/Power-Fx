@@ -446,6 +446,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter SplitArg1 = (b) => StringResources.Get("SplitArg1", b);
         public static StringGetter SplitArg2 = (b) => StringResources.Get("SplitArg2", b);
 
+        public static StringGetter AboutGetProperties = (b) => StringResources.Get("AboutGetProperties", b);
+        public static StringGetter GetPropertiesArg1 = (b) => StringResources.Get("GetPropertiesArg1", b);
+
         public static StringGetter AboutIsType = (b) => StringResources.Get("AboutIsType", b);
         public static StringGetter IsTypeArg1 = (b) => StringResources.Get("IsTypeArg1", b);
         public static StringGetter IsTypeArg2 = (b) => StringResources.Get("IsTypeArg2", b);

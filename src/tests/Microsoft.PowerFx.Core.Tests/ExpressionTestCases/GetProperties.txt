@@ -1,0 +1,39 @@
+
+>> ForAll(GetProperties(ParseJSON("{""a"":1,""b"":true}")),{Name:ThisRecord.Name,StrValue:Text(ThisRecord.Value)})
+Table({Name:"a",StrValue:"1"},{Name:"b",StrValue:"true"})
+
+>> ForAll(GetProperties(ParseJSON("{""a"":1,""b"":true,""c"":null,""d"":[1,2,3],""e"":""hello""}")),{Name:ThisRecord.Name})
+Table({Name:"a"},{Name:"b"},{Name:"c"},{Name:"d"},{Name:"e"})
+
+>> CountRows(GetProperties(ParseJSON("{""a"":1,""b"":true,""c"":null,""d"":[1,2,3],""e"":""hello""}")))
+5
+
+>> Concat(GetProperties(ParseJSON("{""a"":1,""b"":true,""c"":null,""e"":""hello""}")),$"{ThisRecord.Name}:{ThisRecord.Value}", ",")
+"a:1,b:true,c:,e:hello"
+
+>> CountRows(LookUp(GetProperties(ParseJSON("{""a"":1,""b"":true,""c"":null,""d"":[1,2,3],""e"":""hello""}")),Name="d",Value))
+3
+
+>> ForAll(GetProperties(ParseJSON("{""a"":1,""b"":{}}").b),{Name:ThisRecord.Name,StrValue:Text(ThisRecord.Value)})
+Table()
+
+>> ForAll(GetProperties(ParseJSON("{""a"":1,""b"":{""c1"":1,""c2"":2}}").b),{Name:ThisRecord.Name,NumValue:Value(ThisRecord.Value)})
+Table({Name:"c1",NumValue:1},{Name:"c2",NumValue:2})
+
+>> GetProperties(ParseJSON("{}"))
+Table()
+
+>> GetProperties(ParseJSON("null"))
+Blank()
+
+>> GetProperties(ParseJSON("1"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> GetProperties(ParseJSON("[]"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> GetProperties(ParseJSON("false"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> GetProperties(ParseJSON("""hello"""))
+Error({Kind:ErrorKind.InvalidArgument})

@@ -3861,6 +3861,35 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
+        [Theory]
+        [InlineData("GetProperties(ParseJSON('Hello'))")]
+        [InlineData("GetProperties(ParseJSON('[]'))")]
+        [InlineData("GetProperties(ParseJSON('Hello').a)")]
+        [InlineData("GetProperties(ParseJSON('{''a'':1}').a)")]
+        [InlineData("GetProperties(Blank())")]
+        [InlineData("GetProperties(ParseJSON('{''a'':{''b'':1}}').a)")]
+        public void TexlFunctionTypeSemanticsGetProperties(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression.Replace('\'', '\"'));
+
+            Assert.True(DType.TryParse("*[Name:s,Value:O]", out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("GetProperties({a:1,b:true})")] // Does not work with records
+        [InlineData("GetProperties([1,2,3])")] // Does not work with arrays
+        [InlineData("GetProperties(1)")]
+        public void TexlFunctionTypeSemanticsGetProperties_Negative(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression);
+
+            Assert.False(result.IsSuccess);
+        }
+
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig
