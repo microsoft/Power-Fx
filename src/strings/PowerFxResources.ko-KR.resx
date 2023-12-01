@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending 또는 SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>지정된 열에서 일치하는 값 인덱스를 기준으로 '원본'을 정렬합니다.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>원본</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>열</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>값</value>
     
@@ -4951,6 +4939,10 @@
     <value>지정된 값이 '{0}' 형식이었으므로 형식을 변환하지 못했습니다. 필요한 형식은 '{1}'입니다.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>'{0}' 식은 데이터 원본의 일부가 아니거나 다운로드되지 않은 열을 나타낼 수 있습니다. 대신 열 이름을 직접 사용하는 것이 좋습니다.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>'{0}' 테이블에 {1}개 이상의 행이 있는 경우 이 작업이 작동하지 않을 수 있습니다.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>지정된 다음 열은 읽기 전용이므로 수정할 수 없습니다. {0}</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>'원본'에서 텍스트를 검색합니다. 텍스트가 있는 행을 반환합니다. 비교 작업은 대/소문자 구분 없이 수행됩니다.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>검색할 테이블입니다.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>검색 텍스트입니다.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>검색할 열입니다.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>원본</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>텍스트</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>열</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>잘못된 열 형식입니다. 텍스트 형식이 필요합니다.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>테이블에 텍스트 형식의 열이 없습니다.</value>
     
   </data>
 </root>

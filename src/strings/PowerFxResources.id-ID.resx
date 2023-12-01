@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending atau SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Menyortir 'sumber' berdasarkan indeks nilai yang cocok di kolom yang ditentukan.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>sumber</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>kolom</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>nilai</value>
     
@@ -4951,6 +4939,10 @@
     <value>Konversi jenis gagal karena nilai yang diberikan adalah jenis '{0}', yang diharapkan adalah jenis '{1}'.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Ekspresi '{0}' dapat mewakili kolom yang bukan bagian dari sumber data atau belum diunduh. Pertimbangkan untuk menggunakan nama kolom secara langsung sebagai gantinya.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Operasi di tabel '{0}' ini mungkin tidak berfungsi jika memiliki lebih dari {1} baris.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Kolom yang ditentukan adalah kolom baca-saja dan tidak dapat diubah: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Mencari teks di 'sumber'. Menampilkan baris teks ditemukan. Perbandingan dilakukan dengan cara nonpeka huruf.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Tabel untuk dicari.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Cari teks.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Kolom untuk dicari.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>sumber</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>teks</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>kolom</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Jenis kolom salah. Menebak jenis teks.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Tabel tidak berisi kolom jenis teks.</value>
     
   </data>
 </root>

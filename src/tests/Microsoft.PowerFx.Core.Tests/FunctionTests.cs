@@ -37,6 +37,30 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void TestFunctionWithIdentifiersHaveIdentifierParameters()
+        {
+            var texlFunctionsLibrary = BuiltinFunctionsCore.TestOnly_AllBuiltinFunctions;
+            var functions = texlFunctionsLibrary.Where(x => !x.FunctionCategoriesMask.HasFlag(FunctionCategories.REST));
+
+            foreach (var function in functions)
+            {
+                if (function.MaxArity == 0)
+                {
+                    continue;
+                }
+
+                var functionHasColumnIdentifiers = function.HasColumnIdentifiers;
+                var functionHasIdentifierParameters = Enumerable.Range(0, Math.Min(function.MaxArity, 5))
+                    .Where(argIndex => function.GetIdentifierParamStatus(argIndex) != TexlFunction.ParamIdentifierStatus.NeverIdentifier)
+                    .Any();
+
+                Assert.True(
+                    functionHasColumnIdentifiers == functionHasIdentifierParameters,
+                    $"Function {function.Name} ({function.GetType().FullName}) is HasColumnIdentifiers = {functionHasColumnIdentifiers} and functionHasIdentifierParameters = {functionHasIdentifierParameters}");
+            }
+        }
+
+        [Fact]
         public void TextFunctionSet_Ctor()
         {
             var tfs = new TexlFunctionSet();

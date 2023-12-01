@@ -1384,6 +1384,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: RoundDown)
             },
             {
+                BuiltinFunctionsCore.Search,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.Search.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: SearchTypeChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: SearchImpl)
+            },
+            {
                 BuiltinFunctionsCore.Second,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Second.Name,
@@ -1454,6 +1465,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: SortTable)
+            },
+            {
+                BuiltinFunctionsCore.SortByColumns,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.SortByColumns.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: SortByColumnsTypeChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: SortByColumns)
             },
             {
                 BuiltinFunctionsCore.Split,

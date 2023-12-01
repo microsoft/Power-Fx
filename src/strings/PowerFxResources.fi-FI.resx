@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending tai SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Lajittelee source-lähteen määritetyn sarakkeen vastaavien arvojen indeksin perusteella.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>lähde</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>sarake</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>arvot</value>
     
@@ -4951,6 +4939,10 @@
     <value>Tyypin muuntaminen epäonnistui, koska annettu arvo oli tyypiltään {0}, odotettiin tyyppiä {1}.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Lauseke {0} voi viitata sarakkeeseen, joka ei kuulu tietolähteeseen tai jota ei ole ladattu. Harkitse sarakkeen nimen käyttämistä suoraan.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Tämä toiminto taulukossa {0} ei ehkä toimi, jos sillä on yli {1} riviä.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Määritetty sarake on vain luku -muotoa, eikä sitä voi muokata: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Hakee tekstiä source-kohteesta. Palauttaa rivit, joista teksti löytyy. Vertailu tehdään niin, että kirjainkoko ei ole merkitsevä.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Taulukko, josta haetaan.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Hae tekstiä.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Haettava sarake.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>lähde</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>teksti</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>sarake</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Väärä saraketyyppi. Odottaa tekstityyppiä.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Taulukko ei sisällä mitään tekstityyppistä saraketta.</value>
     
   </data>
 </root>

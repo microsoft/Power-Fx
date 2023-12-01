@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending vai SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Kārto vienumu "source", ņemot vērā atbilstošo vērtību rādītāju norādītajā kolonnā.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>avots</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>kolonna</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>vērtības</value>
     
@@ -4951,6 +4939,10 @@
     <value>Tipa pārvēršana neizdevās, jo dotās vērtības tips bija “{0}”, paredzamais tips: “{1}”.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Izteiksme “{0}” var attēlot kolonnu, kas nav daļa no datu avota vai nav lejupielādēta. Ieteicams izmantot kolonnas nosaukumu tieši.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Šī darbība tabulā “{0}” var nedarboties, ja tās rindu skaits pārsniedz {1}.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Norādītā kolonna ir tikai lasāma un to nevar modificēt: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Meklē tekstu vienumā "source". Atgriež rindas, kur teksts tiek atrasts. Salīdzināšana tiek veiktā bez reģistrjutīguma.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Tabula, kur meklēt.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Meklēšanas teksts.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Kolonna, kur meklēt.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>avots</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>teksts</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>kolonna</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Nederīgs kolonnas tips. Paredzēts teksta tips.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Tabulā nav nevienas teksta tipa kolonnas.</value>
     
   </data>
 </root>

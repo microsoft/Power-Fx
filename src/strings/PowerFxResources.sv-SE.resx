@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending eller SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Sorterar källan baserat på indexet med matchande värden i den angivna kolumnen.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>källa</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>kolumn</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>värden</value>
     
@@ -4951,6 +4939,10 @@
     <value>Typkonverteringen misslyckades eftersom det angivna värdet var av typen "{0}", förväntad typ: "{1}".</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Uttrycket "{0}" kan representera en kolumn som inte är en del av datakällan eller som inte har hämtats. Överväg att använda kolumnnamnet direkt i stället.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Den här åtgärden i tabellen "{0}" kanske inte fungerar om den har fler än {1} rader.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Den angivna kolumnen är skrivskyddad och kan inte ändras: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Söker efter text i källan. Returnerar rader där texten hittas. Jämförelsen görs skiftlägesokänsligt.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Tabell att genomsöka.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Genomsök text.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Kolumn att genomsöka.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>källa</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>kolumn</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Fel kolumntyp. En texttyp förväntades.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Tabellen innehåller ingen kolumn av texttyp.</value>
     
   </data>
 </root>

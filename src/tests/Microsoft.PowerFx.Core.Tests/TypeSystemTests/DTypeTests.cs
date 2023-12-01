@@ -319,6 +319,18 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Fact]
+        public void AssociatedDataSourcesTest()
+        {
+            DType myTableType = TestUtils.DT("*[a:n,b:s,c:b]");
+            var myDataSource = new TestDataSource("myDS", myTableType);
+            var myTypeWithAssociatedDataSource = DType.AttachDataSourceInfo(myTableType, myDataSource);
+
+            Assert.Empty(myTableType.AssociatedDataSources);
+            Assert.Single(myTypeWithAssociatedDataSource.AssociatedDataSources);
+            Assert.Equal(myDataSource, myTypeWithAssociatedDataSource.AssociatedDataSources.Single());
+        }
+
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
@@ -802,6 +814,24 @@ namespace Microsoft.PowerFx.Tests
                     out var result));
 
             Assert.Equal(DType.Boolean, result);
+        }
+
+        [Theory]
+        [InlineData("*[A:s]", "B")]
+        [InlineData("*[A:s]", "B.C")]
+        [InlineData("*[A:s,B:![D:n]]", "A.C")]
+        [InlineData("*[A:s,B:![D:n]]", "B.C")]
+        public void TryGetTypeNegativeTests(string dType, string dPath)
+        {
+            var type = TestUtils.DT(dType);
+            var path = DPath.Root;
+            foreach (var pathPart in dPath.Split('.'))
+            {
+                path = path.Append(new DName(pathPart));
+            }
+
+            Assert.False(type.TryGetType(path, out var result));
+            Assert.Equal(DType.Invalid, result);
         }
 
         [Fact]
@@ -2728,6 +2758,9 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("*[A:n, B:b, D:d]", "*[A:n, B:b]", "*[A:n, B:b, D:d]")]
         [InlineData("*[A:n, B:b, D:d]", "*[X:s, Y:n]", "*[A:n, B:b, D:d, X:s, Y:n]")]
         [InlineData("*[A:n, B:b, D:d]", "X", "*[A:n, B:b, D:d]")]
+        [InlineData("*[A:P, B:b, D:d]", "*[A:n, B:b, D:d]", "*[A:e, B:b, D:d]")]
+        [InlineData("*[A:P, B:b, D:d]", "*[A:*[B:b], D:d]", "*[A:e, B:b, D:d]")]
+        [InlineData("*[A:P, B:b, D:d]", "*[A:![B:b], D:d]", "*[A:P, B:b, D:d]")]
 
         [InlineData("*[A:*[A:![X:n, Y:b]]]", "*[A:*[A:![Z:s]]]", "*[A:*[A:![X:n, Y:b, Z:s]]]")]
         [InlineData("![A:n, Nest:*[X:n, Y:n, Z:b]]", "![]", "![A:n, Nest:*[X:n, Y:n, Z:b]]")]

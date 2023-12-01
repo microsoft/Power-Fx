@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending of SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Hiermee wordt 'source' gesorteerd op basis van de index van overeenkomende waarde in de opgegeven kolom.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>bron</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>kolom</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>waarden</value>
     
@@ -4951,6 +4939,10 @@
     <value>Typeconversie is mislukt omdat de gegeven waarde van het type {0} was en type {1} werd verwacht.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>De expressie {0} kan een kolom vertegenwoordigen die geen deel uitmaakt van de gegevensbron of die niet is gedownload. Overweeg in plaats daarvan de kolomnaam rechtstreeks te gebruiken.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Deze bewerking op tabel {0} werkt mogelijk niet als deze meer {1} rijen bevat.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>De opgegeven kolom is alleen-lezen en kan niet worden gewijzigd: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Hiermee wordt tekst gezocht in 'source'. De rijen waarin tekst wordt gevonden, worden geretourneerd. De vergelijking vindt plaats op een niet-hoofdlettergevoelige manier.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>De kolom die moet worden gezocht.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Zoektekst.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>De tekst die moet worden gezocht.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>bron</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>kolom</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Verkeerd kolomtype. Het type Tekst wordt verwacht.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>De tabel bevat geen kolom van het type Tekst.</value>
     
   </data>
 </root>

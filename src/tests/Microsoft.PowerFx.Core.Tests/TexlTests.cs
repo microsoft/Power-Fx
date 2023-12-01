@@ -353,12 +353,74 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("RenameColumns({A:\"hello\",B:1}, AB, B)")]
         [InlineData("RenameColumns({A:\"hello\",B:1}, A1, B)")]
         [InlineData("RenameColumns([{A:\"hello\",B:1}], \"A\", \"B\")")]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], A, A1, A, A2)")]
+        [InlineData("RenameColumns(true, A, A1)")]
         public void TexlFunctionTypeSemanticsRenameColumns_Negative(string expression)
         {
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(expression);
 
             Assert.False(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("IfError(\"Hello\", \"one\")", "s")]
+        [InlineData("IfError(\"Hello\", 1)", "s")]
+        [InlineData("IfError(\"Hello\", 1, 3)", "n")]
+        [InlineData("IfError(\"Hello\", \"one\", \"world\", 2, 1)", "n")]
+        [InlineData("IfError({a:1}, \"one\", [1,2,3], 2, 1)", "n")]
+        public void TexlFunctionTypeSemanticsIfError(string expression, string expectedType)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var options = new ParserOptions() { NumberIsFloat = true };
+            var result = engine.Check(expression, options);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("IfError(\"Hello\", {a:\"one\"})")]
+        [InlineData("IfError(\"Hello\", 1, {a:2})", false, true)]
+        [InlineData("IfError(\"Hello\", 1, 3, [true])")]
+        [InlineData("IfError({a:1}, true)")]
+        [InlineData("IfError(1, [1], true, {a:1}, \"hello\")", false, true)]
+        [InlineData("IfError(IfError({a:1}, true), true)")]
+        [InlineData("false; IfError({a:1}, true); true", true)]
+        [InlineData("IsError(false; IfError({a:1}, true); true)", true)]
+        public void TexlFunctionTypeSemanticsIfError_MismatchedTypes(string expression, bool usesChain = false, bool preV1Bug = false)
+        {
+            foreach (var usePowerFxV1Rules in new[] { false, true })
+            {
+                if (!usePowerFxV1Rules && preV1Bug)
+                {
+                    // Bug on pre-V1 logic; will not fix for legacy reasons
+                    continue;
+                }
+
+                foreach (var isBehavior in new[] { false, true })
+                {
+                    var features = new Features(Features.PowerFxV1)
+                    {
+                        PowerFxV1CompatibilityRules = usePowerFxV1Rules
+                    };
+
+                    var engine = new Engine(new PowerFxConfig(features));
+                    var parserOptions = new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = isBehavior };
+                    var result = engine.Check(expression, parserOptions);
+
+                    if (usePowerFxV1Rules && !usesChain)
+                    {
+                        Assert.True(result.IsSuccess);
+                        Assert.Equal(DType.Void, result.Binding.ResultType);
+                    }
+                    else
+                    {
+                        Assert.True(isBehavior == result.IsSuccess, $"For PFxV1={usePowerFxV1Rules} and isBehavior={isBehavior}, expression {expression} should {(isBehavior ? "succeed" : "fail")}");
+                    }
+                }
+            }
         }
 
         [Theory]
@@ -1445,6 +1507,116 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT(expectedType),
                 symbol);
+        }
+
+        [Theory]
+        [InlineData("SortByColumns([1,2,3,4,5], \"Value\", \"Ascending\")", "*[Value:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], \"Value\")", "*[Value:n]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), \"a\", \"Ascending\")", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), \"a\")", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), \"a\", \"Ascending\", \"b\")", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), \"a\", \"Ascending\", \"b\", \"Descending\")", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), \"a\", \"Ascending\", \"b\", \"Descending\", \"c\")", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), \"a\", \"Ascending\", \"b\", \"Descending\", \"c\", \"Ascending\")", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], First([\"Value\"]).Value, \"Ascending\")", "*[Value:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], First([\"Value\"]).Value)", "*[Value:n]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), If(true,\"a\"), \"Ascending\")", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), If(true,\"a\"))", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), If(true,\"a\"), \"Ascending\", \"b\")", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), \"a\", \"Ascending\", If(true,\"b\"), \"Descending\")", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), If(true,\"a\"), \"Ascending\", If(true,\"b\"), \"Descending\", \"c\")", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), If(true,\"c\"), \"Ascending\", If(true,\"a\"), \"Descending\", If(true,\"b\"), \"Ascending\")", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], \"Value\", [3,4,5])", "*[Value:n]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), \"a\", Table({q:\"hello\"}))", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:1}), \"a\", Table({c:1}))", "*[a:n]")]
+        [InlineData("SortByColumns(Table({a:true}), \"a\", Table({d:true}))", "*[a:b]")]
+        [InlineData("SortByColumns(Table({a:DateTimeValue(\"21 Jan 2014\")}), \"a\", Table({e:DateTimeValue(\"21 Jan 2014\")}))", "*[a:d]")]
+        [InlineData("SortByColumns(Table({a:TimeValue(\"11:15\")}), \"a\", Table({b:TimeValue(\"12:15\")}))", "*[a:T]")]
+        [InlineData("SortByColumns(Table({a:DateValue(\"21 Jan 2014\")}), \"a\", Table({b:DateValue(\"21 Jan 2014\")}))", "*[a:D]")]
+        [InlineData("SortByColumns(Table({a:2}), If(true,\"a\"),[3,4,5])", "*[a:n]")]
+        public void TexlFunctionTypeSemanticsSortByColumns_ColumnsAsIdentifiersDisabled(string script, string expectedType)
+        {
+            foreach (var pfxV1 in new[] { false, true })
+            {
+                var features = new Features
+                {
+                    SupportColumnNamesAsIdentifiers = false,
+                    PowerFxV1CompatibilityRules = pfxV1
+                };
+
+                var expectedDType = TestUtils.DT(expectedType);
+                TestSimpleBindingSuccess(script, expectedDType, features: features);
+            }
+        }
+
+        [Theory]
+        [InlineData("SortByColumns([1,2,3,4,5], Value, SortOrder.Ascending)", "*[Value:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], Value)", "*[Value:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], \"Value\")", "*[Value:n]", true)]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), a, SortOrder.Ascending)", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), a)", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), a, SortOrder.Ascending, b)", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), a, SortOrder.Ascending, b, SortOrder.Descending)", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), a, SortOrder.Ascending, b, SortOrder.Descending, c)", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), a, SortOrder.Ascending, b, SortOrder.Descending, c, SortOrder.Ascending)", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), \"a\", SortOrder.Ascending, b, SortOrder.Descending, c)", "*[a:n,b:s,c:n]", true)]
+        [InlineData("SortByColumns([1,2,3,4,5], First([\"Value\"]).Value, SortOrder.Ascending)", "*[Value:n]", true)]
+        [InlineData("SortByColumns([1,2,3,4,5], First([\"Value\"]).Value)", "*[Value:n]", true)]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), If(true,\"a\"), SortOrder.Ascending)", "*[a:s]", true)]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), If(true,\"a\"))", "*[a:s]", true)]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), If(true,\"a\"), SortOrder.Ascending, b)", "*[a:n,b:s]", true)]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), a, SortOrder.Ascending, If(true,\"b\"), SortOrder.Descending)", "*[a:n,b:s]", true)]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), If(true,\"a\"), SortOrder.Ascending, If(true,\"b\"), SortOrder.Descending, \"c\")", "*[a:n,b:s,c:n]", true)]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), If(true,\"c\"), SortOrder.Ascending, If(true,\"a\"), SortOrder.Descending, If(true,\"b\"), SortOrder.Ascending)", "*[a:n,b:s,c:n]", true)]
+        [InlineData("SortByColumns([1,2,3,4,5], \"Value\", [3,4,5])", "*[Value:n]", true)]
+        [InlineData("SortByColumns([1,2,3,4,5], Value, [3,4,5])", "*[Value:n]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), a, Table({q:\"hello\"}))", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:1}), a, Table({c:1}))", "*[a:n]")]
+        [InlineData("SortByColumns(Table({a:true}), a, Table({d:true}))", "*[a:b]")]
+        [InlineData("SortByColumns(Table({a:DateTimeValue(\"21 Jan 2014\")}), a, Table({e:DateTimeValue(\"21 Jan 2014\")}))", "*[a:d]")]
+        [InlineData("SortByColumns(Table({a:TimeValue(\"11:15\")}), a, Table({b:TimeValue(\"12:15\")}))", "*[a:T]")]
+        [InlineData("SortByColumns(Table({a:DateValue(\"21 Jan 2014\")}), a, Table({b:DateValue(\"21 Jan 2014\")}))", "*[a:D]")]
+        [InlineData("SortByColumns(Table({a:2}), If(true,\"a\"),[3,4,5])", "*[a:n]", true)]
+        public void TexlFunctionTypeSemanticsSortByColumns_ColumnsAsIdentifiersEnabled(string script, string expectedType, bool errorOnPFxV1 = false)
+        {
+            foreach (var pfxV1 in new[] { false, true })
+            {
+                var features = new Features
+                {
+                    SupportColumnNamesAsIdentifiers = true,
+                    PowerFxV1CompatibilityRules = pfxV1
+                };
+
+                var expectedDType = TestUtils.DT(expectedType);
+                if (pfxV1 && errorOnPFxV1)
+                {
+                    TestBindingErrors(script, expectedDType, features: features);
+                }
+                else
+                {
+                    TestSimpleBindingSuccess(script, expectedDType, features: features);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("SortByColumns([Now()], Value, [false, true])", "*[Value:d]")]
+        [InlineData("SortByColumns([{a:[1,2,3]}], a)", "*[a:*[Value:n]]")]
+        [InlineData("SortByColumns([1,2,3], Value2)", "*[Value:n]")]
+        public void TexlFunctionTypeSemanticsSortByColumns_Negative_ColumnsAsIdentifiersEnabled(string script, string expectedType)
+        {
+            foreach (var pfxV1 in new[] { false, true })
+            {
+                var features = new Features
+                {
+                    TableSyntaxDoesntWrapRecords = true,
+                    SupportColumnNamesAsIdentifiers = true,
+                    PowerFxV1CompatibilityRules = pfxV1
+                };
+
+                var expectedDType = TestUtils.DT(expectedType);
+                TestBindingErrors(script, expectedDType, features: features);
+            }
         }
 
         [Theory]
@@ -3510,6 +3682,106 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.AddEntity(new TestDataSource("DS", schema));
 
             TestSimpleBindingSuccess(script, expectedType, symbol);
+        }
+
+        [Theory]
+        [InlineData("Search(T, \"a\", \"Name\")", "*[Name:s]")]
+        [InlineData("Search(T, If(1<0,\"a\"), \"Name\")", "*[Name:s]")]
+        [InlineData("Search(T2,\"a\", \"Name\", \"Address\")", "*[Name:s,Age:n,Address:s]")]
+        public void TexlFunctionTypeSemanticsSearch(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Name:s,Age:n,Address:s]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol);
+        }
+
+        [Theory]
+        [InlineData("Search(T, \"a\", Name)", "*[Name:s]")]
+        [InlineData("Search(T, If(1<0,\"a\"), Name)", "*[Name:s]")]
+        [InlineData("Search(T2,\"a\", Name, Address)", "*[Name:s,Age:n,Address:s]")]
+        public void TexlFunctionTypeSemanticsSearch_SupportColumnNamesAsIdentifiers(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Name:s,Age:n,Address:s]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol,
+                new Features { SupportColumnNamesAsIdentifiers = true });
+        }
+
+        [Theory]
+
+        // 1st arg needs to be a table.
+        [InlineData("Search({Name: \"test\"}, \"a\", \"Name\")", "*[]")]
+
+        // missing 3rd arg
+        [InlineData("Search(T, \"a\")", "*[]")]
+
+        // Age is number, only string supported.
+        [InlineData("Search(T2, \"a\", \"Age\")", "*[Address:s, Age:n, Name:s]")]
+        [InlineData("Search(T3, \"a\", \"Age\")", "*[Age:n]")]
+
+        // 3rd onwards Arg should always be constant string.
+        [InlineData("Search(T2, \"a\", If(1<0, \"Name\"))", "*[Address:s, Age:n, Name:s]")]
+
+        // 2nd Arg should only be a string.
+        [InlineData("Search(T2, 1, \"Name\")", "*[]")]
+
+        // missing field.
+        [InlineData("Search(T2, \"a\", \"Name\", \"Address\", \"Does not exist\")", "*[Address:s, Age:n, Name:s]")]
+        public void TexlFunctionTypeSemanticsSearch_Negative(string script, string expectedSchema)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Name:s,Age:n,Address:s]")));
+            symbol.AddVariable("T3", new TableType(TestUtils.DT("*[Age:n]")));
+
+            TestBindingErrors(
+                script,
+                TestUtils.DT(expectedSchema),
+                symbolTable: symbol);
+        }
+
+        [Theory]
+        
+        // 1st arg needs to be a table.
+        [InlineData("Search({Name: \"test\"}, \"a\", Name)", "*[]")]
+
+        // missing 3rd arg
+        [InlineData("Search(T, \"a\")", "*[]")]
+
+        // Age is number, only string supported.
+        [InlineData("Search(T2, \"a\", Age)", "*[Address:s, Age:n, Name:s]")]
+        [InlineData("Search(T3, \"a\", Age)", "*[Age:n]")]
+
+        // 3rd onwards Arg should always be identifier.
+        [InlineData("Search(T2, \"a\", If(1<0, Name))", "*[Address:s, Age:n, Name:s]")]
+
+        // 2nd Arg should only be a string.
+        [InlineData("Search(T2, 1, Name)", "*[]")]
+
+        // missing field.
+        [InlineData("Search(T2, \"a\", Name, Address, 'Does not exist')", "*[Address:s, Age:n, Name:s]")]
+        public void TexlFunctionTypeSemanticsSearch_SupportColumnNamesAsIdentifiers_Negative(string script, string expectedSchema)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Name:s,Age:n,Address:s]")));
+            symbol.AddVariable("T3", new TableType(TestUtils.DT("*[Age:n]")));
+
+            TestBindingErrors(
+                script,
+                TestUtils.DT(expectedSchema),
+                symbolTable: symbol,
+                features: new Features { SupportColumnNamesAsIdentifiers = true });
         }
 
         [Fact]

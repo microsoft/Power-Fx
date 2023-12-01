@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending või SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Sordib allika vastavalt määratud veerus vastavuses olevate väärtuste registrile.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>allikas</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>veerg</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>väärtused</value>
     
@@ -4951,6 +4939,10 @@
     <value>Tüübi teisendamine nurjus, kuna antud väärtus oli tüübiga „{0}“, eeldati tüüpi „{1}“.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Avaldis {0} võib tähistada veergu, mis ei ole andmeallika osa või mida pole alla laaditud. Kaaluge otse veerunime kasutamist.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>See tegevus tabelis „{0}“ ei pruugi töötada, kui ridu on rohkem kui {1}.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Määratud veerg on kirjutuskaitstud ja seda ei saa muuta: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Otsib allikast teksti. Tagastab teksti sisaldavad read. Võrdlus pole tõstutundlik.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Tabel, kust otsitakse.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Teksti otsimine.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Veerg, kust otsitakse.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>veerg</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Vale veerutüüp. Eeldatav tüüp on tekst.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Tabelis pole ühtki veergu, mille tüüp oleks tekst.</value>
     
   </data>
 </root>

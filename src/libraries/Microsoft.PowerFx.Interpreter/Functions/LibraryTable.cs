@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
@@ -662,6 +664,289 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        private static ErrorValue CreateInvalidSortColumnError(IRContext irContext, CultureInfo cultureInfo, string columnName)
+        {
+            // Needs to be localized - https://github.com/microsoft/Power-Fx/issues/908
+            var invalidSortColumnTemplate = "The specified column '{0}' does not exist or is an invalid sort column type.";
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = string.Format(cultureInfo, invalidSortColumnTemplate, columnName),
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidFunctionUsage
+            });
+        }
+
+        public static async ValueTask<FormulaValue> SortByColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            if (args.Length == 3 && args[2].Type._type.IsTableNonObjNull)
+            {
+                // Order table overload
+                return await SortByColumnsOrderTable(runner, context, irContext, args).ConfigureAwait(false);
+            }
+
+            var arg0 = (TableValue)args[0];
+
+            var columnNames = new List<string>();
+            var ascendingSort = new List<bool>();
+            for (var i = 1; i < args.Length; i += 2)
+            {
+                var columnName = ((StringValue)args[i]).Value;
+
+                if (!arg0.Type.FieldNames.Contains(columnName))
+                {
+                    return CreateInvalidSortColumnError(irContext, runner.CultureInfo, columnName);
+                }
+
+                var isAscending =
+                    i == args.Length - 1 ||
+                    !((StringValue)args[i + 1]).Value.Equals("descending", StringComparison.OrdinalIgnoreCase);
+
+                columnNames.Add(columnName);
+                ascendingSort.Add(isAscending);
+            }
+
+            var rowsWithValues = new List<(DValue<RecordValue> row, List<FormulaValue> columnValues)>();
+            foreach (var row in arg0.Rows)
+            {
+                if (row.IsError)
+                {
+                    return row.Error;
+                }
+
+                var valuesForRow = new List<FormulaValue>();
+                foreach (var column in columnNames)
+                {
+                    runner.CheckCancel();
+                    if (row.IsBlank)
+                    {
+                        valuesForRow.Add(row.Blank);
+                    }
+                    else
+                    {
+                        var fieldValue = await row.Value.GetFieldAsync(column, runner.CancellationToken).ConfigureAwait(false);
+                        if (fieldValue is ErrorValue ev)
+                        {
+                            return ev;
+                        }
+
+                        valuesForRow.Add(fieldValue);
+                    }
+                }
+
+                rowsWithValues.Add((row, valuesForRow));
+            }
+
+            return SortByColumnsImpl(irContext, runner, rowsWithValues, ascendingSort);
+        }
+
+        public static async ValueTask<FormulaValue> SortByColumnsOrderTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (TableValue)args[0];
+            var columnName = ((StringValue)args[1]).Value;
+            if (!arg0.Type.FieldNames.Contains(columnName))
+            {
+                return CreateInvalidSortColumnError(irContext, runner.CultureInfo, columnName);
+            }
+
+            var orderTable = (TableValue)args[2];
+            var orderTableValues = new List<object>();
+            foreach (var orderTableRow in orderTable.Rows)
+            {
+                if (orderTableRow.IsError)
+                {
+                    return orderTableRow.Error;
+                }
+
+                if (orderTableRow.IsBlank)
+                {
+                    // Blank values are ignored
+                    continue;
+                }
+
+                var orderTableRecord = orderTableRow.Value;
+                Contracts.Assert(orderTableRecord.Fields.Count() == 1);
+
+                var fieldValue = orderTableRecord.Fields.Single().Value;
+                if (fieldValue is ErrorValue ev)
+                {
+                    return ev;
+                }
+
+                if (fieldValue is BlankValue)
+                {
+                    // Blank values are ignored
+                    continue;
+                }
+
+                if (!fieldValue.TryGetPrimitiveValue(out var primitiveValue))
+                {
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                }
+
+                if (orderTableValues.Contains(primitiveValue))
+                {
+                    return new ErrorValue(irContext, new ExpressionError()
+                    {
+                        // Needs to be localized - https://github.com/microsoft/Power-Fx/issues/908
+                        Message = "Order table can't have duplicate values",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.InvalidArgument
+                    });
+                }
+
+                orderTableValues.Add(primitiveValue);
+            }
+
+            var rowsToOrder = new List<(DValue<RecordValue> row, FormulaValue columnValue)>();
+            var blankRows = new List<DValue<RecordValue>>();
+            foreach (var row in arg0.Rows)
+            {
+                if (row.IsError)
+                {
+                    return row.Error;
+                }
+
+                if (row.IsBlank)
+                {
+                    rowsToOrder.Add((row, row.Blank));
+                }
+                else
+                {
+                    var fieldValue = await row.Value.GetFieldAsync(columnName, runner.CancellationToken).ConfigureAwait(false);
+                    if (fieldValue is ErrorValue ev)
+                    {
+                        return ev;
+                    }
+
+                    rowsToOrder.Add((row, fieldValue));
+                }
+            }
+
+            var sortedList = rowsToOrder.OrderBy(pair =>
+            {
+                if (pair.columnValue is BlankValue)
+                {
+                    // Blanks go to the end
+                    return int.MaxValue;
+                }
+                else
+                {
+                    if (!pair.columnValue.TryGetPrimitiveValue(out var primitiveValue))
+                    {
+                        return int.MaxValue;
+                    }
+
+                    var indexOnTable = orderTableValues.IndexOf(primitiveValue);
+                    if (indexOnTable < 0)
+                    {
+                        // If not found, go to the end before the blanks
+                        return int.MaxValue - 1;
+                    }
+                    else
+                    {
+                        return indexOnTable;
+                    }
+                }
+            });
+
+            var orderedRows = sortedList.Select(pair => pair.row).ToList();
+            return new InMemoryTableValue(irContext, orderedRows);
+        }
+
+        private class FormulaValueComparer : IComparer<FormulaValue>
+        {
+            private EvalVisitor Runner { get; }
+
+            private bool IsAscending { get; }
+
+            public FormulaValueComparer(EvalVisitor runner, bool isAscending)
+            {
+                Runner = runner;
+                IsAscending = isAscending;
+            }
+
+            public int Compare(FormulaValue x, FormulaValue y)
+            {
+                var modifier = this.IsAscending ? 1 : -1;
+                if (x is BlankValue)
+                {
+                    return y is BlankValue ? 0 : 1;
+                }
+
+                if (y is BlankValue)
+                {
+                    return -1;
+                }
+
+                if (x is StringValue sv1 && y is StringValue sv2)
+                {
+                    return Runner.CultureInfo.CompareInfo.Compare(sv1.Value, sv2.Value) * modifier;
+                }
+
+                if (x is DateValue dv1 && y is DateValue dv2)
+                {
+                    return dv1.GetConvertedValue(Runner.TimeZoneInfo).CompareTo(dv2.GetConvertedValue(Runner.TimeZoneInfo)) * modifier;
+                }
+
+                if (x is DateTimeValue dtv1 && y is DateTimeValue dtv2)
+                {
+                    return dtv1.GetConvertedValue(Runner.TimeZoneInfo).CompareTo(dtv2.GetConvertedValue(Runner.TimeZoneInfo)) * modifier;
+                }
+
+                if (x is TimeValue tv1 && y is TimeValue tv2)
+                {
+                    return tv1.Value.CompareTo(tv2.Value) * modifier;
+                }
+
+                if (x is BooleanValue bv1 && y is BooleanValue bv2)
+                {
+                    return bv1.Value.CompareTo(bv2.Value) * modifier;
+                }
+
+                if (x is GuidValue gv1 && y is GuidValue gv2)
+                {
+                    return gv1.Value.CompareTo(gv2.Value) * modifier;
+                }
+
+                if (x is NumberValue nv1 && y is NumberValue nv2)
+                {
+                    return nv1.Value.CompareTo(nv2.Value) * modifier;
+                }
+
+                if (x is DecimalValue dcv1 && y is DecimalValue dcv2)
+                {
+                    return dcv1.Value.CompareTo(dcv2.Value) * modifier;
+                }
+
+                if (x is OptionSetValue osv1 && y is OptionSetValue osv2)
+                {
+                    return string.Compare(osv1.Option, osv2.Option, StringComparison.Ordinal) * modifier;
+                }
+
+                throw new InvalidOperationException();
+            }
+        }
+
+        private static FormulaValue SortByColumnsImpl(IRContext irContext, EvalVisitor runner, List<(DValue<RecordValue> row, List<FormulaValue> columnValues)> rowWithValues, List<bool> isAscending)
+        {
+            var ordered = rowWithValues.OrderBy(r => r.columnValues[0], new FormulaValueComparer(runner, isAscending[0]));
+            for (int i = 1; i < isAscending.Count; i++)
+            {
+                var columnToSort = i;
+                ordered = ordered.ThenBy(r => r.columnValues[columnToSort], new FormulaValueComparer(runner, isAscending[columnToSort]));
+            }
+
+            try
+            {
+                var orderedRows = ordered.Select(pair => pair.row).ToList();
+                return new InMemoryTableValue(irContext, orderedRows);
+            }
+            catch (InvalidOperationException)
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+        }
+
         public static async ValueTask<FormulaValue> AsType(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (RecordValue)args[0];
@@ -676,6 +961,69 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new ErrorValue(irContext, e.ExpressionError);
             }
+        }
+
+        public static async ValueTask<FormulaValue> SearchImpl(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var source = args[0];
+            var textToSearchArg = args[1];
+
+            if (source is BlankValue)
+            {
+                return source;
+            }
+
+            var sourceTable = (TableValue)args[0];
+            var textToSearch = ((StringValue)textToSearchArg).Value.ToLower(runner.CultureInfo);
+
+            if (string.IsNullOrEmpty(textToSearch))
+            {
+                return source;
+            }
+
+            // If no column names are provided, search all columns
+            bool searchAllColumns = args.Length < 3;
+
+            var columnsToSearch = args.Skip(2).OfType<StringValue>().Select(sv => sv.Value).ToArray();
+
+            var rows = new List<DValue<RecordValue>>();
+
+            foreach (var row in sourceTable.Rows)
+            {
+                if (row.IsBlank)
+                {
+                    continue;
+                }
+
+                if (row.IsError)
+                {
+                    return row.Error;
+                }
+
+                foreach (var columnName in columnsToSearch)
+                {
+                    var columnValue = await row.Value.GetFieldAsync(columnName, runner.CancellationToken).ConfigureAwait(false);
+
+                    if (columnValue is ErrorValue)
+                    {
+                        return columnValue;
+                    }
+                    else if (columnValue is BlankValue)
+                    {
+                        continue;
+                    }
+
+                    var fieldValue = ((StringValue)columnValue).Value.ToLower(runner.CultureInfo);
+                    if (fieldValue.Contains(textToSearch))
+                    {
+                        rows.Add(row);
+                        break; // Found in one of the columns, no need to check further
+                    }
+                }
+            }
+
+            var result = new InMemoryTableValue(irContext, rows);
+            return result;
         }
 
         private static bool IsValueTypeErrorOrBlank<T>(FormulaValue val)

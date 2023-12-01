@@ -515,9 +515,9 @@ namespace Microsoft.PowerFx.Tests
                 return true;
             }
 
-            public override bool IsIdentifierParam(int index)
+            public override ParamIdentifierStatus GetIdentifierParamStatus(int index)
             {
-                return true;
+                return ParamIdentifierStatus.AlwaysIdentifier;
             }
         }
 
@@ -569,9 +569,9 @@ namespace Microsoft.PowerFx.Tests
                 yield break;
             }
 
-            public override bool IsIdentifierParam(int index)
+            public override ParamIdentifierStatus GetIdentifierParamStatus(int index)
             {
-                return (_mask & (1 << index)) != 0;
+                return (_mask & (1 << index)) != 0 ? ParamIdentifierStatus.AlwaysIdentifier : ParamIdentifierStatus.NeverIdentifier;
             }
         }
 

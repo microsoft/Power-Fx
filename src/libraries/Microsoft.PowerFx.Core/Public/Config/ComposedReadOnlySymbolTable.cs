@@ -174,6 +174,20 @@ namespace Microsoft.PowerFx
             return false;
         }
 
+        public virtual bool TryLookupEnum(DName name, out NameLookupInfo lookupInfo)
+        {
+            foreach (INameResolver table in _symbolTables)
+            {
+                if (table.TryLookupEnum(name, out lookupInfo))
+                {
+                    return true;
+                }
+            }
+
+            lookupInfo = default;
+            return false;
+        }
+
         internal override IExternalEntityScope InternalEntityScope
         {
             get

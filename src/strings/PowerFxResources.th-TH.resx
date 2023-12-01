@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending หรือ SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>เรียงลำดับ 'source' โดยอิงตามดัชนีของค่าที่ตรงกันในคอลัมน์ที่กำหนด</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>แหล่งที่มา</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>คอลัมน์</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>ค่า</value>
     
@@ -4951,6 +4939,10 @@
     <value>การแปลงชนิดล้มเหลวเนื่องจากค่าที่ระบุเป็นชนิด '{0}' แต่ที่คาดไว้คือชนิด '{1}'</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>นิพจน์ '{0}' อาจแสดงคอลัมน์ที่ไม่ได้เป็นส่วนหนึ่งของแหล่งข้อมูลหรือยังไม่ได้ดาวน์โหลด ลองใช้ชื่อคอลัมน์โดยตรงแทน</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>การดำเนินการนี้บนตาราง '{0}' อาจไม่ทำงาน ถ้าตารางมีแถวมากกว่า {1} แถว</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>คอลัมน์ที่ระบุเป็นแบบอ่านได้อย่างเดียว และไม่สามารถแก้ไขได้: {0}</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>ค้นหาข้อความใน 'source' ส่งคืนแถวที่พบข้อความ การเปรียบเทียบจะดำเนินการโดยไม่สนใจตัวพิมพ์เล็กใหญ่</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>ตารางที่จะค้นหา</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>ข้อความค้นหา</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>คอลัมน์ที่จะค้นหา</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>แหล่งที่มา</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>ข้อความ</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>คอลัมน์</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>ประเภทคอลัมน์ไม่ถูกต้อง ต้องการประเภทข้อความ</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>ตารางไม่มีคอลัมน์ประเภทตัวอักษร</value>
     
   </data>
 </root>

@@ -940,18 +940,6 @@
     <value>SortOrder.Ascending или SortOrder.Descending</value>
     
   </data>
-  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Сортира „източник“, базирано на индекса от съвпадащи стойности в указаната колона.</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
-    <value>източник</value>
-    
-  </data>
-  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
-    <value>колона</value>
-    
-  </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>стойности</value>
     
@@ -4951,6 +4939,10 @@
     <value>Преобразуването на типа е неуспешно, тъй като дадената стойност е от тип „{0}“, а се очаква тип „{1}“.</value>
     
   </data>
+  <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
+    <value>Изразът „{0}“ може да представлява колона, която не е част от източника на данни или не е изтеглена. Вместо това бихте могли да използвате директно името на колоната.</value>
+    
+  </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Тази операция върху таблица „{0}“ може да не работи, ако таблицата има повече от {1} реда.</value>
     
@@ -5230,6 +5222,39 @@
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Указаната колона е само за четене и не може да се променя: {0}.</value>
+    
+  </data>
+  <data name="AboutSearch" xml:space="preserve">
+    <value>Търси текста в „източник“. Връща редовете, където е открит текстът. Сравнението се извършва при различаване на главни и малки букви.</value>
+    
+  </data>
+  <data name="AboutSearch_source" xml:space="preserve">
+    <value>Таблица за търсене.</value>
+  </data>
+  <data name="AboutSearch_text" xml:space="preserve">
+    <value>Текст за търсене.</value>
+  </data>
+  <data name="AboutSearch_column" xml:space="preserve">
+    <value>Колона за търсене.</value>
+  </data>
+  <data name="SearchArg1" xml:space="preserve">
+    <value>източник</value>
+    
+  </data>
+  <data name="SearchArg2" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="SearchArg3" xml:space="preserve">
+    <value>колона</value>
+    
+  </data>
+  <data name="ErrSearchWrongType" xml:space="preserve">
+    <value>Грешен тип колона. Очаква се текстов тип.</value>
+    
+  </data>
+  <data name="ErrSearchWrongTableType" xml:space="preserve">
+    <value>Таблицата не съдържа колони от текстов тип.</value>
     
   </data>
 </root>
