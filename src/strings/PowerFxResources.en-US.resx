@@ -1706,15 +1706,15 @@
   </data>
   <data name="AboutGetProperties" xml:space="preserve">
     <value>Enumerate and returns the properties of an untyped record.</value>
-    <comment>Description of 'GetProperties' function. The term 'record' is used in the context of an obejct / property bag / set of name/value pairs.</comment>
+    <comment>Description of 'GetProperties' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
   </data>
   <data name="GetPropertiesArg1" xml:space="preserve">
     <value>record</value>
-    <comment>function_parameter - First argument to the GetProperties function - the record whose inputs will be returned. The term 'record' is used in the context of an obejct / property bag / set of name/value pairs.</comment>
+    <comment>function_parameter - First argument to the GetProperties function - the record whose inputs will be returned. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
   </data>
   <data name="AboutGetProperties_record" xml:space="preserve">
     <value>Record to have its properties enumerated.</value>
-    <comment>Description of first argument of the 'GetProperties' function. The term 'record' is used in the context of an obejct / property bag / set of name/value pairs.</comment>
+    <comment>Description of first argument of the 'GetProperties' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
   </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Returns true if the provided value is of the given type.</value>

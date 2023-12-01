@@ -55,6 +55,7 @@
     "FirstN",
     "Float",
     "ForAll",
+    "GetProperties",
     "GUID",
     "Hex2Dec",
     "Hour",
