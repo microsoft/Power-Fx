@@ -757,6 +757,17 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void CheckDottedBindErrorForSingleColumnAccess()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            var result = engine.Check("[1,2,3].foo");
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.StartsWith("Error 7-11: Deprecated use of '.'. Please use the 'ShowColumns' function instead.", result.Errors.First().ToString());
+        }
+
+        [Fact]
         public void CheckDottedBindError2()
         {
             var engine = new RecalcEngine();

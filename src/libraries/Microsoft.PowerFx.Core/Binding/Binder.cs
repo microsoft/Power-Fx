@@ -3338,11 +3338,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                // Disable SingleColumnsAccess syntax. I.e. [1,2,3].Values.
-                // As an alternative use ShowColumns(). e.g. ShowColumns([1,2,3], Values).
+                // Disable SingleColumnsAccess syntax. I.e. [{a:1,b:2},{a:3,b:4]].a
+                // As an alternative use ShowColumns(). e.g. ShowColumns([{a:1,b:2},{a:3,b:4]], a).
                 if (leftType.IsTable && _features.PowerFxV1CompatibilityRules)
                 {
-                    SetDottedNameError(node, TexlStrings.ErrDeprecatedDotUseShowColumn);
+                    SetDottedNameError(node, TexlStrings.ErrDeprecatedDotUseShowColumns);
                     return;
                 }
 

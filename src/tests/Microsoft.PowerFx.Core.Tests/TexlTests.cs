@@ -3862,16 +3862,20 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("T.A", "*[A:n]", true)]
-        [InlineData("T.B", "*[B:![C:s]]", true)]
-        [InlineData("T.A", "e", false)]
-        [InlineData("T.B", "e", false)]
-        public void TestSignleColumnAccessDependentOnTableType(string script, string expectedSchema, bool isBindingSuccess)
+
+        // Single column access syntax is supported pre PowerFxV1 rules.
+        [InlineData("T.A", "*[A:n]", false)]
+        [InlineData("T.B", "*[B:![C:s]]", false)]
+
+        // Single column access syntax is not supported PowerFxV1 rules onwards.
+        [InlineData("T.A", "e", true)]
+        [InlineData("T.B", "e", true)]
+        public void TestSingleColumnAccessDependentOnTableType(string script, string expectedSchema, bool usePowerFxV1Rules)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("T", new TableType(TestUtils.DT("*[A:n, B:![C:s]]")));
 
-            if (!isBindingSuccess)
+            if (usePowerFxV1Rules)
             {
                 var features = new Features() { PowerFxV1CompatibilityRules = true };
                 TestBindingErrors(
