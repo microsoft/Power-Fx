@@ -746,5 +746,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey ErrSearchWrongType = new ErrorResourceKey("ErrSearchWrongType");
         public static ErrorResourceKey ErrSearchWrongTableType = new ErrorResourceKey("ErrSearchWrongTableType");
+
+        public static ErrorResourceKey ErrDeprecatedDotUseShowColumns = new ErrorResourceKey("ErrDeprecatedDotUseShowColumns");
     }
 }
