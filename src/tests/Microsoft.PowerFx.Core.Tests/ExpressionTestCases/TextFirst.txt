@@ -1,0 +1,48 @@
+#SETUP: TextFirst
+
+>> Hello, World
+"Hello, World"
+
+>> ="Hello, World"
+"Hello, World"
+
+>> 1+1
+"1+1"
+
+>> =1+1
+2
+
+>> =$"1+1"
+"1+1"
+
+>> =$"{1+1}"
+"2"
+
+>> ${"1+1"}
+"1+1"
+
+>> ${1+1}
+"2"
+
+>> ${$"{1+1}"}
+"2"
+
+>> ${$"${1+1}"}
+"$2"
+
+// escaping strings starting with =
+
+>> ==
+Errors: Error 1-2: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> ${"="}
+"="
+
+>> ="="
+"="
+
+// escaping islands
+
+>> Hello $${1+1} World
+"Hello ${1+1} World"
+

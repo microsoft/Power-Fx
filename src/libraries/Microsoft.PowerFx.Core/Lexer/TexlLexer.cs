@@ -988,17 +988,20 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     int ich = 0;
 
+                    // skip whitespace looking for a leading '=' that starts a formula
                     while (ich < _charCount && char.IsWhiteSpace(text[ich]))
                     {
                         ich++;
                     }
 
-                    if (text[ich++] == '=' && (ich == _charCount || text[ich] != '='))
+                    if (ich < _charCount && text[ich] == '=')
                     {
-                        CurrentPos = ich;
+                        // skip '=' and treat the rest as a normal formula
+                        CurrentPos = ich + 1;
                     }
                     else
                     {
+                        // CurrentPos doesn't move (stays at start of buffer) and treat all of it as text first
                         _initialLexerMode = LexerMode.TextFirst;
                     }
                 }
