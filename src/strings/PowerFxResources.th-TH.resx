@@ -5257,4 +5257,8 @@
     <value>ตารางไม่มีคอลัมน์ประเภทตัวอักษร</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>การใช้ '.' ในแบบที่ไม่สนับสนุนแล้ว โปรดใช้ฟังก์ชัน 'ShowColumns' แทน</value>
+    
+  </data>
 </root>

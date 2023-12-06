@@ -5257,4 +5257,8 @@
     <value>Die Tabelle enthält keine Spalten vom Texttyp.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Veraltete Verwendung von '.'. Verwenden Sie stattdessen die Funktion 'ShowColumns'.</value>
+    
+  </data>
 </root>

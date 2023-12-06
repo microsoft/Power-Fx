@@ -5257,4 +5257,8 @@
     <value>Tablica ne sadrži nijedan stupac tekstne vrste.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Zastarjela uporaba „.”. Umjesto toga upotrijebite funkciju „ShowColumns”.</value>
+    
+  </data>
 </root>

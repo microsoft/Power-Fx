@@ -5257,4 +5257,8 @@
     <value>テーブルにテキスト型の列が含まれていません。</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>「.」の使用は廃止されました。代わりに 'ShowColumns' 関数を使用してください。</value>
+    
+  </data>
 </root>

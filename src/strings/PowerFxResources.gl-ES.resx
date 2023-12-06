@@ -5214,7 +5214,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>A función JSON non pode serializar datos binarios na expresión non conductual.</value>    
+    <value>A función JSON non pode serializar datos binarios na expresión non condutual.</value>    
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>O parámetro {0} contén unha propiedade de tipo {1} que non é compatible.</value>
@@ -5255,6 +5255,10 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>A táboa non contén ningunha columna de tipo texto.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>O uso de "." quedou obsoleto. No seu lugar, empregue a función "ShowColumns".</value>
     
   </data>
 </root>

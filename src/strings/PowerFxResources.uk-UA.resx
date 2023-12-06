@@ -5257,4 +5257,8 @@
     <value>Таблиця не містить жодного текстового стовпця.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Застаріле використання крапки ("."). Використовуйте натомість функцію "ShowColumns".</value>
+    
+  </data>
 </root>

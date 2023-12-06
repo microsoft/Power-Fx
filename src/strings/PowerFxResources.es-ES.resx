@@ -5257,4 +5257,8 @@
     <value>La tabla no contiene ninguna columna de tipo de texto.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>"." en desuso. Use la función "ShowColumns" en su lugar.</value>
+    
+  </data>
 </root>

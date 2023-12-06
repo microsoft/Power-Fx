@@ -5257,4 +5257,8 @@
     <value>तालिका में पाठ प्रकार का कोई भी स्तंभ नहीं है.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>.'. का अस्वीकृत प्रयोग. कृपया इसके बजाय 'ShowColumns' फ़ंक्शन का उपयोग करें.</value>
+    
+  </data>
 </root>

@@ -5257,4 +5257,8 @@
     <value>La tabella non contiene alcuna colonna di tipo testo.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Uso deprecato di ".". Usa invece la funzione "ShowColumns".</value>
+    
+  </data>
 </root>

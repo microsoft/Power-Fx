@@ -5257,4 +5257,8 @@
     <value>Tabel tidak berisi kolom jenis teks.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>'.' tidak digunakan lagi. Gunakan fungsi 'ShowColumns' sebagai gantinya.</value>
+    
+  </data>
 </root>

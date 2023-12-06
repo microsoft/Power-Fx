@@ -2785,7 +2785,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>열을 제거할 테이블 값입니다.</value>
+    <value>열을 제거할 테이블 또는 레코드 값입니다.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>유지할 열의 이름입니다.</value>
@@ -5255,6 +5255,10 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>테이블에 텍스트 형식의 열이 없습니다.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Deprecated use of '.'. Please use the 'ShowColumns' function instead.</value>
     
   </data>
 </root>

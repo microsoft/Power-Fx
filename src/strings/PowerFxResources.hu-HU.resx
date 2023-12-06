@@ -5257,4 +5257,8 @@
     <value>A tábla nem tartalmaz szöveg típusú oszlopot.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>A(z) '.' elavult használata. Használja inkább 'ShowColumns' függvényt.</value>
+    
+  </data>
 </root>

@@ -5257,4 +5257,8 @@
     <value>Lentelėje nėra jokio teksto tipo stulpelio.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Nerekomenduojamas „.“. Vietoje to naudokite funkciją „ShowColumns“.</value>
+    
+  </data>
 </root>

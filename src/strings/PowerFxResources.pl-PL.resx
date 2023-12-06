@@ -5257,4 +5257,8 @@
     <value>Tabela nie zawiera żadnej kolumny typu tekstowego.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Przestarzałe użycie znaku „.”. Użyj w zamian funkcji „ShowColumns”.</value>
+    
+  </data>
 </root>

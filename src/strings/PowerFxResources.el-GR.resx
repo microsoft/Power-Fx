@@ -5257,4 +5257,8 @@
     <value>Ο πίνακας δεν περιέχει καμία στήλη τύπου κειμένου.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Δεν χρησιμοποιείται το ".". Χρησιμοποιήστε τη συνάρτηση 'ShowColumns' αντ' αυτού.</value>
+    
+  </data>
 </root>

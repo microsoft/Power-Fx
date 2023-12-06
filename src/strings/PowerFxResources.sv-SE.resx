@@ -5257,4 +5257,8 @@
     <value>Tabellen innehåller ingen kolumn av texttyp.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Inaktuell användning av ".". Använd funktionen "ShowColumns" i stället.</value>
+    
+  </data>
 </root>
