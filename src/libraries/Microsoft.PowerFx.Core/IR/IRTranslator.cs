@@ -360,10 +360,10 @@ namespace Microsoft.PowerFx.Core.IR
                     var argContext = i == 0 && func.MutatesArg0 ? new IRTranslatorContext(context, isMutation: true) : context;
 
                     var supportColumnNamesAsIdentifiers = _features.SupportColumnNamesAsIdentifiers;
-                    if (supportColumnNamesAsIdentifiers && func.ParameterCanBeIdentifier(i))
+                    if (supportColumnNamesAsIdentifiers && func.ParameterCanBeIdentifier(context.Binding.Features, i))
                     {
                         var identifierNode = arg.AsFirstName();
-                        if (func.GetIdentifierParamStatus(i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
+                        if (func.GetIdentifierParamStatus(context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
                         {
                             Contracts.Assert(identifierNode != null);
                         }
