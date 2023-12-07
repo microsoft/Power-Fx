@@ -628,5 +628,5 @@ Table({a:3,b:"three"},{a:2,b:"two"},{a:1,b:"one"})
 >> With({ a:"b" }, SortByColumns(Table({a:1,b:"one"},{a:2,b:"two"},{a:3,b:"three"}), a, SortOrder.Descending))
 Table({a:3,b:"three"},{a:2,b:"two"},{a:1,b:"one"})
 
->> With({ a:"b" }, SortByColumns(Table({a:1, b:"one"}, {a:2, b:"two"}, {a:3, b:"three"}, {a:4, b:"four"}), a, ["four", "three", "two", "one"]))
-Table({a:1,b:"one"},{a:2,b:"two"},{a:3,b:"three"},{a:4,b:"four"})
+>> With({ b:"a" }, SortByColumns(Table({a:1, b:"one"}, {a:2, b:"two"}, {a:3, b:"three"}, {a:4, b:"four"}), b, ["four", "three", "two", "one"]))
+Table({a:4,b:"four"},{a:3,b:"three"},{a:2,b:"two"},{a:1,b:"one"})
