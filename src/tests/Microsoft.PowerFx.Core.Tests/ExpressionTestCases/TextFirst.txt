@@ -1,5 +1,47 @@
 #SETUP: TextFirst
 
+// An alternative parser mode for hosts that wish to start in a "text first" manner.
+// Mode is enabled with ParserOptions.TextFirst.
+// This is done as a parser mode for consistency and to ensure parser column offsets are correct.
+//
+// The semantic rules:
+//
+// 1. The input buffer is in general treated as a text string.
+// 2. There is no need to escape ", {, or }.
+// 3. String interpolation are supported, starting with ${ rather than the normal {. This is to allow { to be used without interpretation. String interpolation can be nested by using standard string interpolation within.
+// 4. A single = starts a normal formula.
+//
+// For example:
+//
+//  Normal ParserOptions                 TextFirst ParserOptions                Result
+// ==================================== ====================================== =========================
+//  "3+3"                                3+3                                    "3+3"
+//  3+3                                  =3+3                                   6
+//  $"3 {3+3}"                           3 ${3+3}                               "3 6" 
+//  $"3 {{3+3}}"                         3 {3+3}                                "3 {3+3}"
+//  $"3 ' {{}} {3+3} "" {$"{7+7}"}"      3 ' {} ${3+3} " ${$"{7+7}"}            "3 ' {} 6 "" 14"
+//  "3 ' {} " & 3+3 & " "" " & 7+7       =$"3 ' {{}} {3+3} "" {$"{7+7}"}"       "3 ' {} 6 "" 14"
+
+// examples above
+
+>> 3+3
+"3+3"
+
+>> =3+3
+6
+
+>> 3 ${3+3}
+"3 6"
+
+>> 3 {3+3}
+"3 {3+3}"
+
+>> 3 ' {} ${3+3} " ${$"{7+7}"}
+"3 ' {} 6 "" 14"
+
+>> =$"3 ' {{}} {3+3} "" {$"{7+7}"}"
+"3 ' {} 6 "" 14"
+
 // basics
 
 >> Hello, World
