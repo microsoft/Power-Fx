@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx
         public bool NumberIsFloat { get; set; }
 
         /// <summary>
-        /// If true, parse starts in text literal mode, with string interpolation islands of ${ ... }
+        /// If true, parse starts in text literal mode, with string interpolation islands of ${ ... }.
         /// If the starting non-whitespace charatcer is an equal sign ("="), a normal parse is used instead.
         /// </summary>
         public bool TextFirst { get; set; }
