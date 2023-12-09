@@ -1877,11 +1877,16 @@ namespace Microsoft.PowerFx.Core.Types
             schemaDifference = new KeyValuePair<string, DType>(null, Invalid);
             schemaDifferenceType = Invalid;
 
-            if (Kind == DKind.Void || type.Kind == DKind.Void)
+            // Void accepts everything (including Void).
+            if (Kind == DKind.Void)
             {
-                // Void only accepts itself. This is important where we checking return types, such as in ReflectionFunction.
-                // No other types accept Void, nor does it accept other types
-                return Kind == DKind.Void && type.Kind == DKind.Void;
+                return true;
+            }
+
+            // Except for Void (see above), no types accept Void.
+            if (type.Kind == DKind.Void)
+            {
+                return false;
             }
 
             // We accept ObjNull as any DType (but subtypes can override).
