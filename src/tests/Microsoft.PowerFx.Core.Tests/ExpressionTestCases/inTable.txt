@@ -48,3 +48,30 @@ true
 
 >> "hello" exactin Table({Result:"Hello"},{Result:"World"})
 false
+
+>> "hello" in Table({a:"hello",b:true},{a:"world",b:false})
+Errors: Error 11-56: Invalid schema, expected a one-column table.
+
+>> true in [Today()]
+Errors: Error 0-4: Can't convert this data type. Power Apps can't convert this Boolean to a Date.
+
+>> 123 in ["123", "456"]
+true
+
+>> 123 in {a:123}
+Errors: Error 7-14: Invalid argument type. Cannot use Record values in this context.
+
+>> {a:true} in true
+Errors: Error 12-16: Invalid argument type. Cannot use Boolean values in this context.
+
+>> {a:true} in Table({a:{b:true}})
+Errors: Error 0-8: Invalid argument type. Expecting a Record value, but of a different schema.|Error 0-8: Incompatible type. The 'a' column in the data source you’re updating expects a 'Record' type and you’re using a 'Boolean' type.|Error 12-31: Invalid argument type. Expecting a Table value, but of a different schema.|Error 12-31: Incompatible type. The 'a' column in the data source you’re updating expects a 'Boolean' type and you’re using a 'Record' type.
+
+>> {a:123} in {a:123}
+Errors: Error 11-18: Invalid argument type. Cannot use Record values in this context.
+
+>> [123] in Table({a:123,b:true},{a:345,b:false})
+Errors: Error 9-46: Invalid schema, expected a one-column table.
+
+>> [123] in [123]
+Errors: Error 0-5: Invalid argument type. Cannot use Table values in this context.

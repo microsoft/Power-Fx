@@ -447,8 +447,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        internal static readonly List<string> SubDayStringList = new List<string>() { "Hours", "Minutes", "Seconds", "Milliseconds" };
-
         public DateAddFunction()
             : base("DateAdd", TexlStrings.AboutDateAdd, FunctionCategories.DateTime, DType.DateTime, 0, 2, 3, DType.DateTime, DType.Number, BuiltInEnums.TimeUnitEnum.FormulaType._type)
         {

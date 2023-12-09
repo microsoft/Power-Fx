@@ -353,12 +353,74 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("RenameColumns({A:\"hello\",B:1}, AB, B)")]
         [InlineData("RenameColumns({A:\"hello\",B:1}, A1, B)")]
         [InlineData("RenameColumns([{A:\"hello\",B:1}], \"A\", \"B\")")]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], A, A1, A, A2)")]
+        [InlineData("RenameColumns(true, A, A1)")]
         public void TexlFunctionTypeSemanticsRenameColumns_Negative(string expression)
         {
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(expression);
 
             Assert.False(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("IfError(\"Hello\", \"one\")", "s")]
+        [InlineData("IfError(\"Hello\", 1)", "s")]
+        [InlineData("IfError(\"Hello\", 1, 3)", "n")]
+        [InlineData("IfError(\"Hello\", \"one\", \"world\", 2, 1)", "n")]
+        [InlineData("IfError({a:1}, \"one\", [1,2,3], 2, 1)", "n")]
+        public void TexlFunctionTypeSemanticsIfError(string expression, string expectedType)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var options = new ParserOptions() { NumberIsFloat = true };
+            var result = engine.Check(expression, options);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("IfError(\"Hello\", {a:\"one\"})")]
+        [InlineData("IfError(\"Hello\", 1, {a:2})", false, true)]
+        [InlineData("IfError(\"Hello\", 1, 3, [true])")]
+        [InlineData("IfError({a:1}, true)")]
+        [InlineData("IfError(1, [1], true, {a:1}, \"hello\")", false, true)]
+        [InlineData("IfError(IfError({a:1}, true), true)")]
+        [InlineData("false; IfError({a:1}, true); true", true)]
+        [InlineData("IsError(false; IfError({a:1}, true); true)", true)]
+        public void TexlFunctionTypeSemanticsIfError_MismatchedTypes(string expression, bool usesChain = false, bool preV1Bug = false)
+        {
+            foreach (var usePowerFxV1Rules in new[] { false, true })
+            {
+                if (!usePowerFxV1Rules && preV1Bug)
+                {
+                    // Bug on pre-V1 logic; will not fix for legacy reasons
+                    continue;
+                }
+
+                foreach (var isBehavior in new[] { false, true })
+                {
+                    var features = new Features(Features.PowerFxV1)
+                    {
+                        PowerFxV1CompatibilityRules = usePowerFxV1Rules
+                    };
+
+                    var engine = new Engine(new PowerFxConfig(features));
+                    var parserOptions = new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = isBehavior };
+                    var result = engine.Check(expression, parserOptions);
+
+                    if (usePowerFxV1Rules && !usesChain)
+                    {
+                        Assert.True(result.IsSuccess);
+                        Assert.Equal(DType.Void, result.Binding.ResultType);
+                    }
+                    else
+                    {
+                        Assert.True(isBehavior == result.IsSuccess, $"For PFxV1={usePowerFxV1Rules} and isBehavior={isBehavior}, expression {expression} should {(isBehavior ? "succeed" : "fail")}");
+                    }
+                }
+            }
         }
 
         [Theory]
@@ -3796,6 +3858,39 @@ namespace Microsoft.PowerFx.Core.Tests
             finally
             {
                 symbol.RemoveFunction(silentFilterFunction);
+            }
+        }
+
+        [Theory]
+
+        // Single column access syntax is supported pre PowerFxV1 rules.
+        [InlineData("T.A", "*[A:n]", false)]
+        [InlineData("T.B", "*[B:![C:s]]", false)]
+
+        // Single column access syntax is not supported PowerFxV1 rules onwards.
+        [InlineData("T.A", "e", true)]
+        [InlineData("T.B", "e", true)]
+        public void TestSingleColumnAccessDependentOnTableType(string script, string expectedSchema, bool usePowerFxV1Rules)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[A:n, B:![C:s]]")));
+
+            if (usePowerFxV1Rules)
+            {
+                var features = new Features() { PowerFxV1CompatibilityRules = true };
+                TestBindingErrors(
+                    script,
+                    TestUtils.DT(expectedSchema),
+                    symbol,
+                    features: features);
+            }
+            else
+            {
+                TestSimpleBindingSuccess(
+                                   script,
+                                   TestUtils.DT(expectedSchema),
+                                   symbol,
+                                   features: Features.None);
             }
         }
 
