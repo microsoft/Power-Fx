@@ -59,6 +59,8 @@ namespace Microsoft.PowerFx.Types
 
         public static FormulaType Void { get; } = new Void();
 
+        public static FormulaType Blob { get; } = new BlobType();
+
         /// <summary>
         /// Internal use only to represent an arbitrary (un-backed) option set value.
         /// Should be removed if possible.

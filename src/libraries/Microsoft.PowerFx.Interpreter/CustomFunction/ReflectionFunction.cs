@@ -157,6 +157,11 @@ namespace Microsoft.PowerFx
 
         private static FormulaType GetType(Type t)
         {
+            if (t == typeof(BlobValue))
+            {
+                return FormulaType.Blob;
+            }
+
             // Handle any FormulaType deriving from Primitive<T>
             var tBase = t.BaseType;
 
