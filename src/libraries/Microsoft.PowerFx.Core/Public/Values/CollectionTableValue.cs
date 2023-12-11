@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Types
             cancellationToken.ThrowIfCancellationRequested();
 
             if (_sourceList == null)
-            {                
+            {
                 return await base.AppendAsync(record, cancellationToken).ConfigureAwait(false);
             }
 
@@ -216,6 +216,22 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
+        protected override async Task<DValue<RecordValue>> UpdateCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var actual = await FindAsync(baseRecord, cancellationToken, mutationCopy: true).ConfigureAwait(false);
+
+            if (actual != null)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                return await actual.UpdateFieldsAsync(changeRecord, cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                return DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound()));
+            }
+        }
+
         /// <summary>
         /// Execute a linear search for the matching record.
         /// </summary>
@@ -266,7 +282,7 @@ namespace Microsoft.PowerFx.Types
                 string pKey = currentRecord.GetPrimaryKeyName();
 
                 if (string.IsNullOrEmpty(pKey))
-                {                    
+                {
                     // TryGetPrimaryKey tries to retrieve the primary key value, while GetPrimaryKeyName allows the retrieval of the primary key name
                     if (baseRecord.TryGetPrimaryKey(out string baseRecordPrimaryKey) && baseRecordPrimaryKey == currentRecordPrimaryKeyValue)
                     {
@@ -280,7 +296,7 @@ namespace Microsoft.PowerFx.Types
                     if (pKeyValue.TryGetPrimitiveValue(out object baseRecordPrimaryKeyValue) && baseRecordPrimaryKeyValue.ToString() == currentRecordPrimaryKeyValue)
                     {
                         return true;
-                    }    
+                    }
                 }
 
                 return false;

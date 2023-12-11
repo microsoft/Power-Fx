@@ -185,7 +185,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (!dataSourceType.IsTable)
             {
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], ErrNeedValidVariableName_Arg, Name);
                 return false;
             }
 
