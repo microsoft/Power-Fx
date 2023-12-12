@@ -3924,30 +3924,60 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("GetProperties(ParseJSON('Hello'))")]
-        [InlineData("GetProperties(ParseJSON('[]'))")]
-        [InlineData("GetProperties(ParseJSON('Hello').a)")]
-        [InlineData("GetProperties(ParseJSON('{''a'':1}').a)")]
-        [InlineData("GetProperties(Blank())")]
-        [InlineData("GetProperties(ParseJSON('{''a'':{''b'':1}}').a)")]
-        public void TexlFunctionTypeSemanticsGetProperties(string expression)
+        [InlineData("GetPropertyNames(ParseJSON('Hello'))")]
+        [InlineData("GetPropertyNames(ParseJSON('[]'))")]
+        [InlineData("GetPropertyNames(ParseJSON('Hello').a)")]
+        [InlineData("GetPropertyNames(ParseJSON('{''a'':1}').a)")]
+        [InlineData("GetPropertyNames(Blank())")]
+        [InlineData("GetPropertyNames(ParseJSON('{''a'':{''b'':1}}').a)")]
+        public void TexlFunctionTypeSemanticsGetPropertyNames(string expression)
         {
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(expression.Replace('\'', '\"'));
 
-            Assert.True(DType.TryParse("*[Name:s,Value:O]", out var expectedDType));
+            Assert.True(DType.TryParse("*[Value:s]", out var expectedDType));
             Assert.Equal(expectedDType, result.Binding.ResultType);
             Assert.True(result.IsSuccess);
         }
 
         [Theory]
-        [InlineData("GetProperties({a:1,b:true})")] // Does not work with records
-        [InlineData("GetProperties([1,2,3])")] // Does not work with arrays
-        [InlineData("GetProperties(1)")]
-        public void TexlFunctionTypeSemanticsGetProperties_Negative(string expression)
+        [InlineData("GetPropertyNames({a:1,b:true})")] // Does not work with records
+        [InlineData("GetPropertyNames([1,2,3])")] // Does not work with arrays
+        [InlineData("GetPropertyNames(1)")]
+        public void TexlFunctionTypeSemanticsGetPropertyNames_Negative(string expression)
         {
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(expression);
+
+            Assert.False(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("GetPropertyValue(ParseJSON('Hello'), 'a')")] // Compiles, would fail at runtime
+        [InlineData("GetPropertyValue(ParseJSON('[]'), 'Value')")] // Compiles, would fail at runtime
+        [InlineData("GetPropertyValue(ParseJSON('Hello').a, 'a')")] // Compiles, would fail at runtime
+        [InlineData("GetPropertyValue(ParseJSON('{''a'':1}'), 'a')")]
+        [InlineData("GetPropertyValue(ParseJSON('{''a'':1}').a, 'a')")] // Compiles, would fail at runtime
+        [InlineData("GetPropertyValue(Blank(), 'a')")]
+        [InlineData("GetPropertyValue(ParseJSON('{''a'':{''b'':1}}'), 'a')")]
+        public void TexlFunctionTypeSemanticsGetPropertyValue(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression.Replace('\'', '\"'));
+
+            Assert.Equal(DType.UntypedObject, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("GetPropertyValue({a:1,b:true}, 'a')")] // Does not work with records
+        [InlineData("GetPropertyValue([1,2,3], 'Value')")] // Does not work with arrays
+        [InlineData("GetPropertyValue(1)")]
+        [InlineData("GetPropertyValue(1, 'Value')")]
+        public void TexlFunctionTypeSemanticGetPropertyValue_Negative(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression.Replace('\'', '\"'));
 
             Assert.False(result.IsSuccess);
         }

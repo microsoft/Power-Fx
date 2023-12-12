@@ -433,11 +433,7 @@ namespace Microsoft.PowerFx.Functions
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.CountRows_UO.Name, DType.EmptyTable.GetKindString(), impl);
         }
 
-        private static readonly RecordType GetPropertiesUORecordType = new KnownRecordType(DType.EmptyRecord
-            .Add(new TypedName(DType.String, new DName(GetPropertiesFunction_UO.NameColumnName)))
-            .Add(new TypedName(DType.UntypedObject, new DName(GetPropertiesFunction_UO.ValueColumnName))));
-
-        public static FormulaValue GetProperties_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue GetPropertyNames_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -445,33 +441,31 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (impl.TryGetPropertyNames(out var propertyNames))
                 {
-                    var rows = new List<DValue<RecordValue>>();
-                    var error = false;
-                    foreach (var propertyName in propertyNames)
-                    {
-                        if (!impl.TryGetProperty(propertyName, out var propertyValue))
-                        {
-                            error = true;
-                            break;
-                        }
-
-                        var fields = new NamedValue[]
-                        {
-                            new NamedValue(GetPropertiesFunction_UO.NameColumnName, FormulaValue.New(propertyName)),
-                            new NamedValue(GetPropertiesFunction_UO.ValueColumnName, new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), propertyValue))
-                        };
-
-                        rows.Add(DValue<RecordValue>.Of(RecordValue.NewRecordFromFields(GetPropertiesUORecordType, fields)));
-                    }
-
-                    if (!error)
-                    {
-                        return new InMemoryTableValue(irContext, rows);
-                    }
+                    var rows = propertyNames.Select(s => new StringValue(IRContext.NotInSource(FormulaType.String), s));
+                    return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
                 }
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.GetProperties_UO.Name, DType.EmptyRecord.GetKindString(), impl);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.GetPropertyNames_UO.Name, DType.EmptyRecord.GetKindString(), impl);
+        }
+
+        public static FormulaValue GetPropertyValue_UO(IRContext irContext, FormulaValue[] args)
+        {
+            var impl = (args[0] as UntypedObjectValue).Impl;
+            var propertyName = (args[1] as StringValue).Value;
+
+            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Object)
+            {
+                if (impl.TryGetProperty(propertyName, out var propertyValue))
+                {
+                    return new UntypedObjectValue(irContext, propertyValue);
+                }
+
+                // Consistent with the '.' operator
+                return new BlankValue(irContext);
+            }
+
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.GetPropertyNames_UO.Name, DType.EmptyRecord.GetKindString(), impl);
         }
 
         public static FormulaValue DateValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)

@@ -1704,17 +1704,37 @@
     <value>separator</value>
     <comment>function_parameter - Second argument to the Split function - the delimiter text that is used to split SplitArg1 into substrings.</comment>
   </data>
-  <data name="AboutGetProperties" xml:space="preserve">
-    <value>Enumerate and returns the properties of an untyped record.</value>
-    <comment>Description of 'GetProperties' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  <data name="AboutGetPropertyNames" xml:space="preserve">
+    <value>Enumerate and returns the property names of an untyped record.</value>
+    <comment>Description of 'GetPropertyNames' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
   </data>
-  <data name="GetPropertiesArg1" xml:space="preserve">
+  <data name="GetPropertyNamesArg1" xml:space="preserve">
     <value>record</value>
-    <comment>function_parameter - First argument to the GetProperties function - the record whose inputs will be returned. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+    <comment>function_parameter - First argument to the GetPropertyNames function - the record whose inputs will be returned. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
   </data>
-  <data name="AboutGetProperties_record" xml:space="preserve">
+  <data name="AboutGetPropertyNames_record" xml:space="preserve">
     <value>Record to have its properties enumerated.</value>
-    <comment>Description of first argument of the 'GetProperties' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+    <comment>Description of first argument of the 'GetPropertyNames' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="AboutGetPropertyValue" xml:space="preserve">
+    <value>Returns the value of a property of an untyped record, given the property name.</value>
+    <comment>Description of 'GetPropertyValue' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="GetPropertyValueArg1" xml:space="preserve">
+    <value>record</value>
+    <comment>function_parameter - First argument to the GetPropertyValue function - the record to retrieve a property value. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="GetPropertyValueArg2" xml:space="preserve">
+    <value>property_name</value>
+    <comment>function_parameter - Second argument to the GetPropertyValue function - name of the property to retrieve from the given record. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="AboutGetPropertyValue_record" xml:space="preserve">
+    <value>Record to retrieve a property value.</value>
+    <comment>Description of first argument of the 'GetPropertyValue' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="AboutGetPropertyValue_property_name" xml:space="preserve">
+    <value>Name of the property of the record to be retrieved.</value>
+    <comment>Description of second argument of the 'GetPropertyValue' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
   </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Returns true if the provided value is of the given type.</value>
