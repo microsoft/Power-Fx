@@ -202,9 +202,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex == 0 || (argumentIndex & 0x1) == 1;
         }
 
-        public override ParamIdentifierStatus GetIdentifierParamStatus(int index)
+        public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
         {
             Contracts.Assert(index >= 0);
+
+            if (!features.SupportColumnNamesAsIdentifiers)
+            {
+                return ParamIdentifierStatus.NeverIdentifier;
+            }
 
             return index > 0 ? ParamIdentifierStatus.AlwaysIdentifier : ParamIdentifierStatus.NeverIdentifier;
         }
