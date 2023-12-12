@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         [InlineData("SortByColumns(Accounts, 'Account Name', SortOrder.Ascending, 'Address 1: City')", true)]
         [InlineData("SortByColumns(Accounts, 'Account Name', SortOrder.Descending, 'Non-sortable string column')", false)]
         [InlineData("SortByColumns(Accounts, name, SortOrder.Descending, address1_line1)", true)]
+        [InlineData("SortByColumns(Accounts, varString, SortOrder.Descending)", false)]
         [InlineData("ShowColumns(Accounts, 'Account Name', 'Address 1: City')", false)]
         [InlineData("RenameColumns(Accounts, 'Account Name', 'The name', 'Address 1: City', 'The city')", false)]
         [InlineData("Search(Accounts, \"something to search\", 'Account Name', address1_line1, 'Address 1: City')", true)]
@@ -39,7 +40,9 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         }
 
         [Theory]
-        [InlineData("SortByColumns(Accounts, Left(\"name\", 4), SortOrder.Descending, address1_line1)", false)]
+        [InlineData("SortByColumns(Accounts, Left(\"name\", 4), SortOrder.Descending, \"address1_line1\")", false)]
+        [InlineData("SortByColumns(Accounts, varString, SortOrder.Descending, \"address1_line1\")", false)]
+        [InlineData("SortByColumns(Accounts, \"name\", SortOrder.Descending, \"address1_line1\")", true)]
         public void TestDelegableExpressions_PrePowerFxV1(string expression, bool isDelegable)
         {
             var features = new Features(Features.PowerFxV1)

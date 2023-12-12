@@ -2758,6 +2758,9 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("*[A:n, B:b, D:d]", "*[A:n, B:b]", "*[A:n, B:b, D:d]")]
         [InlineData("*[A:n, B:b, D:d]", "*[X:s, Y:n]", "*[A:n, B:b, D:d, X:s, Y:n]")]
         [InlineData("*[A:n, B:b, D:d]", "X", "*[A:n, B:b, D:d]")]
+        [InlineData("*[A:P, B:b, D:d]", "*[A:n, B:b, D:d]", "*[A:e, B:b, D:d]")]
+        [InlineData("*[A:P, B:b, D:d]", "*[A:*[B:b], D:d]", "*[A:e, B:b, D:d]")]
+        [InlineData("*[A:P, B:b, D:d]", "*[A:![B:b], D:d]", "*[A:P, B:b, D:d]")]
 
         [InlineData("*[A:*[A:![X:n, Y:b]]]", "*[A:*[A:![Z:s]]]", "*[A:*[A:![X:n, Y:b, Z:s]]]")]
         [InlineData("![A:n, Nest:*[X:n, Y:n, Z:b]]", "![]", "![A:n, Nest:*[X:n, Y:n, Z:b]]")]
