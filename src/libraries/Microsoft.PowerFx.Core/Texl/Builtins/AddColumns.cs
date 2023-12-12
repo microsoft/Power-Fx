@@ -182,9 +182,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index >= 2 && ((index & 1) == 0);
         }
 
-        public override ParamIdentifierStatus GetIdentifierParamStatus(int index)
+        public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
         {
             Contracts.Assert(index >= 0);
+
+            if (!features.SupportColumnNamesAsIdentifiers)
+            {
+                return ParamIdentifierStatus.NeverIdentifier;
+            }
 
             // Left to right mask (infinite): ...010101010 
             return (index & 1) == 1 ? ParamIdentifierStatus.AlwaysIdentifier : ParamIdentifierStatus.NeverIdentifier;

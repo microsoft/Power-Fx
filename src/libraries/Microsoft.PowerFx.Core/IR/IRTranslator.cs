@@ -360,15 +360,41 @@ namespace Microsoft.PowerFx.Core.IR
                     var argContext = i == 0 && func.MutatesArg0 ? new IRTranslatorContext(context, isMutation: true) : context;
 
                     var supportColumnNamesAsIdentifiers = _features.SupportColumnNamesAsIdentifiers;
-                    if (supportColumnNamesAsIdentifiers && func.ParameterCanBeIdentifier(i))
+                    if (supportColumnNamesAsIdentifiers && func.ParameterCanBeIdentifier(context.Binding.Features, i))
                     {
+                        Contracts.Assert(i > 0, "First argument cannot be a column identifier");
+
                         var identifierNode = arg.AsFirstName();
-                        if (func.GetIdentifierParamStatus(i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
+                        if (func.GetIdentifierParamStatus(context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
                         {
                             Contracts.Assert(identifierNode != null);
                         }
 
+                        var isColumnAsIdentifier = false;
                         if (identifierNode != null)
+                        {
+                            if (func.GetIdentifierParamStatus(context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
+                            {
+                                isColumnAsIdentifier = true;
+                            }
+                            else
+                            {
+                                // May be identifier, checking first scope
+                                var dsType = context.Binding.GetType(node.Args.Children[0]);
+                                if (dsType.TryGetType(identifierNode.Ident.Name, out _))
+                                {
+                                    // Logical name
+                                    isColumnAsIdentifier = true;
+                                }
+                                else if (DType.TryGetLogicalNameForColumn(dsType, identifierNode.Ident.Name.Value, out _))
+                                {
+                                    // Display name
+                                    isColumnAsIdentifier = true;
+                                }
+                            }
+                        }
+
+                        if (isColumnAsIdentifier)
                         {
                             // Transform the identifier node as a string literal
                             var nodeName = context.Binding.TryGetReplacedIdentName(identifierNode.Ident, out var newIdent) ? new DName(newIdent) : identifierNode.Ident.Name;
@@ -376,8 +402,9 @@ namespace Microsoft.PowerFx.Core.IR
                         }
                         else
                         {
-                            // It's a string argument
-                            args.Add(arg.Accept(this, argContext));
+                            // It's a string argument (either literal or a string variable)
+                            var child = arg.Accept(this, scope != null && func.ScopeInfo.AppliesToArgument(i) ? argContext.With(scope) : argContext);
+                            args.Add(child);
                         }
                     }
                     else if (func.IsLazyEvalParam(i, _features))
