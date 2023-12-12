@@ -9,7 +9,22 @@ namespace Microsoft.PowerFx.Intellisense.SignatureHelp
     {
         public string Label { get; set; }
 
-        public string Documentation { get; set; }
+        private string _documentation = string.Empty;
+
+        public string Documentation
+        {
+            get
+            {
+                if (SignatureInformation.IsAIFunction(Label, out var name))
+                {
+                    return "This is " + name + " Function;  **Disclaimer**: AI-generated content can have mistakes. Make sure it's accurate and appropriate before using it. [See terms](https://powerplatform.microsoft.com/en-us/legaldocs/supp-powerplatform-preview/)";
+                }
+
+                return _documentation;
+            }
+
+            set => _documentation = value;
+        }
 
         public ParameterInformation[] Parameters { get; set; }
 
@@ -47,6 +62,43 @@ namespace Microsoft.PowerFx.Intellisense.SignatureHelp
         public override int GetHashCode()
         {
             return (Label, Documentation).GetHashCode();
+        }
+
+        private static bool IsAIFunction(string label, out string name)
+        {
+            var names = new string[] { "AIClassify", "AIExtract", "AIModelPublish", "AIReply", "AISentiment", "AISummarize", "AISummarizeRecord", "AITranslate" };
+            foreach (var func in names)
+            {
+                if (label.Contains(func))
+                {
+                    name = func;
+                    return true;
+                }
+            }
+
+            name = null;
+            return false;
+        }
+    }
+
+    public class MarkdownDocumentation
+    {
+        public string Value { get; set; }
+    }
+
+    public class MarkdownSignatureInfomation
+    {
+        public string Label { get; set; }
+
+        public MarkdownDocumentation Documentation { get; set; }
+
+        public ParameterInformation[] Parameters { get; set; }
+
+        public MarkdownSignatureInfomation(SignatureInformation signatureInformation)
+        {
+            Label = signatureInformation.Label;
+            Documentation = new MarkdownDocumentation() { Value = signatureInformation.Documentation };
+            Parameters = signatureInformation.Parameters;
         }
     }
 }

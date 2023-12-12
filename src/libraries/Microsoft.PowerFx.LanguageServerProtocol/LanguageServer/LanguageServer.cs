@@ -16,6 +16,7 @@ using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.Intellisense.SignatureHelp;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Schemas;
 using Microsoft.PowerFx.Syntax;
@@ -375,7 +376,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var cursorPosition = GetPosition(expression, signatureHelpParams.Position.Line, signatureHelpParams.Position.Character);
             var result = scope.Suggest(expression, cursorPosition);
 
-            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, result.SignatureHelp));
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new MarkdownSignatureHelp(result.SignatureHelp)));
         }
 
         private void HandleInitialFixupRequest(string id, string paramsJson)
