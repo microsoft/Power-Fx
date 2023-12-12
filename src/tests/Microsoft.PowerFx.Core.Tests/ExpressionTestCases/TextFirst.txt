@@ -257,3 +257,23 @@ Errors: Error 8-30: 'UnknownFunction' is an unknown or unsupported function.|Err
 >> ="Happy " & UnknownFunction("arg") & "Days"
 Errors: Error 12-34: 'UnknownFunction' is an unknown or unsupported function.
 
+// comments
+
+>> // Hello, World
+"// Hello, World"
+
+>> =// Hello, World
+Blank()
+
+>> // Hello ${1+1}, World
+"// Hello 2, World"
+
+>> =$"// Hello {1+1}, World"
+"// Hello 2, World"
+
+>> // Hello ${// 1+1} World
+Errors: Error 24-24: Unexpected characters. Characters are used in the formula in an unexpected way.|Error 24-24: Invalid argument type (Error). Expecting a Text value instead.|Error 0-24: Expressions which appear inside an interpolated string must evaluate to a Text value or to a compatible type.
+
+>> =$"// Hello {// 1+1} World"
+Errors: Error 27-27: Unexpected characters. Characters are used in the formula in an unexpected way.|Error 27-27: Invalid argument type (Error). Expecting a Text value instead.|Error 1-27: Expressions which appear inside an interpolated string must evaluate to a Text value or to a compatible type.
+
