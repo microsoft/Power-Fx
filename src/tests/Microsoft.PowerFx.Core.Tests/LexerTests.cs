@@ -6,7 +6,9 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -25,6 +27,15 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotNull(tokens);
             Assert.Equal(tokKinds.Length, tokens.Count);
             Assert.True(tokens.Zip(tokKinds, (t, k) => t.Kind == k).All(b => b));
+        }
+
+        private Token AssertTokensAndReturnOne(TexlLexer.Flags flags, string value, int one, params TokKind[] tokKinds)
+        {
+            var tokens = TexlLexer.InvariantLexer.LexSource(value, flags);
+            Assert.NotNull(tokens);
+            Assert.Equal(tokKinds.Length, tokens.Count);
+            Assert.True(tokens.Zip(tokKinds, (t, k) => t.Kind == k).All(b => b));
+            return tokens[one];
         }
 
         [Fact]
@@ -523,6 +534,76 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(object.ReferenceEquals(TexlLexer.InvariantLexer, TexlLexer.InvariantLexer));
             Assert.True(object.ReferenceEquals(TexlLexer.CommaDecimalSeparatorLexer, TexlLexer.CommaDecimalSeparatorLexer));
             Assert.False(object.ReferenceEquals(TexlLexer.InvariantLexer, TexlLexer.CommaDecimalSeparatorLexer));
+        }
+
+        [Fact]
+        public void TextFirstWhitespace()
+        {
+            string str = "                         Initial Whitespace";
+
+            var lit = AssertTokensAndReturnOne(
+                TexlLexer.Flags.TextFirst,
+                str,
+                1,
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
+
+            Assert.True(lit.Span.Min == 0);
+            Assert.True(lit.Span.Lim == str.Length);
+        }
+
+        [Fact]
+        public void TextFirstBasic()
+        {
+            string str = "Hello, World";
+
+            var lit = AssertTokensAndReturnOne(
+                TexlLexer.Flags.TextFirst,
+                str,
+                1,
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
+
+            Assert.True(lit.Span.Min == 0);
+            Assert.True(lit.Span.Lim == str.Length);
+        }
+
+        [Fact]
+        public void TextFirstBasicFormulaInterpolation()
+        {
+            string str = "=$\"Hello, World\"";
+
+            var lit = AssertTokensAndReturnOne(
+                TexlLexer.Flags.TextFirst,
+                str,
+                1,
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
+
+            Assert.True(lit.Span.Min == 3);
+            Assert.True(lit.Span.Lim == str.Length - 1);
+        }
+
+        [Fact]
+        public void TextFirstBasicFormulaStrLit()
+        {
+            string str = "=\"Hello, World\"";
+
+            var lit = AssertTokensAndReturnOne(
+                TexlLexer.Flags.TextFirst,
+                str,
+                0,
+                TokKind.StrLit,
+                TokKind.Eof);
+
+            Assert.True(lit.Span.Min == 1);
+            Assert.True(lit.Span.Lim == str.Length);
         }
     }
 }
