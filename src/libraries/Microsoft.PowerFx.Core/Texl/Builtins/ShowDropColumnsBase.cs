@@ -167,8 +167,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex >= 0;
         }
 
-        public override ParamIdentifierStatus GetIdentifierParamStatus(int index)
+        public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
         {
+            if (!features.SupportColumnNamesAsIdentifiers)
+            {
+                return ParamIdentifierStatus.NeverIdentifier;
+            }
+
             return index > 0 ? ParamIdentifierStatus.AlwaysIdentifier : ParamIdentifierStatus.NeverIdentifier;
         }
     }

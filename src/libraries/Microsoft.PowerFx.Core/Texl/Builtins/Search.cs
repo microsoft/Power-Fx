@@ -36,8 +36,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             ScopeInfo = new FunctionScopeInfo(this);
         }
 
-        public override ParamIdentifierStatus GetIdentifierParamStatus(int index)
+        public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
         {
+            if (!features.SupportColumnNamesAsIdentifiers)
+            {
+                return ParamIdentifierStatus.NeverIdentifier;
+            }
+
             return index > 1 ? ParamIdentifierStatus.AlwaysIdentifier : ParamIdentifierStatus.NeverIdentifier;
         }
 
