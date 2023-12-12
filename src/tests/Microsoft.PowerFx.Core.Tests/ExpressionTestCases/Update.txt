@@ -1,0 +1,7 @@
+#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
+
+// Check MutationFunctionsTestSetup handler (PowerFxEvaluationTests.cs) for documentation.
+
+>> Update(t1, r1, r_empty);
+   t1
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})

@@ -35,9 +35,9 @@ namespace Microsoft.PowerFx.Interpreter.Functions.Mutation
 
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
-            yield return new[] { UpdateDataSourceArg, UpdateBaseRecordArg };
-            yield return new[] { UpdateDataSourceArg, UpdateBaseRecordArg, UpdateChangeRecordsArg };
-            yield return new[] { UpdateDataSourceArg, UpdateBaseRecordArg, UpdateChangeRecordsArg, UpdateChangeRecordsArg };
+            yield return new[] { UpdateDataSourceArg, UpdateBaseOldRecordArg };
+            yield return new[] { UpdateDataSourceArg, UpdateBaseOldRecordArg, UpdateChangeRecordArg };
+            yield return new[] { UpdateDataSourceArg, UpdateBaseOldRecordArg, UpdateChangeRecordArg, UpdateRemoveFlagsArg };
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Interpreter.Functions.Mutation
         {
             if (arity > 3)
             {
-                return GetGenericSignatures(arity, UpdateDataSourceArg, UpdateBaseRecordArg, UpdateChangeRecordsArg);
+                return GetGenericSignatures(arity, UpdateDataSourceArg, UpdateBaseOldRecordArg, UpdateChangeRecordArg);
             }
 
             return base.GetSignatures(arity);
