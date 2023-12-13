@@ -939,11 +939,18 @@ namespace Microsoft.PowerFx.Syntax
         private sealed class LexerImpl
         {
             // The Mode of the lexer, required because the behavior of the lexer changes
-            // when lexing inside of a String Interpolation, for example $"Hello {"World"}"
-            // has special lexing behavior.In theory, you could do this with just 2 modes,
-            // but we are using a 3rd mode, Island, to help keep track of when we need
-            // to produce IslandStart and IslandEnd tokens, which will be used by the
+            // when lexing inside of a String Interpolation and for TextFirst.
+            // For example $"Hello {"World"}" has special lexing behavior in String Interpolation
+            // as does Hello ${"World"} in TextFirst.
+            //
+            // "Normal" is used for standard Power Fx formulas outside of String Interpolation and TextFirst.
+            // TextFirst that begins with an '=' is handled with Normal after eating the equals sign.
+            //
+            // In theory, the Island mode would not be needed, but it helps to keep track of when we
+            // need to produce IslandStart and IslandEnd tokens, which will be used by the
             // Parser to correctly organize the string interpolation into a function call.
+            // An Island is used in TextFirst in the same manner that it is used in String Interpolation
+            // after lexing the initial ${ instead of {.
             public enum LexerMode
             {
                 Normal,
@@ -1007,7 +1014,7 @@ namespace Microsoft.PowerFx.Syntax
                 }
             }
 
-            // If the mode stack is empty, this is already an parse, use NormalMode as a default
+            // If the mode stack is empty, fall back to the _intialLexerMode, which can be either Normal or TextFirst.
             private LexerMode CurrentMode => _modeStack.Count != 0 ? _modeStack.Peek() : _initialLexerMode;
 
             private void EnterMode(LexerMode newMode)
