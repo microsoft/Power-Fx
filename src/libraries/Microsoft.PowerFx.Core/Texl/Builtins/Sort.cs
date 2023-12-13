@@ -48,6 +48,32 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new List<string>() { LanguageConstants.SortOrderEnumString };
         }
 
+        public static bool IsValidSortType(bool usePowerFxV1Rules, DType type)
+        {
+            if (!usePowerFxV1Rules)
+            {
+                return type.IsPrimitive;
+            }
+
+            // Restrict types in V1
+            switch (type.Kind)
+            {
+                case DKind.Boolean:
+                case DKind.Currency:
+                case DKind.Date:
+                case DKind.DateTime:
+                case DKind.Decimal:
+                case DKind.Number:
+                case DKind.ObjNull:
+                case DKind.OptionSetValue:
+                case DKind.String:
+                case DKind.Time:
+                    return true;
+            }
+
+            return false;
+        }
+
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -63,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = argTypes[0];
 
             var exprType = argTypes[1];
-            if (!exprType.IsPrimitive)
+            if (!IsValidSortType(context.Features.PowerFxV1CompatibilityRules, exprType))
             {
                 fValid = false;
                 errors.EnsureError(args[1], TexlStrings.ErrSortWrongType);

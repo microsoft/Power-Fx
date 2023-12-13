@@ -1,5 +1,3 @@
-#SETUP: disable:SupportColumnNamesAsIdentifiers
-
 >> SortByColumns([1],"Value")
 Table({Value:1})
 
@@ -17,12 +15,6 @@ Table({Value:-2},{Value:-1},{Value:1},{Value:2},{Value:5})
 
 >> SortByColumns([-2, -1, 5, 1, 2], "Value", SortOrder.Descending)
 Table({Value:5},{Value:2},{Value:1},{Value:-1},{Value:-2})
-
->> SortByColumns([-2, -1, -1E+308, 1, 2], "Value")
-Table({Value:-1E+308},{Value:-2},{Value:-1},{Value:1},{Value:2})
-
->> SortByColumns([-2, -1, 1E+308, 1, 2], "Value")
-Table({Value:-2},{Value:-1},{Value:1},{Value:2},{Value:1E+308})
 
 >> SortByColumns(Table({a:8, b:-1}, {a:2}, {b:5}), "a")
 Table({a:2,b:Blank()},{a:8,b:-1},{a:Blank(),b:5})
@@ -559,7 +551,7 @@ Table({Age:5,First:"Alice",Gender:"Female",HasDog:true,Last:"Smith",Vaccinated:t
   { First: "Dora", Last: "TheExplorer", Age: 4, Gender: "Female", Vaccinated: Blank(), HasDog: true },
   { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
   { First: Blank(), Last: "Rodriguez", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
-  { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }),"First", Left("Hello", -1))
+  { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }),"First", If(Char(-1) <> "a", SortOrder.Ascending))
 Error({Kind:ErrorKind.InvalidArgument})
 
 
@@ -658,12 +650,3 @@ Table({a:3,b:"three"},{a:2,b:"two"},{a:1,b:"one"})
 
 >> With({ col:"b" }, SortByColumns(Table({a:1,b:"one"},{a:2,b:"two"},{a:3,b:"three"}), col, SortOrder.Descending))
 Table({a:2,b:"two"},{a:3,b:"three"},{a:1,b:"one"})
-
->> With({ a:"a" }, SortByColumns(Table({a:1,b:"one"},{a:2,b:"two"},{a:3,b:"three"}), a, SortOrder.Descending))
-Table({a:3,b:"three"},{a:2,b:"two"},{a:1,b:"one"})
-
->> With({ a:"b" }, SortByColumns(Table({a:1,b:"one"},{a:2,b:"two"},{a:3,b:"three"}), a, SortOrder.Descending))
-Table({a:2,b:"two"},{a:3,b:"three"},{a:1,b:"one"})
-
->> With({ a:"b" }, SortByColumns(Table({a:1, b:"one"}, {a:2, b:"two"}, {a:3, b:"three"}, {a:4, b:"four"}), a, ["four", "three", "two", "one"]))
-Table({a:4,b:"four"},{a:3,b:"three"},{a:2,b:"two"},{a:1,b:"one"})

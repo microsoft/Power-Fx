@@ -599,7 +599,14 @@ namespace Microsoft.PowerFx.Functions
                 pairs.Add(await pair.ConfigureAwait(false));
             }
 
-            bool allNumbers = true, allDecimals = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true, allOptionSets = true;
+            bool allNumbers = true,
+                allDecimals = true,
+                allStrings = true,
+                allBooleans = true,
+                allDatetimes = true,
+                allDates = true,
+                allTimes = true,
+                allOptionSets = true;
 
             foreach (var (row, sortValue) in pairs)
             {
@@ -611,6 +618,7 @@ namespace Microsoft.PowerFx.Functions
                 allBooleans &= IsValueTypeErrorOrBlank<BooleanValue>(sortValue);
                 allDatetimes &= IsValueTypeErrorOrBlank<DateTimeValue>(sortValue);
                 allDates &= IsValueTypeErrorOrBlank<DateValue>(sortValue);
+                allTimes &= IsValueTypeErrorOrBlank<TimeValue>(sortValue);
                 allOptionSets &= IsValueTypeErrorOrBlank<OptionSetValue>(sortValue);
 
                 if (sortValue is ErrorValue errorValue)
@@ -619,7 +627,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            if (!(allNumbers || allDecimals || allStrings || allBooleans || allDatetimes || allDates || allOptionSets))
+            if (!(allNumbers || allDecimals || allStrings || allBooleans || allDatetimes || allDates || allTimes || allOptionSets))
             {
                 return CommonErrors.RuntimeTypeMismatch(irContext);
             }
@@ -653,6 +661,10 @@ namespace Microsoft.PowerFx.Functions
             else if (allDates)
             {
                 return SortValueType<DateValue, DateTime>(pairs, irContext, compareToResultModifier);
+            }
+            else if (allTimes)
+            {
+                return SortValueType<TimeValue, TimeSpan>(pairs, irContext, compareToResultModifier);
             }
             else if (allOptionSets)
             {
