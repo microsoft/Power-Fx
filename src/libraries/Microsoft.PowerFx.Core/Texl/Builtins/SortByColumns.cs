@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else
                     {
-                        if (!columnType.IsPrimitive)
+                        if (!SortFunction.IsValidSortType(pfxV1, columnType))
                         {
                             errors.EnsureError(colNameArg, TexlStrings.ErrSortWrongType);
                             return false;
@@ -233,7 +233,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            if (columnType != null && !columnType.IsPrimitive)
+            if (columnType != null && !SortFunction.IsValidSortType(pfxV1, columnType))
             {
                 errors.EnsureError(colNameArg, TexlStrings.ErrSortWrongType);
                 return false;
