@@ -1535,10 +1535,17 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("SortByColumns(Table({a:DateValue(\"21 Jan 2014\")}), \"a\", Table({b:DateValue(\"21 Jan 2014\")}))", "*[a:D]")]
         [InlineData("SortByColumns(Table({a:2}), If(true,\"a\"),[3,4,5])", "*[a:n]")]
         [InlineData("SortByColumns(Table({a:2}), stringVar, SortOrder.Ascending)", "*[a:n]")]
-        public void TexlFunctionTypeSemanticsSortByColumns_PowerFxV1Disabled(string script, string expectedType)
+        [InlineData("SortByColumns(T, \"A\", SortOrder.Ascending, \"B\", SortOrder.Ascending)", "*[A:n, B:b, C:s]", "*[A:n, B:b, C:s]")]
+        [InlineData("SortByColumns(T, \"A\", SortOrder.Ascending, \"B\", SortOrder.Ascending)", "*[A:n, B:b, C:s, H:h, I:i]", "*[A:n, B:b, C:s, H:h, I:i]")]
+        public void TexlFunctionTypeSemanticsSortByColumns_PowerFxV1Disabled(string script, string expectedType, string tVariableType = null)
         {
             var symbolTable = new SymbolTable();
             symbolTable.AddVariable("stringVar", FormulaType.String);
+            if (tVariableType != null)
+            {
+                symbolTable.AddVariable("T", new TableType(TestUtils.DT(tVariableType)));
+            }
+
             foreach (var columnNamesAsIdentifiers in new[] { false, true })
             {
                 var features = new Features
@@ -1574,7 +1581,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TexlFunctionTypeSemanticsSortByColumns_ColumnsAsIdentifiersOn_PFxV1Off_Negative(string script, string expectedType)
         {
             var symbolTable = new SymbolTable();
-            symbolTable.AddVariable("stringVar", FormulaType.String);
+
             var features = new Features
             {
                 SupportColumnNamesAsIdentifiers = true,
@@ -1614,10 +1621,19 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("SortByColumns(Table({a:DateValue(\"21 Jan 2014\")}), a, Table({b:DateValue(\"21 Jan 2014\")}))", "*[a:D]")]
         [InlineData("SortByColumns(Table({a:2}), If(true,\"a\"),[3,4,5])", "*[a:n]")]
         [InlineData("SortByColumns(Table({a:2}), stringVar, SortOrder.Ascending)", "*[a:n]")]
-        public void TexlFunctionTypeSemanticsSortByColumns_ColumnsAsIdentifiersOn_PFxV1On(string script, string expectedType)
+        [InlineData("SortByColumns(T, \"A\", SortOrder.Ascending, \"B\", SortOrder.Ascending)", "*[A:n, B:b, C:s]", "*[A:n, B:b, C:s]")]
+        [InlineData("SortByColumns(T, \"A\", SortOrder.Ascending, \"B\", SortOrder.Ascending)", "*[A:n, B:b, C:s, H:h, I:i]", "*[A:n, B:b, C:s, H:h, I:i]")]
+        [InlineData("SortByColumns(T, A, SortOrder.Ascending, B, SortOrder.Ascending)", "*[A:n, B:b, C:s]", "*[A:n, B:b, C:s]")]
+        [InlineData("SortByColumns(T, A, SortOrder.Ascending, B, SortOrder.Ascending)", "*[A:n, B:b, C:s, H:h, I:i]", "*[A:n, B:b, C:s, H:h, I:i]")]
+        public void TexlFunctionTypeSemanticsSortByColumns_ColumnsAsIdentifiersOn_PFxV1On(string script, string expectedType, string tVariableType = null)
         {
             var symbolTable = new SymbolTable();
             symbolTable.AddVariable("stringVar", FormulaType.String);
+            if (tVariableType != null)
+            {
+                symbolTable.AddVariable("T", new TableType(TestUtils.DT(tVariableType)));
+            }
+
             var features = new Features
             {
                 SupportColumnNamesAsIdentifiers = true,
@@ -1646,6 +1662,48 @@ namespace Microsoft.PowerFx.Core.Tests
                 var expectedDType = TestUtils.DT(expectedType);
                 TestBindingErrors(script, expectedDType, features: features);
             }
+        }
+
+        [Theory]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:![b:n]]")]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:*[b:n]]")]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:O]")]
+        public void TexlFunctionTypeSemanticsSortByColumns_Negative(string script, string tVariableType)
+        {
+            foreach (var pfxV1 in new[] { false, true })
+            {
+                var symbolTable = new SymbolTable();
+                var tType = TestUtils.DT(tVariableType);
+                symbolTable.AddVariable("T", new TableType(tType));
+
+                var features = new Features
+                {
+                    SupportColumnNamesAsIdentifiers = true,
+                    PowerFxV1CompatibilityRules = pfxV1
+                };
+
+                TestBindingErrors(script, tType, symbolTable: symbolTable, features: features);
+            }
+        }
+
+        [Theory]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:i]")]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:h]")]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:o]")]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:m]")]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:g]")]
+        public void TexlFunctionTypeSemanticsSortByColumns_Negative_PowerFxV1Enabled(string script, string tVariableType)
+        {
+            var features = Features.PowerFxV1;
+            var symbolTable = new SymbolTable();
+            var tType = TestUtils.DT(tVariableType);
+            symbolTable.AddVariable("stringVar", FormulaType.String);
+            if (tVariableType != null)
+            {
+                symbolTable.AddVariable("T", new TableType(tType));
+            }
+
+            TestBindingErrors(script, tType, symbolTable: symbolTable, features: features);
         }
 
         [Theory]
