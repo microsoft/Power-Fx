@@ -2292,10 +2292,6 @@
     <value>A field named '{0}' was specified more than once in this record.</value>
     <comment>Parse error on duplicate field definitions.</comment>
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>A column named '{0}' was specified more than once.</value>
     <comment>Duplicate columns.</comment>
