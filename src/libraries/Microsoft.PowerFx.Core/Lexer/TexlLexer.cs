@@ -30,7 +30,12 @@ namespace Microsoft.PowerFx.Syntax
             NumberIsFloat = 1 << 0,
 
             // Enable the the use of reserved keywords as identifiers, for Canvas short term.
-            DisableReservedKeywords = 2 << 0
+            DisableReservedKeywords = 1 << 1,
+
+            // The input is "text first", assumed to be a text string unless it begins with a '='.
+            // String interpolation is supported with ${ ... } instead of just { ... } to avoid collisions
+            // since it is more likely that a raw string will be input, including for example JSON.
+            TextFirst = 1 << 2,
         }
 
         // Locale-invariant syntax.
@@ -934,16 +939,24 @@ namespace Microsoft.PowerFx.Syntax
         private sealed class LexerImpl
         {
             // The Mode of the lexer, required because the behavior of the lexer changes
-            // when lexing inside of a String Interpolation, for example $"Hello {"World"}"
-            // has special lexing behavior.In theory, you could do this with just 2 modes,
-            // but we are using a 3rd mode, Island, to help keep track of when we need
-            // to produce IslandStart and IslandEnd tokens, which will be used by the
+            // when lexing inside of a String Interpolation and for TextFirst.
+            // For example $"Hello {"World"}" has special lexing behavior in String Interpolation
+            // as does Hello ${"World"} in TextFirst.
+            //
+            // "Normal" is used for standard Power Fx formulas outside of String Interpolation and TextFirst.
+            // TextFirst that begins with an '=' is handled with Normal after eating the equals sign.
+            //
+            // In theory, the Island mode would not be needed, but it helps to keep track of when we
+            // need to produce IslandStart and IslandEnd tokens, which will be used by the
             // Parser to correctly organize the string interpolation into a function call.
+            // An Island is used in TextFirst in the same manner that it is used in String Interpolation
+            // after lexing the initial ${ instead of {.
             public enum LexerMode
             {
                 Normal,
                 Island,
-                StringInterpolation
+                StringInterpolation,
+                TextFirst,
             }
 
             private readonly TexlLexer _lex;
@@ -953,6 +966,10 @@ namespace Microsoft.PowerFx.Syntax
             private readonly Stack<LexerMode> _modeStack;
             private readonly bool _numberIsFloat;
             private readonly bool _disableReservedKeywords;
+            private readonly bool _textFirst;
+            private bool _textFirstStartToken;
+            private bool _textFirstEndToken;
+            private readonly LexerMode _initialLexerMode = LexerMode.Normal;
 
             private int _currentTokenPos; // The start of the current token.
             private int _lastCommentTokenPos; // The last seen comment token position.
@@ -970,13 +987,35 @@ namespace Microsoft.PowerFx.Syntax
 
                 _numberIsFloat = flags.HasFlag(TexlLexer.Flags.NumberIsFloat);
                 _disableReservedKeywords = flags.HasFlag(TexlLexer.Flags.DisableReservedKeywords);
+                _textFirst = flags.HasFlag(TexlLexer.Flags.TextFirst);
 
                 _modeStack = new Stack<LexerMode>();
-                _modeStack.Push(LexerMode.Normal);
+
+                if (_textFirst)
+                {
+                    int ich = 0;
+
+                    // skip whitespace looking for a leading '=' that starts a formula
+                    while (ich < _charCount && char.IsWhiteSpace(text[ich]))
+                    {
+                        ich++;
+                    }
+
+                    if (ich < _charCount && text[ich] == '=')
+                    {
+                        // skip '=' and treat the rest as a normal formula
+                        CurrentPos = ich + 1;
+                    }
+                    else
+                    {
+                        // CurrentPos doesn't move (stays at start of buffer) and treat all of it as text first
+                        _initialLexerMode = LexerMode.TextFirst;
+                    }
+                }
             }
 
-            // If the mode stack is empty, this is already an parse, use NormalMode as a default
-            private LexerMode CurrentMode => _modeStack.Count != 0 ? _modeStack.Peek() : LexerMode.Normal;
+            // If the mode stack is empty, fall back to the _intialLexerMode, which can be either Normal or TextFirst.
+            private LexerMode CurrentMode => _modeStack.Count != 0 ? _modeStack.Peek() : _initialLexerMode;
 
             private void EnterMode(LexerMode newMode)
             {
@@ -1062,6 +1101,16 @@ namespace Microsoft.PowerFx.Syntax
                 return new Span(_currentTokenPos, CurrentPos);
             }
 
+            private Span GetTextStartSpan()
+            {
+                return new Span(0, 0);
+            }
+
+            private Span GetTextEndSpan()
+            {
+                return new Span(_charCount, _charCount);
+            }
+
             // Form and return the next token. Returns null to signal end of input.
             public Token GetNextToken()
             {
@@ -1069,7 +1118,21 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     if (Eof)
                     {
-                        return null;
+                        if (CurrentMode == LexerMode.TextFirst && !_textFirstEndToken)
+                        {
+                            _textFirstEndToken = true;
+                            return new StrInterpEndToken(GetTextEndSpan());
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+
+                    if (CurrentMode == LexerMode.TextFirst && !_textFirstStartToken)
+                    {
+                        _textFirstStartToken = true;
+                        return new StrInterpStartToken(GetTextStartSpan());
                     }
 
                     var tok = Dispatch(true, true);
@@ -1138,17 +1201,34 @@ namespace Microsoft.PowerFx.Syntax
 
                     return LexOther();
                 }
-                else if (IsStringDelimiter(ch) && !IsStringDelimiter(nextCh))
+                else if (CurrentMode == LexerMode.StringInterpolation)
                 {
-                    return LexInterpolatedStringEnd();
+                    if (IsStringDelimiter(ch) && !IsStringDelimiter(nextCh))
+                    {
+                        return LexInterpolatedStringEnd();
+                    }
+                    else if (IsCurlyOpen(ch) && !IsCurlyOpen(nextCh))
+                    {
+                        return LexIslandStart();
+                    }
+                    else
+                    {
+                        return LexInterpolatedStringBody();
+                    }
                 }
-                else if (IsCurlyOpen(ch) && !IsCurlyOpen(nextCh))
-                {
-                    return LexIslandStart();
-                }
+
+                // CurrentMode == LexerMode.TextFirst
                 else
                 {
-                    return LexInterpolatedStringBody();
+                    if (ch == '$' && IsCurlyOpen(nextCh))
+                    {
+                        NextChar();
+                        return LexIslandStart();
+                    }
+                    else
+                    {
+                        return LexTextFirstInterpolatedStringBody();
+                    }
                 }
             }
 
@@ -1605,6 +1685,38 @@ namespace Microsoft.PowerFx.Syntax
                 while (!Eof);
 
                 return new ErrorToken(GetTextSpan());
+            }
+
+            // Lex a interpolated string body in a TextFirst input.
+            private Token LexTextFirstInterpolatedStringBody()
+            {
+                _sb.Length = 0;
+
+                do
+                {
+                    var ch = CurrentChar;
+
+                    if (ch == '$' && PeekChar(1) == '$' && IsCurlyOpen(PeekChar(2)))
+                    {
+                        // If we are here, we are seeing a $ followed immediately by another $ and {.
+                        // That is an escape sequence.
+                        _sb.Append(ch);
+                        NextChar();
+                    }
+                    else if (ch == '$' && IsCurlyOpen(PeekChar(1)))
+                    {
+                        return new StrLitToken(_sb.ToString(), GetTextSpan());
+                    }
+                    else if (!CharacterUtils.IsFormatCh(ch))
+                    {
+                        _sb.Append(ch);
+                    }
+
+                    NextChar();
+                }
+                while (!Eof);
+
+                return new StrLitToken(_sb.ToString(), GetTextSpan());
             }
 
             // Lex a sequence of spacing characters.
