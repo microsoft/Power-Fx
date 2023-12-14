@@ -688,9 +688,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (startOfWeek <= 0 || startOfWeek > 17 || (startOfWeek > 3 && startOfWeek < 11))
             {
-                return CommonErrors.GenericInvalidArgument(
-                    irContext,
-                    "Expected a value from the StartOfWeek enumeration to indicate how to number the weekdays.");
+                return CommonErrors.StartOfWeekInvalid(irContext);
             }
 
             var zeroIndex = false;
@@ -717,6 +715,54 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return NumberOrDecimalValue(irContext, weekday);
+        }
+
+        public static FormulaValue WeekNum(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var timeZoneInfo = runner.TimeZoneInfo;
+            var startOfWeek = 0d;
+
+            if (args[0] is BlankValue)
+            {
+                return NumberOrDecimalValue(irContext, 0);
+            }
+
+            var arg0 = runner.GetNormalizedDateTime(args[0]);
+            var dow = arg0.DayOfWeek;
+
+            if (args[1] is ErrorValue)
+            {
+                return args[1];
+            }
+
+            startOfWeek = GetDoubleFromFormulaValue(args[1], 1);
+
+            if (startOfWeek <= 0 || startOfWeek > 17 || (startOfWeek > 3 && startOfWeek < 11) || startOfWeek != Math.Floor(startOfWeek))
+            {
+                return CommonErrors.StartOfWeekInvalid(irContext);
+            }
+
+            if (startOfWeek == 3)
+            {
+                return CommonErrors.GenericInvalidArgument(
+                    irContext,
+                    "The MondayZero value, from the StartOfWeek enumeration, is not supported in the WeekNum function.");
+            }
+
+            var beginningOfYear = new DateTime(arg0.Year, 1, 1);
+            var weekdayFormulaValue = Weekday(runner, context, irContext, new FormulaValue[] { FormulaValue.New(beginningOfYear), new NumberValue(IRContext.NotInSource(FormulaType.Number), 1) });
+
+            if (weekdayFormulaValue is ErrorValue)
+            {
+                return weekdayFormulaValue;
+            }
+
+            var weekdayResult = GetDoubleFromFormulaValue(weekdayFormulaValue);
+            var dateDiff = arg0.Date.Subtract(beginningOfYear).TotalDays;
+            var dayOfWeek = (weekdayResult - WeekStartDay(startOfWeek) + 7) % 7;
+            var weeknum = Math.Floor((dateDiff + dayOfWeek) / 7) + 1;
+
+            return NumberOrDecimalValue(irContext, (int)weeknum);
         }
 
         public static FormulaValue EDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -777,6 +823,42 @@ namespace Microsoft.PowerFx.Functions
             else
             {
                 throw CommonExceptions.RuntimeMisMatch;
+            }
+        }
+
+        private static double WeekStartDay(double startOfWeek)
+        {
+            if (startOfWeek == 1 || startOfWeek == 2)
+            {
+                return startOfWeek;
+            }
+
+            if (startOfWeek >= 11 && startOfWeek <= 16)
+            {
+                return startOfWeek - 9;
+            }
+
+            if (startOfWeek == 17)
+            {
+                return 1;
+            }
+
+            return 0;
+        }
+
+        private static double GetDoubleFromFormulaValue(FormulaValue fv, double defaultDouble = 0)
+        {
+            if (fv is NumberValue numberValue)
+            {
+                return numberValue.Value;
+            }
+            else if (fv is DecimalValue decimalValue)
+            {
+                return (double)decimalValue.Value;
+            }
+            else
+            {
+                return defaultDouble;
             }
         }
     }
