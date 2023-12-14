@@ -36,6 +36,9 @@ namespace Microsoft.PowerFx
         private const string OptionStackTrace = "StackTrace";
         private static bool _stackTrace = false;
 
+        private const string OptionTextFirst = "TextFirst";
+        private static bool _textFirst = false;
+
         private static readonly Features _features = Features.PowerFxV1;
 
         private static StandardFormatter _standardFormatter;
@@ -59,7 +62,8 @@ namespace Microsoft.PowerFx
                 { OptionFeaturesNone, OptionFeaturesNone },
                 { OptionPowerFxV1, OptionPowerFxV1 },
                 { OptionHashCodes, OptionHashCodes },
-                { OptionStackTrace, OptionStackTrace }
+                { OptionStackTrace, OptionStackTrace },
+                { OptionTextFirst, OptionTextFirst }
             };
 
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
@@ -127,6 +131,8 @@ namespace Microsoft.PowerFx
                 this.AllowSetDefinitions = true;
                 this.EnableSampleUserObject();
                 this.AddPseudoFunction(new IRPseudoFunction());
+
+                this.ParserOptions = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat, TextFirst = _textFirst };
             }
 
             public override async Task OnEvalExceptionAsync(Exception e, CancellationToken cancel)
@@ -245,6 +251,7 @@ namespace Microsoft.PowerFx
                 sb.Append($"{"NumberIsFloat:",-42}{_numberIsFloat}\n");
                 sb.Append($"{"LargeCallDepth:",-42}{_largeCallDepth}\n");
                 sb.Append($"{"StackTrace:",-42}{_stackTrace}\n");
+                sb.Append($"{"TextFirst:",-42}{_textFirst}\n");
 
                 foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
@@ -322,6 +329,14 @@ namespace Microsoft.PowerFx
                 if (string.Equals(option.Value, OptionNumberIsFloat, StringComparison.OrdinalIgnoreCase))
                 {
                     _numberIsFloat = value.Value;
+                    _reset = true;
+                    return value;
+                }
+
+                if (string.Equals(option.Value, OptionTextFirst, StringComparison.OrdinalIgnoreCase))
+                {
+                    _textFirst = value.Value;
+                    _reset = true;
                     return value;
                 }
 

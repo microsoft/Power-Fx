@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Repl.Tests
         [InlineData("Sum(1,", "2)")]
         [InlineData("Sum(1,", "2", ",3)")]
         [InlineData("{x:3", ",", "y:4}")]
-        [InlineData("Mid(\"a\", 2,)")] // parse error, still compeltes. 
+        [InlineData("Mid(\"a\", 2,)")] // parse error, still completes. 
         public void ExpectContinue(params string[] lines)
         {
             StringBuilder sb = new StringBuilder();
@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Repl.Tests
                 bool isFirstLine = i == 0;
                 Assert.Equal(isFirstLine, _processor.IsFirstLine);
 
-                var result = _processor.HandleLine(line);
+                var result = _processor.HandleLine(line, new ParserOptions());
                 sb.AppendLine(line);
 
                 if (!isLast)
@@ -47,7 +47,8 @@ namespace Microsoft.PowerFx.Repl.Tests
                 else
                 {
                     // Last line completes
-                    Assert.Equal(sb.ToString(), result);
+                    // Processor may remove the last newline, compare without them
+                    Assert.Equal(sb.ToString().TrimEnd(), result.TrimEnd());
 
                     // Reset, back to first line. 
                     Assert.True(_processor.IsFirstLine); 
