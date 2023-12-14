@@ -468,5 +468,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.NotEqual(func, clonedFunc);
         }
+
+        [Theory]
+        [InlineData("x = $\"{\"}\";", 1, 0)]
+        [InlineData("x = First([$\"{ {a:1,b:2,c:3}.a }]).Value;", 1, 0)]
+        [InlineData("x = $\"{\"1$\"}.{\"}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1)]
+        [InlineData("x = $\"{$\"{$\"{$\"{.12e4}\"}}\"}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1)]
+        [InlineData("x = $\"{$\"{$\"{$\"{.12e4}\"}\"}\"}{$\"Another nested}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1)]
+        public void TestUserDefinitionStringInterpolationWithUnterminatedIsland(string formula, int nfCount, int udfCount)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            UserDefinitions.ProcessUserDefinitions(formula, parserOptions, out var userDefinitionResult);
+
+            Assert.Equal(nfCount, userDefinitionResult.NamedFormulas.Count());
+            Assert.Equal(udfCount, userDefinitionResult.UDFs.Count());
+            Assert.Contains(userDefinitionResult.Errors, e => e.MessageKey == "ErrBadToken");
+        }
     }
 }
