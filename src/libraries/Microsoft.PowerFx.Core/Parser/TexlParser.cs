@@ -1225,7 +1225,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     sourceList.Add(new TokenSource(islandEnd));
                     sourceList.Add(ParseTrivia());
                 }
-                else if (_curs.TidCur == TokKind.Eof)
+                else if (_curs.TidCur == TokKind.Eof || (_curs.TidCur == TokKind.Semicolon && _flagsMode.Peek().HasFlag(Flags.NamedFormulas)))
                 {
                     var error = CreateError(_curs.TokCur, TexlStrings.ErrBadToken);
                     arguments.Add(error);
@@ -1251,7 +1251,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
             }
 
-            Contracts.Assert(_curs.TidCur == TokKind.StrInterpEnd || _curs.TidCur == TokKind.Eof);
+            Contracts.Assert(_curs.TidCur == TokKind.StrInterpEnd || _curs.TidCur == TokKind.Eof || _curs.TidCur == TokKind.Semicolon);
 
             Token strInterpEnd = null;
             if (_curs.TidCur == TokKind.StrInterpEnd)
