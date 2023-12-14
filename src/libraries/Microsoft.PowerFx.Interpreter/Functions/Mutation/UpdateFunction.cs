@@ -25,13 +25,37 @@ namespace Microsoft.PowerFx.Interpreter.Functions.Mutation
     internal class UpdateFunction : PatchAndValidateRecordFunctionBase, IAsyncTexlFunction
     {
         public UpdateFunction()
-            : base("Update", AboutUpdate, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyRecord, 0, 3, int.MaxValue, DType.EmptyTable, DType.EmptyRecord, DType.EmptyRecord)
+            : base("Update", AboutUpdate, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyRecord, 0, 3, 4, DType.EmptyTable, DType.EmptyRecord, DType.EmptyRecord, DType.EmptyEnum)
         {
         }
 
         public override bool MutatesArg0 => true;
 
         public override bool IsSelfContained => false;
+
+        protected static new async Task<Dictionary<string, FormulaValue>> CreateRecordFromArgsDictAsync(FormulaValue[] args, int startFrom, CancellationToken cancellationToken)
+        {
+            var retFields = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
+
+            for (var i = startFrom; i < args.Length; i++)
+            {
+                var arg = args[i];
+
+                if (arg is RecordValue record)
+                {
+                    await foreach (var field in record.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
+                    {
+                        retFields[field.Name] = field.Value;
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException($"Can't handle {arg.Type} argument type.");
+                }
+            }
+
+            return retFields;
+        }
 
         public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
         {
@@ -53,9 +77,18 @@ namespace Microsoft.PowerFx.Interpreter.Functions.Mutation
 
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
-            yield return new[] { UpdateDataSourceArg, UpdateBaseOldRecordArg };
             yield return new[] { UpdateDataSourceArg, UpdateBaseOldRecordArg, UpdateChangeRecordArg };
             yield return new[] { UpdateDataSourceArg, UpdateBaseOldRecordArg, UpdateChangeRecordArg, UpdateRemoveFlagsArg };
+        }
+
+        public override IEnumerable<StringGetter[]> GetSignatures(int arity)
+        {
+            if (arity > 3)
+            {
+                return GetGenericSignatures(arity, UpdateDataSourceArg, UpdateBaseOldRecordArg, UpdateChangeRecordArg, UpdateRemoveFlagsArg);
+            }
+
+            return base.GetSignatures(arity);
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -135,16 +168,6 @@ namespace Microsoft.PowerFx.Interpreter.Functions.Mutation
             int skip = 2;
 
             MutationUtils.CheckForReadOnlyFields(argTypes[0], args.Skip(skip).ToArray(), argTypes.Skip(skip).ToArray(), errors);
-        }
-
-        public override IEnumerable<StringGetter[]> GetSignatures(int arity)
-        {
-            if (arity > 3)
-            {
-                return GetGenericSignatures(arity, UpdateDataSourceArg, UpdateBaseOldRecordArg, UpdateChangeRecordArg);
-            }
-
-            return base.GetSignatures(arity);
         }
 
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
