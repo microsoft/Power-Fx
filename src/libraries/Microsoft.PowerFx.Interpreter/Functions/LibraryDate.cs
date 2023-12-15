@@ -719,15 +719,14 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue WeekNum(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var timeZoneInfo = runner.TimeZoneInfo;
             var startOfWeek = 0d;
+            var arg0 = _epoch;
 
-            if (args[0] is BlankValue)
+            if (args[0] is not BlankValue)
             {
-                return NumberOrDecimalValue(irContext, 0);
+                arg0 = runner.GetNormalizedDateTime(args[0]);
             }
 
-            var arg0 = runner.GetNormalizedDateTime(args[0]);
             var dow = arg0.DayOfWeek;
 
             if (args[1] is ErrorValue)

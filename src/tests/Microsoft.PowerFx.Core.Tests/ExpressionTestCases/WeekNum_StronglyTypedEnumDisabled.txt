@@ -1,0 +1,167 @@
+﻿#SETUP: disable:StronglyTypedBuiltinEnums
+
+// Blank args
+>> WeekNum(Blank(),Blank())
+52
+
+// Blank Date, StartOfWeek as Tuesday
+>> WeekNum(Blank(),12)
+53
+
+>> WeekNum(Blank(),StartOfWeek.Saturday)
+53
+
+>> WeekNum(Date(1,2,2022),Blank())
+33
+
+
+// 1900 (known Excel bug)
+>> WeekNum(Date(1900, 11, 22), StartOfWeek.Sunday)
+47
+
+>> WeekNum(Date(1900, 1, 11), StartOfWeek.Sunday)
+2
+
+>> WeekNum(Date(1900, 4, 4), StartOfWeek.Sunday)
+14
+
+>> WeekNum(Date(1900, 10, 16), StartOfWeek.Sunday)
+42
+
+>> WeekNum(Date(1900, 11, 12), StartOfWeek.Sunday)
+46
+
+>> WeekNum(Date(1900, 8, 30), StartOfWeek.Sunday)
+35
+
+>> WeekNum(Date(1900, 10, 2), StartOfWeek.Sunday)
+40
+
+>> WeekNum(Date(1900, 6, 18), StartOfWeek.Sunday)
+25
+
+>> WeekNum(Date(1900, 11, 17), StartOfWeek.Sunday)
+46
+
+>> WeekNum(Date(1900, 11, 8), StartOfWeek.Sunday)
+45
+
+>> WeekNum(Date(1900, 6, 24), StartOfWeek.Sunday)
+26
+
+>> WeekNum(Date(1900, 6, 11), StartOfWeek.Sunday)
+24
+
+// Leap year
+>> WeekNum(Date(2020, 2, 29))
+9
+
+>> WeekNum(Date(2020, 12, 4))
+49
+
+>> WeekNum(Date(2020, 5, 9))
+19
+
+>> WeekNum(Date(2020, 12, 8))
+50
+
+>> WeekNum(Date(2020, 9, 26))
+39
+
+>> WeekNum(Date(2020, 5, 3))
+19
+
+>> WeekNum(Date(2020, 6, 28))
+27
+
+>> WeekNum(Date(2020, 9, 20))
+39
+
+>> WeekNum(Date(2020, 6, 5))
+23
+
+>> WeekNum(Date(2020, 2, 9))
+7
+
+>> WeekNum(Date(2020, 3, 30))
+14
+
+>> WeekNum(Date(2020, 7, 26))
+31
+
+// Same day - all hours
+>> WeekNum(DateTime(2021,1,7,0,0,0), StartOfWeek.Friday)
+1
+>> WeekNum(DateTime(2021,1,7,1,0,0), StartOfWeek.Friday)
+1
+
+>> WeekNum(DateTime(2021,1,7,2,0,0), StartOfWeek.Friday)
+1
+
+>> WeekNum(DateTime(2021,1,7,3,0,0), StartOfWeek.Friday)
+1
+
+>> WeekNum(DateTime(2021,1,7,4,0,0), StartOfWeek.Friday)
+1
+
+>> WeekNum(DateTime(2021,1,7,5,0,0), StartOfWeek.Friday)
+1
+
+>> WeekNum(DateTime(2021,1,7,6,0,0), StartOfWeek.Friday)
+1
+
+>> WeekNum(DateTime(2021,1,7,7,0,0), StartOfWeek.Friday)
+1
+
+>> WeekNum(DateTime(2021,1,7,8,0,0), StartOfWeek.Friday)
+1
+
+>> WeekNum(DateTime(2021,1,7,9,0,0), StartOfWeek.Friday)
+1
+
+>> WeekNum(DateTime(2021,1,7,10,0,0), StartOfWeek.Friday)
+1
+
+>> WeekNum(DateTime(2021,1,7,11,0,0), StartOfWeek.Friday)
+1
+
+>> WeekNum(DateTime(2021,1,7,12,0,0), StartOfWeek.Friday)
+1
+
+// Valid StartOfWeek enumeration
+>> WeekNum(Date(2020, 12, 8), StartOfWeek.Sunday)
+50
+
+>> WeekNum(Date(2020, 9, 26), StartOfWeek.Monday)
+39
+
+>> WeekNum(Date(2020, 6, 28), StartOfWeek.Tuesday)
+26
+
+>> WeekNum(Date(2020, 9, 20), StartOfWeek.Wednesday)
+38
+
+>> WeekNum(Date(2020, 6, 5), StartOfWeek.Thursday)
+24
+
+>> WeekNum(Date(2020, 2, 9), StartOfWeek.Friday)
+7
+
+>> WeekNum(Date(2020, 3, 30), StartOfWeek.Saturday)
+14
+
+// Invalid StartOfWeek enumeration
+>> WeekNum(Date(2016, 1, 3), 0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> WeekNum(Date(2016, 1, 3), 5)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> WeekNum(Date(2016, 1, 3), 12.5)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> WeekNum(Date(2016, 1, 3), -12)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> WeekNum(DateValue("1/2/2022"), 1E308)
+Error({Kind:ErrorKind.InvalidArgument})
