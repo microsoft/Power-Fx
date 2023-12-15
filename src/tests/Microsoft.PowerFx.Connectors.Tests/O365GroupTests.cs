@@ -37,12 +37,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Theory]
 
         [InlineData(
-            @"First(Filter(Office365Groups.ListGroups().value, ThisRecord.id = ""202a2963-7e7d-4dc6-8aca-a58a2f3a9d53"")).description",
-            "TestProject9Aug",
-            "GET:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/groups|GET:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/groups?$skiptoken=RFNwdAIAAQAAACpHcm91cF9iZWIxNDE4NS00ZDNmLTQ0MTYtYTc0Mi04OWRmMGI3OWY4NmEqR3JvdXBfYmViMTQxODUtNGQzZi00NDE2LWE3NDItODlkZjBiNzlmODZhAAAAAAAAAAAAAAA",
-            "",
-            "Response_O365Groups_ListGroups_01.json",
-            "Response_O365Groups_ListGroups_02.json")]
+            /* expression     */ @"First(Filter(Office365Groups.ListGroups().value, ThisRecord.id = ""202a2963-7e7d-4dc6-8aca-a58a2f3a9d53"")).description",
+            /* result         */ "TestProject9Aug",
+            /* APIM call      */ "GET:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/groups|GET:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/groups?$skiptoken=RFNwdAIAAQAAACpHcm91cF9iZWIxNDE4NS00ZDNmLTQ0MTYtYTc0Mi04OWRmMGI3OWY4NmEqR3JvdXBfYmViMTQxODUtNGQzZi00NDE2LWE3NDItODlkZjBiNzlmODZhAAAAAAAAAAAAAAA",
+            /* APIM body      */ "",
+            /* response files */ "Response_O365Groups_ListGroups_01.json",
+                                 "Response_O365Groups_ListGroups_02.json")]
         
         [InlineData(
             @"First(Office365Groups.ListGroups({ '$filter': ""id eq '202a2963-7e7d-4dc6-8aca-a58a2f3a9d53'"" }).value).description",

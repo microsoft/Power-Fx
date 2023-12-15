@@ -42,11 +42,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Theory]
 
         [InlineData(
-            @"First(Office365Users.SearchUser()).UserPrincipalName",
-            "A_CAPEQ_01@capintegration01.onmicrosoft.com",
-            "GET:/apim/office365users/1870991d56b04959a52f6704949eccad/users?top=0",
-            "",
-            "Response_O365Users_SearchUser.json")]
+            /* expression     */ @"First(Office365Users.SearchUser()).UserPrincipalName",
+            /* result         */ "A_CAPEQ_01@capintegration01.onmicrosoft.com",
+            /* APIM call      */ "GET:/apim/office365users/1870991d56b04959a52f6704949eccad/users?top=0",
+            /* APIM body      */ "",
+            /* response files */ "Response_O365Users_SearchUser.json")]
 
         [InlineData(
             @"First(Office365Users.SearchUser({ top: 5, searchTerm: ""sales""})).UserPrincipalName",
