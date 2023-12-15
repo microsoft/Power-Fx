@@ -36,47 +36,78 @@ namespace Microsoft.PowerFx.Tests
         public HttpResponseMessage _nextResponse;
 #pragma warning restore CA2213 // Disposable fields should be disposed
 
-        public string[] Responses = Array.Empty<string>();
+        public object[] Responses = Array.Empty<object>(); // array of string or byte[]
+        public HttpStatusCode[] Statuses = Array.Empty<HttpStatusCode>();
         public int CurrentResponse = 0;
         public bool ResponseSetMode = false;
 
         public void SetResponseSet(string filename)
         {
-            Responses = Helpers.ReadAllText(filename).Split("~|~").ToArray();
+            Responses = (Helpers.ReadStream(filename) as string).Split("~|~").ToArray();
+            Statuses = Enumerable.Repeat(HttpStatusCode.OK, Responses.Length).ToArray();
             CurrentResponse = 0;
             ResponseSetMode = true;
         }
 
         public void SetResponseFromFiles(params string[] files)
         {
-            Responses = files.Select(file => Helpers.ReadAllText(file)).ToArray();
-            CurrentResponse = 0;
-            ResponseSetMode = true;
+            if (files != null && files.Any())
+            {
+                Responses = files.Select(file => Helpers.ReadStream(file)).ToArray();
+                Statuses = Enumerable.Repeat(HttpStatusCode.OK, files.Length).ToArray();
+                CurrentResponse = 0;
+                ResponseSetMode = true;
+            }
+        }
+
+        public void SetResponseFromFiles(params (string file, HttpStatusCode status)[] filesWithStatus)
+        {
+            if (filesWithStatus != null && filesWithStatus.Any())
+            {
+                Responses = filesWithStatus.Select(fileWithStatus => GetFileText(fileWithStatus.file)).ToArray();
+                Statuses = filesWithStatus.Select(fileWithStatus => fileWithStatus.status).ToArray();
+                CurrentResponse = 0;
+                ResponseSetMode = true;
+            }
         }
 
         public void SetResponseFromFile(string filename, HttpStatusCode status = HttpStatusCode.OK)
         {
-            if (string.IsNullOrEmpty(filename))
-            {
-                return;
-            }
-
-            var text = Helpers.ReadAllText(filename);
+            var text = GetFileText(filename);
             SetResponse(text, status);
         }
 
-        public void SetResponse(string text, HttpStatusCode status = HttpStatusCode.OK)
+        private static object GetFileText(string filename)
         {
-            Assert.Null(_nextResponse);
-            _nextResponse = GetResponseMessage(text, status);
+            return !string.IsNullOrEmpty(filename) ? Helpers.ReadStream(filename) : string.Empty;
         }
 
-        public HttpResponseMessage GetResponseMessage(string text, HttpStatusCode status)
+        public void SetResponse(object data, HttpStatusCode status = HttpStatusCode.OK)
         {
-            return new HttpResponseMessage(status)
+            Assert.Null(_nextResponse);
+            _nextResponse = GetResponseMessage(data, status);
+        }
+
+        // We only support string & byte[] types (images)
+        public HttpResponseMessage GetResponseMessage(object data, HttpStatusCode status)
+        {
+            if (data is string str)
             {
-                Content = new StringContent(text, Encoding.UTF8, OpenApiExtensions.ContentType_ApplicationJson)
-            };
+                return new HttpResponseMessage(status)
+                {
+                    Content = new StringContent(str, Encoding.UTF8, OpenApiExtensions.ContentType_ApplicationJson)
+                };
+            }
+
+            if (data is byte[] byteArray)
+            {
+                return new HttpResponseMessage(status)
+                {
+                    Content = new ByteArrayContent(byteArray)
+                };
+            }
+
+            throw new NotImplementedException("Unsupported data type");
         }
 
         protected override void Dispose(bool disposing)
@@ -118,7 +149,7 @@ namespace Microsoft.PowerFx.Tests
                 }
             }
 
-            var response = ResponseSetMode ? GetResponseMessage(Responses[CurrentResponse++], HttpStatusCode.OK) : _nextResponse;
+            var response = ResponseSetMode ? GetResponseMessage(Responses[CurrentResponse], Statuses[CurrentResponse++]) : _nextResponse;
             if (response != null)
             {
                 response.RequestMessage = request;

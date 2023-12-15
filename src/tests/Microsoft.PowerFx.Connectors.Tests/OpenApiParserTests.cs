@@ -4,13 +4,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Newtonsoft.Json;
@@ -69,15 +67,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Contains(connectorFunctions, func => func.Namespace == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
 
-            ConnectorFunction func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");
-            Assert.Equal("analysisInput:![documents:*[id:s, language:s, text:s]]|task:![parameters:![deploymentName:s, projectName:s]]", string.Join("|", func1.RequiredParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));
+            ConnectorFunction func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");            
+            Assert.Equal("analysisInput:![documents:*[id:s, language:s, text:s]]|task:![parameters:![deploymentName:s, projectName:s, stringIndexType:s]]", string.Join("|", func1.RequiredParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));            
             Assert.Equal("displayName:s", string.Join("|", func1.OptionalParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type.ToString()}")));
 
             (connectorFunctions, texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc, new ConsoleLogger(_output));
             Assert.Contains(connectorFunctions, func => func.Namespace == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
 
-            func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");
+            func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");            
             Assert.Equal("analysisInput:![documents:*[id:s, language:s, text:s]]|task:![parameters:![deploymentName:s, projectName:s]]", string.Join("|", func1.RequiredParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));
             Assert.Empty(func1.OptionalParameters);
         }
@@ -115,11 +113,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
             RecordType analysisInputRecordType = Extensions.MakeRecordType(
                                                     ("conversationItem", Extensions.MakeRecordType(
                                                         ("language", FormulaType.String),
+                                                        ("modality", FormulaType.String),
                                                         ("text", FormulaType.String))));
             RecordType parametersRecordType = Extensions.MakeRecordType(
                                                     ("deploymentName", FormulaType.String),
+                                                    ("directTarget", FormulaType.String),
+                                                    ("isLoggingEnabled", FormulaType.Boolean),
                                                     ("projectName", FormulaType.String),
-                                                    ("verbose", RecordType.Boolean));
+                                                    ("stringIndexType", FormulaType.String),
+                                                    ("targetProjectParameters", FormulaType.UntypedObject),
+                                                    ("verbose", FormulaType.Boolean));
 
             // -- Parameter 1 --
             Assert.Equal("kind", function.RequiredParameters[0].Name);
@@ -148,7 +151,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("parameters", function.RequiredParameters[2].Name);
             Assert.Equal(parametersRecordType, function.RequiredParameters[2].FormulaType);
             Assert.Equal("A single conversational task to execute.", function.RequiredParameters[2].Description);
-            Assert.Null(function.RequiredParameters[2].DefaultValue);
+            Assert.Equal(@"{""deploymentName"":null,""directTarget"":null,""isLoggingEnabled"":null,""projectName"":null,""stringIndexType"":""TextElement_V8"",""targetProjectParameters"":null,""verbose"":null}", System.Text.Json.JsonSerializer.Serialize(function.RequiredParameters[2].DefaultValue.ToObject()));
 
             RecordType analysisInputRecordTypeH = Extensions.MakeRecordType(
                                                     ("conversationItem", Extensions.MakeRecordType(
@@ -217,13 +220,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("/apim/cognitiveservicestextanalytics/{connectionId}/language/:analyze-conversations", function.OperationPath);
 
             RecordType analysisInputRecordType = Extensions.MakeRecordType(
-                                                    ("conversationItem", Extensions.MakeRecordType(
-                                                        ("language", FormulaType.String),
-                                                        ("text", FormulaType.String))));
+                                                               ("conversationItem", Extensions.MakeRecordType(
+                                                                   ("language", FormulaType.String),                                                                   
+                                                                   ("text", FormulaType.String))));
             RecordType parametersRecordType = Extensions.MakeRecordType(
-                                                    ("deploymentName", FormulaType.String),
-                                                    ("projectName", FormulaType.String),
-                                                    ("verbose", RecordType.Boolean));
+                                                    ("deploymentName", FormulaType.String),                                                    
+                                                    ("projectName", FormulaType.String),                                                    
+                                                    ("verbose", FormulaType.Boolean));
 
             Assert.Equal(2, function.RequiredParameters.Length);
             Assert.Equal(3, function.HiddenRequiredParameters.Length);

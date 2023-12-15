@@ -1,0 +1,11 @@
+{
+  "error": {
+    "code": "Request_BadRequest",
+    "message": "One or more added object references already exist for the following modified properties: 'members'.",
+    "innerError": {
+      "date": "2023-12-13T14:05:27",
+      "request-id": "dbb6bff8-c263-4c73-a523-0c36666920b1",
+      "client-request-id": "dbb6bff8-c263-4c73-a523-0c36666920b1"
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#directoryObjects(aboutMe,accountEnabled,birthday,businessPhones,city,companyName,country,department,displayName,givenName,hireDate,id,interests,jobTitle,mail,mailNickname,mobilePhone,mySite,officeLocation,pastProjects,postalCode,preferredLanguage,preferredName,responsibilities,schools,skills,state,streetAddress,surname,userPrincipalName,userType)",
+  "value": [
+    {
+      "@odata.type": "#microsoft.graph.user",
+      "accountEnabled": true,
+      "businessPhones": [
+        "+33 (1) 123456789"
+      ],
+      "city": "Paris",
+      "companyName": "Company",
+      "country": "France",
+      "department": "Power Fx - Paris",
+      "displayName": "John Doe",
+      "givenName": "John",
+      "id": "1508713b-8fcb-4951-9add-e11bbbd602ff",
+      "jobTitle": "SOFTWARE ENGINEER",
+      "mail": "jdoe@company.com",
+      "mailNickname": "jdoe",
+      "mobilePhone": null,
+      "officeLocation": "Home Office",
+      "postalCode": "75000",
+      "preferredLanguage": null,
+      "state": null,
+      "streetAddress": "39, Quai du Pr\u00e9sident Roosevelt",
+      "surname": "Doe",
+      "userPrincipalName": "jdoe@company.com",
+      "userType": "Member"
+    },
+    {
+      "@odata.type": "#microsoft.graph.user",
+      "accountEnabled": true,
+      "businessPhones": [
+        "+1 (555) 1234568"
+      ],
+      "city": "Bellevue",
+      "companyName": "Company",
+      "country": null,
+      "department": "Power Fx - WA",
+      "displayName": "Eve Allen",
+      "givenName": "Eve",
+      "id": "62062a1e-c6a3-4e99-86bf-3cace2072dfd",
+      "jobTitle": "SOFTWARE ENGINEER",
+      "mail": "eallen@company.com",
+      "mailNickname": "eallen",
+      "mobilePhone": null,
+      "officeLocation": "Lost Island",
+      "postalCode": null,
+      "preferredLanguage": null,
+      "state": null,
+      "streetAddress": null,
+      "surname": "Nguyen",
+      "userPrincipalName": "eallen@company.com",
+      "userType": "Member"
+    }
+  ]
+}

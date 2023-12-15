@@ -1,0 +1,45 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#groups",
+  "value": [
+    {
+      "id": "202a2963-7e7d-4dc6-8aca-a58a2f3a9d53",
+      "deletedDateTime": null,
+      "classification": null,
+      "createdDateTime": "2023-08-09T11:50:03Z",
+      "creationOptions": [],
+      "description": "TestProject9Aug",
+      "displayName": "TestProject9Aug",
+      "expirationDateTime": null,
+      "groupTypes": [
+        "Unified"
+      ],
+      "isAssignableToRole": null,
+      "mail": "TestProject9Aug@capintegration01.onmicrosoft.com",
+      "mailEnabled": true,
+      "mailNickname": "TestProject9Aug",
+      "membershipRule": null,
+      "membershipRuleProcessingState": null,
+      "onPremisesDomainName": null,
+      "onPremisesLastSyncDateTime": null,
+      "onPremisesNetBiosName": null,
+      "onPremisesSamAccountName": null,
+      "onPremisesSecurityIdentifier": null,
+      "onPremisesSyncEnabled": null,
+      "preferredDataLocation": null,
+      "preferredLanguage": null,
+      "proxyAddresses": [
+        "SPO:SPO_91233f81-e3b9-4f81-8156-14081043847b@SPO_91bee3d9-0c15-4f17-8624-c92bb8b36ead",
+        "SMTP:TestProject9Aug@capintegration01.onmicrosoft.com"
+      ],
+      "renewedDateTime": "2023-08-09T11:50:03Z",
+      "resourceBehaviorOptions": [],
+      "resourceProvisioningOptions": [],
+      "securityEnabled": false,
+      "securityIdentifier": "S-1-12-1-539634019-1304854141-2326121098-1402812975",
+      "theme": null,
+      "visibility": "Private",
+      "onPremisesProvisioningErrors": [],
+      "serviceProvisioningErrors": []
+    }
+  ]
+}

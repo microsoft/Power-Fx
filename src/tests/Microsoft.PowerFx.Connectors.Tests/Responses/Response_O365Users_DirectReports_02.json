@@ -1,0 +1,22 @@
+{
+  "Id": "df050022-0271-4106-8ad9-ca51ff7ee2fe",
+  "AccountEnabled": true,
+  "BusinessPhones": [
+    "+1 (555) 1234567"
+  ],
+  "City": "SEATTLE",
+  "CompanyName": "Company",
+  "Country": null,
+  "Department": "Power Fx - USA",
+  "DisplayName": "Alice Smith",
+  "GivenName": "Alice",
+  "JobTitle": "THE BOSS",
+  "Mail": "asmith@company.com",
+  "MailNickname": "asmith",
+  "mobilePhone": null,
+  "OfficeLocation": "LOST OFFICE",
+  "PostalCode": null,
+  "Surname": "Alice",
+  "TelephoneNumber": null,
+  "UserPrincipalName": "asmith@company.com"
+}

@@ -186,7 +186,7 @@ namespace Microsoft.PowerFx.Intellisense
             return _addSuggestionHelper.AddSuggestion(intellisenseData, suggestion, suggestionKind, iconKind, type, requiresSuggestionEscaping, sortPriority);
         }
 
-        internal static bool AddSuggestion(IntellisenseData.IntellisenseData intellisenseData, KeyValuePair<string,  NameLookupInfo> suggestion, SuggestionKind suggestionKind, SuggestionIconKind iconKind, DType type, bool requiresSuggestionEscaping, uint sortPriority = 0)
+        internal static bool AddSuggestion(IntellisenseData.IntellisenseData intellisenseData, KeyValuePair<string, NameLookupInfo> suggestion, SuggestionKind suggestionKind, SuggestionIconKind iconKind, DType type, bool requiresSuggestionEscaping, uint sortPriority = 0)
         {
             var suggestionText = suggestion.Value.DisplayName != default ? suggestion.Value.DisplayName : suggestion.Key;
             return AddSuggestion(intellisenseData, suggestionText, suggestionKind, iconKind, type, requiresSuggestionEscaping, sortPriority);
@@ -304,7 +304,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// <summary>
         /// Adds suggestions that start with the MatchingString from the given type.
         /// </summary>
-        internal static void AddTopLevelSuggestions(IntellisenseData.IntellisenseData intellisenseData, DType type, string prefix = "")
+        internal static void AddTopLevelSuggestions(IntellisenseData.IntellisenseData intellisenseData, DType type, string prefix = "", string filter = null)
         {
             Contracts.AssertValue(intellisenseData);
             Contracts.Assert(type.IsValid);
@@ -312,7 +312,8 @@ namespace Microsoft.PowerFx.Intellisense
 
             foreach (var tName in type.GetRootFieldNames().Select(name => (Type: type.GetType(name), Name: name)))
             {
-                if (!intellisenseData.TryAddCustomColumnTypeSuggestions(tName.Type))
+                bool filtered = string.IsNullOrEmpty(filter) ? false : !tName.Name.Value.StartsWith(filter, StringComparison.OrdinalIgnoreCase);
+                if (!filtered && !intellisenseData.TryAddCustomColumnTypeSuggestions(tName.Type))
                 {
                     var usedName = tName.Name;
                     if (DType.TryGetDisplayNameForColumn(type, usedName, out var maybeDisplayName))
@@ -355,14 +356,26 @@ namespace Microsoft.PowerFx.Intellisense
 
                     if (!intellisenseData.TryAddSuggestionForCurrentBinaryOp(checkForOptionSetOnly: true))
                     {
-                        if (info.ScopeIdentifier != default)
+                        var node = callNode.Args.Children[argPosition];
+
+                        if (info.ScopeIdentifier != default && node is ErrorNode)
                         {
+                            // Add ScopeIdentifier (ex: ThisRecord)
                             AddSuggestion(intellisenseData, info.ScopeIdentifier, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: false);
+                        }
+
+                        // if we started a binary op and right side is an error, no need to enumerate top level suggestions
+                        var bop = node.AsBinaryOp();
+                        if (bop?.Right?.Kind == NodeKind.Error)
+                        {
+                            return;
                         }
 
                         if (!info.RequiresScopeIdentifier)
                         {
-                            AddTopLevelSuggestions(intellisenseData, type);
+                            // filter on what's already typed
+                            string filter = node is ErrorNode en ? intellisenseData.Script.Substring(en.Token.Span.Min, en.Token.Span.Lim - en.Token.Span.Min) : null;                            
+                            AddTopLevelSuggestions(intellisenseData, type, filter: filter);
                         }
                     }
                 }
@@ -387,7 +400,7 @@ namespace Microsoft.PowerFx.Intellisense
                 ConnectorSuggestions suggestions = info.Function.GetConnectorSuggestionsAsync(parameters, argPosition, intellisenseData.Services, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 if (suggestions != null && suggestions.Suggestions != null)
-                {                    
+                {
                     foreach (ConnectorSuggestion suggestion in suggestions.Suggestions)
                     {
                         int requiredParamaterCount = info.Function.MaxArity - (info.Function.MaxArity == info.Function.MinArity ? 0 : 1);
@@ -415,7 +428,7 @@ namespace Microsoft.PowerFx.Intellisense
                             }
                         }
                         else
-                        {                                                        
+                        {
                             List<string> possibleFields = suggestions.Suggestions.Select(s => s.DisplayName).ToList();
                             string[] existingFieldsInCall = currentArg.AsRecord().Ids.Select(id => id.Token._value).ToArray();
 
@@ -445,7 +458,7 @@ namespace Microsoft.PowerFx.Intellisense
                             foreach (string possibleField in possibleFields)
                             {
                                 AddSuggestion(intellisenseData, possibleField, SuggestionKind.Global, SuggestionIconKind.Other, DType.String, false);
-                            }                            
+                            }
                         }
                     }
                 }
@@ -668,7 +681,7 @@ namespace Microsoft.PowerFx.Intellisense
                 }
             }
 
-            if (callNode.Parent != null)
+            if (callNode.Parent != null && node is not ErrorNode)
             {
                 return AddTopLevelSuggestionsForGivenNode(intellisenseData, node, callNode.Parent);
             }

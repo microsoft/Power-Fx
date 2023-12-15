@@ -303,12 +303,47 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, bool throwOnError = false)
-        {
+        {            
             var text = response?.Content == null
                             ? string.Empty
                             : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var statusCode = (int)response.StatusCode;
+
+#if RECORD_RESULTS
+            if (response.RequestMessage.Headers.TryGetValues("x-ms-request-url", out IEnumerable<string> urlHeader) &&
+                response.RequestMessage.Headers.TryGetValues("x-ms-request-method", out IEnumerable<string> verbHeader))
+            {                
+                string url = urlHeader.FirstOrDefault();
+                string verb = verbHeader.FirstOrDefault();
+                string ext = _returnRawResults ? "raw" : "json";
+
+                if (!string.IsNullOrEmpty(url))
+                {
+                    string u2 = url.Replace('/', '_').Replace('?', '_').Replace('+', ' ').Replace('%', '_');
+                    u2 = u2.Substring(0, Math.Min(u2.Length, 100));
+
+                    int i = 0;
+                    string file = $@"C:\Temp\Response_{verb}_{(int)statusCode}_{u2}.{ext}";
+
+                    // Paging, when multiple result pages are returned, or when same request is run multiple times
+                    while (System.IO.File.Exists(file))
+                    {
+                        i++;
+                        file = $@"C:\Temp\Response_{verb}_{(int)statusCode}_{u2}_#{i:00}.{ext}";
+                    }
+
+                    if (!_returnRawResults)
+                    {
+                        System.IO.File.WriteAllText(file, text);
+                    }
+                    else
+                    {
+                        System.IO.File.WriteAllBytes(file, await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false));
+                    }
+                }
+            }
+#endif
 
             if (statusCode < 300)
             {

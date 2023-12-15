@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Intellisense
                 { typeof(SplitFunction), DiscardEnumParam(StringTypeSuggestions) },
                 { typeof(StartsWithFunction), DiscardEnumParam(StringTypeSuggestions) },
                 { typeof(TextFunction), TextSuggestions },
-                { typeof(ValueFunction), LanguageCodeSuggestion },
+                { typeof(ValueFunction), LanguageCodeSuggestion }                    
             }, isThreadSafe: true);
 
         public static IEnumerable<KeyValuePair<string, DType>> GetArgumentSuggestions(TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnqualifiedEnums, TexlFunction function, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping)
@@ -45,6 +45,11 @@ namespace Microsoft.PowerFx.Intellisense
             if (CustomFunctionSuggestionProviders.Value.TryGetValue(function.GetType(), out var suggestor))
             {
                 return suggestor(tryGetEnumSymbol, suggestUnqualifiedEnums, scopeType, argumentIndex, out requiresSuggestionEscaping);
+            }
+
+            if (function is ISupportsArgumentSuggestions sas)
+            {
+                return sas.GetArgumentSuggestions(tryGetEnumSymbol, suggestUnqualifiedEnums, scopeType, argumentIndex, out requiresSuggestionEscaping);
             }
 
             requiresSuggestionEscaping = false;

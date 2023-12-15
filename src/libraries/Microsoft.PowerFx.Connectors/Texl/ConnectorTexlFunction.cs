@@ -13,12 +13,13 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ConnectorTexlFunction : TexlFunction, IAsyncConnectorTexlFunction, IHasUnsupportedFunctions
+    internal class ConnectorTexlFunction : TexlFunction, IAsyncConnectorTexlFunction, IHasUnsupportedFunctions, ISupportsArgumentSuggestions
     {
         public ConnectorFunction ConnectorFunction { get; }
 
@@ -56,18 +57,12 @@ namespace Microsoft.PowerFx.Connectors
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return ConnectorFunction.RequiredParameters.Select<ConnectorParameter, TexlStrings.StringGetter>(p => (locale) => p.Name).ToArray();
-            yield return OptionalParametersSignature();
-        }
 
-        private TexlStrings.StringGetter[] OptionalParametersSignature()
-        {
-            if (ConnectorFunction.OptionalParameters.Count() > 0)
+            // when any, optional parameters are in a record
+            if (ConnectorFunction.OptionalParameters.Any())
             {
-                TexlStrings.StringGetter optionalParms = (b) => $"{{{string.Join(",", ConnectorFunction.OptionalParameters.Select(parm => $"{parm.Name}:{parm.FormulaType}"))}}}";
-                return new TexlStrings.StringGetter[] { optionalParms };
+                yield return new TexlStrings.StringGetter[] { (loc) => $"{{ {string.Join(",", ConnectorFunction.OptionalParameters.Select(parm => $"{parm.Name}:{parm.FormulaType}"))} }}" };
             }
-
-            return new ConnectorParameter[0].Select<ConnectorParameter, TexlStrings.StringGetter>(p => (locale) => p.Name).ToArray();
         }
 
         public override bool TryGetParamDescription(string paramName, out string paramDescription)
@@ -126,6 +121,28 @@ namespace Microsoft.PowerFx.Connectors
                 runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in [Texl] {ConnectorFunction.LogFunction(nameof(GetConnectorSuggestionsAsync))} with {LogArguments(arguments)} and position {argPosition} {LogException(ex)}");
                 throw;
             }
+        }
+
+        public IEnumerable<KeyValuePair<string, DType>> GetArgumentSuggestions(ArgumentSuggestions.TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnqualifiedEnums, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping)
+        {
+            requiresSuggestionEscaping = false;
+
+            if (MinArity <= argumentIndex && argumentIndex <= MaxArity)
+            {
+                if (ConnectorFunction.RequiredParameters.Length > 0 && argumentIndex < ConnectorFunction.RequiredParameters.Length)
+                {
+                    ConnectorParameter cP = ConnectorFunction.RequiredParameters[argumentIndex];
+                    return new Dictionary<string, DType>() { { TexlLexer.EscapeName(cP.Name), cP.FormulaType._type } };
+                }
+
+                // optional parameters are in a record
+                if (scopeType.Kind == DKind.Record)
+                {
+                    return ConnectorFunction.OptionalParameters.Select(op => new KeyValuePair<string, DType>(TexlLexer.EscapeName(op.Name), op.FormulaType._type));
+                }
+            }
+
+            return new Dictionary<string, DType>();
         }
     }
 }
