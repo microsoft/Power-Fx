@@ -101,6 +101,35 @@ namespace Microsoft.PowerFx.Interpreter.Functions.Mutation
 
             var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
+            var argCount = argTypes.Length;
+
+            for (var i = 1; i < argCount; i++)
+            {
+                DType argType = argTypes[i];
+
+                // The subsequent args should all be records.
+                if (!argType.IsRecord)
+                {
+                    // The last arg may be the optional "ALL" parameter.
+                    if (argCount >= 3 && i == argCount - 1 && DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                    {
+                        var strNode = (StrLitNode)args[i];
+
+                        if (strNode.Value.ToUpperInvariant() != "ALL")
+                        {
+                            isValid = false;
+                            errors.EnsureError(args[i], ErrRemoveAllArg, args[i]);
+                        }
+
+                        continue;
+                    }
+
+                    isValid = false;
+                    errors.EnsureError(args[i], ErrNeedRecord, args[i]);
+                    continue;
+                }
+            }
+
             DType dataSourceType = argTypes[0];
 
             if (!dataSourceType.IsTable)
