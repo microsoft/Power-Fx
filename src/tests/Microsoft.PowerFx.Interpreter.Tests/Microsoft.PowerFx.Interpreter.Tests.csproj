@@ -40,9 +40,6 @@
       <Link>IntellisenseTests\TestSignatures\%(FileName)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Remove="MutationScripts\AndOr_V1CompatDisabled.txt" />
-    <None Remove="MutationScripts\Clear_V1CompatDisabled.txt" />
-    <None Remove="MutationScripts\Remove_V1CompatDisabled.txt" />
     <None Update="InterpreterExpressionTestCases\*.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
