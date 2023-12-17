@@ -2,7 +2,7 @@
 Table({a:1},{a:2})
 
 >> Clear(t1)
-true
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
 
 >> t1
 Table()
@@ -11,7 +11,7 @@ Table()
 Table({Value:1},{Value:2},{Value:3})
 
 >> Clear(t2)
-true
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
 
 >> t2
 Table()

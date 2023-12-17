@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.DLP;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -21,7 +22,7 @@ using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Functions
 {
-    internal class ClearFunction : BuiltinFunction, IAsyncTexlFunction
+    internal class ClearFunction : BuiltinFunction, IAsyncTexlFunction3
     {
         public override bool IsSelfContained => false;
 
@@ -30,7 +31,7 @@ namespace Microsoft.PowerFx.Functions
         // Unlike the other mutation functions, there is no need to Lazy evaluate the first argument since there is only one arg.
 
         public ClearFunction()
-            : base("Clear", TexlStrings.AboutClear, FunctionCategories.Behavior, DType.Void, 0, 1, 1, DType.EmptyTable)
+            : base("Clear", TexlStrings.AboutClear, FunctionCategories.Behavior, DType.Unknown, 0, 1, 1, DType.EmptyTable)
         {
         }
 
@@ -49,7 +50,7 @@ namespace Microsoft.PowerFx.Functions
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.Kind is DKind.Void);
+            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.Void : DType.Boolean;
 
             // Need a collection for the 1st arg
             DType collectionType = argTypes[0];
@@ -69,7 +70,7 @@ namespace Microsoft.PowerFx.Functions
             base.ValidateArgumentIsMutable(binding, args[0], errors);
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContextRet, FormulaValue[] args, CancellationToken cancellationToken)
         {
             if (args[0] is ErrorValue errorValue)
             {
@@ -78,13 +79,20 @@ namespace Microsoft.PowerFx.Functions
 
             if (args[0] is BlankValue)
             {
-                return FormulaValue.NewVoid();
+                return irContextRet == FormulaType.Void ? FormulaValue.NewVoid() : FormulaValue.NewBlank(FormulaType.Boolean);
             }
 
             var datasource = (TableValue)args[0];
             var ret = await datasource.ClearAsync(cancellationToken).ConfigureAwait(false);
 
-            return FormulaValue.NewVoid();
+            if (irContextRet == FormulaType.Void)
+            {
+                return ret.IsError ? FormulaValue.NewError(ret.Error.Errors, FormulaType.Void) : FormulaValue.NewVoid();
+            }   
+            else
+            {
+                return ret.ToFormulaValue();
+            }
         }
     }
 }

@@ -266,6 +266,10 @@ namespace Microsoft.PowerFx
             {
                 result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, _cancellationToken).ConfigureAwait(false);
             }
+            else if (func is IAsyncTexlFunction3 asyncFunc3)
+            {
+                result = await asyncFunc3.InvokeAsync(node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
+            }
             else if (func is IAsyncTexlFunction4 asyncFunc4)
             {                
                 result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
