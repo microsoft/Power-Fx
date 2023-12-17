@@ -106,18 +106,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("IsToday(Date(2023, 6,2))", "False")] // converts to local
         [InlineData("IsToday(Date(2023, 6,1))", "True")]
         [InlineData("Day(Now())", "1")]
-        [InlineData("TimeZoneOffset()", "420")]
+        [InlineData("TimeZoneOffset(Date(2023,10,1))", "420")]
+        [InlineData("TimeZoneOffset(Date(2023,11,6))", "480")]
         public void TestWithClockService(string expr, string expectedResultStr)
         {
             RuntimeConfig rc = new RuntimeConfig();
             rc.SetTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
             rc.SetClock(new TestClockService());
-                        
+
             var result = _engine.EvalAsync(expr, default, runtimeConfig: rc).Result;
 
             var actualResultStr = result.ToObject().ToString();
 
             Assert.Equal(expectedResultStr, actualResultStr);
-        }        
+        }
+
+        // Test Now/Today expressions.
+        // Use explicit clock service to set time and be fully deterministic. 
+        [Fact]
+        public void TestTimeZoneInfoWithClockService()
+        {
+            RuntimeConfig rc = new RuntimeConfig();
+            var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            rc.SetTimeZone(tzi);
+            rc.SetClock(new TestClockService());
+
+            var result = _engine.EvalAsync("TimeZoneOffset()", default, runtimeConfig: rc).Result;
+            var currentOffset = -tzi.GetUtcOffset(DateTime.Now).TotalMinutes;
+
+            var actualResultStr = result.ToObject().ToString();
+
+            Assert.Equal(currentOffset.ToString(), actualResultStr);
+        }
     }
 }

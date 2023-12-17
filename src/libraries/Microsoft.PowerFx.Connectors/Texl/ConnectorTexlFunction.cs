@@ -56,7 +56,18 @@ namespace Microsoft.PowerFx.Connectors
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return ConnectorFunction.RequiredParameters.Select<ConnectorParameter, TexlStrings.StringGetter>(p => (locale) => p.Name).ToArray();
-            yield return ConnectorFunction.OptionalParameters.Select<ConnectorParameter, TexlStrings.StringGetter>(p => (locale) => p.Name).ToArray();
+            yield return OptionalParametersSignature();
+        }
+
+        private TexlStrings.StringGetter[] OptionalParametersSignature()
+        {
+            if (ConnectorFunction.OptionalParameters.Count() > 0)
+            {
+                TexlStrings.StringGetter optionalParms = (b) => $"{{{string.Join(",", ConnectorFunction.OptionalParameters.Select(parm => $"{parm.Name}:{parm.FormulaType}"))}}}";
+                return new TexlStrings.StringGetter[] { optionalParms };
+            }
+
+            return new ConnectorParameter[0].Select<ConnectorParameter, TexlStrings.StringGetter>(p => (locale) => p.Name).ToArray();
         }
 
         public override bool TryGetParamDescription(string paramName, out string paramDescription)

@@ -1,0 +1,497 @@
+#SETUP: disable:SupportColumnNamesAsIdentifiers
+
+// Sort null table with null order values
+>> SortByColumns(If(1<0,Table({a:1,b:2},{a:2,b:3})), "a",Table({Value:Blank()}))
+Blank()
+
+// Sort null table with empty order values
+>> SortByColumns(If(1<0,Table({a:1,b:2},{a:2,b:3})),"a",Filter([2,1],Value>10))
+Blank()
+
+// Sort null table with non-empty order value
+>> SortByColumns(If(1<0,Table({a:1,b:2},{a:2,b:3})),"a",[1])
+Blank()
+
+//Sort empty table with null order values
+>> SortByColumns(Filter([1, 2, 3], Value > 100), "Value", Table({Value:Blank()}))
+Table()
+
+//Sort empty table with empty order values
+>> SortByColumns(Filter([1, 2, 3], Value > 100), "Value", Filter([1, 2, 3], Value > 100))
+Table()
+
+// Sort empty table with non-empty order values
+>> SortByColumns(Filter([1, 2, 3], Value > 100), "Value", [1])
+Table()
+
+// Sort on numeric column, with order values ascending
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },
+  { First: "Alice", Last: "Smith", Age: 5, Gender: "Female", Vaccinated: true, HasDog: true },
+  { First: Blank(), Last: "Clark", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Allen", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Brown", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false },
+  { First: "Emily", Last: "Jones", Age: 29, Gender: "Female", Vaccinated: true, HasDog: Blank() },
+  { First: "Helio", Last: Blank(), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
+  { First: "Titan", Last: Blank(), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Walker", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Andrew", Last: "Lee", Age: 27, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Nizam", Last: "Lewis", Age: 32, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Amelia", Last: "Bedelia", Age: 40, Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Dora", Last: "TheExplorer", Age: 4, Gender: "Female", Vaccinated: Blank(), HasDog: true },
+  { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
+  { First: Blank(), Last: "Rodriguez", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }), "Age", [2,4,5,17,20,27,29,32,40,48,263,792])
+Table({Age:2,First:"Bob",Gender:"Male",HasDog:true,Last:"Smith",Vaccinated:true},{Age:4,First:"Dora",Gender:"Female",HasDog:true,Last:"TheExplorer",Vaccinated:Blank()},{Age:5,First:"Alice",Gender:"Female",HasDog:true,Last:"Smith",Vaccinated:true},{Age:17,First:"John",Gender:"Male",HasDog:false,Last:"Batali",Vaccinated:false},{Age:20,First:"Maria",Gender:"Female",HasDog:false,Last:"Martinez",Vaccinated:true},{Age:27,First:"Andrew",Gender:"Male",HasDog:false,Last:"Lee",Vaccinated:true},{Age:29,First:"Emily",Gender:"Female",HasDog:Blank(),Last:"Jones",Vaccinated:true},{Age:29,First:"Jaideep",Gender:"Male",HasDog:false,Last:"Lopez",Vaccinated:true},{Age:32,First:"Nizam",Gender:"Male",HasDog:false,Last:"Lewis",Vaccinated:true},{Age:40,First:"Amelia",Gender:"Female",HasDog:Blank(),Last:"Bedelia",Vaccinated:Blank()},{Age:48,First:"Mary",Gender:"Female",HasDog:false,Last:"Harris",Vaccinated:false},{Age:263,First:"Helio",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:792,First:"Titan",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Clark",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Allen",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Female",HasDog:Blank(),Last:"Brown",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Walker",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Female",HasDog:Blank(),Last:"Rodriguez",Vaccinated:Blank()})
+
+// Sort on numeric column, with order values descending
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },
+  { First: "Alice", Last: "Smith", Age: 5, Gender: "Female", Vaccinated: true, HasDog: true },
+  { First: Blank(), Last: "Clark", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Allen", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Brown", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false },
+  { First: "Emily", Last: "Jones", Age: 29, Gender: "Female", Vaccinated: true, HasDog: Blank() },
+  { First: "Helio", Last: Blank(), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
+  { First: "Titan", Last: Blank(), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Walker", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Andrew", Last: "Lee", Age: 27, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Nizam", Last: "Lewis", Age: 32, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Amelia", Last: "Bedelia", Age: 40, Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Dora", Last: "TheExplorer", Age: 4, Gender: "Female", Vaccinated: Blank(), HasDog: true },
+  { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
+  { First: Blank(), Last: "Rodriguez", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }), "Age", [792,263,48,40,32,29,27,20,17,5,4,2])
+Table({Age:792,First:"Titan",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:263,First:"Helio",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:48,First:"Mary",Gender:"Female",HasDog:false,Last:"Harris",Vaccinated:false},{Age:40,First:"Amelia",Gender:"Female",HasDog:Blank(),Last:"Bedelia",Vaccinated:Blank()},{Age:32,First:"Nizam",Gender:"Male",HasDog:false,Last:"Lewis",Vaccinated:true},{Age:29,First:"Emily",Gender:"Female",HasDog:Blank(),Last:"Jones",Vaccinated:true},{Age:29,First:"Jaideep",Gender:"Male",HasDog:false,Last:"Lopez",Vaccinated:true},{Age:27,First:"Andrew",Gender:"Male",HasDog:false,Last:"Lee",Vaccinated:true},{Age:20,First:"Maria",Gender:"Female",HasDog:false,Last:"Martinez",Vaccinated:true},{Age:17,First:"John",Gender:"Male",HasDog:false,Last:"Batali",Vaccinated:false},{Age:5,First:"Alice",Gender:"Female",HasDog:true,Last:"Smith",Vaccinated:true},{Age:4,First:"Dora",Gender:"Female",HasDog:true,Last:"TheExplorer",Vaccinated:Blank()},{Age:2,First:"Bob",Gender:"Male",HasDog:true,Last:"Smith",Vaccinated:true},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Clark",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Allen",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Female",HasDog:Blank(),Last:"Brown",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Walker",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Female",HasDog:Blank(),Last:"Rodriguez",Vaccinated:Blank()})
+
+// Sort on bool column, with order values ascending
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },
+  { First: "Alice", Last: "Smith", Age: 5, Gender: "Female", Vaccinated: true, HasDog: true },
+  { First: Blank(), Last: "Clark", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Allen", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Brown", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false },
+  { First: "Emily", Last: "Jones", Age: 29, Gender: "Female", Vaccinated: true, HasDog: Blank() },
+  { First: "Helio", Last: Blank(), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
+  { First: "Titan", Last: Blank(), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Walker", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Andrew", Last: "Lee", Age: 27, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Nizam", Last: "Lewis", Age: 32, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Amelia", Last: "Bedelia", Age: 40, Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Dora", Last: "TheExplorer", Age: 4, Gender: "Female", Vaccinated: Blank(), HasDog: true },
+  { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
+  { First: Blank(), Last: "Rodriguez", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }), "Vaccinated", [false,true])
+Table({Age:17,First:"John",Gender:"Male",HasDog:false,Last:"Batali",Vaccinated:false},{Age:48,First:"Mary",Gender:"Female",HasDog:false,Last:"Harris",Vaccinated:false},{Age:2,First:"Bob",Gender:"Male",HasDog:true,Last:"Smith",Vaccinated:true},{Age:5,First:"Alice",Gender:"Female",HasDog:true,Last:"Smith",Vaccinated:true},{Age:29,First:"Emily",Gender:"Female",HasDog:Blank(),Last:"Jones",Vaccinated:true},{Age:27,First:"Andrew",Gender:"Male",HasDog:false,Last:"Lee",Vaccinated:true},{Age:32,First:"Nizam",Gender:"Male",HasDog:false,Last:"Lewis",Vaccinated:true},{Age:20,First:"Maria",Gender:"Female",HasDog:false,Last:"Martinez",Vaccinated:true},{Age:29,First:"Jaideep",Gender:"Male",HasDog:false,Last:"Lopez",Vaccinated:true},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Clark",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Allen",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Female",HasDog:Blank(),Last:"Brown",Vaccinated:Blank()},{Age:263,First:"Helio",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:792,First:"Titan",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Walker",Vaccinated:Blank()},{Age:40,First:"Amelia",Gender:"Female",HasDog:Blank(),Last:"Bedelia",Vaccinated:Blank()},{Age:4,First:"Dora",Gender:"Female",HasDog:true,Last:"TheExplorer",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Female",HasDog:Blank(),Last:"Rodriguez",Vaccinated:Blank()})
+
+// Sort on bool column, with order values descending
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },
+  { First: "Alice", Last: "Smith", Age: 5, Gender: "Female", Vaccinated: true, HasDog: true },
+  { First: Blank(), Last: "Clark", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Allen", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Brown", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false },
+  { First: "Emily", Last: "Jones", Age: 29, Gender: "Female", Vaccinated: true, HasDog: Blank() },
+  { First: "Helio", Last: Blank(), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
+  { First: "Titan", Last: Blank(), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Walker", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Andrew", Last: "Lee", Age: 27, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Nizam", Last: "Lewis", Age: 32, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Amelia", Last: "Bedelia", Age: 40, Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Dora", Last: "TheExplorer", Age: 4, Gender: "Female", Vaccinated: Blank(), HasDog: true },
+  { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
+  { First: Blank(), Last: "Rodriguez", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }), "Vaccinated", [true,false])
+Table({Age:2,First:"Bob",Gender:"Male",HasDog:true,Last:"Smith",Vaccinated:true},{Age:5,First:"Alice",Gender:"Female",HasDog:true,Last:"Smith",Vaccinated:true},{Age:29,First:"Emily",Gender:"Female",HasDog:Blank(),Last:"Jones",Vaccinated:true},{Age:27,First:"Andrew",Gender:"Male",HasDog:false,Last:"Lee",Vaccinated:true},{Age:32,First:"Nizam",Gender:"Male",HasDog:false,Last:"Lewis",Vaccinated:true},{Age:20,First:"Maria",Gender:"Female",HasDog:false,Last:"Martinez",Vaccinated:true},{Age:29,First:"Jaideep",Gender:"Male",HasDog:false,Last:"Lopez",Vaccinated:true},{Age:17,First:"John",Gender:"Male",HasDog:false,Last:"Batali",Vaccinated:false},{Age:48,First:"Mary",Gender:"Female",HasDog:false,Last:"Harris",Vaccinated:false},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Clark",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Allen",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Female",HasDog:Blank(),Last:"Brown",Vaccinated:Blank()},{Age:263,First:"Helio",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:792,First:"Titan",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Walker",Vaccinated:Blank()},{Age:40,First:"Amelia",Gender:"Female",HasDog:Blank(),Last:"Bedelia",Vaccinated:Blank()},{Age:4,First:"Dora",Gender:"Female",HasDog:true,Last:"TheExplorer",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Female",HasDog:Blank(),Last:"Rodriguez",Vaccinated:Blank()})
+
+// Sort on string field with null, with order values ascending
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },
+  { First: "Alice", Last: "Smith", Age: 5, Gender: "Female", Vaccinated: true, HasDog: true },
+  { First: Blank(), Last: "Clark", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Allen", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Brown", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false },
+  { First: "Emily", Last: "Jones", Age: 29, Gender: "Female", Vaccinated: true, HasDog: Blank() },
+  { First: "Helio", Last: Blank(), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
+  { First: "Titan", Last: Blank(), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Walker", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Andrew", Last: "Lee", Age: 27, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Nizam", Last: "Lewis", Age: 32, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Amelia", Last: "Bedelia", Age: 40, Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Dora", Last: "TheExplorer", Age: 4, Gender: "Female", Vaccinated: Blank(), HasDog: true },
+  { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
+  { First: Blank(), Last: "Rodriguez", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }), "First", ["Alice","Amelia","Andrew","Bob","Dora","Emily","Helio","Jaideep","John","Maria","Mary","Nizam","Titan"])
+Table({Age:5,First:"Alice",Gender:"Female",HasDog:true,Last:"Smith",Vaccinated:true},{Age:40,First:"Amelia",Gender:"Female",HasDog:Blank(),Last:"Bedelia",Vaccinated:Blank()},{Age:27,First:"Andrew",Gender:"Male",HasDog:false,Last:"Lee",Vaccinated:true},{Age:2,First:"Bob",Gender:"Male",HasDog:true,Last:"Smith",Vaccinated:true},{Age:4,First:"Dora",Gender:"Female",HasDog:true,Last:"TheExplorer",Vaccinated:Blank()},{Age:29,First:"Emily",Gender:"Female",HasDog:Blank(),Last:"Jones",Vaccinated:true},{Age:263,First:"Helio",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:29,First:"Jaideep",Gender:"Male",HasDog:false,Last:"Lopez",Vaccinated:true},{Age:17,First:"John",Gender:"Male",HasDog:false,Last:"Batali",Vaccinated:false},{Age:20,First:"Maria",Gender:"Female",HasDog:false,Last:"Martinez",Vaccinated:true},{Age:48,First:"Mary",Gender:"Female",HasDog:false,Last:"Harris",Vaccinated:false},{Age:32,First:"Nizam",Gender:"Male",HasDog:false,Last:"Lewis",Vaccinated:true},{Age:792,First:"Titan",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Clark",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Allen",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Female",HasDog:Blank(),Last:"Brown",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Walker",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Female",HasDog:Blank(),Last:"Rodriguez",Vaccinated:Blank()})
+
+// Sort on string field with null, with order values descending
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },
+  { First: "Alice", Last: "Smith", Age: 5, Gender: "Female", Vaccinated: true, HasDog: true },
+  { First: Blank(), Last: "Clark", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Allen", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Brown", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false },
+  { First: "Emily", Last: "Jones", Age: 29, Gender: "Female", Vaccinated: true, HasDog: Blank() },
+  { First: "Helio", Last: Blank(), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
+  { First: "Titan", Last: Blank(), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: Blank(), Last: "Walker", Age: Blank(), Gender: "Male", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Andrew", Last: "Lee", Age: 27, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Nizam", Last: "Lewis", Age: 32, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Amelia", Last: "Bedelia", Age: 40, Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Dora", Last: "TheExplorer", Age: 4, Gender: "Female", Vaccinated: Blank(), HasDog: true },
+  { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
+  { First: Blank(), Last: "Rodriguez", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }), "First", ["Titan","Nizam","Mary","Maria","John","Jaideep","Helio","Emily","Dora","Bob","Andrew","Amelia","Alice"])
+Table({Age:792,First:"Titan",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:32,First:"Nizam",Gender:"Male",HasDog:false,Last:"Lewis",Vaccinated:true},{Age:48,First:"Mary",Gender:"Female",HasDog:false,Last:"Harris",Vaccinated:false},{Age:20,First:"Maria",Gender:"Female",HasDog:false,Last:"Martinez",Vaccinated:true},{Age:17,First:"John",Gender:"Male",HasDog:false,Last:"Batali",Vaccinated:false},{Age:29,First:"Jaideep",Gender:"Male",HasDog:false,Last:"Lopez",Vaccinated:true},{Age:263,First:"Helio",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:29,First:"Emily",Gender:"Female",HasDog:Blank(),Last:"Jones",Vaccinated:true},{Age:4,First:"Dora",Gender:"Female",HasDog:true,Last:"TheExplorer",Vaccinated:Blank()},{Age:2,First:"Bob",Gender:"Male",HasDog:true,Last:"Smith",Vaccinated:true},{Age:27,First:"Andrew",Gender:"Male",HasDog:false,Last:"Lee",Vaccinated:true},{Age:40,First:"Amelia",Gender:"Female",HasDog:Blank(),Last:"Bedelia",Vaccinated:Blank()},{Age:5,First:"Alice",Gender:"Female",HasDog:true,Last:"Smith",Vaccinated:true},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Clark",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Allen",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Female",HasDog:Blank(),Last:"Brown",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Walker",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Female",HasDog:Blank(),Last:"Rodriguez",Vaccinated:Blank()})
+
+// Sort hierarchical data on bool column, with order values ascending
+>> SortByColumns(Table(
+  { First: "Bob", Age: 2, HasId: true, Properties: { Vaccinated: true, HasDog: true } },
+  { First: "Alice", Age: 5, HasId: false, Properties: { Vaccinated: true, HasDog: false } },
+  { First: Blank(), Age: 12, HasId: true, Properties: { Vaccinated: Blank(), HasDog: true } },
+  { First: Blank(), Age: 12, HasId: false, Properties: Blank() },
+  { First: "Mary", Age: 12, HasId: false, Properties: Blank() },
+  { First: "Wonderland", Age: 5, HasId: Blank(), Properties: { Vaccinated: true, HasDog: Blank() } },
+  { First: "Samantha", Age: 15, HasId: Blank(), Properties: { Vaccinated: Blank(), HasDog: Blank() } }), "HasId", [false,true])
+Table({Age:5,First:"Alice",HasId:false,Properties:{HasDog:false,Vaccinated:true}},{Age:12,First:Blank(),HasId:false,Properties:Blank()},{Age:12,First:"Mary",HasId:false,Properties:Blank()},{Age:2,First:"Bob",HasId:true,Properties:{HasDog:true,Vaccinated:true}},{Age:12,First:Blank(),HasId:true,Properties:{HasDog:true,Vaccinated:Blank()}},{Age:5,First:"Wonderland",HasId:Blank(),Properties:{HasDog:Blank(),Vaccinated:true}},{Age:15,First:"Samantha",HasId:Blank(),Properties:{HasDog:Blank(),Vaccinated:Blank()}})
+
+// Sort hierarchical data on bool column, with order values descending
+>> SortByColumns(Table(
+  { First: "Bob", Age: 2, HasId: true, Properties: { Vaccinated: true, HasDog: true } },
+  { First: "Alice", Age: 5, HasId: false, Properties: { Vaccinated: true, HasDog: false } },
+  { First: Blank(), Age: 12, HasId: true, Properties: { Vaccinated: Blank(), HasDog: true } },
+  { First: Blank(), Age: 12, HasId: false, Properties: Blank() },
+  { First: "Mary", Age: 12, HasId: false, Properties: Blank() },
+  { First: "Wonderland", Age: 5, HasId: Blank(), Properties: { Vaccinated: true, HasDog: Blank() } },
+  { First: "Samantha", Age: 15, HasId: Blank(), Properties: { Vaccinated: Blank(), HasDog: Blank() } }), "HasId", [true,false])
+Table({Age:2,First:"Bob",HasId:true,Properties:{HasDog:true,Vaccinated:true}},{Age:12,First:Blank(),HasId:true,Properties:{HasDog:true,Vaccinated:Blank()}},{Age:5,First:"Alice",HasId:false,Properties:{HasDog:false,Vaccinated:true}},{Age:12,First:Blank(),HasId:false,Properties:Blank()},{Age:12,First:"Mary",HasId:false,Properties:Blank()},{Age:5,First:"Wonderland",HasId:Blank(),Properties:{HasDog:Blank(),Vaccinated:true}},{Age:15,First:"Samantha",HasId:Blank(),Properties:{HasDog:Blank(),Vaccinated:Blank()}})
+
+
+// Sort on error rows, with order values ascending
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },
+  { First: "Alice", Last: "Smith", Age: 5, Gender: "Female", Vaccinated: true, HasDog: true },
+  If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
+  If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
+  If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
+  { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false },
+  { First: "Emily", Last: "Jones", Age: 29, Gender: "Female", Vaccinated: true, HasDog: Blank() },
+  { First: "Helio", Last: Blank(), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
+  { First: "Titan", Last: Blank(), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
+  { First: "Andrew", Last: "Lee", Age: 27, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Nizam", Last: "Lewis", Age: 32, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Amelia", Last: "Bedelia", Age: 40, Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Dora", Last: "TheExplorer", Age: 4, Gender: "Female", Vaccinated: Blank(), HasDog: true },
+  { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
+  If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
+  { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }), "First", ["Alice" ,"Amelia" ,"Andrew" ,"Bob" ,"Dora" ,"Emily" ,"Helio" ,"Jaideep" ,"John" ,"Maria" ,"Mary" ,"Nizam" ,"Titan"])
+Error({Kind:ErrorKind.InvalidArgument})
+
+
+// Sort on error rows, with order values descending
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },
+  { First: "Alice", Last: "Smith", Age: 5, Gender: "Female", Vaccinated: true, HasDog: true },
+  If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
+  If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
+  If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
+  { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false },
+  { First: "Emily", Last: "Jones", Age: 29, Gender: "Female", Vaccinated: true, HasDog: Blank() },
+  { First: "Helio", Last: Blank(), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
+  { First: "Titan", Last: Blank(), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
+  { First: "Andrew", Last: "Lee", Age: 27, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Nizam", Last: "Lewis", Age: 32, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Amelia", Last: "Bedelia", Age: 40, Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Dora", Last: "TheExplorer", Age: 4, Gender: "Female", Vaccinated: Blank(), HasDog: true },
+  { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
+  If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
+  { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }), "First", ["Titan" ,"Nizam" ,"Mary" ,"Maria" ,"John" ,"Jaideep" ,"Helio" ,"Emily" ,"Dora" ,"Bob" ,"Andrew" ,"Amelia" ,"Alice"])
+Error({Kind:ErrorKind.InvalidArgument})
+
+
+// Sort on null rows, with order values ascending
+
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },
+  { First: "Alice", Last: "Smith", Age: 5, Gender: "Female", Vaccinated: true, HasDog: true },
+  Blank(),
+  Blank(),
+  Blank(),
+  { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false },
+  { First: "Emily", Last: "Jones", Age: 29, Gender: "Female", Vaccinated: true, HasDog: Blank() },
+  { First: "Helio", Last: Blank(), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
+  { First: "Titan", Last: Blank(), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  Blank(),
+  { First: "Andrew", Last: "Lee", Age: 27, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Nizam", Last: "Lewis", Age: 32, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Amelia", Last: "Bedelia", Age: 40, Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Dora", Last: "TheExplorer", Age: 4, Gender: "Female", Vaccinated: Blank(), HasDog: true },
+  { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
+  Blank(),
+  { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }), "First", ["Alice" ,"Amelia" ,"Andrew" ,"Bob" ,"Dora" ,"Emily" ,"Helio" ,"Jaideep" ,"John" ,"Maria" ,"Mary" ,"Nizam" ,"Titan"])
+Table({Age:5,First:"Alice",Gender:"Female",HasDog:true,Last:"Smith",Vaccinated:true},{Age:40,First:"Amelia",Gender:"Female",HasDog:Blank(),Last:"Bedelia",Vaccinated:Blank()},{Age:27,First:"Andrew",Gender:"Male",HasDog:false,Last:"Lee",Vaccinated:true},{Age:2,First:"Bob",Gender:"Male",HasDog:true,Last:"Smith",Vaccinated:true},{Age:4,First:"Dora",Gender:"Female",HasDog:true,Last:"TheExplorer",Vaccinated:Blank()},{Age:29,First:"Emily",Gender:"Female",HasDog:Blank(),Last:"Jones",Vaccinated:true},{Age:263,First:"Helio",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:29,First:"Jaideep",Gender:"Male",HasDog:false,Last:"Lopez",Vaccinated:true},{Age:17,First:"John",Gender:"Male",HasDog:false,Last:"Batali",Vaccinated:false},{Age:20,First:"Maria",Gender:"Female",HasDog:false,Last:"Martinez",Vaccinated:true},{Age:48,First:"Mary",Gender:"Female",HasDog:false,Last:"Harris",Vaccinated:false},{Age:32,First:"Nizam",Gender:"Male",HasDog:false,Last:"Lewis",Vaccinated:true},{Age:792,First:"Titan",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},Blank(),Blank(),Blank(),Blank(),Blank())
+
+// Sort on null rows, with order values descending
+
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },
+  { First: "Alice", Last: "Smith", Age: 5, Gender: "Female", Vaccinated: true, HasDog: true },
+  Blank(),
+  Blank(),
+  Blank(),
+  { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false },
+  { First: "Emily", Last: "Jones", Age: 29, Gender: "Female", Vaccinated: true, HasDog: Blank() },
+  { First: "Helio", Last: Blank(), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
+  { First: "Titan", Last: Blank(), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
+  Blank(),
+  { First: "Andrew", Last: "Lee", Age: 27, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Nizam", Last: "Lewis", Age: 32, Gender: "Male", Vaccinated: true, HasDog: false },
+  { First: "Amelia", Last: "Bedelia", Age: 40, Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
+  { First: "Dora", Last: "TheExplorer", Age: 4, Gender: "Female", Vaccinated: Blank(), HasDog: true },
+  { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
+  Blank(),
+  { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }), "First", ["Titan" ,"Nizam" ,"Mary" ,"Maria" ,"John" ,"Jaideep" ,"Helio" ,"Emily" ,"Dora" ,"Bob" ,"Andrew" ,"Amelia" ,"Alice"])
+Table({Age:792,First:"Titan",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:32,First:"Nizam",Gender:"Male",HasDog:false,Last:"Lewis",Vaccinated:true},{Age:48,First:"Mary",Gender:"Female",HasDog:false,Last:"Harris",Vaccinated:false},{Age:20,First:"Maria",Gender:"Female",HasDog:false,Last:"Martinez",Vaccinated:true},{Age:17,First:"John",Gender:"Male",HasDog:false,Last:"Batali",Vaccinated:false},{Age:29,First:"Jaideep",Gender:"Male",HasDog:false,Last:"Lopez",Vaccinated:true},{Age:263,First:"Helio",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:29,First:"Emily",Gender:"Female",HasDog:Blank(),Last:"Jones",Vaccinated:true},{Age:4,First:"Dora",Gender:"Female",HasDog:true,Last:"TheExplorer",Vaccinated:Blank()},{Age:2,First:"Bob",Gender:"Male",HasDog:true,Last:"Smith",Vaccinated:true},{Age:27,First:"Andrew",Gender:"Male",HasDog:false,Last:"Lee",Vaccinated:true},{Age:40,First:"Amelia",Gender:"Female",HasDog:Blank(),Last:"Bedelia",Vaccinated:Blank()},{Age:5,First:"Alice",Gender:"Female",HasDog:true,Last:"Smith",Vaccinated:true},Blank(),Blank(),Blank(),Blank(),Blank())
+
+
+// Open for discussion scenario: Sort order of Blank() specified in sort table is not considered. Blank() column values are treated as in default order (i.e. at the last)
+// Sort on no values for certain columns and no order value in certain rows (i.e. undefined)
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2 },
+  { First: "Alice" },
+  Blank(),
+  Blank(),
+  Blank(),
+  { First: "John", Last: "Batali", Age: 17 },
+  { First: "Emily", Age: 29 }), "Last", ["Batali",Blank(),"Smith"])
+Table({Age:17,First:"John",Last:"Batali"},{Age:2,First:"Bob",Last:"Smith"},{Age:Blank(),First:"Alice",Last:Blank()},Blank(),Blank(),Blank(),{Age:29,First:"Emily",Last:Blank()})
+
+
+// Sort calendar, with order values ascending
+
+>> SortByColumns(Table(
+  { name: "Project Meeting 3", Day: "Friday" },
+  { name: "Scrum Meeting 3", Day: "Wednesday" },
+  { name: "Scrum Meeting 1", Day: "Monday" },
+  { name: "Project Meeting 2", Day: "Wednesday" },
+  { name: "Scrum Meeting 5", Day: "Friday" },
+  { name: "Project Meeting 1", Day: "Monday" },
+  { name: "Scrum Meeting 4", Day: "Thursday" },
+  { name: "1:1", Day: "Tuesday" },
+  { name: "Team Meeting", Day: "Monday" },
+  { name: "Scrum Meeting 2", Day: "Tuesday" }), "Day", ["Monday","Tuesday","Wednesday","Thursday","Friday"])
+Table({Day:"Monday",name:"Scrum Meeting 1"},{Day:"Monday",name:"Project Meeting 1"},{Day:"Monday",name:"Team Meeting"},{Day:"Tuesday",name:"1:1"},{Day:"Tuesday",name:"Scrum Meeting 2"},{Day:"Wednesday",name:"Scrum Meeting 3"},{Day:"Wednesday",name:"Project Meeting 2"},{Day:"Thursday",name:"Scrum Meeting 4"},{Day:"Friday",name:"Project Meeting 3"},{Day:"Friday",name:"Scrum Meeting 5"})
+
+
+// Sort calendar, with order values descending
+
+>> SortByColumns(Table(
+  { name: "Project Meeting 3", Day: "Friday" },
+  { name: "Scrum Meeting 3", Day: "Wednesday" },
+  { name: "Scrum Meeting 1", Day: "Monday" },
+  { name: "Project Meeting 2", Day: "Wednesday" },
+  { name: "Scrum Meeting 5", Day: "Friday" },
+  { name: "Project Meeting 1", Day: "Monday" },
+  { name: "Scrum Meeting 4", Day: "Thursday" },
+  { name: "1:1", Day: "Tuesday" },
+  { name: "Team Meeting", Day: "Monday" },
+  { name: "Scrum Meeting 2", Day: "Tuesday" }), "Day", ["Friday" ,"Thursday" ,"Wednesday" ,"Tuesday" ,"Monday"])
+Table({Day:"Friday",name:"Project Meeting 3"},{Day:"Friday",name:"Scrum Meeting 5"},{Day:"Thursday",name:"Scrum Meeting 4"},{Day:"Wednesday",name:"Scrum Meeting 3"},{Day:"Wednesday",name:"Project Meeting 2"},{Day:"Tuesday",name:"1:1"},{Day:"Tuesday",name:"Scrum Meeting 2"},{Day:"Monday",name:"Scrum Meeting 1"},{Day:"Monday",name:"Project Meeting 1"},{Day:"Monday",name:"Team Meeting"})
+
+
+// Sort calendar with value not in ordered values
+
+>> SortByColumns(Table(
+  { name: "Project Meeting 3", Day: "Friday" },
+  { name: "Scrum Meeting 3", Day: "Wednesday" },
+  { name: "Scrum Meeting 1", Day: "Monday" },
+  { name: "Project Meeting 2", Day: "Wednesday" },
+  { name: "Scrum Meeting 5", Day: "Friday" },
+  { name: "Project Meeting 1", Day: "Monday" },
+  { name: "Scrum Meeting 4", Day: "Thursday" },
+  { name: "1:1", Day: "Tuesday" },
+  { name: "Team Meeting", Day: "Monday" },
+  { name: "Scrum Meeting 2", Day: "Tuesday" }), "Day", ["Monday", "Tuesday", "Friday"])
+Table({Day:"Monday",name:"Scrum Meeting 1"},{Day:"Monday",name:"Project Meeting 1"},{Day:"Monday",name:"Team Meeting"},{Day:"Tuesday",name:"1:1"},{Day:"Tuesday",name:"Scrum Meeting 2"},{Day:"Friday",name:"Project Meeting 3"},{Day:"Friday",name:"Scrum Meeting 5"},{Day:"Wednesday",name:"Scrum Meeting 3"},{Day:"Wednesday",name:"Project Meeting 2"},{Day:"Thursday",name:"Scrum Meeting 4"})
+
+
+// Sort calendar with one of the ordered values being null
+
+>> SortByColumns(Table(
+  { name: "Project Meeting 3", Day: "Friday" },
+  { name: "Scrum Meeting 3", Day: "Wednesday" },
+  { name: "Scrum Meeting 1", Day: "Monday" },
+  { name: "Project Meeting 2", Day: "Wednesday" },
+  { name: "Scrum Meeting 5", Day: "Friday" },
+  { name: "Project Meeting 1", Day: "Monday" },
+  { name: "Scrum Meeting 4", Day: "Thursday" },
+  { name: "1:1", Day: "Tuesday" },
+  { name: "Team Meeting", Day: "Monday" },
+  { name: "Scrum Meeting 2", Day: "Tuesday" }), "Day", ["Monday",Blank(),"Friday"])
+Table({Day:"Monday",name:"Scrum Meeting 1"},{Day:"Monday",name:"Project Meeting 1"},{Day:"Monday",name:"Team Meeting"},{Day:"Friday",name:"Project Meeting 3"},{Day:"Friday",name:"Scrum Meeting 5"},{Day:"Wednesday",name:"Scrum Meeting 3"},{Day:"Wednesday",name:"Project Meeting 2"},{Day:"Thursday",name:"Scrum Meeting 4"},{Day:"Tuesday",name:"1:1"},{Day:"Tuesday",name:"Scrum Meeting 2"})
+
+
+// Sort on table with columns having special characters
+
+>>  SortByColumns(Table(
+  { 'A\"B': "Bob" }, { 'A\"B': "Alice" }, { 'A\"B': "Mary" }, { 'A\"B': "Wonderland" }, { 'A\"B': "Samantha" }), "A\""B", ["Alice", "Bob", "Mary", "Samantha", "Wonderland"])
+Table({'A\"B':"Alice"},{'A\"B':"Bob"},{'A\"B':"Mary"},{'A\"B':"Samantha"},{'A\"B':"Wonderland"})
+
+// Sort on error order values table
+>> SortByColumns(Table(
+  { name: "Project Meeting 3", Day: "Friday" },
+  { name: "Scrum Meeting 3", Day: "Wednesday" },
+  { name: "Scrum Meeting 1", Day: "Monday" },
+  { name: "Project Meeting 2", Day: "Wednesday" },
+  { name: "Scrum Meeting 5", Day: "Friday" },
+  { name: "Project Meeting 1", Day: "Monday" },
+  { name: "Scrum Meeting 4", Day: "Thursday" },
+  { name: "1:1", Day: "Tuesday" },
+  { name: "Team Meeting", Day: "Monday" },
+  { name: "Scrum Meeting 2", Day: "Tuesday" }), "Day", If(Sqrt(-1)<0,["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]))
+Error({Kind:ErrorKind.Numeric})
+
+// Sort on error source
+
+>> SortByColumns(If(Left("Hello", -1) = "",Table(
+  { name: "Project Meeting 3", Day: "Friday" },
+  { name: "Scrum Meeting 3", Day: "Wednesday" },
+  { name: "Scrum Meeting 1", Day: "Monday" },
+  { name: "Project Meeting 2", Day: "Wednesday" },
+  { name: "Scrum Meeting 5", Day: "Friday" },
+  { name: "Project Meeting 1", Day: "Monday" },
+  { name: "Scrum Meeting 4", Day: "Thursday" },
+  { name: "1:1", Day: "Tuesday" },
+  { name: "Team Meeting", Day: "Monday" },
+  { name: "Scrum Meeting 2", Day: "Tuesday" })), "Day", ["Monday","Tuesday","Wednesday","Thursday","Friday"])
+Error({Kind:ErrorKind.InvalidArgument})
+
+
+// Sort with error values table row
+>> SortByColumns(Table(
+  { name: "Project Meeting 3", Day: "Friday" },
+  { name: "Scrum Meeting 3", Day: "Wednesday" },
+  { name: "Scrum Meeting 1", Day: "Monday" },
+  { name: "Project Meeting 2", Day: "Wednesday" },
+  { name: "Scrum Meeting 5", Day: "Friday" },
+  { name: "Project Meeting 1", Day: "Monday" },
+  { name: "Scrum Meeting 4", Day: "Thursday" },
+  { name: "1:1", Day: "Tuesday" },
+  { name: "Team Meeting", Day: "Monday" },
+  { name: "Scrum Meeting 2", Day: "Tuesday" }), "Day", Table({ Value: "Monday" },{ Value: "Tuesday" },If(Sqrt(-1) < 0, { Value: "Wednesday" }),{ Value: "Thursday" },{ Value: "Friday" }))
+Error({Kind:ErrorKind.Numeric})
+
+
+
+
+// Sort with error inside values table property
+>> SortByColumns(Table(
+  { name: "Project Meeting 3", Day: "Friday" },
+  { name: "Scrum Meeting 3", Day: "Wednesday" },
+  { name: "Scrum Meeting 1", Day: "Monday" },
+  { name: "Project Meeting 2", Day: "Wednesday" },
+  { name: "Scrum Meeting 5", Day: "Friday" },
+  { name: "Project Meeting 1", Day: "Monday" },
+  { name: "Scrum Meeting 4", Day: "Thursday" },
+  { name: "1:1", Day: "Tuesday" },
+  { name: "Team Meeting", Day: "Monday" },
+  { name: "Scrum Meeting 2", Day: "Tuesday" }), "Day", ["Monday","Tuesday","Wednesday",Left("Hello", -1),"Friday"])
+Error({Kind:ErrorKind.InvalidArgument})
+  
+// Sort calendar, with error in a column of the source referenced by the order values
+>> SortByColumns(Table(
+  { name: "Project Meeting 3", Day: "Friday" },
+  { name: "Scrum Meeting 3", Day: "Wednesday" },
+  { name: "Scrum Meeting 1", Day: "Monday" },
+  { name: "Project Meeting 2", Day: Left("Hello", -1) },
+  { name: "Scrum Meeting 5", Day: "Friday" },
+  { name: "Project Meeting 1", Day: "Monday" },
+  { name: "Scrum Meeting 4", Day: "Thursday" },
+  { name: "1:1", Day: "Tuesday" },
+  { name: "Team Meeting", Day: "Monday" },
+  { name: "Scrum Meeting 2", Day: "Tuesday" }),"Day", ["Monday","Tuesday","Wednesday","Thursday","Friday"])
+Error({Kind:ErrorKind.InvalidArgument})
+
+
+// Sort calendar, with error in a column of the source NOT referenced by the order values
+>> SortByColumns(Table(
+  { name: "Project Meeting 3", Day: "Friday" },
+  { name: "Scrum Meeting 3", Day: "Wednesday" },
+  { name: "Scrum Meeting 1", Day: "Monday" },
+  { name: "Project Meeting 2", Day: "Wednesday" },
+  { name: "Scrum Meeting 5", Day: "Friday" },
+  { name: "Project Meeting 1", Day: "Monday" },
+  { name: "Scrum Meeting 4", Day: "Thursday" },
+  { name: Left("Hello", -1), Day: "Tuesday" },
+  { name: "Team Meeting", Day: "Monday" },
+  { name: "Scrum Meeting 2", Day: "Tuesday" }),"Day", ["Monday","Tuesday","Wednesday","Thursday","Friday"])
+Table({Day:"Monday",name:"Scrum Meeting 1"},{Day:"Monday",name:"Project Meeting 1"},{Day:"Monday",name:"Team Meeting"},{Day:"Tuesday",name:Error({Kind:ErrorKind.InvalidArgument})},{Day:"Tuesday",name:"Scrum Meeting 2"},{Day:"Wednesday",name:"Scrum Meeting 3"},{Day:"Wednesday",name:"Project Meeting 2"},{Day:"Thursday",name:"Scrum Meeting 4"},{Day:"Friday",name:"Project Meeting 3"},{Day:"Friday",name:"Scrum Meeting 5"})
+
+
+// Sort on error values for some columns
+
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2 },
+  { First: "Alice", Last: Left("Hello", -1) },
+  { First: "John", Last: "Batali", Age: 17 },
+  { First: "Emily", Last: Left("Hello", -1), Age: 29 }), "Last", ["Batali","Smith"])
+Error({Kind:ErrorKind.InvalidArgument})
+
+
+// Sort table with error values for some columns but doesn't touch error values, ascending.
+>> SortByColumns(Table(
+  { First: "Bob", Last: "Smith", Age: 2 },
+  { First: "Alice", Last: Left("Hello", -1) },
+  { First: "John", Last: "Batali", Age: 17 },
+  { First: "Emily", Last: Left("Hello", -1), Age: 29 }), "First", ["Alice","Emily","Bob","John"])
+Table({Age:Blank(),First:"Alice",Last:Error({Kind:ErrorKind.InvalidArgument})},{Age:29,First:"Emily",Last:Error({Kind:ErrorKind.InvalidArgument})},{Age:2,First:"Bob",Last:"Smith"},{Age:17,First:"John",Last:"Batali"})
+
+
+// All duplicate values in order table
+
+>> SortByColumns(Table(
+  { name: "Project Meeting 3", Day: "Friday" },
+  { name: "Scrum Meeting 3", Day: "Wednesday" },
+  { name: "Scrum Meeting 1", Day: "Monday" },
+  { name: "Project Meeting 2", Day: "Wednesday" },
+  { name: "Scrum Meeting 5", Day: "Friday" },
+  { name: "Project Meeting 1", Day: "Monday" },
+  { name: "Scrum Meeting 4", Day: "Thursday" },
+  { name: "Scrum Meeting 4", Day: "Tuesday" },
+  { name: "Team Meeting", Day: "Monday" },
+  { name: "Scrum Meeting 2", Day: "Tuesday" }),"Day",["Monday","Monday"])
+Error({Kind:ErrorKind.InvalidArgument})
+
+
+// Some duplicate values in order table
+
+>> SortByColumns(Table(
+  { name: "Project Meeting 3", Day: "Friday" },
+  { name: "Scrum Meeting 3", Day: "Wednesday" },
+  { name: "Scrum Meeting 1", Day: "Monday" },
+  { name: "Project Meeting 2", Day: "Wednesday" },
+  { name: "Scrum Meeting 5", Day: "Friday" },
+  { name: "Project Meeting 1", Day: "Monday" },
+  { name: "Scrum Meeting 4", Day: "Thursday" },
+  { name: "Scrum Meeting 4", Day: "Tuesday" },
+  { name: "Team Meeting", Day: "Monday" },
+  { name: "Scrum Meeting 2", Day: "Tuesday" }),"Day",["Monday","Tuesday", Blank(), "Monday"])
+Error({Kind:ErrorKind.InvalidArgument})

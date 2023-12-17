@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 using SharpYaml.Tokens;
@@ -367,7 +368,8 @@ namespace Microsoft.PowerFx.Connectors
                     return suggestions;
                 }
 
-                if (connectorType.DynamicValues != null && string.IsNullOrEmpty(connectorType.DynamicValues.Capability))
+                // BuiltInOperation and capability are currently not supported
+                if (connectorType.DynamicValues != null)
                 {
                     ConnectorEnhancedSuggestions suggestions = await GetConnectorSuggestionsFromDynamicValueAsync(knownParameters, runtimeContext, connectorType.DynamicValues, cancellationToken).ConfigureAwait(false);
                     runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorSuggestionsInternalAsync))}, returning from {nameof(GetConnectorSuggestionsFromDynamicValueAsync)} with {LogConnectorEnhancedSuggestions(suggestions)}");
@@ -650,7 +652,7 @@ namespace Microsoft.PowerFx.Connectors
 
         private static JsonElement ExtractFromJson(JsonElement je, string location)
         {
-            foreach (string vpPart in location.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string vpPart in (location ?? string.Empty).Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (je.ValueKind != JsonValueKind.Object)
                 {
@@ -666,7 +668,7 @@ namespace Microsoft.PowerFx.Connectors
         private async Task<ConnectorType> GetConnectorSuggestionsFromDynamicSchemaAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicSchema cds, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            FormulaValue[] newParameters = GetArguments(cds, knownParameters);
+            FormulaValue[] newParameters = GetArguments(cds, knownParameters, runtimeContext);
 
             if (newParameters == null)
             {
@@ -692,7 +694,7 @@ namespace Microsoft.PowerFx.Connectors
         private async Task<ConnectorType> GetConnectorSuggestionsFromDynamicPropertyAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicProperty cdp, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            FormulaValue[] newParameters = GetArguments(cdp, knownParameters);
+            FormulaValue[] newParameters = GetArguments(cdp, knownParameters, runtimeContext);
 
             if (newParameters == null)
             {
@@ -718,7 +720,7 @@ namespace Microsoft.PowerFx.Connectors
         private async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsFromDynamicValueAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicValue cdv, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            FormulaValue[] newParameters = GetArguments(cdv, knownParameters);
+            FormulaValue[] newParameters = GetArguments(cdv, knownParameters, runtimeContext);
 
             if (newParameters == null)
             {
@@ -734,7 +736,7 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            JsonElement je = ExtractFromJson(sv, cdv.ValueCollection ?? "value");
+            JsonElement je = ExtractFromJson(sv, cdv.ValueCollection);
 
             if (je.ValueKind == JsonValueKind.Array)
             {
@@ -759,7 +761,7 @@ namespace Microsoft.PowerFx.Connectors
         private async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsFromDynamicListAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicList cdl, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            FormulaValue[] newParameters = GetArguments(cdl, knownParameters);
+            FormulaValue[] newParameters = GetArguments(cdl, knownParameters, runtimeContext);
 
             if (newParameters == null)
             {
@@ -849,7 +851,7 @@ namespace Microsoft.PowerFx.Connectors
 
         // This method only returns null when an error occurs
         // Otherwise it will return an empty array
-        private FormulaValue[] GetArguments(ConnectionDynamicApi dynamicApi, NamedValue[] knownParameters)
+        private FormulaValue[] GetArguments(ConnectionDynamicApi dynamicApi, NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext)
         {
             List<FormulaValue> arguments = new List<FormulaValue>();
 
@@ -859,6 +861,12 @@ namespace Microsoft.PowerFx.Connectors
             {
                 string requiredParameterName = connectorParameter.Name;
 
+                // TODO: properly implement the ability to reference child properties instead of simplistic check "GetLastPart(kvp.Key) == requiredParameterName"
+                // doc: https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions
+                // e.g. make this example working:
+                // "destinationInputParam1/property1": {
+                //  "parameterReference": "sourceInputParam1/property1"
+                // }
                 if (dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is StaticConnectorExtensionValue && GetLastPart(kvp.Key) == requiredParameterName).Value is StaticConnectorExtensionValue sValue)
                 {
                     arguments.Add(sValue.Value);
@@ -866,15 +874,29 @@ namespace Microsoft.PowerFx.Connectors
                 }
 
                 KeyValuePair<string, IConnectorExtensionValue> dValue = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is DynamicConnectorExtensionValue dv && GetLastPart(kvp.Key) == requiredParameterName);
-                NamedValue newParam = knownParameters.FirstOrDefault(nv => nv.Name == ((DynamicConnectorExtensionValue)dValue.Value).Reference);
+                string[] referenceList = ((DynamicConnectorExtensionValue)dValue.Value).Reference.Split('/');
 
-                if (newParam == null)
+                var parameterToUse = knownParameters.FirstOrDefault(nv => nv.Name == referenceList.First())?.Value;
+                for (int i = 1; i < referenceList.Length && parameterToUse != null; i++)
                 {
-                    // We're missing a required parameters, nothing we can do
+                    if (parameterToUse is RecordValue recordValue)
+                    {
+                        parameterToUse = recordValue.GetField(referenceList[i]);
+                    }
+                    else
+                    {
+                        runtimeContext.ExecutionLogger?.LogWarning($"Provided parameter is expected to be a record but is {parameterToUse.Type._type}");
+                        return null;
+                    }
+                }
+
+                if (parameterToUse == null || parameterToUse.IsBlank())
+                {
+                    runtimeContext.ExecutionLogger?.LogWarning($"Missing required property to run suggestions");
                     return null;
                 }
 
-                arguments.Add(newParam.Value);
+                arguments.Add(parameterToUse);
             }
 
             return arguments.ToArray();

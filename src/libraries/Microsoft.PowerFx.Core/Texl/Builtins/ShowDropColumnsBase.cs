@@ -107,56 +107,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var count = args.Length;
             for (var i = 1; i < count; i++)
             {
-                string expectedColumnName = null;
                 var nameArg = args[i];
-                var nameArgType = argTypes[i];
 
-                // Verify we have a string literal for the column name. Accd to spec, we don't support
-                // arbitrary expressions that evaluate to string values, because these values contribute to
-                // type analysis, so they need to be known upfront (before DropColumns executes).                            
-                if (supportColumnNamesAsIdentifiers)
-                {
-                    if (nameArg is not FirstNameNode identifierNode)
-                    {
-                        fArgsValid = false;
-
-                        // Argument '{0}' is invalid, expected an identifier.
-                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedIdentifierArg_Name, nameArg.ToString());
-                        continue;
-                    }
-
-                    expectedColumnName = identifierNode.Ident.Name;
-                }
-                else
-                {
-                    StrLitNode strLitNode = nameArg.AsStrLit();
-
-                    if (nameArgType.Kind != DKind.String || strLitNode == null)
-                    {
-                        fArgsValid = false;
-
-                        // Argument '{0}' is invalid, expected a text literal.
-                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());
-                        continue;
-                    }
-
-                    expectedColumnName = strLitNode.Value;
-                }
-
-                // Verify that the name is valid.
-                if (!DName.IsValidDName(expectedColumnName))
+                if (!base.TryGetColumnLogicalName(argTypes[0], supportColumnNamesAsIdentifiers, nameArg, errors, out var columnName))
                 {
                     fArgsValid = false;
-
-                    // Argument '{0}' is not a valid identifier.
-                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, expectedColumnName);
                     continue;
                 }
-
-                var columnName = new DName(
-                    DType.TryGetLogicalNameForColumn(argTypes[0], expectedColumnName, out var logicalName)
-                    ? logicalName
-                    : expectedColumnName);
 
                 if (_isShowColumns)
                 {
@@ -210,9 +167,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex >= 0;
         }
 
-        public override bool IsIdentifierParam(int index)
+        public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
         {
-            return index > 0;
+            if (!features.SupportColumnNamesAsIdentifiers)
+            {
+                return ParamIdentifierStatus.NeverIdentifier;
+            }
+
+            return index > 0 ? ParamIdentifierStatus.AlwaysIdentifier : ParamIdentifierStatus.NeverIdentifier;
         }
     }
 }

@@ -2995,7 +2995,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 UpdateBindKindUseFlags(lookupInfo.Kind);
 
                 // Update statefulness of global datasources excluding dynamic datasources.
-                if (lookupInfo.Kind == BindKind.Data && !_txb._glue.IsDynamicDataSourceInfo(lookupInfo.Data))
+                if (_txb.IsInfoKindDataSource(fnInfo) && !_txb._glue.IsDynamicDataSourceInfo(lookupInfo.Data))
                 {
                     _txb.SetStateful(node, true);
                 }
@@ -3335,6 +3335,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject && !leftType.IsDeferred)
                 {
                     SetDottedNameError(node, TexlStrings.ErrInvalidDot);
+                    return;
+                }
+
+                // Disable SingleColumnsAccess syntax. I.e. [{a:1,b:2},{a:3,b:4]].a
+                // As an alternative use ShowColumns(). e.g. ShowColumns([{a:1,b:2},{a:3,b:4]], a).
+                if (leftType.IsTable && _features.PowerFxV1CompatibilityRules)
+                {
+                    SetDottedNameError(node, TexlStrings.ErrDeprecatedDotUseShowColumns);
                     return;
                 }
 
@@ -4534,12 +4542,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     var isIdentifier = args[i] is FirstNameNode &&
                         _features.SupportColumnNamesAsIdentifiers &&
-                        maybeFunc.IsIdentifierParam(i);
+                        maybeFunc.ParameterCanBeIdentifier(_features, i);
 
-                    // Use the new scope only for lambda args.
-                    _currentScope = (maybeFunc.IsLambdaParam(i) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent;
+                    var isLambdaArg = maybeFunc.IsLambdaParam(i) && scopeInfo.AppliesToArgument(i);
 
-                    if (!isIdentifier)
+                    // Use the new scope only for lambda or identifier args.
+                    _currentScope = (isIdentifier || isLambdaArg) ? scopeNew : scopeNew.Parent;
+
+                    if (!isIdentifier || maybeFunc.GetIdentifierParamStatus(_features, i) == TexlFunction.ParamIdentifierStatus.PossiblyIdentifier)
                     {
                         args[i].Accept(this);
                         _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
@@ -4561,7 +4571,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     // Accept should leave the scope as it found it.
-                    Contracts.Assert(_currentScope == ((maybeFunc.IsLambdaParam(i) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent));
+                    Contracts.Assert(_currentScope == ((isLambdaArg || isIdentifier) ? scopeNew : scopeNew.Parent));
                 }
 
                 // Now check and mark the path as async.
@@ -4581,7 +4591,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     foreach (var arg in args)
                     {
-                        if (arg is FirstNameNode firstNameNode && maybeFunc.IsIdentifierParam(i))
+                        if (arg is FirstNameNode firstNameNode && maybeFunc.ParameterCanBeIdentifier(_features, i))
                         {
                             _ = GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
                         }

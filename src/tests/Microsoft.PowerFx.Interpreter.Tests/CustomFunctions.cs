@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
@@ -158,6 +159,52 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("3,True,a", result.ToObject());
         }
 
+        [Fact]
+        public void CustomFunctionWithNameSpace()
+        {
+            var config = new PowerFxConfig();
+
+            var ns = DPath.Root.Append(new DName("TestNS"));
+            config.AddFunction(new TestCustomFunction(ns));
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enumeration
+            var func = engine.GetFunctionsByName("TestCustom");
+            Assert.Null(func.FirstOrDefault(f => f.Namespace == DPath.Root));
+            Assert.NotNull(func.FirstOrDefault(f => f.Namespace == ns));
+
+            // Can be invoked. 
+            var result = engine.Eval($"{ns}.TestCustom(3,true,\"a\")");
+            Assert.Equal("3,True,a", result.ToObject());
+        }
+
+        [Fact]
+        public void CustomFunctionWithAndWONameSpace()
+        {
+            var config = new PowerFxConfig();
+
+            var ns = DPath.Root.Append(new DName("TestNS"));
+
+            // add function with namespace
+            config.AddFunction(new TestCustomFunction(ns));
+
+            // add function with same name without namespace.
+            config.AddFunction(new TestCustomFunction());
+            var engine = new RecalcEngine(config);
+
+            // Both shows up in enumeration
+            var func = engine.GetFunctionsByName("TestCustom");
+            Assert.NotNull(func.FirstOrDefault(f => f.Namespace == DPath.Root));
+            Assert.NotNull(func.FirstOrDefault(f => f.Namespace == ns));
+
+            // Both can be invoked.
+            var nsResult = engine.Eval($"{ns}.TestCustom(3,true,\"a\")");
+            Assert.Equal("3,True,a", nsResult.ToObject());
+
+            var result = engine.Eval("TestCustom(3,true,\"a\")");
+            Assert.Equal("3,True,a", result.ToObject());
+        }
+
         [Theory]
         [InlineData("TestCustom(1/0,true,\"test\")", null, true, "Invalid operation: division by zero.")]
 
@@ -197,6 +244,11 @@ namespace Microsoft.PowerFx.Tests
         // Must have "Function" suffix. 
         private class TestCustomFunction : ReflectionFunction
         {
+            public TestCustomFunction(DPath ns = default)
+                : base(ns) 
+            { 
+            }
+
             // Must have "Execute" method. 
             public static StringValue Execute(DecimalValue x, BooleanValue b, StringValue s)
             {
@@ -230,11 +282,33 @@ namespace Microsoft.PowerFx.Tests
             Assert.IsType<ErrorValue>(errorResult);
         }
 
+        [Fact]
+        public void CustomRecordFunctionWithNameSpace()
+        {
+            var config = new PowerFxConfig();
+            
+            var ns = DPath.Root.Append(new DName("TestAggregateCtorNS"));
+            config.AddFunction(new TestRecordCustomFunction(ns));
+
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enuemeration
+            var func = engine.GetFunctionsByName("RecordTest");
+            Assert.Null(func.FirstOrDefault(f => f.Namespace == DPath.Root));
+            Assert.NotNull(func.FirstOrDefault(f => f.Namespace == ns));
+
+            // Can be invoked. 
+            var result = engine.Eval($"{ns}.RecordTest()");
+            var resultRecord = Assert.IsAssignableFrom<RecordValue>(result);
+            Assert.Equal(1.0, ((NumberValue)resultRecord.GetField("num")).Value);
+        }
+
         // Must have "Function" suffix. 
         private class TestRecordCustomFunction : ReflectionFunction
         {
-            public TestRecordCustomFunction()
+            public TestRecordCustomFunction(DPath ns = default)
                 : base(
+                      ns,
                       "RecordTest",
                       RecordType.Empty().Add(new NamedFormulaType("num", FormulaType.Number)))
             {
@@ -245,7 +319,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 var record = RecordType.Empty()
                     .Add(new NamedFormulaType("num", FormulaType.Number));
-                var val = FormulaValue.NewRecordFromFields(record, new NamedValue("num", FormulaValue.New(1)));
+                var val = FormulaValue.NewRecordFromFields(record, new NamedValue("num", FormulaValue.New(1.0)));
                 return val;
             }
         }
@@ -854,8 +928,8 @@ namespace Microsoft.PowerFx.Tests
             engine.UpdateVariable("x", x);
 
             var expressions = new[] { "Float(123)", "Decimal(124)", "125" };
-            CheckFloatCoercions(engine, obj, floatOptions, expressions);
-            CheckDecimalCoercions(engine, obj, decimalOptions, expressions);
+            CheckFloatCoercions(engine, obj, floatOptions, DPath.Root, expressions);
+            CheckDecimalCoercions(engine, obj, decimalOptions, DPath.Root, expressions);
 
             // Tests multiple overloads
             engine.Eval("SetProperty(x.BoolProp, true)", options: _opts);
@@ -872,22 +946,59 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(check.IsSuccess);
         }
 
-        private void CheckFloatCoercions(RecalcEngine engine, TestObj obj, ParserOptions options, string[] expressions)
+        [Fact]
+        public void CustomSetPropertyFunctionWithNameSpace()
+        {
+            var floatOptions = new ParserOptions { NumberIsFloat = true, AllowsSideEffects = true };
+            var decimalOptions = new ParserOptions { NumberIsFloat = false, AllowsSideEffects = true };
+
+            var config = new PowerFxConfig();
+            var ns = DPath.Root.Append(new DName("Button"));
+            config.AddFunction(new TestCustomSetPropFunction(ns));
+            var engine = new RecalcEngine(config);
+
+            var obj = new TestObj();
+            var cache = new TypeMarshallerCache();
+            var x = cache.Marshal(obj);
+            engine.UpdateVariable("x", x);
+
+            var expressions = new[] { "Float(123)", "Decimal(124)", "125" };
+            CheckFloatCoercions(engine, obj, floatOptions, ns, expressions);
+            CheckDecimalCoercions(engine, obj, decimalOptions, ns, expressions);
+
+            // Tests multiple overloads
+            engine.Eval($"{ns}.SetProperty(x.BoolProp, true)", options: _opts);
+            Assert.True(obj.BoolProp);
+
+            // Test failure cases
+            var check = engine.Check($"{ns}.SetProperty(x.BoolProp, true)"); // Binding Fail, behavior prop 
+            Assert.False(check.IsSuccess);
+
+            check = engine.Check($"{ns}.SetProperty(x.BoolProp, Float(123))", options: _opts); // arg mismatch
+            Assert.False(check.IsSuccess);
+
+            check = engine.Check($"{ns}.SetProperty(x.numMissing, Float(123))", options: _opts); // Binding Fail
+            Assert.False(check.IsSuccess);
+        }
+
+        private void CheckFloatCoercions(RecalcEngine engine, TestObj obj, ParserOptions options, DPath ns, string[] expressions)
         {
             var expectedValues = new[] { 123.0, 124.0, 125.0 };
+            var nameSpace = ns != default ? ns.ToString() + "." : string.Empty;
             for (int i = 0; i < expressions.Length; i++)
             {
-                engine.Eval($"SetProperty(x.NumProp, {expressions[i]})", null, options);
+                engine.Eval($"{nameSpace}SetProperty(x.NumProp, {expressions[i]})", null, options);
                 Assert.Equal(expectedValues[i], obj.NumProp);
             }
         }
 
-        private void CheckDecimalCoercions(RecalcEngine engine, TestObj obj, ParserOptions options, string[] expressions)
+        private void CheckDecimalCoercions(RecalcEngine engine, TestObj obj, ParserOptions options, DPath ns, string[] expressions)
         {
             var expectedValues = new[] { 123.0m, 124.0m, 125.0m };
+            var nameSpace = ns != default ? ns.ToString() + "." : string.Empty;
             for (int i = 0; i < expressions.Length; i++)
             {
-                engine.Eval($"SetProperty(x.DecimalProp, {expressions[i]})", null, options);
+                engine.Eval($"{nameSpace}SetProperty(x.DecimalProp, {expressions[i]})", null, options);
                 Assert.Equal(expectedValues[i], obj.DecimalProp);
             }
         }
@@ -895,8 +1006,8 @@ namespace Microsoft.PowerFx.Tests
         // Must have "Function" suffix. 
         private class TestCustomSetPropFunction : ReflectionFunction
         {
-            public TestCustomSetPropFunction()
-                : base(SetPropertyName, FormulaType.Boolean)
+            public TestCustomSetPropFunction(DPath ns = default)
+                : base(ns, SetPropertyName, FormulaType.Boolean)
             {
             }
 

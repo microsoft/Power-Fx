@@ -474,6 +474,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 try
                 {
                     // Serialization test. Serialized expression must produce an identical result.
+                    // Serialization can't use TextFirst if enabled for the test, strings for example would have the wrong syntax.
+                    options.TextFirst = false;
                     newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
                 }
                 catch (InvalidOperationException e)

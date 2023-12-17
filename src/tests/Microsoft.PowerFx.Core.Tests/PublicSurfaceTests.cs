@@ -41,7 +41,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.NameCollisionException",
                 "Microsoft.PowerFx.OptionSet",
                 "Microsoft.PowerFx.ParseResult",
-                "Microsoft.PowerFx.ParserOptions",                
+                "Microsoft.PowerFx.ParserOptions",
+
+                "Microsoft.PowerFx.EngineDocumentation",
 
                 // Config & Symbols
                 "Microsoft.PowerFx.FormulaValueSerializerSettings",

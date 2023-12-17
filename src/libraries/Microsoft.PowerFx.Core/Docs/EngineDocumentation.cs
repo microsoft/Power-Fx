@@ -5,15 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Text.Json;
 
-namespace Microsoft.PowerFx.Core.Tests
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Describe a SKU's capabilities.
     /// Used for documentation purposes.
     /// </summary>
-    public class EngineSchema
+    public class EngineDocumentation
     {
         /// <summary>
         /// Power fx version that this file was generated against. 
@@ -34,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Tests
         /// Normalize this structure.
         /// </summary>
         /// <returns>this.</returns>
-        public EngineSchema Normalize()
+        public EngineDocumentation Normalize()
         {
             if (this.MinVersion == null)
             {

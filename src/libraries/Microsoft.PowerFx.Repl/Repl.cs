@@ -206,7 +206,7 @@ namespace Microsoft.PowerFx
                 throw new InvalidOperationException($"Engine is not set.");
             }
 
-            string expression = this.MultilineProcessor.HandleLine(line);
+            string expression = this.MultilineProcessor.HandleLine(line, this.ParserOptions);
 
             if (expression != null)
             {

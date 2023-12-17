@@ -220,10 +220,21 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig();
             var engine = new Engine(config);
-            var result = engine.Check("[1,2,3].foo");
-
+            var result = engine.Check("First([1,2,3]).foo");
             Assert.False(result.IsSuccess);
-            AssertContainsError(result, "Error 7-11: Name isn't valid. 'foo' isn't recognized");
+            Assert.Single(result.Errors);
+            AssertContainsError(result, "Error 14-18: Name isn't valid. 'foo' isn't recognized.");
+        }
+
+        [Fact]
+        public void CheckDottedBindErrorForSingleColumnAccess()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            var result = engine.Check("[1,2,3].foo");
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.Errors);
+            AssertContainsError(result, "Error 7-11: Deprecated use of '.'. Please use the 'ShowColumns' function instead.");
         }
 
         [Fact]
@@ -515,9 +526,9 @@ namespace Microsoft.PowerFx.Tests
                 return true;
             }
 
-            public override bool IsIdentifierParam(int index)
+            public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
             {
-                return true;
+                return ParamIdentifierStatus.AlwaysIdentifier;
             }
         }
 
@@ -569,9 +580,9 @@ namespace Microsoft.PowerFx.Tests
                 yield break;
             }
 
-            public override bool IsIdentifierParam(int index)
+            public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
             {
-                return (_mask & (1 << index)) != 0;
+                return (_mask & (1 << index)) != 0 ? ParamIdentifierStatus.AlwaysIdentifier : ParamIdentifierStatus.NeverIdentifier;
             }
         }
 
