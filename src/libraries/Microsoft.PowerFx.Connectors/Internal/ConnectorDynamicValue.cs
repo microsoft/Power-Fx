@@ -24,6 +24,7 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         public string ValueCollection = null;
 
+        /* Support the following two parameters some day in the future
         /// <summary>
         /// "capability" in "x-ms-dynamic-values".
         /// https://github.com/nk-gears/pa-custom-connector-filepicker/blob/main/README.md.
@@ -35,5 +36,6 @@ namespace Microsoft.PowerFx.Connectors
         /// "builtInOperation" in "x-ms-dynamic-values".
         /// </summary>
         public string BuiltInOperation = null;
+        */
     }
 }

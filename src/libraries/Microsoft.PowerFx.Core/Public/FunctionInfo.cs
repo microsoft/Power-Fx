@@ -35,5 +35,15 @@ namespace Microsoft.PowerFx
         /// Maximal arity of the function.
         /// </summary>
         public int MaxArity => _fnc.MaxArity;
+
+        /// <summary>
+        /// Get a short description of the function.  
+        /// </summary>
+        public string Description => _fnc.Description;
+
+        /// <summary>
+        /// An optional URL for more help on this function. 
+        /// </summary>
+        public string HelpLink => _fnc.HelpLink;
     }
 }

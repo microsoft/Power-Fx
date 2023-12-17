@@ -202,8 +202,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("If(DisplayB, DisplayNum, 1234)", "If(DisplayB, DisplayNum, 1234)", true)]
         [InlineData("If(DisplayB, Num, 1234)", "If(DisplayB, DisplayNum, 1234)", true)]
         [InlineData("Sum(Nested, Inner)", "Sum(NestedDisplay, InnerDisplay)", true)]
-        [InlineData("Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", "Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", true)]        
-        [InlineData("First(Nested.Inner).Inner", "First(NestedDisplay.InnerDisplay).InnerDisplay", true)]
+        [InlineData("Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", "Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", true)]
         [InlineData("First(Nested).DisplayNum", "First(NestedDisplay).InnerLogicalConflicts", true)]
         [InlineData("If(DisplayB, DisplayNum, 1234)", "If(B, Num, 1234)", false)]
         [InlineData("If(B, Num, 1234)", "If(B, Num, 1234)", false)]
@@ -211,7 +210,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Sum(NestedDisplay, InnerDisplay)", "Sum(Nested, Inner)", false)]
         [InlineData("Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", "Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", false)]
         [InlineData("Sum(NestedDisplay, ThisRecord.InnerDisplay)", "Sum(Nested, ThisRecord.Inner)", false)]
-        [InlineData("First(NestedDisplay.InnerDisplay).InnerDisplay", "First(Nested.Inner).Inner", false)]
         [InlineData("First(NestedDisplay).InnerLogicalConflicts", "First(Nested).DisplayNum", false)]
         [InlineData("First(NestedDisplay).DisplayNum", "First(Nested).DisplayNum", false)]
         public void ValidateDisplayNames(string inputExpression, string outputExpression, bool toDisplay)

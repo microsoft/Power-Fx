@@ -1,0 +1,74 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "recipient": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string",
+            "title": "Team",
+            "description": "Add team ID",
+            "x-ms-visibility": "important",
+            "x-ms-dynamic-list": {
+              "operationId": "GetAllTeams",
+              "itemsPath": "value",
+              "itemValuePath": "id",
+              "itemTitlePath": "displayName",
+              "value-collection": "value"
+            },
+            "x-ms-dynamic-values": {
+              "operationId": "GetAllTeams",
+              "value-path": "id",
+              "value-title": "displayName",
+              "value-collection": "value"
+            }
+          },
+          "channelId": {
+            "type": "string",
+            "title": "Channel",
+            "description": "Add channel ID",
+            "x-ms-visibility": "important",
+            "x-ms-dynamic-list": {
+              "operationId": "GetChannelsForGroup",
+              "itemsPath": "value",
+              "itemValuePath": "id",
+              "itemTitlePath": "displayName",
+              "parameters": {
+                "groupId": {
+                  "parameterReference": "body/recipient/groupId",
+                  "required": true
+                }
+              }
+            },
+            "x-ms-dynamic-values": {
+              "operationId": "GetChannelsForGroup",
+              "value-path": "id",
+              "value-title": "displayName",
+              "parameters": {
+                "groupId": {
+                  "parameter": "recipient.groupId"
+                }
+              },
+              "value-collection": "value"
+            },
+            "x-ms-test-value": "19:976f050cb80c4d57a2a5e28b8942e6ec@thread.skype"
+          },
+          "parentMessageId": {
+            "description": "Add the ID of the parent message. Required if this message is a reply",
+            "type": "string",
+            "x-ms-summary": "Parent message ID"
+          }
+        },
+        "required": [
+          "groupId",
+          "channelId"
+        ],
+        "x-ms-visibility": "important"
+      }
+    },
+    "required": [
+      "recipient"
+    ]
+  }
+}

@@ -62,6 +62,9 @@ true
 >> "1+2" in "3"
 false
 
+>> "345" in 123456
+true
+
 // Test some examples with potential wildcard and escape characters. 
 
 >> "[[]" in "SQL literal ["

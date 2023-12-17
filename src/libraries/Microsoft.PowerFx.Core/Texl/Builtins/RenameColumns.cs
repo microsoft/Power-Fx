@@ -102,90 +102,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var newColumnNames = new HashSet<string>();
             var oldColumnNames = new HashSet<string>();
 
+            var supportColumnNamesAsIdentifiers = context.Features.SupportColumnNamesAsIdentifiers;
+
             for (var i = 1; i < count - 1; i += 2)
             {
                 TexlNode oldNameArg = args[i], newNameArg = args[i + 1];
                 DType oldNameArgType = argTypes[i], newNameArgType = argTypes[i + 1];
-                string oldColumnStringName = null, newColumnStringName = null;
-                DName oldColumnName = default, newColumnName = default;
 
-                if (context.Features.SupportColumnNamesAsIdentifiers)
+                if (!base.TryGetColumnLogicalName(argTypes[0], supportColumnNamesAsIdentifiers, oldNameArg, errors, out DName oldColumnName, out var oldColumnType))
                 {
-                    if (oldNameArg is not FirstNameNode oldIdentifierNode)
-                    {
-                        isValidInvocation = false;
-
-                        // Argument '{0}' is invalid, expected an identifier.
-                        errors.EnsureError(DocumentErrorSeverity.Severe, oldNameArg, TexlStrings.ErrExpectedIdentifierArg_Name, oldNameArg.ToString());
-                        return false;
-                    }
-
-                    oldColumnName = oldIdentifierNode.Ident.Name;
-                    oldColumnStringName = oldColumnName.Value;
-
-                    if (newNameArg is not FirstNameNode newIdentifierNode)
-                    {
-                        isValidInvocation = false;
-
-                        // Argument '{0}' is invalid, expected an identifier.
-                        errors.EnsureError(DocumentErrorSeverity.Severe, newNameArg, TexlStrings.ErrExpectedIdentifierArg_Name, newNameArg.ToString());
-                        return false;
-                    }
-
-                    newColumnName = newIdentifierNode.Ident.Name;
-                    newColumnStringName = newColumnName.Value;
-                }
-                else
-                {
-                    // Verify we have string literals for the column names. These cannot be arbitrary expressions
-                    // that evaluate to string values, because the values contribute to type analysis, so they need
-                    // to be known upfront.
-                    StrLitNode oldNameNode;
-                    if (oldNameArgType.Kind != DKind.String || (oldNameNode = oldNameArg.AsStrLit()) == null)
-                    {
-                        isValidInvocation = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, oldNameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, oldNameArg.ToString());
-                        return false;
-                    }
-
-                    oldColumnStringName = oldNameNode.Value;
-
-                    StrLitNode newNameNode;
-                    if (newNameArgType.Kind != DKind.String || (newNameNode = newNameArg.AsStrLit()) == null)
-                    {
-                        isValidInvocation = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, newNameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, newNameArg.ToString());
-                        return false;
-                    }
-
-                    newColumnStringName = newNameNode.Value;
-
-                    // Verify that the names are valid.
-                    if (!DName.IsValidDName(oldColumnStringName))
-                    {
-                        isValidInvocation = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, oldNameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, oldColumnStringName);
-                        return false;
-                    }
-
-                    if (!DName.IsValidDName(newColumnStringName))
-                    {
-                        isValidInvocation = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, newNameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, newColumnStringName);
-                        return false;
-                    }
-
-                    oldColumnName = new DName(oldColumnStringName);
-                    newColumnName = new DName(newColumnStringName);
-                }
-
-                // Verify that the old column name exists.
-                if (!returnType.TryGetType(oldColumnName, out var columnType))
-                {
-                    isValidInvocation = false;
-                    returnType.ReportNonExistingName(FieldNameKind.Logical, errors, oldColumnName, args[i]);
                     return false;
                 }
+
+                if (!base.TryGetColumnLogicalName(null, supportColumnNamesAsIdentifiers, newNameArg, errors, out DName newColumnName))
+                {
+                    return false;
+                }
+
+                var oldColumnStringName = oldColumnName.Value;
+                var newColumnStringName = newColumnName.Value;
 
                 if (oldColumnNames.Contains(oldColumnStringName))
                 {
@@ -212,7 +147,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (oldColumnName != newColumnName)
                 {
-                    columnReplacements.Add(ColumnReplacement.Create(oldColumnName, newColumnName, columnType));
+                    columnReplacements.Add(ColumnReplacement.Create(oldColumnName, newColumnName, oldColumnType));
                     oldColumnNames.Add(oldColumnName);
                     newColumnNames.Add(newColumnName);
                 }
@@ -267,11 +202,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex == 0 || (argumentIndex & 0x1) == 1;
         }
 
-        public override bool IsIdentifierParam(int index)
+        public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
         {
             Contracts.Assert(index >= 0);
 
-            return index > 0;
+            if (!features.SupportColumnNamesAsIdentifiers)
+            {
+                return ParamIdentifierStatus.NeverIdentifier;
+            }
+
+            return index > 0 ? ParamIdentifierStatus.AlwaysIdentifier : ParamIdentifierStatus.NeverIdentifier;
         }
 
         public override bool AffectsDataSourceQueryOptions => true;
@@ -298,38 +238,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 1; i < args.Count - 1; i += 2)
             {
-                string columnName;
-                DType columnType;
-                if (binding.Features.SupportColumnNamesAsIdentifiers)
-                {
-                    FirstNameNode columnNode = args[i].AsFirstName();
-
-                    // This is a bug in the existing implementation - with column names as
-                    // string this will always return a string, although it seems like it
-                    // intended to return the type of the column being renamed. Since this code
-                    // will be obsoleted soon, just keep the existing logic for now.
-                    columnType = DType.String;
-
-                    if (columnType.Kind != DKind.String || columnNode == null)
-                    {
-                        continue;
-                    }
-
-                    columnName = columnNode.Ident.Name.Value;
-                }
-                else
-                {
-                    columnType = binding.GetType(args[i]);
-                    StrLitNode columnNode = args[i].AsStrLit();
-                    if (columnType.Kind != DKind.String || columnNode == null)
-                    {
-                        continue;
-                    }
-
-                    columnName = columnNode.Value;
-                }
-
-                Contracts.Assert(dsType.Contains(new DName(columnName)));
+                base.TryGetColumnLogicalName(dsType, binding.Features.SupportColumnNamesAsIdentifiers, args[i], DefaultErrorContainer, out var columnName, out var columnType).Verify();
+                Contracts.Assert(dsType.Contains(columnName));
 
                 retval |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
             }

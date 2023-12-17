@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Returns true if the function expect identifiers, false otherwise.
         /// Needs to be overloaded for functions having identifier parameters.
-        /// Also overload IsIdentifierParam method. 
+        /// Also overload <see cref="GetIdentifierParamStatus(Features, int)"/> method. 
         /// </summary>
         public virtual bool HasColumnIdentifiers => false;
 
@@ -153,7 +153,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function manipulates collections.
         public virtual bool ManipulatesCollections => false;
 
-        // Return true if the function uses an input's column names to inform Intellisense's suggestions.
+        /// <summary>
+        ///  Return true if the function uses an input's column names to inform Intellisense's suggestions. Also, consider overriding <see cref="TryGetTypeForArgSuggestionAt(int, out DType)"/>.
+        /// </summary>
         public virtual bool CanSuggestInputColumns => false;
 
         /// <summary>
@@ -473,7 +475,7 @@ namespace Microsoft.PowerFx.Core.Functions
             for (var i = 0; i < count; i++)
             {
                 // Identifiers don't have a type
-                if (IsIdentifierParam(i))
+                if (ParameterCanBeIdentifier(context.Features, i))
                 {
                     continue;
                 }
@@ -508,7 +510,7 @@ namespace Microsoft.PowerFx.Core.Functions
             for (var i = count; i < args.Length; i++)
             {
                 // Identifiers don't have a type
-                if (IsIdentifierParam(i))
+                if (ParameterCanBeIdentifier(context.Features, i))
                 {
                     continue;
                 }
@@ -573,15 +575,152 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         /// <summary>
-        /// Returns true if the parameter is an identifier.
+        /// Defines whether a function parameter must / can / cannot be represented by an identifier.
+        /// Used in functions which take column names as arguments.
         /// </summary>
+        public enum ParamIdentifierStatus
+        {
+            /// <summary>
+            /// The parameter can never be represented by an identifier.
+            /// </summary>
+            NeverIdentifier,
+
+            /// <summary>
+            /// The parameter can be represented by an identifier, or by a string (with the value of
+            /// the column logical name)
+            /// </summary>
+            PossiblyIdentifier,
+
+            /// <summary>
+            /// The parameter can only be represented by an identifier (representing the column logical
+            /// or display name).
+            /// </summary>
+            AlwaysIdentifier,
+        }
+
+        /// <summary>
+        /// Returns whether the parameter can be represented by an identifier.
+        /// </summary>
+        /// <param name="features">The features enabled for the expression.</param>
         /// <param name="index">Parameter's index.</param>
-        /// <returns>Boolean representing if the parameter is an identifier.</returns>
-        public virtual bool IsIdentifierParam(int index)
+        /// <returns>Value from <see cref="ParamIdentifierStatus"/> which tells whether
+        /// the parameter in the given index can be an identifier.</returns>
+        public virtual ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
         {
             Contracts.Assert(index >= 0);
 
-            return false;
+            if (HasColumnIdentifiers)
+            {
+                throw new InvalidOperationException($"Override {nameof(GetIdentifierParamStatus)}, if {nameof(HasColumnIdentifiers)} is overridden.");
+            }
+
+            return ParamIdentifierStatus.NeverIdentifier;
+        }
+
+        /// <summary>
+        /// Returns whether the parameter can be represented by an identifier.
+        /// </summary>
+        /// <param name="features">The features enabled for the expression.</param>
+        /// <param name="index">Parameter's index.</param>
+        /// <returns>true if the parameter can be an identifier, false otherwise.</returns>
+        public bool ParameterCanBeIdentifier(Features features, int index)
+        {
+            var paramIdentifierStatus = GetIdentifierParamStatus(features, index);
+            return paramIdentifierStatus ==
+                ParamIdentifierStatus.AlwaysIdentifier ||
+                paramIdentifierStatus == ParamIdentifierStatus.PossiblyIdentifier;
+        }
+
+        /// <summary>
+        /// Tries to retrieve the column logical name from the argument node.
+        /// </summary>
+        /// <param name="sourceType">Type from which the column comes from. Can be null if
+        /// we are adding a new column name.</param>
+        /// <param name="supportColumnNamesAsIdentifiers">Flag indicating whether <see
+        /// cref="Features.SupportColumnNamesAsIdentifiers"/> is enabled.</param>
+        /// <param name="argNode">The function argument node for the function.</param>
+        /// <param name="errors">An error container to store an error if the name cannot be
+        /// retrieved or it is invalid.</param>
+        /// <param name="columnName">The name for the column retrieved from the argument, or null
+        /// if it cannot be retrieved.</param>
+        /// <returns>True if the column logical name can be retrieved; false otherwise.</returns>
+        protected bool TryGetColumnLogicalName(DType sourceType, bool supportColumnNamesAsIdentifiers, TexlNode argNode, IErrorContainer errors, out DName columnName)
+        {
+            return TryGetColumnLogicalName(sourceType, supportColumnNamesAsIdentifiers, argNode, errors, out columnName, out var _);
+        }
+
+        /// <summary>
+        /// Tries to retrieve the column logical name from the argument node.
+        /// </summary>
+        /// <param name="sourceType">Type from which the column comes from. Can be null if
+        /// we are adding a new column name.</param>
+        /// <param name="supportColumnNamesAsIdentifiers">Flag indicating whether <see
+        /// cref="Features.SupportColumnNamesAsIdentifiers"/> is enabled.</param>
+        /// <param name="argNode">The function argument node for the function.</param>
+        /// <param name="errors">An error container to store an error if the name cannot be
+        /// retrieved or it is invalid.</param>
+        /// <param name="columnName">The name for the column retrieved from the argument, or null
+        /// if it cannot be retrieved.</param>
+        /// <param name="columnType">The type for the column retrieved from the argument if
+        /// the source type was passed, or null if it cannot be retrieved.</param>
+        /// <returns>True if the column logical name can be retrieved; false otherwise.</returns>
+        protected bool TryGetColumnLogicalName(DType sourceType, bool supportColumnNamesAsIdentifiers, TexlNode argNode, IErrorContainer errors, out DName columnName, out DType columnType)
+        {
+            columnName = default;
+            columnType = null;
+
+            if (supportColumnNamesAsIdentifiers)
+            {
+                if (argNode is not FirstNameNode identifierNode)
+                {
+                    // Argument '{0}' is invalid, expected an identifier.
+                    errors.EnsureError(DocumentErrorSeverity.Severe, argNode, TexlStrings.ErrExpectedIdentifierArg_Name, argNode.ToString());
+                    return false;
+                }
+
+                var possibleColumnName = identifierNode.Ident.Name;
+
+                if (sourceType != null && DType.TryGetLogicalNameForColumn(sourceType, possibleColumnName.Value, out var logicalName))
+                {
+                    possibleColumnName = new DName(logicalName);
+                }
+
+                if (sourceType != null && !sourceType.TryGetType(possibleColumnName, out columnType))
+                {
+                    sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, possibleColumnName, argNode);
+                    return false;
+                }
+
+                columnName = possibleColumnName;
+            }
+            else
+            {
+                if (argNode is not StrLitNode stringLitNode)
+                {
+                    // Argument '{0}' is invalid, expected a text literal.
+                    errors.EnsureError(DocumentErrorSeverity.Severe, argNode, TexlStrings.ErrExpectedStringLiteralArg_Name, argNode.ToString());
+                    return false;
+                }
+
+                // Verify that the name is valid.
+                if (!DName.IsValidDName(stringLitNode.Value))
+                {
+                    // Argument '{0}' is not a valid identifier.
+                    errors.EnsureError(DocumentErrorSeverity.Severe, argNode, TexlStrings.ErrArgNotAValidIdentifier_Name, stringLitNode.Value);
+                    return false;
+                }
+
+                var possibleColumnName = new DName(stringLitNode.Value);
+                if (sourceType != null && !sourceType.TryGetType(possibleColumnName, out columnType))
+                {
+                    sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, possibleColumnName, argNode);
+                    return false;
+                }
+
+                columnName = possibleColumnName;
+            }
+
+            return true;
         }
 
         public virtual bool AllowsRowScopedParamDelegationExempted(int index)

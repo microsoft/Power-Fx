@@ -1242,6 +1242,11 @@ namespace Microsoft.PowerFx.Core.Types
 
             var fRet = TryGetType(path.Parent, out type);
 
+            if (!fRet)
+            {
+                return false;
+            }
+
             if (type.IsEnum)
             {
                 type = type.GetEnumSupertype();
@@ -2829,7 +2834,7 @@ namespace Microsoft.PowerFx.Core.Types
                     ((field1Type == Polymorphic && field2Type.IsRecord) ||
                     (field2Type == Polymorphic && field1Type.IsRecord)))
                 {
-                    fieldType = field1Type == Polymorphic ? field2Type : field1Type;
+                    fieldType = Polymorphic;
                 }
                 else if (field1Type.IsAggregate && field2Type.IsAggregate)
                 {
@@ -3578,6 +3583,24 @@ namespace Microsoft.PowerFx.Core.Types
                     features) && (!safeCoercionRequired || coercionIsSafe);
             }
 
+            coercionType = IsRecord ? EmptyRecord : EmptyTable;
+            coercionNeeded = false;
+
+            if (!IsAggregate)
+            {
+                return false;
+            }
+
+            if (IsTable != expectedType.IsTable && !aggregateCoercion)
+            {
+                return false;
+            }
+            else if (IsTable != expectedType.IsTable)
+            {
+                // If we are coercing from a table to a record and aggregateCoercion was allowed, we need to coerce to a table first
+                expectedType = this.Kind == DKind.Table ? expectedType.ToTable() : expectedType.ToRecord();
+            }
+
             // LazyTable/Record case
             if (expectedType.IsLazyType)
             {
@@ -3595,19 +3618,6 @@ namespace Microsoft.PowerFx.Core.Types
                 }
 
                 // Lazy type coercion not supported
-                return false;
-            }
-
-            coercionType = IsRecord ? EmptyRecord : EmptyTable;
-            coercionNeeded = false;
-
-            if (!IsAggregate)
-            {
-                return false;
-            }
-
-            if (IsTable != expectedType.IsTable && !aggregateCoercion)
-            {
                 return false;
             }
 
