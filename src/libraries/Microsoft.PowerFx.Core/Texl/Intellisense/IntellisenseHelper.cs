@@ -358,24 +358,35 @@ namespace Microsoft.PowerFx.Intellisense
                     {
                         var node = callNode.Args.Children[argPosition];
 
-                        if (info.ScopeIdentifier != default && node is ErrorNode)
+                        // filter on what's already typed (up to the cursor position)
+                        int start = node.Token.Span.Min;
+                        int end = node.Token.Span.Lim;
+
+                        // if node is BinaryOpNode, use the Right part for determining the filter
+                        if (node is BinaryOpNode binOpNode)
+                        {
+                            start = binOpNode.Right.Token.Span.Min;
+                            end = binOpNode.Right.Token.Span.Lim;
+                        }
+
+                        // if node is an interpolated string, identify which part needs to be used as a filter
+                        if (node is StrInterpNode strInterpNode && strInterpNode.Children.FirstOrDefault(n => n.Token.Span.Min <= intellisenseData.CursorPos && intellisenseData.CursorPos <= n.Token.Span.Lim && n is FirstNameNode) is FirstNameNode fnn)
+                        {
+                            start = fnn.Token.Span.Min;
+                            end = fnn.Token.Span.Lim;
+                        }
+
+                        int len = Math.Min(intellisenseData.CursorPos, end) - start;
+                        string filter = len > 0 ? intellisenseData.Script.Substring(start, len) : null;
+
+                        if (info.ScopeIdentifier != default && (string.IsNullOrWhiteSpace(filter) || info.ScopeIdentifier.Value.StartsWith(filter, StringComparison.OrdinalIgnoreCase))) // && node is ErrorNode)
                         {
                             // Add ScopeIdentifier (ex: ThisRecord)
                             AddSuggestion(intellisenseData, info.ScopeIdentifier, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: false);
                         }
 
-                        // if we started a binary op and right side is an error, no need to enumerate top level suggestions
-                        var bop = node.AsBinaryOp();
-                        if (bop?.Right?.Kind == NodeKind.Error)
-                        {
-                            return;
-                        }
-
                         if (!info.RequiresScopeIdentifier)
-                        {
-                            // filter on what's already typed (up to the cursor position)
-                            int len = node is ErrorNode en ? Math.Min(intellisenseData.CursorPos, en.Token.Span.Lim) - en.Token.Span.Min : -1;
-                            string filter = node is ErrorNode en2 && len > 0 ? intellisenseData.Script.Substring(en2.Token.Span.Min, len) : null;
+                        {                            
                             AddTopLevelSuggestions(intellisenseData, type, filter: filter);
                         }
                     }

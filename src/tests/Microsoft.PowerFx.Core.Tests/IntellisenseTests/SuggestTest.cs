@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Error({|Kind:0, Test:\"\"})", "Kind:", "Test:")]
 
         // ErrorNodeSuggestionHandler
-        [InlineData("ForAll([0],`|", "ThisRecord")] // Can't have 'Value' as we filter on "`"
+        [InlineData("ForAll([0],`|")] // Can't have 'Value' or "ThisRecord" as we filter on "`"
         [InlineData("ForAll(-],|", "ThisRecord")]
         [InlineData("ForAll()~|")]
         [InlineData("With( {Apples:3}, $\"We have {Apples} apples|")]
@@ -347,7 +347,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Filter(Table, Table[|", "![Table: *[Column: s]]", "@Column")]
 
         // ErrorNodeSuggestionHandler
-        [InlineData("ForAll(Table,`|", "![Table: *[Column: s]]", "ThisRecord")] // Can't return "Column" as we filter on "`"
+        [InlineData("ForAll(Table,`|", "![Table: *[Column: s]]")] // Can't return "Column" or "ThisRecord" as we filter on "`"
         public void TestSuggestWithContext(string expression, string context, params string[] expectedSuggestions)
         {
             Assert.NotNull(context);

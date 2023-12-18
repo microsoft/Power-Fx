@@ -168,6 +168,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         internal void RunIntellisenseTest(string expr, string expectedSuggestions)
         {
+            _output.WriteLine($"EXPR: {expr}");
+            _output.WriteLine(string.Empty);
+
             (OpenApiDocument apiDoc, PowerFxConfig config, HttpClient httpClient, PowerPlatformConnectorClient client, ConnectorSettings connectorSettings, RuntimeConfig runtimeConfig) = GetElements();
             config.AddActionConnector(connectorSettings, apiDoc, new ConsoleLogger(_output));
 
