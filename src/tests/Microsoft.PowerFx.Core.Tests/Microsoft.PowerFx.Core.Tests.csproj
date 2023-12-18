@@ -50,7 +50,6 @@
 
   <ItemGroup>
     <None Remove="expressiontestcases\README.md" />
-    <None Remove="ExpressionTestCases\WeekNum_StronglyTypedEnumDisabled.txt" />
   </ItemGroup>
   
   <ItemGroup>

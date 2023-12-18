@@ -1,4 +1,4 @@
-#SETUP: disable:NumberIsFloat,StronglyTypedBuiltinEnums
+#SETUP: disable:NumberIsFloat
 
 // Blank args
 >> WeekNum(Blank(),Blank())
@@ -11,8 +11,24 @@
 >> WeekNum(Blank(),StartOfWeek.Saturday)
 53
 
->> WeekNum(Date(2022,1,2),Blank())
-2
+>> WeekNum(Date(1,2,2022),Blank())
+33
+
+
+// Error args
+>> WeekNum(If(1/0, Date(1900,11,22)),Blank())
+Error({Kind:ErrorKind.Div0})
+
+>> WeekNum(Date(2020, 12, 4),If(1/0, StartOfWeek.Sunday))
+Error({Kind:ErrorKind.Div0})
+
+
+// Edge cases
+>> WeekNum(Date(0001,1,1))
+1
+
+>> WeekNum(Date(9999,12,31))
+53
 
 
 // 1900 (known Excel bug)
@@ -52,6 +68,7 @@
 >> WeekNum(Date(1900, 6, 11), StartOfWeek.Sunday)
 24
 
+
 // Leap year
 >> WeekNum(Date(2020, 2, 29))
 9
@@ -89,43 +106,35 @@
 >> WeekNum(Date(2020, 7, 26))
 31
 
+
+// Leap days
+>> WeekNum(Date(2024, 2, 29))
+9
+
+>> WeekNum(Date(2028, 2, 29))
+10
+
+>> WeekNum(Date(2032, 2, 29))
+10
+
+>> WeekNum(Date(2036, 2, 29))
+9
+
+>> WeekNum(Date(2040, 2, 29))
+9
+
+>> WeekNum(Date(2044, 2, 29))
+10
+
+
 // Same day - all hours
 >> WeekNum(DateTime(2021,1,7,0,0,0), StartOfWeek.Friday)
 1
->> WeekNum(DateTime(2021,1,7,1,0,0), StartOfWeek.Friday)
-1
-
->> WeekNum(DateTime(2021,1,7,2,0,0), StartOfWeek.Friday)
-1
-
->> WeekNum(DateTime(2021,1,7,3,0,0), StartOfWeek.Friday)
-1
-
->> WeekNum(DateTime(2021,1,7,4,0,0), StartOfWeek.Friday)
-1
-
->> WeekNum(DateTime(2021,1,7,5,0,0), StartOfWeek.Friday)
-1
-
->> WeekNum(DateTime(2021,1,7,6,0,0), StartOfWeek.Friday)
-1
-
->> WeekNum(DateTime(2021,1,7,7,0,0), StartOfWeek.Friday)
-1
-
->> WeekNum(DateTime(2021,1,7,8,0,0), StartOfWeek.Friday)
-1
-
->> WeekNum(DateTime(2021,1,7,9,0,0), StartOfWeek.Friday)
-1
-
->> WeekNum(DateTime(2021,1,7,10,0,0), StartOfWeek.Friday)
-1
-
->> WeekNum(DateTime(2021,1,7,11,0,0), StartOfWeek.Friday)
-1
 
 >> WeekNum(DateTime(2021,1,7,12,0,0), StartOfWeek.Friday)
+1
+
+>> WeekNum(DateTime(2021,1,7,23,59,59,999), StartOfWeek.Friday)
 1
 
 // Valid StartOfWeek enumeration
@@ -149,6 +158,7 @@
 
 >> WeekNum(Date(2020, 3, 30), StartOfWeek.Saturday)
 14
+
 
 // Invalid StartOfWeek enumeration
 >> WeekNum(Date(2016, 1, 3),0)
