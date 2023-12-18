@@ -374,7 +374,8 @@ namespace Microsoft.PowerFx.Intellisense
                         if (!info.RequiresScopeIdentifier)
                         {
                             // filter on what's already typed (up to the cursor position)
-                            string filter = node is ErrorNode en ? intellisenseData.Script.Substring(en.Token.Span.Min, Math.Min(intellisenseData.CursorPos, en.Token.Span.Lim) - en.Token.Span.Min) : null;
+                            int len = node is ErrorNode en ? Math.Min(intellisenseData.CursorPos, en.Token.Span.Lim) - en.Token.Span.Min : -1;
+                            string filter = node is ErrorNode en2 && len > 0 ? intellisenseData.Script.Substring(en2.Token.Span.Min, len) : null;
                             AddTopLevelSuggestions(intellisenseData, type, filter: filter);
                         }
                     }

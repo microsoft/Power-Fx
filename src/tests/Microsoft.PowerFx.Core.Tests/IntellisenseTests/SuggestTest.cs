@@ -544,6 +544,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         [Theory]
         [InlineData("Concat([{a:1}, {a:2}],)", 22, "a", "ThisRecord")]
+        [InlineData("Concat([{a:1}, {a:2}], )", 23, "a", "ThisRecord")]
+        [InlineData("Concat([{a:1}, {a:2}],  )", 22, "a", "ThisRecord")]
+        [InlineData("Concat([{a:1}, {a:2}],   )", 24, "a", "ThisRecord")]
         public void SuggestFilter(string expr, int cursor, params string[] results)
         {            
             var engine = new Engine(new PowerFxConfig());
