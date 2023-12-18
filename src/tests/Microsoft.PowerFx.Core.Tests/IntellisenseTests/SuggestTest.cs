@@ -14,6 +14,7 @@ using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -539,6 +540,17 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var suggestion = engine.Suggest(check, cursorPosition).Suggestions.Select(suggestion => suggestion.DisplayText.Text);
 
             Assert.Equal(expected, suggestion);
+        }
+
+        [Theory]
+        [InlineData("Concat([{a:1}, {a:2}],)", 22, "a", "ThisRecord")]
+        public void SuggestFilter(string expr, int cursor, params string[] results)
+        {            
+            var engine = new Engine(new PowerFxConfig());
+            var check = engine.Check(expr);
+            
+            IIntellisenseResult irr = engine.Suggest(check, cursor);
+            Assert.Equal(string.Join("|", results), string.Join("|", irr.Suggestions.Select(s => s.DisplayText.Text)));
         }
 
         private class LazyRecursiveRecordType : RecordType
