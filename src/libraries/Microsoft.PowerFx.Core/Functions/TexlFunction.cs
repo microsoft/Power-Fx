@@ -276,6 +276,13 @@ namespace Microsoft.PowerFx.Core.Functions
         // A description associated with this function.
         public string Description => _description(null);
 
+        /// <summary>
+        /// This function requires an AI disclaimer. 
+        /// </summary>
+        // $$$ Pass this flag in
+        //public bool UseAIDisclaimer => this.Name.StartsWith("AI");
+        public bool ShowAIDisclaimer => true;
+
         // A forward link to the function help.
         public virtual string HelpLink =>
 

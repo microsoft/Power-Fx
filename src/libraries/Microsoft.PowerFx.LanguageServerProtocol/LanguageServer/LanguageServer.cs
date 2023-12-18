@@ -375,7 +375,19 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var cursorPosition = GetPosition(expression, signatureHelpParams.Position.Line, signatureHelpParams.Position.Character);
             var result = scope.Suggest(expression, cursorPosition);
 
-            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, result.SignatureHelp));
+            var lspObj = new SignatureHelp(result.SignatureHelp);
+
+            /* $$$
+            if (lspObj.Signatures != null)
+            {
+                foreach (var sig in lspObj.Signatures)
+                {
+                    
+                    sig.Documentation = GetDisclaimer(sig.Documentation.ToString());
+                }
+            }*/
+
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, lspObj));
         }
 
         private void HandleInitialFixupRequest(string id, string paramsJson)

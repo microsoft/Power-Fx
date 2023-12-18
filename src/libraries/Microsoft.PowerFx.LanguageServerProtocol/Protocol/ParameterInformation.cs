@@ -3,12 +3,24 @@
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
+    using ParameterInformationCore = Microsoft.PowerFx.Intellisense.SignatureHelp.ParameterInformation;
+
     /// <summary>
     /// Represents a parameter of a callable-signature. A parameter can
     /// have a label and a doc-comment.
     /// </summary>
     public class ParameterInformation
     {
+        public ParameterInformation()
+        {
+        }
+
+        public ParameterInformation(ParameterInformationCore param)
+        {
+            this.Label = param.Label;
+            this.Documentation = param.Documentation;
+        }
+
         /// <summary>
         /// The label of this parameter information.
         ///

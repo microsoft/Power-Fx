@@ -13,6 +13,11 @@ namespace Microsoft.PowerFx.Intellisense.SignatureHelp
 
         public ParameterInformation[] Parameters { get; set; }
 
+        // $$$ Make this an object? 
+        // $$$ Enable a path for Reflection function?
+        // This function requires an AI disclaimer. 
+        public bool ShowAIDisclaimer { get; set; }
+
         public bool Equals(SignatureInformation other)
         {
             if (other == null)

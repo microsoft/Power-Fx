@@ -149,6 +149,7 @@ namespace Microsoft.PowerFx.Intellisense
                         {
                             // Use overload description and not IntellisenseData.CurrFunc overload
                             Documentation = !string.IsNullOrWhiteSpace(possibleOverload?.Description) ? possibleOverload.Description : func.Description,
+                            ShowAIDisclaimer = possibleOverload.ShowAIDisclaimer,
                             Label = CreateFunctionSignature(func.Name, parameters, shouldAddEllipsis),
                             Parameters = parameters.ToArray(),
                         };
@@ -170,6 +171,7 @@ namespace Microsoft.PowerFx.Intellisense
                     var signatureInformation = new SignatureInformation()
                     {
                         Documentation = func.Description,
+                        ShowAIDisclaimer = func.ShowAIDisclaimer,
                         Label = CreateFunctionSignature(func.Name),
                         Parameters = new ParameterInformation[0],
                     };
