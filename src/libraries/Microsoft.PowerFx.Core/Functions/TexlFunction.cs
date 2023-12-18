@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Returns true if the function expect identifiers, false otherwise.
         /// Needs to be overloaded for functions having identifier parameters.
-        /// Also overload <see cref="GetIdentifierParamStatus(int)"/> method. 
+        /// Also overload <see cref="GetIdentifierParamStatus(Features, int)"/> method. 
         /// </summary>
         public virtual bool HasColumnIdentifiers => false;
 
@@ -475,7 +475,7 @@ namespace Microsoft.PowerFx.Core.Functions
             for (var i = 0; i < count; i++)
             {
                 // Identifiers don't have a type
-                if (ParameterCanBeIdentifier(i))
+                if (ParameterCanBeIdentifier(context.Features, i))
                 {
                     continue;
                 }
@@ -510,7 +510,7 @@ namespace Microsoft.PowerFx.Core.Functions
             for (var i = count; i < args.Length; i++)
             {
                 // Identifiers don't have a type
-                if (ParameterCanBeIdentifier(i))
+                if (ParameterCanBeIdentifier(context.Features, i))
                 {
                     continue;
                 }
@@ -601,10 +601,11 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Returns whether the parameter can be represented by an identifier.
         /// </summary>
+        /// <param name="features">The features enabled for the expression.</param>
         /// <param name="index">Parameter's index.</param>
         /// <returns>Value from <see cref="ParamIdentifierStatus"/> which tells whether
         /// the parameter in the given index can be an identifier.</returns>
-        public virtual ParamIdentifierStatus GetIdentifierParamStatus(int index)
+        public virtual ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
         {
             Contracts.Assert(index >= 0);
 
@@ -619,11 +620,12 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Returns whether the parameter can be represented by an identifier.
         /// </summary>
+        /// <param name="features">The features enabled for the expression.</param>
         /// <param name="index">Parameter's index.</param>
         /// <returns>true if the parameter can be an identifier, false otherwise.</returns>
-        public bool ParameterCanBeIdentifier(int index)
+        public bool ParameterCanBeIdentifier(Features features, int index)
         {
-            var paramIdentifierStatus = GetIdentifierParamStatus(index);
+            var paramIdentifierStatus = GetIdentifierParamStatus(features, index);
             return paramIdentifierStatus ==
                 ParamIdentifierStatus.AlwaysIdentifier ||
                 paramIdentifierStatus == ParamIdentifierStatus.PossiblyIdentifier;

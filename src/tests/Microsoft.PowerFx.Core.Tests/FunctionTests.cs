@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 var functionHasColumnIdentifiers = function.HasColumnIdentifiers;
                 var functionHasIdentifierParameters = Enumerable.Range(0, Math.Min(function.MaxArity, 5))
-                    .Where(argIndex => function.GetIdentifierParamStatus(argIndex) != TexlFunction.ParamIdentifierStatus.NeverIdentifier)
+                    .Where(argIndex => function.GetIdentifierParamStatus(Features.PowerFxV1, argIndex) != TexlFunction.ParamIdentifierStatus.NeverIdentifier)
                     .Any();
 
                 Assert.True(

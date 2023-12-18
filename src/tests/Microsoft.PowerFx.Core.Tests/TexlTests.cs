@@ -1534,41 +1534,43 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("SortByColumns(Table({a:TimeValue(\"11:15\")}), \"a\", Table({b:TimeValue(\"12:15\")}))", "*[a:T]")]
         [InlineData("SortByColumns(Table({a:DateValue(\"21 Jan 2014\")}), \"a\", Table({b:DateValue(\"21 Jan 2014\")}))", "*[a:D]")]
         [InlineData("SortByColumns(Table({a:2}), If(true,\"a\"),[3,4,5])", "*[a:n]")]
-        public void TexlFunctionTypeSemanticsSortByColumns_ColumnsAsIdentifiersDisabled(string script, string expectedType)
+        [InlineData("SortByColumns(Table({a:2}), stringVar, SortOrder.Ascending)", "*[a:n]")]
+        [InlineData("SortByColumns(T, \"A\", SortOrder.Ascending, \"B\", SortOrder.Ascending)", "*[A:n, B:b, C:s]", "*[A:n, B:b, C:s]")]
+        [InlineData("SortByColumns(T, \"A\", SortOrder.Ascending, \"B\", SortOrder.Ascending)", "*[A:n, B:b, C:s, H:h, I:i]", "*[A:n, B:b, C:s, H:h, I:i]")]
+        public void TexlFunctionTypeSemanticsSortByColumns_PowerFxV1Disabled(string script, string expectedType, string tVariableType = null)
         {
-            foreach (var pfxV1 in new[] { false, true })
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("stringVar", FormulaType.String);
+            if (tVariableType != null)
+            {
+                symbolTable.AddVariable("T", new TableType(TestUtils.DT(tVariableType)));
+            }
+
+            foreach (var columnNamesAsIdentifiers in new[] { false, true })
             {
                 var features = new Features
                 {
-                    SupportColumnNamesAsIdentifiers = false,
-                    PowerFxV1CompatibilityRules = pfxV1
+                    SupportColumnNamesAsIdentifiers = columnNamesAsIdentifiers,
+                    PowerFxV1CompatibilityRules = false
                 };
 
                 var expectedDType = TestUtils.DT(expectedType);
-                TestSimpleBindingSuccess(script, expectedDType, features: features);
+                TestSimpleBindingSuccess(script, expectedDType, symbolTable: symbolTable, features: features);
             }
         }
 
         [Theory]
         [InlineData("SortByColumns([1,2,3,4,5], Value, SortOrder.Ascending)", "*[Value:n]")]
         [InlineData("SortByColumns([1,2,3,4,5], Value)", "*[Value:n]")]
-        [InlineData("SortByColumns([1,2,3,4,5], \"Value\")", "*[Value:n]", true)]
         [InlineData("SortByColumns(Table({a:\"hello\"}), a, SortOrder.Ascending)", "*[a:s]")]
         [InlineData("SortByColumns(Table({a:\"hello\"}), a)", "*[a:s]")]
         [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), a, SortOrder.Ascending, b)", "*[a:n,b:s]")]
         [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), a, SortOrder.Ascending, b, SortOrder.Descending)", "*[a:n,b:s]")]
         [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), a, SortOrder.Ascending, b, SortOrder.Descending, c)", "*[a:n,b:s,c:n]")]
         [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), a, SortOrder.Ascending, b, SortOrder.Descending, c, SortOrder.Ascending)", "*[a:n,b:s,c:n]")]
-        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), \"a\", SortOrder.Ascending, b, SortOrder.Descending, c)", "*[a:n,b:s,c:n]", true)]
-        [InlineData("SortByColumns([1,2,3,4,5], First([\"Value\"]).Value, SortOrder.Ascending)", "*[Value:n]", true)]
-        [InlineData("SortByColumns([1,2,3,4,5], First([\"Value\"]).Value)", "*[Value:n]", true)]
-        [InlineData("SortByColumns(Table({a:\"hello\"}), If(true,\"a\"), SortOrder.Ascending)", "*[a:s]", true)]
-        [InlineData("SortByColumns(Table({a:\"hello\"}), If(true,\"a\"))", "*[a:s]", true)]
-        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), If(true,\"a\"), SortOrder.Ascending, b)", "*[a:n,b:s]", true)]
-        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), a, SortOrder.Ascending, If(true,\"b\"), SortOrder.Descending)", "*[a:n,b:s]", true)]
-        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), If(true,\"a\"), SortOrder.Ascending, If(true,\"b\"), SortOrder.Descending, \"c\")", "*[a:n,b:s,c:n]", true)]
-        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), If(true,\"c\"), SortOrder.Ascending, If(true,\"a\"), SortOrder.Descending, If(true,\"b\"), SortOrder.Ascending)", "*[a:n,b:s,c:n]", true)]
-        [InlineData("SortByColumns([1,2,3,4,5], \"Value\", [3,4,5])", "*[Value:n]", true)]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), \"a\", SortOrder.Ascending, b, SortOrder.Descending, c)", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), If(true,\"a\"), SortOrder.Ascending, b)", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), a, SortOrder.Ascending, If(true,\"b\"), SortOrder.Descending)", "*[a:n,b:s]")]
         [InlineData("SortByColumns([1,2,3,4,5], Value, [3,4,5])", "*[Value:n]")]
         [InlineData("SortByColumns(Table({a:\"hello\"}), a, Table({q:\"hello\"}))", "*[a:s]")]
         [InlineData("SortByColumns(Table({a:1}), a, Table({c:1}))", "*[a:n]")]
@@ -1576,27 +1578,70 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("SortByColumns(Table({a:DateTimeValue(\"21 Jan 2014\")}), a, Table({e:DateTimeValue(\"21 Jan 2014\")}))", "*[a:d]")]
         [InlineData("SortByColumns(Table({a:TimeValue(\"11:15\")}), a, Table({b:TimeValue(\"12:15\")}))", "*[a:T]")]
         [InlineData("SortByColumns(Table({a:DateValue(\"21 Jan 2014\")}), a, Table({b:DateValue(\"21 Jan 2014\")}))", "*[a:D]")]
-        [InlineData("SortByColumns(Table({a:2}), If(true,\"a\"),[3,4,5])", "*[a:n]", true)]
-        public void TexlFunctionTypeSemanticsSortByColumns_ColumnsAsIdentifiersEnabled(string script, string expectedType, bool errorOnPFxV1 = false)
+        public void TexlFunctionTypeSemanticsSortByColumns_ColumnsAsIdentifiersOn_PFxV1Off_Negative(string script, string expectedType)
         {
-            foreach (var pfxV1 in new[] { false, true })
-            {
-                var features = new Features
-                {
-                    SupportColumnNamesAsIdentifiers = true,
-                    PowerFxV1CompatibilityRules = pfxV1
-                };
+            var symbolTable = new SymbolTable();
 
-                var expectedDType = TestUtils.DT(expectedType);
-                if (pfxV1 && errorOnPFxV1)
-                {
-                    TestBindingErrors(script, expectedDType, features: features);
-                }
-                else
-                {
-                    TestSimpleBindingSuccess(script, expectedDType, features: features);
-                }
+            var features = new Features
+            {
+                SupportColumnNamesAsIdentifiers = true,
+                PowerFxV1CompatibilityRules = false
+            };
+
+            var expectedDType = TestUtils.DT(expectedType);
+            TestBindingErrors(script, expectedDType, symbolTable: symbolTable, features: features);
+        }
+
+        [Theory]
+        [InlineData("SortByColumns([1,2,3,4,5], Value, SortOrder.Ascending)", "*[Value:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], Value)", "*[Value:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], \"Value\")", "*[Value:n]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), a, SortOrder.Ascending)", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), a)", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), a, SortOrder.Ascending, b)", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), a, SortOrder.Ascending, b, SortOrder.Descending)", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), a, SortOrder.Ascending, b, SortOrder.Descending, c)", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), a, SortOrder.Ascending, b, SortOrder.Descending, c, SortOrder.Ascending)", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), \"a\", SortOrder.Ascending, b, SortOrder.Descending, c)", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], First([\"Value\"]).Value, SortOrder.Ascending)", "*[Value:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], First([\"Value\"]).Value)", "*[Value:n]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), If(true,\"a\"), SortOrder.Ascending)", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), If(true,\"a\"))", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), If(true,\"a\"), SortOrder.Ascending, b)", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\"}), a, SortOrder.Ascending, If(true,\"b\"), SortOrder.Descending)", "*[a:n,b:s]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), If(true,\"a\"), SortOrder.Ascending, If(true,\"b\"), SortOrder.Descending, \"c\")", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns(Table({a:1, b:\"hello\", c:3}), If(true,\"c\"), SortOrder.Ascending, If(true,\"a\"), SortOrder.Descending, If(true,\"b\"), SortOrder.Ascending)", "*[a:n,b:s,c:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], \"Value\", [3,4,5])", "*[Value:n]")]
+        [InlineData("SortByColumns([1,2,3,4,5], Value, [3,4,5])", "*[Value:n]")]
+        [InlineData("SortByColumns(Table({a:\"hello\"}), a, Table({q:\"hello\"}))", "*[a:s]")]
+        [InlineData("SortByColumns(Table({a:1}), a, Table({c:1}))", "*[a:n]")]
+        [InlineData("SortByColumns(Table({a:true}), a, Table({d:true}))", "*[a:b]")]
+        [InlineData("SortByColumns(Table({a:DateTimeValue(\"21 Jan 2014\")}), a, Table({e:DateTimeValue(\"21 Jan 2014\")}))", "*[a:d]")]
+        [InlineData("SortByColumns(Table({a:TimeValue(\"11:15\")}), a, Table({b:TimeValue(\"12:15\")}))", "*[a:T]")]
+        [InlineData("SortByColumns(Table({a:DateValue(\"21 Jan 2014\")}), a, Table({b:DateValue(\"21 Jan 2014\")}))", "*[a:D]")]
+        [InlineData("SortByColumns(Table({a:2}), If(true,\"a\"),[3,4,5])", "*[a:n]")]
+        [InlineData("SortByColumns(Table({a:2}), stringVar, SortOrder.Ascending)", "*[a:n]")]
+        [InlineData("SortByColumns(T, \"A\", SortOrder.Ascending, \"B\", SortOrder.Ascending)", "*[A:n, B:b, C:s]", "*[A:n, B:b, C:s]")]
+        [InlineData("SortByColumns(T, \"A\", SortOrder.Ascending, \"B\", SortOrder.Ascending)", "*[A:n, B:b, C:s, H:h, I:i]", "*[A:n, B:b, C:s, H:h, I:i]")]
+        [InlineData("SortByColumns(T, A, SortOrder.Ascending, B, SortOrder.Ascending)", "*[A:n, B:b, C:s]", "*[A:n, B:b, C:s]")]
+        [InlineData("SortByColumns(T, A, SortOrder.Ascending, B, SortOrder.Ascending)", "*[A:n, B:b, C:s, H:h, I:i]", "*[A:n, B:b, C:s, H:h, I:i]")]
+        public void TexlFunctionTypeSemanticsSortByColumns_ColumnsAsIdentifiersOn_PFxV1On(string script, string expectedType, string tVariableType = null)
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("stringVar", FormulaType.String);
+            if (tVariableType != null)
+            {
+                symbolTable.AddVariable("T", new TableType(TestUtils.DT(tVariableType)));
             }
+
+            var features = new Features
+            {
+                SupportColumnNamesAsIdentifiers = true,
+                PowerFxV1CompatibilityRules = true
+            };
+
+            var expectedDType = TestUtils.DT(expectedType);
+            TestSimpleBindingSuccess(script, expectedDType, symbolTable: symbolTable, features: features);
         }
 
         [Theory]
@@ -1617,6 +1662,48 @@ namespace Microsoft.PowerFx.Core.Tests
                 var expectedDType = TestUtils.DT(expectedType);
                 TestBindingErrors(script, expectedDType, features: features);
             }
+        }
+
+        [Theory]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:![b:n]]")]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:*[b:n]]")]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:O]")]
+        public void TexlFunctionTypeSemanticsSortByColumns_Negative(string script, string tVariableType)
+        {
+            foreach (var pfxV1 in new[] { false, true })
+            {
+                var symbolTable = new SymbolTable();
+                var tType = TestUtils.DT(tVariableType);
+                symbolTable.AddVariable("T", new TableType(tType));
+
+                var features = new Features
+                {
+                    SupportColumnNamesAsIdentifiers = true,
+                    PowerFxV1CompatibilityRules = pfxV1
+                };
+
+                TestBindingErrors(script, tType, symbolTable: symbolTable, features: features);
+            }
+        }
+
+        [Theory]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:i]")]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:h]")]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:o]")]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:m]")]
+        [InlineData("SortByColumns(T, \"a\")", "*[a:g]")]
+        public void TexlFunctionTypeSemanticsSortByColumns_Negative_PowerFxV1Enabled(string script, string tVariableType)
+        {
+            var features = Features.PowerFxV1;
+            var symbolTable = new SymbolTable();
+            var tType = TestUtils.DT(tVariableType);
+            symbolTable.AddVariable("stringVar", FormulaType.String);
+            if (tVariableType != null)
+            {
+                symbolTable.AddVariable("T", new TableType(tType));
+            }
+
+            TestBindingErrors(script, tType, symbolTable: symbolTable, features: features);
         }
 
         [Theory]
@@ -3858,6 +3945,39 @@ namespace Microsoft.PowerFx.Core.Tests
             finally
             {
                 symbol.RemoveFunction(silentFilterFunction);
+            }
+        }
+
+        [Theory]
+
+        // Single column access syntax is supported pre PowerFxV1 rules.
+        [InlineData("T.A", "*[A:n]", false)]
+        [InlineData("T.B", "*[B:![C:s]]", false)]
+
+        // Single column access syntax is not supported PowerFxV1 rules onwards.
+        [InlineData("T.A", "e", true)]
+        [InlineData("T.B", "e", true)]
+        public void TestSingleColumnAccessDependentOnTableType(string script, string expectedSchema, bool usePowerFxV1Rules)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[A:n, B:![C:s]]")));
+
+            if (usePowerFxV1Rules)
+            {
+                var features = new Features() { PowerFxV1CompatibilityRules = true };
+                TestBindingErrors(
+                    script,
+                    TestUtils.DT(expectedSchema),
+                    symbol,
+                    features: features);
+            }
+            else
+            {
+                TestSimpleBindingSuccess(
+                                   script,
+                                   TestUtils.DT(expectedSchema),
+                                   symbol,
+                                   features: Features.None);
             }
         }
 

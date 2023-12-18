@@ -27,6 +27,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests.Helpers
                 parserOptions.DisableReservedKeywords = true;
             }
 
+            if (flags.HasFlag(TexlParser.Flags.TextFirst))
+            {
+                parserOptions.TextFirst = true;
+            }
+
             return parserOptions;
         }
     }
