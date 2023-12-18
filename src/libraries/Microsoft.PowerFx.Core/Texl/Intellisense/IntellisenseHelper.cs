@@ -379,7 +379,7 @@ namespace Microsoft.PowerFx.Intellisense
                         int len = Math.Min(intellisenseData.CursorPos, end) - start;
                         string filter = len > 0 ? intellisenseData.Script.Substring(start, len) : null;
 
-                        if (info.ScopeIdentifier != default && (string.IsNullOrWhiteSpace(filter) || info.ScopeIdentifier.Value.StartsWith(filter, StringComparison.OrdinalIgnoreCase))) // && node is ErrorNode)
+                        if (info.ScopeIdentifier != default && (string.IsNullOrWhiteSpace(filter) || info.ScopeIdentifier.Value.StartsWith(filter, StringComparison.OrdinalIgnoreCase)))
                         {
                             // Add ScopeIdentifier (ex: ThisRecord)
                             AddSuggestion(intellisenseData, info.ScopeIdentifier, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: false);
