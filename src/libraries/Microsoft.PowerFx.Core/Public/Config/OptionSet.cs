@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -85,5 +86,17 @@ namespace Microsoft.PowerFx
         DType IExternalEntity.Type => _type;
 
         DKind IExternalOptionSet.BackingKind => DKind.String;
+
+        public override bool Equals(object obj)
+        {
+            return obj is OptionSet other &&
+                EntityName == other.EntityName &&
+                this._type == other._type;
+        }
+
+        public override int GetHashCode()
+        {
+            return Hashing.CombineHash(EntityName.GetHashCode(), this._type.GetHashCode());
+        }
     }
 }
