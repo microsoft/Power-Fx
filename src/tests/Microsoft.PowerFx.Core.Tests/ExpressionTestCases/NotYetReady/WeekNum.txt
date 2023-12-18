@@ -1,4 +1,4 @@
-
+﻿
 // **********DEFAULT STARTOFWEEK (WEEK CONTAINING JANUARY 1) PARAMETER **********
 
 >> WeekNum(Date(1900, 11, 22))
