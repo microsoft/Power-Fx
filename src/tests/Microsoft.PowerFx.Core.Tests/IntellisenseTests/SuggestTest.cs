@@ -14,7 +14,6 @@ using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -173,7 +172,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Error({|Kind:0, Test:\"\"})", "Kind:", "Test:")]
 
         // ErrorNodeSuggestionHandler
-        [InlineData("ForAll([0],`|")] // Can't have 'Value' or "ThisRecord" as we filter on "`"
+        [InlineData("ForAll([0],`|", "ThisRecord", "Value")]
         [InlineData("ForAll(-],|", "ThisRecord")]
         [InlineData("ForAll()~|")]
         [InlineData("With( {Apples:3}, $\"We have {Apples} apples|")]
@@ -347,7 +346,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Filter(Table, Table[|", "![Table: *[Column: s]]", "@Column")]
 
         // ErrorNodeSuggestionHandler
-        [InlineData("ForAll(Table,`|", "![Table: *[Column: s]]")] // Can't return "Column" or "ThisRecord" as we filter on "`"
+        [InlineData("ForAll(Table,`|", "![Table: *[Column: s]]", "Column", "ThisRecord")]
         public void TestSuggestWithContext(string expression, string context, params string[] expectedSuggestions)
         {
             Assert.NotNull(context);
@@ -540,20 +539,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var suggestion = engine.Suggest(check, cursorPosition).Suggestions.Select(suggestion => suggestion.DisplayText.Text);
 
             Assert.Equal(expected, suggestion);
-        }
-
-        [Theory]
-        [InlineData("Concat([{a:1}, {a:2}],)", 22, "a", "ThisRecord")]
-        [InlineData("Concat([{a:1}, {a:2}], )", 23, "a", "ThisRecord")]
-        [InlineData("Concat([{a:1}, {a:2}],  )", 22, "a", "ThisRecord")]
-        [InlineData("Concat([{a:1}, {a:2}],   )", 24, "a", "ThisRecord")]
-        public void SuggestFilter(string expr, int cursor, params string[] results)
-        {            
-            var engine = new Engine(new PowerFxConfig());
-            var check = engine.Check(expr);
-            
-            IIntellisenseResult irr = engine.Suggest(check, cursor);
-            Assert.Equal(string.Join("|", results), string.Join("|", irr.Suggestions.Select(s => s.DisplayText.Text)));
         }
 
         private class LazyRecursiveRecordType : RecordType

@@ -258,9 +258,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.AddFunction(customFunction);
 
             var engine = new RecalcEngine(config);
+            var check = engine.Check(expression, null, dataverseMock);
+
             var cursorPos = expression.IndexOf('|');
-            var check = engine.Check(expression.Substring(0, cursorPos), null, dataverseMock);
-            
             var result = engine.Suggest(check, cursorPos);
 
             Assert.Equal(expectedSuggestions, result.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray());
