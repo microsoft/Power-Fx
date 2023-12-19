@@ -26,13 +26,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
             }
 
             this.Label = info.Label;
-            this.Documentation = info.Documentation;    
+            this.Documentation = info.Documentation;
             if (info.ShowAIDisclaimer != null)
             {
+                // Append disclaimer to create a final markdown string to send to LSP. 
                 string disclaimer = info.ShowAIDisclaimer.DisclaimerMarkdown;
                 string original = info.Documentation;
 
-                this.Documentation = original + "\r\n" + disclaimer;
+                this.Documentation = new MarkdownString
+                {
+                    Value = original + "\r\n" + disclaimer
+                };
             }
                         
             // info doesn't have ActiveParameter
