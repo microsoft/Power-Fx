@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
                 string disclaimer = info.ShowAIDisclaimer.DisclaimerMarkdown;
                 string original = info.Documentation;
 
-                this.Documentation = new MarkdownString
+                this.Documentation = new MarkdownStringHolder
                 {
                     Value = original + "\r\n" + disclaimer
                 };
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// The human-readable doc-comment of this signature. Will be shown
         /// in the UI but can be omitted.
         /// If this is a string, it's plain text. 
-        /// If this is a <see cref="MarkdownString"/>, then it's github markdown. 
+        /// If this is a <see cref="MarkdownStringHolder"/>, then it's github markdown. 
         /// </summary>
         public object Documentation { get; set; }
 
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// Github flavored Markdown string.
     /// See https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#markupContent.
     /// </summary>
-    public class MarkdownString
+    public class MarkdownStringHolder
     {
         public string MarkupKind = "markdown"; // "plaintext"
 

@@ -1006,7 +1006,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("AISummarize()", sig.Label);
 
             var je = (JsonElement)sig.Documentation;
-            var markdown = JsonSerializer.Deserialize<MarkdownString>(je.ToString(), _jsonSerializerOptions);
+            var markdown = JsonSerializer.Deserialize<MarkdownStringHolder>(je.ToString(), _jsonSerializerOptions);
             Assert.Equal("markdown", markdown.MarkupKind);
             Assert.StartsWith("Create and set a global variable", markdown.Value); // function's normal description 
             Assert.Contains("**Disclaimer:** AI-generated content", markdown.Value); // disclaimer appended. 
