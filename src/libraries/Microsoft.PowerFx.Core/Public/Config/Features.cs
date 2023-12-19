@@ -88,6 +88,11 @@ namespace Microsoft.PowerFx
         internal bool PrimaryOutputPropertyCoercionDeprecated { get; set; }
 
         /// <summary>
+        /// Enables enhanced lookup delegation, to properly support delegation of reduction formulas. 
+        /// </summary>
+        internal bool IsEnhancedLookUpDelegationEnabled { get; set; }
+
+        /// <summary>
         /// This is specific for Cards team and it is a temporary feature.
         /// It will be soon deleted.
         /// </summary>

@@ -82,7 +82,31 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            FilterOpMetadata metadata = null;
+            if (!TryGetFilterOpDelegationMetadata(callNode, binding, out var metadata))
+            {
+                return false;
+            }
+
+            var args = callNode.Args.Children.VerifyValue();
+
+            // without enhanced lookup delegation, follow the incorrect legacy logic to determine if the function call is delegatable
+            if (!binding.Features.IsEnhancedLookUpDelegationEnabled && args.Count > 2 && binding.IsDelegatable(args[2]))
+            {
+                SuggestDelegationHint(args[2], binding);
+                return false;
+            }
+            
+            if (args.Count < 2)
+            {
+                return false;
+            }
+
+            return IsValidDelegatableFilterPredicateNode(args[1], binding, metadata);
+        }
+
+        private bool TryGetFilterOpDelegationMetadata(CallNode callNode, TexlBinding binding, out FilterOpMetadata metadata)
+        {
+            metadata = null;
             if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
             {
                 if (!TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.ArrayLookup, out _))
@@ -103,13 +127,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 metadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
             }
 
-            var args = callNode.Args.Children.VerifyValue();
-            if (args.Count < 2)
-            {
-                return false;
-            }
-
-            return IsValidDelegatableFilterPredicateNode(args[1], binding, metadata);
+            return true;
         }
 
         public override bool IsEcsExcemptedLambda(int index)
@@ -125,106 +143,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public bool IsValidDelegatableReductionNode(CallNode callNode, TexlNode node, TexlBinding binding)
         {
-            // TODO: how to separate out this logic without duplications
-            FilterOpMetadata filterMetadata = null;
-            if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
+            if (!TryGetFilterOpDelegationMetadata(callNode, binding, out var metadata))
             {
-                if (!TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.ArrayLookup, out _))
-                {
-                    SuggestDelegationHint(callNode, binding);
-                    return false;
-                }
-
-                filterMetadata = delegationMetadata.FilterDelegationMetadata.VerifyValue();
-            }
-            else
-            {
-                if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out var dataSource))
-                {
-                    return false;
-                }
-
-                filterMetadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
+                return false;
             }
 
-            Contracts.AssertValue(node);
-            Contracts.AssertValue(binding);
-
-            var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
-            var dottedNameStrategy = GetDottedNameNodeDelegationStrategy();
-            var cNodeStrategy = GetCallNodeDelegationStrategy();
-
-            NodeKind kind;
-            kind = node.Kind;
-
-            // what cases actually need to be handled here?
-            switch (kind)
-            {
-                case NodeKind.BinaryOp:
-                    {
-                        var opNode = node.AsBinaryOp();
-                        var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
-                        Contracts.AssertValue(opNode);
-
-                        if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
-                        {
-                            return false;
-                        }
-
-                        break;
-                    }
-
-                case NodeKind.FirstName:
-                    {
-                        if (!firstNameStrategy.IsValidFirstNameNode(node.AsFirstName(), binding, null))
-                        {
-                            return false;
-                        }
-
-                        break;
-                    }
-
-                case NodeKind.DottedName:
-                    {
-                        if (!dottedNameStrategy.IsValidDottedNameNode(node.AsDottedName(), binding, filterMetadata, null))
-                        {
-                            return false;
-                        }
-
-                        break;
-                    }
-
-                case NodeKind.UnaryOp:
-                    {
-                        var opNode = node.AsUnaryOpLit();
-                        var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
-                        Contracts.AssertValue(opNode);
-
-                        if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
-                        {
-                            SuggestDelegationHint(node, binding);
-                            return false;
-                        }
-
-                        break;
-                    }
-
-                case NodeKind.Call:
-                    {
-                        if (!cNodeStrategy.IsValidCallNode(node.AsCall(), binding, filterMetadata))
-                        {
-                            return false;
-                        }
-
-                        break;
-                    }
-
-                default:
-                    SuggestDelegationHint(node, binding, string.Format(CultureInfo.InvariantCulture, "Not supported node {0}.", kind));
-                    return false;
-            }
-
-            return true;
+            // use a variation of the filter predicate logic to determine if the reduction formula is delegatable, without enforcing the return type must be boolean
+            return IsValidDelegatableFilterPredicateNode(callNode, binding, metadata, generateHints: false, enforceBoolean: false);
         }
     }
 
@@ -240,8 +165,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var function = binding.GetInfo(node)?.Function;
             var args = node.Args.Children.VerifyValue();          
 
-            // TODO: for now, try to use the top level filtering logic for filters
-            if (function is LookUpFunction lookup && args.Count > 2 && !lookup.IsValidDelegatableReductionNode(node, args[2], binding))
+            // if enabled, only for Lookup functions, verify if the reduction formula is valid for delegation
+            if (binding.Features.IsEnhancedLookUpDelegationEnabled &&
+                function is LookUpFunction lookup && args.Count > 2 && 
+                !lookup.IsValidDelegatableReductionNode(node, args[2], binding))
             {
                 this.SuggestDelegationHint(args[2], binding);
                 return false;

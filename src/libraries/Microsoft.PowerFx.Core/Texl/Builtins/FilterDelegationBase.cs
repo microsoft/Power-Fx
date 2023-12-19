@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return true;
         }
 
-        protected bool IsValidDelegatableFilterPredicateNode(TexlNode dsNode, TexlBinding binding, FilterOpMetadata filterMetadata, bool generateHints = true)
+        protected bool IsValidDelegatableFilterPredicateNode(TexlNode dsNode, TexlBinding binding, FilterOpMetadata filterMetadata, bool generateHints = true, bool enforceBoolean = true)
         {
             Contracts.AssertValue(dsNode);
             Contracts.AssertValue(binding);
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     case NodeKind.FirstName:
                         {
-                            if (!IsNodeBooleanOptionSetorBooleanFieldorView(dsNode, binding))
+                            if (enforceBoolean && !IsNodeBooleanOptionSetorBooleanFieldorView(dsNode, binding))
                             {
                                 SuggestDelegationHint(dsNode, binding);
                                 return false;
@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     case NodeKind.DottedName:
                         {
-                            if (!IsNodeBooleanOptionSetorBooleanFieldorView(dsNode, binding))
+                            if (enforceBoolean && !IsNodeBooleanOptionSetorBooleanFieldorView(dsNode, binding))
                             {
                                 SuggestDelegationHint(dsNode, binding);
                                 return false;
@@ -162,7 +162,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     default:
                         {
-                            if (kind != NodeKind.BoolLit)
+                            // TODO: what other types should be supported for non-boolean reduction nodes?
+                            if (enforceBoolean && kind != NodeKind.BoolLit)
                             {
                                 SuggestDelegationHint(dsNode, binding, string.Format(CultureInfo.InvariantCulture, "Not supported node {0}.", kind));
                                 return false;
