@@ -5,6 +5,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     using System;
     using System.Globalization;
+    using Microsoft.PowerFx.Intellisense;
     using SignatureInformationCore = Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureInformation;
 
     /// <summary>
@@ -27,15 +28,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 
             this.Label = info.Label;
             this.Documentation = info.Documentation;
-            if (info.ShowAIDisclaimer != null)
+            if (info.GetDisclaimerMarkdown != null)
             {
                 // Append disclaimer to create a final markdown string to send to LSP. 
-                string disclaimer = info.ShowAIDisclaimer.DisclaimerMarkdown;
+                MarkdownString disclaimer = info.GetDisclaimerMarkdown();
                 string original = info.Documentation;
 
                 this.Documentation = new MarkdownStringHolder
                 {
-                    Value = original + "\r\n" + disclaimer
+                    Value = original + "\r\n" + disclaimer.Markdown
                 };
             }
                         

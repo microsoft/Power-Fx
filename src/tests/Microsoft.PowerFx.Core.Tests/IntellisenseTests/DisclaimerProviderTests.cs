@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Intellisense.SignatureHelp
         public void Tests()
         {
             var ai = new DisclaimerProvider(null);
-            var str = ai.DisclaimerMarkdown;
+            var str = ai.DisclaimerMarkdown.Markdown;
 
             // We don't know excatly what text will be, but we can sanity check. 
             Assert.StartsWith("**Disclaimer:** AI-generated content", str);
