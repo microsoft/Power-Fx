@@ -122,27 +122,5 @@ namespace Microsoft.PowerFx.Connectors
                 throw;
             }
         }
-
-        public IEnumerable<KeyValuePair<string, DType>> GetArgumentSuggestions(ArgumentSuggestions.TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnqualifiedEnums, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping)
-        {
-            requiresSuggestionEscaping = false;
-
-            if (MinArity <= argumentIndex && argumentIndex <= MaxArity)
-            {
-                if (ConnectorFunction.RequiredParameters.Length > 0 && argumentIndex < ConnectorFunction.RequiredParameters.Length)
-                {
-                    ConnectorParameter cP = ConnectorFunction.RequiredParameters[argumentIndex];
-                    return new Dictionary<string, DType>() { { TexlLexer.EscapeName(cP.Name), cP.FormulaType._type } };
-                }
-
-                // optional parameters are in a record
-                if (scopeType.Kind == DKind.Record)
-                {
-                    return ConnectorFunction.OptionalParameters.Select(op => new KeyValuePair<string, DType>(TexlLexer.EscapeName(op.Name), op.FormulaType._type));
-                }
-            }
-
-            return new Dictionary<string, DType>();
-        }
     }
 }
