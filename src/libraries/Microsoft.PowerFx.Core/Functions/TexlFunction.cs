@@ -279,9 +279,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// This function requires an AI disclaimer. 
         /// </summary>
-        // $$$ Pass this flag in
-        //public bool UseAIDisclaimer => this.Name.StartsWith("AI");
-        public bool ShowAIDisclaimer => true;
+        public virtual bool ShowAIDisclaimer => this.Name.StartsWith("AI", StringComparison.OrdinalIgnoreCase);
 
         // A forward link to the function help.
         public virtual string HelpLink =>

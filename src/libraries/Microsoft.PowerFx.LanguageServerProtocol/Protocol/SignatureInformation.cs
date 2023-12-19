@@ -4,6 +4,7 @@
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     using System;
+    using System.Globalization;
     using SignatureInformationCore = Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureInformation;
 
     /// <summary>
@@ -26,26 +27,16 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 
             this.Label = info.Label;
             this.Documentation = info.Documentation;    
-            if (info.ShowAIDisclaimer)
+            if (info.ShowAIDisclaimer != null)
             {
-                this.Documentation = GetDisclaimer(info.Documentation);
+                string disclaimer = info.ShowAIDisclaimer.DisclaimerMarkdown;
+                string original = info.Documentation;
+
+                this.Documentation = original + "\r\n" + disclaimer;
             }
                         
             // info doesn't have ActiveParameter
-        }
-
-        // Given a string, get the AI disclaimer. 
-        private static MarkdownString GetDisclaimer(string original)
-        {
-            // $$$ Get these from resources. 
-            var link = "https://go.microsoft.com/fwlink/?linkid=2225491";
-            var msg = $"**Disclaimer:** AI-generated content can have mistakes. Make sure it's accurate and appropriate before using it. [See terms]({link})";
-
-            return new MarkdownString
-            {
-                Value = original + "\r\n" + msg
-            };
-        }
+        }      
 
         /// <summary>
         /// The label of this signature. Will be shown in

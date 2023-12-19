@@ -377,16 +377,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             var lspObj = new SignatureHelp(result.SignatureHelp);
 
-            /* $$$
-            if (lspObj.Signatures != null)
-            {
-                foreach (var sig in lspObj.Signatures)
-                {
-                    
-                    sig.Documentation = GetDisclaimer(sig.Documentation.ToString());
-                }
-            }*/
-
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, lspObj));
         }
 
