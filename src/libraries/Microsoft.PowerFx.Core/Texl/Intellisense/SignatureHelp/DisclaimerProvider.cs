@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Intellisense.SignatureHelp
                 (var shortMessage, var _) = ErrorUtils.GetLocalizedErrorContent(
                     TexlStrings.IntellisenseAiDisclaimer, _locale, out _);
 
-                return new MarkdownString(shortMessage);
+                return MarkdownString.FromMarkdown(shortMessage);
             }
         }
 

@@ -27,17 +27,20 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
             }
 
             this.Label = info.Label;
-            this.Documentation = info.Documentation;
-            if (info.GetDisclaimerMarkdown != null)
+
+            if (info.GetDisclaimerMarkdown == null)
             {
+                this.SetDocumentation(info.Documentation);
+            }
+            else 
+            { 
                 // Append disclaimer to create a final markdown string to send to LSP. 
                 MarkdownString disclaimer = info.GetDisclaimerMarkdown();
                 string original = info.Documentation;
 
-                this.Documentation = new MarkdownStringHolder
-                {
-                    Value = original + "\r\n" + disclaimer.Markdown
-                };
+                MarkdownString final = MarkdownString.FromString(original) + disclaimer;
+
+                this.SetDocumentation(final);
             }
                         
             // info doesn't have ActiveParameter
@@ -53,9 +56,30 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// The human-readable doc-comment of this signature. Will be shown
         /// in the UI but can be omitted.
         /// If this is a string, it's plain text. 
-        /// If this is a <see cref="MarkdownStringHolder"/>, then it's github markdown. 
+        /// If this is a <see cref="MarkupContent"/>, then it's github markdown. 
         /// </summary>
         public object Documentation { get; set; }
+
+        /// <summary>
+        /// Helper to set the documentation to plaintext. 
+        /// </summary>
+        /// <param name="plainText"></param>
+        public void SetDocumentation(string plainText)
+        {
+            this.Documentation = plainText;
+        }
+
+        /// <summary>
+        /// Helper to set the documentation to markdown. 
+        /// </summary>
+        /// <param name="markdown"></param>
+        public void SetDocumentation(MarkdownString markdown)
+        {
+            this.Documentation = new MarkupContent
+            {
+                Value = markdown.Markdown
+            };
+        }
 
         /// <summary>
         /// The parameters of this signature.
@@ -68,16 +92,5 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// If provided, this is used in place of `SignatureHelp.activeParameter`.
         /// </summary>
         public uint ActiveParameter { get; set; }
-    }
-
-    /// <summary>
-    /// Github flavored Markdown string.
-    /// See https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#markupContent.
-    /// </summary>
-    public class MarkdownStringHolder
-    {
-        public string MarkupKind = "markdown"; // "plaintext"
-
-        public string Value { get; set; }
     }
 }
