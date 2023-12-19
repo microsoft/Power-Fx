@@ -28,8 +28,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Swagger\*.json" />
     <EmbeddedResource Include="Responses\*.json" />
-    <EmbeddedResource Include="Responses\*.txt" />
-    <EmbeddedResource Include="Responses\*.jpeg" />
+    <EmbeddedResource Include="Responses\*.txt" />    
     <EmbeddedResource Include="Responses\*.jsonSet" />
   </ItemGroup>
 
