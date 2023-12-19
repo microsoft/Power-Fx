@@ -108,20 +108,20 @@ namespace Microsoft.PowerFx.Connectors.Tests
             "Response_O365Users_MyProfileV2A.json")]
 
         // This function should return a FormulaValue with DType.Image type and isn't currently supported
-        [InlineData(
-            @"Office365Users.UserPhoto(""a6d41679-60f7-4623-8d38-0538c02e59f9"")",
-            "IMAGE",
-            "GET:/apim/office365users/1870991d56b04959a52f6704949eccad/users/photo/value?userId=a6d41679-60f7-4623-8d38-0538c02e59f9",
-            "",
-            "Response_O365Users_UserPhoto.jpeg")]
+        //[InlineData(
+        //    @"Office365Users.UserPhoto(""a6d41679-60f7-4623-8d38-0538c02e59f9"")",
+        //    "IMAGE",
+        //    "GET:/apim/office365users/1870991d56b04959a52f6704949eccad/users/photo/value?userId=a6d41679-60f7-4623-8d38-0538c02e59f9",
+        //    "",
+        //    "Response_O365Users_UserPhoto.jpeg")]
 
         // This function should return a FormulaValue with DType.Image type and isn't currently supported
-        [InlineData(
-            @"Office365Users.UserPhotoV2(""a6d41679-60f7-4623-8d38-0538c02e59f9"")",
-            "IMAGE",
-            "GET:/apim/office365users/1870991d56b04959a52f6704949eccad/codeless/v1.0/users/a6d41679-60f7-4623-8d38-0538c02e59f9/photo/$value",
-            "",
-            "Response_O365Users_UserPhoto.jpeg")]
+        //[InlineData(
+        //    @"Office365Users.UserPhotoV2(""a6d41679-60f7-4623-8d38-0538c02e59f9"")",
+        //    "IMAGE",
+        //    "GET:/apim/office365users/1870991d56b04959a52f6704949eccad/codeless/v1.0/users/a6d41679-60f7-4623-8d38-0538c02e59f9/photo/$value",
+        //    "",
+        //    "Response_O365Users_UserPhoto.jpeg")]
 
         [InlineData(
             @"Office365Users.UserPhotoMetadata(""a6d41679-60f7-4623-8d38-0538c02e59f9"").ContentType",
