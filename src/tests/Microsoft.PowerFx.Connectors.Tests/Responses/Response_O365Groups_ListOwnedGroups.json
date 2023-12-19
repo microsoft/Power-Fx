@@ -1,0 +1,3389 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#groups(owners())",
+  "value": [
+    {
+      "id": "4b2cb4d4-bdff-4eb1-826a-69b31ad9796b",
+      "deletedDateTime": null,
+      "classification": null,
+      "createdDateTime": "2022-02-27T20:37:51Z",
+      "creationOptions": [],
+      "description": "11111",
+      "displayName": "11111",
+      "expirationDateTime": null,
+      "groupTypes": [
+        "Unified"
+      ],
+      "isAssignableToRole": null,
+      "mail": "11111@capintegration01.onmicrosoft.com",
+      "mailEnabled": true,
+      "mailNickname": "11111",
+      "membershipRule": null,
+      "membershipRuleProcessingState": null,
+      "onPremisesDomainName": null,
+      "onPremisesLastSyncDateTime": null,
+      "onPremisesNetBiosName": null,
+      "onPremisesSamAccountName": null,
+      "onPremisesSecurityIdentifier": null,
+      "onPremisesSyncEnabled": null,
+      "preferredDataLocation": null,
+      "preferredLanguage": null,
+      "proxyAddresses": [
+        "SPO:SPO_2e35e9e5-297d-4d0c-8dd6-0a134406689c@SPO_91bee3d9-0c15-4f17-8624-c92bb8b36ead",
+        "SMTP:11111@capintegration01.onmicrosoft.com"
+      ],
+      "renewedDateTime": "2022-02-27T20:37:51Z",
+      "resourceBehaviorOptions": [],
+      "resourceProvisioningOptions": [],
+      "securityEnabled": false,
+      "securityIdentifier": "S-1-12-1-1261221076-1320271359-3010030210-1803147546",
+      "theme": null,
+      "visibility": "Private",
+      "onPremisesProvisioningErrors": [],
+      "serviceProvisioningErrors": [],
+      "owners": [
+        {
+          "@odata.type": "#microsoft.graph.user",
+          "id": "32ba11bd-ff15-46f7-bd33-6b481e5f5c7e",
+          "deletedDateTime": null,
+          "accountEnabled": true,
+          "ageGroup": null,
+          "businessPhones": [],
+          "city": null,
+          "companyName": null,
+          "consentProvidedForMinor": null,
+          "country": null,
+          "createdDateTime": "2021-05-05T00:30:53Z",
+          "creationType": null,
+          "department": null,
+          "displayName": "aurorauser09",
+          "employeeId": null,
+          "employeeHireDate": null,
+          "employeeLeaveDateTime": null,
+          "employeeType": null,
+          "externalUserState": null,
+          "externalUserStateChangeDateTime": null,
+          "faxNumber": null,
+          "givenName": "aurora",
+          "isLicenseReconciliationNeeded": false,
+          "jobTitle": null,
+          "legalAgeGroupClassification": null,
+          "mail": "aurorauser09@capintegration01.onmicrosoft.com",
+          "mailNickname": "aurorauser09",
+          "mobilePhone": null,
+          "onPremisesDistinguishedName": null,
+          "onPremisesDomainName": null,
+          "onPremisesImmutableId": null,
+          "onPremisesLastSyncDateTime": null,
+          "onPremisesSecurityIdentifier": null,
+          "onPremisesSamAccountName": null,
+          "onPremisesSyncEnabled": null,
+          "onPremisesUserPrincipalName": null,
+          "otherMails": [],
+          "passwordPolicies": null,
+          "officeLocation": null,
+          "postalCode": null,
+          "preferredDataLocation": null,
+          "preferredLanguage": "en-US",
+          "proxyAddresses": [
+            "SMTP:aurorauser09@capintegration01.onmicrosoft.com"
+          ],
+          "refreshTokensValidFromDateTime": "2021-05-07T00:04:22Z",
+          "imAddresses": [
+            "aurorauser09@capintegration01.onmicrosoft.com"
+          ],
+          "isResourceAccount": null,
+          "showInAddressList": null,
+          "securityIdentifier": "S-1-12-1-851055037-1190657813-1214985149-2119982878",
+          "signInSessionsValidFromDateTime": "2021-05-07T00:04:22Z",
+          "state": null,
+          "streetAddress": null,
+          "surname": "user09",
+          "usageLocation": "US",
+          "userPrincipalName": "aurorauser09@capintegration01.onmicrosoft.com",
+          "userType": "Member",
+          "employeeOrgData": null,
+          "passwordProfile": null,
+          "assignedLicenses": [
+            {
+              "disabledPlans": [],
+              "skuId": "05e9a617-0261-4cee-bb44-138d3ef5d965"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "3f9f06f5-3c31-472c-985f-62d9c10ec167"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "5b631642-bd26-49fe-bd20-1daaa972ef80"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "1e615a51-59db-4807-9957-aa83c3657351"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "6ec92958-3cc1-49db-95bd-bc6b3798df71"
+            },
+            {
+              "disabledPlans": [
+                "69f07c66-bee4-4222-b051-195095efee5b",
+                "0a05d977-a21a-45b2-91ce-61c240dbafa2",
+                "18fa3aba-b085-4105-87d7-55617b8585e6",
+                "7e6d7d78-73de-46ba-83b1-6d25117334ba",
+                "874fc546-6efe-4d22-90b8-5c4e7aa59f4b",
+                "03acaee3-9492-4f40-aed4-bcb6b32981b6",
+                "e95bec33-7c88-4a70-8e19-b10bd9d0c014",
+                "5dbe027f-2339-4123-9542-606e4d348a72",
+                "fe71d6c3-a2ea-4499-9778-da042bf08063",
+                "fafd7243-e5c1-4a3a-9e40-495efcb1d3c3"
+              ],
+              "skuId": "28b81ef4-b535-4e5c-ae14-bd40148c89c5"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "20a48bfa-85c4-46f3-8475-c604be6035f0"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "b30411f5-fea1-4a59-9ad9-3db7c7ead579"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "f30db892-07e9-47e9-837c-80727f46fd3d"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "ddfae3e3-fcb2-4174-8ebd-3023cb213c8b"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "dcb1a3ae-b33f-4487-846a-a640262fadf4"
+            },
+            {
+              "disabledPlans": [
+                "7e6d7d78-73de-46ba-83b1-6d25117334ba",
+                "874fc546-6efe-4d22-90b8-5c4e7aa59f4b",
+                "e95bec33-7c88-4a70-8e19-b10bd9d0c014",
+                "1259157c-8581-4875-bca7-2ffb18c51bda"
+              ],
+              "skuId": "c7d15985-e746-4f01-b113-20b575898250"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "bf666882-9c9b-4b2e-aa2f-4789b0a52ba2"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "beb6439c-caad-48d3-bf46-0c82871e12be"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "a403ebcc-fae0-4ca2-8c8c-7a907fd6c235"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "9c7bff7a-3715-4da7-88d3-07f57f8d0fb6"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "98619618-9dc8-48c6-8f0c-741890ba5f93"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "7ed4877c-0863-4f69-9187-245487128d4f"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "6fd2c87f-b296-42f0-b197-1e91e994b900"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "6a4a1628-9b9a-424d-bed5-4118f0ede3fd"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "606b54a9-78d8-4298-ad8b-df6ef4481c80"
+            },
+            {
+              "disabledPlans": [
+                "e95bec33-7c88-4a70-8e19-b10bd9d0c014",
+                "5dbe027f-2339-4123-9542-606e4d348a72"
+              ],
+              "skuId": "53818b1b-4a27-454b-8896-0dba576410e6"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "4eee99ed-c06e-4fc0-971d-71c5f58c08d9"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "036c2481-aa8a-47cd-ab43-324f0c157c2d"
+            }
+          ],
+          "assignedPlans": [
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "fe71d6c3-a2ea-4499-9778-da042bf08063"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "874fc546-6efe-4d22-90b8-5c4e7aa59f4b"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "5dbe027f-2339-4123-9542-606e4d348a72"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectProgramsAndPortfolios",
+              "servicePlanId": "0a05d977-a21a-45b2-91ce-61c240dbafa2"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "ERP",
+              "servicePlanId": "69f07c66-bee4-4222-b051-195095efee5b"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "e95bec33-7c88-4a70-8e19-b10bd9d0c014"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftOffice",
+              "servicePlanId": "fafd7243-e5c1-4a3a-9e40-495efcb1d3c3"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "7e6d7d78-73de-46ba-83b1-6d25117334ba"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "18fa3aba-b085-4105-87d7-55617b8585e6"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "1259157c-8581-4875-bca7-2ffb18c51bda"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "Netbreeze",
+              "servicePlanId": "03acaee3-9492-4f40-aed4-bcb6b32981b6"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:22Z",
+              "capabilityStatus": "Enabled",
+              "service": "MSRemoteAssist",
+              "servicePlanId": "4f4c7800-298a-4e22-8867-96b17850d4dd"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:22Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "816971f4-37c5-424a-b12b-b56881f402e7"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:22Z",
+              "capabilityStatus": "Enabled",
+              "service": "MSRemoteAssist",
+              "servicePlanId": "baf2c419-dbd3-401a-87ed-f8c7dd83fd4e"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:22Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsServiceGCC",
+              "servicePlanId": "e608feac-8930-4c4a-8685-fdbdeec05bc2"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "MixedRealityCollaborationServices",
+              "servicePlanId": "dcf9d2f4-772e-4434-b757-77a453cfbc02"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "MixedRealityCollaborationServices",
+              "servicePlanId": "3efbd4ed-8958-4824-8389-1321f8730af8"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "RMSOnline",
+              "servicePlanId": "6c57d4b6-3b23-47a5-9bc9-69f17b4947b3"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "a1ace008-72f3-4ea0-8dac-33b3a23a2472"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "MultiFactorService",
+              "servicePlanId": "8a256a2b-b617-496d-b51b-e76466e88db0"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Windows",
+              "servicePlanId": "21b439ba-a0ca-424f-a6cc-52f954a5b111"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Modern-Workplace-Core-ITaas",
+              "servicePlanId": "9a6eeb79-0b4b-4bf0-9808-39d99a2cd5a3"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "WindowsUpdateforBusinessCloudExtensions",
+              "servicePlanId": "7bf960f6-2cd9-443a-8046-5dbff9558365"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Adallom",
+              "servicePlanId": "932ad362-64a8-4783-9106-97849a1a30b9"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "AADPremiumService",
+              "servicePlanId": "41781fb2-bc02-4b7c-bd55-b576c07bb09d"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Microsoft.ProjectBabylon",
+              "servicePlanId": "c948ea65-2053-4a5a-8a62-9eaaaf11b522"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "WindowsDefenderATP",
+              "servicePlanId": "292cc034-7b7c-4950-aaf5-943befd3f1d4"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Bing",
+              "servicePlanId": "0d0c0d31-fae7-41f2-b909-eaf4d7f26dba"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "SCO",
+              "servicePlanId": "c1ec4a95-1f05-45b3-a911-aa3fa01094f5"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftPrint",
+              "servicePlanId": "795f6fe0-cc4d-4773-b050-5dde4dc704c9"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Chapter5FluidApp",
+              "servicePlanId": "c4b8c31a-fb44-4c65-9837-a21f55fcabda"
+            },
+            {
+              "assignedDateTime": "2023-06-28T06:49:31Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "6817d093-2d30-4249-8bd6-774f01efa78c"
+            },
+            {
+              "assignedDateTime": "2023-06-22T21:49:48Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "a2729df7-25f8-4e63-984b-8a8484121554"
+            },
+            {
+              "assignedDateTime": "2023-06-22T21:49:48Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "d8c638e2-9508-40e3-9877-feb87603837b"
+            },
+            {
+              "assignedDateTime": "2023-06-22T21:49:48Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "c7ce3f26-564d-4d3a-878d-d8ab868c85fe"
+            },
+            {
+              "assignedDateTime": "2023-05-16T14:27:51Z",
+              "capabilityStatus": "Enabled",
+              "service": "YammerEnterprise",
+              "servicePlanId": "a82fbf69-b4d7-49f4-83a6-915b2cf354f4"
+            },
+            {
+              "assignedDateTime": "2023-05-16T14:27:51Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "60bf28f9-2b70-4522-96f7-335f5e06c941"
+            },
+            {
+              "assignedDateTime": "2023-05-16T14:27:51Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "7df1d500-ca5c-4229-8cea-815bc88798c9"
+            },
+            {
+              "assignedDateTime": "2022-07-25T11:02:33Z",
+              "capabilityStatus": "Enabled",
+              "service": "DYN365_CS_MESSAGING",
+              "servicePlanId": "3bf52bdf-5226-4a97-829e-5cca9b3f3392"
+            },
+            {
+              "assignedDateTime": "2022-07-25T11:02:33Z",
+              "capabilityStatus": "Enabled",
+              "service": "DYN365AISERVICEINSIGHTS",
+              "servicePlanId": "33f1466e-63a6-464c-bf6a-d1787928a56a"
+            },
+            {
+              "assignedDateTime": "2022-07-25T11:02:33Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "3de81e39-4ce1-47f7-a77f-8473d4eb6d7c"
+            },
+            {
+              "assignedDateTime": "2022-07-25T11:02:33Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "94fb67d3-465f-4d1f-a50a-952da079a564"
+            },
+            {
+              "assignedDateTime": "2022-05-19T17:38:48Z",
+              "capabilityStatus": "Deleted",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "97f29a83-1a20-44ff-bf48-5e4ad11f3e51"
+            },
+            {
+              "assignedDateTime": "2022-05-19T17:38:48Z",
+              "capabilityStatus": "Deleted",
+              "service": "CRM",
+              "servicePlanId": "f06a6c3c-67bd-461c-acbe-68549548d863"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "81d4ecb8-0481-42fb-8868-51536c5aceeb"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "456747c0-cf1e-4b0d-940f-703a01b964cc"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "7f636c80-0961-41b2-94da-9642ccf02de0"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "dbe07046-af68-4861-a20d-1c8cbda9194f"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "54b37829-818e-4e3c-a08a-3ea66ab9b45d"
+            },
+            {
+              "assignedDateTime": "2022-04-18T23:09:14Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "cb3e4386-18f3-4dde-996b-c25fb903785f"
+            },
+            {
+              "assignedDateTime": "2022-04-18T23:09:14Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "909d3bc4-8744-4e19-8354-79d8cf55ea9b"
+            },
+            {
+              "assignedDateTime": "2022-03-29T18:50:32Z",
+              "capabilityStatus": "Deleted",
+              "service": "CRM",
+              "servicePlanId": "af1b4f3c-83a3-4752-b7d0-f9269260518a"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "23d8d023-3a9b-4741-930d-3bd868b45b3c"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftCommunicationsOnline",
+              "servicePlanId": "d9ab8c26-bcc8-42cb-aadd-1b5bc9df03ee"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "91f50f7b-2204-4803-acac-5cf5668b8b39"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "9a096bad-1be0-43b8-9eab-36c6c6c97329"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "cdbeb806-454e-4c51-9996-a1f0749dfe1f"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "Dynamics365CustomerInsightsEngagementInsights",
+              "servicePlanId": "e2bdea63-235e-44c6-9f5e-5b0e783f07dd"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "7ee6f5d7-54c8-47c3-a4bc-a8a9eed672a3"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "2f1065db-f121-4607-930a-607f57b74e63"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "f58a1c8d-df8f-4d8e-917c-2724e17ab04a"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "b88764b1-bcab-4c62-ad4a-3904c44c8f20"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "dc114c16-5d54-497f-849c-6f1e0c9bda74"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "EHRTeleHealth",
+              "servicePlanId": "7adcc626-1e05-4755-993b-af10bad2c64d"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "435e78d0-ad07-4551-aa6e-2ec231a6841c"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "74d93933-6f22-436e-9441-66d205435abb"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "LearningAppServiceInTeams",
+              "servicePlanId": "b76fb638-6ba6-402a-b9f9-83d28acb3d86"
+            },
+            {
+              "assignedDateTime": "2021-05-11T22:22:18Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "dc789ed8-0170-4b65-a415-eb77d5bb350a"
+            },
+            {
+              "assignedDateTime": "2021-05-11T22:22:18Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "ea2cf03b-ac60-46ae-9c1d-eeaeb63cec86"
+            },
+            {
+              "assignedDateTime": "2021-05-10T14:10:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "6ea4c1ef-c259-46df-bce2-943342cd3cb2"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectProgramsAndPortfolios",
+              "servicePlanId": "818523f5-016b-4355-9be8-ed6944946ea7"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "94e5cbf6-d843-4ee8-a2ec-8b15eb52019e"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "RMSOnline",
+              "servicePlanId": "bea4c11e-220a-4e6d-8eb8-8ea15d019f90"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "17ab22cd-a0b3-4536-910a-cb6eb12696c0"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftOffice",
+              "servicePlanId": "43de0ff5-c92c-492b-9116-175376d08c38"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "exchange",
+              "servicePlanId": "5136a095-5cf0-4aff-bec3-e84448b38ea5"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "D365SalesProfessional",
+              "servicePlanId": "db39a47e-1f4f-462b-bf5b-2ec471fb7b88"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "8c66ef8a-177f-4c0d-853c-d4f219331d09"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "Deskless",
+              "servicePlanId": "8c7d2df8-86f0-4902-b2ed-a0458298f3b3"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "9c439259-63b0-46cc-a258-72be4313a42d"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "5d798708-6473-48ad-9776-3acc301c40af"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CCIBot",
+              "servicePlanId": "c74c0850-d528-4023-b0b1-5f9342feacae"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "00283e6b-2bd8-440f-a2d5-87358e4c89a1"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "94a669d1-84d5-4e54-8462-53b0ae2c8be5"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "WhiteboardServices",
+              "servicePlanId": "94a54592-cd8b-425e-87c6-97868b000b91"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftKaizala",
+              "servicePlanId": "aebd3021-9f8f-4bf8-bbe3-0ed2f4f047a1"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "YammerEnterprise",
+              "servicePlanId": "7547a3fe-08ee-4ccb-b430-5077c5041653"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "exchange",
+              "servicePlanId": "33c4f319-9bdd-48d6-9c4d-410b750a4a5a"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "To-Do",
+              "servicePlanId": "c87f142c-d1e9-4363-8630-aaea9c4d9ae5"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "00527d7f-d5bc-4c2a-8d1e-6c0de2410c81"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "35122886-cef5-44a3-ab36-97134eabd9ba"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "fa200448-008c-4acb-abd4-ea106ed2199d"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "Sway",
+              "servicePlanId": "a23b959c-7ce8-4e57-9140-b90eb88a9e97"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectProgramsAndPortfolios",
+              "servicePlanId": "31b4e2fc-4cd6-4e7d-9c1b-41407303bd66"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "dd14867e-8d31-4779-a595-304405f5ad39"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "exchange",
+              "servicePlanId": "199a5c09-e0ca-4e37-8f7c-b05d533e1ea2"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "c68f8d98-5534-41c8-bf36-22fa496fa792"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "4ff01e01-1ba7-4d71-8cf8-ce96c3bbcf14"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "DynamicsRCSWorkload",
+              "servicePlanId": "c7657ae3-c0b0-4eed-8c1d-6a7967bd9c65"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "exchange",
+              "servicePlanId": "efb87545-963c-4e0d-99df-69c6916d9eb0"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftCommunicationsOnline",
+              "servicePlanId": "0feaeb32-d00e-4d66-bd5a-43b5b83db82c"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "95b76021-6a53-4741-ab8b-1d1f3d66a95a"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "76846ad7-7776-4c40-a281-a386362dd1b9"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "73f205fc-6b15-47a5-967e-9e64fdf72d0a"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "50554c47-71d9-49fd-bc54-42a2765c555c"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftStream",
+              "servicePlanId": "9e700747-8b1d-45e5-ab8d-ef187ceec156"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "cf7034ed-348f-42eb-8bbd-dddeea43ee81"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "c7699d2e-19aa-44de-8edf-1736da088ca1"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "Dynamics365AICustomerInsights",
+              "servicePlanId": "ed8e8769-94c5-4132-a3e7-7543b713d51f"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "d5368ca3-357e-4acb-9c21-8495fb025d1f"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "50e68c76-46c6-4674-81f9-75456511b170"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectWorkManagement",
+              "servicePlanId": "b737dad2-2f6c-4c65-90e3-ca563267e8b9"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "fe581650-cf61-4a09-8814-4bd77eca9cb5"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ccibotsprod",
+              "servicePlanId": "ce312d15-8fdf-44c0-9974-a25a177125ee"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "d20bfa21-e9ae-43fc-93c2-20783f0840c3"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectProgramsAndPortfolios",
+              "servicePlanId": "4a12c688-56c6-461a-87b1-30d6f32136f9"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "a6f677b3-62a6-4644-93e7-2a85d240845e"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "TeamspaceAPI",
+              "servicePlanId": "57ff2da0-773e-42df-b2af-ffb7a2317929"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "56be9436-e4b2-446c-bb7f-cc15d16cca4d"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ccibotsprod",
+              "servicePlanId": "041fe683-03e4-45b6-b1af-c0cdc516daee"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "OfficeForms",
+              "servicePlanId": "2789c901-c14e-48ab-a76a-be334d9d793a"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "DynamicsNAV",
+              "servicePlanId": "3f2afeed-6fb5-4bf9-998f-f2912133aead"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "AzureAnalysis",
+              "servicePlanId": "2049e525-b859-401b-b2a0-e0a31c4b1fe4"
+            }
+          ],
+          "authorizationInfo": {
+            "certificateUserIds": []
+          },
+          "identities": [
+            {
+              "signInType": "userPrincipalName",
+              "issuer": "capintegration01.onmicrosoft.com",
+              "issuerAssignedId": "aurorauser09@capintegration01.onmicrosoft.com"
+            }
+          ],
+          "onPremisesProvisioningErrors": [],
+          "onPremisesExtensionAttributes": {
+            "extensionAttribute1": null,
+            "extensionAttribute2": null,
+            "extensionAttribute3": null,
+            "extensionAttribute4": null,
+            "extensionAttribute5": null,
+            "extensionAttribute6": null,
+            "extensionAttribute7": null,
+            "extensionAttribute8": null,
+            "extensionAttribute9": null,
+            "extensionAttribute10": null,
+            "extensionAttribute11": null,
+            "extensionAttribute12": null,
+            "extensionAttribute13": null,
+            "extensionAttribute14": null,
+            "extensionAttribute15": null
+          },
+          "provisionedPlans": [
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "MicrosoftCommunicationsOnline"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "MicrosoftCommunicationsOnline"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "exchange"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "exchange"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "exchange"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "exchange"
+            }
+          ],
+          "serviceProvisioningErrors": []
+        }
+      ]
+    },
+    {
+      "id": "56e038c2-49da-4731-b933-d34505281349",
+      "deletedDateTime": null,
+      "classification": null,
+      "createdDateTime": "2022-02-27T22:28:38Z",
+      "creationOptions": [],
+      "description": "11111",
+      "displayName": "11111",
+      "expirationDateTime": null,
+      "groupTypes": [
+        "Unified"
+      ],
+      "isAssignableToRole": null,
+      "mail": "11111736@capintegration01.onmicrosoft.com",
+      "mailEnabled": true,
+      "mailNickname": "11111736",
+      "membershipRule": null,
+      "membershipRuleProcessingState": null,
+      "onPremisesDomainName": null,
+      "onPremisesLastSyncDateTime": null,
+      "onPremisesNetBiosName": null,
+      "onPremisesSamAccountName": null,
+      "onPremisesSecurityIdentifier": null,
+      "onPremisesSyncEnabled": null,
+      "preferredDataLocation": null,
+      "preferredLanguage": null,
+      "proxyAddresses": [
+        "SPO:SPO_2043936e-0d73-4883-9a1d-586bdfd862a8@SPO_91bee3d9-0c15-4f17-8624-c92bb8b36ead",
+        "SMTP:11111736@capintegration01.onmicrosoft.com"
+      ],
+      "renewedDateTime": "2022-02-27T22:28:38Z",
+      "resourceBehaviorOptions": [],
+      "resourceProvisioningOptions": [],
+      "securityEnabled": false,
+      "securityIdentifier": "S-1-12-1-1457535170-1194412506-1171469241-1225992197",
+      "theme": null,
+      "visibility": "Private",
+      "onPremisesProvisioningErrors": [],
+      "serviceProvisioningErrors": [],
+      "owners": [
+        {
+          "@odata.type": "#microsoft.graph.user",
+          "id": "32ba11bd-ff15-46f7-bd33-6b481e5f5c7e",
+          "deletedDateTime": null,
+          "accountEnabled": true,
+          "ageGroup": null,
+          "businessPhones": [],
+          "city": null,
+          "companyName": null,
+          "consentProvidedForMinor": null,
+          "country": null,
+          "createdDateTime": "2021-05-05T00:30:53Z",
+          "creationType": null,
+          "department": null,
+          "displayName": "aurorauser09",
+          "employeeId": null,
+          "employeeHireDate": null,
+          "employeeLeaveDateTime": null,
+          "employeeType": null,
+          "externalUserState": null,
+          "externalUserStateChangeDateTime": null,
+          "faxNumber": null,
+          "givenName": "aurora",
+          "isLicenseReconciliationNeeded": false,
+          "jobTitle": null,
+          "legalAgeGroupClassification": null,
+          "mail": "aurorauser09@capintegration01.onmicrosoft.com",
+          "mailNickname": "aurorauser09",
+          "mobilePhone": null,
+          "onPremisesDistinguishedName": null,
+          "onPremisesDomainName": null,
+          "onPremisesImmutableId": null,
+          "onPremisesLastSyncDateTime": null,
+          "onPremisesSecurityIdentifier": null,
+          "onPremisesSamAccountName": null,
+          "onPremisesSyncEnabled": null,
+          "onPremisesUserPrincipalName": null,
+          "otherMails": [],
+          "passwordPolicies": null,
+          "officeLocation": null,
+          "postalCode": null,
+          "preferredDataLocation": null,
+          "preferredLanguage": "en-US",
+          "proxyAddresses": [
+            "SMTP:aurorauser09@capintegration01.onmicrosoft.com"
+          ],
+          "refreshTokensValidFromDateTime": "2021-05-07T00:04:22Z",
+          "imAddresses": [
+            "aurorauser09@capintegration01.onmicrosoft.com"
+          ],
+          "isResourceAccount": null,
+          "showInAddressList": null,
+          "securityIdentifier": "S-1-12-1-851055037-1190657813-1214985149-2119982878",
+          "signInSessionsValidFromDateTime": "2021-05-07T00:04:22Z",
+          "state": null,
+          "streetAddress": null,
+          "surname": "user09",
+          "usageLocation": "US",
+          "userPrincipalName": "aurorauser09@capintegration01.onmicrosoft.com",
+          "userType": "Member",
+          "employeeOrgData": null,
+          "passwordProfile": null,
+          "assignedLicenses": [
+            {
+              "disabledPlans": [],
+              "skuId": "05e9a617-0261-4cee-bb44-138d3ef5d965"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "3f9f06f5-3c31-472c-985f-62d9c10ec167"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "5b631642-bd26-49fe-bd20-1daaa972ef80"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "1e615a51-59db-4807-9957-aa83c3657351"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "6ec92958-3cc1-49db-95bd-bc6b3798df71"
+            },
+            {
+              "disabledPlans": [
+                "69f07c66-bee4-4222-b051-195095efee5b",
+                "0a05d977-a21a-45b2-91ce-61c240dbafa2",
+                "18fa3aba-b085-4105-87d7-55617b8585e6",
+                "7e6d7d78-73de-46ba-83b1-6d25117334ba",
+                "874fc546-6efe-4d22-90b8-5c4e7aa59f4b",
+                "03acaee3-9492-4f40-aed4-bcb6b32981b6",
+                "e95bec33-7c88-4a70-8e19-b10bd9d0c014",
+                "5dbe027f-2339-4123-9542-606e4d348a72",
+                "fe71d6c3-a2ea-4499-9778-da042bf08063",
+                "fafd7243-e5c1-4a3a-9e40-495efcb1d3c3"
+              ],
+              "skuId": "28b81ef4-b535-4e5c-ae14-bd40148c89c5"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "20a48bfa-85c4-46f3-8475-c604be6035f0"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "b30411f5-fea1-4a59-9ad9-3db7c7ead579"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "f30db892-07e9-47e9-837c-80727f46fd3d"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "ddfae3e3-fcb2-4174-8ebd-3023cb213c8b"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "dcb1a3ae-b33f-4487-846a-a640262fadf4"
+            },
+            {
+              "disabledPlans": [
+                "7e6d7d78-73de-46ba-83b1-6d25117334ba",
+                "874fc546-6efe-4d22-90b8-5c4e7aa59f4b",
+                "e95bec33-7c88-4a70-8e19-b10bd9d0c014",
+                "1259157c-8581-4875-bca7-2ffb18c51bda"
+              ],
+              "skuId": "c7d15985-e746-4f01-b113-20b575898250"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "bf666882-9c9b-4b2e-aa2f-4789b0a52ba2"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "beb6439c-caad-48d3-bf46-0c82871e12be"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "a403ebcc-fae0-4ca2-8c8c-7a907fd6c235"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "9c7bff7a-3715-4da7-88d3-07f57f8d0fb6"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "98619618-9dc8-48c6-8f0c-741890ba5f93"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "7ed4877c-0863-4f69-9187-245487128d4f"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "6fd2c87f-b296-42f0-b197-1e91e994b900"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "6a4a1628-9b9a-424d-bed5-4118f0ede3fd"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "606b54a9-78d8-4298-ad8b-df6ef4481c80"
+            },
+            {
+              "disabledPlans": [
+                "e95bec33-7c88-4a70-8e19-b10bd9d0c014",
+                "5dbe027f-2339-4123-9542-606e4d348a72"
+              ],
+              "skuId": "53818b1b-4a27-454b-8896-0dba576410e6"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "4eee99ed-c06e-4fc0-971d-71c5f58c08d9"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "036c2481-aa8a-47cd-ab43-324f0c157c2d"
+            }
+          ],
+          "assignedPlans": [
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "fe71d6c3-a2ea-4499-9778-da042bf08063"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "874fc546-6efe-4d22-90b8-5c4e7aa59f4b"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "5dbe027f-2339-4123-9542-606e4d348a72"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectProgramsAndPortfolios",
+              "servicePlanId": "0a05d977-a21a-45b2-91ce-61c240dbafa2"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "ERP",
+              "servicePlanId": "69f07c66-bee4-4222-b051-195095efee5b"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "e95bec33-7c88-4a70-8e19-b10bd9d0c014"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftOffice",
+              "servicePlanId": "fafd7243-e5c1-4a3a-9e40-495efcb1d3c3"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "7e6d7d78-73de-46ba-83b1-6d25117334ba"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "18fa3aba-b085-4105-87d7-55617b8585e6"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "1259157c-8581-4875-bca7-2ffb18c51bda"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "Netbreeze",
+              "servicePlanId": "03acaee3-9492-4f40-aed4-bcb6b32981b6"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:22Z",
+              "capabilityStatus": "Enabled",
+              "service": "MSRemoteAssist",
+              "servicePlanId": "4f4c7800-298a-4e22-8867-96b17850d4dd"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:22Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "816971f4-37c5-424a-b12b-b56881f402e7"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:22Z",
+              "capabilityStatus": "Enabled",
+              "service": "MSRemoteAssist",
+              "servicePlanId": "baf2c419-dbd3-401a-87ed-f8c7dd83fd4e"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:22Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsServiceGCC",
+              "servicePlanId": "e608feac-8930-4c4a-8685-fdbdeec05bc2"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "MixedRealityCollaborationServices",
+              "servicePlanId": "dcf9d2f4-772e-4434-b757-77a453cfbc02"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "MixedRealityCollaborationServices",
+              "servicePlanId": "3efbd4ed-8958-4824-8389-1321f8730af8"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "RMSOnline",
+              "servicePlanId": "6c57d4b6-3b23-47a5-9bc9-69f17b4947b3"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "a1ace008-72f3-4ea0-8dac-33b3a23a2472"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "MultiFactorService",
+              "servicePlanId": "8a256a2b-b617-496d-b51b-e76466e88db0"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Windows",
+              "servicePlanId": "21b439ba-a0ca-424f-a6cc-52f954a5b111"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Modern-Workplace-Core-ITaas",
+              "servicePlanId": "9a6eeb79-0b4b-4bf0-9808-39d99a2cd5a3"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "WindowsUpdateforBusinessCloudExtensions",
+              "servicePlanId": "7bf960f6-2cd9-443a-8046-5dbff9558365"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Adallom",
+              "servicePlanId": "932ad362-64a8-4783-9106-97849a1a30b9"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "AADPremiumService",
+              "servicePlanId": "41781fb2-bc02-4b7c-bd55-b576c07bb09d"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Microsoft.ProjectBabylon",
+              "servicePlanId": "c948ea65-2053-4a5a-8a62-9eaaaf11b522"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "WindowsDefenderATP",
+              "servicePlanId": "292cc034-7b7c-4950-aaf5-943befd3f1d4"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Bing",
+              "servicePlanId": "0d0c0d31-fae7-41f2-b909-eaf4d7f26dba"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "SCO",
+              "servicePlanId": "c1ec4a95-1f05-45b3-a911-aa3fa01094f5"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftPrint",
+              "servicePlanId": "795f6fe0-cc4d-4773-b050-5dde4dc704c9"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Chapter5FluidApp",
+              "servicePlanId": "c4b8c31a-fb44-4c65-9837-a21f55fcabda"
+            },
+            {
+              "assignedDateTime": "2023-06-28T06:49:31Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "6817d093-2d30-4249-8bd6-774f01efa78c"
+            },
+            {
+              "assignedDateTime": "2023-06-22T21:49:48Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "a2729df7-25f8-4e63-984b-8a8484121554"
+            },
+            {
+              "assignedDateTime": "2023-06-22T21:49:48Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "d8c638e2-9508-40e3-9877-feb87603837b"
+            },
+            {
+              "assignedDateTime": "2023-06-22T21:49:48Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "c7ce3f26-564d-4d3a-878d-d8ab868c85fe"
+            },
+            {
+              "assignedDateTime": "2023-05-16T14:27:51Z",
+              "capabilityStatus": "Enabled",
+              "service": "YammerEnterprise",
+              "servicePlanId": "a82fbf69-b4d7-49f4-83a6-915b2cf354f4"
+            },
+            {
+              "assignedDateTime": "2023-05-16T14:27:51Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "60bf28f9-2b70-4522-96f7-335f5e06c941"
+            },
+            {
+              "assignedDateTime": "2023-05-16T14:27:51Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "7df1d500-ca5c-4229-8cea-815bc88798c9"
+            },
+            {
+              "assignedDateTime": "2022-07-25T11:02:33Z",
+              "capabilityStatus": "Enabled",
+              "service": "DYN365_CS_MESSAGING",
+              "servicePlanId": "3bf52bdf-5226-4a97-829e-5cca9b3f3392"
+            },
+            {
+              "assignedDateTime": "2022-07-25T11:02:33Z",
+              "capabilityStatus": "Enabled",
+              "service": "DYN365AISERVICEINSIGHTS",
+              "servicePlanId": "33f1466e-63a6-464c-bf6a-d1787928a56a"
+            },
+            {
+              "assignedDateTime": "2022-07-25T11:02:33Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "3de81e39-4ce1-47f7-a77f-8473d4eb6d7c"
+            },
+            {
+              "assignedDateTime": "2022-07-25T11:02:33Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "94fb67d3-465f-4d1f-a50a-952da079a564"
+            },
+            {
+              "assignedDateTime": "2022-05-19T17:38:48Z",
+              "capabilityStatus": "Deleted",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "97f29a83-1a20-44ff-bf48-5e4ad11f3e51"
+            },
+            {
+              "assignedDateTime": "2022-05-19T17:38:48Z",
+              "capabilityStatus": "Deleted",
+              "service": "CRM",
+              "servicePlanId": "f06a6c3c-67bd-461c-acbe-68549548d863"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "81d4ecb8-0481-42fb-8868-51536c5aceeb"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "456747c0-cf1e-4b0d-940f-703a01b964cc"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "7f636c80-0961-41b2-94da-9642ccf02de0"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "dbe07046-af68-4861-a20d-1c8cbda9194f"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "54b37829-818e-4e3c-a08a-3ea66ab9b45d"
+            },
+            {
+              "assignedDateTime": "2022-04-18T23:09:14Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "cb3e4386-18f3-4dde-996b-c25fb903785f"
+            },
+            {
+              "assignedDateTime": "2022-04-18T23:09:14Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "909d3bc4-8744-4e19-8354-79d8cf55ea9b"
+            },
+            {
+              "assignedDateTime": "2022-03-29T18:50:32Z",
+              "capabilityStatus": "Deleted",
+              "service": "CRM",
+              "servicePlanId": "af1b4f3c-83a3-4752-b7d0-f9269260518a"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "23d8d023-3a9b-4741-930d-3bd868b45b3c"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftCommunicationsOnline",
+              "servicePlanId": "d9ab8c26-bcc8-42cb-aadd-1b5bc9df03ee"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "91f50f7b-2204-4803-acac-5cf5668b8b39"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "9a096bad-1be0-43b8-9eab-36c6c6c97329"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "cdbeb806-454e-4c51-9996-a1f0749dfe1f"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "Dynamics365CustomerInsightsEngagementInsights",
+              "servicePlanId": "e2bdea63-235e-44c6-9f5e-5b0e783f07dd"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "7ee6f5d7-54c8-47c3-a4bc-a8a9eed672a3"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "2f1065db-f121-4607-930a-607f57b74e63"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "f58a1c8d-df8f-4d8e-917c-2724e17ab04a"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "b88764b1-bcab-4c62-ad4a-3904c44c8f20"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "dc114c16-5d54-497f-849c-6f1e0c9bda74"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "EHRTeleHealth",
+              "servicePlanId": "7adcc626-1e05-4755-993b-af10bad2c64d"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "435e78d0-ad07-4551-aa6e-2ec231a6841c"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "74d93933-6f22-436e-9441-66d205435abb"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "LearningAppServiceInTeams",
+              "servicePlanId": "b76fb638-6ba6-402a-b9f9-83d28acb3d86"
+            },
+            {
+              "assignedDateTime": "2021-05-11T22:22:18Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "dc789ed8-0170-4b65-a415-eb77d5bb350a"
+            },
+            {
+              "assignedDateTime": "2021-05-11T22:22:18Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "ea2cf03b-ac60-46ae-9c1d-eeaeb63cec86"
+            },
+            {
+              "assignedDateTime": "2021-05-10T14:10:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "6ea4c1ef-c259-46df-bce2-943342cd3cb2"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectProgramsAndPortfolios",
+              "servicePlanId": "818523f5-016b-4355-9be8-ed6944946ea7"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "94e5cbf6-d843-4ee8-a2ec-8b15eb52019e"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "RMSOnline",
+              "servicePlanId": "bea4c11e-220a-4e6d-8eb8-8ea15d019f90"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "17ab22cd-a0b3-4536-910a-cb6eb12696c0"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftOffice",
+              "servicePlanId": "43de0ff5-c92c-492b-9116-175376d08c38"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "exchange",
+              "servicePlanId": "5136a095-5cf0-4aff-bec3-e84448b38ea5"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "D365SalesProfessional",
+              "servicePlanId": "db39a47e-1f4f-462b-bf5b-2ec471fb7b88"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "8c66ef8a-177f-4c0d-853c-d4f219331d09"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "Deskless",
+              "servicePlanId": "8c7d2df8-86f0-4902-b2ed-a0458298f3b3"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "9c439259-63b0-46cc-a258-72be4313a42d"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "5d798708-6473-48ad-9776-3acc301c40af"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CCIBot",
+              "servicePlanId": "c74c0850-d528-4023-b0b1-5f9342feacae"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "00283e6b-2bd8-440f-a2d5-87358e4c89a1"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "94a669d1-84d5-4e54-8462-53b0ae2c8be5"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "WhiteboardServices",
+              "servicePlanId": "94a54592-cd8b-425e-87c6-97868b000b91"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftKaizala",
+              "servicePlanId": "aebd3021-9f8f-4bf8-bbe3-0ed2f4f047a1"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "YammerEnterprise",
+              "servicePlanId": "7547a3fe-08ee-4ccb-b430-5077c5041653"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "exchange",
+              "servicePlanId": "33c4f319-9bdd-48d6-9c4d-410b750a4a5a"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "To-Do",
+              "servicePlanId": "c87f142c-d1e9-4363-8630-aaea9c4d9ae5"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "00527d7f-d5bc-4c2a-8d1e-6c0de2410c81"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "35122886-cef5-44a3-ab36-97134eabd9ba"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "fa200448-008c-4acb-abd4-ea106ed2199d"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "Sway",
+              "servicePlanId": "a23b959c-7ce8-4e57-9140-b90eb88a9e97"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectProgramsAndPortfolios",
+              "servicePlanId": "31b4e2fc-4cd6-4e7d-9c1b-41407303bd66"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "dd14867e-8d31-4779-a595-304405f5ad39"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "exchange",
+              "servicePlanId": "199a5c09-e0ca-4e37-8f7c-b05d533e1ea2"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "c68f8d98-5534-41c8-bf36-22fa496fa792"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "4ff01e01-1ba7-4d71-8cf8-ce96c3bbcf14"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "DynamicsRCSWorkload",
+              "servicePlanId": "c7657ae3-c0b0-4eed-8c1d-6a7967bd9c65"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "exchange",
+              "servicePlanId": "efb87545-963c-4e0d-99df-69c6916d9eb0"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftCommunicationsOnline",
+              "servicePlanId": "0feaeb32-d00e-4d66-bd5a-43b5b83db82c"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "95b76021-6a53-4741-ab8b-1d1f3d66a95a"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "76846ad7-7776-4c40-a281-a386362dd1b9"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "73f205fc-6b15-47a5-967e-9e64fdf72d0a"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "50554c47-71d9-49fd-bc54-42a2765c555c"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftStream",
+              "servicePlanId": "9e700747-8b1d-45e5-ab8d-ef187ceec156"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "cf7034ed-348f-42eb-8bbd-dddeea43ee81"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "c7699d2e-19aa-44de-8edf-1736da088ca1"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "Dynamics365AICustomerInsights",
+              "servicePlanId": "ed8e8769-94c5-4132-a3e7-7543b713d51f"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "d5368ca3-357e-4acb-9c21-8495fb025d1f"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "50e68c76-46c6-4674-81f9-75456511b170"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectWorkManagement",
+              "servicePlanId": "b737dad2-2f6c-4c65-90e3-ca563267e8b9"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "fe581650-cf61-4a09-8814-4bd77eca9cb5"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ccibotsprod",
+              "servicePlanId": "ce312d15-8fdf-44c0-9974-a25a177125ee"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "d20bfa21-e9ae-43fc-93c2-20783f0840c3"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectProgramsAndPortfolios",
+              "servicePlanId": "4a12c688-56c6-461a-87b1-30d6f32136f9"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "a6f677b3-62a6-4644-93e7-2a85d240845e"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "TeamspaceAPI",
+              "servicePlanId": "57ff2da0-773e-42df-b2af-ffb7a2317929"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "56be9436-e4b2-446c-bb7f-cc15d16cca4d"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ccibotsprod",
+              "servicePlanId": "041fe683-03e4-45b6-b1af-c0cdc516daee"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "OfficeForms",
+              "servicePlanId": "2789c901-c14e-48ab-a76a-be334d9d793a"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "DynamicsNAV",
+              "servicePlanId": "3f2afeed-6fb5-4bf9-998f-f2912133aead"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "AzureAnalysis",
+              "servicePlanId": "2049e525-b859-401b-b2a0-e0a31c4b1fe4"
+            }
+          ],
+          "authorizationInfo": {
+            "certificateUserIds": []
+          },
+          "identities": [
+            {
+              "signInType": "userPrincipalName",
+              "issuer": "capintegration01.onmicrosoft.com",
+              "issuerAssignedId": "aurorauser09@capintegration01.onmicrosoft.com"
+            }
+          ],
+          "onPremisesProvisioningErrors": [],
+          "onPremisesExtensionAttributes": {
+            "extensionAttribute1": null,
+            "extensionAttribute2": null,
+            "extensionAttribute3": null,
+            "extensionAttribute4": null,
+            "extensionAttribute5": null,
+            "extensionAttribute6": null,
+            "extensionAttribute7": null,
+            "extensionAttribute8": null,
+            "extensionAttribute9": null,
+            "extensionAttribute10": null,
+            "extensionAttribute11": null,
+            "extensionAttribute12": null,
+            "extensionAttribute13": null,
+            "extensionAttribute14": null,
+            "extensionAttribute15": null
+          },
+          "provisionedPlans": [
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "MicrosoftCommunicationsOnline"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "MicrosoftCommunicationsOnline"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "exchange"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "exchange"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "exchange"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "exchange"
+            }
+          ],
+          "serviceProvisioningErrors": []
+        }
+      ]
+    },
+    {
+      "id": "905d92dc-db99-48ad-9d01-81c2c09256a7",
+      "deletedDateTime": null,
+      "classification": null,
+      "createdDateTime": "2022-03-06T22:49:29Z",
+      "creationOptions": [],
+      "description": "11111",
+      "displayName": "11111",
+      "expirationDateTime": null,
+      "groupTypes": [
+        "Unified"
+      ],
+      "isAssignableToRole": null,
+      "mail": "11111714@capintegration01.onmicrosoft.com",
+      "mailEnabled": true,
+      "mailNickname": "11111714",
+      "membershipRule": null,
+      "membershipRuleProcessingState": null,
+      "onPremisesDomainName": null,
+      "onPremisesLastSyncDateTime": null,
+      "onPremisesNetBiosName": null,
+      "onPremisesSamAccountName": null,
+      "onPremisesSecurityIdentifier": null,
+      "onPremisesSyncEnabled": null,
+      "preferredDataLocation": null,
+      "preferredLanguage": null,
+      "proxyAddresses": [
+        "SPO:SPO_a00351d2-7fe6-4472-b677-3213b1bae94b@SPO_91bee3d9-0c15-4f17-8624-c92bb8b36ead",
+        "SMTP:11111714@capintegration01.onmicrosoft.com"
+      ],
+      "renewedDateTime": "2022-03-06T22:49:29Z",
+      "resourceBehaviorOptions": [],
+      "resourceProvisioningOptions": [],
+      "securityEnabled": false,
+      "securityIdentifier": "S-1-12-1-2422051548-1219353497-3263234461-2807468736",
+      "theme": null,
+      "visibility": "Private",
+      "onPremisesProvisioningErrors": [],
+      "serviceProvisioningErrors": [],
+      "owners": [
+        {
+          "@odata.type": "#microsoft.graph.user",
+          "id": "32ba11bd-ff15-46f7-bd33-6b481e5f5c7e",
+          "deletedDateTime": null,
+          "accountEnabled": true,
+          "ageGroup": null,
+          "businessPhones": [],
+          "city": null,
+          "companyName": null,
+          "consentProvidedForMinor": null,
+          "country": null,
+          "createdDateTime": "2021-05-05T00:30:53Z",
+          "creationType": null,
+          "department": null,
+          "displayName": "aurorauser09",
+          "employeeId": null,
+          "employeeHireDate": null,
+          "employeeLeaveDateTime": null,
+          "employeeType": null,
+          "externalUserState": null,
+          "externalUserStateChangeDateTime": null,
+          "faxNumber": null,
+          "givenName": "aurora",
+          "isLicenseReconciliationNeeded": false,
+          "jobTitle": null,
+          "legalAgeGroupClassification": null,
+          "mail": "aurorauser09@capintegration01.onmicrosoft.com",
+          "mailNickname": "aurorauser09",
+          "mobilePhone": null,
+          "onPremisesDistinguishedName": null,
+          "onPremisesDomainName": null,
+          "onPremisesImmutableId": null,
+          "onPremisesLastSyncDateTime": null,
+          "onPremisesSecurityIdentifier": null,
+          "onPremisesSamAccountName": null,
+          "onPremisesSyncEnabled": null,
+          "onPremisesUserPrincipalName": null,
+          "otherMails": [],
+          "passwordPolicies": null,
+          "officeLocation": null,
+          "postalCode": null,
+          "preferredDataLocation": null,
+          "preferredLanguage": "en-US",
+          "proxyAddresses": [
+            "SMTP:aurorauser09@capintegration01.onmicrosoft.com"
+          ],
+          "refreshTokensValidFromDateTime": "2021-05-07T00:04:22Z",
+          "imAddresses": [
+            "aurorauser09@capintegration01.onmicrosoft.com"
+          ],
+          "isResourceAccount": null,
+          "showInAddressList": null,
+          "securityIdentifier": "S-1-12-1-851055037-1190657813-1214985149-2119982878",
+          "signInSessionsValidFromDateTime": "2021-05-07T00:04:22Z",
+          "state": null,
+          "streetAddress": null,
+          "surname": "user09",
+          "usageLocation": "US",
+          "userPrincipalName": "aurorauser09@capintegration01.onmicrosoft.com",
+          "userType": "Member",
+          "employeeOrgData": null,
+          "passwordProfile": null,
+          "assignedLicenses": [
+            {
+              "disabledPlans": [],
+              "skuId": "05e9a617-0261-4cee-bb44-138d3ef5d965"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "3f9f06f5-3c31-472c-985f-62d9c10ec167"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "5b631642-bd26-49fe-bd20-1daaa972ef80"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "1e615a51-59db-4807-9957-aa83c3657351"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "6ec92958-3cc1-49db-95bd-bc6b3798df71"
+            },
+            {
+              "disabledPlans": [
+                "69f07c66-bee4-4222-b051-195095efee5b",
+                "0a05d977-a21a-45b2-91ce-61c240dbafa2",
+                "18fa3aba-b085-4105-87d7-55617b8585e6",
+                "7e6d7d78-73de-46ba-83b1-6d25117334ba",
+                "874fc546-6efe-4d22-90b8-5c4e7aa59f4b",
+                "03acaee3-9492-4f40-aed4-bcb6b32981b6",
+                "e95bec33-7c88-4a70-8e19-b10bd9d0c014",
+                "5dbe027f-2339-4123-9542-606e4d348a72",
+                "fe71d6c3-a2ea-4499-9778-da042bf08063",
+                "fafd7243-e5c1-4a3a-9e40-495efcb1d3c3"
+              ],
+              "skuId": "28b81ef4-b535-4e5c-ae14-bd40148c89c5"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "20a48bfa-85c4-46f3-8475-c604be6035f0"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "b30411f5-fea1-4a59-9ad9-3db7c7ead579"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "f30db892-07e9-47e9-837c-80727f46fd3d"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "ddfae3e3-fcb2-4174-8ebd-3023cb213c8b"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "dcb1a3ae-b33f-4487-846a-a640262fadf4"
+            },
+            {
+              "disabledPlans": [
+                "7e6d7d78-73de-46ba-83b1-6d25117334ba",
+                "874fc546-6efe-4d22-90b8-5c4e7aa59f4b",
+                "e95bec33-7c88-4a70-8e19-b10bd9d0c014",
+                "1259157c-8581-4875-bca7-2ffb18c51bda"
+              ],
+              "skuId": "c7d15985-e746-4f01-b113-20b575898250"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "bf666882-9c9b-4b2e-aa2f-4789b0a52ba2"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "beb6439c-caad-48d3-bf46-0c82871e12be"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "a403ebcc-fae0-4ca2-8c8c-7a907fd6c235"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "9c7bff7a-3715-4da7-88d3-07f57f8d0fb6"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "98619618-9dc8-48c6-8f0c-741890ba5f93"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "7ed4877c-0863-4f69-9187-245487128d4f"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "6fd2c87f-b296-42f0-b197-1e91e994b900"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "6a4a1628-9b9a-424d-bed5-4118f0ede3fd"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "606b54a9-78d8-4298-ad8b-df6ef4481c80"
+            },
+            {
+              "disabledPlans": [
+                "e95bec33-7c88-4a70-8e19-b10bd9d0c014",
+                "5dbe027f-2339-4123-9542-606e4d348a72"
+              ],
+              "skuId": "53818b1b-4a27-454b-8896-0dba576410e6"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "4eee99ed-c06e-4fc0-971d-71c5f58c08d9"
+            },
+            {
+              "disabledPlans": [],
+              "skuId": "036c2481-aa8a-47cd-ab43-324f0c157c2d"
+            }
+          ],
+          "assignedPlans": [
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "fe71d6c3-a2ea-4499-9778-da042bf08063"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "874fc546-6efe-4d22-90b8-5c4e7aa59f4b"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "5dbe027f-2339-4123-9542-606e4d348a72"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectProgramsAndPortfolios",
+              "servicePlanId": "0a05d977-a21a-45b2-91ce-61c240dbafa2"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "ERP",
+              "servicePlanId": "69f07c66-bee4-4222-b051-195095efee5b"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "e95bec33-7c88-4a70-8e19-b10bd9d0c014"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftOffice",
+              "servicePlanId": "fafd7243-e5c1-4a3a-9e40-495efcb1d3c3"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "7e6d7d78-73de-46ba-83b1-6d25117334ba"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "18fa3aba-b085-4105-87d7-55617b8585e6"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "1259157c-8581-4875-bca7-2ffb18c51bda"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:23Z",
+              "capabilityStatus": "Enabled",
+              "service": "Netbreeze",
+              "servicePlanId": "03acaee3-9492-4f40-aed4-bcb6b32981b6"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:22Z",
+              "capabilityStatus": "Enabled",
+              "service": "MSRemoteAssist",
+              "servicePlanId": "4f4c7800-298a-4e22-8867-96b17850d4dd"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:22Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "816971f4-37c5-424a-b12b-b56881f402e7"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:22Z",
+              "capabilityStatus": "Enabled",
+              "service": "MSRemoteAssist",
+              "servicePlanId": "baf2c419-dbd3-401a-87ed-f8c7dd83fd4e"
+            },
+            {
+              "assignedDateTime": "2023-12-10T17:59:22Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsServiceGCC",
+              "servicePlanId": "e608feac-8930-4c4a-8685-fdbdeec05bc2"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "MixedRealityCollaborationServices",
+              "servicePlanId": "dcf9d2f4-772e-4434-b757-77a453cfbc02"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "MixedRealityCollaborationServices",
+              "servicePlanId": "3efbd4ed-8958-4824-8389-1321f8730af8"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "RMSOnline",
+              "servicePlanId": "6c57d4b6-3b23-47a5-9bc9-69f17b4947b3"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "a1ace008-72f3-4ea0-8dac-33b3a23a2472"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "MultiFactorService",
+              "servicePlanId": "8a256a2b-b617-496d-b51b-e76466e88db0"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Windows",
+              "servicePlanId": "21b439ba-a0ca-424f-a6cc-52f954a5b111"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Modern-Workplace-Core-ITaas",
+              "servicePlanId": "9a6eeb79-0b4b-4bf0-9808-39d99a2cd5a3"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "WindowsUpdateforBusinessCloudExtensions",
+              "servicePlanId": "7bf960f6-2cd9-443a-8046-5dbff9558365"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Adallom",
+              "servicePlanId": "932ad362-64a8-4783-9106-97849a1a30b9"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "AADPremiumService",
+              "servicePlanId": "41781fb2-bc02-4b7c-bd55-b576c07bb09d"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Microsoft.ProjectBabylon",
+              "servicePlanId": "c948ea65-2053-4a5a-8a62-9eaaaf11b522"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "WindowsDefenderATP",
+              "servicePlanId": "292cc034-7b7c-4950-aaf5-943befd3f1d4"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Bing",
+              "servicePlanId": "0d0c0d31-fae7-41f2-b909-eaf4d7f26dba"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "SCO",
+              "servicePlanId": "c1ec4a95-1f05-45b3-a911-aa3fa01094f5"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftPrint",
+              "servicePlanId": "795f6fe0-cc4d-4773-b050-5dde4dc704c9"
+            },
+            {
+              "assignedDateTime": "2023-12-07T21:03:58Z",
+              "capabilityStatus": "Enabled",
+              "service": "Chapter5FluidApp",
+              "servicePlanId": "c4b8c31a-fb44-4c65-9837-a21f55fcabda"
+            },
+            {
+              "assignedDateTime": "2023-06-28T06:49:31Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "6817d093-2d30-4249-8bd6-774f01efa78c"
+            },
+            {
+              "assignedDateTime": "2023-06-22T21:49:48Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "a2729df7-25f8-4e63-984b-8a8484121554"
+            },
+            {
+              "assignedDateTime": "2023-06-22T21:49:48Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "d8c638e2-9508-40e3-9877-feb87603837b"
+            },
+            {
+              "assignedDateTime": "2023-06-22T21:49:48Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "c7ce3f26-564d-4d3a-878d-d8ab868c85fe"
+            },
+            {
+              "assignedDateTime": "2023-05-16T14:27:51Z",
+              "capabilityStatus": "Enabled",
+              "service": "YammerEnterprise",
+              "servicePlanId": "a82fbf69-b4d7-49f4-83a6-915b2cf354f4"
+            },
+            {
+              "assignedDateTime": "2023-05-16T14:27:51Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "60bf28f9-2b70-4522-96f7-335f5e06c941"
+            },
+            {
+              "assignedDateTime": "2023-05-16T14:27:51Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "7df1d500-ca5c-4229-8cea-815bc88798c9"
+            },
+            {
+              "assignedDateTime": "2022-07-25T11:02:33Z",
+              "capabilityStatus": "Enabled",
+              "service": "DYN365_CS_MESSAGING",
+              "servicePlanId": "3bf52bdf-5226-4a97-829e-5cca9b3f3392"
+            },
+            {
+              "assignedDateTime": "2022-07-25T11:02:33Z",
+              "capabilityStatus": "Enabled",
+              "service": "DYN365AISERVICEINSIGHTS",
+              "servicePlanId": "33f1466e-63a6-464c-bf6a-d1787928a56a"
+            },
+            {
+              "assignedDateTime": "2022-07-25T11:02:33Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "3de81e39-4ce1-47f7-a77f-8473d4eb6d7c"
+            },
+            {
+              "assignedDateTime": "2022-07-25T11:02:33Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "94fb67d3-465f-4d1f-a50a-952da079a564"
+            },
+            {
+              "assignedDateTime": "2022-05-19T17:38:48Z",
+              "capabilityStatus": "Deleted",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "97f29a83-1a20-44ff-bf48-5e4ad11f3e51"
+            },
+            {
+              "assignedDateTime": "2022-05-19T17:38:48Z",
+              "capabilityStatus": "Deleted",
+              "service": "CRM",
+              "servicePlanId": "f06a6c3c-67bd-461c-acbe-68549548d863"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "81d4ecb8-0481-42fb-8868-51536c5aceeb"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "456747c0-cf1e-4b0d-940f-703a01b964cc"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "7f636c80-0961-41b2-94da-9642ccf02de0"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "dbe07046-af68-4861-a20d-1c8cbda9194f"
+            },
+            {
+              "assignedDateTime": "2022-04-28T06:09:56Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "54b37829-818e-4e3c-a08a-3ea66ab9b45d"
+            },
+            {
+              "assignedDateTime": "2022-04-18T23:09:14Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "cb3e4386-18f3-4dde-996b-c25fb903785f"
+            },
+            {
+              "assignedDateTime": "2022-04-18T23:09:14Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "909d3bc4-8744-4e19-8354-79d8cf55ea9b"
+            },
+            {
+              "assignedDateTime": "2022-03-29T18:50:32Z",
+              "capabilityStatus": "Deleted",
+              "service": "CRM",
+              "servicePlanId": "af1b4f3c-83a3-4752-b7d0-f9269260518a"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "23d8d023-3a9b-4741-930d-3bd868b45b3c"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftCommunicationsOnline",
+              "servicePlanId": "d9ab8c26-bcc8-42cb-aadd-1b5bc9df03ee"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "91f50f7b-2204-4803-acac-5cf5668b8b39"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "9a096bad-1be0-43b8-9eab-36c6c6c97329"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "cdbeb806-454e-4c51-9996-a1f0749dfe1f"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "Dynamics365CustomerInsightsEngagementInsights",
+              "servicePlanId": "e2bdea63-235e-44c6-9f5e-5b0e783f07dd"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "7ee6f5d7-54c8-47c3-a4bc-a8a9eed672a3"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "2f1065db-f121-4607-930a-607f57b74e63"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "f58a1c8d-df8f-4d8e-917c-2724e17ab04a"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "b88764b1-bcab-4c62-ad4a-3904c44c8f20"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "dc114c16-5d54-497f-849c-6f1e0c9bda74"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "EHRTeleHealth",
+              "servicePlanId": "7adcc626-1e05-4755-993b-af10bad2c64d"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "BAGHealthcareSolution",
+              "servicePlanId": "435e78d0-ad07-4551-aa6e-2ec231a6841c"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "74d93933-6f22-436e-9441-66d205435abb"
+            },
+            {
+              "assignedDateTime": "2022-02-23T23:07:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "LearningAppServiceInTeams",
+              "servicePlanId": "b76fb638-6ba6-402a-b9f9-83d28acb3d86"
+            },
+            {
+              "assignedDateTime": "2021-05-11T22:22:18Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "dc789ed8-0170-4b65-a415-eb77d5bb350a"
+            },
+            {
+              "assignedDateTime": "2021-05-11T22:22:18Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "ea2cf03b-ac60-46ae-9c1d-eeaeb63cec86"
+            },
+            {
+              "assignedDateTime": "2021-05-10T14:10:46Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "6ea4c1ef-c259-46df-bce2-943342cd3cb2"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectProgramsAndPortfolios",
+              "servicePlanId": "818523f5-016b-4355-9be8-ed6944946ea7"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "94e5cbf6-d843-4ee8-a2ec-8b15eb52019e"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "RMSOnline",
+              "servicePlanId": "bea4c11e-220a-4e6d-8eb8-8ea15d019f90"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "17ab22cd-a0b3-4536-910a-cb6eb12696c0"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftOffice",
+              "servicePlanId": "43de0ff5-c92c-492b-9116-175376d08c38"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "exchange",
+              "servicePlanId": "5136a095-5cf0-4aff-bec3-e84448b38ea5"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "D365SalesProfessional",
+              "servicePlanId": "db39a47e-1f4f-462b-bf5b-2ec471fb7b88"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "8c66ef8a-177f-4c0d-853c-d4f219331d09"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "Deskless",
+              "servicePlanId": "8c7d2df8-86f0-4902-b2ed-a0458298f3b3"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "9c439259-63b0-46cc-a258-72be4313a42d"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "5d798708-6473-48ad-9776-3acc301c40af"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CCIBot",
+              "servicePlanId": "c74c0850-d528-4023-b0b1-5f9342feacae"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "00283e6b-2bd8-440f-a2d5-87358e4c89a1"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "94a669d1-84d5-4e54-8462-53b0ae2c8be5"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "WhiteboardServices",
+              "servicePlanId": "94a54592-cd8b-425e-87c6-97868b000b91"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftKaizala",
+              "servicePlanId": "aebd3021-9f8f-4bf8-bbe3-0ed2f4f047a1"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "YammerEnterprise",
+              "servicePlanId": "7547a3fe-08ee-4ccb-b430-5077c5041653"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "exchange",
+              "servicePlanId": "33c4f319-9bdd-48d6-9c4d-410b750a4a5a"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "To-Do",
+              "servicePlanId": "c87f142c-d1e9-4363-8630-aaea9c4d9ae5"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "00527d7f-d5bc-4c2a-8d1e-6c0de2410c81"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "35122886-cef5-44a3-ab36-97134eabd9ba"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "fa200448-008c-4acb-abd4-ea106ed2199d"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "Sway",
+              "servicePlanId": "a23b959c-7ce8-4e57-9140-b90eb88a9e97"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectProgramsAndPortfolios",
+              "servicePlanId": "31b4e2fc-4cd6-4e7d-9c1b-41407303bd66"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "dd14867e-8d31-4779-a595-304405f5ad39"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "exchange",
+              "servicePlanId": "199a5c09-e0ca-4e37-8f7c-b05d533e1ea2"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "c68f8d98-5534-41c8-bf36-22fa496fa792"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "4ff01e01-1ba7-4d71-8cf8-ce96c3bbcf14"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "DynamicsRCSWorkload",
+              "servicePlanId": "c7657ae3-c0b0-4eed-8c1d-6a7967bd9c65"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "exchange",
+              "servicePlanId": "efb87545-963c-4e0d-99df-69c6916d9eb0"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftCommunicationsOnline",
+              "servicePlanId": "0feaeb32-d00e-4d66-bd5a-43b5b83db82c"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "95b76021-6a53-4741-ab8b-1d1f3d66a95a"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "76846ad7-7776-4c40-a281-a386362dd1b9"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "73f205fc-6b15-47a5-967e-9e64fdf72d0a"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "50554c47-71d9-49fd-bc54-42a2765c555c"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftStream",
+              "servicePlanId": "9e700747-8b1d-45e5-ab8d-ef187ceec156"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "cf7034ed-348f-42eb-8bbd-dddeea43ee81"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "SharePoint",
+              "servicePlanId": "c7699d2e-19aa-44de-8edf-1736da088ca1"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "Dynamics365AICustomerInsights",
+              "servicePlanId": "ed8e8769-94c5-4132-a3e7-7543b713d51f"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "PowerAppsService",
+              "servicePlanId": "d5368ca3-357e-4acb-9c21-8495fb025d1f"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "50e68c76-46c6-4674-81f9-75456511b170"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectWorkManagement",
+              "servicePlanId": "b737dad2-2f6c-4c65-90e3-ca563267e8b9"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "MicrosoftFormsProTest",
+              "servicePlanId": "fe581650-cf61-4a09-8814-4bd77eca9cb5"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ccibotsprod",
+              "servicePlanId": "ce312d15-8fdf-44c0-9974-a25a177125ee"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "d20bfa21-e9ae-43fc-93c2-20783f0840c3"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProjectProgramsAndPortfolios",
+              "servicePlanId": "4a12c688-56c6-461a-87b1-30d6f32136f9"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "CRM",
+              "servicePlanId": "a6f677b3-62a6-4644-93e7-2a85d240845e"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "TeamspaceAPI",
+              "servicePlanId": "57ff2da0-773e-42df-b2af-ffb7a2317929"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ProcessSimple",
+              "servicePlanId": "56be9436-e4b2-446c-bb7f-cc15d16cca4d"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "ccibotsprod",
+              "servicePlanId": "041fe683-03e4-45b6-b1af-c0cdc516daee"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "OfficeForms",
+              "servicePlanId": "2789c901-c14e-48ab-a76a-be334d9d793a"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "DynamicsNAV",
+              "servicePlanId": "3f2afeed-6fb5-4bf9-998f-f2912133aead"
+            },
+            {
+              "assignedDateTime": "2021-05-05T20:40:17Z",
+              "capabilityStatus": "Enabled",
+              "service": "AzureAnalysis",
+              "servicePlanId": "2049e525-b859-401b-b2a0-e0a31c4b1fe4"
+            }
+          ],
+          "authorizationInfo": {
+            "certificateUserIds": []
+          },
+          "identities": [
+            {
+              "signInType": "userPrincipalName",
+              "issuer": "capintegration01.onmicrosoft.com",
+              "issuerAssignedId": "aurorauser09@capintegration01.onmicrosoft.com"
+            }
+          ],
+          "onPremisesProvisioningErrors": [],
+          "onPremisesExtensionAttributes": {
+            "extensionAttribute1": null,
+            "extensionAttribute2": null,
+            "extensionAttribute3": null,
+            "extensionAttribute4": null,
+            "extensionAttribute5": null,
+            "extensionAttribute6": null,
+            "extensionAttribute7": null,
+            "extensionAttribute8": null,
+            "extensionAttribute9": null,
+            "extensionAttribute10": null,
+            "extensionAttribute11": null,
+            "extensionAttribute12": null,
+            "extensionAttribute13": null,
+            "extensionAttribute14": null,
+            "extensionAttribute15": null
+          },
+          "provisionedPlans": [
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "MicrosoftCommunicationsOnline"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "SharePoint"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "MicrosoftCommunicationsOnline"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "CRM"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "exchange"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "exchange"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "exchange"
+            },
+            {
+              "capabilityStatus": "Enabled",
+              "provisioningStatus": "Success",
+              "service": "exchange"
+            }
+          ],
+          "serviceProvisioningErrors": []
+        }
+      ]
+    }        
+  ]
+}

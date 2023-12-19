@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Intellisense
                 { typeof(SplitFunction), DiscardEnumParam(StringTypeSuggestions) },
                 { typeof(StartsWithFunction), DiscardEnumParam(StringTypeSuggestions) },
                 { typeof(TextFunction), TextSuggestions },
-                { typeof(ValueFunction), LanguageCodeSuggestion },
+                { typeof(ValueFunction), LanguageCodeSuggestion }
             }, isThreadSafe: true);
 
         public static IEnumerable<KeyValuePair<string, DType>> GetArgumentSuggestions(TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnqualifiedEnums, TexlFunction function, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping)

@@ -1,0 +1,22 @@
+{
+  "Id": "df050022-0271-4106-8ad9-ca51ff7ee2ff",
+  "AccountEnabled": true,
+  "BusinessPhones": [
+    "+1 (555) 7054271"
+  ],
+  "City": "REDMOND",
+  "CompanyName": "CompanyName",
+  "Country": null,
+  "Department": "Aurora 09",
+  "DisplayName": "Bob Sponge",
+  "GivenName": "Bob",
+  "JobTitle": "Manager",
+  "Mail": "A_CAPEQ_01@capintegration01.onmicrosoft.com",
+  "MailNickname": "sponge",
+  "mobilePhone": null,
+  "OfficeLocation": null,
+  "PostalCode": null,
+  "Surname": "Bob",
+  "TelephoneNumber": null,
+  "UserPrincipalName": "A_CAPEQ_01@capintegration01.onmicrosoft.com"
+}

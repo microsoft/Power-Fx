@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public Visibility Visibility { get; internal set; }
 
-        internal RecordType HiddenRecordType { get; }       
+        internal RecordType HiddenRecordType { get; }
 
         public bool SupportsDynamicValuesOrList => DynamicValues != null || DynamicList != null;
 
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     EnumValues = Array.Empty<FormulaValue>();
                     EnumDisplayNames = Array.Empty<string>();
-                }                                               
+                }
             }
 
             DynamicSchema = openApiParameter.GetDynamicSchema();
@@ -119,8 +119,8 @@ namespace Microsoft.PowerFx.Connectors
             FormulaType = new BlankType();
         }
 
-        internal ConnectorType(OpenApiSchema schema)
-            : this(schema, null, new OpenApiParameter() { Schema = schema }.ToConnectorType())
+        internal ConnectorType(OpenApiSchema schema, ConnectorCompatibility compatibility)
+            : this(schema, null, new OpenApiParameter() { Schema = schema }.ToConnectorType(compatibility))
         {
         }
 
