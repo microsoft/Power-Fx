@@ -14,6 +14,7 @@ namespace Microsoft.PowerFx.Intellisense
     /// For use in displaying in intellisense. 
     /// </summary>
     [DebuggerDisplay("MARKDOWN: {Markdown}")]
+    [ThreadSafeImmutable]
     public class MarkdownString
     {
         // private constructor to force use of factory method.
