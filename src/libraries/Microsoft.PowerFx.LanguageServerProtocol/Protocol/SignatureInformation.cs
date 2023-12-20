@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
                 MarkdownString disclaimer = info.GetDisclaimerMarkdown();
                 string original = info.Documentation;
 
-                MarkdownString final = MarkdownString.FromString(original) + disclaimer;
+                MarkdownString final = MarkdownString.FromString(original) + MarkdownString.Newline + disclaimer;
 
                 this.SetDocumentation(final);
             }

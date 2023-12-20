@@ -375,9 +375,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var cursorPosition = GetPosition(expression, signatureHelpParams.Position.Line, signatureHelpParams.Position.Character);
             var result = scope.Suggest(expression, cursorPosition);
 
-            var lspObj = new SignatureHelp(result.SignatureHelp);
+            var signatureHelp = new SignatureHelp(result.SignatureHelp);
 
-            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, lspObj));
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, signatureHelp));
         }
 
         private void HandleInitialFixupRequest(string id, string paramsJson)
