@@ -279,7 +279,19 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// This function requires an AI disclaimer. 
         /// </summary>
-        public virtual bool ShowAIDisclaimer => this.Name.StartsWith("AI", StringComparison.OrdinalIgnoreCase);
+        public virtual bool ShowAIDisclaimer => _aiWhitelist.Contains(this.Name);
+
+        // Move away from whitelist: https://github.com/microsoft/Power-Fx/issues/2118
+        private static readonly ISet<string> _aiWhitelist = new HashSet<string>()
+        {
+            "AIClassify", 
+            "AIExtract",
+            "AIReply",
+            "AISentiment",
+            "AISummarize",
+            "AISummarizeRecord",
+            "AITranslate"
+        };
 
         // A forward link to the function help.
         public virtual string HelpLink =>

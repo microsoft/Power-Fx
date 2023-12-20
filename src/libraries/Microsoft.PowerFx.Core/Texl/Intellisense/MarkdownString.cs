@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Intellisense
 
         // See escaping rules: https://github.com/mattcone/markdown-guide/blob/master/_basic-syntax/escaping-characters.md
         // Escape with a \
-        private static readonly HashSet<char> _ecapeChars = new HashSet<char>
+        private static readonly ISet<char> _ecapeChars = new HashSet<char>
         {
             '\\', '`', '*', '_', '{', '}', '[', ']', '<', '>', '(', ')', '#', '+', '-', '.', '!', '|'
         };
