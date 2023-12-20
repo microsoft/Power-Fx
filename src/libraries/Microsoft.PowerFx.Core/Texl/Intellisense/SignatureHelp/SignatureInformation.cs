@@ -13,6 +13,9 @@ namespace Microsoft.PowerFx.Intellisense.SignatureHelp
 
         public ParameterInformation[] Parameters { get; set; }
 
+        // If non-null, then show an disclaimer after the description. 
+        public Func<MarkdownString> GetDisclaimerMarkdown { get; set; }
+
         public bool Equals(SignatureInformation other)
         {
             if (other == null)
