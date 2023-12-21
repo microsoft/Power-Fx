@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core;
@@ -1142,6 +1143,33 @@ namespace Microsoft.PowerFx.Tests
                     useLegacyDateTimeAccepts: false,
                     usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.Equal(testSchemaDifference.Value, DType.Invalid);
+        }
+
+        [Fact]
+        public void OptionSetEquality()
+        {
+            var mutable1 = new Dictionary<DName, DName>() 
+            { 
+                { new DName("A"), new DName("1") },
+                { new DName("B"), new DName("2") } 
+            };
+
+            var immutable = mutable1.ToImmutableDictionary();
+
+            OptionSet optionSet1 = new OptionSet(
+                "option",
+                immutable);
+
+            OptionSet optionSet2 = new OptionSet(
+                "option",
+                immutable);
+
+            var ov1 = new OptionSetValueType(optionSet1);
+            var ov2 = new OptionSetValueType(optionSet2);
+
+            Assert.False(ReferenceEquals(optionSet1, optionSet2));
+
+            Assert.True(ov1._type.Accepts(ov2._type, true, false, true));
         }
 
         [Theory]

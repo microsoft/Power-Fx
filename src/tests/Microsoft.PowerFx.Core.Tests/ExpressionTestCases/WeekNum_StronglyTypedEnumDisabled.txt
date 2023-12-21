@@ -1,0 +1,42 @@
+﻿#SETUP: disable:StronglyTypedBuiltinEnums
+
+// Regular weeknum usage
+>> WeekNum(DateTime(2021,1,7,0,0,0), 1)
+2
+
+>> WeekNum(DateTime(2021,1,7,0,0,0), 2)
+2
+
+>> WeekNum(DateTime(2021,1,7,0,0,0), 12)
+2
+
+>> WeekNum(DateTime(2021,1,7,0,0,0), 13)
+2
+
+>> WeekNum(DateTime(2021,1,7,0,0,0), 14)
+2
+
+>> WeekNum(DateTime(2021,1,7,0,0,0), 15)
+1
+
+>> WeekNum(DateTime(2021,1,7,0,0,0), 16)
+2
+
+// Invalid StartOfWeek enumeration
+>> WeekNum(Date(2016, 1, 3), 0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> WeekNum(Date(2016, 1, 3), 3)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> WeekNum(Date(2016, 1, 3), 5)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> WeekNum(Date(2016, 1, 3), 12.5)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> WeekNum(Date(2016, 1, 3), -12)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> WeekNum(DateValue("1/2/2022"), 1E308)
+Error({Kind:ErrorKind.InvalidArgument})

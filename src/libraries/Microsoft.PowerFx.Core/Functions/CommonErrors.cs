@@ -216,5 +216,15 @@ namespace Microsoft.PowerFx.Functions
                 Kind = ErrorKind.InvalidArgument
             });
         }
+
+        internal static ErrorValue StartOfWeekInvalid(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Expected a value from the StartOfWeek enumeration to indicate how to number the weekdays.",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
     }
 }

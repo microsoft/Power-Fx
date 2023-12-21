@@ -1,0 +1,21 @@
+{
+  "Id": "dae277a8-343d-42ff-bd17-16dd634092c9",
+  "AccountEnabled": true,
+  "BusinessPhones": [
+  ],
+  "City": null,
+  "CompanyName": null,
+  "Country": null,
+  "Department": null,
+  "DisplayName": "account manager",
+  "GivenName": "account",
+  "JobTitle": null,
+  "Mail": null,
+  "MailNickname": "accountmanager",
+  "mobilePhone": null,
+  "OfficeLocation": null,
+  "PostalCode": null,
+  "Surname": "manager",
+  "TelephoneNumber": null,
+  "UserPrincipalName": "accountmanager@capintegration01.onmicrosoft.com"
+}

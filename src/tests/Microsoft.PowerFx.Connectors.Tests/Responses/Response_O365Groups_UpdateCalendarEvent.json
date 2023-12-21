@@ -1,0 +1,73 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/events/$entity",
+  "@odata.etag": "W/\"rlH4VFk60E2mW9t2nJD1lwAAUjuOYQ==\"",
+  "id": "AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU-nnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxhAAA=",
+  "createdDateTime": "2023-12-13T16:04:01.643946Z",
+  "lastModifiedDateTime": "2023-12-13T16:04:02.216336Z",
+  "changeKey": "rlH4VFk60E2mW9t2nJD1lwAAUjuOYQ==",
+  "categories": [
+  ],
+  "transactionId": null,
+  "originalStartTimeZone": "UTC",
+  "originalEndTimeZone": "UTC",
+  "iCalUId": "040000008200E00074C5B7101A82E00800000000F35AFEFCDD2DDA01000000000000000010000000C5E5EC2A1C4C0A44813B2E10B7F9FF34",
+  "reminderMinutesBeforeStart": 15,
+  "isReminderOn": true,
+  "hasAttachments": false,
+  "subject": "Event4",
+  "bodyPreview": "",
+  "importance": "normal",
+  "sensitivity": "normal",
+  "isAllDay": false,
+  "isCancelled": false,
+  "isOrganizer": true,
+  "responseRequested": true,
+  "seriesMasterId": null,
+  "showAs": "busy",
+  "type": "singleInstance",
+  "webLink": "https://outlook.office365.com/calendar/deeplink/read/group/capintegration01.onmicrosoft.com/TestProject9Aug/AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU%2FnnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxhAAA%3D",
+  "onlineMeetingUrl": null,
+  "isOnlineMeeting": false,
+  "onlineMeetingProvider": "unknown",
+  "allowNewTimeProposals": true,
+  "occurrenceId": null,
+  "isDraft": false,
+  "hideAttendees": false,
+  "responseStatus": {
+    "response": "organizer",
+    "time": "0001-01-01T00:00:00Z"
+  },
+  "body": {
+    "contentType": "html",
+    "content": ""
+  },
+  "start": {
+    "dateTime": "2023-12-13T17:03:59.0654069",
+    "timeZone": "UTC"
+  },
+  "end": {
+    "dateTime": "2023-12-13T17:03:59.0654495",
+    "timeZone": "UTC"
+  },
+  "location": {
+    "displayName": "",
+    "locationType": "default",
+    "uniqueIdType": "unknown",
+    "address": {
+    },
+    "coordinates": {
+    }
+  },
+  "locations": [
+  ],
+  "recurrence": null,
+  "attendees": [
+  ],
+  "organizer": {
+    "emailAddress": {
+      "name": "TestProject9Aug",
+      "address": "TestProject9Aug@capintegration01.onmicrosoft.com"
+    }
+  },
+  "onlineMeeting": null
+}

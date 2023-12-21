@@ -1,0 +1,46 @@
+[
+  {
+    "Id": "1508713b-8fcb-4951-9add-e11bbbd602ff",
+    "AccountEnabled": true,
+    "BusinessPhones": [
+      "+33 (1) 123456789"
+    ],
+    "City": "Paris",
+    "CompanyName": "Company",
+    "Country": "France",
+    "Department": "Power Fx - Paris",
+    "DisplayName": "John Doe",
+    "GivenName": "John",
+    "JobTitle": "SOFTWARE ENGINEER",
+    "Mail": "jdoe@company.com",
+    "MailNickname": "jdoe",
+    "mobilePhone": null,
+    "OfficeLocation": "Home Office",
+    "PostalCode": "75000",
+    "Surname": "Doe",
+    "TelephoneNumber": null,
+    "UserPrincipalName": "jdoe@company.com"
+  },
+  {
+    "Id": "62062a1e-c6a3-4e99-86bf-3cace2072dfd",
+    "AccountEnabled": true,
+    "BusinessPhones": [
+      "+1 (555) 1234568"
+    ],
+    "City": "Bellevue",
+    "CompanyName": "Company",
+    "Country": null,
+    "Department": "Power Fx - WA",
+    "DisplayName": "Eve Allen",
+    "GivenName": "Eve",
+    "JobTitle": "SOFTWARE ENGINEER",
+    "Mail": "eallen@company.com",
+    "MailNickname": "eallen",
+    "mobilePhone": null,
+    "OfficeLocation": "Island",
+    "PostalCode": null,
+    "Surname": "Eve",
+    "TelephoneNumber": null,
+    "UserPrincipalName": "eallen@company.com"
+  }
+]

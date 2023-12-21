@@ -360,7 +360,7 @@ namespace Microsoft.PowerFx.Tests
 
             var overload = result.FunctionOverloads.Single();
             Assert.Equal(Intellisense.SuggestionKind.Function, overload.Kind);
-            Assert.Equal("FindMeetingTimesV2({RequiredAttendees:String,OptionalAttendees:String,ResourceAttendees:String,MeetingDuration:Decimal,Start:DateTime,End:DateTime,MaxCandidates:Decimal,MinimumAttendeePercentage:String,IsOrganizerOptional:Boolean,ActivityDomain:String})", overload.DisplayText.Text);
+            Assert.Equal("FindMeetingTimesV2({ RequiredAttendees:String,OptionalAttendees:String,ResourceAttendees:String,MeetingDuration:Decimal,Start:DateTime,End:DateTime,MaxCandidates:Decimal,MinimumAttendeePercentage:String,IsOrganizerOptional:Boolean,ActivityDomain:String })", overload.DisplayText.Text);
         }
 
         // Very documentation strings from the Swagger show up in the intellisense.
@@ -1450,8 +1450,8 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
         // ConnectorCompatibility element will determine if an internal parameters will be suggested.
         [Theory]
-        [InlineData(ConnectorCompatibility.Default, "Office365Users.SearchUserV2(", "SearchUserV2({searchTerm:String,top:Decimal,isSearchTermRequired:Boolean,skipToken:String})")]
-        [InlineData(ConnectorCompatibility.SwaggerCompatibility, "Office365Users.SearchUserV2(", "SearchUserV2({searchTerm:String,top:Decimal,isSearchTermRequired:Boolean})")]
+        [InlineData(ConnectorCompatibility.Default, "Office365Users.SearchUserV2(", "SearchUserV2({ searchTerm:String,top:Decimal,isSearchTermRequired:Boolean,skipToken:String })")]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, "Office365Users.SearchUserV2(", "SearchUserV2({ searchTerm:String,top:Decimal,isSearchTermRequired:Boolean })")]
         public async Task ConnectorCompatibilityIntellisenseTest(ConnectorCompatibility compact, string expression, string expected)
         {
             using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json");
@@ -1483,7 +1483,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             var suggestions = engine.Suggest(expression, null, expression.Length);
             var overload = suggestions.FunctionOverloads.First();
 
-            Assert.Equal(overload.DisplayText.Text, expected);
+            Assert.Equal(expected, overload.DisplayText.Text);
         }
     }
 }
