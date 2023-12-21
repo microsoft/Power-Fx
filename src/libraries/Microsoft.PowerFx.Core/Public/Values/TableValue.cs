@@ -194,9 +194,10 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         /// <param name="baseRecord">A record to modify.</param>
         /// <param name="changeRecord">A record that contains properties to modify the base record.</param>
+        /// <param name="all"></param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The updated record.</returns>
-        public async Task<DValue<RecordValue>> UpdateAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
+        public async Task<DValue<RecordValue>> UpdateAsync(RecordValue baseRecord, RecordValue changeRecord, bool all, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             var recordType = Type.ToRecord();

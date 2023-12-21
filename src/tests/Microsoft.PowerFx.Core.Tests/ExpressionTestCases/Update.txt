@@ -16,5 +16,5 @@ Table({Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 >> Update(t1, r1, {Field2:"mars"});
 {Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
->> Update(t1,r1,{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},"All")
-{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+>> Update(t1, r1, r_empty, "All");
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
