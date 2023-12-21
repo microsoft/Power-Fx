@@ -16,6 +16,77 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
+        public static async ValueTask<FormulaValue> Collect(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = args[0] as TableValue;
+            var argc = args.Length;
+
+            if (arg0 == null)
+            {
+                return args[0];
+            }
+
+            List<DValue<RecordValue>> resultRows = new List<DValue<RecordValue>>();
+
+            for (int i = 1; i < argc; i++)
+            {
+                runner.CheckCancel();
+
+                var arg = args[i];
+
+                if (arg is TableValue tableValue)
+                {
+                    foreach (DValue<RecordValue> row in tableValue.Rows)
+                    {
+                        if (row.IsBlank)
+                        {
+                            continue;
+                        }
+                        else if (row.IsError)
+                        {
+                            return row.Error;
+                        }
+                        else
+                        {
+                            resultRows.Add(await arg0.AppendAsync(row.Value, runner.CancellationToken).ConfigureAwait(false));
+                        }
+                    }
+                }
+                else if (arg is RecordValue recordValue)
+                {
+                    resultRows.Add(await arg0.AppendAsync(recordValue, runner.CancellationToken).ConfigureAwait(false));
+                }
+                else if (arg is ErrorValue)
+                {
+                    return arg;
+                }
+                else if (arg is BlankValue && !arg0.Type._type.IsSingleColumnTable)
+                {
+                    continue;
+                }
+                else
+                {
+                    NamedValue namedValue = new NamedValue(arg0.Type.SingleColumnFieldName, arg);
+                    var singleColumnRecord = FormulaValue.NewRecordFromFields(namedValue);
+
+                    resultRows.Add(await arg0.AppendAsync(singleColumnRecord, runner.CancellationToken).ConfigureAwait(false));
+                }
+            }
+
+            if (resultRows.Count == 0)
+            {
+                return BlankValue.NewBlank(irContext.ResultType);
+            }
+            else if (resultRows.Count == 1)
+            {
+                return CompileTimeTypeWrapperRecordValue.AdjustType(arg0.Type.ToRecord(), (RecordValue)resultRows.First().ToFormulaValue());
+            }
+            else
+            {
+                return CompileTimeTypeWrapperTableValue.AdjustType(arg0.Type, new InMemoryTableValue(irContext, resultRows));
+            }
+        }
+
         public static async ValueTask<FormulaValue> LookUp(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             // Streaming 

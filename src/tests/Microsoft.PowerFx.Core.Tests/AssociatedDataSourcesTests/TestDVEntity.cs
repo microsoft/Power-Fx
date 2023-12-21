@@ -30,6 +30,8 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
         public bool IsPageable => true;
 
+        public bool IsClearable => false;
+
         DType IExternalEntity.Type => AccountsTypeHelper.GetDType();
 
         IExternalDataEntityMetadataProvider IExternalDataSource.DataEntityMetadataProvider => throw new NotImplementedException();

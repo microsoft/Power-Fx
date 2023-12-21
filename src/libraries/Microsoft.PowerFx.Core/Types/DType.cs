@@ -676,6 +676,8 @@ namespace Microsoft.PowerFx.Core.Types
                     ? GetNames(DPath.Root).Any(tn => tn.Type.IsError || (!tn.Type.IsLazyType && tn.Type.HasErrors))
                     : IsError;
 
+        public bool IsSingleColumnTable => IsTable && GetNames(DPath.Root).Count() == 1;
+
         public bool Contains(DName fieldName)
         {
             Contracts.AssertValid(fieldName);

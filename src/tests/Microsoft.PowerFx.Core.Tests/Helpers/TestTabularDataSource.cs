@@ -203,6 +203,8 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public DName EntityName => new DName(Name);
 
+        public bool IsClearable => throw new NotImplementedException();
+
         public DType Type { get; }
 
         public bool IsPageable => false;

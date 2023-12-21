@@ -58,6 +58,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction CharT = _library.Add(new CharTFunction());
         public static readonly TexlFunction Clock24 = _library.Add(new IsClock24Function());
         public static readonly TexlFunction Coalesce = _library.Add(new CoalesceFunction());
+        public static readonly TexlFunction Collect = _library.Add(new CollectScalarFunction());
+        public static readonly TexlFunction CollectT = _library.Add(new CollectFunction());
         public static readonly TexlFunction ColorFade = _library.Add(new ColorFadeFunction());
         public static readonly TexlFunction ColorFadeT = _library.Add(new ColorFadeTFunction());
         public static readonly TexlFunction ColorValue = _library.Add(new ColorValueFunction());

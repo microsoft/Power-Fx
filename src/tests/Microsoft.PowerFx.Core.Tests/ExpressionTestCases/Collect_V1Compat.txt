@@ -19,4 +19,5 @@ Errors: Error 17-19: The specified column 'Field1' does not exist.|Error 8-15: T
 Errors: Error 8-15: The value passed to the 'Collect' function cannot be changed.
 
 >> Collect("", "")
-Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instead.|Error 12-14: Invalid argument type (Text). Expecting a Record value instead.|Error 12-14: Invalid argument type. Cannot use Text values in this context.|Error 8-10: The value passed to the 'Collect' function cannot be changed.|Error 0-15: The function 'Collect' has some invalid arguments.
+Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instead.|Error 12-14: The specified column 'Value' does not exist.|Error 8-10: The value passed to the 'Collect' function cannot be changed.|Error 0-15: The function 'Collect' has some invalid arguments.
+

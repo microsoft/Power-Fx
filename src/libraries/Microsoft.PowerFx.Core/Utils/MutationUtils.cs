@@ -9,7 +9,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Syntax;
 
-namespace Microsoft.PowerFx.Interpreter
+namespace Microsoft.PowerFx.Core.Utils
 {
     internal class MutationUtils
     {
