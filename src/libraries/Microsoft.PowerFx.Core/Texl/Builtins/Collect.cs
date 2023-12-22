@@ -80,16 +80,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.AboutCollect, TexlStrings.AboutCollect };
-            yield return new[] { TexlStrings.AboutCollect, TexlStrings.AboutCollect, TexlStrings.AboutCollect };
-            yield return new[] { TexlStrings.AboutCollect, TexlStrings.AboutCollect, TexlStrings.AboutCollect, TexlStrings.AboutCollect };
+            yield return new[] { TexlStrings.CollectDataSourceArg, TexlStrings.CollectItemArg };
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
             {
-                return GetGenericSignatures(arity, TexlStrings.AboutCollect, TexlStrings.AboutCollect);
+                return GetGenericSignatures(arity, TexlStrings.CollectDataSourceArg, TexlStrings.CollectItemArg);
             }
 
             return base.GetSignatures(arity);
@@ -399,46 +397,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         protected override bool IsScalar => true;
 
         public override bool SupportsParamCoercion => false;
-
-        public override DType GetCollectedType(PowerFx.Features features, DType argType)
-        {
-            return GetCollectedTypeForGivenArgType(features, argType);
-        }
-    }
-
-    // ClearCollect(collection:*[...], item1:![...]|*[...], ...)
-    internal class ClearCollectFunction : CollectFunction
-    {
-        public override bool AllowedWithinNondeterministicOperationOrder => false;
-
-        public ClearCollectFunction()
-            : base("ClearCollect", TexlStrings.AboutClearCollect)
-        {
-        }
-
-        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertAllValues(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.AssertValue(errors);
-            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
-
-            base.CheckSemantics(binding, args, argTypes, errors);
-
-            if (binding.EntityScope.TryGetDataSource(args[0], out IExternalDataSource dataSourceInfo) && !dataSourceInfo.IsClearable)
-            {
-                // !!! Fix error message
-                errors.EnsureError(args[0], TexlStrings.ErrAsNotInContext);
-            }
-        }
-    }
-
-    // ClearCollect(collection:*[...], item1, ...)
-    internal sealed class ClearCollectScalarFunction : ClearCollectFunction
-    {
-        protected override bool IsScalar => true;
 
         public override DType GetCollectedType(PowerFx.Features features, DType argType)
         {

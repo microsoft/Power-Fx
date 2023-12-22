@@ -3019,6 +3019,16 @@
     <value>data_source</value>
     <comment>function_parameter - First parameter for the Collect function. The data source that you want to add data to.</comment>
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>The data source that you want to add data to.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
+    <comment>function_parameter - Second parameter for the Collect function. The item to be added.</comment>
+  </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>record</value>
     <comment>function_parameter - Second parameter for the Collect function. The record to be added.</comment>
