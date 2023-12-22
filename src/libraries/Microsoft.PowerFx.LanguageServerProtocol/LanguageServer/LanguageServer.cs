@@ -17,6 +17,7 @@ using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
+using Microsoft.PowerFx.LanguageServerProtocol.Public;
 using Microsoft.PowerFx.LanguageServerProtocol.Schemas;
 using Microsoft.PowerFx.Syntax;
 
@@ -39,6 +40,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private readonly SendToClient _sendToClient;
         private readonly IPowerFxScopeFactory _scopeFactory;
+        private readonly INLHandlerFactory _nLHandlerFactory;
         private readonly Action<string> _logger;
 
         public delegate void NotifyDidChange(DidChangeTextDocumentParams didChangeParams);
@@ -63,13 +65,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// </summary>
         public NLHandler NL2FxImplementation { get; set; }
 
-        public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
+        public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null, INLHandlerFactory nLHandlerFactory = null)
         {
             Contracts.AssertValue(sendToClient);
             Contracts.AssertValue(scopeFactory);
 
             _sendToClient = sendToClient;
             _scopeFactory = scopeFactory;
+            _nLHandlerFactory = nLHandlerFactory;
 
             _logger = logger;
         }
@@ -484,7 +487,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             protected override CustomNL2FxResult Handle(IPowerFxScope scope, CustomNL2FxParams request)
             {
-                var nl = _parent.NL2FxImplementation;
+                var nl = _parent?._nLHandlerFactory?.GetNlHandler(scope) ?? _parent.NL2FxImplementation;
                 if (nl == null || !nl.SupportsNL2Fx)
                 {
                     throw new NotSupportedException($"NL2Fx not enabled");
@@ -501,7 +504,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 };
 
                 CancellationToken cancel = default;
-                var result = _parent.NL2FxImplementation.NL2FxAsync(req, cancel)
+                var result = nl.NL2FxAsync(req, cancel)
                     .ConfigureAwait(false).GetAwaiter().GetResult();
 
                 FinalCheck(scope, result);
