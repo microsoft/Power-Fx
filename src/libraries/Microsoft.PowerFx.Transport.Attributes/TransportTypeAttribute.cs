@@ -32,13 +32,14 @@ namespace Microsoft.AppMagic.Transport
 
         public bool EnablePublicMembersByDefault { get; }
 
-        public TransportTypeAttribute(TransportKind kind = TransportKind.ByValue, bool enablePublicMembersByDefault = true, string customTypescriptBaseClass = null, string customDtoName = null, bool isMethodCustomizationEnabled = false)
+        public TransportTypeAttribute(TransportKind kind = TransportKind.ByValue, bool enablePublicMembersByDefault = true, string customTypescriptBaseClass = null, string customDtoName = null, bool isMethodCustomizationEnabled = false, bool isReactHooksSingleton = false)
         {
             Kind = kind;
             EnablePublicMembersByDefault = enablePublicMembersByDefault;
             CustomTypescriptBaseClass = customTypescriptBaseClass;
             CustomDtoName = customDtoName;
             IsMethodCustomizationEnabled = isMethodCustomizationEnabled;
+            IsReactHooksSingleton = isReactHooksSingleton;
         }
 
         /// <summary>
@@ -57,5 +58,12 @@ namespace Microsoft.AppMagic.Transport
         /// Allows overriding method behavior via the base type, without replacing the generated methods completely.
         /// </summary>
         public bool IsMethodCustomizationEnabled { get; }
+        
+        /// <summary>
+        /// Whether this class is a special singleton that supports React Hooks for the client. 
+        /// Only ServerRemoted classes qualify, and only if exactly one instance is instantiated during the lifecycle.
+        /// If multiple instances are instantiated (even if the previous are disposed first), only the first will be linked with the hooks.
+        /// </summary>
+        public bool IsReactHooksSingleton { get; }
     }
 }
