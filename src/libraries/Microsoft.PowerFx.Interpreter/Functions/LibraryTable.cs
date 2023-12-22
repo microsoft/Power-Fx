@@ -18,13 +18,26 @@ namespace Microsoft.PowerFx.Functions
     {
         public static async ValueTask<FormulaValue> Collect(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var arg0 = args[0] as TableValue;
+            FormulaValue arg0;
             var argc = args.Length;
 
-            if (arg0 == null)
+            // Need to check if the Lazy first argument has been evaluated since it may have already been
+            // evaluated in the ClearCollect case.
+            if (args[0] is LambdaFormulaValue arg0lazy)
+            {
+                arg0 = await arg0lazy.EvalAsync().ConfigureAwait(false);
+            }
+            else
+            {
+                arg0 = args[0];
+            }
+
+            if (arg0 is not TableValue)
             {
                 return args[0];
             }
+
+            var tableValue = arg0 as TableValue;
 
             List<DValue<RecordValue>> resultRows = new List<DValue<RecordValue>>();
 
@@ -34,9 +47,9 @@ namespace Microsoft.PowerFx.Functions
 
                 var arg = args[i];
 
-                if (arg is TableValue tableValue)
+                if (arg is TableValue argTableValue)
                 {
-                    foreach (DValue<RecordValue> row in tableValue.Rows)
+                    foreach (DValue<RecordValue> row in argTableValue.Rows)
                     {
                         if (row.IsBlank)
                         {
@@ -48,28 +61,30 @@ namespace Microsoft.PowerFx.Functions
                         }
                         else
                         {
-                            resultRows.Add(await arg0.AppendAsync(row.Value, runner.CancellationToken).ConfigureAwait(false));
+                            var recordValueCopy = FormulaValue.NewRecordFromFields(row.Value.Fields);
+                            resultRows.Add(await tableValue.AppendAsync(recordValueCopy, runner.CancellationToken).ConfigureAwait(false));
                         }
                     }
                 }
                 else if (arg is RecordValue recordValue)
                 {
-                    resultRows.Add(await arg0.AppendAsync(recordValue, runner.CancellationToken).ConfigureAwait(false));
+                    var recordValueCopy = FormulaValue.NewRecordFromFields(recordValue.Fields);
+                    resultRows.Add(await tableValue.AppendAsync(recordValueCopy, runner.CancellationToken).ConfigureAwait(false));
                 }
                 else if (arg is ErrorValue)
                 {
                     return arg;
                 }
-                else if (arg is BlankValue && !arg0.Type._type.IsSingleColumnTable)
+                else if (arg is BlankValue && !tableValue.Type._type.IsSingleColumnTable)
                 {
                     continue;
                 }
                 else
                 {
-                    NamedValue namedValue = new NamedValue(arg0.Type.SingleColumnFieldName, arg);
+                    NamedValue namedValue = new NamedValue(tableValue.Type.SingleColumnFieldName, arg);
                     var singleColumnRecord = FormulaValue.NewRecordFromFields(namedValue);
 
-                    resultRows.Add(await arg0.AppendAsync(singleColumnRecord, runner.CancellationToken).ConfigureAwait(false));
+                    resultRows.Add(await tableValue.AppendAsync(singleColumnRecord, runner.CancellationToken).ConfigureAwait(false));
                 }
             }
 
@@ -79,11 +94,11 @@ namespace Microsoft.PowerFx.Functions
             }
             else if (resultRows.Count == 1)
             {
-                return CompileTimeTypeWrapperRecordValue.AdjustType(arg0.Type.ToRecord(), (RecordValue)resultRows.First().ToFormulaValue());
+                return CompileTimeTypeWrapperRecordValue.AdjustType(tableValue.Type.ToRecord(), (RecordValue)resultRows.First().ToFormulaValue());
             }
             else
             {
-                return CompileTimeTypeWrapperTableValue.AdjustType(arg0.Type, new InMemoryTableValue(irContext, resultRows));
+                return CompileTimeTypeWrapperTableValue.AdjustType(tableValue.Type, new InMemoryTableValue(irContext, resultRows));
             }
         }
 

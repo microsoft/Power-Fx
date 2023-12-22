@@ -40,6 +40,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool CanSuggestInputColumns => true;
 
+        public override bool MutatesArg0 => true;
+
         /// <summary>
         /// Since Arg1 and Arg2 depends on type of Arg1 return false for them.
         /// </summary>
@@ -59,13 +61,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argNum >= 1;
         }
 
+        public override bool IsLazyEvalParam(int index, Features features)
+        {
+            // First argument to mutation functions is Lazy for datasources that are copy-on-write.
+            // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
+            return index == 0;
+        }
+
         public CollectFunction()
             : this("Collect", TexlStrings.AboutCollect)
         {
         }
 
         protected CollectFunction(string name, TexlStrings.StringGetter description)
-            : base(name, description, FunctionCategories.Behavior, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable)
+            : base(name, description, FunctionCategories.Behavior, DType.EmptyRecord, 0, 2, int.MaxValue, DType.EmptyTable)
         {
         }
 
