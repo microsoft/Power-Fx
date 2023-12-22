@@ -33,17 +33,24 @@ namespace Microsoft.PowerFx.Interpreter.Functions.Mutation
 
         public override bool IsSelfContained => false;
 
-        protected static async Task<Dictionary<string, FormulaValue>> CreateRecordFromArgsDictAsync(FormulaValue[] args, int startFrom, int exclude, CancellationToken cancellationToken)
+        protected static async Task<Dictionary<string, FormulaValue>> CreateRecordFromArgsDictAsync(FormulaValue[] args, int baseData, int exclude, CancellationToken cancellationToken)
         {
             var retFields = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
 
-            for (var i = startFrom; i < args.Length - exclude; i++)
+            for (var i = baseData; i < args.Length - exclude; i++)
             {
                 var arg = args[i];
 
-                if (arg is RecordValue record)
+                if (arg is RecordValue record && i == baseData)
                 {
                     await foreach (var field in record.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
+                    {
+                        retFields[field.Name] = BlankValue.NewBlank();
+                    }
+                }
+                else if (arg is RecordValue newRecord)
+                {
+                    await foreach (var field in newRecord.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
                     {
                         retFields[field.Name] = field.Value;
                     }
@@ -213,7 +220,7 @@ namespace Microsoft.PowerFx.Interpreter.Functions.Mutation
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            var changeRecord = FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 2, toExclude, cancellationToken).ConfigureAwait(false));
+            var changeRecord = FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 1, toExclude, cancellationToken).ConfigureAwait(false));
 
             var datasource = (TableValue)arg0;
             var baseRecord = (RecordValue)arg1;
