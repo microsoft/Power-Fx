@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             CalendarDeleteItemV2
             CalendarGetItem (Deprecated)
             CalendarGetItems (Deprecated)
-            CalendarGetTable (Hidden)
+            CalendarGetTable (Internal)
             CalendarGetTables (Deprecated)
             CalendarGetTablesV2
             CalendarPatchItem (Deprecated)
@@ -54,19 +54,19 @@ namespace Microsoft.PowerFx.Connectors.Tests
             ContactGetItems (Deprecated)
             ContactGetItemsV2
             ContactGetItemV2
-            ContactGetTable (Hidden)
+            ContactGetTable (Internal)
             ContactGetTables (Deprecated)
             ContactGetTablesV2
             ContactPatchItem (Deprecated)
             ContactPatchItemV2
             ContactPostItem (Deprecated)
             ContactPostItemV2
-            DeleteApprovalMailSubscription (Hidden)
+            DeleteApprovalMailSubscription (Internal)
             DeleteEmail (Deprecated)
             DeleteEmailV2
-            DeleteEventSubscription (Hidden)
-            DeleteOnNewEmailSubscription (Hidden)
-            DeleteOptionsMailSubscription (Hidden)
+            DeleteEventSubscription (Internal)
+            DeleteOnNewEmailSubscription (Internal)
+            DeleteOptionsMailSubscription (Internal)
             ExportEmail (Deprecated)
             ExportEmailV2
             FindMeetingTimes (Deprecated)
@@ -77,8 +77,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             ForwardEmailV2
             GetAttachment (Deprecated)
             GetAttachmentV2
-            GetDataSets (Hidden)
-            GetDataSetsMetadata (Hidden)
+            GetDataSets (Internal)
+            GetDataSetsMetadata (Internal)
             GetEmail (Deprecated)
             GetEmails (Deprecated)
             GetEmailsV2 (Deprecated)
@@ -95,23 +95,23 @@ namespace Microsoft.PowerFx.Connectors.Tests
             GetRoomsInRoomList (Deprecated)
             GetRoomsInRoomListV2
             GetRoomsV2
-            GetSensitivityLabels (Hidden)
+            GetSensitivityLabels (Internal)
             HttpRequest
             MarkAsRead (Deprecated)
             MarkAsReadV2 (Deprecated)
             MarkAsReadV3
             Move (Deprecated)
             MoveV2
-            OnFilePickerBrowse (Hidden)
-            OnFilePickerOpen (Hidden)
-            ReceiveEventFromSubscription (Hidden)
-            ReceiveEventFromSubscriptionV2 (Hidden)
-            ReceiveMailFromSubscription (Hidden)
-            ReceiveMailFromSubscriptionV2 (Hidden)
-            ReceiveResponseGet (Hidden)
-            ReceiveResponsePost (Hidden)
-            RenewEventSubscription (Hidden)
-            RenewOnNewEmailSubscription (Hidden)
+            OnFilePickerBrowse (Internal)
+            OnFilePickerOpen (Internal)
+            ReceiveEventFromSubscription (Internal)
+            ReceiveEventFromSubscriptionV2 (Internal)
+            ReceiveMailFromSubscription (Internal)
+            ReceiveMailFromSubscriptionV2 (Internal)
+            ReceiveResponseGet (Internal)
+            ReceiveResponsePost (Internal)
+            RenewEventSubscription (Internal)
+            RenewOnNewEmailSubscription (Internal)
             ReplyTo (Deprecated)
             ReplyToV2 (Deprecated)
             ReplyToV3
@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             SetAutomaticRepliesSettingV2
             SharedMailboxSendEmail (Deprecated)
             SharedMailboxSendEmailV2
-            TestConnection (Hidden)
+            TestConnection (Internal)
             UpdateMyContactPhoto
             V2CalendarGetItem (Deprecated)
             V2CalendarGetItems (Deprecated)

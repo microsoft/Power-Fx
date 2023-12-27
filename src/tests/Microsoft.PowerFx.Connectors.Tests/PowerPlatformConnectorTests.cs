@@ -289,7 +289,7 @@ namespace Microsoft.PowerFx.Tests
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "d95489a91a5846f4b2c095307d86edd6" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
 
-            IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector(new ConnectorSettings("azbs") { IncludeHiddenFunctions = true }, apiDoc, new ConsoleLogger(_output));
+            IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector(new ConnectorSettings("azbs") { IncludeInternalFunctions = true }, apiDoc, new ConsoleLogger(_output));
             RecalcEngine engine = new RecalcEngine(config);
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("azbs", ppClient, console: _output));
 
@@ -1024,7 +1024,7 @@ namespace Microsoft.PowerFx.Tests
             };
 
             // GetRoomsV2 is not hidden
-            config.AddActionConnector(new ConnectorSettings("Office365Outlook") { AllowUnsupportedFunctions = true, IncludeHiddenFunctions = false }, apiDoc, new ConsoleLogger(_output));
+            config.AddActionConnector(new ConnectorSettings("Office365Outlook") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = false }, apiDoc, new ConsoleLogger(_output));
 
             var engine = new RecalcEngine(config);
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client, console: _output));
@@ -1122,7 +1122,7 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddActionConnector(new ConnectorSettings("SQL") { IncludeHiddenFunctions = true }, apiDoc, new ConsoleLogger(_output));
+            config.AddActionConnector(new ConnectorSettings("SQL") { IncludeInternalFunctions = true }, apiDoc, new ConsoleLogger(_output));
             RecalcEngine engine = new RecalcEngine(config);
             RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
 
@@ -1215,13 +1215,13 @@ namespace Microsoft.PowerFx.Tests
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions("SP", apiDoc, new ConsoleLogger(_output)).OrderBy(f => f.Name).ToList();
             Assert.Equal(51, functions.Count);
 
-            functions = OpenApiParser.GetFunctions(new ConnectorSettings("SP") { IncludeHiddenFunctions = true }, apiDoc, new ConsoleLogger(_output)).OrderBy(f => f.Name).ToList();
+            functions = OpenApiParser.GetFunctions(new ConnectorSettings("SP") { IncludeInternalFunctions = true }, apiDoc, new ConsoleLogger(_output)).OrderBy(f => f.Name).ToList();
 
             // The difference is due to hidden functions
             Assert.Equal(101, functions.Count);
-            Assert.Equal(101 - 51, functions.Count(f => f.IsHidden));
+            Assert.Equal(101 - 51, functions.Count(f => f.IsInternal));
 
-            IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector(new ConnectorSettings("SP") { IncludeHiddenFunctions = true }, apiDoc, new ConsoleLogger(_output));
+            IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector(new ConnectorSettings("SP") { IncludeInternalFunctions = true }, apiDoc, new ConsoleLogger(_output));
             RecalcEngine engine = new RecalcEngine(config);
             RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SP", ppClient, console: _output));
 
@@ -1314,7 +1314,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "b20e87387f9149e884bdf0b0c87a67e8" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
 
-            ConnectorSettings connectorSettings = new ConnectorSettings("exob") { AllowUnsupportedFunctions = true, IncludeHiddenFunctions = true };
+            ConnectorSettings connectorSettings = new ConnectorSettings("exob") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true };
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
 
             IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector(connectorSettings, apiDoc, new ConsoleLogger(_output, true));

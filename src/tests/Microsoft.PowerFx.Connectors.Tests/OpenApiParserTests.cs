@@ -645,7 +645,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void SQL_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
-            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("SQL") { IncludeHiddenFunctions = true }, doc, new ConsoleLogger(_output));
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("SQL") { IncludeInternalFunctions = true }, doc, new ConsoleLogger(_output));
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "SQL" && func.Name == "GetProcedureV2");
         }
 

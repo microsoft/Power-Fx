@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Connectors
                    $"{nameof(connectorSettings.MaxRows)} {connectorSettings.MaxRows}, " +
                    $"{nameof(connectorSettings.FailOnUnknownExtension)} {connectorSettings.FailOnUnknownExtension}, " +
                    $"{nameof(connectorSettings.AllowUnsupportedFunctions)} {connectorSettings.AllowUnsupportedFunctions}, " +
-                   $"{nameof(connectorSettings.IncludeHiddenFunctions)} {connectorSettings.IncludeHiddenFunctions}, ";
+                   $"{nameof(connectorSettings.IncludeInternalFunctions)} {connectorSettings.IncludeInternalFunctions}, ";
         }
 
         internal static string LogException(Exception ex)

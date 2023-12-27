@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         public virtual ConnectorSettings GetConnectorSettings(ConnectorCompatibility compatibility = ConnectorCompatibility.PowerAppsCompatibility)
         {
-            return new ConnectorSettings(GetNamespace()) { Compatibility = compatibility, IncludeHiddenFunctions = true };
+            return new ConnectorSettings(GetNamespace()) { Compatibility = compatibility, IncludeInternalFunctions = true };
         }
 
         public virtual TimeZoneInfo GetTimeZoneInfo() => TimeZoneInfo.Utc;
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _output.WriteLine(string.Empty);
             foreach (ConnectorFunction func in funcs.OrderBy(f => f.Name))
             {
-                _output.WriteLine($"{func.Name}{(func.IsDeprecated ? " (Deprecated)" : string.Empty)}{(func.IsHidden ? " (Hidden)" : string.Empty)}{(!func.IsSupported && !func.IsDeprecated ? $" (Not supported: {func.NotSupportedReason})" : string.Empty)}");
+                _output.WriteLine($"{func.Name}{(func.IsDeprecated ? " (Deprecated)" : string.Empty)}{(func.IsInternal ? " (Internal)" : string.Empty)}{(!func.IsSupported && !func.IsDeprecated ? $" (Not supported: {func.NotSupportedReason})" : string.Empty)}");
             }
 
             return funcs;

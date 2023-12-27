@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Connectors
                 configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}");
                 IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(new ConnectorSettings(@namespace), openApiDocument, configurationLogger);
                 configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}, returning {functions.Count()} functions");
-                return functions.Where(f => !f.IsHidden);
+                return functions.Where(f => !f.IsInternal);
             }
             catch (Exception ex)
             {
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Connectors
                 configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");
                 IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger);
                 configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, returning {functions.Count()} functions");
-                return functions.Where(f => !f.IsHidden || connectorSettings.IncludeHiddenFunctions);
+                return functions.Where(f => !f.IsInternal || connectorSettings.IncludeInternalFunctions);
             }
             catch (Exception ex)
             {
@@ -426,7 +426,7 @@ namespace Microsoft.PowerFx.Connectors
         // Parse an OpenApiDocument and return functions. 
         internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) ParseInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
         {
-            List<ConnectorFunction> cFunctions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger).Where(f => !f.IsHidden || connectorSettings.IncludeHiddenFunctions).ToList();
+            List<ConnectorFunction> cFunctions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger).Where(f => !f.IsInternal || connectorSettings.IncludeInternalFunctions).ToList();
             List<ConnectorTexlFunction> tFunctions = cFunctions.Select(f => new ConnectorTexlFunction(f)).ToList();
 
             return (cFunctions, tFunctions);

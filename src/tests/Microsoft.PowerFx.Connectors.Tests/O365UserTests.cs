@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             RelevantPeople
             SearchUser (Deprecated)
             SearchUserV2
-            TestConnection (Hidden)
+            TestConnection (Internal)
             TrendingDocuments
             UpdateMyPhoto
             UpdateMyProfile
