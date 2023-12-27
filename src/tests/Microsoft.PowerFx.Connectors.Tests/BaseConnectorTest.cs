@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             PowerFxConfig config = new PowerFxConfig();
             OpenApiDocument apiDoc = testConnector._apiDocument;
             ConnectorSettings connectorSettings = GetConnectorSettings();
-            TimeZoneInfo tzi = TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time"); // (UTC+01:00) Brussels, Copenhagen, Madrid, Paris
+            TimeZoneInfo tzi = TimeZoneInfo.Utc;
 
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext(GetNamespace(), client, console: _output, tzi: tzi));
             runtimeConfig.SetClock(new TestClockService());

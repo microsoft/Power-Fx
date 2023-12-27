@@ -460,14 +460,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             @"Office365Outlook.CalendarPostItem(""Calendar"", DateTime(2023, 12, 20, 17, 05, 0), DateTime(2023, 12, 20, 15, 15, 0), ""Event 17"", { ShowAs: ""Some Event"" }).Subject",
             "Event 17",
             "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/Calendar/items",
-            @"{""End"":""2023-12-20T16:05:00.000Z"",""ShowAs"":""Some Event"",""Start"":""2023-12-20T14:15:00.000Z"",""Subject"":""Event 17""}",
+            @"{""End"":""2023-12-20T17:05:00.000Z"",""ShowAs"":""Some Event"",""Start"":""2023-12-20T15:15:00.000Z"",""Subject"":""Event 17""}",
             "201:Response_O365Outlook_CalendarPostItem.json")]
 
         [InlineData(
             @"Office365Outlook.CalendarPatchItem(""Calendar"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A1AAA="", DateTime(2023, 12, 20, 17, 05, 0), DateTime(2023, 12, 20, 15, 15, 0), ""Event 18"").Subject",
             "Event 18",
             "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A1AAA%253d",
-            @"{""End"":""2023-12-20T16:05:00.000Z"",""Start"":""2023-12-20T14:15:00.000Z"",""Subject"":""Event 18""}",
+            @"{""End"":""2023-12-20T17:05:00.000Z"",""Start"":""2023-12-20T15:15:00.000Z"",""Subject"":""Event 18""}",
             "200:Response_O365Outlook_CalendarPatchItem.json")]
 
         [InlineData(
@@ -729,14 +729,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             @"Office365Outlook.V2CalendarPostItem(""Calendar"", ""Event 30"", DateTime(2023, 12, 27, 15, 10, 59, 117.594), DateTime(2023, 12, 27, 16, 22, 3, 902.111)).Subject",
             "Event 30",
             "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v2/tables/Calendar/items",
-            @"{""Subject"":""Event 30"",""Start"":""2023-12-27T14:10:59.117Z"",""End"":""2023-12-27T15:22:03.902Z""}",
+            @"{""Subject"":""Event 30"",""Start"":""2023-12-27T15:10:59.117Z"",""End"":""2023-12-27T16:22:03.902Z""}",
             "201:Response_O365Outlook_V2CalendarPostItem.json")]
 
         [InlineData(
             @"Office365Outlook.V3CalendarPostItem(""Calendar"", ""Event 31"", DateTime(2023, 12, 27, 15, 10, 59, 117.594), DateTime(2023, 12, 27, 16, 22, 3, 902.111)).Subject",
             "Event 31",
             "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v3/tables/Calendar/items",
-            @"{""Subject"":""Event 31"",""Start"":""2023-12-27T14:10:59.117Z"",""End"":""2023-12-27T15:22:03.902Z""}",
+            @"{""Subject"":""Event 31"",""Start"":""2023-12-27T15:10:59.117Z"",""End"":""2023-12-27T16:22:03.902Z""}",
             "201:Response_O365Outlook_V3CalendarPostItem.json")]
 
         [InlineData(
@@ -750,14 +750,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             @"Office365Outlook.V2CalendarPatchItem(""Calendar"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBHAAA="", ""Event 30a"", DateTime(2023, 12, 27, 15, 10, 59, 117.594), DateTime(2023, 12, 27, 16, 22, 3, 902.111)).Subject",
             "Event 30a",
             "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v2/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBHAAA%253d",
-            @"{""Subject"":""Event 30a"",""Start"":""2023-12-27T14:10:59.117Z"",""End"":""2023-12-27T15:22:03.902Z""}",
+            @"{""Subject"":""Event 30a"",""Start"":""2023-12-27T15:10:59.117Z"",""End"":""2023-12-27T16:22:03.902Z""}",
             "Response_O365Outlook_V2CalendarPatchItem.json")]
 
         [InlineData(
             @"Office365Outlook.V3CalendarPatchItem(""Calendar"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBGAAA="", ""Event 31a"", DateTime(2023, 12, 27, 15, 10, 59, 117.594), DateTime(2023, 12, 27, 16, 22, 3, 902.111)).Subject",
             "Event 31a",
             "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v3/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBGAAA%253d",
-            @"{""Subject"":""Event 31a"",""Start"":""2023-12-27T14:10:59.117Z"",""End"":""2023-12-27T15:22:03.902Z""}",
+            @"{""Subject"":""Event 31a"",""Start"":""2023-12-27T15:10:59.117Z"",""End"":""2023-12-27T16:22:03.902Z""}",
             "Response_O365Outlook_V3CalendarPatchItem.json")]
 
         [InlineData(
