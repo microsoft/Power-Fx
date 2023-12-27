@@ -44,7 +44,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void WriteDateTimeValue(DateTime dateTimeValue)
         {            
-            _writer.Append(dateTimeValue.ToString("o", CultureInfo.InvariantCulture));           
+            _writer.Append(dateTimeValue.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture));           
+        }
+
+        protected override void WriteDateTimeValueNoTimeZone(DateTime dateTimeValue)
+        {
+            _writer.Append(dateTimeValue.ToString("yyyy-MM-ddTHH:mm:ss.fff", CultureInfo.InvariantCulture));
         }
 
         protected override void WriteDateValue(DateTime dateValue)

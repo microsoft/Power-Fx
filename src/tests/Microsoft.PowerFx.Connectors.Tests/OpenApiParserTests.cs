@@ -38,8 +38,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Azure Cognitive Service for Language, previously known as 'Text Analytics' connector detects language, sentiment and more of the text you provide.", doc.Info.Description);
 
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions("ACSL", doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
-            Assert.Equal(51, functions.Count);
-            ConnectorFunction conversationAnalysisAnalyzeConversationConversation = functions[19];
+            Assert.Equal(44, functions.Count);
+            ConnectorFunction conversationAnalysisAnalyzeConversationConversation = functions[14];
 
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", conversationAnalysisAnalyzeConversationConversation.Name);
             Assert.Equal("Analyzes the input conversation utterance.", conversationAnalysisAnalyzeConversationConversation.Description);
@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void ACSL_GetFunctionParameters_PowerAppsCompatibility()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
-            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.PowerAppsCompatibility }, doc).OrderBy(cf => cf.Name).ToList()[19];
+            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.PowerAppsCompatibility }, doc).OrderBy(cf => cf.Name).ToList()[14];
 
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("ConversationAnalysis_AnalyzeConversation_Conversation", function.OriginalName);
@@ -213,7 +213,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void ACSL_GetFunctionParameters_SwaggerCompatibility()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
-            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc).OrderBy(cf => cf.Name).ToList()[19];
+            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc).OrderBy(cf => cf.Name).ToList()[14];
 
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("ConversationAnalysis_AnalyzeConversation_Conversation", function.OriginalName);
@@ -324,8 +324,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             OpenApiDocument apiDoc = testConnector._apiDocument;
             ConsoleLogger logger = new ConsoleLogger(_output);
 
-            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
-            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, apiDoc).OrderBy(cf => cf.Name).ToList()[19];
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);            
+            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, apiDoc).OrderBy(cf => cf.Name).ToList()[14];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:w, offset:w, resolutions:O, text:s], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
@@ -434,7 +434,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var httpClient = new HttpClient(testConnector);
             testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service for Language v2.1_Response.json");
 
-            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList()[13];
+            var xx = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList();
+            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList()[11];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:w, multipleResolutions:b, offset:w, resolutions:O, text:s, topResolution:O], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
@@ -644,7 +645,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void SQL_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
-            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("SQL"), doc, new ConsoleLogger(_output));
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("SQL") { IncludeHiddenFunctions = true }, doc, new ConsoleLogger(_output));
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "SQL" && func.Name == "GetProcedureV2");
         }
 

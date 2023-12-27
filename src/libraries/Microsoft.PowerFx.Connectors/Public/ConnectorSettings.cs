@@ -8,8 +8,8 @@ namespace Microsoft.PowerFx.Connectors
     /// <summary>
     /// Settings for a connector.
     /// </summary>
-    public class ConnectorSettings 
-    {        
+    public class ConnectorSettings
+    {
         public ConnectorSettings(string @namespace)
         {
             Namespace = @namespace;
@@ -34,15 +34,22 @@ namespace Microsoft.PowerFx.Connectors
         /// Allow using functions that are identified as unsupported.
         /// NotSupportedReason property will still be specified.
         /// </summary>
-        public bool AllowUnsupportedFunctions { get; init; } = false;    
-        
+        public bool AllowUnsupportedFunctions { get; init; } = false;
+
+        /// <summary>
+        /// Hidden functions are those where x-ms-visibility extension is set to "internal".
+        /// By default these functions won't be accessible by end users.
+        /// Internally, hidden functions will be kept (ConnectorFunction.FunctionList) as some of those are used for dynamic intellisense.
+        /// </summary>
+        public bool IncludeHiddenFunctions { get; init; } = false;
+
         public ConnectorCompatibility Compatibility { get; init; } = ConnectorCompatibility.Default;
     }
 
     public enum ConnectorCompatibility
     {
         Default = PowerAppsCompatibility,
-        
+
         // Power Apps Compatibility
         // - required parameters can be reordered based on their locations
         // - required internal visible parameters with defaults are required

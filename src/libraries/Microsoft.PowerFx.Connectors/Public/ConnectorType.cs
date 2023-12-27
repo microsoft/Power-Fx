@@ -77,13 +77,16 @@ namespace Microsoft.PowerFx.Connectors
 
         internal bool Binary { get; private set; }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, bool binary = false)
+        internal MediaKind MediaKind { get; private set; }
+
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType)
         {
             Name = openApiParameter?.Name;
             IsRequired = openApiParameter?.Required == true;
             Visibility = openApiParameter?.GetVisibility().ToVisibility() ?? Visibility.Unknown;
             FormulaType = formulaType;
-            Binary = binary;
+            Binary = schema.Format == "binary";
+            MediaKind = openApiParameter?.GetMediaKind().ToMediaKind() ?? (Binary ? MediaKind.File : MediaKind.NotBinary);
 
             if (schema != null)
             {

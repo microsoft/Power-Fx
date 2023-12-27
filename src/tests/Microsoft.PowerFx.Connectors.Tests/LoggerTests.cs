@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Empty(functions);
             Assert.Equal(
-                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace <Namespace is null>, MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, |" +
+                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace <Namespace is null>, MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, IncludeHiddenFunctions False, |" +
                 @"[ERROR] connectorSettings.Namespace is null|" +
                 @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
         }
@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Empty(functions);
             Assert.Equal(
-                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace Test, MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, |" +
+                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace Test, MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, IncludeHiddenFunctions False, |" +
                 @"[ERROR] openApiDocument is null|" +
                 @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
         }
@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Empty(functions);
             Assert.Equal(
-                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace Test, MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, |" +
+                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace Test, MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, IncludeHiddenFunctions False, |" +
                 @"[ERROR] OpenApiDocument is invalid, it has no Path|" +
                 @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
         }
@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Empty(functions);
             Assert.Equal(
-                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace , MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, |" +
+                @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace , MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, IncludeHiddenFunctions False, |" +
                 @"[ERROR] connectorSettings.Namespace is not a valid DName|" +
                 @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
         }
@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.NotEmpty(functions);
             Assert.Equal(
-                "[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace SQL, MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, |" +
+                "[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace SQL, MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, IncludeHiddenFunctions False, |" +
                 "[INFO ] Operation GET /{connectionId}/datasets({dataset})/tables({table})/onnewitems is trigger|" +
                 "[INFO ] Operation GET /{connectionId}/datasets({dataset})/tables({table})/onupdateditems is trigger|" +
                 "[INFO ] Operation GET /{connectionId}/datasets/{server},{database}/tables/{table}/onupdateditems is trigger|" +
@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "[INFO ] Operation GET /{connectionId}/datasets/default/tables/{table}/onupdateditems is trigger|" +
                 "[INFO ] Operation GET /{connectionId}/v2/datasets/{server},{database}/tables/{table}/onnewitems is trigger|" +
                 "[INFO ] Namespace SQL: 'SQL Server' version 1.0 - 64 functions found|" +
-                "[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 64 functions", logger.GetLogs());
+                "[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 18 functions", logger.GetLogs());
         }
     }
 }

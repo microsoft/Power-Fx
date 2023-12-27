@@ -239,8 +239,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void UrlEncoderSerializer_Array_DateTime()
         {
-            var dt1 = new DateTime(1904, 11, 4, 2, 35, 33, 981);
-            var dt2 = new DateTime(2022, 6, 22, 17, 5, 11, 117);
+            var dt1 = new DateTime(1904, 11, 4, 2, 35, 33, 981, DateTimeKind.Local);
+            var dt2 = new DateTime(2022, 6, 22, 17, 5, 11, 117, DateTimeKind.Local);
 
             var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
@@ -251,8 +251,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Collection(
                 dates, 
-                d1 => Assert.Equal(dt1, d1), 
-                d2 => Assert.Equal(dt2, d2));
+                d1 => Assert.Equal(dt1, d1.ToUniversalTime()), 
+                d2 => Assert.Equal(dt2, d2.ToUniversalTime()));
         }
 
         [Fact]
@@ -338,7 +338,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             rtConfig.SetTimeZone(TimeZoneInfo.Local);            
             string str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new ConvertToUTC(TimeZoneInfo.Local));
             
-            string dateStr = str.Substring(2);
+            string dateStr = str.Substring(2);            
+            date = date.AddTicks(-(date.Ticks % 10000));
             Assert.Equal(date, DateTime.Parse(HttpUtility.UrlDecode(dateStr)));            
         }       
     }

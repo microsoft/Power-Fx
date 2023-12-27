@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Get all functions based on OpenApi document and using provided http client
             // throwOnError is set to true so that any later GetParameters call will generate an exception in case of HTTP failure (HTTP result not 200)
             // Default behavior: no exception and no suggestion in case of error
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("SQL", apiDoc, new ConsoleLogger(_output));
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("SQL") { IncludeHiddenFunctions = true }, apiDoc, new ConsoleLogger(_output));
 
             Assert.Equal(64, functions.Count());
 

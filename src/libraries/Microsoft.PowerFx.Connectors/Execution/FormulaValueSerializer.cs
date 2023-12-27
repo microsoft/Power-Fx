@@ -44,6 +44,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected abstract void WriteDateTimeValue(DateTime dateTimeValue);
 
+        protected abstract void WriteDateTimeValueNoTimeZone(DateTime dateTimeValue);
+
         protected abstract void WriteDateValue(DateTime dateValue);
 
         protected readonly bool _schemaLessBody;
@@ -234,7 +236,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                         }
                         else if (propertySchema.Format == "date-no-tz")
                         {
-                            WriteDateValue(dtv.GetConvertedValue(TimeZoneInfo.Utc));
+                            WriteDateTimeValueNoTimeZone(((PrimitiveValue<DateTime>)dtv).Value);
                         }
                         else
                         {

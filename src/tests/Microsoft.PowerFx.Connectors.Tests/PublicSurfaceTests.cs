@@ -40,6 +40,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.ConnectorType",
               "Microsoft.PowerFx.Connectors.Constants",
               "Microsoft.PowerFx.Connectors.LogCategory",
+              "Microsoft.PowerFx.Connectors.MediaKind",
               "Microsoft.PowerFx.Connectors.ODataParameters",
               "Microsoft.PowerFx.Connectors.ODataQueryableTableValue",
               "Microsoft.PowerFx.Connectors.OpenApiExtensions",              

@@ -1,0 +1,55 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users('d8e90db6-d09c-4a90-bc1e-86512a797fd3')/contactFolders('Contacts')/contacts/$entity",
+  "@odata.etag": "W/\"EQAAABYAAADr1A2S1MsmTIW9552ybeHbAABxFZeH\"",
+  "id": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LYAAA=",
+  "createdDateTime": "2023-12-21T16:48:52Z",
+  "lastModifiedDateTime": "2023-12-21T16:48:52Z",
+  "changeKey": "EQAAABYAAADr1A2S1MsmTIW9552ybeHbAABxFZeH",
+  "categories": [
+  ],
+  "parentFolderId": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwAuAAAAAAC1gTSkmbm5QLpPwj9qarJqAQDr1A2S1MsmTIW9552ybeHbAAAAAAEOAAA=",
+  "birthday": null,
+  "fileAs": "",
+  "displayName": "John Doe",
+  "givenName": "John",
+  "initials": null,
+  "middleName": null,
+  "nickName": null,
+  "surname": "Doe",
+  "title": null,
+  "yomiGivenName": null,
+  "yomiSurname": null,
+  "yomiCompanyName": null,
+  "generation": null,
+  "imAddresses": [
+  ],
+  "jobTitle": null,
+  "companyName": "Retired",
+  "department": null,
+  "officeLocation": null,
+  "profession": null,
+  "businessHomePage": null,
+  "assistantName": "",
+  "manager": "",
+  "homePhones": [
+  ],
+  "mobilePhone": "+1(555)234 5678",
+  "businessPhones": [
+  ],
+  "spouseName": "",
+  "personalNotes": "Notes",
+  "children": [
+  ],
+  "emailAddresses": [
+    {
+      "name": "john.doe@hotmail.com",
+      "address": "john.doe@hotmail.com"
+    }
+  ],
+  "homeAddress": {
+  },
+  "businessAddress": {
+  },
+  "otherAddress": {
+  }
+}

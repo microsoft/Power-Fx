@@ -125,6 +125,8 @@ namespace Microsoft.PowerFx.Connectors
         /// https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-visibility.
         /// </summary>
         public bool IsInternal => Operation.IsInternal();
+        
+        public bool IsHidden => Visibility.ToVisibility() == Connectors.Visibility.Internal;
 
         /// <summary>
         /// Defined as "x-ms-require-user-confirmation" boolean content.
@@ -256,7 +258,7 @@ namespace Microsoft.PowerFx.Connectors
         private ConnectorParameter[] _hiddenRequiredParameters;
         private ConnectorParameter[] _optionalParameters;
         private ConnectorType _returnParameterType;
-        private bool _isSupported;
+        private bool _isSupported;        
         private string _notSupportedReason;
 
         // Those properties are only used by HttpFunctionInvoker
@@ -274,7 +276,7 @@ namespace Microsoft.PowerFx.Connectors
             FunctionList = functionList;
 
             _configurationLogger = configurationLogger;
-            _isSupported = isSupported || connectorSettings.AllowUnsupportedFunctions;
+            _isSupported = isSupported || connectorSettings.AllowUnsupportedFunctions;            
             _notSupportedReason = notSupportedReason ?? (isSupported ? string.Empty : "Internal error on not supported reason");
         }
 
@@ -592,7 +594,7 @@ namespace Microsoft.PowerFx.Connectors
 
             EnsureInitialized();
             runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(InvokeInternalAsync))}, with {LogArguments(arguments)}");
-            BaseRuntimeConnectorContext context = ConnectorReturnType.Binary ? runtimeContext.WithRawResults() : runtimeContext;
+            BaseRuntimeConnectorContext context = ConnectorReturnType.Binary ? runtimeContext.WithRawResults(ConnectorReturnType.MediaKind) : runtimeContext;
             ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(this, context), context.ThrowOnError);
             FormulaValue result = await invoker.InvokeAsync(arguments, context, cancellationToken).ConfigureAwait(false);
             FormulaValue formulaValue = await PostProcessResultAsync(result, runtimeContext, invoker, cancellationToken).ConfigureAwait(false);
@@ -807,7 +809,7 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            return await dynamicApi.ConnectorFunction.InvokeInternalAsync(arguments, runtimeContext.WithRawResults(), cancellationToken).ConfigureAwait(false);
+            return await dynamicApi.ConnectorFunction.InvokeInternalAsync(arguments, runtimeContext.WithRawResults(MediaKind.NotBinary), cancellationToken).ConfigureAwait(false);
         }
 
         private void EnsureInitialized()
@@ -916,7 +918,7 @@ namespace Microsoft.PowerFx.Connectors
 
             // parameters used in ConnectorParameterInternals
             Dictionary<string, (bool, FormulaValue, DType)> parameterDefaultValues = new ();
-            List<OpenApiParameter> openApiBodyParameters = new ();
+            List<ConnectorParameter> openApiBodyParameters = new ();
             string bodySchemaReferenceId = null;
             bool schemaLessBody = false;
             string contentType = OpenApiExtensions.ContentType_ApplicationJson;
@@ -1021,8 +1023,8 @@ namespace Microsoft.PowerFx.Connectors
                                     }
 
                                     OpenApiParameter bodyParameter = new OpenApiParameter() { Name = bodyPropertyName, Schema = bodyPropertySchema, Description = requestBody.Description, Required = bodyPropertyRequired, Extensions = bodyPropertySchema.Extensions };
-                                    openApiBodyParameters.Add(bodyParameter);
                                     ConnectorParameter bodyConnectorParameter2 = new ConnectorParameter(bodyParameter, requestBody, ConnectorSettings.Compatibility);
+                                    openApiBodyParameters.Add(bodyConnectorParameter2);                                    
 
                                     if (bodyConnectorParameter2.HiddenRecordType != null)
                                     {
@@ -1038,9 +1040,8 @@ namespace Microsoft.PowerFx.Connectors
                                 schemaLessBody = true;
 
                                 OpenApiParameter bodyParameter2 = new OpenApiParameter() { Name = bodyName, Schema = bodySchema, Description = requestBody.Description, Required = requestBody.Required, Extensions = bodySchema.Extensions };
-                                openApiBodyParameters.Add(bodyParameter2);
-
                                 ConnectorParameter bodyConnectorParameter3 = new ConnectorParameter(bodyParameter2, requestBody, ConnectorSettings.Compatibility);
+                                openApiBodyParameters.Add(bodyConnectorParameter3);                                
 
                                 if (bodyConnectorParameter3.HiddenRecordType != null)
                                 {
@@ -1059,9 +1060,8 @@ namespace Microsoft.PowerFx.Connectors
                         OpenApiSchema bodyParameterSchema = new OpenApiSchema() { Type = "string" };
 
                         OpenApiParameter bodyParameter3 = new OpenApiParameter() { Name = bodyName, Schema = bodyParameterSchema, Description = "Body", Required = requestBody.Required };
-                        openApiBodyParameters.Add(bodyParameter3);
-
                         ConnectorParameter bodyParameter = new ConnectorParameter(bodyParameter3, requestBody, ConnectorSettings.Compatibility);
+                        openApiBodyParameters.Add(bodyParameter);                        
 
                         List<ConnectorParameter> parameterList = requestBody.Required ? requiredParameters : optionalParameters;
                         parameterList.Add(bodyParameter);

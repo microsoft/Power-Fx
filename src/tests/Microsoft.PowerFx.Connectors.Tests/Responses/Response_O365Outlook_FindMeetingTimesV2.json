@@ -1,0 +1,96 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#microsoft.graph.meetingTimeSuggestionsResult",
+  "emptySuggestionsReason": "",
+  "meetingTimeSuggestions": [
+    {
+      "confidence": 100.0,
+      "organizerAvailability": "free",
+      "attendeeAvailability": [
+      ],
+      "locations": [
+      ],
+      "meetingTimeSlot": {
+        "start": {
+          "dateTime": "2023-12-22T17:30:00.0000000",
+          "timeZone": "UTC"
+        },
+        "end": {
+          "dateTime": "2023-12-22T18:00:00.0000000",
+          "timeZone": "UTC"
+        }
+      }
+    },
+    {
+      "confidence": 100.0,
+      "organizerAvailability": "free",
+      "attendeeAvailability": [
+      ],
+      "locations": [
+      ],
+      "meetingTimeSlot": {
+        "start": {
+          "dateTime": "2023-12-22T18:00:00.0000000",
+          "timeZone": "UTC"
+        },
+        "end": {
+          "dateTime": "2023-12-22T18:30:00.0000000",
+          "timeZone": "UTC"
+        }
+      }
+    },
+    {
+      "confidence": 100.0,
+      "organizerAvailability": "free",
+      "attendeeAvailability": [
+      ],
+      "locations": [
+      ],
+      "meetingTimeSlot": {
+        "start": {
+          "dateTime": "2023-12-22T18:30:00.0000000",
+          "timeZone": "UTC"
+        },
+        "end": {
+          "dateTime": "2023-12-22T19:00:00.0000000",
+          "timeZone": "UTC"
+        }
+      }
+    },
+    {
+      "confidence": 100.0,
+      "organizerAvailability": "free",
+      "attendeeAvailability": [
+      ],
+      "locations": [
+      ],
+      "meetingTimeSlot": {
+        "start": {
+          "dateTime": "2023-12-22T19:00:00.0000000",
+          "timeZone": "UTC"
+        },
+        "end": {
+          "dateTime": "2023-12-22T19:30:00.0000000",
+          "timeZone": "UTC"
+        }
+      }
+    },
+    {
+      "confidence": 100.0,
+      "organizerAvailability": "free",
+      "attendeeAvailability": [
+      ],
+      "locations": [
+      ],
+      "meetingTimeSlot": {
+        "start": {
+          "dateTime": "2023-12-22T19:30:00.0000000",
+          "timeZone": "UTC"
+        },
+        "end": {
+          "dateTime": "2023-12-22T20:00:00.0000000",
+          "timeZone": "UTC"
+        }
+      }
+    }
+  ]
+}

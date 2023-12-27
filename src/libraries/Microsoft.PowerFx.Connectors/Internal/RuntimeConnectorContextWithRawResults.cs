@@ -23,6 +23,8 @@ namespace Microsoft.PowerFx.Connectors
 
         internal override bool ReturnRawResults => true;
 
+        internal override MediaKind MediaKind { get; set; }
+
         public override ConnectorLogger ExecutionLogger => _baseRuntimeConnectorContext.ExecutionLogger;
     }
 }

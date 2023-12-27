@@ -41,6 +41,29 @@ namespace Microsoft.PowerFx.Connectors.Tests
         // If we rerun those tests, AddMemberToGroup will work & RemoveMemberFromGroup fail...
         [Theory]
 
+        /*
+            DirectReports (Deprecated)
+            DirectReportsV2
+            HttpRequest
+            Manager (Deprecated)
+            ManagerV2
+            MyProfile (Deprecated)
+            MyProfileV2
+            MyTrendingDocuments
+            RelevantPeople
+            SearchUser (Deprecated)
+            SearchUserV2
+            TestConnection (Hidden)
+            TrendingDocuments
+            UpdateMyPhoto
+            UpdateMyProfile
+            UserPhoto (Deprecated)
+            UserPhotoMetadata
+            UserPhotoV2
+            UserProfile (Deprecated)
+            UserProfileV2         
+         */
+
         [InlineData(
             /* expression     */ @"First(Office365Users.SearchUser()).UserPrincipalName",
             /* result         */ "A_CAPEQ_01@capintegration01.onmicrosoft.com",
@@ -64,7 +87,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             "",
             "Response_O365Users_SearchUserV2.json")]
 
-        // undocumented API & not working PA
+        // Hidden function
         [InlineData(
             @"Office365Users.TestConnection()",
             null,
@@ -110,7 +133,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         // This function should return a FormulaValue with DType.Image type and isn't currently supported
         //[InlineData(
         //    @"Office365Users.UserPhoto(""a6d41679-60f7-4623-8d38-0538c02e59f9"")",
-        //    "IMAGE",
+        //    "RAW", // JPG file - Later we'll have to use "IMAGE" and verify we get an Fx ImageValue
         //    "GET:/apim/office365users/1870991d56b04959a52f6704949eccad/users/photo/value?userId=a6d41679-60f7-4623-8d38-0538c02e59f9",
         //    "",
         //    "Response_O365Users_UserPhoto.jpeg")]
@@ -118,7 +141,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         // This function should return a FormulaValue with DType.Image type and isn't currently supported
         //[InlineData(
         //    @"Office365Users.UserPhotoV2(""a6d41679-60f7-4623-8d38-0538c02e59f9"")",
-        //    "IMAGE",
+        //    "RAW", // JPG file - Later we'll have to use "IMAGE" and verify we get an Fx ImageValue
         //    "GET:/apim/office365users/1870991d56b04959a52f6704949eccad/codeless/v1.0/users/a6d41679-60f7-4623-8d38-0538c02e59f9/photo/$value",
         //    "",
         //    "Response_O365Users_UserPhoto.jpeg")]
