@@ -318,7 +318,7 @@ namespace Microsoft.PowerFx.Connectors
 
             var statusCode = (int)response.StatusCode;
 
-#if !RECORD_RESULTS
+#if RECORD_RESULTS
             if (response.RequestMessage.Headers.TryGetValues("x-ms-request-url", out IEnumerable<string> urlHeader) &&
                 response.RequestMessage.Headers.TryGetValues("x-ms-request-method", out IEnumerable<string> verbHeader))
             {
