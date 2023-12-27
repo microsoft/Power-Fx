@@ -25,16 +25,14 @@ namespace Microsoft.PowerFx.Connectors
     {
         private readonly HttpMessageInvoker _httpClient;
         private readonly ConnectorFunction _function;
-        private readonly bool _returnRawResults;
-        private readonly MediaKind _mediaKind;
+        private readonly bool _returnRawResults;        
         private readonly ConnectorLogger _logger;
 
         public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext)
         {
             _function = function;
             _httpClient = runtimeContext.GetInvoker(function.Namespace);
-            _returnRawResults = runtimeContext.ReturnRawResults;
-            _mediaKind = runtimeContext.MediaKind;
+            _returnRawResults = runtimeContext.ReturnRawResults;            
             _logger = runtimeContext.ExecutionLogger;
         }
 

@@ -14,6 +14,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
     [ThreadSafeImmutable]
     internal abstract class FormulaValueSerializer
     {
+        internal const string UtcDateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffZ";
+        internal const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fff";
+
         internal abstract string GetResult();
 
         internal abstract void StartSerialization(string referenceId);

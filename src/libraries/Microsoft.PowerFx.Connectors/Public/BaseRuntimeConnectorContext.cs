@@ -15,15 +15,13 @@ namespace Microsoft.PowerFx.Connectors
 
         public virtual bool ThrowOnError { get; } = false;
 
-        internal virtual bool ReturnRawResults { get; } = false;
-
-        internal virtual MediaKind MediaKind { get; set; } = MediaKind.NotBinary;
+        internal virtual bool ReturnRawResults { get; } = false;        
 
         public virtual ConnectorLogger ExecutionLogger { get; } = null; 
 
-        internal BaseRuntimeConnectorContext WithRawResults(MediaKind mk)
+        internal BaseRuntimeConnectorContext WithRawResults()
         {
-            return new RuntimeConnectorContextWithRawResults(this) { MediaKind = mk };
+            return new RuntimeConnectorContextWithRawResults(this);
         }
     }
 

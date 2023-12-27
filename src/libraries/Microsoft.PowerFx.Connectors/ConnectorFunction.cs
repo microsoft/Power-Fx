@@ -592,7 +592,7 @@ namespace Microsoft.PowerFx.Connectors
 
             EnsureInitialized();
             runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(InvokeInternalAsync))}, with {LogArguments(arguments)}");
-            BaseRuntimeConnectorContext context = ConnectorReturnType.Binary ? runtimeContext.WithRawResults(ConnectorReturnType.MediaKind) : runtimeContext;
+            BaseRuntimeConnectorContext context = ConnectorReturnType.Binary ? runtimeContext.WithRawResults() : runtimeContext;
             ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(this, context), context.ThrowOnError);
             FormulaValue result = await invoker.InvokeAsync(arguments, context, cancellationToken).ConfigureAwait(false);
             FormulaValue formulaValue = await PostProcessResultAsync(result, runtimeContext, invoker, cancellationToken).ConfigureAwait(false);
@@ -807,7 +807,7 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            return await dynamicApi.ConnectorFunction.InvokeInternalAsync(arguments, runtimeContext.WithRawResults(MediaKind.NotBinary), cancellationToken).ConfigureAwait(false);
+            return await dynamicApi.ConnectorFunction.InvokeInternalAsync(arguments, runtimeContext.WithRawResults(), cancellationToken).ConfigureAwait(false);
         }
 
         private void EnsureInitialized()
