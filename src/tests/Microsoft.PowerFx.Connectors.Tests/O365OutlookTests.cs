@@ -194,7 +194,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             "",
             "Response_O365Outlook_GetAttachmentV2.json")]
 
-        // This function is not available in Power Apps as it is hidden
+        // This function is not available in Power Apps as it is internal
         [InlineData(
             @"First(Office365Outlook.GetDataSets().value).DisplayName",
             "Calendars",
@@ -202,7 +202,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             "",
             "Response_O365Outlook_GetDataSets.json")]
 
-        // This function is not available in Power Apps as it is hidden
+        // This function is not available in Power Apps as it is internal
         [InlineData(
             @"Office365Outlook.GetDataSetsMetadata().tabular.tablePluralName",
             "Tables",
@@ -252,7 +252,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             "",
             "Response_O365Outlook_CalendarGetTablesV2.json")]
 
-        // This function is not available in Power Apps as it is hidden
+        // This function is not available in Power Apps as it is internal
         [InlineData(
             @"Office365Outlook.CalendarGetTable(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA="").title",
             "United Kingdom holidays",
@@ -378,7 +378,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             "",
             "Response_O365Outlook_GetRoomsInRoomListV2.json")]
 
-        // This function is not available in Power Apps as it is hidden
+        // This function is not available in Power Apps as it is internal
         // Requires an update swagger file as we were expecting a record with 'value' containing the array of sensitivity labels
         // Impacts SendEmail and SendEmailV2 functions where dynamic intellisense will not work properly for Sensitivity param
         [InlineData(
@@ -395,7 +395,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             "",
             "Response_O365Outlook_ContactGetTables.json")]
 
-        // Hidden function
+        // Internal function
         [InlineData(
             @"Office365Outlook.ContactGetTable(""Contacts"").title",
             "Contacts",
@@ -715,7 +715,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             @"{""MailboxAddress"":""aurorauser01@aurorafinanceintegration02.onmicrosoft.com"",""To"":""aurorauser01@aurorafinanceintegration02.onmicrosoft.com"",""Subject"":""Shared email"",""Body"":""Some body."",""Importance"":""Normal""}",
             "200:")]
 
-        // Hidden function
+        // Internal function
         [InlineData(
             @"Office365Outlook.TestConnection()",
             null,

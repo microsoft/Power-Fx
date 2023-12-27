@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             "",
             "Response_O365Users_SearchUserV2.json")]
 
-        // Hidden function
+        // Internal function
         [InlineData(
             @"Office365Users.TestConnection()",
             null,

@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Tests
             // Function we added where specified in MSNWeather.json
             var funcNames = funcs.Select(func => func.Name).OrderBy(x => x).ToArray();
 
-            // "GetMeasureUnits" is hidden (x-ms-visibililty is set to internal)
+            // "GetMeasureUnits" is internral (x-ms-visibililty is set to internal)
             Assert.Equal(new string[] { "CurrentWeather", "TodaysForecast", "TomorrowsForecast" }, funcNames);
 
             // Now execute it...
@@ -989,7 +989,7 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
             };
 
-            // There are 20 hidden functions
+            // There are 20 internal functions
             IReadOnlyList<ConnectorFunction> fi = config.AddActionConnector("Office365Outlook", apiDoc, new ConsoleLogger(_output));
             Assert.Equal(77, fi.Count());
 
@@ -1023,7 +1023,7 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            // GetRoomsV2 is not hidden
+            // GetRoomsV2 is not internal
             config.AddActionConnector(new ConnectorSettings("Office365Outlook") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = false }, apiDoc, new ConsoleLogger(_output));
 
             var engine = new RecalcEngine(config);
@@ -1217,7 +1217,7 @@ namespace Microsoft.PowerFx.Tests
 
             functions = OpenApiParser.GetFunctions(new ConnectorSettings("SP") { IncludeInternalFunctions = true }, apiDoc, new ConsoleLogger(_output)).OrderBy(f => f.Name).ToList();
 
-            // The difference is due to hidden functions
+            // The difference is due to internal functions
             Assert.Equal(101, functions.Count);
             Assert.Equal(101 - 51, functions.Count(f => f.IsInternal));
 
