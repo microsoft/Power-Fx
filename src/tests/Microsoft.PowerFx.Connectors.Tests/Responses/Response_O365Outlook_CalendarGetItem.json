@@ -1,0 +1,61 @@
+{
+  "Id": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAABNUGGhAADr1A2S1MsmTIW9552ybeHbAABNUI7rAAA=",
+  "Attendees": [
+  ],
+  "Body": {
+    "ContentType": "HTML",
+    "Content": "<html>\r\n<head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n<meta name=\"Generator\" content=\"Microsoft Exchange Server\">\r\n<!-- converted from rtf -->\r\n<style><!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --></style>\r\n</head>\r\n<body>\r\n<font face=\"Times New Roman\" size=\"3\"><span style=\"font-size:12pt;\"><a name=\"BM_BEGIN\"></a></span></font>\r\n</body>\r\n</html>\r\n"
+  },
+  "BodyPreview": "",
+  "Categories": [
+  ],
+  "ChangeKey": "69QNktTLJkyFveedsm3h2wAATVFNKw==",
+  "DateTimeCreated": "2023-10-27T07:43:14.6560758+00:00",
+  "DateTimeLastModified": "2023-10-27T07:43:14.6794956+00:00",
+  "End": "2026-09-01T00:00:00+00:00",
+  "EndTimeZone": "UTC",
+  "HasAttachments": false,
+  "ICalUId": "040000008200E00074C5B7101A82E0080000000000000000000000000000000000000000310000007643616C2D5569640100000036316539353031622D333137342D346439382D396561612D64666466393833656338623000",
+  "Importance": "Normal",
+  "IsAllDay": true,
+  "IsCancelled": false,
+  "IsOrganizer": true,
+  "Location": {
+    "DisplayName": "United Kingdom",
+    "Address": {
+      "Street": null,
+      "City": null,
+      "State": null,
+      "CountryOrRegion": null,
+      "PostalCode": null
+    },
+    "Coordinates": {
+      "Altitude": null,
+      "Latitude": null,
+      "Longitude": null,
+      "Accuracy": null,
+      "AltitudeAccuracy": null
+    }
+  },
+  "Organizer": {
+    "EmailAddress": {
+      "Name": "aurorauser01",
+      "Address": "aurorauser01@aurorafinanceintegration02.onmicrosoft.com"
+    }
+  },
+  "Recurrence": null,
+  "Reminder": 15,
+  "ResponseRequested": true,
+  "ResponseStatus": {
+    "Response": "Organizer",
+    "Time": "0001-01-01T00:00:00+00:00"
+  },
+  "SeriesMasterId": null,
+  "ShowAs": "Free",
+  "Start": "2026-08-31T00:00:00+00:00",
+  "StartTimeZone": "UTC",
+  "Subject": "Late Summer Holiday",
+  "Type": "SingleInstance",
+  "WebLink": "https://outlook.office365.com/owa/?itemid=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAABNUGGhAADr1A2S1MsmTIW9552ybeHbAABNUI7rAAA%3D&exvsurl=1&path=/calendar/item",
+  "Reason": null
+}

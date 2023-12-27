@@ -1,0 +1,9 @@
+{
+  "@odata.context": "https://outlook.office365.com/api/beta/$metadata#Collection(Microsoft.OutlookServices.EmailAddress)",
+  "value": [
+    {
+      "Name": "Conf Room SEA11/11.009 (60)",
+      "Address": "cfsea11@aurorafinanceintegration02.onmicrosoft.com"
+    }
+  ]
+}

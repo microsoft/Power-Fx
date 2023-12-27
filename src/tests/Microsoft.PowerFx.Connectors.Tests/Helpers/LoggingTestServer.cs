@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -21,14 +23,20 @@ namespace Microsoft.PowerFx.Tests
     {
         // Log HTTP calls. 
         public StringBuilder _log = new ();
-
         public OpenApiDocument _apiDocument;
-
         public bool SendAsyncCalled = false;
+        public bool Live = false;
+        public HttpClient LiveClient = null;
 
-        public LoggingTestServer(string swaggerName)
+        public LoggingTestServer(string swaggerName, bool live = false)
         {
+            Live = live;
             _apiDocument = Helpers.ReadSwagger(swaggerName);
+
+            if (live)
+            {
+                LiveClient = new HttpClient();
+            }
         }
 
         // Set the response, returned by SendAsync
@@ -114,6 +122,7 @@ namespace Microsoft.PowerFx.Tests
         {
             base.Dispose(disposing);
             _nextResponse?.Dispose();
+            LiveClient?.Dispose();
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -147,6 +156,41 @@ namespace Microsoft.PowerFx.Tests
                 {
                     _log.AppendLine($" [body] {content}");
                 }
+            }
+
+            if (Live)
+            {
+                // Clone request as it can only be used once (https://stackoverflow.com/questions/25044166/how-to-clone-a-httprequestmessage-when-the-original-request-has-content)
+                using HttpRequestMessage clone = new HttpRequestMessage(request.Method, request.RequestUri);
+
+                // Copy the request's content (via a MemoryStream) into the cloned object
+                var ms = new MemoryStream();
+                if (request.Content != null)
+                {
+                    await request.Content.CopyToAsync(ms).ConfigureAwait(false);
+                    ms.Position = 0;
+                    clone.Content = new StreamContent(ms);
+
+                    // Copy the content headers
+                    foreach (var h in request.Content.Headers)
+                    {
+                        clone.Content.Headers.Add(h.Key, h.Value);
+                    }
+                }
+
+                clone.Version = request.Version;
+
+                foreach (KeyValuePair<string, object> prop in request.Properties)
+                {
+                    clone.Properties.Add(prop);
+                }
+
+                foreach (KeyValuePair<string, IEnumerable<string>> header in request.Headers)
+                {
+                    clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                }
+                
+                return await LiveClient.SendAsync(clone, cancellationToken).ConfigureAwait(false);
             }
 
             var response = ResponseSetMode ? GetResponseMessage(Responses[CurrentResponse], Statuses[CurrentResponse++]) : _nextResponse;

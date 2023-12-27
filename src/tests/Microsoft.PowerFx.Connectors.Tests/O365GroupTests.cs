@@ -36,6 +36,22 @@ namespace Microsoft.PowerFx.Connectors.Tests
         // If we rerun those tests, AddMemberToGroup will work & RemoveMemberFromGroup fail...
         [Theory]
 
+        /*
+            AddMemberToGroup
+            CalendarDeleteItemV2
+            CreateCalendarEvent
+            CreateCalendarEventV2
+            HttpRequest
+            HttpRequestV2
+            ListGroupMembers
+            ListGroups
+            ListOwnedGroups
+            ListOwnedGroupsV2
+            ListOwnedGroupsV3
+            RemoveMemberFromGroup
+            UpdateCalendarEvent        
+         */
+
         [InlineData(
             /* expression     */ @"First(Filter(Office365Groups.ListGroups().value, ThisRecord.id = ""202a2963-7e7d-4dc6-8aca-a58a2f3a9d53"")).description",
             /* result         */ "TestProject9Aug",
@@ -91,21 +107,21 @@ namespace Microsoft.PowerFx.Connectors.Tests
             @"Office365Groups.CreateCalendarEvent(GUID(""202a2963-7e7d-4dc6-8aca-a58a2f3a9d53""), ""Event1"", { dateTime: Now() }, { dateTime: Now(), timeZone: ""UTC"" }).subject",
             "Event1",
             "POST:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/groups/202a2963-7e7d-4dc6-8aca-a58a2f3a9d53/events",
-            @"{""subject"":""Event1"",""start"":{""dateTime"":""2023-06-01T20:15:07.0000000"",""timeZone"":""UTC""},""end"":{""dateTime"":""2023-06-01T20:15:07.0000000"",""timeZone"":""UTC""}}",
+            @"{""subject"":""Event1"",""start"":{""dateTime"":""2023-06-02T03:15:07.000Z"",""timeZone"":""UTC""},""end"":{""dateTime"":""2023-06-02T03:15:07.000Z"",""timeZone"":""UTC""}}",
             "201:Response_O365Groups_CreateCalendarEvent.json")]
 
         [InlineData(
             @"Office365Groups.CreateCalendarEventV2(GUID(""202a2963-7e7d-4dc6-8aca-a58a2f3a9d53""), ""Event1"", { dateTime: Now() }, { dateTime: Now(), timeZone: ""UTC"" }).subject",
             "Event1",
             "POST:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v2/v1.0/groups/202a2963-7e7d-4dc6-8aca-a58a2f3a9d53/events",
-            @"{""subject"":""Event1"",""start"":{""dateTime"":""2023-06-01T20:15:07.0000000"",""timeZone"":""UTC""},""end"":{""dateTime"":""2023-06-01T20:15:07.0000000"",""timeZone"":""UTC""},""body"":{""contentType"":""Html""}}",
+            @"{""subject"":""Event1"",""start"":{""dateTime"":""2023-06-02T03:15:07.000Z"",""timeZone"":""UTC""},""end"":{""dateTime"":""2023-06-02T03:15:07.000Z"",""timeZone"":""UTC""},""body"":{""contentType"":""Html""}}",
             "201:Response_O365Groups_CreateCalendarEventV2.json")]
 
         [InlineData(
             @"Office365Groups.CalendarDeleteItemV2(GUID(""202a2963-7e7d-4dc6-8aca-a58a2f3a9d53""), Office365Groups.CreateCalendarEvent(GUID(""202a2963-7e7d-4dc6-8aca-a58a2f3a9d53""), ""Event2"", { dateTime: Now() }, { dateTime: Now() }).id)",
             null,
             "POST:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/groups/202a2963-7e7d-4dc6-8aca-a58a2f3a9d53/events|DELETE:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/groups/202a2963-7e7d-4dc6-8aca-a58a2f3a9d53/events/AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU-nnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxfAAA%253d",
-            @"{""subject"":""Event2"",""start"":{""dateTime"":""2023-06-01T20:15:07.0000000"",""timeZone"":""UTC""},""end"":{""dateTime"":""2023-06-01T20:15:07.0000000"",""timeZone"":""UTC""}}",
+            @"{""subject"":""Event2"",""start"":{""dateTime"":""2023-06-02T03:15:07.000Z"",""timeZone"":""UTC""},""end"":{""dateTime"":""2023-06-02T03:15:07.000Z"",""timeZone"":""UTC""}}",
             "201:Response_O365Groups_CreateCalendarEvent_ToDelete.json",
             "204:")]
 
@@ -113,7 +129,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             @"Office365Groups.UpdateCalendarEvent(GUID(""202a2963-7e7d-4dc6-8aca-a58a2f3a9d53""), Office365Groups.CreateCalendarEvent(GUID(""202a2963-7e7d-4dc6-8aca-a58a2f3a9d53""), ""Event3"", { dateTime: Now(), timeZone: ""UTC"" }, { dateTime: Now(), timeZone: ""UTC"" }).id, ""Event4"", { dateTime: Now(), timeZone: ""UTC"" }, { dateTime: Now(), timeZone: ""UTC"" }).subject",
             "Event4",
             "POST:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/groups/202a2963-7e7d-4dc6-8aca-a58a2f3a9d53/events|PATCH:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/groups/202a2963-7e7d-4dc6-8aca-a58a2f3a9d53/events/AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU-nnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxhAAA%253d",
-            @"{""subject"":""Event3"",""start"":{""dateTime"":""2023-06-01T20:15:07.0000000"",""timeZone"":""UTC""},""end"":{""dateTime"":""2023-06-01T20:15:07.0000000"",""timeZone"":""UTC""}}|{""subject"":""Event4"",""start"":{""dateTime"":""2023-06-01T20:15:07.0000000"",""timeZone"":""UTC""},""end"":{""dateTime"":""2023-06-01T20:15:07.0000000"",""timeZone"":""UTC""},""body"":{""contentType"":""Html""}}",
+            @"{""subject"":""Event3"",""start"":{""dateTime"":""2023-06-02T03:15:07.000Z"",""timeZone"":""UTC""},""end"":{""dateTime"":""2023-06-02T03:15:07.000Z"",""timeZone"":""UTC""}}|{""subject"":""Event4"",""start"":{""dateTime"":""2023-06-02T03:15:07.000Z"",""timeZone"":""UTC""},""end"":{""dateTime"":""2023-06-02T03:15:07.000Z"",""timeZone"":""UTC""},""body"":{""contentType"":""Html""}}",
             "201:Response_O365Groups_CreateCalendarEvent_ToUpdate.json",
             "Response_O365Groups_UpdateCalendarEvent.json")]
 

@@ -1,0 +1,13 @@
+{
+  "@odata.context": "https://office365-dfwus.azconn-dfwus-001.p.azurewebsites.net/$metadata#datasets",
+  "value": [
+    {
+      "Name": "calendars",
+      "DisplayName": "Calendars"
+    },
+    {
+      "Name": "contacts",
+      "DisplayName": "Contacts"
+    }
+  ]
+}

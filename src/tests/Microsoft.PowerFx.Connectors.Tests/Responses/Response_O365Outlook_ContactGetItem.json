@@ -1,0 +1,66 @@
+{
+  "CreatedDateTime": "2023-12-21T16:48:52+00:00",
+  "LastModifiedDateTime": "2023-12-21T16:48:52+00:00",
+  "Id": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LYAAA=",
+  "ParentFolderId": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwAuAAAAAAC1gTSkmbm5QLpPwj9qarJqAQDr1A2S1MsmTIW9552ybeHbAAAAAAEOAAA=",
+  "Birthday": null,
+  "FileAs": "",
+  "DisplayName": "John Doe",
+  "GivenName": "John",
+  "Initials": null,
+  "MiddleName": null,
+  "NickName": null,
+  "Surname": "Doe",
+  "Title": null,
+  "Generation": null,
+  "EmailAddresses": [
+    {
+      "Name": "john.doe@hotmail.com",
+      "Address": "john.doe@hotmail.com"
+    }
+  ],
+  "ImAddresses": [
+  ],
+  "JobTitle": null,
+  "CompanyName": "Retired",
+  "Department": null,
+  "OfficeLocation": null,
+  "Profession": null,
+  "BusinessHomePage": null,
+  "AssistantName": "",
+  "Manager": "",
+  "HomePhones": [
+  ],
+  "BusinessPhones": [
+  ],
+  "MobilePhone1": "+1(555)234 5678",
+  "HomeAddress": {
+    "Street": null,
+    "City": null,
+    "State": null,
+    "CountryOrRegion": null,
+    "PostalCode": null
+  },
+  "BusinessAddress": {
+    "Street": null,
+    "City": null,
+    "State": null,
+    "CountryOrRegion": null,
+    "PostalCode": null
+  },
+  "OtherAddress": {
+    "Street": null,
+    "City": null,
+    "State": null,
+    "CountryOrRegion": null,
+    "PostalCode": null
+  },
+  "YomiCompanyName": null,
+  "YomiGivenName": null,
+  "YomiSurname": null,
+  "Categories": [
+  ],
+  "ChangeKey": "EQAAABYAAADr1A2S1MsmTIW9552ybeHbAABxFZeH",
+  "DateTimeCreated": "2023-12-21T16:48:52+00:00",
+  "DateTimeLastModified": "2023-12-21T16:48:52+00:00"
+}
