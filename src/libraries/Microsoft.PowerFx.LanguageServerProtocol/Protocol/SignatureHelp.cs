@@ -3,6 +3,9 @@
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
+    using System;
+    using SignatureHelpCore = Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureHelp;
+
     /// <summary>
     /// Signature help represents the signature of something
     /// callable. There can be multiple signatures but only one
@@ -10,6 +13,29 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// </summary>
     public class SignatureHelp
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SignatureHelp"/> class.
+        /// </summary>
+        public SignatureHelp() 
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SignatureHelp"/> class.
+        /// Copy a LSP signature from a Core signature. 
+        /// </summary>
+        /// <param name="sig"></param>
+        public SignatureHelp(SignatureHelpCore sig) 
+        {
+            if (sig.Signatures != null)
+            {
+                this.Signatures = Array.ConvertAll(sig.Signatures, x => new SignatureInformation(x));
+            }
+            
+            this.ActiveSignature = sig.ActiveSignature;
+            this.ActiveParameter = sig.ActiveParameter;
+        }
+
         /// <summary>
         /// One or more signatures. If no signatures are available the signature help
         /// request should return `null`.
