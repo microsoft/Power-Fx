@@ -154,7 +154,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         [InlineData(
             @"First(Office365Outlook.GetEmailsV2({from:""no-reply-powerbi@microsoft.com""}).value).DateTimeReceived",
-            "DATETIME:2023-12-19T06:43:51.0000000Z",
+            "DATETIME:2023-12-19T05:43:51Z",
             "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/v2/Mail?folderPath=Inbox&from=no-reply-powerbi%40microsoft.com&importance=Any&fetchOnlyWithAttachment=False&fetchOnlyUnread=True&fetchOnlyFlagged=False&includeAttachments=False&top=10",
             "",
             "Response_O365Outlook_GetEmailsV2.json")]
@@ -741,7 +741,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         [InlineData(
             @"Office365Outlook.V4CalendarPostItem(""Calendar"", ""Event 32"", DateTime(2023, 12, 27, 15, 10, 59, 117.594), DateTime(2023, 12, 27, 16, 22, 3, 902.111),""(UTC+09:30) Darwin"").startWithTimeZone",
-            "DATETIME:2023-12-27T06:40:59.117Z",
+            "DATETIME:2023-12-27T15:10:59.117+09:30",
             "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v4/tables/Calendar/items",
             @"{""subject"":""Event 32"",""start"":""2023-12-27T15:10:59.117"",""end"":""2023-12-27T16:22:03.902"",""timeZone"":""(UTC\u002B09:30) Darwin""}",
             "201:Response_O365Outlook_V4CalendarPostItem.json")]

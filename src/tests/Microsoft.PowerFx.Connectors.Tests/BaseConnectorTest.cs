@@ -45,6 +45,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             return new ConnectorSettings(GetNamespace()) { Compatibility = compatibility, IncludeHiddenFunctions = true };
         }
 
+        public virtual TimeZoneInfo GetTimeZoneInfo() => TimeZoneInfo.Utc;
+
         public virtual string GetJWTToken() => "Some JWT token";
 
         internal static string DisplaySuggestion(IntellisenseSuggestion s) => $"{(s.Kind == SuggestionKind.Global && s.Type.Kind > Core.Types.DKind.Unknown ? $"{s.DisplayText.Text}:{s.Type.Kind}" : s.DisplayText.Text)}";
@@ -72,7 +74,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             PowerFxConfig config = new PowerFxConfig();
             OpenApiDocument apiDoc = testConnector._apiDocument;
             ConnectorSettings connectorSettings = GetConnectorSettings();
-            TimeZoneInfo tzi = TimeZoneInfo.Utc;
+            TimeZoneInfo tzi = GetTimeZoneInfo();
 
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext(GetNamespace(), client, console: _output, tzi: tzi));
             runtimeConfig.SetClock(new TestClockService());
@@ -142,9 +144,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             else if (expectedResult.StartsWith("DATETIME:"))
             {
                 Assert.True(fv is not ErrorValue, fv is ErrorValue ev ? $"EvalAsync Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}" : null);
-                DateTimeValue dtv = Assert.IsType<DateTimeValue>(fv);
+                DateTimeValue dtv = Assert.IsType<DateTimeValue>(fv);                                
 
-                Assert.Equal(DateTime.Parse(expectedResult.Substring(9)).ToUniversalTime(), dtv.GetConvertedValue(TimeZoneInfo.Utc));
+                Assert.Equal(DateTime.Parse(expectedResult.Substring(9)).ToUniversalTime(), new ConvertToUTC(GetTimeZoneInfo()).ToUTC(dtv));
             }
             else
             {
