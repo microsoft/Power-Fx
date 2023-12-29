@@ -18,7 +18,7 @@ Blank()
 {name:"textInput1"}
 
 >> IsBlank(Collect(t1, Blank()))
-Errors: Error 20-27: The specified column 'Value' does not exist.|Error 8-28: The function 'Collect' has some invalid arguments.
+true
     
 >> IsError(Collect(t1, If(1/0, r2)))
 true
@@ -55,3 +55,9 @@ Errors: Error 11-22: The specified column 'Price' does not exist.|Error 0-23: Th
 
 >> Collect(t_empty,{Value:200}).Value
 200
+
+>> Collect(t1, Table(r2,r2))
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Collect(t1, Table(r2,r2), {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})

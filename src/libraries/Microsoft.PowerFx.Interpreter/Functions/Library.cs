@@ -291,6 +291,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Collect)
             },
             {
+                BuiltinFunctionsCore.CollectT,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.CollectT.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Collect)
+            },
+            {
                 BuiltinFunctionsCore.ColorValue,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.ColorValue.Name,

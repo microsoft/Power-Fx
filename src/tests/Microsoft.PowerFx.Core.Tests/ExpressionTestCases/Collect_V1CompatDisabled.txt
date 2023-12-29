@@ -10,13 +10,13 @@ Errors: Error 29-52: The specified column 'surname' does not exist. The column w
 Errors: Error 40-42: The specified column 'Field1' does not exist.|Error 0-43: The function 'Collect' has some invalid arguments.
 
 >> Collect(Error({Kind:ErrorKind.Custom}), Error({Kind:ErrorKind.Div0}))
-Errors: Error 40-68: The specified column 'Value' does not exist.|Error 0-69: The function 'Collect' has some invalid arguments.
+Error({Kind:ErrorKind.Div0})
 
 >> Collect(Blank(), r2)
 Errors: Error 17-19: The specified column 'Field1' does not exist.|Error 0-20: The function 'Collect' has some invalid arguments.
 
 >> Collect(Blank(), Blank())
-Errors: Error 17-24: The specified column 'Value' does not exist.|Error 0-25: The function 'Collect' has some invalid arguments.
+Blank()
 
 >> Collect("", "")
 Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instead.|Error 12-14: The specified column 'Value' does not exist.|Error 0-15: The function 'Collect' has some invalid arguments.

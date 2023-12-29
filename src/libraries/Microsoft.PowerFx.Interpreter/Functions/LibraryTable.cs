@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx.Functions
         {
             FormulaValue arg0;
             var argc = args.Length;
+            var returnIsTable = args.Length > 2;
 
             // Need to check if the Lazy first argument has been evaluated since it may have already been
             // evaluated in the ClearCollect case.
@@ -32,9 +33,18 @@ namespace Microsoft.PowerFx.Functions
                 arg0 = args[0];
             }
 
+            if (arg0 is BlankValue)
+            {
+                return arg0;
+            }
+            else if (arg0 is ErrorValue)
+            {
+                return arg0;
+            }
+
             if (arg0 is not TableValue)
             {
-                return args[0];
+                return CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(arg0.Type));
             }
 
             var tableValue = arg0 as TableValue;
@@ -49,6 +59,8 @@ namespace Microsoft.PowerFx.Functions
 
                 if (arg is TableValue argTableValue)
                 {
+                    returnIsTable = true;
+
                     foreach (DValue<RecordValue> row in argTableValue.Rows)
                     {
                         if (row.IsBlank)
@@ -92,13 +104,13 @@ namespace Microsoft.PowerFx.Functions
             {
                 return BlankValue.NewBlank(irContext.ResultType);
             }
-            else if (resultRows.Count == 1)
-            {
-                return CompileTimeTypeWrapperRecordValue.AdjustType(tableValue.Type.ToRecord(), (RecordValue)resultRows.First().ToFormulaValue());
-            }
-            else
+            else if (returnIsTable)
             {
                 return CompileTimeTypeWrapperTableValue.AdjustType(tableValue.Type, new InMemoryTableValue(irContext, resultRows));
+            }
+            else
+            {                
+                return CompileTimeTypeWrapperRecordValue.AdjustType(tableValue.Type.ToRecord(), (RecordValue)resultRows.First().ToFormulaValue());
             }
         }
 

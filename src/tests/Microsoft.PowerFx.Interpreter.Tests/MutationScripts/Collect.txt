@@ -69,3 +69,27 @@ Table({a:1,b:1},{a:2,b:2})
 
 >> Collect(partialT1, {a:3});Last(partialT1).b
 Blank()
+
+>> Set(t1, [1,2,3])
+Table({Value:1},{Value:2},{Value:3})
+
+>> Collect(t1, 4)
+{Value:4}
+
+>> Collect(t1, [5,6,7],8,9,10)
+Table({Value:5},{Value:6},{Value:7},{Value:8},{Value:9},{Value:10})
+
+>> 0;t1
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5},{Value:6},{Value:7},{Value:8},{Value:9},{Value:10})
+
+>> Collect(t1, Table({Value:11},Blank()))
+Table({Value:11})
+
+>> Collect(t1, Table({Value:12},Error({Kind:ErrorKind.Custom})))
+Error({Kind:ErrorKind.Custom})
+
+>> Collect(t1, [13,Blank(),14])
+Table({Value:13},{Value:Blank()},{Value:14})
+
+>> 1;t1
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5},{Value:6},{Value:7},{Value:8},{Value:9},{Value:10},{Value:11},{Value:12},{Value:13},{Value:Blank()},{Value:14})

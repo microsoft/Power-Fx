@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -13,7 +12,6 @@ using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
@@ -208,7 +206,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType, useLegacyDateTimeAccepts: false, context.Features, allowCoerce: true);
 
-                    if (args.Length > 2)
+                    if (argTypes.Length == 2)
+                    {
+                        if (argTypes[1].IsTable && argTypes[1].Kind != DKind.ObjNull)
+                        {
+                            returnType = returnType.ToTable();
+                        }
+                    }
+                    else
                     {
                         returnType = returnType.ToTable();
                     }
@@ -250,6 +255,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
+            base.CheckSemantics(binding, args, argTypes, errors);
             base.ValidateArgumentIsMutable(binding, args[0], errors);
 
             int skip = 1;
