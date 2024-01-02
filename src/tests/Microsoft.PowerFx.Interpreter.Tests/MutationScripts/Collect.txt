@@ -91,5 +91,9 @@ Error({Kind:ErrorKind.Custom})
 >> Collect(t1, [13,Blank(),14])
 Table({Value:13},{Value:Blank()},{Value:14})
 
+// {Value:16} wont be collected because it appears after the error.
+>> Collect(t1, Table({Value:15}, Error({Kind:ErrorKind.Custom}), {Value:16}))
+Error({Kind:ErrorKind.Custom})
+
 >> 1;t1
-Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5},{Value:6},{Value:7},{Value:8},{Value:9},{Value:10},{Value:11},{Value:12},{Value:13},{Value:Blank()},{Value:14})
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5},{Value:6},{Value:7},{Value:8},{Value:9},{Value:10},{Value:11},{Value:12},{Value:13},{Value:Blank()},{Value:14},{Value:15})

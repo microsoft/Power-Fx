@@ -366,35 +366,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 _ => TableValue.ValueName
             };
         }
-
-        // !!!
-        //        public static void PushCustomJsArgs(TexlFunction func, JsTranslator translator, TexlBinding binding, CallNode node, List<Fragment> argFragments)
-        //        {
-        //            var collectFunc = (CollectFunction)func;
-
-        //            // Only scalar collection functions require the scalar field name.
-        //            if (!collectFunc.IsScalar)
-        //            {
-        //                return;
-        //            }
-
-        //            // CollectS needs to also inject the field name for these scalars; e.g. Collect(x,"a","b") -> Collect(x,"a","b","Value").
-        //            // Note that a single name is sufficient. Since the scalars being pushed are of the same type, they will be collected
-        //            // into the exact same column, whose name is needed (and will be pushed) here.
-        //            var args = node.Args.Children;
-        //            string fieldName = Contracts.VerifyValue(CollectScalarFunction.GetInvariantNameForRecord(binding.Features, binding.GetType(args[1]).Kind));
-        //#if DEBUG
-        //            for (int i = 1; i < argFragments.Count; i++)
-        //            {
-        //                Contracts.Assert(fieldName == Contracts.VerifyValue(CollectScalarFunction.GetInvariantNameForRecord(binding.Features, binding.GetType(args[i]).Kind)));
-        //            }
-        //#endif
-
-        //            var builder = new PAStringBuilder(fieldName.Length + 2);
-        //            builder.AppendAsPlainText(fieldName);
-
-        //            argFragments.Add(translator.CreateFragment(builder));
-        //        }
     }
 
     // Collect(collection:*[...], item1, ...)

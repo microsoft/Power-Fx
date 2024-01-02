@@ -19,9 +19,6 @@ namespace Microsoft.PowerFx.Core.Entities
 
         bool RequiresAsync { get; }
 
-        // !!! Change this in PA
-        bool IsClearable { get; }
-
         IExternalDataEntityMetadataProvider DataEntityMetadataProvider { get; }
 
         DataSourceKind Kind { get; }
