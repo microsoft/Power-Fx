@@ -1,0 +1,21 @@
+[  
+  {
+    "Id": "87867195-f2b8-4ac2-b0b7-6bb73cb33afc",
+    "DisplayName": "Public",
+    "ApplicableTo": "email,teamwork,file",
+    "SubLabels": [
+    ]
+  },  
+  {
+    "Id": "1a19d03a-48bc-4359-8038-5b5fad5847c3",
+    "DisplayName": "Confidential",
+    "ApplicableTo": null,
+    "SubLabels": null
+  },  
+  {
+    "Id": "c179f820-d535-4b2f-b252-8a9c4ad24ec6",
+    "DisplayName": "Highly Confidential",
+    "ApplicableTo": null,
+    "SubLabels": null
+  }  
+]

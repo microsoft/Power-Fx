@@ -1,0 +1,14 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users('d8e90db6-d09c-4a90-bc1e-86512a797fd3')/messages('AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA%3D')/attachments/$entity",
+  "@odata.type": "#microsoft.graph.fileAttachment",
+  "@odata.mediaContentType": "image/png",
+  "id": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAABEgAQAAaOrCiujABLpFlM9d390HE=",
+  "lastModifiedDateTime": "2023-12-20T10:22:43Z",
+  "name": "Outlook-rwoti1ve.png",
+  "contentType": "image/png",
+  "size": 531,
+  "isInline": true,
+  "contentId": "1854d8c6-d1a9-45d3-9696-0eb763a00ea4",
+  "contentLocation": null,
+  "contentBytes": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACDSURBVDhPYwCBoqKi/6RisEYYAAmQAuhrwM0QczD95fRhOJssA2A0COA0AKQIhEG2vVk5G85HlgMBvAbAaGQ2Mg0CZLsABgi6gBDAaQCxAMMAqDgcXAs1wsDoAKqVgQGbQnQNyOLImDoGgABYFgmgKwRhdADVCgEUByJIgFQM0cnAAABuCat1lCjm+AAAAABJRU5ErkJggg=="
+}

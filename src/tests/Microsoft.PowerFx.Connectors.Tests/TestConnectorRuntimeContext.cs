@@ -14,15 +14,17 @@ namespace Microsoft.PowerFx.Connectors.Tests
         private readonly Dictionary<string, HttpMessageInvoker> _clients = new ();
         private readonly bool _throwOnError;
         private readonly ConnectorLogger _logger;
+        private readonly TimeZoneInfo _tzi;
 
-        public TestConnectorRuntimeContext(string @namespace, HttpMessageInvoker client, bool? throwOnError = null, ITestOutputHelper console = null, bool includeDebug = false)
+        public TestConnectorRuntimeContext(string @namespace, HttpMessageInvoker client, bool? throwOnError = null, ITestOutputHelper console = null, bool includeDebug = false, TimeZoneInfo tzi = null)
         {
             Add(@namespace, client);
             _throwOnError = throwOnError ?? base.ThrowOnError;
             _logger = console == null ? null : new ConsoleLogger(console, includeDebug);
+            _tzi = tzi ?? TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
         }
 
-        public override TimeZoneInfo TimeZoneInfo => TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+        public override TimeZoneInfo TimeZoneInfo => _tzi;
 
         public TestConnectorRuntimeContext Add(string @namespace, HttpMessageInvoker client)
         {

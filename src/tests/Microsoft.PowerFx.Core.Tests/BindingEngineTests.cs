@@ -503,6 +503,31 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        // Example of function that requires AI disclaimer.
+        internal class AISummarizeFunction : TexlFunction
+        {
+            public AISummarizeFunction()
+                : base(
+                      DPath.Root,
+                      "AISummarize",
+                      "AISummarize",
+                      TexlStrings.AboutSet, // just to add something
+                      FunctionCategories.Information,
+                      DType.Boolean,
+                      0, // no lambdas
+                      0, // no args
+                      0)
+            {
+            }
+
+            public override bool IsSelfContained => false;
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield break;
+            }
+        }
+
         internal class LambdaAndColumnIdentifierFunction : TexlFunction
         {
             public LambdaAndColumnIdentifierFunction()

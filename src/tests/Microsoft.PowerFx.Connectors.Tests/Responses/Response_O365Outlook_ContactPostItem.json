@@ -1,0 +1,71 @@
+{
+  "CreatedDateTime": "2023-12-22T14:27:25+00:00",
+  "LastModifiedDateTime": "2023-12-22T14:27:25+00:00",
+  "Id": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LaAAA=",
+  "ParentFolderId": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwAuAAAAAAC1gTSkmbm5QLpPwj9qarJqAQDr1A2S1MsmTIW9552ybeHbAAAAAAEOAAA=",
+  "Birthday": null,
+  "FileAs": "",
+  "DisplayName": "John II",
+  "GivenName": "John Smith",
+  "Initials": null,
+  "MiddleName": null,
+  "NickName": null,
+  "Surname": null,
+  "Title": null,
+  "Generation": null,
+  "EmailAddresses": [
+    {
+      "Name": "email1",
+      "Address": "john2@nowhere.com"
+    },
+    {
+      "Name": "email2",
+      "Address": "john117zz@hotmail.se"
+    }
+  ],
+  "ImAddresses": [
+  ],
+  "JobTitle": null,
+  "CompanyName": "Bank of Sweden",
+  "Department": null,
+  "OfficeLocation": null,
+  "Profession": null,
+  "BusinessHomePage": null,
+  "AssistantName": null,
+  "Manager": null,
+  "HomePhones": [
+    "+1 (555) 457-987-1174"
+  ],
+  "BusinessPhones": [
+  ],
+  "MobilePhone1": null,
+  "HomeAddress": {
+    "Street": null,
+    "City": null,
+    "State": null,
+    "CountryOrRegion": null,
+    "PostalCode": null
+  },
+  "BusinessAddress": {
+    "Street": null,
+    "City": null,
+    "State": null,
+    "CountryOrRegion": null,
+    "PostalCode": null
+  },
+  "OtherAddress": {
+    "Street": null,
+    "City": null,
+    "State": null,
+    "CountryOrRegion": null,
+    "PostalCode": null
+  },
+  "YomiCompanyName": null,
+  "YomiGivenName": null,
+  "YomiSurname": null,
+  "Categories": [
+  ],
+  "ChangeKey": "EQAAABYAAADr1A2S1MsmTIW9552ybeHbAABxFcgY",
+  "DateTimeCreated": "2023-12-22T14:27:25+00:00",
+  "DateTimeLastModified": "2023-12-22T14:27:25+00:00"
+}

@@ -25,11 +25,13 @@
     <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Swagger\*.json" />
+  <ItemGroup>        
+    <EmbeddedResource Include="Responses\*.eml" />
     <EmbeddedResource Include="Responses\*.json" />
-    <EmbeddedResource Include="Responses\*.txt" />
     <EmbeddedResource Include="Responses\*.jsonSet" />
+    <EmbeddedResource Include="Responses\*.png" />
+    <EmbeddedResource Include="Responses\*.txt" />        
+    <EmbeddedResource Include="Swagger\*.json" />
   </ItemGroup>
 
   <ItemGroup>

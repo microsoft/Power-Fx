@@ -1,0 +1,22 @@
+{
+  "Id": "1508713b-8fcb-4951-9add-e11bbbd602ff",
+  "AccountEnabled": true,
+  "BusinessPhones": [
+    "+33 (1) 123456789"
+  ],
+  "City": "Paris",
+  "CompanyName": "Company",
+  "Country": "France",
+  "Department": "Power Fx - Paris",
+  "DisplayName": "John Doe",
+  "GivenName": "John",
+  "JobTitle": "SOFTWARE ENGINEER",
+  "Mail": "jdoe@company.com",
+  "MailNickname": "jdoe",
+  "mobilePhone": null,
+  "OfficeLocation": "Home Office",
+  "PostalCode": "75000",
+  "Surname": "Doe",
+  "TelephoneNumber": null,
+  "UserPrincipalName": "jdoe@microsoft.com"
+}

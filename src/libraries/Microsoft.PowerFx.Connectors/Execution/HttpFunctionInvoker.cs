@@ -25,14 +25,14 @@ namespace Microsoft.PowerFx.Connectors
     {
         private readonly HttpMessageInvoker _httpClient;
         private readonly ConnectorFunction _function;
-        private readonly bool _returnRawResults;
+        private readonly bool _returnRawResults;        
         private readonly ConnectorLogger _logger;
 
         public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext)
         {
             _function = function;
             _httpClient = runtimeContext.GetInvoker(function.Namespace);
-            _returnRawResults = runtimeContext.ReturnRawResults;
+            _returnRawResults = runtimeContext.ReturnRawResults;            
             _logger = runtimeContext.ExecutionLogger;
         }
 
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Connectors
             Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
             Dictionary<string, FormulaValue> map = ConvertToNamedParameters(args);
 
-            foreach (OpenApiParameter param in _function._internals.OpenApiBodyParameters)
+            foreach (ConnectorParameter param in _function._internals.OpenApiBodyParameters)
             {
                 if (map.TryGetValue(param.Name, out var paramValue))
                 {
@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (bodyParts.Any())
             {
-                body = GetBody(_function._internals.BodySchemaReferenceId, _function._internals.SchemaLessBody, bodyParts, utcConverter, cancellationToken);
+                body = GetBody(_function._internals.BodySchemaReferenceId, _function._internals.SchemaLessBody, bodyParts, utcConverter, cancellationToken);                
             }
 
             foreach (OpenApiParameter param in _function.Operation.Parameters)
@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();            
+            var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();
             var request = new HttpRequestMessage(_function.HttpMethod, url);
 
             foreach (var kv in headers)
@@ -135,8 +135,9 @@ namespace Microsoft.PowerFx.Connectors
         {
             // First N are required params. 
             // Last param is a record with each field being an optional.
+            // Parameter names are case sensitive.
 
-            Dictionary<string, FormulaValue> map = new (StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, FormulaValue> map = new ();
 
             // Seed with default values. This will get overwritten if provided. 
             foreach (KeyValuePair<string, (bool required, FormulaValue fValue, DType dType)> kv in _function._internals.ParameterDefaultValues)
@@ -304,11 +305,51 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, bool throwOnError = false)
         {
+            // https://github.com/microsoft/Power-Fx/issues/2119
+            // https://github.com/microsoft/Power-Fx/issues/1172
+            // response.Content could be a ByteArrayContent
+            // we'll need to use _mediaKind to correctly create an Fx Image or Blob in this case
+            // when MediaKind.NotBinary is used, we'll always return a string (used for dynamic intellisense)
             var text = response?.Content == null
                             ? string.Empty
                             : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var statusCode = (int)response.StatusCode;
+
+#if RECORD_RESULTS
+            if (response.RequestMessage.Headers.TryGetValues("x-ms-request-url", out IEnumerable<string> urlHeader) &&
+                response.RequestMessage.Headers.TryGetValues("x-ms-request-method", out IEnumerable<string> verbHeader))
+            {
+                string url = urlHeader.FirstOrDefault();
+                string verb = verbHeader.FirstOrDefault();
+                string ext = _returnRawResults ? "raw" : "json";
+
+                if (!string.IsNullOrEmpty(url))
+                {
+                    string u2 = url.Replace('/', '_').Replace('?', '_').Replace('+', ' ').Replace('%', '_');
+                    u2 = u2.Substring(0, Math.Min(u2.Length, 100));
+
+                    int i = 0;
+                    string file = $@"C:\Temp\Response_{verb}_{(int)statusCode}_{u2}.{ext}";
+
+                    // Paging, when multiple result pages are returned, or when same request is run multiple times
+                    while (System.IO.File.Exists(file))
+                    {
+                        i++;
+                        file = $@"C:\Temp\Response_{verb}_{(int)statusCode}_{u2}_#{i:00}.{ext}";
+                    }
+
+                    if (!_returnRawResults)
+                    {
+                        System.IO.File.WriteAllText(file, text);
+                    }
+                    else
+                    {
+                        System.IO.File.WriteAllBytes(file, await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false));
+                    }
+                }
+            }
+#endif
 
             if (statusCode < 300)
             {
@@ -405,7 +446,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);            
+            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
             return _invoker.InvokeAsync(new ConvertToUTC(runtimeContext.TimeZoneInfo), _cacheScope, args, localInvoker, cancellationToken, _throwOnError);
         }
 
@@ -413,7 +454,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);            
+            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
             return _invoker.InvokeAsync(url, _cacheScope, localInvoker, cancellationToken, _throwOnError);
         }
     }
@@ -431,10 +472,17 @@ namespace Microsoft.PowerFx.Connectors
         {
             _tzi = tzi;
         }
-        
+
         public DateTime ToUTC(DateTimeValue dtv)
-        {
-            return dtv.GetConvertedValue(_tzi);
+        {            
+            DateTime dt = ((PrimitiveValue<DateTime>)dtv).Value;
+
+            return dt.Kind switch
+            {
+                DateTimeKind.Utc => dt,
+                DateTimeKind.Unspecified => TimeZoneInfo.ConvertTimeToUtc(dt, _tzi),
+                _ => TimeZoneInfo.ConvertTimeToUtc(new DateTime(dt.Ticks, DateTimeKind.Unspecified), _tzi)
+            };            
         }
     }
 }

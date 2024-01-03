@@ -319,6 +319,8 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string GetVisibility(this IOpenApiExtensible schema) => schema.Extensions.TryGetValue(XMsVisibility, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
+        internal static string GetMediaKind(this IOpenApiExtensible schema) => schema.Extensions.TryGetValue(XMsMediaKind, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
+
         internal static (bool IsPresent, string Value) GetString(this OpenApiObject apiObj, string str) => apiObj.TryGetValue(str, out IOpenApiAny openApiAny) && openApiAny is OpenApiString openApiStr ? (true, openApiStr.Value) : (false, null);
 
         internal static void WhenPresent(this OpenApiObject apiObj, string propName, Action<string> action)
@@ -339,7 +341,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // See https://swagger.io/docs/specification/data-models/data-types/        
-        internal static ConnectorType ToConnectorType(this OpenApiParameter openApiParameter, Stack<string> chain = null, int level = 0)
+        internal static ConnectorType ToConnectorType(this OpenApiParameter openApiParameter, ConnectorCompatibility compatibility, Stack<string> chain = null, int level = 0)
         {
             chain ??= new Stack<string>();
 
@@ -373,7 +375,7 @@ namespace Microsoft.PowerFx.Connectors
                             return new ConnectorType(schema, openApiParameter, FormulaType.DateTime);
 
                         case "binary":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.String, binary: true);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.String);
 
                         case "enum":
                             if (schema.Enum.All(e => e is OpenApiString))
@@ -444,8 +446,8 @@ namespace Microsoft.PowerFx.Connectors
 
                     if (innerA.StartsWith("R:", StringComparison.Ordinal) && chain.Contains(innerA))
                     {
-                        // Here, we have a circular reference and default to a string
-                        return new ConnectorType(schema, openApiParameter, FormulaType.String);
+                        // Here, we have a circular reference and default to a table
+                        return new ConnectorType(schema, openApiParameter, TableType.Empty());
                     }
 
                     // Inheritance/Polymorphism - Can't know the exact type
@@ -456,7 +458,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     chain.Push(innerA);
-                    ConnectorType arrayType = new OpenApiParameter() { Name = "Array", Required = true, Schema = schema.Items, Extensions = schema.Items.Extensions }.ToConnectorType(chain, level + 1);
+                    ConnectorType arrayType = new OpenApiParameter() { Name = "Array", Required = true, Schema = schema.Items, Extensions = schema.Items.Extensions }.ToConnectorType(compatibility, chain, level + 1);
 
                     chain.Pop();
 
@@ -504,11 +506,16 @@ namespace Microsoft.PowerFx.Connectors
 
                             if (kv.Value.IsInternal())
                             {
-                                if (schema.Required.Contains(kv.Key) && kv.Value.Default != null)
+                                if (schema.Required.Contains(kv.Key))
                                 {
+                                    if (kv.Value.Default == null)
+                                    {
+                                        continue;
+                                    }
+
                                     hiddenRequired = true;
                                 }
-                                else
+                                else if (compatibility == ConnectorCompatibility.SwaggerCompatibility)
                                 {
                                     continue;
                                 }
@@ -524,7 +531,7 @@ namespace Microsoft.PowerFx.Connectors
                             }
 
                             chain.Push(innerO);
-                            ConnectorType propertyType = new OpenApiParameter() { Name = propName, Required = schema.Required.Contains(propName), Schema = kv.Value, Extensions = kv.Value.Extensions }.ToConnectorType(chain, level + 1);
+                            ConnectorType propertyType = new OpenApiParameter() { Name = propName, Required = schema.Required.Contains(propName), Schema = kv.Value, Extensions = kv.Value.Extensions }.ToConnectorType(compatibility, chain, level + 1);
                             chain.Pop();
 
                             if (propertyType.HiddenRecordType != null)
@@ -573,9 +580,9 @@ namespace Microsoft.PowerFx.Connectors
             };
         }
 
-        public static FormulaType GetReturnType(this OpenApiOperation openApiOperation)
+        public static FormulaType GetReturnType(this OpenApiOperation openApiOperation, ConnectorCompatibility compatibility)
         {
-            (ConnectorType connectorType, string unsupportedReason) = openApiOperation.GetConnectorReturnType();
+            (ConnectorType connectorType, string unsupportedReason) = openApiOperation.GetConnectorReturnType(compatibility);
             FormulaType ft = connectorType?.FormulaType ?? new BlankType();
             return ft;
         }
@@ -585,7 +592,7 @@ namespace Microsoft.PowerFx.Connectors
             return op.Extensions.TryGetValue(XMsRequireUserConfirmation, out IOpenApiExtension openExt) && openExt is OpenApiBoolean b && b.Value;
         }
 
-        internal static (ConnectorType ConnectorType, string UnsupportedReason) GetConnectorReturnType(this OpenApiOperation openApiOperation)
+        internal static (ConnectorType ConnectorType, string UnsupportedReason) GetConnectorReturnType(this OpenApiOperation openApiOperation, ConnectorCompatibility compatibility)
         {
             OpenApiResponses responses = openApiOperation.Responses;
             OpenApiResponse response = responses.Where(kvp => kvp.Key?.Length == 3 && kvp.Key.StartsWith("2", StringComparison.Ordinal)).OrderBy(kvp => kvp.Key).FirstOrDefault().Value;
@@ -609,7 +616,7 @@ namespace Microsoft.PowerFx.Connectors
             if (response.Content.Count == 0)
             {
                 OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "binary" };
-                ConnectorType connectorType = new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.ToConnectorType();
+                ConnectorType connectorType = new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.ToConnectorType(compatibility);
                 return (connectorType, null);
             }
 
@@ -630,11 +637,11 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         // Treat as void.                         
                         OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "binary" };
-                        ConnectorType cType = new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.ToConnectorType();
+                        ConnectorType cType = new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.ToConnectorType(compatibility);
                         return (cType, null);
                     }
 
-                    ConnectorType connectorType = new OpenApiParameter() { Name = "response", Required = true, Schema = openApiMediaType.Schema, Extensions = openApiMediaType.Schema.Extensions }.ToConnectorType();
+                    ConnectorType connectorType = new OpenApiParameter() { Name = "response", Required = true, Schema = openApiMediaType.Schema, Extensions = openApiMediaType.Schema.Extensions }.ToConnectorType(compatibility);
 
                     return (connectorType, null);
                 }
@@ -692,6 +699,15 @@ namespace Microsoft.PowerFx.Connectors
                 : Enum.TryParse(visibility, true, out Visibility vis)
                 ? vis
                 : Visibility.Unknown;
+        }
+
+        public static MediaKind ToMediaKind(this string mediaKind)
+        {
+            return string.IsNullOrEmpty(mediaKind)
+                ? MediaKind.File
+                : Enum.TryParse(mediaKind, true, out MediaKind mk)
+                ? mk
+                : MediaKind.Unknown;
         }
 
         internal static string PageLink(this OpenApiOperation op)

@@ -1,0 +1,1865 @@
+Received: from LV3P223MB0915.NAMP223.PROD.OUTLOOK.COM (2603:10b6:408:1dd::10)
+ by SJ1P223MB0458.NAMP223.PROD.OUTLOOK.COM with HTTPS; Tue, 19 Dec 2023
+ 05:43:50 +0000
+Received: from BN9PR03CA0527.namprd03.prod.outlook.com (2603:10b6:408:131::22)
+ by LV3P223MB0915.NAMP223.PROD.OUTLOOK.COM (2603:10b6:408:1dd::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.16; Tue, 19 Dec
+ 2023 05:43:45 +0000
+Received: from BN8NAM12FT017.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:408:131:cafe::2a) by BN9PR03CA0527.outlook.office365.com
+ (2603:10b6:408:131::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.38 via Frontend
+ Transport; Tue, 19 Dec 2023 05:43:45 +0000
+Authentication-Results: spf=pass (sender IP is 20.88.157.185)
+ smtp.mailfrom=microsoft.com; dkim=pass (signature was verified)
+ header.d=microsoft.com;dmarc=pass action=none
+ header.from=microsoft.com;compauth=pass reason=100
+Received-SPF: Pass (protection.outlook.com: domain of microsoft.com designates
+ 20.88.157.185 as permitted sender) receiver=protection.outlook.com;
+ client-ip=20.88.157.185; helo=mail-nam-cu02-bl.eastus.cloudapp.azure.com;
+ pr=C
+Received: from mail-nam-cu02-bl.eastus.cloudapp.azure.com (20.88.157.185) by
+ BN8NAM12FT017.mail.protection.outlook.com (10.13.182.170) with Microsoft SMTP
+ Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.7113.17 via
+ Frontend Transport; Tue, 19 Dec 2023 05:43:45 +0000
+DKIM-Signature: v=1; a=rsa-sha256; d=microsoft.com; s=s1024-meo;
+	c=relaxed/relaxed; i=no-reply-powerbi@microsoft.com; t=1702964624;
+	h=from:subject:date:message-id:to:mime-version:content-type;
+	bh=GyqgqTChpra0IuLUan+nI8y5qAbNs8I5BDLkbJdvYu0=;
+	b=g3fpNUIHMMK4xAONJVJT50FzQ/+HFkwzj3jqAt/knzHhEM8LuFje35wA4yzgvWNyHRuzwHOFWXd
+	yZGP6TL7jrZYw+ZKnfyS+B6CXaLJbwbNMIodQnyA1zVU5lNmemFzKY9MX8/BBARHJfxa7dl4i0EXi
+	dul29FF4X4tnpa6FSgQ=
+From: Microsoft Power BI <no-reply-powerbi@microsoft.com>
+Date: Tue, 19 Dec 2023 05:43:44 +0000
+Subject: Your scheduled refresh has been paused.
+Message-Id: <3bffb0bf-213c-4e07-92e4-3b9eb49d4288@az.eastus.microsoft.com>
+To: aurorauser01@aurorafinanceintegration02.onmicrosoft.com
+Content-Type: multipart/alternative; boundary="=-lG03jXgNqGju8i6DN5WsaA=="
+Return-Path: azure-noreply@microsoft.com
+X-MS-Exchange-Organization-ExpirationStartTime: 19 Dec 2023 05:43:45.3430
+ (UTC)
+X-MS-Exchange-Organization-ExpirationStartTimeReason: OriginalSubmit
+X-MS-Exchange-Organization-ExpirationInterval: 1:00:00:00.0000000
+X-MS-Exchange-Organization-ExpirationIntervalReason: OriginalSubmit
+X-MS-Exchange-Organization-Network-Message-Id:
+ 98bf9a47-c2bc-4d43-96f7-08dc0055774b
+X-EOPAttributedMessage: 0
+X-EOPTenantAttributedMessage: 4abc24ea-2d0b-4011-87d4-3de32ca1e9cc:0
+X-MS-Exchange-Organization-MessageDirectionality: Incoming
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic:
+ BN8NAM12FT017:EE_|LV3P223MB0915:EE_|SJ1P223MB0458:EE_
+X-MS-Exchange-Organization-AuthSource:
+ BN8NAM12FT017.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-Organization-AuthAs: Anonymous
+X-MS-Office365-Filtering-Correlation-Id: 98bf9a47-c2bc-4d43-96f7-08dc0055774b
+X-MS-Exchange-Organization-SCL: 1
+X-Microsoft-Antispam: BCL:0;
+X-Forefront-Antispam-Report:
+ CIP:20.88.157.185;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail-nam-cu02-bl.eastus.cloudapp.azure.com;PTR:mail-nam-cu02-bl.eastus.cloudapp.azure.com;CAT:NONE;SFS:(13230031)(47530400004)(230922051799003)(47000500020)(131899015)(8002899009)(451199024)(1690799017)(36736006)(83380400001)(956004)(10290500003)(19627405001)(52230400001)(6916009)(26005)(6486002)(966005)(336012)(22186003)(1096003)(8676002)(6506007)(33964004)(31686004)(58800400005)(6512007)(66899024)(5660300002)(356005)(9316004)(7636003)(166002)(7596003)(31696002)(559001)(579004);DIR:INB;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Dec 2023 05:43:45.0774
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98bf9a47-c2bc-4d43-96f7-08dc0055774b
+X-MS-Exchange-CrossTenant-Id: 4abc24ea-2d0b-4011-87d4-3de32ca1e9cc
+X-MS-Exchange-CrossTenant-AuthSource:
+ BN8NAM12FT017.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3P223MB0915
+X-MS-Exchange-Transport-EndToEndLatency: 00:00:05.5236958
+X-MS-Exchange-Processed-By-BccFoldering: 15.20.7113.016
+X-Microsoft-Antispam-Mailbox-Delivery:
+	ucf:0;jmr:0;auth:0;dest:I;ENG:(910001)(944506478)(944626604)(920097)(930097)(140003);
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TWp4encydmRmdHduZGkvRVpYdzZaYnBzbFY0OTlVazNvNlZGQktqWmRtbDJr?=
+ =?utf-8?B?RDdER1RMUWZQREtZMTZLT3k4Zyt2NjVwcVhCQzQ3ZVpLcWhBaDJxUVJzMUtH?=
+ =?utf-8?B?TjRCL25JaGo1RDZzaTJjNStPek91YnB1ZzRzd1dmREZCMjlCTnVYdjRIbFgy?=
+ =?utf-8?B?YmFQUlhDK2JxNElKOG1QU2plcUtucUQwb2ZjaHkrMkNGUVBtUlZ5eElDZlhZ?=
+ =?utf-8?B?OFRxNW0xcFlEVE9XUlR1UGhGdDBvcEtzM011SEJvQVEveENBRnppVVYwV0Vr?=
+ =?utf-8?B?Nm1oeTB6KzF0QThLVmFrbm1JMTh2RWlPOEpLSEV4MmhWNCtEcUM1aElqT1RF?=
+ =?utf-8?B?elE0ZkNLQjhDazdSckxJd3lkelhUYWZsaS92SkE5TUtvZnJaUDFrOGFEM2pT?=
+ =?utf-8?B?MXZidFJtSUIxaDVYQ25tR2FVRTJrcHIvY1F6MS9Xdmd0ck5jMFg5a29Vc1ov?=
+ =?utf-8?B?L0pKOUUxWUlNaWw5R0MrbEZTWVdYZS9Jemt2VS9odzhOVHRDOGJMSzVYQis0?=
+ =?utf-8?B?NzVhM2ZOVVRJc21nSnhlTy9Hb2ppZy9keEN4R3ZrUnFjUmt3ZTIwZ0JzcnRH?=
+ =?utf-8?B?Um9RQlNudVRxekg4bm9JQmRJMlE1SE80ejlJZldObUJKRGNwTWwxVGFnYS9I?=
+ =?utf-8?B?TWV4YVErY3d5bDRaOG9XbnM5elU2RmdjUElXQ1FHWjlGQlozMk5oR1R3Q3NC?=
+ =?utf-8?B?RmdMU1Bvek9HV1E2Y0ltTXpiOUFqb3lwd2lnVStJVWVjRGw4a0FGek8xRVg2?=
+ =?utf-8?B?WjdxUTlFZHRJaFVRNFdxZzZsSzJxM1RuSFZ6VERKelF0V2ltR2NZdkxnVzZ0?=
+ =?utf-8?B?ZDVDRXVsYzlvaGttR2FjSlNUSjB3LytBWHd2T05CcTNjeDFvTTYvMDh1eUVN?=
+ =?utf-8?B?SWs4RFdmNTdGYmFSWDB0VTl2dzdnSGtZWGgwSmM4ekxLRVp2VlhVblQra0F1?=
+ =?utf-8?B?WDQ3anN3UVNGcWRQMkZjUThhbkNneFZoWWxiZTdkMzlpSWxyQ0pFTmxjdWc4?=
+ =?utf-8?B?NEJJckVIUG81ODloMHB2aDZZMDVNRkhneDZpakcxV0pWalUvSWRBa0R3ZmRS?=
+ =?utf-8?B?R1BKT0ROaklFT2JlZGhjYWUyRkdwYmNRajlRYXU1aGd2TGI1enpqWUVZOFB5?=
+ =?utf-8?B?ZnNPTUZUcm9WajFnY0VPVXozdW5TRWdSb0YrbkpTT3BZYjB3L2N6ZWQxcTJj?=
+ =?utf-8?B?Y0RYYmVkK2gvMW1oNnJTUEwvRTQxcjl5dnlRRUErbFRVTTE0R05WQnEwdzV2?=
+ =?utf-8?B?b25CbVRzOVZMZnliR0hadG9TeFFFZUpGRUduLzN0ZXJPRTljd1lUdGl1aW0v?=
+ =?utf-8?B?ZmlDbkhkSmZoWXkzZjNCc0xhUzNiSUthR05IVWN6YjJ1cWR0WHNOelZYejNE?=
+ =?utf-8?B?K1h6c0JnM29sbW5hK012QUdDQS90WmNHSXRwbUplWDAzRTZUMXpUKzNqMTg3?=
+ =?utf-8?B?M0RhVHppa1poeVAxTnZhRmcyclNUUldUMkRkNmFYQmtWSHVUalJZanlDTXlN?=
+ =?utf-8?B?S1hzQUNYVCtENlJSazNEUWRIVGpsT2JzN000Qmc5Mk5Eb1FudzdBaUVITXZF?=
+ =?utf-8?B?bUVQM3RBV1RuZ3hsemhvL01EeU1uZDVQaVVzYThmb01UM0JYaU5RTEMyV0JI?=
+ =?utf-8?B?YVRTVkpmdlpHYjdNOWJyK3YrSzFEMms3K1hLTVRMWjVRU25hRU4vSjk0YlFI?=
+ =?utf-8?B?Nlp5WHAydSsreVQrM1FHQVhBWE80eEhSRDNRdFJMZ1I1NzFUQmhpUjVTdVNJ?=
+ =?utf-8?B?QzhZdk9tM2hWSUFxNm41ZFd6dU9EUUNzVnI0V0lMTEJEQUxjMVcwak1vS2NY?=
+ =?utf-8?B?L2RkSFBzb3NrUGJkdi85eEhsUzZQSnc0dGFJb1ZZLy9sTXN4LytEOGx6RU5t?=
+ =?utf-8?B?N3BvdExKNFVZWitkQmpaa2VIMDg3THozS2xrbEM2c1lDK1czOUVsV2hyQmhQ?=
+ =?utf-8?B?VkFjeHRRbUQ2b0thN1UyajY5YVNCZmhqRFV6YVBISGhCT21YenhWa1d2akll?=
+ =?utf-8?B?UW82aXMzQldaaDZlREJVQjkwNFpvS1dHOG1mUUg1STBvOTRITncxMUpRODc5?=
+ =?utf-8?B?WFF4czc0ZEtZNk4xb3pnSjNZRXpINEFWMXJEU1JjdFFPK3Z1b1hDQUNKQytO?=
+ =?utf-8?B?L1luK25EdCtTbDh0a3lTc3I2bzU0U3lBamw3VXYyWWtjOGRiNW83SW1uYkl4?=
+ =?utf-8?B?MHMxNkNjNGVuRUo5OEZKaTNuejhEZi9RZVNuSzJpRExkOWZLTzJrNUFRdE9D?=
+ =?utf-8?B?a0w4MmxZdVp6YzlORGtXZEE4eStjUHQ1cjlRZWEzZUpFWGpBdk5jbzJYZGVN?=
+ =?utf-8?B?NmlmSy9VZW0veHB5SjVwYlh1cGRwTDQwSmFheHpiWFUxaGNua09OdWFmYml2?=
+ =?utf-8?B?U2hQWitaUGJCSjArN2xkTmxEcFlyanQrcTEvVG8zb0hYalU4eEtqRHZ3c2ti?=
+ =?utf-8?B?eEJnOC9NSXZSeTA1OUpWR2g2My9TKy81dkVsbVYzWmlmd3o5Sk5VSlJkN0Y2?=
+ =?utf-8?B?NWYrNk1nOHhuMWJ1M0h6c0psVkZmc2Q1SlE3TmdhcXNpSjRHZHZJTjZFcElQ?=
+ =?utf-8?Q?QY7EPzEHw=3D?=
+MIME-Version: 1.0
+
+--=-lG03jXgNqGju8i6DN5WsaA==
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+
+Microsoft
+
+Your scheduled refresh has been paused.
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+We=E2=80=99ve paused scheduled refresh for copy latest in My workspace=
+ workspace due to inactivity.
+https://app.powerbi.com/groups/a8c2e792-f012-4099-bd08-36f974d78a2b/se=
+ttings/datasets/4e8b8f16-d3a9-4226-af3c-7c608759d6e7
+https://app.powerbi.com/groups/a8c2e792-f012-4099-bd08-36f974d78a2b
+
+No one has viewed dashboards or reports built using this dataset for t=
+wo months. To resume it, just visit a report or dashboard built using =
+this dataset or manually refresh the dataset using the Refresh Now opt=
+ion.
+
+Learn more >>
+https://docs.microsoft.com/en-us/power-bi/refresh-data
+
+Activity Id:
+
+b5361153-0225-43db-aff3-f7dab359b1b1
+
+Request Id:
+
+8b2c34d2-6626-444e-b346-58f02e0a8907
+
+Cluster Name:
+
+WABI-US-NORTH-CENTRAL-J-PRIMARY-redirect.analysis.windows.net
+
+--------------------------------------------------
+
+
+Privacy Statement: https://go.microsoft.com/fwlink/?LinkId=3D521839
+
+Microsoft Corporation, One Microsoft Way, Redmond, WA 98052
+
+Microsoft
+
+--=-lG03jXgNqGju8i6DN5WsaA==
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns=3D"https://www.w3.org/1999/xhtml" lang=3D"en" xmlns:v=3D"urn:sc=
+hemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-microsoft-com:office:office=
+" style=3D"min-height: 100%;background: #ffffff"><head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8">
+    <meta name=3D"viewport" content=3D"width=3Ddevice-width">
+    <meta name=3D"eventId" content=3D"power-bi-selective-refresh-group-work=
+space">
+    <meta name=3D"messageId" content=3D"3bffb0bf-213c-4e07-92e4-3b9eb49d428=
+8">
+    <meta name=3D"cloud" content=3D"AZ">
+
+
+       =20
+
+    <title>
+       =20
+    Your scheduled refresh has been paused.
+
+    </title>
+
+        <style id=3D"mediaqueries">@media only screen and (max-width: 640px=
+) {
+  .wrap-dangler {
+    padding-right: 10% !important;
+    mso-padding-right-alt: 10% !important;
+  }
+
+  .wrap-dangler.small-text-center .wrap-dangler.text-center {
+    padding-left: 10% !important;
+    mso-padding-left-alt: 10% !important;
+    padding-right: 10% !important;
+    mso-padding-right-alt: 10% !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  p.comment-border-right {
+    margin-left: 0 !important;
+    Margin-left: 0 !important;
+    mso-margin-left-alt: 0 !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  p.comment-border-left {
+    margin-left: 0 !important;
+    Margin-left: 0 !important;
+    mso-margin-left-alt: 0 !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .small-float-left {
+    margin-left: 0 !important;
+    float: none !important;
+    text-align: left !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .show-for-large {
+    display: none !important;
+    width: 0;
+    mso-hide: all;
+    overflow: hidden;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .wrap-dangler {
+    padding-right: 10% !important;
+    mso-padding-right-alt: 10% !important;
+  }
+
+  .wrap-dangler.small-text-center .wrap-dangler.text-center {
+    padding-left: 10% !important;
+    mso-padding-left-alt: 10% !important;
+    padding-right: 10% !important;
+    mso-padding-right-alt: 10% !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  p.comment-border-right {
+    margin-left: 0 !important;
+    Margin-left: 0 !important;
+    mso-margin-left-alt: 0 !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  p.comment-border-left {
+    margin-left: 0 !important;
+    Margin-left: 0 !important;
+    mso-margin-left-alt: 0 !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .small-float-left {
+    margin-left: 0 !important;
+    float: none !important;
+    text-align: left !important;
+  }
+}
+
+@media only screen {
+  html {
+    min-height: 100%;
+    background: #ffffff;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .small-float-center {
+    margin: 0 auto !important;
+    float: none !important;
+    text-align: center !important;
+  }
+
+  .small-text-center {
+    text-align: center !important;
+  }
+
+  .small-text-left {
+    text-align: left !important;
+  }
+
+  .small-text-right {
+    text-align: right !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .hide-for-large {
+    display: block !important;
+    width: auto !important;
+    overflow: visible !important;
+    max-height: none !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  table.body table.container .hide-for-large,
+  table.body table.container .row.hide-for-large {
+    display: table !important;
+    width: 100% !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  table.body table.container .callout-inner.hide-for-large {
+    display: table-cell !important;
+    width: 100% !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  table.body table.container .show-for-large {
+    display: none !important;
+    width: 0;
+    mso-hide: all;
+    overflow: hidden;
+  }
+}
+
+@media only screen {
+  a[x-apple-data-detectors] {
+    color: inherit !important;
+    text-decoration: none !important;
+    font-size: inherit !important;
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .menu.small-vertical .menu-item {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  table.body img {
+    width: auto;
+    height: auto;
+  }
+
+  table.body center {
+    min-width: 0 !important;
+  }
+
+  table.body .container {
+    width: 95% !important;
+  }
+
+  table.body .columns,
+  table.body .column {
+    height: auto !important;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  table.body .columns .column,
+  table.body .columns .columns,
+  table.body .column .column,
+  table.body .column .columns {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  table.body .collapse .columns,
+  table.body .collapse .column {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  td.small-1,
+  th.small-1 {
+    display: inline-block !important;
+    width: 8.33333% !important;
+  }
+
+  td.small-2,
+  th.small-2 {
+    display: inline-block !important;
+    width: 16.66667% !important;
+  }
+
+  td.small-3,
+  th.small-3 {
+    display: inline-block !important;
+    width: 25% !important;
+  }
+
+  td.small-4,
+  th.small-4 {
+    display: inline-block !important;
+    width: 33.33333% !important;
+  }
+
+  td.small-5,
+  th.small-5 {
+    display: inline-block !important;
+    width: 41.66667% !important;
+  }
+
+  td.small-6,
+  th.small-6 {
+    display: inline-block !important;
+    width: 50% !important;
+  }
+
+  td.small-7,
+  th.small-7 {
+    display: inline-block !important;
+    width: 58.33333% !important;
+  }
+
+  td.small-8,
+  th.small-8 {
+    display: inline-block !important;
+    width: 66.66667% !important;
+  }
+
+  td.small-9,
+  th.small-9 {
+    display: inline-block !important;
+    width: 75% !important;
+  }
+
+  td.small-10,
+  th.small-10 {
+    display: inline-block !important;
+    width: 83.33333% !important;
+  }
+
+  td.small-11,
+  th.small-11 {
+    display: inline-block !important;
+    width: 91.66667% !important;
+  }
+
+  td.small-12,
+  th.small-12 {
+    display: inline-block !important;
+    width: 100% !important;
+  }
+
+  .columns td.small-12,
+  .column td.small-12,
+  .columns th.small-12,
+  .column th.small-12 {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  table.body td.small-offset-1,
+  table.body th.small-offset-1 {
+    margin-left: 8.33333% !important;
+    Margin-left: 8.33333% !important;
+  }
+
+  table.body td.small-offset-2,
+  table.body th.small-offset-2 {
+    margin-left: 16.66667% !important;
+    Margin-left: 16.66667% !important;
+  }
+
+  table.body td.small-offset-3,
+  table.body th.small-offset-3 {
+    margin-left: 25% !important;
+    Margin-left: 25% !important;
+  }
+
+  table.body td.small-offset-4,
+  table.body th.small-offset-4 {
+    margin-left: 33.33333% !important;
+    Margin-left: 33.33333% !important;
+  }
+
+  table.body td.small-offset-5,
+  table.body th.small-offset-5 {
+    margin-left: 41.66667% !important;
+    Margin-left: 41.66667% !important;
+  }
+
+  table.body td.small-offset-6,
+  table.body th.small-offset-6 {
+    margin-left: 50% !important;
+    Margin-left: 50% !important;
+  }
+
+  table.body td.small-offset-7,
+  table.body th.small-offset-7 {
+    margin-left: 58.33333% !important;
+    Margin-left: 58.33333% !important;
+  }
+
+  table.body td.small-offset-8,
+  table.body th.small-offset-8 {
+    margin-left: 66.66667% !important;
+    Margin-left: 66.66667% !important;
+  }
+
+  table.body td.small-offset-9,
+  table.body th.small-offset-9 {
+    margin-left: 75% !important;
+    Margin-left: 75% !important;
+  }
+
+  table.body td.small-offset-10,
+  table.body th.small-offset-10 {
+    margin-left: 83.33333% !important;
+    Margin-left: 83.33333% !important;
+  }
+
+  table.body td.small-offset-11,
+  table.body th.small-offset-11 {
+    margin-left: 91.66667% !important;
+    Margin-left: 91.66667% !important;
+  }
+
+  table.body table.columns td.expander,
+  table.body table.columns th.expander {
+    display: none !important;
+  }
+
+  table.body .right-text-pad,
+  table.body .text-pad-right {
+    padding-left: 12px !important;
+  }
+
+  table.body .left-text-pad,
+  table.body .text-pad-left {
+    padding-right: 12px !important;
+  }
+
+  table.menu {
+    width: 100% !important;
+  }
+
+  table.menu td,
+  table.menu th {
+    width: auto !important;
+    display: inline-block !important;
+  }
+
+  table.menu.vertical td,
+  table.menu.vertical th,
+  table.menu.small-vertical td,
+  table.menu.small-vertical th {
+    display: block !important;
+  }
+
+  table.menu[align=3D"center"] {
+    width: auto !important;
+  }
+
+  table.button.small-expand,
+  table.button.small-expanded {
+    width: 100% !important;
+  }
+
+  table.button.small-expand table,
+  table.button.small-expanded table {
+    width: 100%;
+  }
+
+  table.button.small-expand table a,
+  table.button.small-expanded table a {
+    text-align: center !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  table.button.small-expand center,
+  table.button.small-expanded center {
+    min-width: 0;
+  }
+}
+
+@media (min-resolution: 1dpi) {
+  body[data-outlook-cycle] .main-container > table {
+    width: 640px;
+  }
+
+  body[data-outlook-cycle] .container-wide .main-container > table {
+    width: 888px;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .outer-wrapper > tbody > tr > .wrapper-inner,
+  table.body .columns,
+  table.body .column {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .main-container > .float-center {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 888px) {
+  body.container-wide .main-container > table {
+    width: 100% !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  table.button.secondary a {
+    font-size: 16px !important;
+    line-height: 22px !important;
+  }
+
+  .header-right-column table.button table td a {
+    font-size: 13px !important;
+    line-height: 1 !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .section .card-table th:first-child {
+    padding-bottom: 0px !important;
+    mso-padding-bottom-alt: 0px !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .section .card-table td,
+  .section .card-table th:last-child {
+    padding-top: 0px !important;
+    mso-padding-top-alt: 0px !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .section .card-table.mobile-padding td {
+    padding-top: 8px !important;
+    mso-padding-top-alt: 8px !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .section .card-table tr.border-top td,
+  .section .card-table tr.border-top th:last-child {
+    border: none !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .section .card-table.no-stack tr.border-top td,
+  .section .card-table.no-stack tr.border-top th {
+    border-top: 1px solid #dedede !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .section .card-table.no-stack th,
+  .section .card-table.no-stack td {
+    padding-top: 8px !important;
+    mso-padding-top-alt: 8px !important;
+    padding-bottom: 8px !important;
+    mso-padding-bottom-alt: 8px !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .section .card-row .columns.first {
+    padding-bottom: 0px !important;
+    mso-padding-bottom-alt: 0px !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .section .card-row .columns.last {
+    padding-top: 0px !important;
+    mso-padding-top-alt: 0px !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .header-section .stack-for-small th {
+    display: block;
+    width: 100% !important;
+  }
+
+  .header-section .stack-for-small .header-right-column {
+    padding-bottom: 0 !important;
+    padding-top: 24px !important;
+  }
+
+  .header-section .stack-for-small .header-right-column,
+  .header-section .stack-for-small .header-right-column p {
+    text-align: left !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .logo-microsoft-azure {
+    max-height: 21px;
+    max-width: 100%;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .logo-microsoft-viva {
+    max-height: 21px;
+    max-width: 100%;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .logo-microsoft-dynamic365 {
+    max-height: 21px;
+    max-width: 100%;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .list-row .columns.first,
+  .list-row .list-items {
+    padding-bottom: 0 !important;
+    mso-padding-bottom-alt: 0 !important;
+  }
+
+  .list-row .columns.last,
+  .list-row .list-items {
+    padding-top: 0 !important;
+    mso-padding-top-alt: 0 !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .number-bar .interior-bar td {
+    padding-top: 0px !important;
+    mso-padding-top-alt: 0px !important;
+    padding-bottom: 0px !important;
+    mso-padding-bottom-alt: 0px !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .small-display-block {
+    display: block !important;
+  }
+
+  .small-text-medium {
+    font-size: 18px !important;
+  }
+
+  .small-text-left {
+    text-align: left !important;
+  }
+
+  .small-bottom-padding-8 {
+    padding-bottom: 8px !important;
+    mso-padding-bottom-alt: 8px !important;
+  }
+
+  .small-top-padding-0 {
+    padding-top: 0 !important;
+    mso-padding-top-alt: 0 !important;
+  }
+
+  .video-container img {
+    margin-bottom: 10px;
+    Margin-bottom: 10px;
+    mso-margin-bottom-alt: 10px;
+  }
+
+  .video-container .video-thumbnail img {
+    max-width: 580px;
+    width: 300px;
+  }
+
+  .list-items p {
+    text-align: left !important;
+    font-size: 20px;
+  }
+
+  .list-items p,
+  .list-items img {
+    line-height: 13px !important;
+    mso-line-height-alt: 13px;
+    margin-bottom: 8px;
+    Margin-bottom: 8px;
+    mso-margin-bottom-alt: 8px;
+    text-align: left;
+  }
+
+  .list-items img {
+    vertical-align: middle !important;
+    margin-top: 5px !important;
+  }
+
+  .list-items.bullet-small th img {
+    padding-top: 0;
+    mso-padding-top-alt: 0;
+  }
+
+  table.body {
+    min-width: 320px !important;
+  }
+
+  table.body .main-container {
+    padding: 0 !important;
+  }
+
+  table.body .main-container > table.container {
+    min-width: 300px !important;
+  }
+
+  table.body table.container {
+    width: 100% !important;
+  }
+
+  .header-section img {
+    height: auto !important;
+  }
+
+  .header-section .small-6,
+  .header-section .large-3,
+  .header-section .large-6 {
+    margin-top: 0px;
+    Margin-top: 0px;
+    mso-margin-top-alt: 0px;
+    margin-bottom: 0px;
+    Margin-bottom: 0px;
+    mso-margin-bottom-alt: 0px;
+  }
+
+  .header-section .heading-container {
+    margin-bottom: 0px;
+    Margin-bottom: 0px;
+    mso-margin-bottom-alt: 0px;
+  }
+
+  .header-section .heading-container p {
+    font-family: Segoe UI, SegoeUI, Roboto, "Helvetica Neue", Arial, sans-s=
+erif;
+  }
+
+  .header-section p.amount-title {
+    line-height: 16px;
+    mso-line-height-alt: 16px;
+    font-size: 12px !important;
+    word-wrap: break-word !important;
+    margin: 0 15px 10px 15px;
+    mso-margin-alt: 0 15px 10px 15px;
+    padding-top: 0 !important;
+  }
+
+  .header-section p.amount-value {
+    font-size: 24px;
+    line-height: 18px;
+    mso-line-height-alt: 18px;
+    margin: 0 15px 10px 15px;
+    mso-margin-alt: 0 15px 10px 15px;
+    padding: 0;
+  }
+
+  .section .columns {
+    padding-top: 0px;
+    mso-padding-top-alt: 0px;
+    padding-bottom: 0px;
+    mso-padding-bottom-alt: 0px;
+  }
+
+  .section .show-for-small {
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+    mso-height-alt: auto !important;
+    max-height: none !important;
+    mso-max-height-alt: none !important;
+    mso-hide: none !important;
+    overflow: visible !important;
+  }
+
+  table.footer-template p {
+    font-size: 12px !important;
+    line-height: 16px !important;
+  }
+
+  .wrapper.wrapper-inner-540-large .wrapper-inner .container {
+    width: 100%;
+  }
+
+  .wrapper.wrapper-inner-20 .wrapper-inner {
+    padding-left: 0px !important;
+    mso-padding-left-alt: 0px !important;
+    padding-right: 20px !important;
+    mso-padding-right-alt: 20px !important;
+  }
+
+  .no-pad-for-small table th {
+    padding-left: 0px !important;
+    mso-padding-left-alt: 0px !important;
+    padding-right: 0px !important;
+    mso-padding-right-alt: 0px !important;
+  }
+
+  .large-pad-left table th {
+    padding-left: 0px !important;
+    mso-padding-left-alt: 0px !important;
+  }
+
+  .large-pad-right table th {
+    padding-right: 0px !important;
+    mso-padding-right-alt: 0px !important;
+  }
+
+  .max-width img {
+    height: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+@media only screen and (max-width: 888px) {
+  .max-width img {
+    height: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .button {
+    min-width: 132px !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .standard-table td {
+    padding-bottom: 5px !important;
+    mso-padding-bottom-alt: 5px !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .table-default.table-heading-rows,
+  .table-default.table-heading-rows-loop {
+    display: table !important;
+  }
+
+  .table-default.table-heading-rows th,
+  .table-default.table-heading-rows td,
+  .table-default.table-heading-rows-loop th,
+  .table-default.table-heading-rows-loop td {
+    padding: 0 !important;
+    mso-padding-alt: 0 !important;
+    display: block;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-top: 6px !important;
+  }
+
+  .table-default.table-heading-rows td,
+  .table-default.table-heading-rows-loop td {
+    border-top: none !important;
+    padding-bottom: 6px !important;
+    padding-top: none !important;
+  }
+
+  .table-default.table-heading-rows td.wrap-word,
+  .table-default.table-heading-rows .code-block td.wrapper-inner,
+  .code-block .table-default.table-heading-rows td.wrapper-inner,
+  .table-default.table-heading-rows .code-block-azns td.wrapper-inner,
+  .code-block-azns .table-default.table-heading-rows td.wrapper-inner,
+  .table-default.table-heading-rows-loop td.wrap-word,
+  .table-default.table-heading-rows-loop .code-block td.wrapper-inner,
+  .code-block .table-default.table-heading-rows-loop td.wrapper-inner,
+  .table-default.table-heading-rows-loop .code-block-azns td.wrapper-inner,
+  .code-block-azns .table-default.table-heading-rows-loop td.wrapper-inner =
+{
+    display: block !important;
+  }
+
+  .table-default.table-heading-rows th,
+  .table-default.table-heading-rows-loop th {
+    width: 100% !important;
+    padding-bottom: none !important;
+    padding-top: 6px !important;
+  }
+
+  .table-default.table-heading-rows.no-stack td,
+  .table-default.table-heading-rows-loop.no-stack td {
+    padding-left: 12px !important;
+  }
+
+  .table-default.table-heading-rows.no-stack td.wrap-word,
+  .table-default.table-heading-rows.no-stack .code-block td.wrapper-inner,
+  .code-block .table-default.table-heading-rows.no-stack td.wrapper-inner,
+  .table-default.table-heading-rows.no-stack .code-block-azns td.wrapper-in=
+ner,
+  .code-block-azns .table-default.table-heading-rows.no-stack td.wrapper-in=
+ner,
+  .table-default.table-heading-rows-loop.no-stack td.wrap-word,
+  .table-default.table-heading-rows-loop.no-stack .code-block td.wrapper-in=
+ner,
+  .code-block .table-default.table-heading-rows-loop.no-stack td.wrapper-in=
+ner,
+  .table-default.table-heading-rows-loop.no-stack .code-block-azns td.wrapp=
+er-inner,
+  .code-block-azns .table-default.table-heading-rows-loop.no-stack td.wrapp=
+er-inner {
+    display: table-cell;
+  }
+
+  .table-default.table-heading-rows.no-stack th,
+  .table-default.table-heading-rows-loop.no-stack th {
+    width: 1% !important;
+    padding-right: 12px !important;
+  }
+
+  .table-default.table-heading-rows.no-stack:first-child th,
+  .table-default.table-heading-rows.no-stack:first-child td,
+  .table-default.table-heading-rows.no-stack .table-heading-rows-loop:first=
+-child th,
+  .table-default.table-heading-rows.no-stack .table-heading-rows-loop:first=
+-child td,
+  .table-default.table-heading-rows-loop.no-stack:first-child th,
+  .table-default.table-heading-rows-loop.no-stack:first-child td,
+  .table-default.table-heading-rows-loop.no-stack .table-heading-rows-loop:=
+first-child th,
+  .table-default.table-heading-rows-loop.no-stack .table-heading-rows-loop:=
+first-child td {
+    border-top: none !important;
+  }
+
+  .table-default.table-heading-rows.no-stack th,
+  .table-default.table-heading-rows.no-stack td,
+  .table-default.table-heading-rows-loop.no-stack th,
+  .table-default.table-heading-rows-loop.no-stack td {
+    display: table-cell !important;
+    border-top: solid 1px #dedede !important;
+    padding-top: 8px !important;
+    mso-padding-top-alt: 8px !important;
+    padding-bottom: 8px !important;
+    mso-padding-bottom-alt: 8px !important;
+  }
+
+  .table-default.table-heading-rows.no-stack.table-heading-rows-loop th,
+  .table-default.table-heading-rows.no-stack.table-heading-rows-loop td,
+  .table-default.table-heading-rows-loop.no-stack.table-heading-rows-loop t=
+h,
+  .table-default.table-heading-rows-loop.no-stack.table-heading-rows-loop t=
+d {
+    border-top: none !important;
+  }
+
+  .table-default.table-heading-rows.no-stack.table-heading-rows-loop .table=
+-row-loop-start:first-child th,
+  .table-default.table-heading-rows.no-stack.table-heading-rows-loop .table=
+-row-loop-start:first-child td,
+  .table-default.table-heading-rows-loop.no-stack.table-heading-rows-loop .=
+table-row-loop-start:first-child th,
+  .table-default.table-heading-rows-loop.no-stack.table-heading-rows-loop .=
+table-row-loop-start:first-child td {
+    border-top: none !important;
+  }
+
+  .table-default.table-heading-rows.no-stack.table-heading-rows-loop .table=
+-row-loop-start th,
+  .table-default.table-heading-rows.no-stack.table-heading-rows-loop .table=
+-row-loop-start td,
+  .table-default.table-heading-rows-loop.no-stack.table-heading-rows-loop .=
+table-row-loop-start th,
+  .table-default.table-heading-rows-loop.no-stack.table-heading-rows-loop .=
+table-row-loop-start td {
+    border-top: solid 1px #dedede !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .power-bi.container-mooncake .header-section img {
+    height: auto !important;
+    max-height: 16px;
+    max-width: 100%;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .synapse-reflex.container-mooncake .header-section img {
+    height: auto !important;
+    max-height: 16px;
+    max-width: 100%;
+  }
+}</style>
+
+    <!--[if gte (gte mso 9)|(IE)]>
+        <xml>
+            <o:OfficeDocumentSettings>
+            <o:AllowPNG/>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+        <style>
+            li {
+                text-align:-webkit-match-parent;
+                display:list-item;
+                text-indent: -1em;
+            }
+
+            .alert span,
+            .arrow-link,
+            b,
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            .heading-group th,
+            strong,
+            .card-table th,
+            .header-right-column,
+            .styled-table th,
+            .styled-table td,
+            .text-heading1,
+            .text-heading2,
+            .text-heading3,
+            .text-heading4,
+            .text-heading5,
+            .text-bold,
+            table.button a,
+            .wrapper-inner a,
+            .wrapper-inner p {
+                font-weight: 400 !important;
+            }
+        </style>
+    <![endif]-->
+</head>
+
+
+
+<body class=3D"power-bi ltr " dir=3D"ltr" style=3D"width: 100%;min-width: 1=
+00%;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;padding: 0;-m=
+oz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border=
+-box;color: #11100f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica=
+ Neue&quot;, Arial, sans-serif;font-weight: 400;padding-top: 0;padding-righ=
+t: 0;padding-bottom: 0;padding-left: 0;Margin: 0;text-align: left;font-size=
+: 14px;line-height: 20px">
+        <div class=3D"preheader" style=3D"display: none;visibility: hidden;=
+opacity: 0;color: #f4f4f4;height: 0;width: 0;line-height: 1px;font-size: 1p=
+x;max-height: 0;max-width: 0;overflow: hidden;mso-hide: all">We=E2=80=99ve =
+paused scheduled refresh for copy latest in My workspace workspace due to i=
+nactivity.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    <table role=3D"presentation" class=3D"body " data-made-with-foundation=
+=3D"data-made-with-foundation" style=3D"border-spacing: 0;border-collapse: =
+collapse;vertical-align: top;mso-table-lspace: -1pt;mso-table-rspace: -1pt;=
+background: #ffffff;height: 100%;width: 100%;color: #11100f;font-family: Se=
+goe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font=
+-weight: 400;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left=
+: 0;Margin: 0;text-align: left;font-size: 14px;line-height: 20px">
+        <tbody><tr style=3D"padding-top: 0;padding-right: 0;padding-bottom:=
+ 0;padding-left: 0;vertical-align: top;text-align: left">
+            <td class=3D"float-center" align=3D"center" valign=3D"top" styl=
+e=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphens=
+: auto;border-collapse: collapse;vertical-align: top;color: #11100f;font-fa=
+mily: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-se=
+rif;font-weight: 400;padding-top: 0;padding-right: 0;padding-bottom: 0;padd=
+ing-left: 0;font-size: 14px;line-height: 20px;Margin: 0 auto;float: none;te=
+xt-align: center">
+                <center class=3D"main-container" style=3D"width: 100%;min-w=
+idth: 640px">
+                    <table role=3D"presentation" bgcolor=3D"#ffffff" align=
+=3D"center" class=3D"float-center" style=3D"border-spacing: 0;border-collap=
+se: collapse;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left=
+: 0;vertical-align: top;mso-table-lspace: -1pt;mso-table-rspace: -1pt;Margi=
+n: 0 auto;float: none;text-align: center">
+                        <tbody><tr style=3D"padding-top: 0;padding-right: 0=
+;padding-bottom: 0;padding-left: 0;vertical-align: top;text-align: left">
+                            <td style=3D"word-wrap: break-word;-webkit-hyph=
+ens: auto;-moz-hyphens: auto;hyphens: auto;border-collapse: collapse;vertic=
+al-align: top;color: #11100f;font-family: Segoe UI, SegoeUI, Roboto, &quot;=
+Helvetica Neue&quot;, Arial, sans-serif;font-weight: 400;padding-top: 0;pad=
+ding-right: 0;padding-bottom: 0;padding-left: 0;Margin: 0;text-align: left;=
+font-size: 14px;line-height: 20px">
+                               =20
+
+<table role=3D"presentation" dir=3D"ltr" align=3D"center" class=3D"containe=
+r header-container section" style=3D"border-spacing: 0;border-collapse: col=
+lapse;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;ver=
+tical-align: top;mso-table-lspace: -1pt;mso-table-rspace: -1pt;background: =
+#ffffff;width: 640px;Margin: 0 auto;text-align: inherit"><tbody><tr style=
+=3D"padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;verti=
+cal-align: top;text-align: left"><td style=3D"word-wrap: break-word;-webkit=
+-hyphens: auto;-moz-hyphens: auto;hyphens: auto;border-collapse: collapse;v=
+ertical-align: top;color: #11100f;font-family: Segoe UI, SegoeUI, Roboto, &=
+quot;Helvetica Neue&quot;, Arial, sans-serif;font-weight: 400;padding-top: =
+0;padding-right: 0;padding-bottom: 0;padding-left: 0;Margin: 0;text-align: =
+left;font-size: 14px;line-height: 20px">
+    <table role=3D"presentation" class=3D"wrapper outer-wrapper" align=3D"c=
+enter" style=3D"border-spacing: 0;border-collapse: collapse;padding-top: 0;=
+padding-right: 0;padding-bottom: 0;padding-left: 0;vertical-align: top;text=
+-align: left;mso-table-lspace: -1pt;mso-table-rspace: -1pt;width: 100%"><tb=
+ody><tr style=3D"padding-top: 0;padding-right: 0;padding-bottom: 0;padding-=
+left: 0;vertical-align: top;text-align: left"><td class=3D"wrapper-inner" s=
+tyle=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyph=
+ens: auto;border-collapse: collapse;vertical-align: top;color: #11100f;font=
+-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans=
+-serif;font-weight: 400;padding-right: 0;padding-left: 0;Margin: 0;text-ali=
+gn: left;font-size: 14px;line-height: 20px;padding-top: 0;mso-padding-top-a=
+lt: 0;padding-bottom: 0;mso-padding-bottom-alt: 0">
+        <table role=3D"presentation" class=3D"row header-section" style=3D"=
+border-spacing: 0;border-collapse: collapse;padding-top: 0;padding-right: 0=
+;padding-bottom: 0;padding-left: 0;vertical-align: top;text-align: left;mso=
+-table-lspace: -1pt;mso-table-rspace: -1pt;padding: 0;width: 100%;position:=
+ relative;display: table"><tbody><tr style=3D"padding-top: 0;padding-right:=
+ 0;padding-bottom: 0;padding-left: 0;vertical-align: top;text-align: left">
+            <th class=3D"small-12 large-12 columns first last" style=3D"wor=
+d-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphens: auto;b=
+order-collapse: collapse;vertical-align: top;color: #11100f;font-family: Se=
+goe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font=
+-weight: 400;text-align: left;font-size: 14px;line-height: 20px;Margin: 0 a=
+uto;width: 616px;padding-left: 24px;padding-right: 24px;padding-top: 24px;m=
+so-padding-top-alt: 24px;padding-bottom: 24px;mso-padding-bottom-alt: 24px"=
+><table role=3D"presentation" style=3D"border-spacing: 0;border-collapse: c=
+ollapse;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;v=
+ertical-align: top;text-align: left;mso-table-lspace: -1pt;mso-table-rspace=
+: -1pt;width: 100%"><tbody><tr style=3D"padding-top: 0;padding-right: 0;pad=
+ding-bottom: 0;padding-left: 0;vertical-align: top;text-align: left"><th st=
+yle=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphe=
+ns: auto;border-collapse: collapse;vertical-align: top;color: #11100f;font-=
+family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-=
+serif;font-weight: 400;padding-top: 0;padding-right: 0;padding-bottom: 0;pa=
+dding-left: 0;Margin: 0;text-align: left;font-size: 14px;line-height: 20px"=
+>
+                <table role=3D"presentation" style=3D"border-spacing: 0;bor=
+der-collapse: collapse;padding-top: 0;padding-right: 0;padding-bottom: 0;pa=
+dding-left: 0;vertical-align: top;text-align: left;mso-table-lspace: -1pt;m=
+so-table-rspace: -1pt;width: 100%">
+                    <tbody><tr style=3D"padding-top: 0;padding-right: 0;pad=
+ding-bottom: 0;padding-left: 0;vertical-align: top;text-align: left">
+                        <th align=3D"left" class=3D"header-left-column" val=
+ign=3D"middle" style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hy=
+phens: auto;hyphens: auto;border-collapse: collapse;vertical-align: top;col=
+or: #11100f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&qu=
+ot;, Arial, sans-serif;font-weight: 400;padding-top: 0;padding-right: 0;pad=
+ding-bottom: 0;padding-left: 0;Margin: 0;text-align: left;font-size: 14px;l=
+ine-height: 20px">
+                           =20
+    <img height=3D"20" width=3D"auto" src=3D"https://images.ecomm.microsoft=
+.com/cdn/mediahandler/azure-emails-templates/production/shared/images/templ=
+ates/shared/microsoft-2x.png" alt=3D"Microsoft" title=3D"Microsoft" class=
+=3D"logo-microsoft" style=3D"outline: none;text-decoration: none;-ms-interp=
+olation-mode: bicubic;max-width: 100%;clear: both;display: block;height: 20=
+px;max-height: 20px;width: auto">
+
+                        </th>
+                        <th align=3D"right" class=3D"header-right-column" v=
+align=3D"middle" style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-=
+hyphens: auto;hyphens: auto;border-collapse: collapse;vertical-align: top;p=
+adding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;Margin: 0;=
+text-align: right;line-height: 1;mso-line-height: 1;Margin-bottom: 0;mso-ma=
+rgin-bottom-alt: 0;font-size: 18px;font-family: Segoe UI Semibold, SegoeUIS=
+emibold, Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans=
+-serif;font-weight: 600;color: #000000">
+                           =20
+    Power BI
+
+                        </th>
+                    </tr>
+                </tbody></table>
+            </th>
+<th class=3D"expander" style=3D"word-wrap: break-word;-webkit-hyphens: auto=
+;-moz-hyphens: auto;hyphens: auto;border-collapse: collapse;vertical-align:=
+ top;color: #11100f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica=
+ Neue&quot;, Arial, sans-serif;font-weight: 400;padding-top: 0;padding-righ=
+t: 0;padding-bottom: 0;padding-left: 0;Margin: 0;text-align: left;font-size=
+: 14px;line-height: 20px;visibility: hidden;width: 0;padding: 0"></th></tr>=
+</tbody></table></th>
+        </tr></tbody></table>
+    </td></tr></tbody></table>
+</td></tr></tbody></table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table role=3D"presentation" align=3D"center" class=3D"container template-c=
+ontainer section powerbi" style=3D"border-spacing: 0;border-collapse: colla=
+pse;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;verti=
+cal-align: top;mso-table-lspace: -1pt;mso-table-rspace: -1pt;background: #f=
+fffff;width: 640px;Margin: 0 auto;text-align: inherit"><tbody><tr style=3D"=
+padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;vertical-=
+align: top;text-align: left"><td style=3D"word-wrap: break-word;-webkit-hyp=
+hens: auto;-moz-hyphens: auto;hyphens: auto;border-collapse: collapse;verti=
+cal-align: top;color: #11100f;font-family: Segoe UI, SegoeUI, Roboto, &quot=
+;Helvetica Neue&quot;, Arial, sans-serif;font-weight: 400;padding-top: 0;pa=
+dding-right: 0;padding-bottom: 0;padding-left: 0;Margin: 0;text-align: left=
+;font-size: 14px;line-height: 20px">
+    <table role=3D"presentation" class=3D"wrapper outer-wrapper" align=3D"c=
+enter" style=3D"border-spacing: 0;border-collapse: collapse;padding-top: 0;=
+padding-right: 0;padding-bottom: 0;padding-left: 0;vertical-align: top;text=
+-align: left;mso-table-lspace: -1pt;mso-table-rspace: -1pt;width: 100%"><tb=
+ody><tr style=3D"padding-top: 0;padding-right: 0;padding-bottom: 0;padding-=
+left: 0;vertical-align: top;text-align: left"><td class=3D"wrapper-inner" s=
+tyle=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyph=
+ens: auto;border-collapse: collapse;vertical-align: top;color: #11100f;font=
+-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans=
+-serif;font-weight: 400;padding-right: 0;padding-left: 0;Margin: 0;text-ali=
+gn: left;font-size: 14px;line-height: 20px;padding-bottom: 12px;mso-padding=
+-bottom-alt: 12px;padding-top: 6px;mso-padding-top-alt: 6px">
+            <center style=3D"width: 100%;min-width: 640px">
+                <table role=3D"presentation" align=3D"center" class=3D"row =
+float-center" style=3D"border-spacing: 0;border-collapse: collapse;padding-=
+top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;vertical-align: t=
+op;mso-table-lspace: -1pt;mso-table-rspace: -1pt;padding: 0;width: 100%;pos=
+ition: relative;Margin: 0 auto;float: none;text-align: center;display: tabl=
+e"><tbody><tr style=3D"padding-top: 0;padding-right: 0;padding-bottom: 0;pa=
+dding-left: 0;vertical-align: top;text-align: left">
+                    <th class=3D"small-12 large-12 columns first last" styl=
+e=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphens=
+: auto;border-collapse: collapse;vertical-align: top;color: #11100f;font-fa=
+mily: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-se=
+rif;font-weight: 400;text-align: left;font-size: 14px;line-height: 20px;Mar=
+gin: 0 auto;width: 616px;padding-bottom: 12px;mso-padding-bottom-alt: 12px;=
+padding-left: 24px;padding-right: 24px;padding-top: 6px;mso-padding-top-alt=
+: 6px"><table role=3D"presentation" style=3D"border-spacing: 0;border-colla=
+pse: collapse;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-lef=
+t: 0;vertical-align: top;text-align: left;mso-table-lspace: -1pt;mso-table-=
+rspace: -1pt;width: 100%"><tbody><tr style=3D"padding-top: 0;padding-right:=
+ 0;padding-bottom: 0;padding-left: 0;vertical-align: top;text-align: left">=
+<th style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto=
+;hyphens: auto;border-collapse: collapse;vertical-align: top;color: #11100f=
+;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial,=
+ sans-serif;font-weight: 400;padding-top: 0;padding-right: 0;padding-bottom=
+: 0;padding-left: 0;Margin: 0;text-align: left;font-size: 14px;line-height:=
+ 20px">
+                        <h1 style=3D"padding-top: 0;padding-right: 0;paddin=
+g-bottom: 0;padding-left: 0;Margin: 0;text-align: left;color: inherit;Margi=
+n-bottom: 16px;-webkit-hyphens: none;-moz-hyphens: none;-ms-hyphens: none;h=
+yphens: none;letter-spacing: -.01em;font-family: Segoe UI Semibold, SegoeUI=
+Semibold, Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, san=
+s-serif;font-weight: 600;font-size: 28px;line-height: 36px;mso-line-height-=
+alt: 36px;word-wrap: normal;-webkit-text-size-adjust: none">Your scheduled =
+refresh has been paused.</h1>
+                        <p style=3D"color: #11100f;font-family: Segoe UI, S=
+egoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font-weight: =
+400;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;Margi=
+n: 0;text-align: left;font-size: 16px;line-height: 22px;mso-line-height-alt=
+: 22px;word-wrap: normal;-webkit-text-size-adjust: none;Margin-bottom: 12px=
+;mso-margin-bottom-alt: 12px;-webkit-hyphens: none;-moz-hyphens: none;-ms-h=
+yphens: none;hyphens: none">We=E2=80=99ve paused scheduled refresh for <a h=
+ref=3D"https://nam.safelink.emails.azure.net/redirect/?destination=3Dhttps%=
+3A%2F%2Fapp.powerbi.com%2Fgroups%2Fa8c2e792-f012-4099-bd08-36f974d78a2b%2Fs=
+ettings%2Fdatasets%2F4e8b8f16-d3a9-4226-af3c-7c608759d6e7&amp;p=3DbT0zYmZmY=
+jBiZi0yMTNjLTRlMDctOTJlNC0zYjllYjQ5ZDQyODgmdT1hZW8mbD00ZThiOGYxNi1kM2E5LTQy=
+MjYtYWYzYy03YzYwODc1OWQ2ZTc%3D" style=3D"font-family: Segoe UI, SegoeUI, Ro=
+boto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font-weight: 400;paddin=
+g: 0;text-align: left;line-height: 20px;Margin: inherit;mso-margin-alt: inh=
+erit;-webkit-hyphens: none;-moz-hyphens: none;-ms-hyphens: none;hyphens: no=
+ne;color: #11100f;text-decoration: underline;text-underline: solid;mso-text=
+-underline: solid">copy latest</a> in <a href=3D"https://nam.safelink.email=
+s.azure.net/redirect/?destination=3Dhttps%3A%2F%2Fapp.powerbi.com%2Fgroups%=
+2Fa8c2e792-f012-4099-bd08-36f974d78a2b&amp;p=3DbT0zYmZmYjBiZi0yMTNjLTRlMDct=
+OTJlNC0zYjllYjQ5ZDQyODgmdT1hZW8mbD1hOGMyZTc5Mi1mMDEyLTQwOTktYmQwOC0zNmY5NzR=
+kNzhhMmI%3D" style=3D"font-family: Segoe UI, SegoeUI, Roboto, &quot;Helveti=
+ca Neue&quot;, Arial, sans-serif;font-weight: 400;padding: 0;text-align: le=
+ft;line-height: 20px;Margin: inherit;mso-margin-alt: inherit;-webkit-hyphen=
+s: none;-moz-hyphens: none;-ms-hyphens: none;hyphens: none;color: #11100f;t=
+ext-decoration: underline;text-underline: solid;mso-text-underline: solid">=
+My workspace</a> workspace due to inactivity.</p>
+                        <p style=3D"color: #11100f;font-family: Segoe UI, S=
+egoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font-weight: =
+400;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;Margi=
+n: 0;text-align: left;font-size: 16px;line-height: 22px;mso-line-height-alt=
+: 22px;word-wrap: normal;-webkit-text-size-adjust: none;Margin-bottom: 0;ms=
+o-margin-bottom-alt: 0;-webkit-hyphens: none;-moz-hyphens: none;-ms-hyphens=
+: none;hyphens: none">No one has viewed dashboards or reports built using t=
+his dataset for two months. To resume it, just visit a report or dashboard =
+built using this dataset or manually refresh the dataset using the Refresh =
+Now option.</p>
+                    </th>
+<th class=3D"expander" style=3D"word-wrap: break-word;-webkit-hyphens: auto=
+;-moz-hyphens: auto;hyphens: auto;border-collapse: collapse;vertical-align:=
+ top;color: #11100f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica=
+ Neue&quot;, Arial, sans-serif;font-weight: 400;padding-top: 0;padding-righ=
+t: 0;padding-bottom: 0;padding-left: 0;Margin: 0;text-align: left;font-size=
+: 14px;line-height: 20px;visibility: hidden;width: 0;padding: 0"></th></tr>=
+</tbody></table></th>
+                </tr></tbody></table>
+                <table role=3D"presentation" align=3D"center" class=3D"row =
+float-center" style=3D"border-spacing: 0;border-collapse: collapse;padding-=
+top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;vertical-align: t=
+op;mso-table-lspace: -1pt;mso-table-rspace: -1pt;padding: 0;width: 100%;pos=
+ition: relative;Margin: 0 auto;float: none;text-align: center;display: tabl=
+e"><tbody><tr style=3D"padding-top: 0;padding-right: 0;padding-bottom: 0;pa=
+dding-left: 0;vertical-align: top;text-align: left">
+                    <th class=3D"small-12 large-12 columns first last" styl=
+e=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphens=
+: auto;border-collapse: collapse;vertical-align: top;color: #11100f;font-fa=
+mily: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-se=
+rif;font-weight: 400;text-align: left;font-size: 14px;line-height: 20px;Mar=
+gin: 0 auto;width: 616px;padding-top: 12px;mso-padding-top-alt: 12px;paddin=
+g-bottom: 12px;mso-padding-bottom-alt: 12px;padding-left: 24px;padding-righ=
+t: 24px"><table role=3D"presentation" style=3D"border-spacing: 0;border-col=
+lapse: collapse;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-l=
+eft: 0;vertical-align: top;text-align: left;mso-table-lspace: -1pt;mso-tabl=
+e-rspace: -1pt;width: 100%"><tbody><tr style=3D"padding-top: 0;padding-righ=
+t: 0;padding-bottom: 0;padding-left: 0;vertical-align: top;text-align: left=
+"><th style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: au=
+to;hyphens: auto;border-collapse: collapse;vertical-align: top;color: #1110=
+0f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Aria=
+l, sans-serif;font-weight: 400;padding-top: 0;padding-right: 0;padding-bott=
+om: 0;padding-left: 0;Margin: 0;text-align: left;font-size: 14px;line-heigh=
+t: 20px">
+                        <table role=3D"presentation" class=3D"wrapper" alig=
+n=3D"center" style=3D"border-spacing: 0;border-collapse: collapse;padding-t=
+op: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;vertical-align: to=
+p;text-align: left;mso-table-lspace: -1pt;mso-table-rspace: -1pt;width: 100=
+%"><tbody><tr style=3D"padding-top: 0;padding-right: 0;padding-bottom: 0;pa=
+dding-left: 0;vertical-align: top;text-align: left"><td class=3D"wrapper-in=
+ner" style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: aut=
+o;hyphens: auto;border-collapse: collapse;vertical-align: top;color: #11100=
+f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial=
+, sans-serif;font-weight: 400;padding-right: 0;padding-left: 0;Margin: 0;te=
+xt-align: left;font-size: 14px;line-height: 20px;padding-bottom: 12px;mso-p=
+adding-bottom-alt: 12px;padding-top: 6px;mso-padding-top-alt: 6px">
+                            <table role=3D"presentation" align=3D"center" c=
+lass=3D"container" style=3D"border-spacing: 0;border-collapse: collapse;pad=
+ding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;vertical-ali=
+gn: top;mso-table-lspace: -1pt;mso-table-rspace: -1pt;background: #ffffff;M=
+argin: 0 auto;text-align: inherit;width: 100%"><tbody><tr style=3D"padding-=
+top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;vertical-align: t=
+op;text-align: left"><td style=3D"word-wrap: break-word;-webkit-hyphens: au=
+to;-moz-hyphens: auto;hyphens: auto;border-collapse: collapse;vertical-alig=
+n: top;color: #11100f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helveti=
+ca Neue&quot;, Arial, sans-serif;font-weight: 400;padding-top: 0;padding-ri=
+ght: 0;padding-bottom: 0;padding-left: 0;Margin: 0;text-align: left;font-si=
+ze: 14px;line-height: 20px">
+                                <table role=3D"presentation" class=3D"row" =
+style=3D"border-spacing: 0;border-collapse: collapse;padding-top: 0;padding=
+-right: 0;padding-bottom: 0;padding-left: 0;vertical-align: top;text-align:=
+ left;mso-table-lspace: -1pt;mso-table-rspace: -1pt;padding: 0;position: re=
+lative;width: 100%;display: table"><tbody><tr style=3D"padding-top: 0;paddi=
+ng-right: 0;padding-bottom: 0;padding-left: 0;vertical-align: top;text-alig=
+n: left">
+                                    <th class=3D"small-12 large-12 columns =
+first last" style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphe=
+ns: auto;hyphens: auto;border-collapse: collapse;vertical-align: top;color:=
+ #11100f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;=
+, Arial, sans-serif;font-weight: 400;text-align: left;font-size: 14px;line-=
+height: 20px;Margin: 0 auto;padding-bottom: 12px;mso-padding-bottom-alt: 12=
+px;padding-left: 0;padding-right: 0;width: 100%;padding-top: 6px;mso-paddin=
+g-top-alt: 6px"><table role=3D"presentation" style=3D"border-spacing: 0;bor=
+der-collapse: collapse;padding-top: 0;padding-right: 0;padding-bottom: 0;pa=
+dding-left: 0;vertical-align: top;text-align: left;mso-table-lspace: -1pt;m=
+so-table-rspace: -1pt;width: 100%"><tbody><tr style=3D"padding-top: 0;paddi=
+ng-right: 0;padding-bottom: 0;padding-left: 0;vertical-align: top;text-alig=
+n: left"><th style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyph=
+ens: auto;hyphens: auto;border-collapse: collapse;vertical-align: top;color=
+: #11100f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot=
+;, Arial, sans-serif;font-weight: 400;padding-top: 0;padding-right: 0;paddi=
+ng-bottom: 0;padding-left: 0;Margin: 0;text-align: left;font-size: 14px;lin=
+e-height: 20px">
+                                        <table role=3D"presentation" class=
+=3D"button" style=3D"border-spacing: 0;border-collapse: collapse;padding-to=
+p: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;vertical-align: top=
+;text-align: left;mso-table-lspace: -1pt;mso-table-rspace: -1pt;Margin: 0;w=
+idth: auto"><tbody><tr style=3D"padding-top: 0;padding-right: 0;padding-bot=
+tom: 0;padding-left: 0;vertical-align: top;text-align: left"><td style=3D"w=
+ord-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphens: auto=
+;border-collapse: collapse;vertical-align: top;color: #11100f;font-family: =
+Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;fo=
+nt-weight: 400;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-le=
+ft: 0;Margin: 0;text-align: left;font-size: 14px;line-height: 20px"><table =
+role=3D"presentation" style=3D"border-spacing: 0;border-collapse: collapse;=
+padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;vertical-=
+align: top;text-align: left;mso-table-lspace: -1pt;mso-table-rspace: -1pt;w=
+idth: 100%"><tbody><tr style=3D"padding-top: 0;padding-right: 0;padding-bot=
+tom: 0;padding-left: 0;vertical-align: top;text-align: left"><td style=3D"w=
+ord-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphens: auto=
+;border-collapse: collapse;vertical-align: top;font-family: Segoe UI, Segoe=
+UI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font-weight: 400;=
+padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;Margin: 0=
+;font-size: 14px;line-height: 20px;color: #ffffff;border: 0;border-radius: =
+2px;text-align: center;background-color: #117865;background: #117865"><a hr=
+ef=3D"https://nam.safelink.emails.azure.net/redirect/?destination=3Dhttps%3=
+A%2F%2Fdocs.microsoft.com%2Fen-us%2Fpower-bi%2Frefresh-data&amp;p=3DbT0zYmZ=
+mYjBiZi0yMTNjLTRlMDctOTJlNC0zYjllYjQ5ZDQyODgmdT1hZW8mbD1yZWZyZXNoLWRhdGE%3D=
+" style=3D"font-size: 16px;text-align: left;display: inline-block;padding: =
+12px 16px 12px 16px;line-height: 1;-webkit-hyphens: none;-moz-hyphens: none=
+;-ms-hyphens: none;hyphens: none;text-underline: none;mso-text-underline: n=
+one;font-family: Segoe UI Semibold, SegoeUISemibold, Segoe UI, SegoeUI, Rob=
+oto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font-weight: 600;mso-bor=
+der-alt: 8px solid #117865;mso-padding-alt: 0;background-color: #117865;bor=
+der: 0;border-radius: 2px;color: #ffffff;text-decoration: none">Learn more =
+&gt;</a></td></tr></tbody></table></td></tr></tbody></table>
+                                    </th>
+<th class=3D"expander" style=3D"word-wrap: break-word;-webkit-hyphens: auto=
+;-moz-hyphens: auto;hyphens: auto;border-collapse: collapse;vertical-align:=
+ top;color: #11100f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica=
+ Neue&quot;, Arial, sans-serif;font-weight: 400;padding-top: 0;padding-righ=
+t: 0;padding-bottom: 0;padding-left: 0;Margin: 0;text-align: left;font-size=
+: 14px;line-height: 20px;visibility: hidden;width: 0;padding: 0"></th></tr>=
+</tbody></table></th>
+                                </tr></tbody></table>
+                            </td></tr></tbody></table>
+                        </td></tr></tbody></table>
+                    </th></tr></tbody></table></th>
+                </tr></tbody></table>
+                <table role=3D"presentation" align=3D"center" class=3D"row =
+collapse-tb float-center" style=3D"border-spacing: 0;border-collapse: colla=
+pse;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;verti=
+cal-align: top;mso-table-lspace: -1pt;mso-table-rspace: -1pt;padding: 0;wid=
+th: 100%;position: relative;Margin: 0 auto;float: none;text-align: center;d=
+isplay: table"><tbody><tr style=3D"padding-top: 0;padding-right: 0;padding-=
+bottom: 0;padding-left: 0;vertical-align: top;text-align: left">
+                    <th class=3D"padding-bottom-0 small-12 large-3 columns =
+first" style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: a=
+uto;hyphens: auto;border-collapse: collapse;vertical-align: top;color: #111=
+00f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Ari=
+al, sans-serif;font-weight: 400;text-align: left;font-size: 14px;line-heigh=
+t: 20px;padding-bottom: 0px;mso-padding-bottom-alt: 0px;Margin: 0 auto;widt=
+h: 136px;padding-right: 12px;padding-top: 12px;mso-padding-top-alt: 12px;pa=
+dding-left: 24px"><table role=3D"presentation" style=3D"border-spacing: 0;b=
+order-collapse: collapse;padding-top: 0;padding-right: 0;padding-bottom: 0;=
+padding-left: 0;vertical-align: top;text-align: left;mso-table-lspace: -1pt=
+;mso-table-rspace: -1pt;width: 100%"><tbody><tr style=3D"padding-top: 0;pad=
+ding-right: 0;padding-bottom: 0;padding-left: 0;vertical-align: top;text-al=
+ign: left"><th style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hy=
+phens: auto;hyphens: auto;border-collapse: collapse;vertical-align: top;col=
+or: #11100f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&qu=
+ot;, Arial, sans-serif;font-weight: 400;padding-top: 0;padding-right: 0;pad=
+ding-bottom: 0;padding-left: 0;Margin: 0;text-align: left;font-size: 14px;l=
+ine-height: 20px">
+                        <p class=3D"margin-bottom-0" style=3D"color: #11100=
+f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial=
+, sans-serif;font-weight: 400;padding-top: 0;padding-right: 0;padding-botto=
+m: 0;padding-left: 0;Margin: 0;text-align: left;font-size: 16px;line-height=
+: 22px;mso-line-height-alt: 22px;word-wrap: normal;-webkit-text-size-adjust=
+: none;Margin-bottom: 0px;mso-margin-bottom-alt: 0px;-webkit-hyphens: none;=
+-moz-hyphens: none;-ms-hyphens: none;hyphens: none"><strong style=3D"font-f=
+amily: Segoe UI Semibold, SegoeUISemibold, Segoe UI, SegoeUI, Roboto, &quot=
+;Helvetica Neue&quot;, Arial, sans-serif;font-weight: 600">Activity Id:</st=
+rong></p>
+                    </th></tr></tbody></table></th>
+                    <th class=3D"bottom-margin-2 small-12 large-9 columns l=
+ast" style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: aut=
+o;hyphens: auto;border-collapse: collapse;vertical-align: top;color: #11100=
+f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial=
+, sans-serif;font-weight: 400;text-align: left;font-size: 14px;line-height:=
+ 20px;Margin-bottom: 2px;mso-margin-bottom-alt: 2px;Margin: 0 auto;width: 4=
+56px;padding-left: 12px;padding-top: 12px;mso-padding-top-alt: 12px;padding=
+-bottom: 12px;mso-padding-bottom-alt: 12px;padding-right: 24px"><table role=
+=3D"presentation" style=3D"border-spacing: 0;border-collapse: collapse;padd=
+ing-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;vertical-alig=
+n: top;text-align: left;mso-table-lspace: -1pt;mso-table-rspace: -1pt;width=
+: 100%"><tbody><tr style=3D"padding-top: 0;padding-right: 0;padding-bottom:=
+ 0;padding-left: 0;vertical-align: top;text-align: left"><th style=3D"word-=
+wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphens: auto;bor=
+der-collapse: collapse;vertical-align: top;color: #11100f;font-family: Sego=
+e UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font-w=
+eight: 400;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: =
+0;Margin: 0;text-align: left;font-size: 14px;line-height: 20px">
+                        <p class=3D"margin-bottom-0" style=3D"color: #11100=
+f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial=
+, sans-serif;font-weight: 400;padding-top: 0;padding-right: 0;padding-botto=
+m: 0;padding-left: 0;Margin: 0;text-align: left;font-size: 16px;line-height=
+: 22px;mso-line-height-alt: 22px;word-wrap: normal;-webkit-text-size-adjust=
+: none;Margin-bottom: 0px;mso-margin-bottom-alt: 0px;-webkit-hyphens: none;=
+-moz-hyphens: none;-ms-hyphens: none;hyphens: none">b5361153-0225-43db-aff3=
+-f7dab359b1b1 </p>
+                    </th></tr></tbody></table></th>
+                </tr></tbody></table>
+                <table role=3D"presentation" align=3D"center" class=3D"row =
+collapse-tb float-center" style=3D"border-spacing: 0;border-collapse: colla=
+pse;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;verti=
+cal-align: top;mso-table-lspace: -1pt;mso-table-rspace: -1pt;padding: 0;wid=
+th: 100%;position: relative;Margin: 0 auto;float: none;text-align: center;d=
+isplay: table"><tbody><tr style=3D"padding-top: 0;padding-right: 0;padding-=
+bottom: 0;padding-left: 0;vertical-align: top;text-align: left">
+                    <th class=3D"padding-bottom-0 small-12 large-3 columns =
+first" style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: a=
+uto;hyphens: auto;border-collapse: collapse;vertical-align: top;color: #111=
+00f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Ari=
+al, sans-serif;font-weight: 400;text-align: left;font-size: 14px;line-heigh=
+t: 20px;padding-bottom: 0px;mso-padding-bottom-alt: 0px;Margin: 0 auto;widt=
+h: 136px;padding-right: 12px;padding-top: 12px;mso-padding-top-alt: 12px;pa=
+dding-left: 24px"><table role=3D"presentation" style=3D"border-spacing: 0;b=
+order-collapse: collapse;padding-top: 0;padding-right: 0;padding-bottom: 0;=
+padding-left: 0;vertical-align: top;text-align: left;mso-table-lspace: -1pt=
+;mso-table-rspace: -1pt;width: 100%"><tbody><tr style=3D"padding-top: 0;pad=
+ding-right: 0;padding-bottom: 0;padding-left: 0;vertical-align: top;text-al=
+ign: left"><th style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hy=
+phens: auto;hyphens: auto;border-collapse: collapse;vertical-align: top;col=
+or: #11100f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&qu=
+ot;, Arial, sans-serif;font-weight: 400;padding-top: 0;padding-right: 0;pad=
+ding-bottom: 0;padding-left: 0;Margin: 0;text-align: left;font-size: 14px;l=
+ine-height: 20px">
+                        <p class=3D"margin-bottom-0" style=3D"color: #11100=
+f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial=
+, sans-serif;font-weight: 400;padding-top: 0;padding-right: 0;padding-botto=
+m: 0;padding-left: 0;Margin: 0;text-align: left;font-size: 16px;line-height=
+: 22px;mso-line-height-alt: 22px;word-wrap: normal;-webkit-text-size-adjust=
+: none;Margin-bottom: 0px;mso-margin-bottom-alt: 0px;-webkit-hyphens: none;=
+-moz-hyphens: none;-ms-hyphens: none;hyphens: none"><strong style=3D"font-f=
+amily: Segoe UI Semibold, SegoeUISemibold, Segoe UI, SegoeUI, Roboto, &quot=
+;Helvetica Neue&quot;, Arial, sans-serif;font-weight: 600">Request Id:</str=
+ong></p>
+                    </th></tr></tbody></table></th>
+                    <th class=3D"bottom-margin-2 small-12 large-9 columns l=
+ast" style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: aut=
+o;hyphens: auto;border-collapse: collapse;vertical-align: top;color: #11100=
+f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial=
+, sans-serif;font-weight: 400;text-align: left;font-size: 14px;line-height:=
+ 20px;Margin-bottom: 2px;mso-margin-bottom-alt: 2px;Margin: 0 auto;width: 4=
+56px;padding-left: 12px;padding-top: 12px;mso-padding-top-alt: 12px;padding=
+-bottom: 12px;mso-padding-bottom-alt: 12px;padding-right: 24px"><table role=
+=3D"presentation" style=3D"border-spacing: 0;border-collapse: collapse;padd=
+ing-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;vertical-alig=
+n: top;text-align: left;mso-table-lspace: -1pt;mso-table-rspace: -1pt;width=
+: 100%"><tbody><tr style=3D"padding-top: 0;padding-right: 0;padding-bottom:=
+ 0;padding-left: 0;vertical-align: top;text-align: left"><th style=3D"word-=
+wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphens: auto;bor=
+der-collapse: collapse;vertical-align: top;color: #11100f;font-family: Sego=
+e UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font-w=
+eight: 400;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: =
+0;Margin: 0;text-align: left;font-size: 14px;line-height: 20px">
+                        <p class=3D"margin-bottom-0" style=3D"color: #11100=
+f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial=
+, sans-serif;font-weight: 400;padding-top: 0;padding-right: 0;padding-botto=
+m: 0;padding-left: 0;Margin: 0;text-align: left;font-size: 16px;line-height=
+: 22px;mso-line-height-alt: 22px;word-wrap: normal;-webkit-text-size-adjust=
+: none;Margin-bottom: 0px;mso-margin-bottom-alt: 0px;-webkit-hyphens: none;=
+-moz-hyphens: none;-ms-hyphens: none;hyphens: none">8b2c34d2-6626-444e-b346=
+-58f02e0a8907</p>
+                    </th></tr></tbody></table></th>
+                </tr></tbody></table>
+                <table role=3D"presentation" align=3D"center" class=3D"row =
+collapse-top float-center" style=3D"border-spacing: 0;border-collapse: coll=
+apse;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;vert=
+ical-align: top;mso-table-lspace: -1pt;mso-table-rspace: -1pt;padding: 0;wi=
+dth: 100%;position: relative;Margin: 0 auto;float: none;text-align: center;=
+display: table"><tbody><tr style=3D"padding-top: 0;padding-right: 0;padding=
+-bottom: 0;padding-left: 0;vertical-align: top;text-align: left">
+                    <th class=3D"padding-bottom-0 small-12 large-3 columns =
+first" style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: a=
+uto;hyphens: auto;border-collapse: collapse;vertical-align: top;color: #111=
+00f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Ari=
+al, sans-serif;font-weight: 400;text-align: left;font-size: 14px;line-heigh=
+t: 20px;padding-bottom: 0px;mso-padding-bottom-alt: 0px;Margin: 0 auto;widt=
+h: 136px;padding-right: 12px;padding-top: 12px;mso-padding-top-alt: 12px;pa=
+dding-left: 24px"><table role=3D"presentation" style=3D"border-spacing: 0;b=
+order-collapse: collapse;padding-top: 0;padding-right: 0;padding-bottom: 0;=
+padding-left: 0;vertical-align: top;text-align: left;mso-table-lspace: -1pt=
+;mso-table-rspace: -1pt;width: 100%"><tbody><tr style=3D"padding-top: 0;pad=
+ding-right: 0;padding-bottom: 0;padding-left: 0;vertical-align: top;text-al=
+ign: left"><th style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hy=
+phens: auto;hyphens: auto;border-collapse: collapse;vertical-align: top;col=
+or: #11100f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&qu=
+ot;, Arial, sans-serif;font-weight: 400;padding-top: 0;padding-right: 0;pad=
+ding-bottom: 0;padding-left: 0;Margin: 0;text-align: left;font-size: 14px;l=
+ine-height: 20px">
+                        <p class=3D"margin-bottom-0" style=3D"color: #11100=
+f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial=
+, sans-serif;font-weight: 400;padding-top: 0;padding-right: 0;padding-botto=
+m: 0;padding-left: 0;Margin: 0;text-align: left;font-size: 16px;line-height=
+: 22px;mso-line-height-alt: 22px;word-wrap: normal;-webkit-text-size-adjust=
+: none;Margin-bottom: 0px;mso-margin-bottom-alt: 0px;-webkit-hyphens: none;=
+-moz-hyphens: none;-ms-hyphens: none;hyphens: none"><strong style=3D"font-f=
+amily: Segoe UI Semibold, SegoeUISemibold, Segoe UI, SegoeUI, Roboto, &quot=
+;Helvetica Neue&quot;, Arial, sans-serif;font-weight: 600">Cluster Name:</s=
+trong></p>
+                    </th></tr></tbody></table></th>
+                    <th class=3D"bottom-margin-2 small-12 large-9 columns l=
+ast" style=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: aut=
+o;hyphens: auto;border-collapse: collapse;vertical-align: top;color: #11100=
+f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial=
+, sans-serif;font-weight: 400;text-align: left;font-size: 14px;line-height:=
+ 20px;Margin-bottom: 2px;mso-margin-bottom-alt: 2px;Margin: 0 auto;width: 4=
+56px;padding-left: 12px;padding-top: 12px;mso-padding-top-alt: 12px;padding=
+-bottom: 12px;mso-padding-bottom-alt: 12px;padding-right: 24px"><table role=
+=3D"presentation" style=3D"border-spacing: 0;border-collapse: collapse;padd=
+ing-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;vertical-alig=
+n: top;text-align: left;mso-table-lspace: -1pt;mso-table-rspace: -1pt;width=
+: 100%"><tbody><tr style=3D"padding-top: 0;padding-right: 0;padding-bottom:=
+ 0;padding-left: 0;vertical-align: top;text-align: left"><th style=3D"word-=
+wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphens: auto;bor=
+der-collapse: collapse;vertical-align: top;color: #11100f;font-family: Sego=
+e UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font-w=
+eight: 400;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: =
+0;Margin: 0;text-align: left;font-size: 14px;line-height: 20px">
+                        <p class=3D"margin-bottom-0" style=3D"color: #11100=
+f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial=
+, sans-serif;font-weight: 400;padding-top: 0;padding-right: 0;padding-botto=
+m: 0;padding-left: 0;Margin: 0;text-align: left;font-size: 16px;line-height=
+: 22px;mso-line-height-alt: 22px;word-wrap: normal;-webkit-text-size-adjust=
+: none;Margin-bottom: 0px;mso-margin-bottom-alt: 0px;-webkit-hyphens: none;=
+-moz-hyphens: none;-ms-hyphens: none;hyphens: none">WABI-US-NORTH-CENTRAL-J=
+-PRIMARY-redirect.analysis.windows.net</p>
+                    </th></tr></tbody></table></th>
+                </tr></tbody></table>
+            </center>
+        </td></tr></tbody></table>
+</td></tr></tbody></table>
+
+
+                                <table role=3D"presentation" dir=3D"ltr" al=
+ign=3D"center" class=3D"container footer-template" style=3D"border-spacing:=
+ 0;border-collapse: collapse;padding-top: 0;padding-right: 0;padding-bottom=
+: 0;padding-left: 0;vertical-align: top;mso-table-lspace: -1pt;mso-table-rs=
+pace: -1pt;background: #ffffff;width: 640px;Margin: 0 auto;text-align: inhe=
+rit"><tbody><tr style=3D"padding-top: 0;padding-right: 0;padding-bottom: 0;=
+padding-left: 0;vertical-align: top;text-align: left"><td style=3D"word-wra=
+p: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphens: auto;border=
+-collapse: collapse;vertical-align: top;color: #11100f;font-family: Segoe U=
+I, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font-weig=
+ht: 400;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;M=
+argin: 0;text-align: left;font-size: 14px;line-height: 20px">
+                                    <table role=3D"presentation" class=3D"w=
+rapper outer-wrapper footer-wrapper" align=3D"center" style=3D"border-spaci=
+ng: 0;border-collapse: collapse;padding-top: 0;padding-right: 0;padding-bot=
+tom: 0;padding-left: 0;vertical-align: top;text-align: left;mso-table-lspac=
+e: -1pt;mso-table-rspace: -1pt;width: 100%;background-color: #F0F0F0"><tbod=
+y><tr style=3D"padding-top: 0;padding-right: 0;padding-bottom: 0;padding-le=
+ft: 0;vertical-align: top;text-align: left"><td class=3D"wrapper-inner" sty=
+le=3D"word-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphen=
+s: auto;border-collapse: collapse;vertical-align: top;color: #11100f;font-f=
+amily: Segoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-s=
+erif;font-weight: 400;padding-right: 0;padding-left: 0;Margin: 0;text-align=
+: left;font-size: 14px;line-height: 20px;padding-top: 12px;mso-padding-top-=
+alt: 12px;padding-bottom: 12px;mso-padding-bottom-alt: 12px">
+                                        <center style=3D"width: 100%;min-wi=
+dth: 640px">
+                                                                           =
+                                                        =20
+
+   =20
+<table role=3D"presentation" class=3D"row" style=3D"border-spacing: 0;borde=
+r-collapse: collapse;padding-top: 0;padding-right: 0;padding-bottom: 0;padd=
+ing-left: 0;vertical-align: top;text-align: left;mso-table-lspace: -1pt;mso=
+-table-rspace: -1pt;padding: 0;width: 100%;position: relative;display: tabl=
+e"><tbody><tr style=3D"padding-top: 0;padding-right: 0;padding-bottom: 0;pa=
+dding-left: 0;vertical-align: top;text-align: left">
+    <th class=3D"small-12 large-12 columns first last" style=3D"word-wrap: =
+break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphens: auto;border-co=
+llapse: collapse;vertical-align: top;color: #11100f;font-family: Segoe UI, =
+SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font-weight:=
+ 400;text-align: left;font-size: 14px;line-height: 20px;Margin: 0 auto;padd=
+ing-left: 24px;padding-right: 24px;padding-top: 12px;mso-padding-top-alt: 1=
+2px;padding-bottom: 12px;mso-padding-bottom-alt: 12px;width: auto"><table r=
+ole=3D"presentation" style=3D"border-spacing: 0;border-collapse: collapse;p=
+adding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;vertical-a=
+lign: top;text-align: left;mso-table-lspace: -1pt;mso-table-rspace: -1pt;wi=
+dth: 100%"><tbody><tr style=3D"padding-top: 0;padding-right: 0;padding-bott=
+om: 0;padding-left: 0;vertical-align: top;text-align: left"><th style=3D"wo=
+rd-wrap: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphens: auto;=
+border-collapse: collapse;vertical-align: top;color: #11100f;font-family: S=
+egoe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;fon=
+t-weight: 400;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-lef=
+t: 0;Margin: 0;text-align: left;font-size: 14px;line-height: 20px">       =
+=20
+        <p class=3D"margin-bottom-0" style=3D"font-family: Segoe UI, SegoeU=
+I, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font-weight: 400;p=
+adding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;Margin: 0;=
+text-align: left;word-wrap: normal;-webkit-text-size-adjust: none;Margin-bo=
+ttom: 0px;mso-margin-bottom-alt: 0px;font-size: 12px;line-height: 16px;mso-=
+line-height-alt: 16px;color: #484644">
+
+            <a href=3D"https://nam.safelink.emails.azure.net/redirect/?dest=
+ination=3Dhttps%3A%2F%2Fgo.microsoft.com%2Ffwlink%2F%3FLinkId%3D521839&amp;=
+p=3DbT0zYmZmYjBiZi0yMTNjLTRlMDctOTJlNC0zYjllYjQ5ZDQyODgmdT1hZW8mbD1wcml2YWN=
+5LXN0YXRlbWVudA%3D%3D" title=3D"Privacy Statement" style=3D"font-family: Se=
+goe UI, SegoeUI, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font=
+-weight: 400;padding: 0;text-align: left;line-height: 20px;color: #484644;d=
+isplay: inline-block;text-decoration: underline;text-underline: single">Pri=
+vacy Statement</a>           =20
+        </p>
+        <p class=3D"margin-top-8" style=3D"font-family: Segoe UI, SegoeUI, =
+Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;font-weight: 400;padd=
+ing-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;Margin: 0;tex=
+t-align: left;Margin-bottom: 12px;word-wrap: normal;-webkit-text-size-adjus=
+t: none;Margin-top: 8px;mso-margin-top-alt: 8px;font-size: 12px;line-height=
+: 16px;mso-line-height-alt: 16px;color: #484644">Microsoft Corporation, <sp=
+an class=3D"no-wrap" style=3D"display: inline-block;word-break: keep-all;hy=
+phens: none">One Microsoft Way, =E2=80=8BRedmond, WA 98052=E2=80=8B</span><=
+/p>
+        <img height=3D"20" width=3D"auto" class=3D"logo-microsoft" src=3D"h=
+ttps://images.ecomm.microsoft.com/cdn/mediahandler/azure-emails-templates/p=
+roduction/shared/images/templates/shared/images/logos/microsoft-logo-2x.png=
+" alt=3D"Microsoft" title=3D"Microsoft" style=3D"outline: none;text-decorat=
+ion: none;-ms-interpolation-mode: bicubic;max-width: 100%;clear: both;displ=
+ay: block;height: 20px;max-height: 20px;width: auto">
+    </th>
+<th class=3D"expander" style=3D"word-wrap: break-word;-webkit-hyphens: auto=
+;-moz-hyphens: auto;hyphens: auto;border-collapse: collapse;vertical-align:=
+ top;color: #11100f;font-family: Segoe UI, SegoeUI, Roboto, &quot;Helvetica=
+ Neue&quot;, Arial, sans-serif;font-weight: 400;padding-top: 0;padding-righ=
+t: 0;padding-bottom: 0;padding-left: 0;Margin: 0;text-align: left;font-size=
+: 14px;line-height: 20px;visibility: hidden;width: 0;padding: 0"></th></tr>=
+</tbody></table></th>
+</tr></tbody></table>
+
+                                        </center>
+                                    </td></tr></tbody></table>
+                                </td></tr></tbody></table>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                </center>
+            </td>
+        </tr>
+    </tbody></table>
+        <img height=3D"" width=3D"auto" src=3D"https://nam.safelink.emails.=
+azure.net/trackingpixel/?p=3DbT0zYmZmYjBiZi0yMTNjLTRlMDctOTJlNC0zYjllYjQ5ZD=
+QyODgmdT1hZW8%3D" alt=3D"" role=3D"presentation" style=3D"outline: none;tex=
+t-decoration: none;-ms-interpolation-mode: bicubic;width: auto;max-width: 1=
+00%;clear: both;display: block">
+   =20
+
+</body></html>=
+
+--=-lG03jXgNqGju8i6DN5WsaA==--

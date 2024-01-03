@@ -68,7 +68,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void WriteDateTimeValue(DateTime dateTimeValue)
         {
-            _writer.Append(HttpUtility.UrlEncode(dateTimeValue.ToString("o", CultureInfo.InvariantCulture)));
+            _writer.Append(HttpUtility.UrlEncode(dateTimeValue.ToString(UtcDateTimeFormat, CultureInfo.InvariantCulture)));
+        }
+
+        protected override void WriteDateTimeValueNoTimeZone(DateTime dateTimeValue)
+        {
+            _writer.Append(HttpUtility.UrlEncode(dateTimeValue.ToString(DateTimeFormat, CultureInfo.InvariantCulture)));
         }
 
         protected override void WriteDateValue(DateTime dateValue)

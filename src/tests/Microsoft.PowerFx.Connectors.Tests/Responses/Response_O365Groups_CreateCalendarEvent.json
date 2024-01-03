@@ -1,0 +1,73 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/events/$entity",
+  "@odata.etag": "W/\"rlH4VFk60E2mW9t2nJD1lwAAUjuQHA==\"",
+  "id": "AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU-nnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxiAAA=",
+  "createdDateTime": "2023-12-13T17:02:53.7362166Z",
+  "lastModifiedDateTime": "2023-12-13T17:02:53.8195591Z",
+  "changeKey": "rlH4VFk60E2mW9t2nJD1lwAAUjuQHA==",
+  "categories": [
+  ],
+  "transactionId": null,
+  "originalStartTimeZone": "UTC",
+  "originalEndTimeZone": "UTC",
+  "iCalUId": "040000008200E00074C5B7101A82E008000000007B804836E62DDA0100000000000000001000000052E0A3FAA9E09142AF63C02161B9C167",
+  "reminderMinutesBeforeStart": 15,
+  "isReminderOn": true,
+  "hasAttachments": false,
+  "subject": "Event1",
+  "bodyPreview": "",
+  "importance": "normal",
+  "sensitivity": "normal",
+  "isAllDay": false,
+  "isCancelled": false,
+  "isOrganizer": true,
+  "responseRequested": true,
+  "seriesMasterId": null,
+  "showAs": "busy",
+  "type": "singleInstance",
+  "webLink": "https://outlook.office365.com/calendar/deeplink/read/group/capintegration01.onmicrosoft.com/TestProject9Aug/AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU%2FnnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxiAAA%3D",
+  "onlineMeetingUrl": null,
+  "isOnlineMeeting": false,
+  "onlineMeetingProvider": "unknown",
+  "allowNewTimeProposals": true,
+  "occurrenceId": null,
+  "isDraft": false,
+  "hideAttendees": false,
+  "responseStatus": {
+    "response": "organizer",
+    "time": "0001-01-01T00:00:00Z"
+  },
+  "body": {
+    "contentType": "html",
+    "content": "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n<meta name=\"Generator\" content=\"Microsoft Exchange Server\">\r\n<!-- converted from text -->\r\n<style><!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --></style></head>\r\n<body>\r\n<font size=\"2\"><span style=\"font-size:11pt;\"><div class=\"PlainText\">&nbsp;</div></span></font>\r\n</body>\r\n</html>\r\n"
+  },
+  "start": {
+    "dateTime": "2023-12-13T18:02:49.1660929",
+    "timeZone": "UTC"
+  },
+  "end": {
+    "dateTime": "2023-12-13T18:02:49.1662331",
+    "timeZone": "UTC"
+  },
+  "location": {
+    "displayName": "",
+    "locationType": "default",
+    "uniqueIdType": "unknown",
+    "address": {
+    },
+    "coordinates": {
+    }
+  },
+  "locations": [
+  ],
+  "recurrence": null,
+  "attendees": [
+  ],
+  "organizer": {
+    "emailAddress": {
+      "name": "TestProject9Aug",
+      "address": "TestProject9Aug@capintegration01.onmicrosoft.com"
+    }
+  },
+  "onlineMeeting": null
+}

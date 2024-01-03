@@ -4,13 +4,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Newtonsoft.Json;
@@ -40,8 +38,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Azure Cognitive Service for Language, previously known as 'Text Analytics' connector detects language, sentiment and more of the text you provide.", doc.Info.Description);
 
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions("ACSL", doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
-            Assert.Equal(51, functions.Count);
-            ConnectorFunction conversationAnalysisAnalyzeConversationConversation = functions[19];
+            Assert.Equal(44, functions.Count);
+            ConnectorFunction conversationAnalysisAnalyzeConversationConversation = functions[14];
 
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", conversationAnalysisAnalyzeConversationConversation.Name);
             Assert.Equal("Analyzes the input conversation utterance.", conversationAnalysisAnalyzeConversationConversation.Description);
@@ -69,15 +67,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Contains(connectorFunctions, func => func.Namespace == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
 
-            ConnectorFunction func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");
-            Assert.Equal("analysisInput:![documents:*[id:s, language:s, text:s]]|task:![parameters:![deploymentName:s, projectName:s]]", string.Join("|", func1.RequiredParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));
+            ConnectorFunction func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");            
+            Assert.Equal("analysisInput:![documents:*[id:s, language:s, text:s]]|task:![parameters:![deploymentName:s, projectName:s, stringIndexType:s]]", string.Join("|", func1.RequiredParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));            
             Assert.Equal("displayName:s", string.Join("|", func1.OptionalParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type.ToString()}")));
 
             (connectorFunctions, texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc, new ConsoleLogger(_output));
             Assert.Contains(connectorFunctions, func => func.Namespace == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
 
-            func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");
+            func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");            
             Assert.Equal("analysisInput:![documents:*[id:s, language:s, text:s]]|task:![parameters:![deploymentName:s, projectName:s]]", string.Join("|", func1.RequiredParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));
             Assert.Empty(func1.OptionalParameters);
         }
@@ -102,7 +100,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void ACSL_GetFunctionParameters_PowerAppsCompatibility()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
-            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.PowerAppsCompatibility }, doc).OrderBy(cf => cf.Name).ToList()[19];
+            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.PowerAppsCompatibility }, doc).OrderBy(cf => cf.Name).ToList()[14];
 
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("ConversationAnalysis_AnalyzeConversation_Conversation", function.OriginalName);
@@ -115,11 +113,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
             RecordType analysisInputRecordType = Extensions.MakeRecordType(
                                                     ("conversationItem", Extensions.MakeRecordType(
                                                         ("language", FormulaType.String),
+                                                        ("modality", FormulaType.String),
                                                         ("text", FormulaType.String))));
             RecordType parametersRecordType = Extensions.MakeRecordType(
                                                     ("deploymentName", FormulaType.String),
+                                                    ("directTarget", FormulaType.String),
+                                                    ("isLoggingEnabled", FormulaType.Boolean),
                                                     ("projectName", FormulaType.String),
-                                                    ("verbose", RecordType.Boolean));
+                                                    ("stringIndexType", FormulaType.String),
+                                                    ("targetProjectParameters", FormulaType.UntypedObject),
+                                                    ("verbose", FormulaType.Boolean));
 
             // -- Parameter 1 --
             Assert.Equal("kind", function.RequiredParameters[0].Name);
@@ -148,7 +151,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("parameters", function.RequiredParameters[2].Name);
             Assert.Equal(parametersRecordType, function.RequiredParameters[2].FormulaType);
             Assert.Equal("A single conversational task to execute.", function.RequiredParameters[2].Description);
-            Assert.Null(function.RequiredParameters[2].DefaultValue);
+            Assert.Equal(@"{""deploymentName"":null,""directTarget"":null,""isLoggingEnabled"":null,""projectName"":null,""stringIndexType"":""TextElement_V8"",""targetProjectParameters"":null,""verbose"":null}", System.Text.Json.JsonSerializer.Serialize(function.RequiredParameters[2].DefaultValue.ToObject()));
 
             RecordType analysisInputRecordTypeH = Extensions.MakeRecordType(
                                                     ("conversationItem", Extensions.MakeRecordType(
@@ -210,20 +213,20 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void ACSL_GetFunctionParameters_SwaggerCompatibility()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
-            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc).OrderBy(cf => cf.Name).ToList()[19];
+            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc).OrderBy(cf => cf.Name).ToList()[14];
 
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("ConversationAnalysis_AnalyzeConversation_Conversation", function.OriginalName);
             Assert.Equal("/apim/cognitiveservicestextanalytics/{connectionId}/language/:analyze-conversations", function.OperationPath);
 
             RecordType analysisInputRecordType = Extensions.MakeRecordType(
-                                                    ("conversationItem", Extensions.MakeRecordType(
-                                                        ("language", FormulaType.String),
-                                                        ("text", FormulaType.String))));
+                                                               ("conversationItem", Extensions.MakeRecordType(
+                                                                   ("language", FormulaType.String),                                                                   
+                                                                   ("text", FormulaType.String))));
             RecordType parametersRecordType = Extensions.MakeRecordType(
-                                                    ("deploymentName", FormulaType.String),
-                                                    ("projectName", FormulaType.String),
-                                                    ("verbose", RecordType.Boolean));
+                                                    ("deploymentName", FormulaType.String),                                                    
+                                                    ("projectName", FormulaType.String),                                                    
+                                                    ("verbose", FormulaType.Boolean));
 
             Assert.Equal(2, function.RequiredParameters.Length);
             Assert.Equal(3, function.HiddenRequiredParameters.Length);
@@ -321,8 +324,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             OpenApiDocument apiDoc = testConnector._apiDocument;
             ConsoleLogger logger = new ConsoleLogger(_output);
 
-            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
-            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, apiDoc).OrderBy(cf => cf.Name).ToList()[19];
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);            
+            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, apiDoc).OrderBy(cf => cf.Name).ToList()[14];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:w, offset:w, resolutions:O, text:s], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
@@ -431,7 +434,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var httpClient = new HttpClient(testConnector);
             testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service for Language v2.1_Response.json");
 
-            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList()[13];
+            var xx = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList();
+            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList()[11];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:w, multipleResolutions:b, offset:w, resolutions:O, text:s, topResolution:O], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
@@ -641,7 +645,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void SQL_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
-            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("SQL"), doc, new ConsoleLogger(_output));
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("SQL") { IncludeInternalFunctions = true }, doc, new ConsoleLogger(_output));
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "SQL" && func.Name == "GetProcedureV2");
         }
 

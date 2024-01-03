@@ -1,0 +1,81 @@
+{
+  "@odata.context": "https://graph.microsoft.com/beta/$metadata#users('32ba11bd-ff15-46f7-bd33-6b481e5f5c7e')/insights/trending",
+  "value": [
+    {
+      "id": "TF_YeomWxegok2ermX9rNQjL8ysMK1jeXRLodBeZLeAw5A7NFNFXOMURYfTEUPCA8fspkPZrk648UqEd63IrjbypA",
+      "weight": 0.022630559280514717,
+      "resourceReference": {
+        "id": "drives/b!YeomWxegok2ermX9rNQjL8ysMK1jeXRLodBeZLeAw5A7NFNFXOMURYfTEUPCA8fs/items/01VEVGAV5GIPM24TVY6FFII55NZCXDN4VE",
+        "type": "microsoft.graph.driveItem",
+        "webUrl": "https://capintegration01.sharepoint.com/sites/TESTING/_layouts/15/Doc.aspx?sourcedoc=%7BAED943A6-B84E-4AF1-8477-ADC8AE36F2A4%7D&file=CityPopulation.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1"
+      },
+      "resourceVisualization": {
+        "containerDisplayName": "TESTING",
+        "containerType": "Site",
+        "containerWebUrl": "https://capintegration01.sharepoint.com/sites/TESTING/msdyn_agreement/Forms/AllItems.aspx",
+        "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "previewImageUrl": "https://capintegration01.sharepoint.com/sites/TESTING/_api/GroupService/GetGroupImage?id='23b9232c-2681-4e9e-8af8-33755ee9eebb'&hash=638151354896184408",
+        "previewText": "city\ncountry\nPopulation\n\"London\"\n\"United Kingdom\"\n8615000\n\"Berlin\"\n\"Germany\"\n3562000\n\"Madrid\"\n\"Spain\"\n3165000\n\"Rome\"\n\"Italy\"\n2874000\n\"Paris\"\n \"France\"\n2273000\n \"Hamburg\"\n\"Germany\"\n1760000\n\"Barcelona\"\n\"Spain\"\n1602000\n\"Munich\"\n\"Germany\"\n1494000\n \"Milan\"\n\"Ita",
+        "title": "CityPopulation",
+        "type": "Excel"
+      }
+    },
+    {
+      "id": "TF_sfTnPPlgjEG8h19PyvRwWMQEkN2EO9NLt7OOXQRVFaf1Ppl67XxrSpoqmAnNGE3-Q6JmGX7Wmkif_QNM9AJAew",
+      "weight": 0.02262754738330841,
+      "resourceReference": {
+        "id": "drives/b!sfTnPPlgjEG8h19PyvRwWMQEkN2EO9NLt7OOXQRVFaf1Ppl67XxrSpoqmAnNGE3-/items/01ITWY52SDUJTBS7WWTJEJ77IDJT2AEQD3",
+        "type": "microsoft.graph.driveItem",
+        "webUrl": "https://capintegration01.sharepoint.com/_layouts/15/Doc.aspx?sourcedoc=%7B1966A243-D67E-489A-9FFD-034CF402407B%7D&file=Book.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1"
+      },
+      "resourceVisualization": {
+        "containerDisplayName": "Communication site",
+        "containerType": "Site",
+        "containerWebUrl": "https://capintegration01.sharepoint.com/adx_webpage/Forms/AllItems.aspx",
+        "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "previewImageUrl": "https://capintegration01.sharepoint.com/_api/v2.1/drives/b!sfTnPPlgjEG8h19PyvRwWMQEkN2EO9NLt7OOXQRVFaf1Ppl67XxrSpoqmAnNGE3-/items/01ITWY52SDUJTBS7WWTJEJ77IDJT2AEQD3/thumbnails/0/small/content?prefer=noredirect,closestavailablesize",
+        "previewText": "",
+        "title": "Book",
+        "type": "Excel"
+      }
+    },
+    {
+      "id": "TF_K_0Ajtt7oEOIWbXU-hJKPehSYdW__5xGldqnYox_pZCB896-adg6SIgyRZeMboMT5zTx4l4wLEeolzBkcrYfcw",
+      "weight": 0.0,
+      "resourceReference": {
+        "id": "drives/b!K_0Ajtt7oEOIWbXU-hJKPehSYdW__5xGldqnYox_pZCB896-adg6SIgyRZeMboMT/items/01G6HCEX7HGTY6EXRQFRD2RFZQMRZLMH3T",
+        "type": "microsoft.graph.driveItem",
+        "webUrl": "https://capintegration01.sharepoint.com/sites/TestSite101/_layouts/15/Doc.aspx?sourcedoc=%7BE2F134E7-305E-472C-A897-306472B61F73%7D&file=testdoc1.docx&action=default&mobileredirect=true&DefaultItemOpen=1"
+      },
+      "resourceVisualization": {
+        "containerDisplayName": "TestSite101",
+        "containerType": "Site",
+        "containerWebUrl": "https://capintegration01.sharepoint.com/sites/TestSite101/account/testaccount1_013FC51FB198EE11BE37002248201F3C",
+        "mediaType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "previewImageUrl": "https://capintegration01.sharepoint.com/sites/TestSite101/_api/GroupService/GetGroupImage?id='e89a98ce-aa18-401f-b35b-fded995b2d36'&hash=638271302992891312",
+        "previewText": "Erererer\r\ngghfgghghghhg\r\n",
+        "title": "testdoc1",
+        "type": "Word"
+      }
+    },
+    {
+      "id": "TF_sfTnPPlgjEG8h19PyvRwWMQEkN2EO9NLt7OOXQRVFafNtEQWr9hYRbuRGKZLJ85MwtKC7c9mHUiJfaCNANizdA",
+      "weight": 0.0,
+      "resourceReference": {
+        "id": "drives/b!sfTnPPlgjEG8h19PyvRwWMQEkN2EO9NLt7OOXQRVFafNtEQWr9hYRbuRGKZLJ85M/items/01ITWY52WC2KBO3T3GDVEIS7NARUANRM3U",
+        "type": "microsoft.graph.driveItem",
+        "webUrl": "https://capintegration01.sharepoint.com/_layouts/15/Doc.aspx?sourcedoc=%7BED82D2C2-66CF-481D-897D-A08D00D8B374%7D&file=testdoc1.docx&action=default&mobileredirect=true&DefaultItemOpen=1"
+      },
+      "resourceVisualization": {
+        "containerDisplayName": "Communication site",
+        "containerType": "Site",
+        "containerWebUrl": "https://capintegration01.sharepoint.com/account/testacct1_0D49CAE1AE84EE118178000D3A9E1D40",
+        "mediaType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "previewImageUrl": "https://capintegration01.sharepoint.com/_api/v2.1/drives/b!sfTnPPlgjEG8h19PyvRwWMQEkN2EO9NLt7OOXQRVFafNtEQWr9hYRbuRGKZLJ85M/items/01ITWY52WC2KBO3T3GDVEIS7NARUANRM3U/thumbnails/0/small/content?prefer=noredirect,closestavailablesize",
+        "previewText": "Dsjkdsjksdjk\r\nSdkjsdjksdjksd\r\nsdkljksdkjsd\r\n",
+        "title": "testdoc1",
+        "type": "Word"
+      }
+    }
+  ]
+}

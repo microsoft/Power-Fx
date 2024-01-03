@@ -1,0 +1,320 @@
+{
+  "name": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwAuAAAAAAC1gTSkmbm5QLpPwj9qarJqAQDr1A2S1MsmTIW9552ybeHbAAAAAAEOAAA=",
+  "title": "Contacts",
+  "x-ms-permission": "read-write",
+  "schema": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "required": [
+        "GivenName"
+      ],
+      "properties": {
+        "Id": {
+          "title": "Id",
+          "description": "The contact's unique identifier.",
+          "x-ms-permission": "read-only",
+          "type": "string",
+          "x-ms-keyOrder": 1,
+          "x-ms-keyType": "primary",
+          "x-ms-sort": "none"
+        },
+        "ParentFolderId": {
+          "title": "Parent folder id",
+          "description": "The ID of the contact's parent folder",
+          "x-ms-permission": "read-only",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "Birthday": {
+          "title": "Birthday",
+          "description": "The contact's birthday",
+          "type": "string",
+          "format": "date-time",
+          "x-ms-visibility": "advanced"
+        },
+        "FileAs": {
+          "title": "File as",
+          "description": "The name the contact is filed under",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "DisplayName": {
+          "title": "Display Name",
+          "description": "The contact's display name",
+          "type": "string"
+        },
+        "GivenName": {
+          "title": "Given name",
+          "description": "The contact's given name",
+          "type": "string"
+        },
+        "Initials": {
+          "title": "Initials",
+          "description": "The contact's initials",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "MiddleName": {
+          "title": "Middle name",
+          "description": "The contact's middle name",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "NickName": {
+          "title": "Nickname",
+          "description": "The contact's nickname",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "Surname": {
+          "title": "Surname",
+          "description": "The contact's surname",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "Title": {
+          "title": "Title",
+          "description": "The contact's title",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "Generation": {
+          "title": "Generation",
+          "description": "The contact's generation",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "EmailAddresses": {
+          "title": "Email addresses",
+          "description": "The contact's email addresses",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "Address": {
+                "title": "Address",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "ImAddresses": {
+          "title": "IM addresses",
+          "description": "The contact's instant messaging (IM) addresses",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-ms-visibility": "advanced"
+        },
+        "JobTitle": {
+          "title": "JobTitle",
+          "description": "The contact's job title",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "CompanyName": {
+          "title": "Company name",
+          "description": "The name of the contact's company",
+          "type": "string"
+        },
+        "Department": {
+          "title": "Department",
+          "description": "The contact's department",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "OfficeLocation": {
+          "title": "Office location",
+          "description": "The location of the contact's office",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "Profession": {
+          "title": "Profession",
+          "description": "The contact's profession",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "BusinessHomePage": {
+          "title": "Business home page",
+          "description": "The business home page of the contact",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "AssistantName": {
+          "title": "Assistant name",
+          "description": "The name of the contact's assistant",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "Manager": {
+          "title": "Manager",
+          "description": "The name of the contact's manager",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "HomePhones": {
+          "title": "Home phones",
+          "description": "The contact's home phone numbers",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "BusinessPhones": {
+          "title": "Business phones",
+          "description": "The contact's business phone numbers",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "MobilePhone1": {
+          "title": "Mobile phone",
+          "description": "The contact's mobile phone number",
+          "type": "string"
+        },
+        "HomeAddress": {
+          "title": "Home address",
+          "description": "The contact's home address",
+          "type": "object",
+          "properties": {
+            "Street": {
+              "title": "Street",
+              "type": "string"
+            },
+            "City": {
+              "title": "City",
+              "type": "string"
+            },
+            "State": {
+              "title": "State",
+              "type": "string"
+            },
+            "CountryOrRegion": {
+              "title": "CountryOrRegion",
+              "type": "string"
+            },
+            "PostalCode": {
+              "title": "PostalCode",
+              "type": "string"
+            }
+          },
+          "x-ms-visibility": "advanced"
+        },
+        "BusinessAddress": {
+          "title": "Business address",
+          "description": "The contact's business address",
+          "type": "object",
+          "properties": {
+            "Street": {
+              "title": "Street",
+              "type": "string"
+            },
+            "City": {
+              "title": "City",
+              "type": "string"
+            },
+            "State": {
+              "title": "State",
+              "type": "string"
+            },
+            "CountryOrRegion": {
+              "title": "CountryOrRegion",
+              "type": "string"
+            },
+            "PostalCode": {
+              "title": "PostalCode",
+              "type": "string"
+            }
+          },
+          "x-ms-visibility": "advanced"
+        },
+        "OtherAddress": {
+          "title": "Other address",
+          "description": "Other addresses for the contact",
+          "type": "object",
+          "properties": {
+            "Street": {
+              "title": "Street",
+              "type": "string"
+            },
+            "City": {
+              "title": "City",
+              "type": "string"
+            },
+            "State": {
+              "title": "State",
+              "type": "string"
+            },
+            "CountryOrRegion": {
+              "title": "CountryOrRegion",
+              "type": "string"
+            },
+            "PostalCode": {
+              "title": "PostalCode",
+              "type": "string"
+            }
+          },
+          "x-ms-visibility": "advanced"
+        },
+        "YomiCompanyName": {
+          "title": "Yomi company name",
+          "description": "The phonetic Japanese company name of the contact",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "YomiGivenName": {
+          "title": "Yomi given name",
+          "description": "The phonetic Japanese given name (first name) of the contact",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "YomiSurname": {
+          "title": "Yomi surname",
+          "description": "The phonetic Japanese surname (last name) of the contact",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "Categories": {
+          "title": "Categories",
+          "description": "The categories associated with the contact",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-ms-visibility": "advanced"
+        },
+        "ChangeKey": {
+          "title": "Change key",
+          "description": "Identifies the version of the event object",
+          "x-ms-permission": "read-only",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "DateTimeCreated": {
+          "title": "Created time",
+          "description": "The time the contact was created",
+          "x-ms-permission": "read-only",
+          "type": "string",
+          "format": "date-time",
+          "x-ms-visibility": "advanced"
+        },
+        "DateTimeLastModified": {
+          "title": "Last modified time",
+          "description": "The time the contact was modified",
+          "x-ms-permission": "read-only",
+          "type": "string",
+          "format": "date-time",
+          "x-ms-visibility": "advanced"
+        }
+      }
+    }
+  }
+}

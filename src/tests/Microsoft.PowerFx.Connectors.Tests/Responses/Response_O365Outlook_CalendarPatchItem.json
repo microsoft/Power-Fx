@@ -1,0 +1,61 @@
+{
+  "Id": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A1AAA=",
+  "Attendees": [
+  ],
+  "Body": {
+    "ContentType": "HTML",
+    "Content": "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n<meta name=\"Generator\" content=\"Microsoft Exchange Server\">\r\n<!-- converted from text -->\r\n<style><!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --></style></head>\r\n<body>\r\n<font size=\"2\"><span style=\"font-size:11pt;\"><div class=\"PlainText\">&nbsp;</div></span></font>\r\n</body>\r\n</html>\r\n"
+  },
+  "BodyPreview": "",
+  "Categories": [
+  ],
+  "ChangeKey": "69QNktTLJkyFveedsm3h2wAAcRXGMg==",
+  "DateTimeCreated": "2023-12-22T13:06:20.0821142+00:00",
+  "DateTimeLastModified": "2023-12-22T13:30:29.8852955+00:00",
+  "End": "2023-12-20T16:05:00+00:00",
+  "EndTimeZone": "UTC",
+  "HasAttachments": false,
+  "ICalUId": "040000008200E00074C5B7101A82E00800000000775EEDA7D734DA010000000000000000100000002A880DE9DEA2FC4BB353589AB88F677A",
+  "Importance": "Low",
+  "IsAllDay": false,
+  "IsCancelled": false,
+  "IsOrganizer": true,
+  "Location": {
+    "DisplayName": "",
+    "Address": {
+      "Street": null,
+      "City": null,
+      "State": null,
+      "CountryOrRegion": null,
+      "PostalCode": null
+    },
+    "Coordinates": {
+      "Altitude": null,
+      "Latitude": null,
+      "Longitude": null,
+      "Accuracy": null,
+      "AltitudeAccuracy": null
+    }
+  },
+  "Organizer": {
+    "EmailAddress": {
+      "Name": "aurorauser01",
+      "Address": "aurorauser01@aurorafinanceintegration02.onmicrosoft.com"
+    }
+  },
+  "Recurrence": null,
+  "Reminder": 15,
+  "ResponseRequested": true,
+  "ResponseStatus": {
+    "Response": "Organizer",
+    "Time": "0001-01-01T00:00:00+00:00"
+  },
+  "SeriesMasterId": null,
+  "ShowAs": "Free",
+  "Start": "2023-12-20T14:15:00+00:00",
+  "StartTimeZone": "UTC",
+  "Subject": "Event 18",
+  "Type": "SingleInstance",
+  "WebLink": "https://outlook.office365.com/owa/?itemid=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A1AAA%3D&exvsurl=1&path=/calendar/item",
+  "Reason": null
+}

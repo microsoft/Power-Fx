@@ -1,0 +1,20 @@
+{
+  "from": "MicrosoftExchange329e71ec88ae4615bbc36ab6ce41109e@aurorafinanceintegration02.onmicrosoft.com",
+  "toRecipients": "testuser4@aurorafinanceintegration02.onmicrosoft.com",
+  "ccRecipients": null,
+  "bccRecipients": null,
+  "replyTo": null,
+  "subject": "Undeliverable: FW: 2 of your flow(s) have failed",
+  "body": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><p><b><font color=\"#000066\" size=\"3\" face=\"Arial\">Delivery has failed to these recipients or groups:</font></b></p><font color=\"#000000\" size=\"2\" face=\"Tahoma\"><p><a href=\"mailto:testuser4@aurorafinanceintegration02.onmicrosoft.com\">testuser4@aurorafinanceintegration02.onmicrosoft.com</a><br></font><font color=\"#000000\" size=\"3\" face=\"Arial\">Your message wasn't delivered because the recipient's email provider rejected it.<br></font><font color=\"#000000\" size=\"2\" face=\"Tahoma\"><br></p></font><br><br><br><br><br><br><font color=\"#808080\" size=\"2\" face=\"Tahoma\"><p><b>Diagnostic information for administrators:</b></p><p>Generating server: SJ1P223MB0458.NAMP223.PROD.OUTLOOK.COM<br></p><p>testuser4@aurorafinanceintegration02.onmicrosoft.com<br>Remote server returned '550 5.7.708 Service unavailable. Access denied, traffic not accepted from this IP. For more information please go to http://go.microsoft.com/fwlink/?LinkId=526653 AS(7230) [DS7P223MB0526.NAMP223.PROD.OUTLOOK.COM 2023-12-22T17:55:11.067Z 08DC0274620E9A63]'<br></p><p>Original message headers:</p><pre>Received: from SJ1P223MB0458.NAMP223.PROD.OUTLOOK.COM\r\n ([fe80::5f65:f726:4859:a220]) by SJ1P223MB0458.NAMP223.PROD.OUTLOOK.COM\r\n ([fe80::5f65:f726:4859:a220%4]) with mapi id 15.20.7113.016; Fri, 22 Dec 2023\r\n 17:55:11 +0000\r\nMIME-Version: 1.0\r\nContent-Type: text/plain\r\nDate: Fri, 22 Dec 2023 17:55:11 +0000\r\nMessage-ID:\r\n\t&lt;SJ1P223MB04584A804F2E8348E70A5983EA94A@SJ1P223MB0458.NAMP223.PROD.OUTLOOK.COM&gt;\r\nSubject: FW: 2 of your flow(s) have failed\r\n</pre></font></body></html>",
+  "importance": "normal",
+  "bodyPreview": "Delivery has failed to these recipients or groups:\r\n\r\ntestuser4@aurorafinanceintegration02.onmicrosoft.com\r\nYour message wasn't delivered because the recipient's email provider rejected it.\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nDiagnostic information for administrators:\r\n\r\nGe",
+  "hasAttachments": false,
+  "id": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZpAAA=",
+  "internetMessageId": "<5f260db4-9482-4b3a-baa9-86fb3af009be@SJ1P223MB0458.NAMP223.PROD.OUTLOOK.COM>",
+  "conversationId": "AAQkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwAQAG7F4exM59BPh3owH24q0uQ=",
+  "receivedDateTime": "2023-12-22T17:55:13+00:00",
+  "isRead": false,
+  "attachments": [
+  ],
+  "isHtml": true
+}

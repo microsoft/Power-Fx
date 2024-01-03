@@ -4373,4 +4373,8 @@
     <value>Deprecated use of '.'. Please use the 'ShowColumns' function instead.</value>
     <comment>{Locked='ShowColumns'}</comment>
   </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Disclaimer:** AI-generated content can have mistakes. Make sure it's accurate and appropriate before using it. [See terms](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    <comment>The disclaimer we show on AI functions. This is github flavored markdown. So ** marks text in bold. </comment>
+  </data>
 </root>

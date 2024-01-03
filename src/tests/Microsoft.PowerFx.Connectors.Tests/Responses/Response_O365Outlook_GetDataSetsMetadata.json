@@ -1,0 +1,10 @@
+{
+  "tabular": {
+    "source": "list",
+    "displayName": "dataset",
+    "urlEncoding": "double",
+    "tableDisplayName": "Table",
+    "tablePluralName": "Tables"
+  },
+  "blob": null
+}
