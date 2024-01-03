@@ -258,10 +258,12 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
 
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions("SP", apiDoc, new ConsoleLogger(_output)).OrderBy(f => f.Name).ToList();
 
-            // Total 101 functions, including 1 deprecated & 50 internal functions (and no deprecated+internal functions)
-            Assert.Equal(101, functions.Count);
+            // Total 101 functions, including 50 internal, 1 deprecated & 50 internal functions (and no deprecated+internal functions)
+            Assert.Equal(51, functions.Count);
             Assert.Single(functions.Where(f => f.IsDeprecated));
-            Assert.Equal(50, functions.Where(f => f.IsInternal).Count());
+
+            // This is expected as internal functions (which are marked as internal) are not included
+            Assert.Empty(functions.Where(f => f.IsInternal));
             Assert.Empty(functions.Where(f => f.IsDeprecated && f.IsInternal));
 
             IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector("SP", apiDoc, new ConsoleLogger(_output));

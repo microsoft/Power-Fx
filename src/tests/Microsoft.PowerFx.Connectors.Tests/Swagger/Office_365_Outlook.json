@@ -15960,16 +15960,9 @@
     },
     "BatchResponse[SensitivityLabel]": {
       "description": "Represents a wrapper object for batch response",
-      "type": "object",
-      "properties": {
-        "value": {
-          "description": "A list of the response objects",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SensitivityLabel"
-          },
-          "readOnly": true
-        }
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SensitivityLabel"
       }
     },
     "SensitivityLabel": {

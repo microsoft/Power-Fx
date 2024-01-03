@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Connectors
                 configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}");
                 IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(new ConnectorSettings(@namespace), openApiDocument, configurationLogger);
                 configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}, returning {functions.Count()} functions");
-                return functions;
+                return functions.Where(f => !f.IsInternal);
             }
             catch (Exception ex)
             {
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Connectors
                 configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");
                 IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger);
                 configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, returning {functions.Count()} functions");
-                return functions;
+                return functions.Where(f => !f.IsInternal || connectorSettings.IncludeInternalFunctions);
             }
             catch (Exception ex)
             {
@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Connectors
                 string notSupportedReasonForPath = string.Empty;
 
                 // Skip Webhooks
-                if (ops.Extensions.Any(kvp => kvp.Key == "x-ms-notification-content"))
+                if (ops.Extensions.Any(kvp => kvp.Key == XMsNotificationContent))
                 {
                     configurationLogger?.LogInformation($"Skipping Webhook {path} {ops.Description}");
                     continue;
@@ -147,9 +147,9 @@ namespace Microsoft.PowerFx.Connectors
                                               : !string.IsNullOrEmpty(notSupportedReasonForPath)
                                               ? notSupportedReasonForPath
                                               : notSupportedReasonForOperation;
-
-                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings, functions, configurationLogger) { Servers = openApiDocument.Servers };
-                    functions.Add(connectorFunction);
+                    
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings, functions, configurationLogger) { Servers = openApiDocument.Servers };                                        
+                    functions.Add(connectorFunction);                    
                 }
             }
 
@@ -342,6 +342,7 @@ namespace Microsoft.PowerFx.Connectors
                 opExtensions.Remove(XMsDynamicValues);
                 opExtensions.Remove(XMsDynamicSchema);
                 opExtensions.Remove(XMsDynamicProperties);
+                opExtensions.Remove(XMsMediaKind);
                 opExtensions.Remove(XMsDynamicList);
                 opExtensions.Remove(XMsRequireUserConfirmation);
                 opExtensions.Remove("x-ms-api-annotation");
@@ -425,7 +426,7 @@ namespace Microsoft.PowerFx.Connectors
         // Parse an OpenApiDocument and return functions. 
         internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) ParseInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
         {
-            List<ConnectorFunction> cFunctions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger).ToList();
+            List<ConnectorFunction> cFunctions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger).Where(f => !f.IsInternal || connectorSettings.IncludeInternalFunctions).ToList();
             List<ConnectorTexlFunction> tFunctions = cFunctions.Select(f => new ConnectorTexlFunction(f)).ToList();
 
             return (cFunctions, tFunctions);

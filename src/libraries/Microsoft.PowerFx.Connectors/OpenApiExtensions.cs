@@ -319,6 +319,8 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string GetVisibility(this IOpenApiExtensible schema) => schema.Extensions.TryGetValue(XMsVisibility, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
+        internal static string GetMediaKind(this IOpenApiExtensible schema) => schema.Extensions.TryGetValue(XMsMediaKind, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
+
         internal static (bool IsPresent, string Value) GetString(this OpenApiObject apiObj, string str) => apiObj.TryGetValue(str, out IOpenApiAny openApiAny) && openApiAny is OpenApiString openApiStr ? (true, openApiStr.Value) : (false, null);
 
         internal static void WhenPresent(this OpenApiObject apiObj, string propName, Action<string> action)
@@ -373,7 +375,7 @@ namespace Microsoft.PowerFx.Connectors
                             return new ConnectorType(schema, openApiParameter, FormulaType.DateTime);
 
                         case "binary":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.String, binary: true);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.String);
 
                         case "enum":
                             if (schema.Enum.All(e => e is OpenApiString))
@@ -444,8 +446,8 @@ namespace Microsoft.PowerFx.Connectors
 
                     if (innerA.StartsWith("R:", StringComparison.Ordinal) && chain.Contains(innerA))
                     {
-                        // Here, we have a circular reference and default to a string
-                        return new ConnectorType(schema, openApiParameter, FormulaType.String);
+                        // Here, we have a circular reference and default to a table
+                        return new ConnectorType(schema, openApiParameter, TableType.Empty());
                     }
 
                     // Inheritance/Polymorphism - Can't know the exact type
@@ -697,6 +699,15 @@ namespace Microsoft.PowerFx.Connectors
                 : Enum.TryParse(visibility, true, out Visibility vis)
                 ? vis
                 : Visibility.Unknown;
+        }
+
+        public static MediaKind ToMediaKind(this string mediaKind)
+        {
+            return string.IsNullOrEmpty(mediaKind)
+                ? MediaKind.File
+                : Enum.TryParse(mediaKind, true, out MediaKind mk)
+                ? mk
+                : MediaKind.Unknown;
         }
 
         internal static string PageLink(this OpenApiOperation op)

@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Connectors
     // Only contains parameters only used in HttpFunctionInvoker and determined in ConnectorFunction initialization.
     internal class ConnectorParameterInternals
     {
-        internal List<OpenApiParameter> OpenApiBodyParameters { get; init; }
+        internal List<ConnectorParameter> OpenApiBodyParameters { get; init; }
 
         internal bool SchemaLessBody { get; init; }
 

@@ -373,6 +373,8 @@ namespace Microsoft.PowerFx.Tests
             string str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new ConvertToUTC(TimeZoneInfo.Local));
 
             DateTimeType obj = JsonSerializer.Deserialize<DateTimeType>(str);
+            date = TimeZoneInfo.ConvertTimeToUtc(date);
+            date = date.AddTicks(-(date.Ticks % 10000));
             Assert.Equal(date, obj.A);
         }
 

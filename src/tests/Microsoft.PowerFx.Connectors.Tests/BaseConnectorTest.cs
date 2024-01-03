@@ -22,13 +22,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
 {
     public abstract class BaseConnectorTest : PowerFxTest, IDisposable
     {
-        internal ITestOutputHelper _output;
-        internal LoggingTestServer _testConnector;
+        internal ITestOutputHelper _output;                
+        internal string _swaggerFile;
         private bool _disposedValue;
 
         public BaseConnectorTest(ITestOutputHelper output, string swaggerFile)
-        {
-            _testConnector = new LoggingTestServer(swaggerFile);
+        {            
+            _swaggerFile = swaggerFile;
             _output = output;
         }
 
@@ -42,8 +42,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         public virtual ConnectorSettings GetConnectorSettings(ConnectorCompatibility compatibility = ConnectorCompatibility.PowerAppsCompatibility)
         {
-            return new ConnectorSettings(GetNamespace()) { Compatibility = compatibility };
+            return new ConnectorSettings(GetNamespace()) { Compatibility = compatibility, IncludeInternalFunctions = true };
         }
+
+        public virtual TimeZoneInfo GetTimeZoneInfo() => TimeZoneInfo.Utc;
 
         public virtual string GetJWTToken() => "Some JWT token";
 
@@ -51,50 +53,48 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         internal IReadOnlyList<ConnectorFunction> EnumerateFunctions()
         {
-            (OpenApiDocument apiDoc, PowerFxConfig config, HttpClient httpClient, PowerPlatformConnectorClient client, ConnectorSettings connectorSettings, RuntimeConfig runtimeConfig) = GetElements();
+            (LoggingTestServer testConnector, OpenApiDocument apiDoc, PowerFxConfig config, HttpClient httpClient, PowerPlatformConnectorClient client, ConnectorSettings connectorSettings, RuntimeConfig runtimeConfig) = GetElements();
             IReadOnlyList<ConnectorFunction> funcs = config.AddActionConnector(connectorSettings, apiDoc, new ConsoleLogger(_output));
 
             _output.WriteLine(string.Empty);
             foreach (ConnectorFunction func in funcs.OrderBy(f => f.Name))
             {
-                _output.WriteLine(func.Name);
+                _output.WriteLine($"{func.Name}{(func.IsDeprecated ? " (Deprecated)" : string.Empty)}{(func.IsInternal ? " (Internal)" : string.Empty)}{(!func.IsSupported && !func.IsDeprecated ? $" (Not supported: {func.NotSupportedReason})" : string.Empty)}");
             }
 
             return funcs;
         }
 
-        internal (OpenApiDocument apiDoc, PowerFxConfig config, HttpClient httpClient, PowerPlatformConnectorClient client, ConnectorSettings connectorSettings, RuntimeConfig runtimeConfig) GetElements(bool live = false)
+        internal (LoggingTestServer testConnector, OpenApiDocument apiDoc, PowerFxConfig config, HttpClient httpClient, PowerPlatformConnectorClient client, ConnectorSettings connectorSettings, RuntimeConfig runtimeConfig) GetElements(bool live = false)
         {
-            OpenApiDocument apiDoc = _testConnector._apiDocument;
+            var testConnector = new LoggingTestServer(_swaggerFile, live);                                  
+            HttpClient httpClient = new HttpClient(testConnector);
+            PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(GetEndpoint(), GetEnvironment(), GetConnectionId(), () => GetJWTToken(), httpClient) { SessionId = "9315f316-5182-4260-b333-7a43a36ca3b0" };
+            
             PowerFxConfig config = new PowerFxConfig();
-            HttpClient httpClient = live ? new HttpClient() : new HttpClient(_testConnector); // With _testConnector, we can mock the response
-
-            PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(GetEndpoint(), GetEnvironment(), GetConnectionId(), () => GetJWTToken(), httpClient)
-            {
-                SessionId = "9315f316-5182-4260-b333-7a43a36ca3b0" // any GUID will work
-            };
-
+            OpenApiDocument apiDoc = testConnector._apiDocument;
             ConnectorSettings connectorSettings = GetConnectorSettings();
+            TimeZoneInfo tzi = GetTimeZoneInfo();
 
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext(GetNamespace(), client, console: _output));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext(GetNamespace(), client, console: _output, tzi: tzi));
             runtimeConfig.SetClock(new TestClockService());
-            runtimeConfig.SetTimeZone(TimeZoneInfo.Utc);
+            runtimeConfig.SetTimeZone(tzi);
 
-            return (apiDoc, config, httpClient, client, connectorSettings, runtimeConfig);
+            return (testConnector, apiDoc, config, httpClient, client, connectorSettings, runtimeConfig);
         }
 
-        internal async Task RunConnectorTestAsync(bool live, string expr, string expectedResult, string xUrls, string xBodies, string[] expectedFiles, bool displayIntellisenseResults)
+        internal async Task RunConnectorTestAsync(bool live, string expr, string expectedResult, string xUrls, string xBodies, string[] expectedFiles, bool displayIntellisenseResults, string extra = null)
         {
             _output.WriteLine($"EXPR: {expr}");
             _output.WriteLine(string.Empty);
 
-            (OpenApiDocument apiDoc, PowerFxConfig config, HttpClient httpClient, PowerPlatformConnectorClient client, ConnectorSettings connectorSettings, RuntimeConfig runtimeConfig) = GetElements(live);
+            (LoggingTestServer testConnector, OpenApiDocument apiDoc, PowerFxConfig config, HttpClient httpClient, PowerPlatformConnectorClient client, ConnectorSettings connectorSettings, RuntimeConfig runtimeConfig) = GetElements(live);
             IReadOnlyList<ConnectorFunction> funcs = config.AddActionConnector(connectorSettings, apiDoc, new ConsoleLogger(_output));
 
             RecalcEngine engine = new RecalcEngine(config);
             if (!live)
             {
-                _testConnector.SetResponseFromFiles(expectedFiles.Select(ef =>
+                testConnector.SetResponseFromFiles(expectedFiles.Select(ef =>
                     ef[3] != ':' // status code specified
                     ? ($@"Responses\{ef}", HttpStatusCode.OK)
                     : string.IsNullOrEmpty(ef.Substring(4)) // no file specified
@@ -102,7 +102,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     : ($@"Responses\{ef.Substring(4)}", (HttpStatusCode)int.Parse(ef.Substring(0, 3)))).ToArray());
             }
 
-            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);           
+
+            string network = testConnector._log.ToString();
+            string urls = string.Join("|", Regex.Matches(network, @"x-ms-request-method: (?<r>[^ \r\n]+)\s*x-ms-request-url: (?<u>[^ \r\n]+)").Select(g => $"{g.Groups["r"].Value}:{g.Groups["u"].Value}"));
+            string bodies = string.Join("|", Regex.Matches(network, @"\[body\] (?<b>.*)").Select(g => g.Groups["b"].Value.Replace("\r", string.Empty).Replace("\n", string.Empty)));
+
+            _output.WriteLine(string.Empty);
+            _output.WriteLine(network);
 
             if (string.IsNullOrEmpty(expectedResult))
             {
@@ -112,39 +119,60 @@ namespace Microsoft.PowerFx.Connectors.Tests
             {
                 Assert.IsAssignableFrom<RecordValue>(fv);
             }
-            else if (expectedResult == "IMAGE")
+            else if (expectedResult == "RAW")
             {
                 // Do nothing for now
+                // Will need to check length, depending on type (image, blob...)
             }
             else if (expectedResult.StartsWith("ERR:"))
             {
                 ErrorValue ev = Assert.IsType<ErrorValue>(fv);
-                string err = string.Join(",", ev.Errors.Select(er => er.Message));
+                string err2 = string.Join(",", ev.Errors.Select(er => er.Message));
 
                 foreach (string er in expectedResult.Substring(4).Split("|"))
                 {
-                    Assert.Contains(er, err);
+                    Assert.Contains(er, err2);
                 }
+            }
+            else if (expectedResult.StartsWith("DECIMAL:"))
+            {
+                Assert.True(fv is not ErrorValue, fv is ErrorValue ev ? $"EvalAsync Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}" : null);
+                DecimalValue decv = Assert.IsType<DecimalValue>(fv);
+
+                Assert.Equal(decimal.Parse(expectedResult.Substring(8)), decv.Value);
+            }
+            else if (expectedResult.StartsWith("DATETIME:"))
+            {
+                Assert.True(fv is not ErrorValue, fv is ErrorValue ev ? $"EvalAsync Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}" : null);
+                DateTimeValue dtv = Assert.IsType<DateTimeValue>(fv);                                
+
+                Assert.Equal(DateTime.Parse(expectedResult.Substring(9)).ToUniversalTime(), new ConvertToUTC(GetTimeZoneInfo()).ToUTC(dtv));
             }
             else
             {
                 Assert.True(fv is not ErrorValue, fv is ErrorValue ev ? $"EvalAsync Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}" : null);
                 StringValue sv = Assert.IsType<StringValue>(fv);
 
-                Assert.Equal(expectedResult, sv.Value);
+                if (expectedResult.StartsWith("STARTSWITH:"))
+                {
+                    // Not using Assert.StartsWith as in case of failure, we don't see where the issue is
+                    Assert.Equal(expectedResult.Substring(11), sv.Value.Substring(0, expectedResult.Length - 11));
+                }
+                else
+                {
+                    Assert.Equal(expectedResult, sv.Value);
+                }
             }
 
-            if (!live)
+            Assert.Equal(xUrls, urls);
+            Assert.Equal(xBodies, bodies);     
+            
+            if (!string.IsNullOrEmpty(extra))
             {
-                string network = _testConnector._log.ToString();
-                string urls = string.Join("|", Regex.Matches(network, @"x-ms-request-method: (?<r>[^ \r\n]+)\s*x-ms-request-url: (?<u>[^ \r\n]+)").Select(g => $"{g.Groups["r"].Value}:{g.Groups["u"].Value}"));                
-                string bodies = string.Join("|", Regex.Matches(network, @"\[body\] (?<b>.*)").Select(g => g.Groups["b"].Value.Replace("\r", string.Empty).Replace("\n", string.Empty)));
-
-                _output.WriteLine(string.Empty);
-                _output.WriteLine(network);
-
-                Assert.Equal(xUrls, urls);
-                Assert.Equal(xBodies, bodies);
+                foreach (string e in extra.Split("|"))
+                {
+                    Assert.Contains(e, network);
+                }
             }
 
             if (displayIntellisenseResults)
@@ -171,7 +199,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _output.WriteLine($"EXPR: {expr}");
             _output.WriteLine(string.Empty);
 
-            (OpenApiDocument apiDoc, PowerFxConfig config, HttpClient httpClient, PowerPlatformConnectorClient client, ConnectorSettings connectorSettings, RuntimeConfig runtimeConfig) = GetElements();
+            (LoggingTestServer testConnector, OpenApiDocument apiDoc, PowerFxConfig config, HttpClient httpClient, PowerPlatformConnectorClient client, ConnectorSettings connectorSettings, RuntimeConfig runtimeConfig) = GetElements();
             config.AddActionConnector(connectorSettings, apiDoc, new ConsoleLogger(_output));
 
             RecalcEngine engine = new RecalcEngine(config);
@@ -189,8 +217,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             if (!_disposedValue)
             {
                 if (disposing)
-                {
-                    _testConnector?.Dispose();
+                {                    
                 }
 
                 _disposedValue = true;

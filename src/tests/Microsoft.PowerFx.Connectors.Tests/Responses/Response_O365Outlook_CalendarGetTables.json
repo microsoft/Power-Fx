@@ -1,0 +1,42 @@
+{
+  "value": [
+    {
+      "Name": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABpnprrAAA=",
+      "DisplayName": "Birthdays",
+      "DynamicProperties": {
+        "Owner": {
+          "Name": "aurorauser01",
+          "Address": "aurorauser01@aurorafinanceintegration02.onmicrosoft.com"
+        }
+      },
+      "items": [
+      ]
+    },
+    {
+      "Name": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA=",
+      "DisplayName": "Calendar",
+      "DynamicProperties": {
+        "Owner": {
+          "Name": "aurorauser01",
+          "Address": "aurorauser01@aurorafinanceintegration02.onmicrosoft.com"
+        }
+      },
+      "items": [
+      ]
+    },
+    {
+      "Name": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA=",
+      "DisplayName": "United Kingdom holidays",
+      "DynamicProperties": {
+        "Owner": {
+          "Name": "aurorauser01",
+          "Address": "aurorauser01@aurorafinanceintegration02.onmicrosoft.com"
+        }
+      },
+      "items": [
+      ]
+    }
+  ],
+  "@odata.nextLink": null,
+  "@odata.deltaLink": null
+}

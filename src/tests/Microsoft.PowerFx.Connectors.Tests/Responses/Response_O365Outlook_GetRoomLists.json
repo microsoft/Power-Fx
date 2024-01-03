@@ -1,0 +1,13 @@
+{
+  "@odata.context": "https://outlook.office365.com/api/beta/$metadata#Collection(Microsoft.OutlookServices.EmailAddress)",
+  "value": [
+    {
+      "Name": "Seattle",
+      "Address": "seattle@aurorafinanceintegration02.onmicrosoft.com"
+    },
+    {
+      "Name": "Tokyo",
+      "Address": "tokyo@aurorafinanceintegration02.onmicrosoft.com"
+    }
+  ]
+} 
