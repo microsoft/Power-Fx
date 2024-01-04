@@ -291,9 +291,9 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Collect)
             },
             {
-                BuiltinFunctionsCore.CollectT,
+                BuiltinFunctionsCore.CollectS,
                 StandardErrorHandlingAsync<FormulaValue>(
-                    BuiltinFunctionsCore.CollectT.Name,
+                    BuiltinFunctionsCore.CollectS.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,

@@ -260,17 +260,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             int skip = 1;
 
+            MutationUtils.CheckSemantics(binding, this, args, argTypes, errors);
             MutationUtils.CheckForReadOnlyFields(argTypes[0], args.Skip(skip).ToArray(), argTypes.Skip(skip).ToArray(), errors);
-
-            // !!! 
-            //if ((binding.NameResolver?.CurrentEntity as ControlInfo)?.Template.IsDataComponent == true && !isConnected)
-            //{
-            //    // Stateful actions including using in-memory data sources are not allowed within data components.
-            //    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.err);
-            //}
-
-            // !!!
-            //FunctionUtils.ManipulatesCollectionsCheckSemantics(binding, this, args, argTypes, errors);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -332,7 +323,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return Arg0RequiresAsync(callNode, binding);
         }
 
-        public static DType GetCollectedTypeForGivenArgType(PowerFx.Features features, DType argType)
+        public static DType GetCollectedTypeForGivenArgType(Features features, DType argType)
         {
             Contracts.Assert(argType.IsValid);
 

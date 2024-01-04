@@ -36,10 +36,10 @@ Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{F
 Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
 
 >> Collect(t1, "x")
-Errors: Error 12-15: The specified column 'Value' does not exist.|Error 0-16: The function 'Collect' has some invalid arguments.
+Errors: Error 0-16: The function 'Collect' has some invalid arguments.|Error 12-15: Invalid argument type. Cannot use Text values in this context.
 
 >> Collect(t1, 1)
-Errors: Error 12-13: The specified column 'Value' does not exist.|Error 0-14: The function 'Collect' has some invalid arguments.
+Errors: Error 0-14: The function 'Collect' has some invalid arguments.|Error 12-13: Invalid argument type. Cannot use Decimal values in this context.
 
 >> Collect(Foo,r2)
 Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-14: The specified column 'Field1' does not exist.|Error 0-15: The function 'Collect' has some invalid arguments.
