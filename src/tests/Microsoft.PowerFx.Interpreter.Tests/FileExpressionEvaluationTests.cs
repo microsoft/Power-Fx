@@ -176,7 +176,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);
 
             var config = new PowerFxConfig(features) { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
-            config.SymbolTable.EnableMutationFunctions();
+            config.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
 
             var rc = new RuntimeConfig();

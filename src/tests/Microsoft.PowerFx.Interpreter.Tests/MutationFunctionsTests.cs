@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var parameters = RecordType.Empty()
                 .Add("rType", rType);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.EnableMutationFunctions();
             engine.Config.SymbolTable.AddConstant("t", t);
 
             if (toDisplay)
@@ -200,7 +200,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var parameters = RecordType.Empty()
                 .Add("rType", rType);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.EnableMutationFunctions();
             engine.Config.SymbolTable.AddConstant("t", t);
 
             var types = new List<FormulaType>()
@@ -246,7 +246,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new Engine(new PowerFxConfig());
             engine.Config.SymbolTable.AddVariable("namedFormula", new TableType(TestUtils.DT("*[Value:n]")), mutable: false);
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.EnableMutationFunctions();
             var check = engine.Check(expression, options: _opts);
             Assert.False(check.IsSuccess);
         }
@@ -262,7 +262,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new Engine(new PowerFxConfig());
             engine.Config.SymbolTable.AddVariable("varTable", new TableType(TestUtils.DT("*[Value:s]")), mutable: true);
             engine.Config.SymbolTable.AddVariable("varRecord", new KnownRecordType(TestUtils.DT("![x:*[Value:s]]")), mutable: true);
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.EnableMutationFunctions();
             var check = engine.Check(expression, options: _opts);
             Assert.True(check.IsSuccess);
         }
@@ -292,7 +292,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("flavor", FormulaType.String))
                 .Add(new NamedFormulaType("quantity", fv.Type));
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.EnableMutationFunctions();
             engine.UpdateVariable("checktable", FormulaValue.NewTable(rType));
 
             var check = engine.Check(expr, options: new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true });
@@ -321,7 +321,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("subject", FormulaType.String))
                 .Add(new NamedFormulaType("poly", FormulaType.Build(DType.Polymorphic)));
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.EnableMutationFunctions();
             engine.UpdateVariable("t1", FormulaValue.NewTable(rType));
 
             var check = engine.Check(expr, options: new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true });

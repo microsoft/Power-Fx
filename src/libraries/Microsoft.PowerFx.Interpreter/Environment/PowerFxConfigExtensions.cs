@@ -34,6 +34,7 @@ namespace Microsoft.PowerFx
         /// Enable all multation functions which allows scripts to execute side effect behavior.
         /// </summary>
         /// <param name="symbolTable"></param>
+        [Obsolete("This will be removed. Enable mutation functions by calling PowerFxConfig.EnableMutationFunctions()")]
         public static void EnableMutationFunctions(this SymbolTable symbolTable)
         {
             symbolTable.AddFunction(new RecalcEngineSetFunction());
@@ -41,6 +42,21 @@ namespace Microsoft.PowerFx
             symbolTable.AddFunction(new RemoveFunction());
             symbolTable.AddFunction(new ClearFunction());
             symbolTable.AddFunction(new ClearCollectFunction());
+        }
+
+        public static void EnableMutationFunctions(this PowerFxConfig config)
+        {
+            config.SymbolTable.AddFunction(new RecalcEngineSetFunction());
+            config.SymbolTable.AddFunction(new PatchFunction());
+            config.SymbolTable.AddFunction(new RemoveFunction());
+            config.SymbolTable.AddFunction(new ClearFunction());
+            config.SymbolTable.AddFunction(new ClearCollectFunction());
+
+            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in Library.MutationFunctions())
+            {
+                config.SymbolTable.AddFunction(func.Key);
+                config.AdditionalFunctions.Add(func.Key, func.Value);
+            }
         }
 
         [Obsolete("RegEx is still in preview. Grammar may change.")]

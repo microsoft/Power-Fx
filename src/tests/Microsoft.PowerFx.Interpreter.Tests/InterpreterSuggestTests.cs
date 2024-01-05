@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestSuggestMutationFunctions(string expression, params string[] expectedSuggestions)
         {
             var config = SuggestTests.Default;
-            config.SymbolTable.EnableMutationFunctions();
+            config.EnableMutationFunctions();
 
             var actualSuggestions = SuggestStrings(expression, config, null);
             Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet());
 
-            config.SymbolTable.EnableMutationFunctions();
+            config.EnableMutationFunctions();
 
             config.SymbolTable.AddHostObject("User", RecordType.Empty(), (sp) => RecordValue.NewRecordFromFields());
             
@@ -322,7 +322,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var config = SuggestTests.Default;
 
-            config.SymbolTable.EnableMutationFunctions();
+            config.EnableMutationFunctions();
 
             // With Input record type param
             config.AddFunction(new TestRecordInputCustomFunction());

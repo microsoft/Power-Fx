@@ -267,7 +267,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var symbol = engine._symbolTable;
 
-            symbol.EnableMutationFunctions();
+            engine.Config.EnableMutationFunctions();
 
             engine.UpdateVariable("t1", t1);
             engine.UpdateVariable("r1", r1);

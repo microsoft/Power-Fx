@@ -26,10 +26,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbols = new SymbolTable();
 
             var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
 
             var engine = new RecalcEngine();
             var runtimeConfig = new SymbolValues(symbols);
+            engine.Config.EnableMutationFunctions();
             runtimeConfig.Set(slot, databaseTable);
             
             CheckResult check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
@@ -57,10 +57,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbols = new SymbolTable();
 
             var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
 
             var engine = new RecalcEngine();
             var runtimeConfig = new SymbolValues(symbols);
+            engine.Config.EnableMutationFunctions();
             runtimeConfig.Set(slot, databaseTable);
 
             CheckResult check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
@@ -85,11 +85,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbols = new SymbolTable();
 
             var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
 
             var engine = new RecalcEngine();
             var runtimeConfig = new SymbolValues(symbols);
 
+            engine.Config.EnableMutationFunctions();
             engine.UpdateVariable("x", TableValue.NewTable(RecordType.Empty()));
             runtimeConfig.Set(slot, databaseTable);
 
@@ -106,7 +106,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbols = new SymbolTable();
 
             var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
 
             // Temporary feature to unblock Cards team
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -114,6 +113,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #pragma warning restore CS0612 // Type or member is obsolete
             var engine = new RecalcEngine(config);
             var runtimeConfig = new SymbolValues(symbols);
+
+            config.EnableMutationFunctions();
 
             engine.UpdateVariable("x", TableValue.NewTable(RecordType.Empty()));
             runtimeConfig.Set(slot, databaseTable);
@@ -136,11 +137,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbols = new SymbolTable();
 
             var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
 
             var engine = new RecalcEngine();
             var runtimeConfig = new SymbolValues(symbols);
 
+            engine.Config.EnableMutationFunctions();
             engine.UpdateVariable("x", TableValue.NewTable(RecordType.Empty()));
             runtimeConfig.Set(slot, databaseTable);
 

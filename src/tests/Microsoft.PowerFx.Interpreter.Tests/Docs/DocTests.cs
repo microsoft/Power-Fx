@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.Docs
             config.EnableRegExFunctions();
 #pragma warning restore CS0618 // Type or member is obsolete
 
-            config.SymbolTable.EnableMutationFunctions();
+            config.EnableMutationFunctions();
 
             var engine = new RecalcEngine(config);
 

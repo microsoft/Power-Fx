@@ -280,28 +280,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Char)
             },
             {
-                BuiltinFunctionsCore.Collect,
-                StandardErrorHandlingAsync<FormulaValue>(
-                    BuiltinFunctionsCore.Collect.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: DeferRuntimeTypeChecking,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Collect)
-            },
-            {
-                BuiltinFunctionsCore.CollectS,
-                StandardErrorHandlingAsync<FormulaValue>(
-                    BuiltinFunctionsCore.CollectS.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: DeferRuntimeTypeChecking,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Collect)
-            },
-            {
                 BuiltinFunctionsCore.ColorValue,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.ColorValue.Name,

@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var listT = new List<RecordValue>();
 
-            symbol.EnableMutationFunctions();
+            engine.Config.EnableMutationFunctions();
 
             RecordValue r1 = FormulaValue.NewRecordFromFields(
                 new NamedValue("Field1", FormulaValue.New(1)),
@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void CheckMutationFunctionWithLazyTypesTest(string expr, bool isCheckSuccess)
         {
             var engine = new RecalcEngine();
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.EnableMutationFunctions();
             engine.Config.EnableSetFunction();
             var options = new ParserOptions() { AllowsSideEffects = true };
             

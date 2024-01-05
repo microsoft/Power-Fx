@@ -122,13 +122,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Define symbol table
             var symbolTable = new SymbolTable();
-            symbolTable.EnableMutationFunctions();
 
             if (setVariableValueInEngine)      
             {
                 engine.UpdateVariable(varName, formulaValue);
             }
 
+            engine.Config.EnableMutationFunctions();
             var check = engine.Check(expressionText, parserOptions, symbolTable: symbolTable);
             Assert.True(check.IsSuccess);
             var run = check.GetEvaluator();

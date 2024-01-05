@@ -75,8 +75,7 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            config.SymbolTable.EnableMutationFunctions();
-
+            config.EnableMutationFunctions();
             config.EnableSetFunction();
             config.EnableJsonFunctions();
 
