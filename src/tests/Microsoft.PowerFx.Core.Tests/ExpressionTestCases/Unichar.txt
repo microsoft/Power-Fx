@@ -1,0 +1,15 @@
+﻿>> Unichar(955)
+"λ"
+
+>> Unichar(65)
+"A"
+
+>> Unichar(66)
+"B"
+
+>> Unichar(0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Partial surrogate
+>> Unichar(55296)
+Error()

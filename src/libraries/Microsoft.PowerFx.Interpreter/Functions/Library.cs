@@ -1729,6 +1729,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: RoundDown)
             },
             {
+                BuiltinFunctionsCore.Unichar,
+                StandardErrorHandling<NumberValue>(
+                    BuiltinFunctionsCore.Unichar.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactValueType<NumberValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Unichar)
+            },
+            {
                 BuiltinFunctionsCore.Upper,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Upper.Name,

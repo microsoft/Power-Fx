@@ -1187,6 +1187,27 @@ namespace Microsoft.PowerFx.Functions
             return resultDateTime.UtcDateTime;
         }
 
+        public static FormulaValue Unichar(IRContext irContext, NumberValue[] args)
+        {
+            double number = args[0].Value;
+
+            if (number > 0 && number <= 1114111)
+            {
+                // TODO: Handle partial surrogates
+                string unicode = char.ConvertFromUtf32((int)number);
+                return new StringValue(irContext, unicode);
+            }
+            else
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = $"Input value {number} falls outside the allowable range",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.InvalidArgument
+                });
+            }
+        }
+
         internal static bool TryGetInt(FormulaValue value, out int outputValue)
         {
             double inputValue;

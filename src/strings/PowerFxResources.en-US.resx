@@ -4377,4 +4377,15 @@
     <value>**Disclaimer:** AI-generated content can have mistakes. Make sure it's accurate and appropriate before using it. [See terms](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
     <comment>The disclaimer we show on AI functions. This is github flavored markdown. So ** marks text in bold. </comment>
   </data>
+  <data name="AboutUnichar" xml:space="preserve">
+    <value>Converts number to Unicode string</value>
+    <comment>Description of 'Unichar' function.</comment>
+  </data>
+  <data name="AboutUnichar_number" xml:space="preserve">
+    <value>number to be converted into unicode</value>
+  </data>
+  <data name="UnicharArg1" xml:space="preserve">
+    <value>number</value>
+    <comment>function_parameter - First parameter for the Unichar function - the number to be converted into unicode string</comment>
+  </data>
 </root>
