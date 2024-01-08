@@ -51,6 +51,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 return;
             }
 
+            // Checks for something similar to Collect(x.a, 4).
             if (!binding.TryCastToFirstName(targetArg, out firstNameInfo))
             {
                 return;

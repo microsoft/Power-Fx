@@ -360,7 +360,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // Collect(collection:*[...], item1, ...)
-    internal sealed class CollectScalarFunction : CollectFunction
+    internal class CollectScalarFunction : CollectFunction
     {
         protected override bool IsScalar => true;
 

@@ -31,8 +31,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Collect(t, r1)", 1)]
         [InlineData("Collect(t, r1);Collect(t, r1);Collect(t, r1)", 3)]
         [InlineData("Collect(t, r1);Collect(t, {})", 2)]
-
-        //[InlineData("Collect(t, r1);Collect(t, Blank())", 1)]
+        [InlineData("Collect(t, r1);Collect(t, Blank())", 1)]
         public async Task AppendCountTest(string script, int expected)
         {
             var engine = new RecalcEngine();

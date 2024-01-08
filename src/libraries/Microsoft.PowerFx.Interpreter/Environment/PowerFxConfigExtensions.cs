@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 
@@ -30,32 +31,43 @@ namespace Microsoft.PowerFx
             powerFxConfig.AddFunction(new RecalcEngineSetFunction());
         }
 
-        /// <summary>
-        /// Enable all multation functions which allows scripts to execute side effect behavior.
-        /// </summary>
-        /// <param name="symbolTable"></param>
-        [Obsolete("This will be removed. Enable mutation functions by calling PowerFxConfig.EnableMutationFunctions()")]
-        public static void EnableMutationFunctions(this SymbolTable symbolTable)
+        private static IEnumerable<TexlFunction> MutationFunctionsList()
         {
-            symbolTable.AddFunction(new RecalcEngineSetFunction());
-            symbolTable.AddFunction(new PatchFunction());
-            symbolTable.AddFunction(new RemoveFunction());
-            symbolTable.AddFunction(new ClearFunction());
-            symbolTable.AddFunction(new ClearCollectFunction());
+            return new TexlFunction[]
+            {
+                new CollectImpl(),
+                new CollectScalarImpl(),
+                new RecalcEngineSetFunction(),
+                new PatchFunction(),
+                new RemoveFunction(),
+                new ClearFunction(),
+                new ClearCollectFunction(),
+            };
         }
 
+        /// <summary>
+        /// Enable all multation functions which allows scripts to execute side effect behavior.
+        /// This will add the functions to the <see cref="SymbolTable"/>.
+        /// </summary>
+        /// <param name="symbolTable"></param>
+        public static void EnableMutationFunctions(this SymbolTable symbolTable)
+        {
+            foreach (var function in MutationFunctionsList())
+            {
+                symbolTable.AddFunction(function);
+            }
+        }
+
+        /// <summary>
+        /// Enable all multation functions which allows scripts to execute side effect behavior.
+        /// This will add the functions to the <see cref="PowerFxConfig.SymbolTable"/>.
+        /// </summary>
+        /// <param name="config"></param>
         public static void EnableMutationFunctions(this PowerFxConfig config)
         {
-            config.SymbolTable.AddFunction(new RecalcEngineSetFunction());
-            config.SymbolTable.AddFunction(new PatchFunction());
-            config.SymbolTable.AddFunction(new RemoveFunction());
-            config.SymbolTable.AddFunction(new ClearFunction());
-            config.SymbolTable.AddFunction(new ClearCollectFunction());
-
-            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in Library.MutationFunctions())
+            foreach (var function in MutationFunctionsList())
             {
-                config.SymbolTable.AddFunction(func.Key);
-                config.AdditionalFunctions.Add(func.Key, func.Value);
+                config.SymbolTable.AddFunction(function);
             }
         }
 

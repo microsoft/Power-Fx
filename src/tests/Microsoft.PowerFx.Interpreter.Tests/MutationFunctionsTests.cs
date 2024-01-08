@@ -328,5 +328,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.Equal(isSuccess, check.IsSuccess);
         }
+
+        [Fact]
+        public void SymbolTableEnableMutationFuntionsTest()
+        {
+            var expr = "Collect()";
+            var engine = new RecalcEngine();
+
+            var symbolTable = new SymbolTable();
+            var symbolTableEnabled = new SymbolTable();
+
+            symbolTableEnabled.EnableMutationFunctions();
+
+            // Mutation functions not listed.
+            var check = engine.Check(expr, symbolTable: symbolTable);
+            Assert.DoesNotContain(check.Symbols.Functions.FunctionNames, f => f == "Collect");
+
+            // Mutation functions is listed.
+            var checkEnabled = engine.Check(expr, symbolTable: symbolTableEnabled);
+            Assert.Contains(checkEnabled.Symbols.Functions.FunctionNames, f => f == "Collect");
+        }
     }
 }
