@@ -1,9 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Linq;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
@@ -327,6 +330,48 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check(expr, options: new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true });
 
             Assert.Equal(isSuccess, check.IsSuccess);
+        }
+
+        [Fact]
+        public void DontCopyRerivedRecordValuesTest()
+        {
+            var expr = "Collect(t, x)";
+            var engine = new RecalcEngine();
+
+            var rType = RecordType.Empty()
+                .Add(new NamedFormulaType("field", FormulaType.String));
+
+            TableValue t = FormulaValue.NewTable(rType);
+            RecordValue x = new FileObjectRecordValue("x", IRContext.NotInSource(rType), new List<NamedValue>());
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("x", x);
+            engine.UpdateVariable("t", t);
+
+            var check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true });
+
+            Assert.True(check.IsSuccess);
+
+            var result = check.GetEvaluator().Eval();
+
+            Assert.IsType<FileObjectRecordValue>(result);
+            Assert.True(ReferenceEquals(x, result));
+
+            var fileObjectRecordValue = (FileObjectRecordValue)result;
+
+            // Derived object did not lose its properties
+            Assert.Equal("x", fileObjectRecordValue.SomeProperty);
+        }
+
+        internal class FileObjectRecordValue : InMemoryRecordValue
+        {
+            public string SomeProperty { get; set; }
+
+            public FileObjectRecordValue(string someProperty, IRContext irContext, IEnumerable<NamedValue> fields)
+                : base(irContext, fields)
+            {
+                SomeProperty = someProperty;
+            }
         }
     }
 }
