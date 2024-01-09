@@ -4,12 +4,79 @@
 >> Unichar(65)
 "A"
 
+>> Unichar(6500/100)
+"A"
+
 >> Unichar(66)
 "B"
 
->> Unichar(0)
-Error({Kind:ErrorKind.InvalidArgument})
+>> Unichar(119137)
+"𝅘𝅥𝅯"
+
+// using result from hex2dec
+>> Unichar(Hex2Dec("1F600"))
+"😀"
+
+// true (1) returns a value
+>> IsBlank(Unichar(true))
+false
 
 // Partial surrogate
 >> Unichar(55296)
-Error()
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Unichar(57343)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Out of bounds
+>> Unichar(0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Unichar(-42)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Unichar(1114112)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Unichar(2114111)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Unichar(-1114112)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// String input tests
+>> Unichar("67")
+"C"
+
+>> Unichar("abc")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Unichar("-1")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Unichar("65.1")
+"A"
+
+// Decimal values test
+>> Unichar(68.1234)
+"D"
+
+// Decimal values test
+>> Unichar(0.1)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Unichar(119137.99)
+"𝅘𝅥𝅯"
+
+// ******** NULL and ERROR PARAMETERS ********
+>> Unichar(Blank())
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> IsBlank(Unichar(Blank()))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> IsError(Unichar(Blank()))
+true
+
+>> Unichar(1/0)
+Error({Kind:ErrorKind.Div0})

@@ -1191,13 +1191,18 @@ namespace Microsoft.PowerFx.Functions
         {
             double number = args[0].Value;
 
-            if (number > 0 && number <= 1114111)
-            {
-                // TODO: Handle partial surrogates
-                string unicode = char.ConvertFromUtf32((int)number);
-                return new StringValue(irContext, unicode);
-            }
-            else
+            // Unicode upper and lower bounds
+            const double lowerBound = 1; // Excel returns error for Unichar(0)
+            const double upperBound = 1114111; // 0x10FFFF
+
+            // https://unicode.org/glossary/#surrogate_pair
+            const double surrogateMin = 55296; // 0xD800
+            const double surrogateMax = 57343; // 0xDFFF
+
+            bool isOutOfRange = number < lowerBound || number > upperBound;
+            bool isPartialSurrogate = number >= surrogateMin && number <= surrogateMax;
+
+            if (isOutOfRange)
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
@@ -1205,6 +1210,20 @@ namespace Microsoft.PowerFx.Functions
                     Span = irContext.SourceContext,
                     Kind = ErrorKind.InvalidArgument
                 });
+            }
+            else if (isPartialSurrogate)
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = $"Input value {number} is an invalid argument",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.InvalidArgument
+                });
+            }
+            else
+            {
+                string unicode = char.ConvertFromUtf32((int)Math.Floor(number));
+                return new StringValue(irContext, unicode);
             }
         }
 

@@ -1734,9 +1734,9 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Unichar.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: ExactValueType<NumberValue>,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Unichar)
             },
             {
@@ -1943,6 +1943,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.TanT,
                 StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.TanT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Tan], ReplaceBlankWithFloatZero)
+            },
+            {
+                BuiltinFunctionsCore.UnicharT,
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.UnicharT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Unichar], ReplaceBlankWithFloatZero)
             },
         };
 
