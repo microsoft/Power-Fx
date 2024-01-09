@@ -9,8 +9,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 {
     public class TestLanguageServer : LanguageServer
     {
-        public TestLanguageServer(ITestOutputHelper output, SendToClient sendToClient, IPowerFxScopeFactory scopeFactory)
-            : base(sendToClient, scopeFactory, (string s) => output.WriteLine(s))
+        public TestLanguageServer(ITestOutputHelper output, SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, INLHandlerFactory nlHandlerFactory = null)
+            : base(sendToClient, scopeFactory, (string s) => output.WriteLine(s), nlHandlerFactory)
         {            
         }
 

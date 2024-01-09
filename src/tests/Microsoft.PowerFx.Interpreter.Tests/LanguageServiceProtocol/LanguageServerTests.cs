@@ -1494,11 +1494,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 testNLHandler = null;
             }
 
-            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory)
-            {
-                NL2FxImplementation = testNLHandler
-            };
-
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory, new TestNlHandlerFactory(testNLHandler));
             List<Exception> exList = new List<Exception>();
             testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
@@ -1668,10 +1664,27 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             });
         }
 
+        private class TestNlHandlerFactory : INLHandlerFactory
+        {
+            private readonly TestNLHandler _handler;
+
+            public TestNlHandlerFactory(TestNLHandler handler)
+            {
+                _handler = handler;
+            }
+
+            public NLHandler GetNLHandler(IPowerFxScope scope)
+            {
+                return _handler;
+            }
+        }
+
         [Theory]
-        [InlineData("Score < 50", true)]
-        [InlineData("missing < 50", false)] // doesn't compile, should get filtered out by LSP 
-        public void TestNL2FX(string expectedExpr, bool success)
+        [InlineData("Score < 50", true, true)]
+        [InlineData("missing < 50", false, true)] // doesn't compile, should get filtered out by LSP 
+        [InlineData("Score < 50", true, false)]
+        [InlineData("missing < 50", false, false)]
+        public void TestNL2FX(string expectedExpr, bool success, bool useFactory)
         {
             var documentUri = "powerfx://app?context=1";
 
@@ -1687,9 +1700,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => dict[documentUri]);
 
             var testNLHandler = new TestNLHandler { Expected = expectedExpr };
-            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory)
+            var testServer = useFactory ? new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory, new TestNlHandlerFactory(testNLHandler)) : new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory)
             {
-                NL2FxImplementation = testNLHandler 
+                NL2FxImplementation = testNLHandler,  
             };
 
             List<Exception> exList = new List<Exception>();
@@ -1768,10 +1781,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => dict[documentUri]);
 
             var testNLHandler = new TestNLHandler { Throw = true }; // simulate error
-            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory)
-            {
-                NL2FxImplementation = testNLHandler
-            };
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory, new TestNlHandlerFactory(testNLHandler));
 
             List<Exception> exList = new List<Exception>();
             testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
@@ -1803,10 +1813,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => dict[documentUri]);
 
             var testNLHandler = new TestNLHandler { Expected = expectedExpr };
-            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory)
-            {
-                NL2FxImplementation = testNLHandler
-            };
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory, new TestNlHandlerFactory(testNLHandler));
 
             List<Exception> exList = new List<Exception>();
             testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
