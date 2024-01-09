@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -40,9 +41,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         public abstract string GetConnectionId();
 
-        public virtual ConnectorSettings GetConnectorSettings(ConnectorCompatibility compatibility = ConnectorCompatibility.PowerAppsCompatibility)
+        public virtual ConnectorSettings GetConnectorSettings(bool returnUnknownRecordFieldsAsUntypedObjects = false)
         {
-            return new ConnectorSettings(GetNamespace()) { Compatibility = compatibility, IncludeInternalFunctions = true };
+            return new ConnectorSettings(GetNamespace()) 
+            { 
+                Compatibility = returnUnknownRecordFieldsAsUntypedObjects ? ConnectorCompatibility.SwaggerCompatibility : ConnectorCompatibility.PowerAppsCompatibility, 
+                IncludeInternalFunctions = true, 
+                ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldsAsUntypedObjects 
+            };
         }
 
         public virtual TimeZoneInfo GetTimeZoneInfo() => TimeZoneInfo.Utc;
@@ -65,7 +71,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             return funcs;
         }
 
-        internal (LoggingTestServer testConnector, OpenApiDocument apiDoc, PowerFxConfig config, HttpClient httpClient, PowerPlatformConnectorClient client, ConnectorSettings connectorSettings, RuntimeConfig runtimeConfig) GetElements(bool live = false)
+        internal (LoggingTestServer testConnector, OpenApiDocument apiDoc, PowerFxConfig config, HttpClient httpClient, PowerPlatformConnectorClient client, ConnectorSettings connectorSettings, RuntimeConfig runtimeConfig) GetElements(bool live = false, bool returnUO = false)
         {
             var testConnector = new LoggingTestServer(_swaggerFile, live);                                  
             HttpClient httpClient = new HttpClient(testConnector);
@@ -73,7 +79,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             
             PowerFxConfig config = new PowerFxConfig();
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            ConnectorSettings connectorSettings = GetConnectorSettings();
+            ConnectorSettings connectorSettings = GetConnectorSettings(returnUO);
             TimeZoneInfo tzi = GetTimeZoneInfo();
 
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext(GetNamespace(), client, console: _output, tzi: tzi));
@@ -210,6 +216,20 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string suggestionsStr = string.Join("|", suggestions.Cast<IntellisenseSuggestion>().Select(s => DisplaySuggestion(s)));
 
             Assert.Equal(expectedSuggestions, suggestionsStr);
+        }
+
+        internal static void EmptyFolder(string folder)
+        {
+            try
+            {
+                Directory.CreateDirectory(folder);
+                Directory.Delete(folder, true);
+                Directory.CreateDirectory(folder);
+            }
+            catch (Exception)
+            {
+                // Ignore any problem
+            }
         }
 
         protected virtual void Dispose(bool disposing)

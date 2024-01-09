@@ -42,6 +42,13 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         public bool IncludeInternalFunctions { get; init; } = false;
 
+        /// <summary>
+        /// In Power Apps, all record fields which are not declared in the swagger file will not be part of the Power Fx response.
+        /// ReturnUnknownRecordFieldsAsUntypedObjects modifies this behavior to return all unknown fields as UntypedObjects. 
+        /// This flag is only working when Compatibility is set to ConnectorCompatibility.SwaggerCompatibility.
+        /// </summary>
+        public bool ReturnUnknownRecordFieldsAsUntypedObjects { get; init; } = false;
+
         public ConnectorCompatibility Compatibility { get; init; } = ConnectorCompatibility.Default;
     }
 
