@@ -17,14 +17,14 @@ namespace Microsoft.PowerFx.Types
         /// <summary>
         /// Convenience method to create a value from a json representation. 
         /// </summary>
-        public static FormulaValue FromJson(string jsonString, FormulaType formulaType = null, bool numberIsFloat = false)
+        public static FormulaValue FromJson(string jsonString, FormulaType formulaType = null, bool numberIsFloat = false, bool returnUnknownRecordFieldsAsUntypedObjects = false)
         {
             try
             {
                 using JsonDocument document = JsonDocument.Parse(jsonString);
                 JsonElement propBag = document.RootElement;
 
-                return FromJson(propBag, formulaType, numberIsFloat);
+                return FromJson(propBag, formulaType, numberIsFloat, returnUnknownRecordFieldsAsUntypedObjects);
             }
             catch
             {
@@ -39,8 +39,9 @@ namespace Microsoft.PowerFx.Types
         /// <param name="element"></param>
         /// <param name="formulaType">Expected formula type. We will check the Json element and formula type match if this parameter is provided.</param>
         /// <param name="numberIsFloat">Treat JSON numbers as Floats.  By default, they are treated as Decimals.</param>
-        public static FormulaValue FromJson(JsonElement element, FormulaType formulaType = null, bool numberIsFloat = false)
-        {            
+        /// <param name="returnUnknownRecordFieldsAsUntypedObjects"></param>
+        public static FormulaValue FromJson(JsonElement element, FormulaType formulaType = null, bool numberIsFloat = false, bool returnUnknownRecordFieldsAsUntypedObjects = false)
+        {
             if (formulaType is UntypedObjectType uot)
             {
                 return UntypedObjectValue.New(new JsonUntypedObject(element.Clone()));
@@ -81,21 +82,21 @@ namespace Microsoft.PowerFx.Types
                     {
                         DateTime dt2 = element.GetDateTime();
 
-                        if (dt2.Kind == DateTimeKind.Local) 
-                        { 
-                            dt2 = dt2.ToUniversalTime(); 
+                        if (dt2.Kind == DateTimeKind.Local)
+                        {
+                            dt2 = dt2.ToUniversalTime();
                         }
 
-                        if (dt2.Kind == DateTimeKind.Unspecified) 
-                        { 
-                            dt2 = new DateTime(dt2.Ticks, DateTimeKind.Utc); 
+                        if (dt2.Kind == DateTimeKind.Unspecified)
+                        {
+                            dt2 = new DateTime(dt2.Ticks, DateTimeKind.Utc);
                         }
 
                         return DateTimeValue.New(dt2);
                     }
                     else if (formulaType is DateTimeNoTimeZoneType)
                     {
-                        DateTime dt3 = element.GetDateTime(); 
+                        DateTime dt3 = element.GetDateTime();
                         return DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3));
                     }
                     else
@@ -126,7 +127,7 @@ namespace Microsoft.PowerFx.Types
                 case JsonValueKind.Object:
                     if (skipTypeValidation || formulaType is RecordType)
                     {
-                        return RecordFromJsonObject(element, formulaType as RecordType, numberIsFloat);
+                        return RecordFromJsonObject(element, formulaType as RecordType, numberIsFloat, returnUnknownRecordFieldsAsUntypedObjects);
                     }
                     else
                     {
@@ -136,8 +137,8 @@ namespace Microsoft.PowerFx.Types
                 case JsonValueKind.Array:
                     if (skipTypeValidation || formulaType is TableType)
                     {
-                        return TableFromJsonArray(element, formulaType as TableType, numberIsFloat);
-                    }                    
+                        return TableFromJsonArray(element, formulaType as TableType, numberIsFloat, returnUnknownRecordFieldsAsUntypedObjects);
+                    }
                     else
                     {
                         throw new NotImplementedException($"Expecting a TableType Json Array but got {formulaType._type.Kind}");
@@ -149,7 +150,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         // Json objects parse to records. 
-        private static RecordValue RecordFromJsonObject(JsonElement element, RecordType recordType, bool numberIsFloat = false)
+        private static RecordValue RecordFromJsonObject(JsonElement element, RecordType recordType, bool numberIsFloat = false, bool returnUnknownRecordFieldsAsUntypedObjects = false)
         {
             Contract.Assert(element.ValueKind == JsonValueKind.Object);
 
@@ -160,14 +161,21 @@ namespace Microsoft.PowerFx.Types
             {
                 var name = pair.Name;
                 var value = pair.Value;
-
-                // if TryGetFieldType fails, fieldType is set to Blank
-                if (recordType?.TryGetFieldType(name, out FormulaType fieldType) != true)
+                FormulaType fieldType = null;
+                
+                if (recordType?.TryGetFieldType(name, out fieldType) == false)
                 {
-                    fieldType = null;
+                    // if we expect a record type and the field is unknown, let's ignore it like in Power Apps
+                    if (!returnUnknownRecordFieldsAsUntypedObjects)
+                    {
+                        continue;
+                    }
+
+                    // otherwise return the field as an Untyped Object (as it's not described in the swagger file)
+                    fieldType = FormulaType.UntypedObject;
                 }
 
-                var paValue = FromJson(value, fieldType, numberIsFloat);
+                var paValue = FromJson(value, fieldType, numberIsFloat, returnUnknownRecordFieldsAsUntypedObjects);
                 fields.Add(new NamedValue(name, paValue));
                 type = type.Add(new NamedFormulaType(name, paValue.IRContext.ResultType));
             }
@@ -179,11 +187,11 @@ namespace Microsoft.PowerFx.Types
         // Parse json. 
         // [1,2,3]  is a single column table, actually equivalent to: 
         // [{Value : 1, Value: 2, Value :3 }]
-        internal static FormulaValue TableFromJsonArray(JsonElement array, TableType tableType, bool numberIsFloat = false)
+        internal static FormulaValue TableFromJsonArray(JsonElement array, TableType tableType, bool numberIsFloat = false, bool returnUnknownRecordFieldsAsUntypedObjects = false)
         {
             Contract.Assert(array.ValueKind == JsonValueKind.Array);
 
-            var records = new List<RecordValue>();
+            var records = new List<RecordValue>();            
 
             // Single Column table (e.g. [1,2,3]) Pattern for table is unique
             // since in that case nested elements are not object and hence needs to be handled differently.
@@ -194,7 +202,7 @@ namespace Microsoft.PowerFx.Types
             for (var i = 0; i < array.GetArrayLength(); ++i)
             {
                 JsonElement element = array[i];
-                var val = GuaranteeRecord(FromJson(element, ft, numberIsFloat));
+                var val = GuaranteeRecord(FromJson(element, ft, numberIsFloat, returnUnknownRecordFieldsAsUntypedObjects));
 
                 records.Add(val);
             }
@@ -213,9 +221,9 @@ namespace Microsoft.PowerFx.Types
                 foreach (var record in records)
                 {
                     typeUnion = DType.Union(
-                        GuaranteeRecord(record).IRContext.ResultType._type, 
-                        typeUnion, 
-                        useLegacyDateTimeAccepts: false, 
+                        GuaranteeRecord(record).IRContext.ResultType._type,
+                        typeUnion,
+                        useLegacyDateTimeAccepts: false,
                         features: Features.None /* Use more strict union rules */);
                 }
 

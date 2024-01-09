@@ -555,7 +555,7 @@ namespace Microsoft.PowerFx.Connectors
                         return new ConnectorType(schema, openApiParameter, recordType, hiddenRecordType, connectorTypes.ToArray(), hiddenConnectorTypes.ToArray());
                     }
 
-                default:
+                default:                    
                     throw new NotImplementedException($"Unsupported schema type {schema.Type}");
             }
         }
@@ -818,7 +818,10 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (prm.Value is OpenApiDateTime oadt && fv is DateTimeValue dtv)
                 {
-                    if (forceString && prm.Key == "api-version")
+                    // https://github.com/microsoft/OpenAPI.NET/issues/533
+                    // https://github.com/microsoft/Power-Fx/pull/1987 - https://github.com/microsoft/Power-Fx/issues/1982
+                    // api-version, x-ms-api-version, X-GitHub-Api-Version...
+                    if (forceString && prm.Key.EndsWith("api-version", StringComparison.OrdinalIgnoreCase))
                     {
                         fv = FormulaValue.New(dtv.GetConvertedValue(TimeZoneInfo.Utc).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
                     }
