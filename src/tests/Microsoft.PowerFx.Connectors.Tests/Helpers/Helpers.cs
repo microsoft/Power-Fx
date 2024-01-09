@@ -32,10 +32,12 @@ namespace Microsoft.PowerFx.Tests
         // returns byte[] or string depending on name extension
         public static object ReadStream(string name)
         {
+            string[] byteArrayExtensions = new string[] { ".jpeg", ".jpg", ".png", ".pdf" };
+
             using (var stream = GetStream(name))
             {
                 // return byte[] for images
-                if (name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
+                if (byteArrayExtensions.Any(ext => name.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
                 {
                     using var memoryStream = new MemoryStream();
                     stream.CopyTo(memoryStream);

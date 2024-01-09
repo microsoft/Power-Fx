@@ -14,6 +14,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
     [ThreadSafeImmutable]
     internal abstract class FormulaValueSerializer
     {
+        internal const string UtcDateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffZ";
+        internal const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fff";
+
         internal abstract string GetResult();
 
         internal abstract void StartSerialization(string referenceId);
@@ -43,6 +46,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
         protected abstract void WriteBooleanValue(bool booleanValue);
 
         protected abstract void WriteDateTimeValue(DateTime dateTimeValue);
+
+        protected abstract void WriteDateTimeValueNoTimeZone(DateTime dateTimeValue);
 
         protected abstract void WriteDateValue(DateTime dateValue);
 
@@ -234,7 +239,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                         }
                         else if (propertySchema.Format == "date-no-tz")
                         {
-                            WriteDateValue(dtv.GetConvertedValue(TimeZoneInfo.Utc));
+                            WriteDateTimeValueNoTimeZone(((PrimitiveValue<DateTime>)dtv).Value);
                         }
                         else
                         {

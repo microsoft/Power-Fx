@@ -9,4 +9,4 @@ call buildLocalPackages.cmd
 @echo  ^<add key="Local" value="%~dp0outputpackages" /^>
 @echo .  
 @echo 2) Set your current PowerFx version to 
-@echo  1.3.0-local
+@echo  1.99.0-local

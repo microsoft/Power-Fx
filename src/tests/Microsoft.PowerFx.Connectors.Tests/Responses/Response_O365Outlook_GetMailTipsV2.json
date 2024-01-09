@@ -1,0 +1,15 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#Collection(microsoft.graph.mailTips)",
+  "value": [
+    {
+      "mailboxFull": false,
+      "externalMemberCount": 0,
+      "isModerated": false,
+      "maxMessageSize": 37748736,
+      "emailAddress": {
+        "name": "",
+        "address": "aurorauser01@aurorafinanceintegration02.onmicrosoft.com"
+      }
+    }
+  ]
+}

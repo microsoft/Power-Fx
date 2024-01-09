@@ -79,12 +79,23 @@ namespace Microsoft.PowerFx.Types
                     }
                     else if (formulaType is DateTimeType)
                     {
-                        DateTime dt2 = element.GetDateTime(); // Kind is Local
+                        DateTime dt2 = element.GetDateTime();
+
+                        if (dt2.Kind == DateTimeKind.Local) 
+                        { 
+                            dt2 = dt2.ToUniversalTime(); 
+                        }
+
+                        if (dt2.Kind == DateTimeKind.Unspecified) 
+                        { 
+                            dt2 = new DateTime(dt2.Ticks, DateTimeKind.Utc); 
+                        }
+
                         return DateTimeValue.New(dt2);
                     }
                     else if (formulaType is DateTimeNoTimeZoneType)
                     {
-                        DateTime dt3 = element.GetDateTime(); // Kind is Local
+                        DateTime dt3 = element.GetDateTime(); 
                         return DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3));
                     }
                     else

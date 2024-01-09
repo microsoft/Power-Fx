@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public virtual bool ThrowOnError { get; } = false;
 
-        internal virtual bool ReturnRawResults { get; } = false;
+        internal virtual bool ReturnRawResults { get; } = false;        
 
         public virtual ConnectorLogger ExecutionLogger { get; } = null; 
 
