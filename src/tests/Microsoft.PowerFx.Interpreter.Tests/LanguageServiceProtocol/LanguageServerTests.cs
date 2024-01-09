@@ -1702,7 +1702,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var testNLHandler = new TestNLHandler { Expected = expectedExpr };
             var testServer = useFactory ? new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory, new TestNlHandlerFactory(testNLHandler)) : new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory)
             {
-                NL2FxImplementation = testNLHandler,  
+                NL2FxImplementation = testNLHandler
             };
 
             List<Exception> exList = new List<Exception>();
