@@ -1,82 +1,97 @@
-﻿>> Unichar(955)
+﻿>> UniChar(955)
 "λ"
 
->> Unichar(65)
+>> UniChar(65)
 "A"
 
->> Unichar(6500/100)
+>> UniChar(6500/100)
 "A"
 
->> Unichar(66)
+>> UniChar(66)
 "B"
 
->> Unichar(119137)
+>> UniChar(119137)
 "𝅘𝅥𝅯"
 
 // using result from hex2dec
->> Unichar(Hex2Dec("1F600"))
+>> UniChar(Hex2Dec("1F600"))
+"😀"
+
+// UniChar(1114111) and UniChar(1114111.99) should return same value
+>> If(UniChar(1114111) = UniChar(1114111.99), UniChar(Hex2Dec("1F600")))
+"😀"
+
+// UniChar(1.001) and UniChar(1.99) should return same value
+>> If(UniChar(1.001) = UniChar(1.99), "works")
+"works"
+
+// UniChar(55295) and UniChar(55295.99) should return same value
+>> If(UniChar(55295) = UniChar(55295.99), UniChar(Hex2Dec("1F600")))
 "😀"
 
 // true (1) returns a value
->> IsBlank(Unichar(true))
+>> IsBlank(UniChar(true))
 false
 
 // Partial surrogate
->> Unichar(55296)
-Error({Kind:ErrorKind.InvalidArgument})
+>> UniChar(55296)
+Error({Kind:ErrorKind.NotApplicable})
 
->> Unichar(57343)
-Error({Kind:ErrorKind.InvalidArgument})
+>> UniChar(57343)
+Error({Kind:ErrorKind.NotApplicable})
 
 // Out of bounds
->> Unichar(0)
+>> UniChar(0)
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Unichar(-42)
+>> UniChar(0.9999)
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Unichar(1114112)
+>> UniChar(-42)
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Unichar(2114111)
+>> UniChar(1114112)
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Unichar(-1114112)
+>> UniChar(2114111)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> UniChar(-1114112)
 Error({Kind:ErrorKind.InvalidArgument})
 
 // String input tests
->> Unichar("67")
+>> UniChar("67")
 "C"
 
->> Unichar("abc")
+>> UniChar("abc")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Unichar("-1")
+>> UniChar("-1")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Unichar("65.1")
+>> UniChar("65.1")
 "A"
 
 // Decimal values test
->> Unichar(68.1234)
+>> UniChar(68.1234)
 "D"
 
 // Decimal values test
->> Unichar(0.1)
+>> UniChar(0.1)
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Unichar(119137.99)
+>> UniChar(119137.99)
 "𝅘𝅥𝅯"
 
 // ******** NULL and ERROR PARAMETERS ********
->> Unichar(Blank())
+>> UniChar(Blank())
 Error({Kind:ErrorKind.InvalidArgument})
 
->> IsBlank(Unichar(Blank()))
+>> IsBlank(UniChar(Blank()))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> IsError(Unichar(Blank()))
+>> IsError(UniChar(Blank()))
 true
 
->> Unichar(1/0)
+>> UniChar(1/0)
 Error({Kind:ErrorKind.Div0})

@@ -1187,17 +1187,18 @@ namespace Microsoft.PowerFx.Functions
             return resultDateTime.UtcDateTime;
         }
 
-        public static FormulaValue Unichar(IRContext irContext, NumberValue[] args)
+        public static FormulaValue UniChar(IRContext irContext, NumberValue[] args)
         {
-            double number = args[0].Value;
+            // Excel floors the input number
+            double number = Math.Floor(args[0].Value);
 
             // Unicode upper and lower bounds
-            const double lowerBound = 1; // Excel returns error for Unichar(0)
-            const double upperBound = 1114111; // 0x10FFFF
+            const double lowerBound = 0x1; // Excel returns error for UniChar(0)
+            const double upperBound = 0x10FFFF; // 1114111
 
             // https://unicode.org/glossary/#surrogate_pair
-            const double surrogateMin = 55296; // 0xD800
-            const double surrogateMax = 57343; // 0xDFFF
+            const double surrogateMin = 0xD800; // 55296
+            const double surrogateMax = 0xDFFF; // 57343
 
             bool isOutOfRange = number < lowerBound || number > upperBound;
             bool isPartialSurrogate = number >= surrogateMin && number <= surrogateMax;
@@ -1211,20 +1212,19 @@ namespace Microsoft.PowerFx.Functions
                     Kind = ErrorKind.InvalidArgument
                 });
             }
-            else if (isPartialSurrogate)
+            
+            if (isPartialSurrogate)
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = $"Input value {number} is an invalid argument",
+                    Message = $"Input value {number} is an invalid input",
                     Span = irContext.SourceContext,
-                    Kind = ErrorKind.InvalidArgument
+                    Kind = ErrorKind.NotApplicable
                 });
             }
-            else
-            {
-                string unicode = char.ConvertFromUtf32((int)Math.Floor(number));
-                return new StringValue(irContext, unicode);
-            }
+            
+            string unicode = char.ConvertFromUtf32((int)number);
+            return new StringValue(irContext, unicode);
         }
 
         internal static bool TryGetInt(FormulaValue value, out int outputValue)

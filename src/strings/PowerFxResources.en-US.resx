@@ -4377,26 +4377,26 @@
     <value>**Disclaimer:** AI-generated content can have mistakes. Make sure it's accurate and appropriate before using it. [See terms](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
     <comment>The disclaimer we show on AI functions. This is github flavored markdown. So ** marks text in bold. </comment>
   </data>
-  <data name="AboutUnichar" xml:space="preserve">
-    <value>Converts number to Unicode string</value>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Returns the Unicode character that is referenced by the given numeric value.</value>
     <comment>Description of 'Unichar' function.</comment>
   </data>
-  <data name="AboutUnichar_number" xml:space="preserve">
-    <value>number to be converted into unicode.</value>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Numberic value to be converted into Unicode character.</value>
   </data>
-  <data name="UnicharArg1" xml:space="preserve">
+  <data name="UniCharArg1" xml:space="preserve">
     <value>number</value>
-    <comment>function_parameter - First parameter for the Unichar function - the number to be converted into unicode string.</comment>
+    <comment>function_parameter - First parameter for the Unichar function - the numberic value to be converted into Unicode character.</comment>
   </data>
-  <data name="AboutUnicharT" xml:space="preserve">
-    <value>Converts a table of numbers to table of Unicode strings</value>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Converts a table of numbers to a table of Unicode characters.</value>
     <comment>Description of 'Unichar' function (table overload).</comment>
   </data>
-  <data name="UnicharTArg1" xml:space="preserve">
+  <data name="UniCharTArg1" xml:space="preserve">
     <value>column_of_numbers</value>
-    <comment>function_parameter - First parameter for the Unichar function -  a table column of numbers to be converted into unicode strings.</comment>
+    <comment>function_parameter - First parameter for the Unichar function -  a table column of numbers to be converted into Unicode characters.</comment>
   </data>
-  <data name="AboutUnichar_column_of_numbers" xml:space="preserve">
-    <value>a table column of numbers to be converted into unicode strings.</value>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>A table column of numbers to be converted into Unicode characters.</value>
   </data>
 </root>

@@ -136,7 +136,7 @@
     "Trim",
     "TrimEnds",
     "Trunc",
-    "Unichar",
+    "UniChar",
     "Upper",
     "Value",
     "VarP",

@@ -1729,15 +1729,15 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: RoundDown)
             },
             {
-                BuiltinFunctionsCore.Unichar,
+                BuiltinFunctionsCore.UniChar,
                 StandardErrorHandling<NumberValue>(
-                    BuiltinFunctionsCore.Unichar.Name,
+                    BuiltinFunctionsCore.UniChar.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Unichar)
+                    targetFunction: UniChar)
             },
             {
                 BuiltinFunctionsCore.Upper,
@@ -1945,8 +1945,8 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.TanT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Tan], ReplaceBlankWithFloatZero)
             },
             {
-                BuiltinFunctionsCore.UnicharT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.UnicharT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Unichar], ReplaceBlankWithFloatZero)
+                BuiltinFunctionsCore.UniCharT,
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.UniCharT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.UniChar], ReplaceBlankWithFloatZero)
             },
         };
 

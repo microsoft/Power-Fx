@@ -1,18 +1,16 @@
-﻿#SETUP: ConsistentOneColumnTableResult
-
->> Unichar([128546, 8594, 128515])
+﻿>> UniChar([128546, 8594, 128515])
 Table({Value:"😢"},{Value:"→"},{Value:"😃"})
 
->> Unichar([955, 120, 46, 120])
+>> UniChar([955, 120, 46, 120])
 Table({Value:"λ"},{Value:"x"},{Value:"."},{Value:"x"})
 
->> Unichar(Table({a:72},{a:101},{a:108},{a:108},{a:111}))
+>> UniChar(Table({a:72},{a:101},{a:108},{a:108},{a:111}))
 Table({Value:"H"},{Value:"e"},{Value:"l"},{Value:"l"},{Value:"o"})
 
 // ******** OUT-OF-RANGE and Invalid PARAMETERS:
 
->> Unichar(Table({a:36},{a:-1},{a:Hex2Dec("1F600")},{a:Blank()},{a:955}))
+>> UniChar(Table({a:36},{a:-1},{a:Hex2Dec("1F600")},{a:Blank()},{a:955}))
 Table({Value:"$"},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"😀"},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"λ"})
 
->> Unichar([-1.1, Hex2Dec("1F600"), 55296])
-Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"😀"},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+>> UniChar([-1.1, Hex2Dec("1F600"), 55296])
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"😀"},{Value:Error({Kind:ErrorKind.NotApplicable})})

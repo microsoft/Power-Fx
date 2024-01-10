@@ -13,9 +13,9 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // Unichar(arg:n) : s
-    // Corresponding Excel function: Unichar
-    internal sealed class UnicharFunction : BuiltinFunction
+    // UniChar(arg:n) : s
+    // Corresponding Excel function: UNICHAR
+    internal sealed class UniCharFunction : BuiltinFunction
     {
         public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
@@ -26,30 +26,30 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsStateless => true;
 
-        public UnicharFunction()
-            : base("Unichar", TexlStrings.AboutUnichar, FunctionCategories.Text, DType.String, 0, 1, 1, DType.Number)
+        public UniCharFunction()
+            : base("UniChar", TexlStrings.AboutUniChar, FunctionCategories.Text, DType.String, 0, 1, 1, DType.Number)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.UnicharArg1 };
+            yield return new[] { TexlStrings.UniCharArg1 };
         }
     }
 
-    // Unichar(arg:*[n]) : *[s]
-    internal sealed class UnicharTFunction : BuiltinFunction
+    // UniChar(arg:*[n]) : *[s]
+    internal sealed class UniCharTFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
 
-        public UnicharTFunction()
-            : base("Unichar", TexlStrings.AboutUnicharT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        public UniCharTFunction()
+            : base("UniChar", TexlStrings.AboutUniCharT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.UnicharTArg1 };
+            yield return new[] { TexlStrings.UniCharTArg1 };
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             fValid &= CheckNumericColumnType(context, args[0], argTypes[0], errors, ref nodeToCoercedTypeMap);
 
             // Synthesize a new return type
-            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
+            returnType = DType.CreateTable(new TypedName(DType.String, ColumnName_Value));
 
             return fValid;
         }
