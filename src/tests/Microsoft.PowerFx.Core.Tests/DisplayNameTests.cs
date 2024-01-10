@@ -765,11 +765,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("=var1", true)]
-        [InlineData("Var1", false)]
-        [InlineData("text ${var1} text", true)]
-        [InlineData("={'prop1':var1}", true)]
-        public void RenameParameterTextFirst(string expr, bool find)
+        [InlineData("=var1", "=var2", true)]
+        [InlineData("Var1", null, false)]
+        [InlineData("text ${var1} text", "text ${var2} text", true)]
+        [InlineData("={'prop1':var1}", "={'prop1':var2}", true)]
+        public void RenameParameterTextFirst(string expr, string expected, bool find)
         {
             var recalcEngine = new Engine();
             var dpath = DPath.Root;
@@ -781,6 +781,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var renamer = recalcEngine.CreateFieldRenamer(recordType, dpath.Append(new DName("var1")), new DName("var2"), options);
 
             Assert.Equal(find, renamer.Find(expr));
+
+            if (find)
+            {
+                Assert.Equal(expected, renamer.ApplyRename(expr));
+            }
         }
     }
 }
