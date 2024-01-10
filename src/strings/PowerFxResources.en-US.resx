@@ -4379,24 +4379,24 @@
   </data>
   <data name="AboutUniChar" xml:space="preserve">
     <value>Returns the Unicode character that is referenced by the given numeric value.</value>
-    <comment>Description of 'Unichar' function.</comment>
+    <comment>Description of 'UniChar' function.</comment>
   </data>
   <data name="AboutUniChar_number" xml:space="preserve">
-    <value>Numberic value to be converted into Unicode character.</value>
+    <value>Numeric value to be converted into a Unicode character.</value>
   </data>
   <data name="UniCharArg1" xml:space="preserve">
     <value>number</value>
-    <comment>function_parameter - First parameter for the Unichar function - the numberic value to be converted into Unicode character.</comment>
+    <comment>function_parameter - First argument to the UniChar function - numberic value to be converted into a Unicode character.</comment>
   </data>
   <data name="AboutUniCharT" xml:space="preserve">
-    <value>Converts a table of numbers to a table of Unicode characters.</value>
-    <comment>Description of 'Unichar' function (table overload).</comment>
+    <value>Converts a table of numeric values to a table of Unicode characters.</value>
+    <comment>Description of 'UniChar' function (table overload).</comment>
   </data>
   <data name="UniCharTArg1" xml:space="preserve">
     <value>column_of_numbers</value>
-    <comment>function_parameter - First parameter for the Unichar function -  a table column of numbers to be converted into Unicode characters.</comment>
+    <comment>function_parameter - First argument to the UniChar function - a table column of numeric values to be converted into Unicode characters.</comment>
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
-    <value>A table column of numbers to be converted into Unicode characters.</value>
+    <value>A table column of numeric values to be converted into Unicode characters.</value>
   </data>
 </root>
