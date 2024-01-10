@@ -1372,7 +1372,6 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(FormulaType.UntypedObject, rv5.GetField("Site").Type);
             Assert.Equal("Atlanta", ((UntypedObjectValue)rv5.GetField("Site")).Impl.GetString());
 
-
             // Network trace cannot be tested here as SwaggerCompatibility is enabled.
         }
 
