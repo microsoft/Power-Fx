@@ -298,9 +298,7 @@ namespace Microsoft.PowerFx.Interpreter
             }
 
             var tableValue = arg0 as TableValue;
-            var recordValue = arg1 as RecordValue;
-
-            var recordValueToAppend = (RecordValue)recordValue.MaybeShallowCopy();
+            var recordValueToAppend = (RecordValue)arg1.MaybeShallowCopy();
 
             cancellationToken.ThrowIfCancellationRequested();
             var result = await tableValue.AppendAsync(recordValueToAppend, cancellationToken).ConfigureAwait(false);
