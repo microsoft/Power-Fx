@@ -66,11 +66,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <summary>
         /// If set, provides the handler for $/nlSuggestion message.
         /// </summary>
-        public NLHandler NL2FxImplementation { get; set; }
+        public NLHandler NL2FxImplementation { get;  set; }
 
-        internal readonly INLHandlerFactory _nlHandlerFactory;
+        private INLHandlerFactory _nlHandlerFactory;
 
-        public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null, INLHandlerFactory nlHandlerFactory = null)
+        public INLHandlerFactory NLHandlerFactory
+        {
+            get => _nlHandlerFactory;
+            init => _nlHandlerFactory = value;
+        }
+
+        public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
         {
             Contracts.AssertValue(sendToClient);
             Contracts.AssertValue(scopeFactory);
@@ -79,7 +85,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             _scopeFactory = scopeFactory;
 
             _logger = logger;
-            _nlHandlerFactory = nlHandlerFactory;
         }
 
         /// <summary>
@@ -472,7 +477,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             {
                 var result = new CustomGetCapabilitiesResult();
 
-                var nl = _parent._nlHandlerFactory?.GetNLHandler(scope) ?? _parent.NL2FxImplementation;
+                var nl = GetNLHandler(_parent, scope);
                 if (nl != null)
                 {
                     result.SupportsNL2Fx = nl.SupportsNL2Fx;
@@ -492,7 +497,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             protected override CustomNL2FxResult Handle(IPowerFxScope scope, CustomNL2FxParams request)
             {
-                var nl = _parent._nlHandlerFactory?.GetNLHandler(scope) ?? _parent.NL2FxImplementation;
+                var nl = GetNLHandler(_parent, scope);
                 if (nl == null || !nl.SupportsNL2Fx)
                 {
                     throw new NotSupportedException($"NL2Fx not enabled");
@@ -545,7 +550,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             protected override CustomFx2NLResult Handle(IPowerFxScope scope, CustomFx2NLParams request)
             {
-                var nl = _parent._nlHandlerFactory?.GetNLHandler(scope) ?? _parent.NL2FxImplementation;
+                var nl = GetNLHandler(_parent, scope);
                 if (nl == null || !nl.SupportsFx2NL)
                 {
                     throw new NotSupportedException($"NL2Fx not enabled");
@@ -558,6 +563,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     .ConfigureAwait(false).GetAwaiter().GetResult();
                 return result;
             }
+        }
+
+        private static NLHandler GetNLHandler(LanguageServer server, IPowerFxScope scope)
+        {
+            return server.NLHandlerFactory?.GetNLHandler(scope) ?? server.NL2FxImplementation;
         }
 
         private void HandleCodeActionRequest(string id, string paramsJson)
