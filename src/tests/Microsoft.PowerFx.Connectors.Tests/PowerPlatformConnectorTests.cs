@@ -1202,6 +1202,56 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public async Task SQL_ExecuteStoredProc_WithUserAgent()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "tip1-shared-002.azure-apim.net",           // endpoint 
+                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
+                    "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
+                    () => "eyJ0eX...",
+                    "MyProduct/v1.2",                           // UserAgent to include
+                    httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
+            var engine = new RecalcEngine(config);
+            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
+
+            testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+
+            Assert.Equal(FormulaType.UntypedObject, result.Type);
+            Assert.True((result as UntypedObjectValue).Impl.TryGetPropertyNames(out IEnumerable<string> propertyNames));
+            Assert.Equal(3, propertyNames.Count());
+
+            string actual = testConnector._log.ToString();
+            string version = PowerPlatformConnectorClient.Version;
+            string expected = @$"POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eX...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
+ x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
+ x-ms-user-agent: MyProduct/v1.2 PowerFx/{version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""p1"":50}}
+";
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public async Task SharePointOnlineTest()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SharePoint.json");

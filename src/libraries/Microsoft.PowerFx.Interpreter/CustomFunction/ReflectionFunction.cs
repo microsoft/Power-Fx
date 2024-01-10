@@ -303,7 +303,7 @@ namespace Microsoft.PowerFx
                     return CommonErrors.CustomError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
                 }
 
-                throw e;
+                throw;
             }
 
             if (info.IsAsync)

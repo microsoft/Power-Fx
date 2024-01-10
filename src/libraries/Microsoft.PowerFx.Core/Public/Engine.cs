@@ -406,6 +406,19 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public RenameDriver CreateFieldRenamer(RecordType parameters, DPath pathToRename, DName updatedName, CultureInfo culture)
         {
+            return CreateFieldRenamer(parameters, pathToRename, updatedName, new ParserOptions() { Culture = culture });
+        }
+
+        /// <summary>
+        /// Creates a renamer instance for updating a field reference from <paramref name="parameters"/> in expressions.
+        /// </summary>
+        /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
+        /// be acecssed as top-level identifiers in the formula. Must be the names from before any rename operation is applied.</param>
+        /// <param name="pathToRename">Path to the field to rename.</param>
+        /// <param name="updatedName">New name. Replaces the last segment of <paramref name="pathToRename"/>.</param>
+        /// <param name="options">Parser option to support TextFirst (if necessary) and culture.</param>
+        public RenameDriver CreateFieldRenamer(RecordType parameters, DPath pathToRename, DName updatedName, ParserOptions options)
+        {
             Contracts.CheckValue(parameters, nameof(parameters));
             Contracts.CheckValid(pathToRename, nameof(pathToRename));
             Contracts.CheckValid(updatedName, nameof(updatedName));
@@ -419,7 +432,7 @@ namespace Microsoft.PowerFx
             ** but that we don't return any display names for them. Thus, we clone a PowerFxConfig but without 
             ** display name support and construct a resolver from that instead, which we use for the rewrite binding.
             */
-            return new RenameDriver(parameters, pathToRename, updatedName, this, CreateResolverInternal() as ReadOnlySymbolTable, CreateBinderGlue(), culture, false);
+            return new RenameDriver(parameters, pathToRename, updatedName, this, CreateResolverInternal() as ReadOnlySymbolTable, CreateBinderGlue(), options, false);
         }
 
         public RenameDriver CreateOptionSetRenamer(RecordType parameters, DPath pathToRename, DName updatedName, CultureInfo culture)
@@ -444,11 +457,26 @@ namespace Microsoft.PowerFx
             return GetInvariantExpressionWorker(expressionText, symbolTable, parseCulture);
         }
 
+        public string GetInvariantExpressionParserOption(string expressionText, RecordType parameters, ParserOptions options)
+        {
+            var ruleScope = this.GetRuleScope();
+            var symbolTable = (parameters == null) ? null : SymbolTable.NewFromRecord(parameters);
+
+            return GetInvariantExpressionWorker(expressionText, symbolTable, options);
+        }
+
         internal string GetInvariantExpressionWorker(string expressionText, ReadOnlySymbolTable symbolTable, CultureInfo parseCulture)
         {
             var ruleScope = this.GetRuleScope();
 
             return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), parseCulture, Config.Features, toDisplay: false);
+        }
+
+        internal string GetInvariantExpressionWorker(string expressionText, ReadOnlySymbolTable symbolTable, ParserOptions options)
+        {
+            var ruleScope = this.GetRuleScope();
+
+            return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), options, Config.Features, toDisplay: false);
         }
 
         /// <summary>

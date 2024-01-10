@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -21,8 +20,8 @@ namespace Microsoft.PowerFx.Core
         private readonly INameResolver _renameResolver;
         private readonly Engine _engine;
         private readonly IBinderGlue _binderGlue;
-        private readonly CultureInfo _culture;
         private readonly bool _renameOptionSet;
+        private readonly ParserOptions _parserOptions;
 
         private Dictionary<AggregateType, WrappedDerivedRecordType> _wrappedLazyRecordTypes;
 
@@ -40,9 +39,12 @@ namespace Microsoft.PowerFx.Core
             _renameResolver = renameOptionSet ? RenameResolverHelper(resolver, pathToRename, updatedName) : resolver;
             _engine = engine;
             _binderGlue = binderGlue;
-            _culture = culture;
             _renameOptionSet = renameOptionSet;
+            _parserOptions = new ParserOptions() { Culture = culture };
         }
+
+        internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, Engine engine, ReadOnlySymbolTable resolver, IBinderGlue binderGlue, ParserOptions parserOptions, bool renameOptionSet)
+            : this(parameters, pathToRename, updatedName, engine, resolver, binderGlue, CultureInfo.InvariantCulture, renameOptionSet) => _parserOptions = parserOptions;
 
         /// <summary>
         /// Applies rename operation to <paramref name="expressionText"/>.
@@ -52,14 +54,14 @@ namespace Microsoft.PowerFx.Core
         public string ApplyRename(string expressionText)
         {
             // Ensure expression is converted to invariant before applying rename.
-            var invariantExpression = _engine.GetInvariantExpression(expressionText, _baseParameters, _culture);
-            var converted = ExpressionLocalizationHelper.ConvertExpression(invariantExpression, _renameParameters, BindingConfig.Default, _renameResolver, _binderGlue, CultureInfo.InvariantCulture, Features.None, true);
+            var invariantExpression = _engine.GetInvariantExpressionParserOption(expressionText, _baseParameters, _parserOptions);
+            var converted = ExpressionLocalizationHelper.ConvertExpression(invariantExpression, _renameParameters, BindingConfig.Default, _renameResolver, _binderGlue, _parserOptions, Features.None, true);
 
             // Convert back to the invariant expression. All parameter values are already invariant at this point, so we pass _renameParameters, but stripped of it's DisplayNameProvider.
             // Reset the wrapped cache first to ensure we clear all display name providers
             _wrappedLazyRecordTypes = new Dictionary<AggregateType, WrappedDerivedRecordType>();
             var strippedRenameParameters = _renameOptionSet ? _baseParameters : GetWrappedAggregateType(_renameParameters, DisabledDisplayNameProvider.Instance) as RecordType;
-            return ExpressionLocalizationHelper.ConvertExpression(converted, strippedRenameParameters, BindingConfig.Default, _resolver, _binderGlue, CultureInfo.InvariantCulture, Features.None, false);
+            return ExpressionLocalizationHelper.ConvertExpression(converted, strippedRenameParameters, BindingConfig.Default, _resolver, _binderGlue, _parserOptions, Features.None, false);
         }
 
         /// <summary>
@@ -69,8 +71,11 @@ namespace Microsoft.PowerFx.Core
         /// <returns>True if the full path to change is contained in the expression.</returns>
         public bool Find(string expressionText)
         {
-            var invariantExpression = _engine.GetInvariantExpression(expressionText, _baseParameters, _culture);
-            return invariantExpression != ApplyRename(invariantExpression);
+            var invariantExpression = _engine.GetInvariantExpressionParserOption(expressionText, _baseParameters, _parserOptions);
+
+            var renamed = ApplyRename(invariantExpression);
+
+            return invariantExpression != ApplyRename(renamed);
         }
 
         private INameResolver RenameResolverHelper(ReadOnlySymbolTable symbols, DPath pathToRename, DName updatedName)
