@@ -9,8 +9,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// </summary>
     public class MarkupContent
     {
-        public string MarkupKind = "markdown"; // "plaintext"
+        /// <summary>
+        /// The type of markup.  Either 'markdown' or 'plaintext'.
+        /// </summary>
+        public string Kind { get; set; } = "markdown"; // "plaintext"
 
+        /// <summary>
+        /// The content itself.
+        /// </summary>
         public string Value { get; set; }
     }
 }
