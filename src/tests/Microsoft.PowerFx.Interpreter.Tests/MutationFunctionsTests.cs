@@ -1,9 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Linq;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
@@ -328,7 +331,39 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.Equal(isSuccess, check.IsSuccess);
         }
+        
+        [Theory]
+        [InlineData("Collect(t, x)")]
+        [InlineData("Collect(t, x);First(t)")]
+        [InlineData("Collect(t, x);Patch(t, First(t), x);First(t)")]
+        public void DontCopyDerivedRecordValuesTest(string expression)
+        {
+            var engine = new RecalcEngine();
+            var rType = RecordType.Empty()
+                .Add(new NamedFormulaType("field", FormulaType.String));
 
+            TableValue t = FormulaValue.NewTable(rType);
+            RecordValue x = new FileObjectRecordValue("x", IRContext.NotInSource(rType), new List<NamedValue>());
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("x", x);
+            engine.UpdateVariable("t", t);
+
+            var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = true });
+
+            Assert.True(check.IsSuccess);
+
+            var result = check.GetEvaluator().Eval();
+
+            Assert.IsType<FileObjectRecordValue>(result);
+            Assert.False(ReferenceEquals(x, result));
+
+            var fileObjectRecordValue = (FileObjectRecordValue)result;
+
+            // Derived object did not lose it's properties
+            Assert.Equal("x", fileObjectRecordValue.SomeProperty);
+        }
+        
         [Fact]
         public void SymbolTableEnableMutationFuntionsTest()
         {
@@ -347,6 +382,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Mutation functions is listed.
             var checkEnabled = engine.Check(expr, symbolTable: symbolTableEnabled);
             Assert.Contains(checkEnabled.Symbols.Functions.FunctionNames, f => f == "Collect");
+        }
+
+        internal class FileObjectRecordValue : InMemoryRecordValue
+        {
+            public string SomeProperty { get; set; }
+
+            public FileObjectRecordValue(string someProperty, IRContext irContext, IEnumerable<NamedValue> fields)
+                : base(irContext, fields)
+            {
+                SomeProperty = someProperty;
+            }
+
+            public override bool TryShallowCopy(out FormulaValue copy)
+            {
+                copy = new FileObjectRecordValue(SomeProperty, IRContext, Fields);
+                return true;
+            }
         }
     }
 }
