@@ -335,6 +335,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Theory]
         [InlineData("Collect(t, x)")]
         [InlineData("Collect(t, x);First(t)")]
+        [InlineData("Collect(t, x);Patch(t, First(t), x);First(t)")]
         public void DontCopyDerivedRecordValuesTest(string expression)
         {
             var engine = new RecalcEngine();
@@ -355,7 +356,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = check.GetEvaluator().Eval();
 
             Assert.IsType<FileObjectRecordValue>(result);
-            Assert.True(ReferenceEquals(x, result));
+            Assert.False(ReferenceEquals(x, result));
 
             var fileObjectRecordValue = (FileObjectRecordValue)result;
 
@@ -371,6 +372,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 : base(irContext, fields)
             {
                 SomeProperty = someProperty;
+            }
+
+            public override bool TryShallowCopy(out FormulaValue copy)
+            {
+                copy = new FileObjectRecordValue(SomeProperty, IRContext, Fields);
+                return true;
             }
         }
     }
