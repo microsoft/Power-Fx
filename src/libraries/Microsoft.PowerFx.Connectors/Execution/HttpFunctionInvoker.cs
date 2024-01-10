@@ -360,7 +360,7 @@ namespace Microsoft.PowerFx.Connectors
                     ? FormulaValue.NewBlank(_function.ReturnType)
                     : _returnRawResults
                     ? FormulaValue.New(text)
-                    : FormulaValueJSON.FromJson(text, _function.ReturnType, returnUnknownRecordFieldsAsUntypedObjects: returnUnknownRecordFieldAsUO); // $$$ Do we need to check response media type to confirm that the content is indeed json?
+                    : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, _function.ReturnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
 
             if (throwOnError)
