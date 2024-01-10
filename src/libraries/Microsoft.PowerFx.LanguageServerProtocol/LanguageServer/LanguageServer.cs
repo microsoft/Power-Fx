@@ -65,11 +65,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         /// <summary>
         /// If set, provides the handler for $/nlSuggestion message.
+        /// Note: This is not a thread safe. Consider using the NlHandlerFactory.
         /// </summary>
-        public NLHandler NL2FxImplementation { get;  set; }
+        public NLHandler NL2FxImplementation { get; set; }
 
         private INLHandlerFactory _nlHandlerFactory;
 
+        /// <summary>
+        /// A factory to get the NLHandler from the given scope.
+        /// </summary>
         public INLHandlerFactory NLHandlerFactory
         {
             get => _nlHandlerFactory;
