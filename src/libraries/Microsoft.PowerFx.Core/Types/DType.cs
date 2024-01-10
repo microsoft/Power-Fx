@@ -619,12 +619,6 @@ namespace Microsoft.PowerFx.Core.Types
                     return _isActivityPointer.Value;
                 }
 
-                // TryGetType assumes Kind is valid
-                if (Kind == DKind.Invalid)
-                {
-                    return false;
-                }
-
                 TryGetType(new DName("activity_pointer_fax"), out var activityReferenceType);
                 _isActivityPointer = IsRecord && activityReferenceType != Invalid;
                 return _isActivityPointer.Value;
