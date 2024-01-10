@@ -141,7 +141,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                         // Here we assume UO implementation is JsonUntypedObject
                         string swagger = ((JsonUntypedObject)uo.Impl)._element.ToString();
 
-                        File.WriteAllText($@"{swaggerRoot}\{connectorName.Value.Replace("/", "_")}.json", IndentJson(swagger));
+                        await File.WriteAllTextAsync($@"{swaggerRoot}\{connectorName.Value.Replace("/", "_")}.json", IndentJson(swagger)).ConfigureAwait(false);
                         _output.WriteLine("OK");
                     }
                 }
@@ -149,6 +149,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         // Format Json with indentation
-        public static string IndentJson(string str) => JsonSerializer.Serialize(JsonSerializer.Deserialize<JsonElement>(str), new JsonSerializerOptions() { WriteIndented = true });
+        public static string IndentJson(string str) => JsonSerializer.Serialize(JsonSerializer.Deserialize<JsonElement>(str), SerializerOptions);
+
+        private static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions() { WriteIndented = true };
     }
 }
