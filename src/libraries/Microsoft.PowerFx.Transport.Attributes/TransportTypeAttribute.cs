@@ -32,14 +32,14 @@ namespace Microsoft.AppMagic.Transport
 
         public bool EnablePublicMembersByDefault { get; }
 
-        public TransportTypeAttribute(TransportKind kind = TransportKind.ByValue, bool enablePublicMembersByDefault = true, string customTypescriptBaseClass = null, string customDtoName = null, bool isMethodCustomizationEnabled = false, bool isReactHooksSingleton = false)
+        public TransportTypeAttribute(TransportKind kind = TransportKind.ByValue, bool enablePublicMembersByDefault = true, string customTypescriptBaseClass = null, string customDtoName = null, bool isMethodCustomizationEnabled = false, bool isSingleton = false)
         {
             Kind = kind;
             EnablePublicMembersByDefault = enablePublicMembersByDefault;
             CustomTypescriptBaseClass = customTypescriptBaseClass;
             CustomDtoName = customDtoName;
             IsMethodCustomizationEnabled = isMethodCustomizationEnabled;
-            IsReactHooksSingleton = isReactHooksSingleton;
+            IsSingleton = isSingleton;
         }
 
         /// <summary>
@@ -64,6 +64,6 @@ namespace Microsoft.AppMagic.Transport
         /// Only ServerRemoted classes qualify, and only if exactly one instance is instantiated during the lifecycle.
         /// If multiple instances are instantiated (even if the previous are disposed first), only the first will be linked with the hooks.
         /// </summary>
-        public bool IsReactHooksSingleton { get; }
+        public bool IsSingleton { get; }
     }
 }
