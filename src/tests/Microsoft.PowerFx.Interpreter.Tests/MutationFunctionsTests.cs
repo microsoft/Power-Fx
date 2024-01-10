@@ -332,12 +332,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(isSuccess, check.IsSuccess);
         }
 
-        [Fact]
-        public void DontCopyRerivedRecordValuesTest()
+        [Theory]
+        [InlineData("Collect(t, x)")]
+        [InlineData("Collect(t, x);First(t)")]
+        public void DontCopyDerivedRecordValuesTest(string expression)
         {
-            var expr = "Collect(t, x)";
             var engine = new RecalcEngine();
-
             var rType = RecordType.Empty()
                 .Add(new NamedFormulaType("field", FormulaType.String));
 
@@ -348,7 +348,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("x", x);
             engine.UpdateVariable("t", t);
 
-            var check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true });
+            var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = true });
 
             Assert.True(check.IsSuccess);
 
@@ -359,7 +359,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var fileObjectRecordValue = (FileObjectRecordValue)result;
 
-            // Derived object did not lose its properties
+            // Derived object did not lose it's properties
             Assert.Equal("x", fileObjectRecordValue.SomeProperty);
         }
 
