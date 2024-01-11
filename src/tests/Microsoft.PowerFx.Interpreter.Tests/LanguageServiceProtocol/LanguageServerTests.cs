@@ -1007,7 +1007,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             var je = (JsonElement)sig.Documentation;
             var markdown = JsonSerializer.Deserialize<MarkupContent>(je.ToString(), _jsonSerializerOptions);
-            Assert.Equal("markdown", markdown.MarkupKind);
+            Assert.Equal("markdown", markdown.Kind);
             Assert.StartsWith("Create and set a global variable", markdown.Value); // function's normal description 
             Assert.Contains("**Disclaimer:** AI-generated content", markdown.Value); // disclaimer appended. 
         }
@@ -2326,6 +2326,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.True(errElement.TryGetProperty("code", out var codeElement));
             var code = (JsonRpcHelper.ErrorCode)codeElement.GetInt32();
             Assert.Equal(expectedCode, code);
+            Assert.True(root.TryGetProperty("fxVersion", out var fxVersionElement));
+            Assert.Equal(Engine.AssemblyVersion, fxVersionElement.GetString());
         }
 
         private static T AssertAndGetResponsePayload<T>(string response, string id)
@@ -2336,6 +2338,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             root.TryGetProperty("id", out var responseId);
             Assert.Equal(id, responseId.GetString());
             root.TryGetProperty("result", out var resultElement);
+            Assert.True(root.TryGetProperty("fxVersion", out var fxVersionElement));
+            Assert.Equal(Engine.AssemblyVersion, fxVersionElement.GetString());
             var paramsObj = JsonSerializer.Deserialize<T>(resultElement.GetRawText(), _jsonSerializerOptions);
             return paramsObj;
         }

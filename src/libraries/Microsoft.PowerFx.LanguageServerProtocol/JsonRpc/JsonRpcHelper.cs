@@ -49,7 +49,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             {
                 jsonrpc = "2.0",
                 id,
-                error
+                error,
+                fxVersion = Engine.AssemblyVersion
             }, _jsonSerializerOptions);
 
         public static string CreateSuccessResult(string id, object result) => JsonSerializer.Serialize(
@@ -57,7 +58,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             {
                 jsonrpc = "2.0",
                 id,
-                result
+                result,
+                fxVersion = Engine.AssemblyVersion
             }, _jsonSerializerOptions);
 
         public static string CreateNotification(string method, object @params) => JsonSerializer.Serialize(
@@ -65,7 +67,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             {
                 jsonrpc = "2.0",
                 method,
-                @params
+                @params,
+                fxVersion = Engine.AssemblyVersion
             }, _jsonSerializerOptions);
 
         public static string Serialize<T>(T data)

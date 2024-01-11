@@ -254,13 +254,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
                 foreach (var brokenToken in brokenTokens)
                 {
                     var adjustedStartIdx = brokenToken.StartIndex;
-                    while (adjustedStartIdx > 0 && eol.IndexOf(expression[adjustedStartIdx - 1]) != -1)
+                    while (adjustedStartIdx > 0 && eol.Contains(expression[adjustedStartIdx - 1]))
                     {
                         adjustedStartIdx--;
                     }
 
                     var adjustedEndIndex = brokenToken.EndIndex;
-                    while (adjustedEndIndex < expression.Length && eol.IndexOf(expression[adjustedEndIndex]) != -1)
+                    while (adjustedEndIndex < expression.Length && eol.Contains(expression[adjustedEndIndex]))
                     {
                         adjustedEndIndex++;
                     }

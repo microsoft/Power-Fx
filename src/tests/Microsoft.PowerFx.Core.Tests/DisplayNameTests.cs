@@ -763,5 +763,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var recordType = RecordType.Empty().Add("numLogical", FormulaType.Number, "numDisplay");
             Assert.Equal("numDisplay", recordType.GetFieldTypes().First().DisplayName);
         }
+
+        [Theory]
+        [InlineData("=var1", "=var2", true)]
+        [InlineData("Var1", null, false)]
+        [InlineData("text ${var1} text", "text ${var2} text", true)]
+        [InlineData("={'prop1':var1}", "={'prop1':var2}", true)]
+        public void RenameParameterTextFirst(string expr, string expected, bool find)
+        {
+            var recalcEngine = new Engine();
+            var dpath = DPath.Root;
+            var recordType = RecordType.Empty();
+
+            recordType = recordType.Add(new NamedFormulaType("var1", FormulaType.Blank));
+
+            ParserOptions options = new ParserOptions() { Culture = CultureInfo.InvariantCulture, TextFirst = true };
+            var renamer = recalcEngine.CreateFieldRenamer(recordType, dpath.Append(new DName("var1")), new DName("var2"), options);
+
+            Assert.Equal(find, renamer.Find(expr));
+
+            if (find)
+            {
+                Assert.Equal(expected, renamer.ApplyRename(expr));
+            }
+        }
     }
 }

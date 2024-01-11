@@ -1,12 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using static Microsoft.PowerFx.Core.Parser.TexlParser;
 
 namespace Microsoft.PowerFx
 {
@@ -89,6 +86,14 @@ namespace Microsoft.PowerFx
             var result = TexlParser.ParseScript(script, features, Culture, flags);
             result.Options = this;
             return result;
+        }
+
+        internal Flags GetParserFlags()
+        {
+            return (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
+                        (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0) |
+                        (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0) |
+                        (TextFirst ? TexlParser.Flags.TextFirst : 0);
         }
     }
 }
