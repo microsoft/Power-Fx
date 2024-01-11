@@ -31,6 +31,10 @@ namespace Microsoft.PowerFx
         /// </summary>
         public PowerFxConfig Config { get; }
 
+        // Volatile means it can be set by multiple threads. 
+        // But all threads will produce the same value, so it's ok. 
+        private static volatile string _assemblyVersion;
+
         /// <summary>
         /// For diagnostics, get the assembly version of Power Fx Engine. 
         /// </summary>
@@ -38,11 +42,16 @@ namespace Microsoft.PowerFx
         {
             get
             {
-                var fxAttr = typeof(Engine).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-                var fullVerStr = fxAttr.InformationalVersion;
+                if (_assemblyVersion == null)
+                {
+                    var fxAttr = typeof(Engine).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+                    var fullVerStr = fxAttr.InformationalVersion;
 
-                var parts = fullVerStr.Split('+');
-                return parts[0];
+                    var parts = fullVerStr.Split('+');
+                    _assemblyVersion = parts[0];
+                }
+
+                return _assemblyVersion;
             }
         }
 
