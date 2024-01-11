@@ -1001,7 +1001,13 @@ POST https://tip1-shared.azure-apim.net/invoke
 
             BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
 
-            ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(
+                new ConnectorSettings("DV") 
+                { 
+                    Compatibility = ConnectorCompatibility.SwaggerCompatibility, 
+                    ReturnUnknownRecordFieldsAsUntypedObjects = true 
+                }, 
+                testConnector._apiDocument).ToArray();
             ConnectorFunction createCardInstance = functions.First(f => f.Name == "CreateCardInstance");
 
             testConnector.SetResponseFromFile(@"Responses\CardsForPowerApps_CreateCardInstance.json");
@@ -1018,7 +1024,7 @@ POST https://tip1-shared.azure-apim.net/invoke
                 CancellationToken.None).ConfigureAwait(false);
 
             string input = testConnector._log.ToString();
-            Assert.Equal("AdaptiveCard", (((RecordValue)result).GetField("type") as StringValue).Value);
+            Assert.Equal("AdaptiveCard", (((RecordValue)result).GetField("type") as UntypedObjectValue).Impl.GetString());
             Assert.Equal(
                 $@"POST https://tip1002-002.azure-apihub.net/invoke
  authority: tip1002-002.azure-apihub.net

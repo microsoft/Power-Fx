@@ -10,7 +10,10 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Tests;
+using Microsoft.PowerFx.TexlFunctionExporter;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
@@ -517,6 +520,90 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             config.AddActionConnector("Connector", doc, new ConsoleLogger(_output));
         }
+
+        /// <summary>
+        /// GenerateYamlFiles from Connector TexlFunctions.
+        /// </summary>
+        /// <param name="reference">Name of the test.</param>
+        /// <param name="folderExclusionIndex">0: default folder exclusions, 1: no exclusion.</param>
+        /// <param name="pattern">Pattern to identify swagger files.</param>
+        /// <param name="folders">List of folders to consider when identifying swagger files. 
+        /// Wehn no folder is provided, use internal Library.
+        /// When 2 swagger files will have the same display name and version, the one from first folder will be preferred.
+        /// </param>
+        // This test is only meant for internal testing
+#if GENERATE_CONNECTOR_STATS
+        [Theory]
+#else
+        [Theory(Skip = "Need files from AAPT-connector, PowerPlatformConnectors and Power-Fx-TexlFunctions-Baseline projects")]
+#endif
+        [InlineData("Library")] // Default Power-Fx library
+        [InlineData("Aapt-Ppc", 0, "apidefinition*swagger*.json", @"C:\Data\aapt", @"C:\Data\ppc")]
+        [InlineData("Baseline", 1, "*.json", @"C:\Data\Power-Fx-TexlFunctions-Baseline\Swaggers")]
+        public void GenerateYamlFiles(string reference, int folderExclusionIndex = -1, string pattern = null, params string[] folders)
+        {
+            string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
+            string srcFolder = Path.GetFullPath(Path.Combine(outFolder, ".."));
+
+            // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
+            // Locally         : ENV: C:\Data\Power-Fx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Debug\netcoreapp3.1
+            _output.WriteLine($"ENV: {Environment.CurrentDirectory}");
+            _output.WriteLine($"OUT: {outFolder}");
+            _output.WriteLine($"SRC: {srcFolder}");
+
+            string outFolderPath = Path.Combine(outFolder, "YamlOutput");
+            BaseConnectorTest.EmptyFolder(Path.Combine(outFolderPath, reference));
+
+            if (folders.Length == 0)
+            {
+#pragma warning disable CS0618 // Type or member is obsolete
+                List<TexlFunction> texlFunctions = BuiltinFunctionsCore._library.Functions.ToList();
+#pragma warning restore CS0618 // Type or member is obsolete
+
+                _output.WriteLine($"Number of TexlFunctions in library: {texlFunctions.Count()}");
+
+                // Export to Yaml
+                ExportTexlFunctionsToYaml(reference, outFolderPath, reference, texlFunctions, true);
+                return;
+            }
+
+            SwaggerLocatorSettings swaggerLocationSettings = folderExclusionIndex == 0 ? null : new SwaggerLocatorSettings(new List<string>());
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            ConnectorSettings connectorSettings = new ConnectorSettings("FakeNamespace") 
+            { 
+                AllowUnsupportedFunctions = true, 
+                IncludeInternalFunctions = true, 
+                FailOnUnknownExtension = false, 
+                Compatibility = ConnectorCompatibility.PowerAppsCompatibility 
+            };            
+
+            // Step 1: Identify the list of swagger files to consider
+            // The output of LocateSwaggerFilesWithDocuments is a dictionary where
+            // - Key is the connector display name
+            // - Value is a (folder, location, document) tuple where folder is the source folder at the origin of the swagger identification, location is the exact swagger file location, document is the corresponding OpenApiDocument 
+            // LocateSwaggerFiles could also be used here and would only return a Dictionary<displayName, location> (no source folder or document)
+            Dictionary<string, (string folder, string location, OpenApiDocument document)> swaggerFiles = SwaggerFileIdentification.LocateSwaggerFilesWithDocuments(folders, pattern, swaggerLocationSettings);
+            _output.WriteLine($"Number of connectors found: {swaggerFiles.Count()}");
+
+            foreach (KeyValuePair<string, (string folder, string location, OpenApiDocument document)> connector in swaggerFiles)
+            {
+                // Step 2: Get TexlFunctions to be exported
+                // Notice that TexlFunction is internal and requires InternalVisibleTo
+                List<TexlFunction> texlFunctions = OpenApiParser.ParseInternal(connectorSettings, connector.Value.document, logger).texlFunctions.Cast<TexlFunction>().ToList();
+
+                // Step 3: Export TexlFunctions to Yaml
+                ExportTexlFunctionsToYaml(reference, outFolderPath, connector.Key, texlFunctions, false);
+            }
+        }
+
+        private static void ExportTexlFunctionsToYaml(string reference, string output, string connectorName, List<TexlFunction> texlFunctions, bool isLibrary)
+        {
+            foreach (TexlFunction texlFunction in texlFunctions)
+            {
+                // Export TexlFunction definition as Yaml file
+                YamlExporter.ExportTexlFunction($"{Path.Combine(output, reference, connectorName.Replace("/", "_", StringComparison.OrdinalIgnoreCase))}", texlFunction, isLibrary);
+            }
+        }
     }
 
     public static class Exts
@@ -605,7 +692,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             if (connectorParam.DefaultValue != null)
             {
-                cParam.DefaultValue = connectorParam.DefaultValue.ToExpression();                
+                cParam.DefaultValue = connectorParam.DefaultValue.ToExpression();
             }
 
             if (!string.IsNullOrEmpty(connectorParam.Title))
