@@ -274,8 +274,13 @@ namespace Microsoft.PowerFx.Connectors
             FunctionList = functionList;
 
             _configurationLogger = configurationLogger;
-            _isSupported = isSupported || connectorSettings.AllowUnsupportedFunctions;            
-            _notSupportedReason = notSupportedReason ?? (isSupported ? string.Empty : "Internal error on not supported reason");
+            SetSupported(isSupported || connectorSettings.AllowUnsupportedFunctions, notSupportedReason ?? (isSupported ? string.Empty : "Internal error on not supported reason"));            
+        }
+
+        internal void SetSupported(bool isSupported, string notSupportedReason)
+        {
+            _isSupported = isSupported;
+            _notSupportedReason = notSupportedReason;
         }
 
         /// <summary>
@@ -1104,15 +1109,13 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (!string.IsNullOrEmpty(unsupportedReason))
                 {
-                    _isSupported = ConnectorSettings.AllowUnsupportedFunctions;
-                    _notSupportedReason = unsupportedReason;
+                    SetSupported(ConnectorSettings.AllowUnsupportedFunctions, unsupportedReason);                                        
                 }
             }
             catch (Exception ex)
             {
-                _isSupported = ConnectorSettings.AllowUnsupportedFunctions;
-                _notSupportedReason = ex.Message;
-
+                SetSupported(ConnectorSettings.AllowUnsupportedFunctions, ex.Message);
+                
                 _requiredParameters = new ConnectorParameter[0];
                 _optionalParameters = new ConnectorParameter[0];
                 _hiddenRequiredParameters = new ConnectorParameter[0];

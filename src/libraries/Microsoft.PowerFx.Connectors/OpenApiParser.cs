@@ -433,12 +433,14 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     return new ConnectorTexlFunction(f);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     // Some exception is possible when evaluating the return type as it internally calls ToConnectorType()
                     // which can throw on some enum types of unknown schema types like 'file' (known limitation)
                     // If that case, we allow the creation of ConnetorTexlFunction object w/o a return type (will be DType.UntypedObject)
-                    return new ConnectorTexlFunction(f, false);
+                    var cf = new ConnectorTexlFunction(f, false);
+                    cf.ConnectorFunction.SetSupported(false, ex.Message);
+                    return cf;
                 }
             }).ToList();
 
