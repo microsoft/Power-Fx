@@ -67,6 +67,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Repl", "l
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Repl.Tests", "tests\Microsoft.PowerFx.Repl.Tests\Microsoft.PowerFx.Repl.Tests.csproj", "{8A54017E-52C3-45BB-9E87-3F0876688D53}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.PowerFx.TexlFunctionExporter", "tests\Microsoft.PowerFx.TexlFunctionExporter\Microsoft.PowerFx.TexlFunctionExporter.csproj", "{06373068-0BDC-4BF8-9DAA-7B248C2B577E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +131,10 @@ Global
 		{8A54017E-52C3-45BB-9E87-3F0876688D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A54017E-52C3-45BB-9E87-3F0876688D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A54017E-52C3-45BB-9E87-3F0876688D53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06373068-0BDC-4BF8-9DAA-7B248C2B577E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06373068-0BDC-4BF8-9DAA-7B248C2B577E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06373068-0BDC-4BF8-9DAA-7B248C2B577E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06373068-0BDC-4BF8-9DAA-7B248C2B577E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -149,6 +155,7 @@ Global
 		{89514D49-4D5D-4423-A6EC-F0FF1D23EF43} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
 		{889A85AD-6450-4F5E-A404-01CC296C90D9} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
 		{8A54017E-52C3-45BB-9E87-3F0876688D53} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{06373068-0BDC-4BF8-9DAA-7B248C2B577E} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {30372F91-B206-4351-A621-F0E2773C337B}

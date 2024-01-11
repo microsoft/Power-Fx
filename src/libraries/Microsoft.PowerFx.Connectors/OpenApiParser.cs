@@ -427,7 +427,22 @@ namespace Microsoft.PowerFx.Connectors
         internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) ParseInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
         {
             List<ConnectorFunction> cFunctions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger).Where(f => !f.IsInternal || connectorSettings.IncludeInternalFunctions).ToList();
-            List<ConnectorTexlFunction> tFunctions = cFunctions.Select(f => new ConnectorTexlFunction(f)).ToList();
+            List<ConnectorTexlFunction> tFunctions = cFunctions.Select(f =>
+            {
+                try
+                {
+                    return new ConnectorTexlFunction(f);
+                }
+                catch (Exception ex)
+                {
+                    // Some exception is possible when evaluating the return type as it internally calls ToConnectorType()
+                    // which can throw on some enum types of unknown schema types like 'file' (known limitation)
+                    // If that case, we allow the creation of ConnetorTexlFunction object w/o a return type (will be DType.UntypedObject)
+                    var cf = new ConnectorTexlFunction(f, false);
+                    cf.ConnectorFunction.SetSupported(false, ex.Message);
+                    return cf;
+                }
+            }).ToList();
 
             return (cFunctions, tFunctions);
         }

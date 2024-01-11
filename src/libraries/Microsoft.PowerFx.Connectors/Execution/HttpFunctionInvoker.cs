@@ -353,11 +353,14 @@ namespace Microsoft.PowerFx.Connectors
 
             if (statusCode < 300)
             {
+                // We only return UO for unknown fields (not declared in swagger file) if compatibility is SwaggerCompatibility
+                bool returnUnknownRecordFieldAsUO = _function.ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility && _function.ConnectorSettings.ReturnUnknownRecordFieldsAsUntypedObjects;
+
                 return string.IsNullOrWhiteSpace(text)
                     ? FormulaValue.NewBlank(_function.ReturnType)
                     : _returnRawResults
                     ? FormulaValue.New(text)
-                    : FormulaValueJSON.FromJson(text, _function.ReturnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
+                    : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, _function.ReturnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
 
             if (throwOnError)
