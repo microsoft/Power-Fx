@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <summary>
         /// This const represents the dummy formula that is used to create an infrastructure needed to get the symbols for Nl2Fx operation.
         /// </summary>
-        public const string Nl2FxDummyFormula = "\"Dummy Nl2Fx Check\"";
+        internal const string Nl2FxDummyFormula = "\"Dummy Nl2Fx Check\"";
 
         public delegate void SendToClient(string data);
 
@@ -69,16 +69,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// </summary>
         public NLHandler NL2FxImplementation { get; set; }
 
-        private INLHandlerFactory _nlHandlerFactory;
-
         /// <summary>
         /// A factory to get the NLHandler from the given scope.
         /// </summary>
-        public INLHandlerFactory NLHandlerFactory
-        {
-            get => _nlHandlerFactory;
-            init => _nlHandlerFactory = value;
-        }
+        public INLHandlerFactory NLHandlerFactory { get; init; }
 
         public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
         {
