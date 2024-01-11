@@ -488,5 +488,23 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(udfCount, userDefinitionResult.UDFs.Count());
             Assert.Contains(userDefinitionResult.Errors, e => e.MessageKey == "ErrBadToken");
         }
+
+        [Theory]
+        [InlineData("Foo(x: Number): None = Abs(x);")]
+        [InlineData("Foo(x: None): Number = Abs(x);")]
+        [InlineData("Foo(x: Decimal): Number =  Abs(x);")]
+        [InlineData("Foo(x: Number): Decimal =  Abs(x);")]
+        [InlineData("Foo(x: DateTimeTZInd): Decimal =  Abs(x);")]
+        [InlineData("Foo(x: Number): DateTimeTZInd =  Abs(x);")]
+        public void TestUDFsWithRestrictedTypes(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+            Assert.Contains(userDefinitionResult.Errors, x => x.MessageKey == "ErrUDF_UnknownType");
+        }
     }
 }
