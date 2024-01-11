@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -939,6 +938,11 @@ namespace Microsoft.PowerFx.Functions
 
         internal static FormulaValue RoundFloat(IRContext irContext, NumberValue num, double doubleDigs, RoundType rt = RoundType.Default)
         {
+            if (num.Value == 0)
+            {
+                return num;
+            }
+
             var number = num.Value;
             var s = number < 0 ? -1d : 1d;
             var n = Math.Abs(number);
@@ -946,11 +950,6 @@ namespace Microsoft.PowerFx.Functions
             int dg = doubleDigs > int.MaxValue ? int.MaxValue :
                           doubleDigs < int.MinValue ? int.MinValue :
                                 (int)doubleDigs;
-
-            if (dg < -15 || dg > 15 || number < -1e20d || number > 1e20d)
-            {
-                return num;
-            }
 
             // Dividing by m, since multiplication was introducing floating point error
             var m = Math.Pow(10d, dg);
@@ -963,7 +962,16 @@ namespace Microsoft.PowerFx.Functions
                 case RoundType.Down:
                     return new NumberValue(irContext, s * Math.Floor(n * m) / m);
                 case RoundType.Up:
-                    return new NumberValue(irContext, s * Math.Ceiling(n * m) / m);
+                    double result = s * Math.Ceiling(n * m) / m;
+
+                    // If negative, we are trying to round to the next tens/ hundreds / ...
+                    // This can result in something like 9999.9, which needs to be round up to the closest whole number.
+                    if (dg < 0 && Math.Log10(n) < -dg)
+                    {
+                        result = s * Math.Pow(10, -dg);
+                    }
+
+                    return new NumberValue(irContext, result);
             }
 
             return CommonErrors.UnreachableCodeError(irContext);
@@ -996,15 +1004,6 @@ namespace Microsoft.PowerFx.Functions
             int digits = doubleDigs > int.MaxValue ? int.MaxValue : 
                                doubleDigs < int.MinValue ? int.MinValue : 
                                     (int)doubleDigs;
-
-            if (digits < -28)
-            {
-                return new DecimalValue(irContext, 0m);
-            }
-            else if (digits > 28)
-            {
-                return dec;
-            }
 
             try
             {
@@ -1062,6 +1061,10 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
             catch (OverflowException)
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+            catch (ArgumentOutOfRangeException)
             {
                 return CommonErrors.OverflowError(irContext);
             }
