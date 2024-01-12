@@ -5163,15 +5163,16 @@ namespace Microsoft.PowerFx.Core.Binding
 
             private void ValidateSupportedFunction(CallNode node, TexlFunction func)
             {
-                if (func is IHasUnsupportedFunctions sdf && sdf.IsNotSupported)
+                if (func is IHasUnsupportedFunctions sdf)
                 {
+                    if (sdf.IsNotSupported)
+                    {
+                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Critical, node, TexlStrings.ErrUnsupportedFunction, func.Name, func.Namespace);
+                    }
+
                     if (sdf.IsDeprecated)
                     {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDeprecatedFunction, func.Name, func.Namespace);
-                    }
-                    else
-                    {
-                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Critical, node, TexlStrings.ErrUnsupportedFunction, func.Name, func.Namespace);
                     }
                 }
             }

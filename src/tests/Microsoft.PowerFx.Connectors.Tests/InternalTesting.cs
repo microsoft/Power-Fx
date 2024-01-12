@@ -344,7 +344,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using StreamWriter writer = new StreamWriter(Path.Combine(outFolder, reportName), append: false);
 
             Dictionary<string, List<string>> w2 = new Dictionary<string, List<string>>();
-
             Dictionary<string, int> exceptionMessages = new ();
             Dictionary<string, IEnumerable<ConnectorFunction>> allFunctions = new ();
 
@@ -356,11 +355,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 i++;
                 try
                 {
+                    ConsoleLogger logger = new ConsoleLogger(_output);
                     OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile);
                     title = $"{doc.Info.Title} [{swaggerFile}]";
 
                     // Check we can get the functions
-                    IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc, new ConsoleLogger(_output));
+                    IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc, logger);
 
                     allFunctions.Add(title, functions);
                     var config = new PowerFxConfig();
@@ -370,7 +370,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     };
 
                     // Check we can add the service (more comprehensive test)
-                    config.AddActionConnector("Connector", doc);
+                    config.AddActionConnector("Connector", doc, logger);
 
                     IEnumerable<ConnectorFunction> functions2 = OpenApiParser.GetFunctions(new ConnectorSettings("C1") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc);
                     string cFolder = Path.Combine(outFolder, reportFolder, doc.Info.Title);
@@ -661,7 +661,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
 
             func.ReturnType = connectorFunction.ReturnType._type.ToString();
-            func.ReturnType_Detailed = connectorFunction.ConnectorReturnType == null ? (dynamic)"null" : connectorFunction.ConnectorReturnType.ToExpando(noname: true);
+            func.ReturnType_Detailed = connectorFunction.ReturnParameterType == null ? (dynamic)"null" : connectorFunction.ReturnParameterType.ToExpando(noname: true);
 
             func.ArityMin = connectorFunction.ArityMin;
             func.ArityMax = connectorFunction.ArityMax;

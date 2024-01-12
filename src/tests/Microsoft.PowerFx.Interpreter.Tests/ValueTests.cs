@@ -157,6 +157,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             public static int StaticProp { get; set; }
 
+            // Unused property (IDE0051)
             private int PrivateProp { get; set; }
 
             internal int InternalProp { get; set; }

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
+using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Tests;
 using Xunit;
@@ -29,15 +29,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 doc.Servers.Add(srv);
             }
 
-            Assert.Equal(expectedAuthority, doc.GetAuthority());
-            Assert.Equal(expectedBasePath, doc.GetBasePath());
+            Assert.Equal(expectedAuthority, doc.GetAuthority(null));
+            Assert.Equal(expectedBasePath, doc.GetBasePath(null));
         }
 
         [Fact]
         public void OpenApiExtension_Null()
         {
-            Assert.Null((null as OpenApiDocument).GetAuthority());
-            Assert.Null((null as OpenApiDocument).GetBasePath());
+            Assert.Null((null as OpenApiDocument).GetAuthority(null));
+            Assert.Null((null as OpenApiDocument).GetBasePath(null));
         }
 
         [Fact]
@@ -49,8 +49,32 @@ namespace Microsoft.PowerFx.Connectors.Tests
             doc.Servers.Add(srv1);
             doc.Servers.Add(srv2);
 
-            Assert.Throws<NotImplementedException>(() => doc.GetAuthority());
-            Assert.Throws<NotImplementedException>(() => doc.GetBasePath());
+            // string str = doc.SerializeAsJson(OpenApi.OpenApiSpecVersion.OpenApi3_0);
+
+            //{
+            //    "openapi": "3.0.1",
+            //      "info": { },
+            //      "servers": [
+            //        {
+            //           "url": "https://server1"
+            //        },
+            //        {
+            //           "url": "https://server2"
+            //        }
+            //      ],
+            //      "paths": { }
+            //}
+
+            ConnectorErrors errors = new ConnectorErrors();
+
+            doc.GetAuthority(errors);
+            Assert.True(errors.HasErrors);
+            Assert.Equal("Multiple servers in OpenApiDocument is not supported", errors.Errors.First());
+
+            errors = new ConnectorErrors();
+            doc.GetBasePath(errors);
+            Assert.True(errors.HasErrors);
+            Assert.Equal("Multiple servers in OpenApiDocument is not supported", errors.Errors.First());
         }
     }
 }

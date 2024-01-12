@@ -108,14 +108,14 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Theory]
-        [InlineData(100)] // Continue
-        [InlineData(200)] // Ok
-        [InlineData(202)] // Accepted
-        [InlineData(305)] // Use Proxy
-        [InlineData(411)] // Length Required
-        [InlineData(500)] // Server Error
-        [InlineData(502)] // Bad Gateway
-        public async Task Connector_GenerateErrors(int statusCode)
+        [InlineData(100, null)] // Continue
+        [InlineData(200, null)] // Ok
+        [InlineData(202, null)] // Accepted
+        [InlineData(305, "Use Proxy")] 
+        [InlineData(411, "Length Required")] 
+        [InlineData(500, "Internal Server Error")] 
+        [InlineData(502, "Bad Gateway")] 
+        public async Task Connector_GenerateErrors(int statusCode, string reasonPhrase)
         {
             using var testConnector = new LoggingTestServer(@"Swagger\TestConnector12.json");
             var apiDoc = testConnector._apiDocument;
@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx.Tests
 
                 Assert.Equal(ErrorKind.Network, err.Kind);
                 Assert.Equal(ErrorSeverity.Critical, err.Severity);
-                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}. Response: {statusCode}", err.Message);
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode} ({reasonPhrase}). Response: {statusCode}", err.Message);
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Tests
             }
             else
             {
-                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}. Response: {statusCode}", sv2.Value);
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode} ({reasonPhrase}). Response: {statusCode}", sv2.Value);
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
@@ -418,7 +418,7 @@ namespace Microsoft.PowerFx.Tests
         {
             using var httpClient = new HttpClient();
 
-            var ex = Assert.Throws<ArgumentException>(() => new PowerPlatformConnectorClient(
+            var ex = Assert.Throws<PowerFxConnectorException>(() => new PowerPlatformConnectorClient(
                 "http://firstrelease-001.azure-apim.net:117",  // endpoint not allowed with http scheme
                 "839eace6-59ab-4243-97ec-a5b8fcc104e4",
                 "453f61fa88434d42addb987063b1d7d2",
@@ -463,7 +463,7 @@ namespace Microsoft.PowerFx.Tests
             using var testConnector2 = new LoggingTestServer(@"Swagger\TestOpenAPI.json");
             var apiDoc2 = testConnector2._apiDocument;
 
-            var ex2 = Assert.Throws<ArgumentException>(() => new PowerPlatformConnectorClient(
+            var ex2 = Assert.Throws<PowerFxConnectorException>(() => new PowerPlatformConnectorClient(
                 apiDoc2,                                        // Swagger file without "host" param
                 "839eace6-59ab-4243-97ec-a5b8fcc104e4",
                 "453f61fa88434d42addb987063b1d7d2",
@@ -616,7 +616,9 @@ namespace Microsoft.PowerFx.Tests
             IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc, new ConsoleLogger(_output));
             Assert.True(functions.First(f => f.Name == "GetEmailsV2").IsDeprecated);
             Assert.False(functions.First(f => f.Name == "SendEmailV2").IsDeprecated);
-            Assert.Equal("OpenApiOperation is deprecated", functions.First(f => f.Name == "GetEmailsV2").NotSupportedReason);
+
+            // deprecated functions are supported and should not expose NotSupportedReason
+            Assert.Equal(string.Empty, functions.First(f => f.Name == "GetEmailsV2").NotSupportedReason);
             Assert.Equal(string.Empty, functions.First(f => f.Name == "SendEmailV2").NotSupportedReason);
 
             RecalcEngine engine = new RecalcEngine(config);

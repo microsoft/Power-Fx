@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         // Json objects parse to records. 
-        private static RecordValue RecordFromJsonObject(JsonElement element, RecordType recordType, FormulaValueJsonSerializerSettings settings)
+        private static InMemoryRecordValue RecordFromJsonObject(JsonElement element, RecordType recordType, FormulaValueJsonSerializerSettings settings)
         {
             Contract.Assert(element.ValueKind == JsonValueKind.Object);
 
