@@ -561,7 +561,7 @@ namespace Microsoft.PowerFx.Tests
 
             var check = engine.Check("foo(1)");
             Assert.True(check.IsSuccess);
-            Assert.Equal(FormulaType.Decimal, check.ReturnType);
+            Assert.Equal(FormulaType.Number, check.ReturnType);
 
             var result = check.GetEvaluator().Eval();            
             Assert.Equal(expected, result.AsDouble());
