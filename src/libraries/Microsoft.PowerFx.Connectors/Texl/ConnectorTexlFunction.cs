@@ -22,8 +22,8 @@ namespace Microsoft.PowerFx.Connectors
     {
         public ConnectorFunction ConnectorFunction { get; }
 
-        internal ConnectorTexlFunction(ConnectorFunction function)
-            : base(DPath.Root.Append(new DName(function.Namespace)), function.Name, function.Name, (locale) => function.Description, FunctionCategories.REST, function.ReturnType._type, BigInteger.Zero, function.ArityMin, function.ArityMax, function.ParameterTypes)
+        internal ConnectorTexlFunction(ConnectorFunction function, bool withReturnType = true)
+            : base(DPath.Root.Append(new DName(function.Namespace)), function.Name, function.Name, (locale) => function.Description, FunctionCategories.REST, withReturnType ? function.ReturnType._type : FormulaType.UntypedObject._type, BigInteger.Zero, function.ArityMin, function.ArityMax, function.ParameterTypes)
         {
             ConnectorFunction = function;
         }
