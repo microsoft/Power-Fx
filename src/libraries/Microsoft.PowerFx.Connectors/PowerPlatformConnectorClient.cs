@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="userAgent">Product UserAgent to add to Power-Fx one (Power-Fx/version).</param>
         /// <param name="httpInvoker">Optional HttpMessageInvoker. If not provided a default HttpClient is used.</param>
         public PowerPlatformConnectorClient(OpenApiDocument swaggerFile, string environmentId, string connectionId, Func<string> getAuthToken, string userAgent, HttpMessageInvoker httpInvoker = null)
-            : this(swaggerFile.GetAuthority() ?? throw new ArgumentException("Swagger document doesn't contain an endpoint"), environmentId, connectionId, getAuthToken, userAgent, httpInvoker)
+            : this(GetAuthority(swaggerFile), environmentId, connectionId, getAuthToken, userAgent, httpInvoker)
         {
         }
 
@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Connectors
             // Case insensitive comparison per RFC 9110 [4.2.3 http(s) Normalization and Comparison]
             if (endpoint.StartsWith($"{Uri.UriSchemeHttp}://", StringComparison.OrdinalIgnoreCase))
             {
-                throw new ArgumentException("Cannot accept unsecure endpoint");
+                throw new PowerFxConnectorException("Cannot accept unsecure endpoint");
             }
 
             // Must set to allow callers to invoke SendAsync() via other helper methods.
@@ -144,6 +144,24 @@ namespace Microsoft.PowerFx.Connectors
             {
                 BaseAddress = new Uri("https://" + endpoint); // Uri.Parse will validate endpoint syntax. 
             }
+        }
+
+        private static string GetAuthority(OpenApiDocument swaggerFile)
+        {
+            ConnectorErrors errors = new ConnectorErrors();
+            string authority = swaggerFile.GetAuthority(errors);
+
+            if (authority == null)
+            {
+                errors.AddError("Swagger document doesn't contain an endpoint");
+            }
+
+            if (errors.HasErrors)
+            {
+                throw new PowerFxConnectorException(string.Join(", ", errors.Errors));
+            }
+
+            return authority;
         }
 
         public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

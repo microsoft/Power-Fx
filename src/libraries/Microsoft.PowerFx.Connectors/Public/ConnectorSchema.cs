@@ -9,7 +9,7 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Connectors
 {
     [DebuggerDisplay("{ConnectorType}")]
-    public class ConnectorSchema
+    public class ConnectorSchema : SupportsConnectorErrors
     {
         public ConnectorType ConnectorType { get; }
 
@@ -30,13 +30,13 @@ namespace Microsoft.PowerFx.Connectors
         public string Summary => ConnectorExtensions.Summary;
 
         public bool SupportsDynamicIntellisense => ConnectorType.SupportsDynamicIntellisense;
-
+        
         internal ConnectorSchema(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, ConnectorCompatibility compatibility)
         {
             Schema = openApiParameter.Schema;
             UseHiddenTypes = useHiddenTypes;
-            ConnectorType = openApiParameter.ToConnectorType(compatibility);
-            DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue) && defaultValue is not BlankValue ? defaultValue : null;
+            ConnectorType = AggregateErrors(openApiParameter.GetConnectorType(compatibility));
+            DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue, this) && defaultValue is not BlankValue ? defaultValue : null;
             ConnectorExtensions = new ConnectorExtensions(openApiParameter, bodyExtensions);
         }
 
@@ -44,8 +44,10 @@ namespace Microsoft.PowerFx.Connectors
         {
             Schema = connectorSchema.Schema;
             DefaultValue = connectorSchema.DefaultValue;
-            ConnectorType = connectorType ?? connectorSchema.ConnectorType;
+            ConnectorType = AggregateErrors(connectorType ?? connectorSchema.ConnectorType);
             ConnectorExtensions = connectorSchema.ConnectorExtensions;
+            AggregateErrors(connectorSchema);
+            AggregateErrors(connectorType);
         }
     }
 }

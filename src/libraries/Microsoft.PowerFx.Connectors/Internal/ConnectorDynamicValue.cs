@@ -1,13 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.OpenApi.Any;
+
 namespace Microsoft.PowerFx.Connectors
 {
     /// <summary>
     /// Internal class supporting "x-ms-dynamic-values" extension.
     /// https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values.
     /// </summary>
-    internal class ConnectorDynamicValue : ConnectionDynamicApi
+    internal class ConnectorDynamicValue : ConnectorDynamicApi
     {
         /// <summary>
         /// "value-title" in "x-ms-dynamic-values".
@@ -37,5 +39,15 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         public string BuiltInOperation = null;
         */
+
+        internal ConnectorDynamicValue(OpenApiObject openApiObject)
+            : base(openApiObject)
+        {
+        }
+
+        internal ConnectorDynamicValue(string error)
+            : base(error)
+        {
+        }
     }
 }

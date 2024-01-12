@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Connectors
             MaxRows = maxRows;
             CancellationToken = cancellation;
 
-            NamedValue tableProp = CurrentPage.Fields.FirstOrDefault((NamedValue nv) => nv.Value is TableValue) ?? throw new InvalidOperationException("PagedRecordValue must contain a table");
+            NamedValue tableProp = CurrentPage.Fields.FirstOrDefault((NamedValue nv) => nv.Value is TableValue) ?? throw new PowerFxConnectorException("PagedRecordValue must contain a table");
             TableFieldName = tableProp.Name;
             CurrentTable = tableProp.Value as TableValue;
         }
