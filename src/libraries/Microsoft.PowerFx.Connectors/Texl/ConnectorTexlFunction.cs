@@ -57,16 +57,20 @@ namespace Microsoft.PowerFx.Connectors
         {
             List<TexlStrings.StringGetter> parameters = new ();
 
-            if (ConnectorFunction.RequiredParameters != null)
+            bool hasInvalidRequiredParameters = ConnectorFunction.RequiredParameters != null && ConnectorFunction.RequiredParameters.Any(p => p.HasErrors);
+            bool hasInvalidOptionalParameters = ConnectorFunction.OptionalParameters != null && ConnectorFunction.OptionalParameters.Any(p => p.HasErrors);
+
+            // If any of the required parameters had an error, we'll return no signature
+            if (ConnectorFunction.RequiredParameters != null && !hasInvalidRequiredParameters)
             {
                 parameters = ConnectorFunction.RequiredParameters.Select<ConnectorParameter, TexlStrings.StringGetter>(p => (locale) => p.Name).ToList();
                 yield return parameters.ToArray();
             }
 
-            // when any, optional parameters are in a record and this is a second signature
-            if (ConnectorFunction.OptionalParameters != null && ConnectorFunction.OptionalParameters.Any())
+            // when any, optional parameters are in a record and this is a second signature            
+            if (ConnectorFunction.OptionalParameters != null && ConnectorFunction.OptionalParameters.Length != 0 && !hasInvalidOptionalParameters)
             {
-                parameters.Add((locale) => $"{{ {string.Join(",", ConnectorFunction.OptionalParameters.Select(parm => $"{parm.Name}:{parm.FormulaType}"))} }}");
+                parameters.Add((locale) => $"{{ {string.Join(",", ConnectorFunction.OptionalParameters.Select(p => $"{p.Name}:{p.FormulaType}"))} }}");
                 yield return parameters.ToArray();
             }
         }

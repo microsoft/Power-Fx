@@ -297,7 +297,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         [InlineData(
             @"First(Office365Outlook.GetEventsCalendarView(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA="", ""2017-01-01T08:00:00-07:00"", ""2024-01-01T08:00:00-07:00"").Values).Subject",
-            "ERR:Office365Outlook.GetEventsCalendarView failed: The server returned an HTTP error with code 400.|Your request can't be completed. The range between the start and end dates is greater than the allowed range. Maximum number of days: 1825",
+            "ERR:Office365Outlook.GetEventsCalendarView failed: The server returned an HTTP error with code 400 (Bad Request).|Your request can't be completed. The range between the start and end dates is greater than the allowed range. Maximum number of days: 1825",
             "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Events/CalendarView?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3d&startDateTimeOffset=2017-01-01T08%3a00%3a00-07%3a00&endDateTimeOffset=2024-01-01T08%3a00%3a00-07%3a00",
             "",
             "400:Response_O365Outlook_GetEventsCalendarView_Error.json")]
@@ -472,7 +472,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         [InlineData(
             @"Office365Outlook.CalendarDeleteItem(""Calendar"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A1AAA="")",
-            "ERR:Office365Outlook.CalendarDeleteItem failed: The server returned an HTTP error with code 404.|The specified object was not found in the store.",
+            "ERR:Office365Outlook.CalendarDeleteItem failed: The server returned an HTTP error with code 404 (Not Found).|The specified object was not found in the store.",
             "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A1AAA%253d",
             "",
             "404:Response_O365Outlook_CalendarDeleteItem_NotFound.json")]
