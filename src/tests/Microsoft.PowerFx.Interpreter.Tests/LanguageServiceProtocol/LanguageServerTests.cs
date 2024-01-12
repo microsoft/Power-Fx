@@ -1644,7 +1644,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             });
         }
 
-        private static string FX2NlMessageJson(string documentUri)
+        private static string FX2NlMessageJson(string documentUri, string context = null)
         {
             return JsonSerializer.Serialize(new
             {
@@ -1659,7 +1659,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         LanguageId = "powerfx",
                         Version = 1
                     },
-                    Expression = "Score > 3"
+                    Expression = "Score > 3",
+                    NLContext = context
                 }
             });
         }
@@ -1668,13 +1669,19 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             private readonly TestNLHandler _handler;
 
+            public IPowerFxScope Scope { get; private set; }
+
+            public BaseNLParams NLParams { get; private set; }
+
             public TestNlHandlerFactory(TestNLHandler handler)
             {
                 _handler = handler;
             }
 
-            public NLHandler GetNLHandler(IPowerFxScope scope)
+            public NLHandler GetNLHandler(IPowerFxScope scope, BaseNLParams nlParams)
             {
+                Scope = scope;
+                NLParams = nlParams;
                 return _handler;
             }
         }
@@ -1793,6 +1800,49 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("123", errorResponse.Id);
             Assert.NotNull(errorResponse.Error);
+        }
+
+        [Fact]
+        public void TestNlHandlerCreation()
+        {
+            var documentUri = "powerfx://app?context=1";
+            var expectedExpr = "sentence";
+
+            var engine = new Engine();
+            var symbols = new SymbolTable();
+            symbols.AddVariable("Score", FormulaType.Number);
+            var editor = engine.CreateEditorScope(symbols: symbols);
+
+            var dict = new Dictionary<string, EditorContextScope>
+            {
+                { documentUri, editor }
+            };
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => dict[documentUri]);
+           
+            var testNLHandler = new TestNLHandler { Expected = expectedExpr };
+            var nlHandlerFactory = new TestNlHandlerFactory(testNLHandler);
+
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory, nlHandlerFactory);
+
+            List<Exception> exList = new List<Exception>();
+            testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
+
+            testServer.OnDataReceived(FX2NlMessageJson(documentUri, JsonSerializer.Serialize(new
+            {
+                Age = 24,
+                Name = "Foobar"
+            })));
+
+            var nlContext = nlHandlerFactory.NLParams.NLContext;
+            Assert.NotNull(nlContext);
+            Assert.NotNull(nlHandlerFactory.Scope);
+
+            var document = JsonDocument.Parse(nlContext);
+            var root = document.RootElement;
+            Assert.True(root.TryGetProperty("Age", out var age));
+            Assert.Equal(24, age.GetInt32());
+            Assert.True(root.TryGetProperty("Name", out var name));
+            Assert.Equal("Foobar", name.GetString());
         }
 
         [Fact]

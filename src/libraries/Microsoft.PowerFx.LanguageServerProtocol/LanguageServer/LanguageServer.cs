@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <summary>
         /// This const represents the dummy formula that is used to create an infrastructure needed to get the symbols for Nl2Fx operation.
         /// </summary>
-        internal const string Nl2FxDummyFormula = "\"Dummy Nl2Fx Check\"";
+        internal static string Nl2FxDummyFormula = '"' + Guid.NewGuid().ToString() + '"';
 
         public delegate void SendToClient(string data);
 
@@ -475,7 +475,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             {
                 var result = new CustomGetCapabilitiesResult();
 
-                var nl = GetNLHandler(_parent, scope);
+                var nl = GetNLHandler(_parent, scope, null);
                 if (nl != null)
                 {
                     result.SupportsNL2Fx = nl.SupportsNL2Fx;
@@ -495,7 +495,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             protected override CustomNL2FxResult Handle(IPowerFxScope scope, CustomNL2FxParams request)
             {
-                var nl = GetNLHandler(_parent, scope);
+                var nl = GetNLHandler(_parent, scope, request);
                 if (nl == null || !nl.SupportsNL2Fx)
                 {
                     throw new NotSupportedException($"NL2Fx not enabled");
@@ -548,7 +548,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             protected override CustomFx2NLResult Handle(IPowerFxScope scope, CustomFx2NLParams request)
             {
-                var nl = GetNLHandler(_parent, scope);
+                var nl = GetNLHandler(_parent, scope, request);
                 if (nl == null || !nl.SupportsFx2NL)
                 {
                     throw new NotSupportedException($"NL2Fx not enabled");
@@ -563,9 +563,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
         }
 
-        private static NLHandler GetNLHandler(LanguageServer server, IPowerFxScope scope)
+        private static NLHandler GetNLHandler(LanguageServer server, IPowerFxScope scope, BaseNLParams nlParams)
         {
-            return server.NLHandlerFactory?.GetNLHandler(scope) ?? server.NL2FxImplementation;
+            return server.NLHandlerFactory?.GetNLHandler(scope, nlParams) ?? server.NL2FxImplementation;
         }
 
         private void HandleCodeActionRequest(string id, string paramsJson)

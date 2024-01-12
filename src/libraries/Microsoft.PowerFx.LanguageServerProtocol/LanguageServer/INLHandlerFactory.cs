@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
@@ -14,7 +15,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// Get the NLHandler from the given scope.
         /// </summary>
         /// <param name="scope">IPowerFxScope instance.</param>
+        /// <param name="nlParams">NL operation params.</param>
         /// <returns>NLHandler for the given scope.</returns>
-        NLHandler GetNLHandler(IPowerFxScope scope);
+        NLHandler GetNLHandler(IPowerFxScope scope, BaseNLParams nlParams);
     }
 }
