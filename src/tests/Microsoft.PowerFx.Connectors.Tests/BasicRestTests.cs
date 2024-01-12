@@ -147,7 +147,7 @@ namespace Microsoft.PowerFx.Tests
             config.AddActionConnector("PetStore", apiDoc, new ConsoleLogger(_output));
 
             // Ensure we use HTTPS protocol
-            Assert.Equal("https", apiDoc.GetScheme().Substring(0, 5));
+            Assert.Equal("https", apiDoc.GetScheme(null).Substring(0, 5));
         }
     }
 }

@@ -68,8 +68,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
 
             ConnectorFunction func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");            
-            Assert.Equal("analysisInput:![documents:*[id:s, language:s, text:s]]|task:![parameters:![deploymentName:s, projectName:s, stringIndexType:s]]", string.Join("|", func1.RequiredParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));            
-            Assert.Equal("displayName:s", string.Join("|", func1.OptionalParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type.ToString()}")));
+            Assert.Equal("analysisInput:![documents:*[id:s, language:s, text:s]]|task:![parameters:![deploymentName:s, projectName:s, stringIndexType:s]]", string.Join("|", func1.RequiredParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));
+            Assert.Equal("displayName:s", string.Join("|", func1.OptionalParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));
 
             (connectorFunctions, texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc, new ConsoleLogger(_output));
             Assert.Contains(connectorFunctions, func => func.Namespace == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
@@ -202,7 +202,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(rt3Name, returnTypeName);
             Assert.True((FormulaType)expectedReturnType == returnType);
 
-            ConnectorType connectorReturnType = function.ConnectorReturnType;
+            ConnectorType connectorReturnType = function.ReturnParameterType;
             Assert.NotNull(connectorReturnType);
             Assert.Equal((FormulaType)expectedReturnType, connectorReturnType.FormulaType);
             Assert.Equal(2, connectorReturnType.Fields.Length);
@@ -310,7 +310,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(rt3Name, returnTypeName);
             Assert.True((FormulaType)expectedReturnType == returnType);
 
-            ConnectorType connectorReturnType = function.ConnectorReturnType;
+            ConnectorType connectorReturnType = function.ReturnParameterType;
             Assert.NotNull(connectorReturnType);
             Assert.Equal((FormulaType)expectedReturnType, connectorReturnType.FormulaType);
             Assert.Equal(2, connectorReturnType.Fields.Length);
@@ -728,14 +728,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(Visibility.Advanced, createFileV2.OptionalParameters[1].ConnectorType.Visibility);
             Assert.Equal(Visibility.Internal, createFileV2.OptionalParameters[2].ConnectorType.Visibility);
 
-            Assert.Equal(Visibility.None, createFileV2.ConnectorReturnType.Visibility);
+            Assert.Equal(Visibility.None, createFileV2.ReturnParameterType.Visibility);
 
             ConnectorFunction listFolderV4 = functions.First(f => f.Name == "ListFolderV4");
 
-            Assert.Equal(Visibility.None, listFolderV4.ConnectorReturnType.Visibility);
-            Assert.Equal(Visibility.None, listFolderV4.ConnectorReturnType.Fields[0].Visibility);
-            Assert.Equal(Visibility.Advanced, listFolderV4.ConnectorReturnType.Fields[1].Visibility);
-            Assert.Equal(Visibility.Advanced, listFolderV4.ConnectorReturnType.Fields[2].Visibility);
+            Assert.Equal(Visibility.None, listFolderV4.ReturnParameterType.Visibility);
+            Assert.Equal(Visibility.None, listFolderV4.ReturnParameterType.Fields[0].Visibility);
+            Assert.Equal(Visibility.Advanced, listFolderV4.ReturnParameterType.Fields[1].Visibility);
+            Assert.Equal(Visibility.Advanced, listFolderV4.ReturnParameterType.Fields[2].Visibility);
         }
 
         [Fact]
@@ -988,7 +988,7 @@ POST https://tip1-shared.azure-apim.net/invoke
             PowerFxConfig powerFxConfig = new PowerFxConfig();
             OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile);
 
-            OpenApiParser.GetFunctions("namespace", doc);
+            OpenApiParser.GetFunctions("namespace", doc); // missing logger
             powerFxConfig.AddActionConnector("namespace", doc);
         }
 
