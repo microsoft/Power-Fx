@@ -28,7 +28,9 @@ namespace Microsoft.PowerFx.Syntax
         private readonly ParserOptions _parserOptions;
         private readonly Features _features;
         private static readonly ISet<string> _restrictedUDFNames = new HashSet<string> { "Type", "IsType", "AsType" };
-        private static readonly ISet<DType> _restrictedTypes = new HashSet<DType> { DType.DateTimeNoTimeZone, DType.ObjNull,  DType.Decimal };
+
+        // Exposing it so hosts can filter out the intellisense suggestions
+        public static readonly ISet<DType> RestrictedTypes = new HashSet<DType> { DType.DateTimeNoTimeZone, DType.ObjNull,  DType.Decimal };
 
         private UserDefinitions(string script, ParserOptions parserOptions, Features features = null)
         {
@@ -129,7 +131,7 @@ namespace Microsoft.PowerFx.Syntax
                     argsAlreadySeen.Add(arg.NameIdent.Name);
 
                     var parameterType = arg.TypeIdent.GetFormulaType()._type;
-                    if (parameterType.Kind.Equals(DType.Unknown.Kind) || _restrictedTypes.Contains(parameterType))
+                    if (parameterType.Kind.Equals(DType.Unknown.Kind) || RestrictedTypes.Contains(parameterType))
                     {
                         errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
                         isParamCheckSuccessful = false;
@@ -145,7 +147,7 @@ namespace Microsoft.PowerFx.Syntax
             var returnTypeFormulaType = returnType.GetFormulaType()._type;
             var isReturnTypeCheckSuccessful = true;
 
-            if (returnTypeFormulaType.Kind.Equals(DType.Unknown.Kind) || _restrictedTypes.Contains(returnTypeFormulaType))
+            if (returnTypeFormulaType.Kind.Equals(DType.Unknown.Kind) || RestrictedTypes.Contains(returnTypeFormulaType))
             {
                 errors.Add(new TexlError(returnType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnType.Name));
                 isReturnTypeCheckSuccessful = false;
