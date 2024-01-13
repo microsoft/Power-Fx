@@ -1,0 +1,27 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#directoryObjects(aboutMe,accountEnabled,birthday,businessPhones,city,companyName,country,department,displayName,givenName,hireDate,id,interests,jobTitle,mail,mailNickname,mobilePhone,mySite,officeLocation,pastProjects,postalCode,preferredLanguage,preferredName,responsibilities,schools,skills,state,streetAddress,surname,userPrincipalName,userType)/$entity",
+  "@odata.type": "#microsoft.graph.user",
+  "accountEnabled": true,
+  "businessPhones": [
+    "+1 (555) 7054271"
+  ],
+  "city": "REDMOND",
+  "companyName": "CompanyName",
+  "country": null,
+  "department": "Aurora 09",
+  "displayName": "Bob Sponge",
+  "givenName": "Bob",
+  "id": "df050022-0271-4106-8ad9-ca51ff7ee2ff",
+  "jobTitle": "POWER FX SPONGE",
+  "mail": "A_CAPEQ_01@capintegration01.onmicrosoft.com",
+  "mailNickname": "sponge",
+  "mobilePhone": null,
+  "officeLocation": null,
+  "postalCode": null,
+  "preferredLanguage": null,
+  "state": null,
+  "streetAddress": null,
+  "surname": "Stall",
+  "userPrincipalName": "A_CAPEQ_01@capintegration01.onmicrosoft.com",
+  "userType": "Member"
+}

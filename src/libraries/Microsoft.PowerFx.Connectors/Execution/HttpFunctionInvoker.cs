@@ -25,14 +25,14 @@ namespace Microsoft.PowerFx.Connectors
     {
         private readonly HttpMessageInvoker _httpClient;
         private readonly ConnectorFunction _function;
-        private readonly bool _returnRawResults;
+        private readonly bool _returnRawResults;        
         private readonly ConnectorLogger _logger;
 
         public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext)
         {
             _function = function;
             _httpClient = runtimeContext.GetInvoker(function.Namespace);
-            _returnRawResults = runtimeContext.ReturnRawResults;
+            _returnRawResults = runtimeContext.ReturnRawResults;            
             _logger = runtimeContext.ExecutionLogger;
         }
 
@@ -57,31 +57,28 @@ namespace Microsoft.PowerFx.Connectors
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
-            Dictionary<string, FormulaValue> map = ConvertToNamedParameters(args);
+            Dictionary<string, FormulaValue> incomingParameters = ConvertToNamedParameters(args);
 
-            foreach (OpenApiParameter param in _function._internals.OpenApiBodyParameters)
+            foreach (KeyValuePair<ConnectorParameter, FormulaValue> param in _function._internals.OpenApiBodyParameters)
             {
-                if (map.TryGetValue(param.Name, out var paramValue))
+                if (incomingParameters.TryGetValue(param.Key.Name, out var paramValue))
                 {
-                    bodyParts.Add(param.Name, (param.Schema, paramValue));
+                    bodyParts.Add(param.Key.Name, (param.Key.Schema, paramValue));
                 }
-                else if (param.Schema.Default != null)
-                {
-                    if (OpenApiExtensions.TryGetOpenApiValue(param.Schema.Default, null, out FormulaValue defaultValue))
-                    {
-                        bodyParts.Add(param.Name, (param.Schema, defaultValue));
-                    }
+                else if (param.Key.Schema.Default != null && param.Value != null)
+                {                    
+                    bodyParts.Add(param.Key.Name, (param.Key.Schema, param.Value));                    
                 }
             }
 
-            if (bodyParts.Any())
+            if (bodyParts.Count != 0)
             {
-                body = GetBody(_function._internals.BodySchemaReferenceId, _function._internals.SchemaLessBody, bodyParts, utcConverter, cancellationToken);
+                body = GetBody(_function._internals.BodySchemaReferenceId, _function._internals.SchemaLessBody, bodyParts, utcConverter, cancellationToken);                
             }
 
             foreach (OpenApiParameter param in _function.Operation.Parameters)
             {
-                if (map.TryGetValue(param.Name, out var paramValue))
+                if (incomingParameters.TryGetValue(param.Name, out var paramValue))
                 {
                     var valueStr = paramValue?.ToObject()?.ToString() ?? string.Empty;
 
@@ -115,7 +112,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();            
+            var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();
             var request = new HttpRequestMessage(_function.HttpMethod, url);
 
             foreach (var kv in headers)
@@ -135,8 +132,9 @@ namespace Microsoft.PowerFx.Connectors
         {
             // First N are required params. 
             // Last param is a record with each field being an optional.
+            // Parameter names are case sensitive.
 
-            Dictionary<string, FormulaValue> map = new (StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, FormulaValue> map = new ();
 
             // Seed with default values. This will get overwritten if provided. 
             foreach (KeyValuePair<string, (bool required, FormulaValue fValue, DType dType)> kv in _function._internals.ParameterDefaultValues)
@@ -153,23 +151,23 @@ namespace Microsoft.PowerFx.Connectors
             for (int i = 0; i < _function.RequiredParameters.Length; i++)
             {
                 string parameterName = _function.RequiredParameters[i].Name;
-                FormulaValue value = args[i];
+                FormulaValue paramValue = args[i];
 
                 // Objects are always flattenned                
-                if (value is RecordValue record && !_function.RequiredParameters[i].IsBodyParameter)
+                if (paramValue is RecordValue record && !_function.RequiredParameters[i].IsBodyParameter)
                 {
                     foreach (NamedValue field in record.Fields)
                     {
                         map.Add(field.Name, field.Value);
                     }
                 }
-                else if (!map.ContainsKey(parameterName))
+                else if (!map.TryGetValue(parameterName, out FormulaValue existingParamValue))
                 {
-                    map.Add(parameterName, value);
+                    map.Add(parameterName, paramValue);
                 }
-                else if (value is RecordValue r)
+                else if (paramValue is RecordValue r)
                 {
-                    map[parameterName] = MergeRecords(map[parameterName] as RecordValue, r);
+                    map[parameterName] = MergeRecords(existingParamValue as RecordValue, r);
                 }
             }
 
@@ -197,7 +195,7 @@ namespace Microsoft.PowerFx.Connectors
                 else
                 {
                     // Type check should have caught this. 
-                    throw new InvalidOperationException($"Optional arg must be the last arg and a record");
+                    throw new PowerFxConnectorException($"Optional arguments must be the last argument and a record");
                 }
             }
 
@@ -251,7 +249,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else
                     {
-                        throw new ArgumentException($"Cannot merge '{field1.Name}' of type {field1.Value.GetType().Name} with '{field2.Name}' of type {field2.Value.GetType().Name}");
+                        throw new PowerFxConnectorException($"Cannot merge '{field1.Name}' of type {field1.Value.GetType().Name} with '{field2.Name}' of type {field2.Value.GetType().Name}");
                     }
                 }
             }
@@ -267,7 +265,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, CancellationToken cancellationToken)
+        private StringContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, CancellationToken cancellationToken)
         {
             FormulaValueSerializer serializer = null;
 
@@ -283,7 +281,7 @@ namespace Microsoft.PowerFx.Connectors
                 };
 
                 serializer.StartSerialization(referenceId);
-                foreach (var kv in map)
+                foreach (KeyValuePair<string, (OpenApiSchema Schema, FormulaValue Value)> kv in map)
                 {
                     serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
                 }
@@ -304,24 +302,69 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, bool throwOnError = false)
         {
+            // https://github.com/microsoft/Power-Fx/issues/2119
+            // https://github.com/microsoft/Power-Fx/issues/1172
+            // response.Content could be a ByteArrayContent
+            // we'll need to use _mediaKind to correctly create an Fx Image or Blob in this case
+            // when MediaKind.NotBinary is used, we'll always return a string (used for dynamic intellisense)
             var text = response?.Content == null
                             ? string.Empty
                             : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var statusCode = (int)response.StatusCode;
 
+#if RECORD_RESULTS
+            if (response.RequestMessage.Headers.TryGetValues("x-ms-request-url", out IEnumerable<string> urlHeader) &&
+                response.RequestMessage.Headers.TryGetValues("x-ms-request-method", out IEnumerable<string> verbHeader))
+            {
+                string url = urlHeader.FirstOrDefault();
+                string verb = verbHeader.FirstOrDefault();
+                string ext = _returnRawResults ? "raw" : "json";
+
+                if (!string.IsNullOrEmpty(url))
+                {
+                    string u2 = url.Replace('/', '_').Replace('?', '_').Replace('+', ' ').Replace('%', '_');
+                    u2 = u2.Substring(0, Math.Min(u2.Length, 100));
+
+                    int i = 0;
+                    string file = $@"C:\Temp\Response_{verb}_{(int)statusCode}_{u2}.{ext}";
+
+                    // Paging, when multiple result pages are returned, or when same request is run multiple times
+                    while (System.IO.File.Exists(file))
+                    {
+                        i++;
+                        file = $@"C:\Temp\Response_{verb}_{(int)statusCode}_{u2}_#{i:00}.{ext}";
+                    }
+
+                    if (!_returnRawResults)
+                    {
+                        System.IO.File.WriteAllText(file, text);
+                    }
+                    else
+                    {
+                        System.IO.File.WriteAllBytes(file, await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false));
+                    }
+                }
+            }
+#endif
+
             if (statusCode < 300)
             {
+                // We only return UO for unknown fields (not declared in swagger file) if compatibility is SwaggerCompatibility
+                bool returnUnknownRecordFieldAsUO = _function.ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility && _function.ConnectorSettings.ReturnUnknownRecordFieldsAsUntypedObjects;
+
                 return string.IsNullOrWhiteSpace(text)
                     ? FormulaValue.NewBlank(_function.ReturnType)
                     : _returnRawResults
                     ? FormulaValue.New(text)
-                    : FormulaValueJSON.FromJson(text, _function.ReturnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
+                    : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, _function.ReturnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
+
+            string reasonPhrase = string.IsNullOrEmpty(response.ReasonPhrase) ? string.Empty : $" ({response.ReasonPhrase})";
 
             if (throwOnError)
             {
-                throw new HttpRequestException($"Http Status Error {statusCode}: {text}");
+                throw new HttpRequestException($"Http Status Error {statusCode}{reasonPhrase}: {text}");
             }
 
             return FormulaValue.NewError(
@@ -329,7 +372,7 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         Kind = ErrorKind.Network,
                         Severity = ErrorSeverity.Critical,
-                        Message = $"The server returned an HTTP error with code {statusCode}. Response: {text}"
+                        Message = $"The server returned an HTTP error with code {statusCode}{reasonPhrase}. Response: {text}"
                     },
                     _function.ReturnType);
         }
@@ -391,7 +434,7 @@ namespace Microsoft.PowerFx.Connectors
             Name = name;
 
             _cacheScope = cacheScope;
-            _invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
+            _invoker = invoker ?? throw new ArgumentNullException(nameof(invoker), "Invoker cannot be null");
             _throwOnError = throwOnError;
         }
 
@@ -405,7 +448,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);            
+            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
             return _invoker.InvokeAsync(new ConvertToUTC(runtimeContext.TimeZoneInfo), _cacheScope, args, localInvoker, cancellationToken, _throwOnError);
         }
 
@@ -413,7 +456,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);            
+            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
             return _invoker.InvokeAsync(url, _cacheScope, localInvoker, cancellationToken, _throwOnError);
         }
     }
@@ -431,10 +474,17 @@ namespace Microsoft.PowerFx.Connectors
         {
             _tzi = tzi;
         }
-        
+
         public DateTime ToUTC(DateTimeValue dtv)
-        {
-            return dtv.GetConvertedValue(_tzi);
+        {            
+            DateTime dt = ((PrimitiveValue<DateTime>)dtv).Value;
+
+            return dt.Kind switch
+            {
+                DateTimeKind.Utc => dt,
+                DateTimeKind.Unspecified => TimeZoneInfo.ConvertTimeToUtc(dt, _tzi),
+                _ => TimeZoneInfo.ConvertTimeToUtc(new DateTime(dt.Ticks, DateTimeKind.Unspecified), _tzi)
+            };            
         }
     }
 }

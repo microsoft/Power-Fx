@@ -1,0 +1,13 @@
+{
+  "@odata.context": "https://graph.microsoft.com/beta/$metadata#Collection(microsoft.graph.emailAddress)",
+  "value": [
+    {
+      "name": "Seattle",
+      "address": "seattle@aurorafinanceintegration02.onmicrosoft.com"
+    },
+    {
+      "name": "Tokyo",
+      "address": "tokyo@aurorafinanceintegration02.onmicrosoft.com"
+    }
+  ]
+}

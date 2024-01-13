@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Connectors
     /// </summary>
     public enum Visibility : int
     {
-        // "x-ms-visibility" is not corresponding to any valid value (normally, only "important", "advanced" or "internal"
+        // "x-ms-visibility" is not corresponding to any valid value (normally, only "important", "advanced" or "internal")
         Unknown = -1,
 
         // "x-ms-visibility" is not defined

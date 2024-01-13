@@ -63,7 +63,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             var config = new PowerFxConfig(features: features ?? Features.None);
             config.AddFunction(new BehaviorFunction());
-
+            config.AddFunction(new AISummarizeFunction());
+            
             var engine = new Engine(config);
 
             _sendToClientData = new List<string>();
@@ -975,6 +976,40 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(3, _testServer.TestGetPosition("123", 0, 999));
 
             Assert.Empty(_exList);
+        }
+
+        // Ensure the disclaimer shows up in a signature.
+        [Fact]
+        public void TestSignatureDisclaimers()
+        {
+            var text = "AISummarize(";
+
+            var signatureHelpParams1 = new SignatureHelpParams
+            {
+                TextDocument = GetTextDocument(GetUri("expression=" + text)),
+                Text = text,
+                Position = GetPosition(text.Length),
+                Context = GetSignatureHelpContext("(")
+            };
+
+            Init(options: GetParserOptions(false));
+
+            // test good formula
+            var payload = GetSignatureHelpPayload(signatureHelpParams1);
+            _testServer.OnDataReceived(payload.payload);
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(_sendToClientData[0], _jsonSerializerOptions);
+
+            Assert.Equal("2.0", response.Jsonrpc);
+            Assert.Equal(payload.id, response.Id);
+            var sig = response.Result.Signatures.Single();
+            Assert.Equal("AISummarize()", sig.Label);
+
+            var je = (JsonElement)sig.Documentation;
+            var markdown = JsonSerializer.Deserialize<MarkupContent>(je.ToString(), _jsonSerializerOptions);
+            Assert.Equal("markdown", markdown.Kind);
+            Assert.StartsWith("Create and set a global variable", markdown.Value); // function's normal description 
+            Assert.Contains("**Disclaimer:** AI-generated content", markdown.Value); // disclaimer appended. 
         }
 
         [Theory]
@@ -2291,6 +2326,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.True(errElement.TryGetProperty("code", out var codeElement));
             var code = (JsonRpcHelper.ErrorCode)codeElement.GetInt32();
             Assert.Equal(expectedCode, code);
+            Assert.True(root.TryGetProperty("fxVersion", out var fxVersionElement));
+            Assert.Equal(Engine.AssemblyVersion, fxVersionElement.GetString());
         }
 
         private static T AssertAndGetResponsePayload<T>(string response, string id)
@@ -2301,6 +2338,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             root.TryGetProperty("id", out var responseId);
             Assert.Equal(id, responseId.GetString());
             root.TryGetProperty("result", out var resultElement);
+            Assert.True(root.TryGetProperty("fxVersion", out var fxVersionElement));
+            Assert.Equal(Engine.AssemblyVersion, fxVersionElement.GetString());
             var paramsObj = JsonSerializer.Deserialize<T>(resultElement.GetRawText(), _jsonSerializerOptions);
             return paramsObj;
         }

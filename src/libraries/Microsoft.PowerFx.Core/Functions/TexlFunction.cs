@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -37,6 +38,7 @@ using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 namespace Microsoft.PowerFx.Core.Functions
 {
     [ThreadSafeImmutable]
+    [DebuggerDisplay("{Name}")]
     internal abstract class TexlFunction : IFunction
     {
         // Column name when Features.ConsistentOneColumnTableResult is enabled.
@@ -275,6 +277,23 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // A description associated with this function.
         public string Description => _description(null);
+
+        /// <summary>
+        /// This function requires an AI disclaimer. 
+        /// </summary>
+        public virtual bool ShowAIDisclaimer => _aiWhitelist.Contains(this.Name);
+
+        // Move away from whitelist: https://github.com/microsoft/Power-Fx/issues/2118
+        private static readonly ISet<string> _aiWhitelist = new HashSet<string>()
+        {
+            "AIClassify", 
+            "AIExtract",
+            "AIReply",
+            "AISentiment",
+            "AISummarize",
+            "AISummarizeRecord",
+            "AITranslate"
+        };
 
         // A forward link to the function help.
         public virtual string HelpLink =>

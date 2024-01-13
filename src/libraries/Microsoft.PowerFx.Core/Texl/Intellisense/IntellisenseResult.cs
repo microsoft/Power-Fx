@@ -78,6 +78,8 @@ namespace Microsoft.PowerFx.Intellisense
             }
             else
             {
+                Func<MarkdownString> aiDisclaimer = new DisclaimerProvider(null).Getter;                
+
                 IsFunctionScope = true;
                 var highlightStart = -1;
                 var highlightEnd = -1;
@@ -149,6 +151,7 @@ namespace Microsoft.PowerFx.Intellisense
                         {
                             // Use overload description and not IntellisenseData.CurrFunc overload
                             Documentation = !string.IsNullOrWhiteSpace(possibleOverload?.Description) ? possibleOverload.Description : func.Description,
+                            GetDisclaimerMarkdown = possibleOverload.ShowAIDisclaimer ? aiDisclaimer : null,
                             Label = CreateFunctionSignature(func.Name, parameters, shouldAddEllipsis),
                             Parameters = parameters.ToArray(),
                         };
@@ -170,6 +173,7 @@ namespace Microsoft.PowerFx.Intellisense
                     var signatureInformation = new SignatureInformation()
                     {
                         Documentation = func.Description,
+                        GetDisclaimerMarkdown = func.ShowAIDisclaimer ? aiDisclaimer : null,
                         Label = CreateFunctionSignature(func.Name),
                         Parameters = new ParameterInformation[0],
                     };

@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Connectors
     // FormulaType is used to represent the type of the parameter in the Power Fx expression as used in Power Apps
     // ConnectorType contains more details information coming from the swagger file and extensions
     [DebuggerDisplay("{FormulaType._type}")]
-    public class ConnectorType
+    public class ConnectorType : SupportsConnectorErrors
     {
         // "name"
         public string Name { get; internal set; }
@@ -57,9 +57,9 @@ namespace Microsoft.PowerFx.Connectors
         // Option Set, only defined when IsEnum is true and EnumValues is not empty
         public OptionSet OptionSet => GetOptionSet();
 
-        public Visibility Visibility { get; internal set; }
+        public Visibility Visibility { get; internal set; }  
 
-        internal RecordType HiddenRecordType { get; }       
+        internal RecordType HiddenRecordType { get; }
 
         public bool SupportsDynamicValuesOrList => DynamicValues != null || DynamicList != null;
 
@@ -77,16 +77,19 @@ namespace Microsoft.PowerFx.Connectors
 
         internal bool Binary { get; private set; }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, bool binary = false)
+        internal MediaKind MediaKind { get; private set; }        
+
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType)
         {
             Name = openApiParameter?.Name;
             IsRequired = openApiParameter?.Required == true;
             Visibility = openApiParameter?.GetVisibility().ToVisibility() ?? Visibility.Unknown;
             FormulaType = formulaType;
-            Binary = binary;
+            Binary = schema.Format == "binary";
+            MediaKind = openApiParameter?.GetMediaKind().ToMediaKind() ?? (Binary ? MediaKind.File : MediaKind.NotBinary);
 
             if (schema != null)
-            {
+            {                
                 Description = schema.Description;
                 DisplayName = schema.GetSummary();
                 ExplicitInput = schema.GetExplicitInput();
@@ -96,7 +99,17 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (IsEnum)
                 {
-                    EnumValues = schema.Enum.Select(oaa => OpenApiExtensions.TryGetOpenApiValue(oaa, null, out FormulaValue fv) ? fv : throw new NotSupportedException($"Invalid conversion for type {oaa.GetType().Name} in enum")).ToArray();
+                    EnumValues = schema.Enum.Select(oaa =>
+                    {                        
+                        if (OpenApiExtensions.TryGetOpenApiValue(oaa, null, out FormulaValue fv, this))
+                        {
+                            return fv;
+                        }
+                        
+                        AddError($"Invalid conversion for type {oaa.GetType().Name} in enum");
+                        return FormulaValue.NewBlank();
+                    }).ToArray();
+
                     EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue(XMsEnumDisplayName, out IOpenApiExtension enumNames) && enumNames is OpenApiArray oaa
                                         ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
                                         : Array.Empty<string>();
@@ -105,22 +118,25 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     EnumValues = Array.Empty<FormulaValue>();
                     EnumDisplayNames = Array.Empty<string>();
-                }                                               
+                }
             }
 
-            DynamicSchema = openApiParameter.GetDynamicSchema();
-            DynamicProperty = openApiParameter.GetDynamicProperty();
-            DynamicValues = openApiParameter.GetDynamicValue();
-            DynamicList = openApiParameter.GetDynamicList();
+            DynamicSchema = AggregateErrors(openApiParameter.GetDynamicSchema());
+            DynamicProperty = AggregateErrors(openApiParameter.GetDynamicProperty());
+            DynamicValues = AggregateErrors(openApiParameter.GetDynamicValue());
+            DynamicList = AggregateErrors(openApiParameter.GetDynamicList());
         }
 
-        internal ConnectorType()
+        internal static readonly FormulaType DefaultType = FormulaType.UntypedObject;
+
+        internal ConnectorType(string error)
+            : base(error)
         {
-            FormulaType = new BlankType();
+            FormulaType = DefaultType;
         }
 
-        internal ConnectorType(OpenApiSchema schema)
-            : this(schema, null, new OpenApiParameter() { Schema = schema }.ToConnectorType())
+        internal ConnectorType(OpenApiSchema schema, ConnectorCompatibility compatibility)
+            : this(schema, null, new OpenApiParameter() { Schema = schema }.GetConnectorType(compatibility))
         {
         }
 
@@ -128,6 +144,7 @@ namespace Microsoft.PowerFx.Connectors
             : this(schema, openApiParameter, connectorType.FormulaType)
         {
             Fields = connectorType.Fields;
+            AggregateErrors(connectorType);
         }
 
         internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, RecordType hiddenRecordType)
@@ -141,6 +158,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             Fields = new ConnectorType[] { tableConnectorType };
             HiddenRecordType = null;
+            AggregateErrors(tableConnectorType);
         }
 
         internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
@@ -149,6 +167,19 @@ namespace Microsoft.PowerFx.Connectors
             Fields = fields;
             HiddenFields = hiddenFields;
             HiddenRecordType = hiddenRecordType;
+            AggregateErrors(fields);
+            AggregateErrors(hiddenFields);
+        }
+
+        private void AggregateErrors(ConnectorType[] types)
+        {
+            if (types != null)
+            {
+                foreach (ConnectorType type in types)
+                {
+                    AggregateErrors(type);
+                }
+            }
         }
 
         private OptionSet GetOptionSet()
@@ -159,6 +190,6 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return new OptionSet(Name, EnumValues.Select(ev => ev.ToObject().ToString()).Zip(EnumDisplayNames, (ev, dn) => new KeyValuePair<string, string>(ev, dn)).ToDictionary(kvp => new DName(kvp.Key), kvp => new DName(kvp.Value)).ToImmutableDictionary());
-        }
+        }       
     }
 }

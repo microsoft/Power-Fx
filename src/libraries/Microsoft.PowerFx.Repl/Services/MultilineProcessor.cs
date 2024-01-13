@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Repl.Services
 
         // Return null if we need more input. 
         // else return string containing multiple lines together. 
-        public virtual string HandleLine(string line)
+        public virtual string HandleLine(string line, ParserOptions parserOptions)
         {
             _commandBuffer.AppendLine(line);
 
@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Repl.Services
             // We use the parser results to determine if the command is complete or more lines are needed.
             // The Engine features and parser options do not need to match what we will actually use,
             // this just needs to be good enough to detect the errors below for multiline processing.
-            var result = Engine.Parse(commandBufferString);
+            var result = Engine.Parse(commandBufferString, options: parserOptions);
 
             // We will get this error, with this argument, if we are missing closing punctuation.
             var missingClose = result.Errors.Any(error => error.MessageKey == "ErrExpectedFound_Ex_Fnd" &&
@@ -54,6 +54,18 @@ namespace Microsoft.PowerFx.Repl.Services
             if (!missingClose || badToken || emptyLine)
             {
                 Clear();
+
+                // Removes one newline from the end (\r\n or just \n) for the enter provided by the user.
+                // Important for TextFirst lexer mode where a newline would be significant.
+                if (commandBufferString.EndsWith("\r\n", StringComparison.InvariantCulture))
+                {
+                    commandBufferString = commandBufferString.Substring(0, commandBufferString.Length - 2);
+                }
+                else if (commandBufferString.EndsWith("\n", StringComparison.InvariantCulture))
+                {
+                    commandBufferString = commandBufferString.Substring(0, commandBufferString.Length - 1);
+                }
+                
                 return commandBufferString;
             }
             else

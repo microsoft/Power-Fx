@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Models;
@@ -28,12 +29,25 @@ namespace Microsoft.PowerFx.Tests
             return File.OpenRead(name);
         }
 
-        public static string ReadAllText(string name)
+        // returns byte[] or string depending on name extension
+        public static object ReadStream(string name)
         {
+            string[] byteArrayExtensions = new string[] { ".jpeg", ".jpg", ".png", ".pdf" };
+
             using (var stream = GetStream(name))
-            using (var textReader = new StreamReader(stream))
             {
-                return textReader.ReadToEnd();
+                // return byte[] for images
+                if (byteArrayExtensions.Any(ext => name.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
+                {
+                    using var memoryStream = new MemoryStream();
+                    stream.CopyTo(memoryStream);
+                    return memoryStream.ToArray();
+                }
+                else
+                {
+                    using var streamReader = new StreamReader(stream);                    
+                    return streamReader.ReadToEnd();                    
+                }
             }
         }
 

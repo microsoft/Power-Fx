@@ -1,22 +1,4 @@
-#SETUP: OptionSetSortTestSetup
-
->> Sort(t1, OptionSetField1, SortOrder.Ascending)
-Table({OptionSetField1:OptionSet.option_1,StrField1:"test1"},{OptionSetField1:OptionSet.option_2,StrField1:"test2"})
-
->> Sort(t1, OptionSetField1, SortOrder.Descending)
-Table({OptionSetField1:OptionSet.option_2,StrField1:"test2"},{OptionSetField1:OptionSet.option_1,StrField1:"test1"})
-
->> Sort(t2, OptionSetField1, SortOrder.Ascending)
-Table({OptionSetField1:OptionSet.option_1,StrField1:"test1"},{OptionSetField1:OptionSet.option_1,StrField1:"test3"},{OptionSetField1:OptionSet.option_2,StrField1:"test2"},{OptionSetField1:OptionSet.option_2,StrField1:"test4"})
-
->> Sort(t2, OptionSetField1, SortOrder.Descending)
-Table({OptionSetField1:OptionSet.option_2,StrField1:"test2"},{OptionSetField1:OptionSet.option_2,StrField1:"test4"},{OptionSetField1:OptionSet.option_1,StrField1:"test1"},{OptionSetField1:OptionSet.option_1,StrField1:"test3"})
-
-// Sort(t3, OptionSetField1, SortOrder.Ascending)
-// Option set doesn't support blank value yet
-
-// Sort(t3, OptionSetField1, SortOrder.Descending)
-// Option set doesn't support blank value yet
+// ******** NUMBER COLUMNS ********
 
 >> Sort([-2, -1, 5, 1, 2], Value)
 Table({Value:-2},{Value:-1},{Value:1},{Value:2},{Value:5})
@@ -33,6 +15,14 @@ Table({Value:5},{Value:2},{Value:1},{Value:-2},{Value:Blank()})
 >> Sort([-2, -1, 0, 1, 2], 1 / Value)
 Error({Kind:ErrorKind.Div0})
 
+>> Sort(Table({a:8, b:-1}, {a:2}, {b:5}), a)
+Table({a:2,b:Blank()},{a:8,b:-1},{a:Blank(),b:5})
+
+>> Sort(Table({a:8, b:-1}, {a:2}, {b:5}), b, SortOrder.Descending)
+Table({a:Blank(),b:5},{a:8,b:-1},{a:2,b:Blank()})
+
+// ******** STRING COLUMNS ********
+
 >> Sort(["a", "b", "D", "x", "J", "C"], Value)
 Table({Value:"a"},{Value:"b"},{Value:"C"},{Value:"D"},{Value:"J"},{Value:"x"})
 
@@ -44,6 +34,14 @@ Table({Value:"a"},{Value:"b"},{Value:"C"},{Value:"J"},{Value:"x"},{Value:Blank()
 
 >> Sort(["a", "b", Blank(), "x", "J", "C"], Value, SortOrder.Descending)
 Table({Value:"x"},{Value:"J"},{Value:"C"},{Value:"b"},{Value:"a"},{Value:Blank()})
+
+>> Sort(["Hello", "hellO", "hello", "heLLo", "HELLO", "hElLo"], Value)
+Table({Value:"hello"},{Value:"hellO"},{Value:"heLLo"},{Value:"hElLo"},{Value:"Hello"},{Value:"HELLO"})
+
+>> Sort(["Hello", "hellO", "1", "%", "2", "hElLo"], Value)
+Table({Value:"%"},{Value:"1"},{Value:"2"},{Value:"hellO"},{Value:"hElLo"},{Value:"Hello"})
+
+// ******** BOOLEAN COLUMNS ********
 
 >> Sort([true,false,true,false,true], Value)
 Table({Value:false},{Value:false},{Value:true},{Value:true},{Value:true})
@@ -57,16 +55,31 @@ Table({Value:false},{Value:false},{Value:true},{Value:true},{Value:Blank()})
 >> Sort([true,false,Blank(),false,true], Value, SortOrder.Descending)
 Table({Value:true},{Value:true},{Value:false},{Value:false},{Value:Blank()})
 
+// ******** DATE/TIME COLUMNS ********
+
 >> Sort([Date(2020, 01, 05), Date(2020, 01, 01), Date(1995, 01, 01)], Value)
 Table({Value:Date(1995,1,1)},{Value:Date(2020,1,1)},{Value:Date(2020,1,5)})
 
 >> Sort([Date(2020, 01, 05), Date(2020, 01, 01), Date(1995, 01, 01)], Value, SortOrder.Descending)
 Table({Value:Date(2020,1,5)},{Value:Date(2020,1,1)},{Value:Date(1995,1,1)})
 
->> Sort([DateTimeValue("May 16, 2019 8:00:00 AM"), DateTimeValue("May 16, 2019 8:00:00 PM"), DateTimeValue("May 16, 2019 8:00:01 PM")], Value)
+// ******** TIME COLUMNS ********
+
+>> Sort([Time(12,35,55), Time(23, 01, 01), Time(5,30,50)], Value)
+Table({Value:Time(5,30,50,0)},{Value:Time(12,35,55,0)},{Value:Time(23,1,1,0)})
+
+>> Sort([Time(12,35,55), Time(23, 01, 01), Time(5,30,50)], Value, SortOrder.Descending)
+Table({Value:Time(23,1,1,0)},{Value:Time(12,35,55,0)},{Value:Time(5,30,50,0)})
+
+>> Sort([Time(17,29,0), Blank(), Time(5,30,50)], Value)
+Table({Value:Time(5,30,50,0)},{Value:Time(17,29,0,0)},{Value:Blank()})
+
+// ******** DATETIME COLUMNS ********
+
+>> Sort([DateTime(2019,5,16,8,0,0), DateTime(2019,5,16,20,0,0), DateTime(2019,5,16,20,0,1)], Value)
 Table({Value:DateTime(2019,5,16,8,0,0,0)},{Value:DateTime(2019,5,16,20,0,0,0)},{Value:DateTime(2019,5,16,20,0,1,0)})
 
->> Sort([DateTimeValue("May 16, 2019 8:00:00 AM"), DateTimeValue("May 16, 2019 8:00:00 PM"), DateTimeValue("May 16, 2019 8:00:01 PM")], Value, SortOrder.Descending)
+>> Sort([DateTime(2019,5,16,8,0,0), DateTime(2019,5,16,20,0,0), DateTime(2019,5,16,20,0,1)], Value, SortOrder.Descending)
 Table({Value:DateTime(2019,5,16,20,0,1,0)},{Value:DateTime(2019,5,16,20,0,0,0)},{Value:DateTime(2019,5,16,8,0,0,0)})
 
 >> First(LastN(Sort([-2, -1, 0, 1, 2], 1 / Value), 3)).Value
@@ -106,6 +119,10 @@ Table()
 //Empty table and String sort formula parameter
 >> Sort([], "Hello")
 Table()
+
+// ERROR HANDLED IN SORT FORMULA
+>> Sort([10, 2, 30, Sqrt(-1), 4, 1/0, 50], IfError(Value, -FirstError.Kind))
+Table({Value:Error({Kind:ErrorKind.Numeric})},{Value:Error({Kind:ErrorKind.Div0})},{Value:2},{Value:4},{Value:10},{Value:30},{Value:50})
 
 // ERROR PASSED AS SORT FORMULA
 

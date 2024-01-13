@@ -142,6 +142,7 @@
     "Value",
     "VarP",
     "Weekday",
+    "WeekNum",
     "With",
     "Year"
   ]

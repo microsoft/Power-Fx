@@ -1,12 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using static Microsoft.PowerFx.Core.Parser.TexlParser;
 
 namespace Microsoft.PowerFx
 {
@@ -24,6 +21,12 @@ namespace Microsoft.PowerFx
         /// If true, numbers are treated as float.  By default, numbers are treated as decimal.
         /// </summary>
         public bool NumberIsFloat { get; set; }
+
+        /// <summary>
+        /// If true, parse starts in text literal mode, with string interpolation islands of ${ ... }.
+        /// If the starting non-whitespace charatcer is an equal sign ("="), a normal parse is used instead.
+        /// </summary>
+        public bool TextFirst { get; set; }
 
         /// <summary>
         /// If true, various words have been reserved and are not available for identifiers.
@@ -77,11 +80,20 @@ namespace Microsoft.PowerFx
 
             var flags = (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
                         (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0) |
-                        (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0);
+                        (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0) |
+                        (TextFirst ? TexlParser.Flags.TextFirst : 0);
 
             var result = TexlParser.ParseScript(script, features, Culture, flags);
             result.Options = this;
             return result;
+        }
+
+        internal Flags GetParserFlags()
+        {
+            return (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
+                        (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0) |
+                        (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0) |
+                        (TextFirst ? TexlParser.Flags.TextFirst : 0);
         }
     }
 }

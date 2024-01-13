@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string LogKnownParameters(NamedValue[] knownParameters)
         {
-            if (knownParameters == null || !knownParameters.Any())
+            if (knownParameters == null || knownParameters.Length == 0)
             {
                 return "no parameter";
             }
@@ -34,7 +34,14 @@ namespace Microsoft.PowerFx.Connectors
                 return Null(nameof(ConnectorType));
             }
 
-            return $"{nameof(ConnectorType)} {connectorType?.Name ?? Null(nameof(connectorType.Name))} {connectorType?.FormulaType._type.ToString() ?? Null(nameof(ConnectorType.FormulaType))}";
+            string log = $"{nameof(ConnectorType)} {connectorType?.Name ?? Null(nameof(connectorType.Name))} {connectorType?.FormulaType._type.ToString() ?? Null(nameof(ConnectorType.FormulaType))}";
+
+            if (connectorType.HasErrors)
+            {
+                log += $" With errors: {string.Join(", ", connectorType.Errors)}";
+            }
+
+            return log;
         }
 
         internal static string LogConnectorParameter(ConnectorParameter connectorParameter)
@@ -49,7 +56,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string LogArguments(FormulaValue[] arguments)
         {
-            if (arguments == null || !arguments.Any())
+            if (arguments == null || arguments.Length == 0)
             {
                 return "no argument";
             }
@@ -114,7 +121,7 @@ namespace Microsoft.PowerFx.Connectors
                 return Null();
             }
 
-            if (connectorParameters.ParametersWithSuggestions == null || !connectorParameters.ParametersWithSuggestions.Any())
+            if (connectorParameters.ParametersWithSuggestions == null || connectorParameters.ParametersWithSuggestions.Length == 0)
             {
                 return $"no parameter, Completed = {connectorParameters.IsCompleted}";
             }
@@ -132,7 +139,8 @@ namespace Microsoft.PowerFx.Connectors
             return $"{nameof(connectorSettings.Namespace)} {connectorSettings.Namespace ?? Null(nameof(connectorSettings.Namespace))}, " +
                    $"{nameof(connectorSettings.MaxRows)} {connectorSettings.MaxRows}, " +
                    $"{nameof(connectorSettings.FailOnUnknownExtension)} {connectorSettings.FailOnUnknownExtension}, " +
-                   $"{nameof(connectorSettings.AllowUnsupportedFunctions)} {connectorSettings.AllowUnsupportedFunctions}, ";           
+                   $"{nameof(connectorSettings.AllowUnsupportedFunctions)} {connectorSettings.AllowUnsupportedFunctions}, " +
+                   $"{nameof(connectorSettings.IncludeInternalFunctions)} {connectorSettings.IncludeInternalFunctions}, ";
         }
 
         internal static string LogException(Exception ex)

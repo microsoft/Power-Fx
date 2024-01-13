@@ -2324,10 +2324,6 @@
     <value>A field named '{0}' was specified more than once in this record.</value>
     <comment>Parse error on duplicate field definitions.</comment>
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>A column named '{0}' was specified more than once.</value>
     <comment>Duplicate columns.</comment>
@@ -4408,5 +4404,9 @@
   <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
     <value>Deprecated use of '.'. Please use the 'ShowColumns' function instead.</value>
     <comment>{Locked='ShowColumns'}</comment>
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Disclaimer:** AI-generated content can have mistakes. Make sure it's accurate and appropriate before using it. [See terms](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    <comment>The disclaimer we show on AI functions. This is github flavored markdown. So ** marks text in bold. </comment>
   </data>
 </root>

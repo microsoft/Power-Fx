@@ -1,0 +1,40 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users(aboutMe,accountEnabled,birthday,businessPhones,city,companyName,country,department,displayName,givenName,hireDate,id,interests,jobTitle,mail,mailNickname,mobilePhone,mySite,officeLocation,pastProjects,postalCode,preferredLanguage,preferredName,responsibilities,schools,skills,state,streetAddress,surname,userPrincipalName,userType)/$entity",
+  "aboutMe": null,
+  "birthday": "0001-01-01T08:00:00Z",
+  "hireDate": "0001-01-01T08:00:00Z",
+  "interests": [
+  ],
+  "mySite": "https://capintegration01-my.sharepoint.com/personal/accountmanager_capintegration01_onmicrosoft_com/",
+  "pastProjects": [
+  ],
+  "preferredName": "",
+  "responsibilities": [
+  ],
+  "schools": [
+  ],
+  "skills": [
+  ],
+  "accountEnabled": true,
+  "businessPhones": [
+  ],
+  "city": null,
+  "companyName": null,
+  "country": null,
+  "department": null,
+  "displayName": "account manager",
+  "givenName": "account",
+  "id": "dae277a8-343d-42ff-bd17-16dd634092c9",
+  "jobTitle": null,
+  "mail": null,
+  "mailNickname": "accountmanager",
+  "mobilePhone": null,
+  "officeLocation": null,
+  "postalCode": null,
+  "preferredLanguage": "en-US",
+  "state": null,
+  "streetAddress": null,
+  "surname": "manager",
+  "userPrincipalName": "accountmanager@capintegration01.onmicrosoft.com",
+  "userType": "Member"
+}

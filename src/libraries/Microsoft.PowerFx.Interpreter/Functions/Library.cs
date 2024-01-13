@@ -1827,6 +1827,19 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Weekday)
             },
             {
+                BuiltinFunctionsCore.WeekNum,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.WeekNum.Name,
+                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        DateOrTimeOrDateTime,
+                        ExactValueTypeOrBlank<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: WeekNum)
+            },
+            {
                 BuiltinFunctionsCore.With,
                 StandardErrorHandlingAsync<FormulaValue>(
                     BuiltinFunctionsCore.With.Name,

@@ -1,0 +1,8 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users(id,mySite,mail,mailNickname,userPrincipalName)/$entity",
+  "id": "32ba11bd-ff15-46f7-bd33-6b481e5f5c7e",
+  "mail": "aurorauser09@capintegration01.onmicrosoft.com",
+  "mailNickname": "aurorauser09",
+  "userPrincipalName": "aurorauser09@capintegration01.onmicrosoft.com",
+  "mySite": "https://capintegration01-my.sharepoint.com/personal/aurorauser09_capintegration01_onmicrosoft_com/"
+}

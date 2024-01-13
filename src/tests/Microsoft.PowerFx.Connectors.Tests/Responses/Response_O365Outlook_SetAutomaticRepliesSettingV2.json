@@ -1,0 +1,18 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users('d8e90db6-d09c-4a90-bc1e-86512a797fd3')/mailboxSettings",
+  "userPurpose": "unknown",
+  "automaticRepliesSetting": {
+    "status": "alwaysEnabled",
+    "externalAudience": "all",
+    "internalReplyMessage": "internal message",
+    "externalReplyMessage": "external message",
+    "scheduledStartDateTime": {
+      "dateTime": "2023-12-27T08:00:00.0000000",
+      "timeZone": "UTC"
+    },
+    "scheduledEndDateTime": {
+      "dateTime": "2023-12-28T08:00:00.0000000",
+      "timeZone": "UTC"
+    }
+  }
+}
