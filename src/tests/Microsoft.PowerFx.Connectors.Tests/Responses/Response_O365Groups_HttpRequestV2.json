@@ -1,0 +1,746 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/events",
+  "value": [
+    {
+      "@odata.etag": "W/\"rlH4VFk60E2mW9t2nJD1lwAAUjuCdg==\"",
+      "id": "AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU-nnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxTAAA=",
+      "createdDateTime": "2023-12-13T14:04:56.1381173Z",
+      "lastModifiedDateTime": "2023-12-13T14:04:56.1688617Z",
+      "changeKey": "rlH4VFk60E2mW9t2nJD1lwAAUjuCdg==",
+      "categories": [
+      ],
+      "transactionId": null,
+      "originalStartTimeZone": "UTC",
+      "originalEndTimeZone": "UTC",
+      "iCalUId": "040000008200E00074C5B7101A82E00800000000B93BF059CD2DDA01000000000000000010000000E79C278697A2C54D98E90567388F9E99",
+      "reminderMinutesBeforeStart": 15,
+      "isReminderOn": true,
+      "hasAttachments": false,
+      "subject": "Event1",
+      "bodyPreview": "",
+      "importance": "normal",
+      "sensitivity": "normal",
+      "isAllDay": false,
+      "isCancelled": false,
+      "isOrganizer": true,
+      "responseRequested": true,
+      "seriesMasterId": null,
+      "showAs": "busy",
+      "type": "singleInstance",
+      "webLink": "https://outlook.office365.com/calendar/deeplink/read/group/capintegration01.onmicrosoft.com/TestProject9Aug/AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU%2FnnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxTAAA%3D",
+      "onlineMeetingUrl": null,
+      "isOnlineMeeting": false,
+      "onlineMeetingProvider": "unknown",
+      "allowNewTimeProposals": true,
+      "occurrenceId": null,
+      "isDraft": false,
+      "hideAttendees": false,
+      "responseStatus": {
+        "response": "organizer",
+        "time": "0001-01-01T00:00:00Z"
+      },
+      "body": {
+        "contentType": "html",
+        "content": "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n<meta name=\"Generator\" content=\"Microsoft Exchange Server\">\r\n<!-- converted from text -->\r\n<style><!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --></style></head>\r\n<body>\r\n<font size=\"2\"><span style=\"font-size:11pt;\"><div class=\"PlainText\">&nbsp;</div></span></font>\r\n</body>\r\n</html>\r\n"
+      },
+      "start": {
+        "dateTime": "2023-12-13T15:04:53.2103444",
+        "timeZone": "UTC"
+      },
+      "end": {
+        "dateTime": "2023-12-13T15:04:53.2103711",
+        "timeZone": "UTC"
+      },
+      "location": {
+        "displayName": "",
+        "locationType": "default",
+        "uniqueIdType": "unknown",
+        "address": {
+        },
+        "coordinates": {
+        }
+      },
+      "locations": [
+      ],
+      "recurrence": null,
+      "attendees": [
+      ],
+      "organizer": {
+        "emailAddress": {
+          "name": "TestProject9Aug",
+          "address": "TestProject9Aug@capintegration01.onmicrosoft.com"
+        }
+      },
+      "onlineMeeting": null,
+      "calendar@odata.associationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar/$ref",
+      "calendar@odata.navigationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar"
+    },
+    {
+      "@odata.etag": "W/\"rlH4VFk60E2mW9t2nJD1lwAAUjuCdA==\"",
+      "id": "AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU-nnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxSAAA=",
+      "createdDateTime": "2023-12-13T14:04:54.298286Z",
+      "lastModifiedDateTime": "2023-12-13T14:04:54.3333345Z",
+      "changeKey": "rlH4VFk60E2mW9t2nJD1lwAAUjuCdA==",
+      "categories": [
+      ],
+      "transactionId": null,
+      "originalStartTimeZone": "UTC",
+      "originalEndTimeZone": "UTC",
+      "iCalUId": "040000008200E00074C5B7101A82E0080000000071E5D658CD2DDA010000000000000000100000001BF64B2F8B733E48A94F121630BD79FC",
+      "reminderMinutesBeforeStart": 15,
+      "isReminderOn": true,
+      "hasAttachments": false,
+      "subject": "Event1",
+      "bodyPreview": "",
+      "importance": "normal",
+      "sensitivity": "normal",
+      "isAllDay": false,
+      "isCancelled": false,
+      "isOrganizer": true,
+      "responseRequested": true,
+      "seriesMasterId": null,
+      "showAs": "busy",
+      "type": "singleInstance",
+      "webLink": "https://outlook.office365.com/calendar/deeplink/read/group/capintegration01.onmicrosoft.com/TestProject9Aug/AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU%2FnnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxSAAA%3D",
+      "onlineMeetingUrl": null,
+      "isOnlineMeeting": false,
+      "onlineMeetingProvider": "unknown",
+      "allowNewTimeProposals": true,
+      "occurrenceId": null,
+      "isDraft": false,
+      "hideAttendees": false,
+      "responseStatus": {
+        "response": "organizer",
+        "time": "0001-01-01T00:00:00Z"
+      },
+      "body": {
+        "contentType": "html",
+        "content": ""
+      },
+      "start": {
+        "dateTime": "2023-12-13T15:04:51.3343399",
+        "timeZone": "UTC"
+      },
+      "end": {
+        "dateTime": "2023-12-13T15:04:51.3343553",
+        "timeZone": "UTC"
+      },
+      "location": {
+        "displayName": "",
+        "locationType": "default",
+        "uniqueIdType": "unknown",
+        "address": {
+        },
+        "coordinates": {
+        }
+      },
+      "locations": [
+      ],
+      "recurrence": null,
+      "attendees": [
+      ],
+      "organizer": {
+        "emailAddress": {
+          "name": "TestProject9Aug",
+          "address": "TestProject9Aug@capintegration01.onmicrosoft.com"
+        }
+      },
+      "onlineMeeting": null,
+      "calendar@odata.associationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar/$ref",
+      "calendar@odata.navigationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar"
+    },
+    {
+      "@odata.etag": "W/\"rlH4VFk60E2mW9t2nJD1lwAAUjuCcg==\"",
+      "id": "AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU-nnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxRAAA=",
+      "createdDateTime": "2023-12-13T14:04:43.5646195Z",
+      "lastModifiedDateTime": "2023-12-13T14:04:44.3168491Z",
+      "changeKey": "rlH4VFk60E2mW9t2nJD1lwAAUjuCcg==",
+      "categories": [
+      ],
+      "transactionId": null,
+      "originalStartTimeZone": "UTC",
+      "originalEndTimeZone": "UTC",
+      "iCalUId": "040000008200E00074C5B7101A82E00800000000F6537352CD2DDA010000000000000000100000006C45E67347D7104EBC81845B6A37EED2",
+      "reminderMinutesBeforeStart": 15,
+      "isReminderOn": true,
+      "hasAttachments": false,
+      "subject": "Event4",
+      "bodyPreview": "",
+      "importance": "normal",
+      "sensitivity": "normal",
+      "isAllDay": false,
+      "isCancelled": false,
+      "isOrganizer": true,
+      "responseRequested": true,
+      "seriesMasterId": null,
+      "showAs": "busy",
+      "type": "singleInstance",
+      "webLink": "https://outlook.office365.com/calendar/deeplink/read/group/capintegration01.onmicrosoft.com/TestProject9Aug/AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU%2FnnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxRAAA%3D",
+      "onlineMeetingUrl": null,
+      "isOnlineMeeting": false,
+      "onlineMeetingProvider": "unknown",
+      "allowNewTimeProposals": true,
+      "occurrenceId": null,
+      "isDraft": false,
+      "hideAttendees": false,
+      "responseStatus": {
+        "response": "organizer",
+        "time": "0001-01-01T00:00:00Z"
+      },
+      "body": {
+        "contentType": "html",
+        "content": ""
+      },
+      "start": {
+        "dateTime": "2023-12-13T15:04:41.6607524",
+        "timeZone": "UTC"
+      },
+      "end": {
+        "dateTime": "2023-12-13T15:04:41.6608013",
+        "timeZone": "UTC"
+      },
+      "location": {
+        "displayName": "",
+        "locationType": "default",
+        "uniqueIdType": "unknown",
+        "address": {
+        },
+        "coordinates": {
+        }
+      },
+      "locations": [
+      ],
+      "recurrence": null,
+      "attendees": [
+      ],
+      "organizer": {
+        "emailAddress": {
+          "name": "TestProject9Aug",
+          "address": "TestProject9Aug@capintegration01.onmicrosoft.com"
+        }
+      },
+      "onlineMeeting": null,
+      "calendar@odata.associationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar/$ref",
+      "calendar@odata.navigationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar"
+    },
+    {
+      "@odata.etag": "W/\"rlH4VFk60E2mW9t2nJD1lwAAUjt6oA==\"",
+      "id": "AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU-nnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxQAAA=",
+      "createdDateTime": "2023-12-13T11:15:31.5102118Z",
+      "lastModifiedDateTime": "2023-12-13T11:15:31.5479675Z",
+      "changeKey": "rlH4VFk60E2mW9t2nJD1lwAAUjt6oA==",
+      "categories": [
+      ],
+      "transactionId": null,
+      "originalStartTimeZone": "UTC",
+      "originalEndTimeZone": "UTC",
+      "iCalUId": "040000008200E00074C5B7101A82E00800000000017758AFB52DDA010000000000000000100000009512E5C8856DBC4D8FA00C29CBB1B612",
+      "reminderMinutesBeforeStart": 15,
+      "isReminderOn": true,
+      "hasAttachments": false,
+      "subject": "Event1",
+      "bodyPreview": "",
+      "importance": "normal",
+      "sensitivity": "normal",
+      "isAllDay": false,
+      "isCancelled": false,
+      "isOrganizer": true,
+      "responseRequested": true,
+      "seriesMasterId": null,
+      "showAs": "busy",
+      "type": "singleInstance",
+      "webLink": "https://outlook.office365.com/calendar/deeplink/read/group/capintegration01.onmicrosoft.com/TestProject9Aug/AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU%2FnnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxQAAA%3D",
+      "onlineMeetingUrl": null,
+      "isOnlineMeeting": false,
+      "onlineMeetingProvider": "unknown",
+      "allowNewTimeProposals": true,
+      "occurrenceId": null,
+      "isDraft": false,
+      "hideAttendees": false,
+      "responseStatus": {
+        "response": "organizer",
+        "time": "0001-01-01T00:00:00Z"
+      },
+      "body": {
+        "contentType": "html",
+        "content": "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n<meta name=\"Generator\" content=\"Microsoft Exchange Server\">\r\n<!-- converted from text -->\r\n<style><!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --></style></head>\r\n<body>\r\n<font size=\"2\"><span style=\"font-size:11pt;\"><div class=\"PlainText\">&nbsp;</div></span></font>\r\n</body>\r\n</html>\r\n"
+      },
+      "start": {
+        "dateTime": "2023-12-13T11:15:28.6750000",
+        "timeZone": "UTC"
+      },
+      "end": {
+        "dateTime": "2023-12-13T11:15:28.6750000",
+        "timeZone": "UTC"
+      },
+      "location": {
+        "displayName": "",
+        "locationType": "default",
+        "uniqueIdType": "unknown",
+        "address": {
+        },
+        "coordinates": {
+        }
+      },
+      "locations": [
+      ],
+      "recurrence": null,
+      "attendees": [
+      ],
+      "organizer": {
+        "emailAddress": {
+          "name": "TestProject9Aug",
+          "address": "TestProject9Aug@capintegration01.onmicrosoft.com"
+        }
+      },
+      "onlineMeeting": null,
+      "calendar@odata.associationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar/$ref",
+      "calendar@odata.navigationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar"
+    },
+    {
+      "@odata.etag": "W/\"rlH4VFk60E2mW9t2nJD1lwAAUjt1WA==\"",
+      "id": "AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU-nnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxPAAA=",
+      "createdDateTime": "2023-12-13T09:52:34.3834441Z",
+      "lastModifiedDateTime": "2023-12-13T09:52:34.4161456Z",
+      "changeKey": "rlH4VFk60E2mW9t2nJD1lwAAUjt1WA==",
+      "categories": [
+      ],
+      "transactionId": null,
+      "originalStartTimeZone": "UTC",
+      "originalEndTimeZone": "UTC",
+      "iCalUId": "040000008200E00074C5B7101A82E00800000000638AC018AA2DDA010000000000000000100000003591C4C68C9F5A4CADF7327B226947BC",
+      "reminderMinutesBeforeStart": 15,
+      "isReminderOn": true,
+      "hasAttachments": false,
+      "subject": "Event1",
+      "bodyPreview": "",
+      "importance": "normal",
+      "sensitivity": "normal",
+      "isAllDay": false,
+      "isCancelled": false,
+      "isOrganizer": true,
+      "responseRequested": true,
+      "seriesMasterId": null,
+      "showAs": "busy",
+      "type": "singleInstance",
+      "webLink": "https://outlook.office365.com/calendar/deeplink/read/group/capintegration01.onmicrosoft.com/TestProject9Aug/AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU%2FnnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxPAAA%3D",
+      "onlineMeetingUrl": null,
+      "isOnlineMeeting": false,
+      "onlineMeetingProvider": "unknown",
+      "allowNewTimeProposals": true,
+      "occurrenceId": null,
+      "isDraft": false,
+      "hideAttendees": false,
+      "responseStatus": {
+        "response": "organizer",
+        "time": "0001-01-01T00:00:00Z"
+      },
+      "body": {
+        "contentType": "html",
+        "content": "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n<meta name=\"Generator\" content=\"Microsoft Exchange Server\">\r\n<!-- converted from text -->\r\n<style><!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --></style></head>\r\n<body>\r\n<font size=\"2\"><span style=\"font-size:11pt;\"><div class=\"PlainText\">&nbsp;</div></span></font>\r\n</body>\r\n</html>\r\n"
+      },
+      "start": {
+        "dateTime": "2023-12-13T10:52:32.5233218",
+        "timeZone": "UTC"
+      },
+      "end": {
+        "dateTime": "2023-12-13T10:52:32.5233415",
+        "timeZone": "UTC"
+      },
+      "location": {
+        "displayName": "",
+        "locationType": "default",
+        "uniqueIdType": "unknown",
+        "address": {
+        },
+        "coordinates": {
+        }
+      },
+      "locations": [
+      ],
+      "recurrence": null,
+      "attendees": [
+      ],
+      "organizer": {
+        "emailAddress": {
+          "name": "TestProject9Aug",
+          "address": "TestProject9Aug@capintegration01.onmicrosoft.com"
+        }
+      },
+      "onlineMeeting": null,
+      "calendar@odata.associationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar/$ref",
+      "calendar@odata.navigationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar"
+    },
+    {
+      "@odata.etag": "W/\"rlH4VFk60E2mW9t2nJD1lwAAUjt1Qw==\"",
+      "id": "AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU-nnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxNAAA=",
+      "createdDateTime": "2023-12-13T09:52:29.8641382Z",
+      "lastModifiedDateTime": "2023-12-13T09:52:30.3708456Z",
+      "changeKey": "rlH4VFk60E2mW9t2nJD1lwAAUjt1Qw==",
+      "categories": [
+      ],
+      "transactionId": null,
+      "originalStartTimeZone": "UTC",
+      "originalEndTimeZone": "UTC",
+      "iCalUId": "040000008200E00074C5B7101A82E00800000000BE800F16AA2DDA01000000000000000010000000DBC282D4024DA74C8443FB783629940A",
+      "reminderMinutesBeforeStart": 15,
+      "isReminderOn": true,
+      "hasAttachments": false,
+      "subject": "Event4",
+      "bodyPreview": "",
+      "importance": "normal",
+      "sensitivity": "normal",
+      "isAllDay": false,
+      "isCancelled": false,
+      "isOrganizer": true,
+      "responseRequested": true,
+      "seriesMasterId": null,
+      "showAs": "busy",
+      "type": "singleInstance",
+      "webLink": "https://outlook.office365.com/calendar/deeplink/read/group/capintegration01.onmicrosoft.com/TestProject9Aug/AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU%2FnnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxNAAA%3D",
+      "onlineMeetingUrl": null,
+      "isOnlineMeeting": false,
+      "onlineMeetingProvider": "unknown",
+      "allowNewTimeProposals": true,
+      "occurrenceId": null,
+      "isDraft": false,
+      "hideAttendees": false,
+      "responseStatus": {
+        "response": "organizer",
+        "time": "0001-01-01T00:00:00Z"
+      },
+      "body": {
+        "contentType": "html",
+        "content": ""
+      },
+      "start": {
+        "dateTime": "2023-12-13T10:52:28.7947200",
+        "timeZone": "UTC"
+      },
+      "end": {
+        "dateTime": "2023-12-13T10:52:28.7947447",
+        "timeZone": "UTC"
+      },
+      "location": {
+        "displayName": "",
+        "locationType": "default",
+        "uniqueIdType": "unknown",
+        "address": {
+        },
+        "coordinates": {
+        }
+      },
+      "locations": [
+      ],
+      "recurrence": null,
+      "attendees": [
+      ],
+      "organizer": {
+        "emailAddress": {
+          "name": "TestProject9Aug",
+          "address": "TestProject9Aug@capintegration01.onmicrosoft.com"
+        }
+      },
+      "onlineMeeting": null,
+      "calendar@odata.associationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar/$ref",
+      "calendar@odata.navigationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar"
+    },
+    {
+      "@odata.etag": "W/\"rlH4VFk60E2mW9t2nJD1lwAAUjt1Og==\"",
+      "id": "AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU-nnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxMAAA=",
+      "createdDateTime": "2023-12-13T09:52:23.1897087Z",
+      "lastModifiedDateTime": "2023-12-13T09:52:23.2132166Z",
+      "changeKey": "rlH4VFk60E2mW9t2nJD1lwAAUjt1Og==",
+      "categories": [
+      ],
+      "transactionId": null,
+      "originalStartTimeZone": "UTC",
+      "originalEndTimeZone": "UTC",
+      "iCalUId": "040000008200E00074C5B7101A82E00800000000490F1312AA2DDA01000000000000000010000000414E082718194645BB81535A9245A017",
+      "reminderMinutesBeforeStart": 15,
+      "isReminderOn": true,
+      "hasAttachments": false,
+      "subject": "Event1",
+      "bodyPreview": "",
+      "importance": "normal",
+      "sensitivity": "normal",
+      "isAllDay": false,
+      "isCancelled": false,
+      "isOrganizer": true,
+      "responseRequested": true,
+      "seriesMasterId": null,
+      "showAs": "busy",
+      "type": "singleInstance",
+      "webLink": "https://outlook.office365.com/calendar/deeplink/read/group/capintegration01.onmicrosoft.com/TestProject9Aug/AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU%2FnnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxMAAA%3D",
+      "onlineMeetingUrl": null,
+      "isOnlineMeeting": false,
+      "onlineMeetingProvider": "unknown",
+      "allowNewTimeProposals": true,
+      "occurrenceId": null,
+      "isDraft": false,
+      "hideAttendees": false,
+      "responseStatus": {
+        "response": "organizer",
+        "time": "0001-01-01T00:00:00Z"
+      },
+      "body": {
+        "contentType": "html",
+        "content": ""
+      },
+      "start": {
+        "dateTime": "2023-12-13T10:52:21.2884053",
+        "timeZone": "UTC"
+      },
+      "end": {
+        "dateTime": "2023-12-13T10:52:21.2884764",
+        "timeZone": "UTC"
+      },
+      "location": {
+        "displayName": "",
+        "locationType": "default",
+        "uniqueIdType": "unknown",
+        "address": {
+        },
+        "coordinates": {
+        }
+      },
+      "locations": [
+      ],
+      "recurrence": null,
+      "attendees": [
+      ],
+      "organizer": {
+        "emailAddress": {
+          "name": "TestProject9Aug",
+          "address": "TestProject9Aug@capintegration01.onmicrosoft.com"
+        }
+      },
+      "onlineMeeting": null,
+      "calendar@odata.associationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar/$ref",
+      "calendar@odata.navigationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar"
+    },
+    {
+      "@odata.etag": "W/\"rlH4VFk60E2mW9t2nJD1lwAAUjt1Lg==\"",
+      "id": "AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU-nnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxLAAA=",
+      "createdDateTime": "2023-12-13T09:51:23.4482548Z",
+      "lastModifiedDateTime": "2023-12-13T09:51:23.4677702Z",
+      "changeKey": "rlH4VFk60E2mW9t2nJD1lwAAUjt1Lg==",
+      "categories": [
+      ],
+      "transactionId": null,
+      "originalStartTimeZone": "UTC",
+      "originalEndTimeZone": "UTC",
+      "iCalUId": "040000008200E00074C5B7101A82E00800000000223678EEA92DDA01000000000000000010000000933F4530B707F34A9086B0E73E413583",
+      "reminderMinutesBeforeStart": 15,
+      "isReminderOn": true,
+      "hasAttachments": false,
+      "subject": "Event1",
+      "bodyPreview": "",
+      "importance": "normal",
+      "sensitivity": "normal",
+      "isAllDay": false,
+      "isCancelled": false,
+      "isOrganizer": true,
+      "responseRequested": true,
+      "seriesMasterId": null,
+      "showAs": "busy",
+      "type": "singleInstance",
+      "webLink": "https://outlook.office365.com/calendar/deeplink/read/group/capintegration01.onmicrosoft.com/TestProject9Aug/AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU%2FnnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxLAAA%3D",
+      "onlineMeetingUrl": null,
+      "isOnlineMeeting": false,
+      "onlineMeetingProvider": "unknown",
+      "allowNewTimeProposals": true,
+      "occurrenceId": null,
+      "isDraft": false,
+      "hideAttendees": false,
+      "responseStatus": {
+        "response": "organizer",
+        "time": "0001-01-01T00:00:00Z"
+      },
+      "body": {
+        "contentType": "html",
+        "content": "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n<meta name=\"Generator\" content=\"Microsoft Exchange Server\">\r\n<!-- converted from text -->\r\n<style><!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --></style></head>\r\n<body>\r\n<font size=\"2\"><span style=\"font-size:11pt;\"><div class=\"PlainText\">&nbsp;</div></span></font>\r\n</body>\r\n</html>\r\n"
+      },
+      "start": {
+        "dateTime": "2023-12-13T10:51:21.5736690",
+        "timeZone": "UTC"
+      },
+      "end": {
+        "dateTime": "2023-12-13T10:51:21.5736858",
+        "timeZone": "UTC"
+      },
+      "location": {
+        "displayName": "",
+        "locationType": "default",
+        "uniqueIdType": "unknown",
+        "address": {
+        },
+        "coordinates": {
+        }
+      },
+      "locations": [
+      ],
+      "recurrence": null,
+      "attendees": [
+      ],
+      "organizer": {
+        "emailAddress": {
+          "name": "TestProject9Aug",
+          "address": "TestProject9Aug@capintegration01.onmicrosoft.com"
+        }
+      },
+      "onlineMeeting": null,
+      "calendar@odata.associationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar/$ref",
+      "calendar@odata.navigationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar"
+    },
+    {
+      "@odata.etag": "W/\"rlH4VFk60E2mW9t2nJD1lwAAUjt1JQ==\"",
+      "id": "AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU-nnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxJAAA=",
+      "createdDateTime": "2023-12-13T09:51:18.41349Z",
+      "lastModifiedDateTime": "2023-12-13T09:51:18.9651534Z",
+      "changeKey": "rlH4VFk60E2mW9t2nJD1lwAAUjt1JQ==",
+      "categories": [
+      ],
+      "transactionId": null,
+      "originalStartTimeZone": "UTC",
+      "originalEndTimeZone": "UTC",
+      "iCalUId": "040000008200E00074C5B7101A82E00800000000BE7E78EBA92DDA010000000000000000100000004599BDEF6C34DA4BBAD966F50F8D4373",
+      "reminderMinutesBeforeStart": 15,
+      "isReminderOn": true,
+      "hasAttachments": false,
+      "subject": "Event4",
+      "bodyPreview": "",
+      "importance": "normal",
+      "sensitivity": "normal",
+      "isAllDay": false,
+      "isCancelled": false,
+      "isOrganizer": true,
+      "responseRequested": true,
+      "seriesMasterId": null,
+      "showAs": "busy",
+      "type": "singleInstance",
+      "webLink": "https://outlook.office365.com/calendar/deeplink/read/group/capintegration01.onmicrosoft.com/TestProject9Aug/AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU%2FnnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxJAAA%3D",
+      "onlineMeetingUrl": null,
+      "isOnlineMeeting": false,
+      "onlineMeetingProvider": "unknown",
+      "allowNewTimeProposals": true,
+      "occurrenceId": null,
+      "isDraft": false,
+      "hideAttendees": false,
+      "responseStatus": {
+        "response": "organizer",
+        "time": "0001-01-01T00:00:00Z"
+      },
+      "body": {
+        "contentType": "html",
+        "content": ""
+      },
+      "start": {
+        "dateTime": "2023-12-13T10:51:17.3732605",
+        "timeZone": "UTC"
+      },
+      "end": {
+        "dateTime": "2023-12-13T10:51:17.3733019",
+        "timeZone": "UTC"
+      },
+      "location": {
+        "displayName": "",
+        "locationType": "default",
+        "uniqueIdType": "unknown",
+        "address": {
+        },
+        "coordinates": {
+        }
+      },
+      "locations": [
+      ],
+      "recurrence": null,
+      "attendees": [
+      ],
+      "organizer": {
+        "emailAddress": {
+          "name": "TestProject9Aug",
+          "address": "TestProject9Aug@capintegration01.onmicrosoft.com"
+        }
+      },
+      "onlineMeeting": null,
+      "calendar@odata.associationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar/$ref",
+      "calendar@odata.navigationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar"
+    },
+    {
+      "@odata.etag": "W/\"rlH4VFk60E2mW9t2nJD1lwAAUjt1IQ==\"",
+      "id": "AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU-nnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxIAAA=",
+      "createdDateTime": "2023-12-13T09:51:11.1866275Z",
+      "lastModifiedDateTime": "2023-12-13T09:51:11.2092594Z",
+      "changeKey": "rlH4VFk60E2mW9t2nJD1lwAAUjt1IQ==",
+      "categories": [
+      ],
+      "transactionId": null,
+      "originalStartTimeZone": "UTC",
+      "originalEndTimeZone": "UTC",
+      "iCalUId": "040000008200E00074C5B7101A82E008000000007B9A28E7A92DDA010000000000000000100000009C9406F1EDFEFA4BB83644B17C585DB9",
+      "reminderMinutesBeforeStart": 15,
+      "isReminderOn": true,
+      "hasAttachments": false,
+      "subject": "Event1",
+      "bodyPreview": "",
+      "importance": "normal",
+      "sensitivity": "normal",
+      "isAllDay": false,
+      "isCancelled": false,
+      "isOrganizer": true,
+      "responseRequested": true,
+      "seriesMasterId": null,
+      "showAs": "busy",
+      "type": "singleInstance",
+      "webLink": "https://outlook.office365.com/calendar/deeplink/read/group/capintegration01.onmicrosoft.com/TestProject9Aug/AAMkADNlODZjNGVhLWQ2ZTQtNDE5Yy1iMmY3LWI4NzQ3ZWQ0OGU0NwBGAAAAAACGvU%2FnnljTQqIpP7Z0zqSVBwCuUfhUWTrQTaZb23ackPWXAAAAAAENAACuUfhUWTrQTaZb23ackPWXAABSONxIAAA%3D",
+      "onlineMeetingUrl": null,
+      "isOnlineMeeting": false,
+      "onlineMeetingProvider": "unknown",
+      "allowNewTimeProposals": true,
+      "occurrenceId": null,
+      "isDraft": false,
+      "hideAttendees": false,
+      "responseStatus": {
+        "response": "organizer",
+        "time": "0001-01-01T00:00:00Z"
+      },
+      "body": {
+        "contentType": "html",
+        "content": ""
+      },
+      "start": {
+        "dateTime": "2023-12-13T10:51:09.2815443",
+        "timeZone": "UTC"
+      },
+      "end": {
+        "dateTime": "2023-12-13T10:51:09.2816304",
+        "timeZone": "UTC"
+      },
+      "location": {
+        "displayName": "",
+        "locationType": "default",
+        "uniqueIdType": "unknown",
+        "address": {
+        },
+        "coordinates": {
+        }
+      },
+      "locations": [
+      ],
+      "recurrence": null,
+      "attendees": [
+      ],
+      "organizer": {
+        "emailAddress": {
+          "name": "TestProject9Aug",
+          "address": "TestProject9Aug@capintegration01.onmicrosoft.com"
+        }
+      },
+      "onlineMeeting": null,
+      "calendar@odata.associationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar/$ref",
+      "calendar@odata.navigationLink": "https://graph.microsoft.com/v1.0/groups('202a2963-7e7d-4dc6-8aca-a58a2f3a9d53')/calendar"
+    }
+  ],
+  "@odata.nextLink": "https://graph.microsoft.com/v1.0/groups/202a2963-7e7d-4dc6-8aca-a58a2f3a9d53/events?%24top=10&%24skip=10"
+}

@@ -1,0 +1,511 @@
+{
+  "name": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA=",
+  "title": "United Kingdom holidays",
+  "x-ms-permission": "read-write",
+  "schema": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "required": [
+        "Subject",
+        "Start"
+      ],
+      "properties": {
+        "Id": {
+          "title": "Id",
+          "description": "The Event's unique identifier",
+          "x-ms-permission": "read-only",
+          "type": "string",
+          "x-ms-keyOrder": 1,
+          "x-ms-keyType": "primary",
+          "x-ms-sort": "none"
+        },
+        "Attendees": {
+          "title": "Attendees",
+          "description": "List of attendees for the event",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Status": {
+                "title": "Status",
+                "type": "object",
+                "properties": {
+                  "Response": {
+                    "title": "Response",
+                    "type": "string",
+                    "enum": [
+                      "None",
+                      "Organizer",
+                      "TentativelyAccepted",
+                      "Accepted",
+                      "Declined",
+                      "NotResponded"
+                    ],
+                    "default": "None"
+                  },
+                  "Time": {
+                    "title": "Time",
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              },
+              "Type": {
+                "title": "Type",
+                "type": "string",
+                "enum": [
+                  "Required",
+                  "Optional",
+                  "Resource"
+                ],
+                "default": "Required"
+              },
+              "EmailAddress": {
+                "title": "EmailAddress",
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "title": "Name",
+                    "type": "string"
+                  },
+                  "Address": {
+                    "title": "Address",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Body": {
+          "title": "Body",
+          "description": "The body of the message associated with the event",
+          "type": "object",
+          "properties": {
+            "ContentType": {
+              "title": "ContentType",
+              "type": "string",
+              "enum": [
+                "Text",
+                "HTML"
+              ],
+              "default": "Text"
+            },
+            "Content": {
+              "title": "Content",
+              "type": "string"
+            }
+          }
+        },
+        "BodyPreview": {
+          "title": "Body preview",
+          "description": "The preview of the message associated with the event",
+          "x-ms-permission": "read-only",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "Categories": {
+          "title": "Categories",
+          "description": "The categories associated with the event",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-ms-visibility": "advanced"
+        },
+        "ChangeKey": {
+          "title": "Change key",
+          "description": "This property identifies the version of the event object. Every time the event is changed, ChangeKey changes as well.",
+          "x-ms-permission": "read-only",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "DateTimeCreated": {
+          "title": "Created time",
+          "description": "The date and time that the event was created",
+          "x-ms-permission": "read-only",
+          "type": "string",
+          "format": "date-time",
+          "x-ms-visibility": "advanced"
+        },
+        "DateTimeLastModified": {
+          "title": "Last modified time",
+          "description": "The date and time that the event was last modified",
+          "x-ms-permission": "read-only",
+          "type": "string",
+          "format": "date-time",
+          "x-ms-visibility": "advanced"
+        },
+        "End": {
+          "title": "End time",
+          "description": "The end time of the event",
+          "type": "string",
+          "format": "date-time"
+        },
+        "EndTimeZone": {
+          "title": "End time zone",
+          "description": "This property specifies the time zone of the meeting end time. The value must be as defined in Windows (example: 'Pacific Standard Time').",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "HasAttachments": {
+          "title": "Has attachments?",
+          "description": "Set to true if the event has attachments",
+          "x-ms-permission": "read-only",
+          "type": "boolean",
+          "x-ms-visibility": "advanced"
+        },
+        "ICalUId": {
+          "title": "Event Unique ID",
+          "description": "A unique identifier that is shared by all instances of an event across different calendars",
+          "x-ms-permission": "read-only",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "Importance": {
+          "title": "Importance",
+          "description": "The importance of the event: Low, Normal, or High",
+          "type": "string",
+          "enum": [
+            "Low",
+            "Normal",
+            "High"
+          ],
+          "default": "Low",
+          "x-ms-visibility": "advanced"
+        },
+        "IsAllDay": {
+          "title": "Is all day event?",
+          "description": "Set to true if the event lasts all day",
+          "type": "boolean",
+          "x-ms-visibility": "advanced"
+        },
+        "IsCancelled": {
+          "title": "Is cancelled?",
+          "description": "Set to true if the event has been canceled",
+          "type": "boolean",
+          "x-ms-visibility": "advanced"
+        },
+        "IsOrganizer": {
+          "title": "Is Organizer",
+          "description": "Set to true if the message sender is also the organizer",
+          "type": "boolean",
+          "x-ms-visibility": "advanced"
+        },
+        "Location": {
+          "title": "Location",
+          "description": "The location of the event",
+          "type": "object",
+          "properties": {
+            "DisplayName": {
+              "title": "DisplayName",
+              "type": "string"
+            },
+            "Address": {
+              "title": "Address",
+              "type": "object",
+              "properties": {
+                "Street": {
+                  "title": "Street",
+                  "type": "string"
+                },
+                "City": {
+                  "title": "City",
+                  "type": "string"
+                },
+                "State": {
+                  "title": "State",
+                  "type": "string"
+                },
+                "CountryOrRegion": {
+                  "title": "CountryOrRegion",
+                  "type": "string"
+                },
+                "PostalCode": {
+                  "title": "PostalCode",
+                  "type": "string"
+                }
+              }
+            },
+            "Coordinates": {
+              "title": "Coordinates",
+              "type": "object",
+              "properties": {
+                "Altitude": {
+                  "title": "Altitude",
+                  "type": "number",
+                  "format": "double"
+                },
+                "Latitude": {
+                  "title": "Latitude",
+                  "type": "number",
+                  "format": "double"
+                },
+                "Longitude": {
+                  "title": "Longitude",
+                  "type": "number",
+                  "format": "double"
+                },
+                "Accuracy": {
+                  "title": "Accuracy",
+                  "type": "number",
+                  "format": "double"
+                },
+                "AltitudeAccuracy": {
+                  "title": "AltitudeAccuracy",
+                  "type": "number",
+                  "format": "double"
+                }
+              }
+            }
+          },
+          "x-ms-visibility": "advanced"
+        },
+        "Organizer": {
+          "title": "Organizer",
+          "description": "The organizer of the event",
+          "type": "object",
+          "properties": {
+            "EmailAddress": {
+              "title": "EmailAddress",
+              "type": "object",
+              "properties": {
+                "Name": {
+                  "title": "Name",
+                  "type": "string"
+                },
+                "Address": {
+                  "title": "Address",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "x-ms-visibility": "advanced"
+        },
+        "Recurrence": {
+          "title": "Recurrence",
+          "description": "The recurrence pattern for the event",
+          "type": "object",
+          "properties": {
+            "Pattern": {
+              "title": "Pattern",
+              "type": "object",
+              "properties": {
+                "Type": {
+                  "title": "Type",
+                  "type": "string",
+                  "enum": [
+                    "Daily",
+                    "Weekly",
+                    "AbsoluteMonthly",
+                    "RelativeMonthly",
+                    "AbsoluteYearly",
+                    "RelativeYearly"
+                  ],
+                  "default": "Daily"
+                },
+                "Interval": {
+                  "title": "Interval",
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "Month": {
+                  "title": "Month",
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "DayOfMonth": {
+                  "title": "DayOfMonth",
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "DaysOfWeek": {
+                  "title": "DaysOfWeek",
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "Sunday",
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday"
+                    ],
+                    "type": "string",
+                    "default": "Sunday"
+                  }
+                },
+                "FirstDayOfWeek": {
+                  "title": "FirstDayOfWeek",
+                  "type": "string",
+                  "enum": [
+                    "Sunday",
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday"
+                  ],
+                  "default": "Sunday"
+                },
+                "Index": {
+                  "title": "Index",
+                  "type": "string",
+                  "enum": [
+                    "First",
+                    "Second",
+                    "Third",
+                    "Fourth",
+                    "Last"
+                  ],
+                  "default": "First"
+                }
+              }
+            },
+            "Range": {
+              "title": "Range",
+              "type": "object",
+              "properties": {
+                "Type": {
+                  "title": "Type",
+                  "type": "string",
+                  "enum": [
+                    "EndDate",
+                    "NoEnd",
+                    "Numbered"
+                  ],
+                  "default": "EndDate"
+                },
+                "StartDate": {
+                  "title": "StartDate",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "EndDate": {
+                  "title": "EndDate",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "NumberOfOccurrences": {
+                  "title": "NumberOfOccurrences",
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          },
+          "x-ms-visibility": "advanced"
+        },
+        "Reminder": {
+          "title": "Reminder",
+          "description": "Time in minutes before event start to remind",
+          "type": "integer",
+          "format": "int32",
+          "x-ms-visibility": "advanced"
+        },
+        "ResponseRequested": {
+          "title": "Response requested",
+          "description": "Set to true if the sender would like a response when the event is accepted or declined",
+          "type": "boolean",
+          "x-ms-visibility": "advanced"
+        },
+        "ResponseStatus": {
+          "title": "Response status",
+          "description": "Indicates the type of response sent in response to an event message",
+          "x-ms-permission": "read-only",
+          "type": "object",
+          "properties": {
+            "Response": {
+              "title": "Response",
+              "type": "string",
+              "enum": [
+                "None",
+                "Organizer",
+                "TentativelyAccepted",
+                "Accepted",
+                "Declined",
+                "NotResponded"
+              ],
+              "default": "None"
+            },
+            "Time": {
+              "title": "Time",
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "x-ms-visibility": "advanced"
+        },
+        "SeriesMasterId": {
+          "title": "Series master id",
+          "description": "Unique identifier for Series Master event type",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "ShowAs": {
+          "title": "Show as",
+          "description": "Shows as free or busy",
+          "type": "string",
+          "enum": [
+            "Free",
+            "Tentative",
+            "Busy",
+            "Oof",
+            "WorkingElsewhere",
+            "Unknown"
+          ],
+          "default": "Free",
+          "x-ms-visibility": "advanced"
+        },
+        "Start": {
+          "title": "Start time",
+          "description": "The start time of the event",
+          "type": "string",
+          "format": "date-time"
+        },
+        "StartTimeZone": {
+          "title": "Start time zone",
+          "description": "This property specifies the time zone of the meeting start time. The value must be as defined in Windows (example: 'Pacific Standard Time').",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "Subject": {
+          "title": "Subject",
+          "description": "Event subject",
+          "type": "string"
+        },
+        "Type": {
+          "title": "Type",
+          "description": "The event type: Single Instance, Occurrence, Exception, or Series Master",
+          "type": "string",
+          "enum": [
+            "SingleInstance",
+            "Occurrence",
+            "Exception",
+            "SeriesMaster"
+          ],
+          "default": "SingleInstance",
+          "x-ms-visibility": "advanced"
+        },
+        "WebLink": {
+          "title": "Web link",
+          "description": "The preview of the message associated with the event",
+          "x-ms-permission": "read-only",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "Reason": {
+          "title": "Reason",
+          "description": "The reason property used by O365 sync events protocol, will be 'deleted' if its a deleted event.",
+          "x-ms-permission": "read-only",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        }
+      }
+    }
+  }
+}

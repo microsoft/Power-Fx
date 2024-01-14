@@ -1044,7 +1044,7 @@
         "parameters": [
           {
             "in": "formData",
-            "name": "X",
+            "name": "x",
             "type": "array",
             "items": {
               "format": "int32",
@@ -1053,7 +1053,7 @@
           },
           {
             "in": "formData",
-            "name": "Y",
+            "name": "y",
             "type": "integer",
             "format": "int32"
           }

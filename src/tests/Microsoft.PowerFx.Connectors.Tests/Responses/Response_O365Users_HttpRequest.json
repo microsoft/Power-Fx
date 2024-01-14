@@ -1,0 +1,15 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users/$entity",
+  "businessPhones": [
+  ],
+  "displayName": "aurorauser09",
+  "givenName": "aurora",
+  "jobTitle": null,
+  "mail": "aurorauser09@capintegration01.onmicrosoft.com",
+  "mobilePhone": null,
+  "officeLocation": null,
+  "preferredLanguage": "en-US",
+  "surname": "user09",
+  "userPrincipalName": "aurorauser09@capintegration01.onmicrosoft.com",
+  "id": "32ba11bd-ff15-46f7-bd33-6b481e5f5c7e"
+}

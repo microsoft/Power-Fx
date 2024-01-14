@@ -1,0 +1,310 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users('32ba11bd-ff15-46f7-bd33-6b481e5f5c7e')/people",
+  "value": [
+    {
+      "id": "kPZaTkRghkeFOXRV6MpIoA==",
+      "displayName": "Sayantan Chakraborty",
+      "givenName": null,
+      "surname": null,
+      "birthday": null,
+      "personNotes": null,
+      "isFavorite": false,
+      "jobTitle": null,
+      "companyName": null,
+      "yomiCompany": null,
+      "department": null,
+      "officeLocation": null,
+      "profession": null,
+      "userPrincipalName": null,
+      "imAddress": null,
+      "scoredEmailAddresses": [
+        {
+          "address": "cavi4762@gmail.com",
+          "relevanceScore": 406.0,
+          "selectionLikelihood": "notSpecified"
+        }
+      ],
+      "phones": [
+      ],
+      "personType": {
+        "class": "Person",
+        "subclass": "ImplicitContact"
+      }
+    },
+    {
+      "id": "C3uHaJw-bEaLglzBiRK6kw==",
+      "displayName": "ambham@microsoft.com",
+      "givenName": null,
+      "surname": null,
+      "birthday": null,
+      "personNotes": null,
+      "isFavorite": false,
+      "jobTitle": null,
+      "companyName": null,
+      "yomiCompany": null,
+      "department": null,
+      "officeLocation": null,
+      "profession": null,
+      "userPrincipalName": null,
+      "imAddress": null,
+      "scoredEmailAddresses": [
+        {
+          "address": "ambham@microsoft.com",
+          "relevanceScore": 198.0,
+          "selectionLikelihood": "notSpecified"
+        }
+      ],
+      "phones": [
+      ],
+      "personType": {
+        "class": "Person",
+        "subclass": "ImplicitContact"
+      }
+    },
+    {
+      "id": "RTs1gDiB8kezSa6xaxVwyg==",
+      "displayName": "Puja Pandey",
+      "givenName": null,
+      "surname": null,
+      "birthday": null,
+      "personNotes": null,
+      "isFavorite": false,
+      "jobTitle": null,
+      "companyName": null,
+      "yomiCompany": null,
+      "department": null,
+      "officeLocation": null,
+      "profession": null,
+      "userPrincipalName": null,
+      "imAddress": null,
+      "scoredEmailAddresses": [
+        {
+          "address": "Pandey.Puja@microsoft.com",
+          "relevanceScore": 168.0,
+          "selectionLikelihood": "notSpecified"
+        }
+      ],
+      "phones": [
+      ],
+      "personType": {
+        "class": "Person",
+        "subclass": "ImplicitContact"
+      }
+    },
+    {
+      "id": "i5fo0TWEm0mVYThguOTLWg==",
+      "displayName": "BASSolutionCenterSup@microsoft.com",
+      "givenName": null,
+      "surname": null,
+      "birthday": null,
+      "personNotes": null,
+      "isFavorite": false,
+      "jobTitle": null,
+      "companyName": null,
+      "yomiCompany": null,
+      "department": null,
+      "officeLocation": null,
+      "profession": null,
+      "userPrincipalName": null,
+      "imAddress": null,
+      "scoredEmailAddresses": [
+        {
+          "address": "BASSolutionCenterSup@microsoft.com",
+          "relevanceScore": 152.0,
+          "selectionLikelihood": "notSpecified"
+        }
+      ],
+      "phones": [
+      ],
+      "personType": {
+        "class": "Person",
+        "subclass": "ImplicitContact"
+      }
+    },
+    {
+      "id": "duT64zKMgU_Ck1HrOcTQpA==",
+      "displayName": "Puja Pandey",
+      "givenName": null,
+      "surname": null,
+      "birthday": null,
+      "personNotes": null,
+      "isFavorite": false,
+      "jobTitle": null,
+      "companyName": null,
+      "yomiCompany": null,
+      "department": null,
+      "officeLocation": null,
+      "profession": null,
+      "userPrincipalName": null,
+      "imAddress": null,
+      "scoredEmailAddresses": [
+        {
+          "address": "pupande@microsoft.com",
+          "relevanceScore": 147.0,
+          "selectionLikelihood": "notSpecified"
+        }
+      ],
+      "phones": [
+      ],
+      "personType": {
+        "class": "Person",
+        "subclass": "ImplicitContact"
+      }
+    },
+    {
+      "id": "w6e-3Giqa0yvybL9THOC0A==",
+      "displayName": "Devansh Choure",
+      "givenName": null,
+      "surname": null,
+      "birthday": null,
+      "personNotes": null,
+      "isFavorite": false,
+      "jobTitle": null,
+      "companyName": null,
+      "yomiCompany": null,
+      "department": null,
+      "officeLocation": null,
+      "profession": null,
+      "userPrincipalName": null,
+      "imAddress": null,
+      "scoredEmailAddresses": [
+        {
+          "address": "dchoure@microsoft.com",
+          "relevanceScore": 119.0,
+          "selectionLikelihood": "notSpecified"
+        }
+      ],
+      "phones": [
+      ],
+      "personType": {
+        "class": "Person",
+        "subclass": "ImplicitContact"
+      }
+    },
+    {
+      "id": "rO_nd-01XEKNF2oP7TDh1g==",
+      "displayName": "Alex Huntington",
+      "givenName": null,
+      "surname": null,
+      "birthday": null,
+      "personNotes": null,
+      "isFavorite": false,
+      "jobTitle": null,
+      "companyName": null,
+      "yomiCompany": null,
+      "department": null,
+      "officeLocation": null,
+      "profession": null,
+      "userPrincipalName": null,
+      "imAddress": null,
+      "scoredEmailAddresses": [
+        {
+          "address": "alex@treyresearch.net",
+          "relevanceScore": 43.0,
+          "selectionLikelihood": "notSpecified"
+        }
+      ],
+      "phones": [
+      ],
+      "personType": {
+        "class": "Person",
+        "subclass": "ImplicitContact"
+      }
+    },
+    {
+      "id": "5f3d4411-814c-4696-9dd2-5933cc9fe0c9",
+      "displayName": "aurorauser07",
+      "givenName": "aurora",
+      "surname": "user07",
+      "birthday": null,
+      "personNotes": null,
+      "isFavorite": false,
+      "jobTitle": null,
+      "companyName": null,
+      "yomiCompany": null,
+      "department": null,
+      "officeLocation": null,
+      "profession": null,
+      "userPrincipalName": "aurorauser07@capintegration01.onmicrosoft.com",
+      "imAddress": "sip:aurorauser07@capintegration01.onmicrosoft.com",
+      "scoredEmailAddresses": [
+        {
+          "address": "aurorauser07@capintegration01.onmicrosoft.com",
+          "relevanceScore": 16.0,
+          "selectionLikelihood": "notSpecified"
+        }
+      ],
+      "phones": [
+        {
+          "type": "business",
+          "number": "2196719911"
+        }
+      ],
+      "personType": {
+        "class": "Person",
+        "subclass": "OrganizationUser"
+      }
+    },
+    {
+      "id": "32ba11bd-ff15-46f7-bd33-6b481e5f5c7e",
+      "displayName": "aurorauser09",
+      "givenName": "aurora",
+      "surname": "user09",
+      "birthday": null,
+      "personNotes": null,
+      "isFavorite": false,
+      "jobTitle": null,
+      "companyName": null,
+      "yomiCompany": null,
+      "department": null,
+      "officeLocation": null,
+      "profession": null,
+      "userPrincipalName": "aurorauser09@capintegration01.onmicrosoft.com",
+      "imAddress": "sip:aurorauser09@capintegration01.onmicrosoft.com",
+      "scoredEmailAddresses": [
+        {
+          "address": "aurorauser09@capintegration01.onmicrosoft.com",
+          "relevanceScore": 1.0,
+          "selectionLikelihood": "notSpecified"
+        }
+      ],
+      "phones": [
+      ],
+      "personType": {
+        "class": "Person",
+        "subclass": "OrganizationUser"
+      }
+    },
+    {
+      "id": "a6d41679-60f7-4623-8d38-0538c02e59f9",
+      "displayName": "aurorauser08",
+      "givenName": "aurora",
+      "surname": "user08",
+      "birthday": null,
+      "personNotes": null,
+      "isFavorite": false,
+      "jobTitle": null,
+      "companyName": null,
+      "yomiCompany": null,
+      "department": null,
+      "officeLocation": null,
+      "profession": null,
+      "userPrincipalName": "aurorauser08@capintegration01.onmicrosoft.com",
+      "imAddress": "sip:aurorauser08@capintegration01.onmicrosoft.com",
+      "scoredEmailAddresses": [
+        {
+          "address": "aurorauser08@capintegration01.onmicrosoft.com",
+          "relevanceScore": 0.0,
+          "selectionLikelihood": "notSpecified"
+        }
+      ],
+      "phones": [
+      ],
+      "personType": {
+        "class": "Person",
+        "subclass": "OrganizationUser"
+      }
+    }
+  ],
+  "@odata.nextLink": "https://graph.microsoft.com/v1.0/users/32ba11bd-ff15-46f7-bd33-6b481e5f5c7e/people?%24skip=0"
+}

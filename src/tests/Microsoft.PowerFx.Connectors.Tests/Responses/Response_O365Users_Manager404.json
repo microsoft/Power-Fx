@@ -1,0 +1,8 @@
+{
+  "status": 404,
+  "message": "No manager found for the specified user.\r\nclientRequestId: e5889504-b029-4060-8333-aae9b438c61c-self\r\nserviceRequestId: 88954229-3171-4397-ae55-a4f18fb59b73",
+  "error": {
+    "message": "No manager found for the specified user."
+  },
+  "source": "office365users-dfscus.azconn-dfscus-002.p.azurewebsites.net"
+}

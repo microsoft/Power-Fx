@@ -81,9 +81,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         private JObject ReadSignatureHelpFile(string signatureHelpPath) => JObject.Parse(File.ReadAllText(signatureHelpPath));
 
-        private JObject SerializeSignatureHelp(SignatureHelp signatureHelp) => JObject.Parse(JsonConvert.SerializeObject(signatureHelp));
+        private string SerializeSig(SignatureHelp signatureHelp) => JsonConvert.SerializeObject(signatureHelp, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.Indented });
 
-        private void WriteSignatureHelp(string path, SignatureHelp signatureHelp) => File.WriteAllText(path, JsonConvert.SerializeObject(signatureHelp, Formatting.Indented));
+        private JObject SerializeSignatureHelp(SignatureHelp signatureHelp) => JObject.Parse(SerializeSig(signatureHelp));
+
+        private void WriteSignatureHelp(string path, SignatureHelp signatureHelp) => File.WriteAllText(path, SerializeSig(signatureHelp));
 
         /// <summary>
         /// These use json value comparisons to test the signature help output of

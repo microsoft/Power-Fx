@@ -1,0 +1,47 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#directoryObjects",
+  "value": [
+    {
+      "@odata.type": "#microsoft.graph.user",
+      "id": "32ba11bd-ff15-46f7-bd33-6b481e5f5c7e",
+      "businessPhones": [],
+      "displayName": "aurorauser09",
+      "givenName": "aurora",
+      "jobTitle": null,
+      "mail": "aurorauser09@capintegration01.onmicrosoft.com",
+      "mobilePhone": null,
+      "officeLocation": null,
+      "preferredLanguage": "en-US",
+      "surname": "user09",
+      "userPrincipalName": "aurorauser09@capintegration01.onmicrosoft.com"
+    },
+    {
+      "@odata.type": "#microsoft.graph.user",
+      "id": "09462c5b-9c50-4e09-984a-c549e7e388aa",
+      "businessPhones": [],
+      "displayName": "aurorauser14",
+      "givenName": "aurora",
+      "jobTitle": null,
+      "mail": "aurorauser14@capintegration01.onmicrosoft.com",
+      "mobilePhone": null,
+      "officeLocation": null,
+      "preferredLanguage": null,
+      "surname": "user14",
+      "userPrincipalName": "aurorauser14@capintegration01.onmicrosoft.com"
+    },
+    {
+      "@odata.type": "#microsoft.graph.user",
+      "id": "0a221556-29a1-40dc-a5e4-ddd9fd8481ff",
+      "businessPhones": [],
+      "displayName": "aurorauser16",
+      "givenName": "aurora",
+      "jobTitle": null,
+      "mail": "aurorauser16@capintegration01.onmicrosoft.com",
+      "mobilePhone": null,
+      "officeLocation": null,
+      "preferredLanguage": null,
+      "surname": "user16",
+      "userPrincipalName": "aurorauser16@capintegration01.onmicrosoft.com"
+    }
+  ]
+}

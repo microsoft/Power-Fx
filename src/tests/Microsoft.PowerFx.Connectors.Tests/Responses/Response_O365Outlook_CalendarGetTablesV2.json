@@ -1,0 +1,66 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users('d8e90db6-d09c-4a90-bc1e-86512a797fd3')/calendars",
+  "value": [
+    {
+      "id": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABpnprrAAA=",
+      "name": "Birthdays",
+      "color": "auto",
+      "hexColor": "",
+      "isDefaultCalendar": false,
+      "changeKey": "69QNktTLJkyFveedsm3h2wAAaaMPdQ==",
+      "canShare": false,
+      "canViewPrivateItems": true,
+      "canEdit": false,
+      "allowedOnlineMeetingProviders": [
+      ],
+      "defaultOnlineMeetingProvider": "unknown",
+      "isTallyingResponses": false,
+      "isRemovable": true,
+      "owner": {
+        "name": "aurorauser01",
+        "address": "aurorauser01@aurorafinanceintegration02.onmicrosoft.com"
+      }
+    },
+    {
+      "id": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA=",
+      "name": "Calendar",
+      "color": "auto",
+      "hexColor": "",
+      "isDefaultCalendar": true,
+      "changeKey": "69QNktTLJkyFveedsm3h2wAATVFMxg==",
+      "canShare": true,
+      "canViewPrivateItems": true,
+      "canEdit": true,
+      "allowedOnlineMeetingProviders": [
+        "teamsForBusiness"
+      ],
+      "defaultOnlineMeetingProvider": "teamsForBusiness",
+      "isTallyingResponses": true,
+      "isRemovable": false,
+      "owner": {
+        "name": "aurorauser01",
+        "address": "aurorauser01@aurorafinanceintegration02.onmicrosoft.com"
+      }
+    },
+    {
+      "id": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA=",
+      "name": "United Kingdom holidays",
+      "color": "auto",
+      "hexColor": "",
+      "isDefaultCalendar": false,
+      "changeKey": "69QNktTLJkyFveedsm3h2wAATVFM1Q==",
+      "canShare": false,
+      "canViewPrivateItems": true,
+      "canEdit": false,
+      "allowedOnlineMeetingProviders": [
+      ],
+      "defaultOnlineMeetingProvider": "unknown",
+      "isTallyingResponses": false,
+      "isRemovable": true,
+      "owner": {
+        "name": "aurorauser01",
+        "address": "aurorauser01@aurorafinanceintegration02.onmicrosoft.com"
+      }
+    }
+  ]
+}

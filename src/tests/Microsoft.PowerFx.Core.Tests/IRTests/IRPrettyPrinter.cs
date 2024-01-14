@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
@@ -180,6 +181,10 @@ namespace Microsoft.PowerFx.Tests
             if (node.Value is NameSymbol n)
             {
                 _sb.Append(n.Name);
+            }
+            else if (node.Value is IExternalEntity ee)
+            {
+                _sb.Append(ee.EntityName);
             }
             else
             {

@@ -1,0 +1,60 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users('d8e90db6-d09c-4a90-bc1e-86512a797fd3')/contactFolders('Contacts')/contacts/$entity",
+  "@odata.etag": "W/\"EQAAABYAAADr1A2S1MsmTIW9552ybeHbAABxFchS\"",
+  "id": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LfAAA=",
+  "createdDateTime": "2023-12-22T14:43:15Z",
+  "lastModifiedDateTime": "2023-12-22T14:43:15Z",
+  "changeKey": "EQAAABYAAADr1A2S1MsmTIW9552ybeHbAABxFchS",
+  "categories": [
+  ],
+  "parentFolderId": "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwAuAAAAAAC1gTSkmbm5QLpPwj9qarJqAQDr1A2S1MsmTIW9552ybeHbAAAAAAEOAAA=",
+  "birthday": null,
+  "fileAs": "",
+  "displayName": "John III",
+  "givenName": "John Smith 3",
+  "initials": null,
+  "middleName": null,
+  "nickName": null,
+  "surname": null,
+  "title": null,
+  "yomiGivenName": null,
+  "yomiSurname": null,
+  "yomiCompanyName": null,
+  "generation": null,
+  "imAddresses": [
+  ],
+  "jobTitle": null,
+  "companyName": "Bank of Sweden",
+  "department": null,
+  "officeLocation": null,
+  "profession": null,
+  "businessHomePage": null,
+  "assistantName": null,
+  "manager": null,
+  "homePhones": [
+    "+1 (555) 457-987-1174"
+  ],
+  "mobilePhone": null,
+  "businessPhones": [
+  ],
+  "spouseName": null,
+  "personalNotes": "",
+  "children": [
+  ],
+  "emailAddresses": [
+    {
+      "name": "email1",
+      "address": "john2@nowhere.com"
+    },
+    {
+      "name": "email2",
+      "address": "john117zz@hotmail.se"
+    }
+  ],
+  "homeAddress": {
+  },
+  "businessAddress": {
+  },
+  "otherAddress": {
+  }
+}

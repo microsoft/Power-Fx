@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             RecordValue rv1 = engine.Eval("{a:1}") as RecordValue;
             RecordValue rv2 = engine.Eval(@"{a:""x""}") as RecordValue;
 
-            var ex = Assert.Throws<ArgumentException>(() => HttpFunctionInvoker.MergeRecords(rv1, rv2));
+            var ex = Assert.Throws<PowerFxConnectorException>(() => HttpFunctionInvoker.MergeRecords(rv1, rv2));
             Assert.Equal("Cannot merge 'a' of type DecimalValue with 'a' of type StringValue", ex.Message);
         }
 

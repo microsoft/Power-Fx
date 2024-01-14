@@ -222,7 +222,9 @@ Boy: I wonder where I'll float next?
             using var http = new HttpClient();
             using (var stream = await http.GetStreamAsync(new Uri(url)).ConfigureAwait(false))
             {
-                var doc = new OpenApiStreamReader().Read(stream, out OpenApiDiagnostic diag);
+                ReadResult rr = await new OpenApiStreamReader().ReadAsync(stream, CancellationToken.None).ConfigureAwait(false);                
+                OpenApiDiagnostic diag = rr.OpenApiDiagnostic;
+                OpenApiDocument doc = rr.OpenApiDocument;
 
                 if ((doc == null || doc.Paths == null || doc.Paths.Count == 0) && diag != null && diag.Errors.Count > 0)
                 {

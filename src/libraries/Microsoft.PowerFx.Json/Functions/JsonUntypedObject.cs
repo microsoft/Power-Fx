@@ -4,21 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
     internal class JsonUntypedObject : IUntypedObject
     {
-        private readonly JsonElement _element;
+        internal readonly JsonElement _element;
 
         public JsonUntypedObject(JsonElement element)
         {
