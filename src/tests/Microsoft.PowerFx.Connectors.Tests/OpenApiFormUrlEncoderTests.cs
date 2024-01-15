@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void UrlEncoderSerializer_SingleInteger_NoValue()
         {
-            var ex = Assert.Throws<ArgumentException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaInteger, null)
             }));
@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void UrlEncoderSerializer_SingleInteger_NoSchema()
         {
-            var ex = Assert.Throws<ArgumentException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (null, null)
             }));
@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void UrlEncoderSerializer_Integer_String_Mismatch()
         {
-            var ex = Assert.Throws<ArgumentException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaInteger, FormulaValue.New("abc"))
             }));
@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void UrlEncoderSerializer_Number_String_Mismatch()
         {
-            var ex = Assert.Throws<ArgumentException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaNumber, FormulaValue.New("abc"))
             }));
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void UrlEncoderSerializer_String_Integer_Mismatch()
         {
-            var ex = Assert.Throws<ArgumentException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaString, FormulaValue.New(11))
             }));
@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void UrlEncoderSerializer_Bool_String_Mismatch()
         {
-            var ex = Assert.Throws<ArgumentException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaBoolean, FormulaValue.New("abc"))
             }));
@@ -162,7 +162,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void UrlEncoderSerializer_InvalidSchema()
         {
-            var ex = Assert.Throws<NotImplementedException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (new OpenApiSchema() { Type = "unknown" }, FormulaValue.New(1)),
             }));
@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void UrlEncoderSerializer_Null()
         {
-            var ex = Assert.Throws<NotImplementedException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (new OpenApiSchema() { Type = "null" }, FormulaValue.New(1)),
             }));
@@ -258,7 +258,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void UrlEncoderSerializer_Array_Record_Invalid()
         {
-            var ex = Assert.Throws<ArgumentException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayObject, GetArray(GetRecord(("x", FormulaValue.New(1)))))
             }));
@@ -269,7 +269,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void UrlEncoderSerializer_Array_Record_Invalid2()
         {
-            var ex = Assert.Throws<NotImplementedException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayObject, GetArray(GetRecord(("Value", GetRecord(("z", FormulaValue.New(2)))))))
             }));
@@ -280,7 +280,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void UrlEncoderSerializer_Array_Invalid()
         {
-            var ex = Assert.Throws<ArgumentException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetTable(GetRecord(("a", FormulaValue.New(1)), ("b", FormulaValue.New("foo")))))
             }));
@@ -320,7 +320,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void UrlEncoderSerializer_Object_MissingObjectProperty()
         {
-            var ex = Assert.Throws<NotImplementedException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaObject(("x", SchemaInteger, true), ("y", SchemaString, true)), GetRecord(("x", FormulaValue.New(1))))
             }));

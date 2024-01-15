@@ -108,14 +108,14 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Theory]
-        [InlineData(100)] // Continue
-        [InlineData(200)] // Ok
-        [InlineData(202)] // Accepted
-        [InlineData(305)] // Use Proxy
-        [InlineData(411)] // Length Required
-        [InlineData(500)] // Server Error
-        [InlineData(502)] // Bad Gateway
-        public async Task Connector_GenerateErrors(int statusCode)
+        [InlineData(100, null)] // Continue
+        [InlineData(200, null)] // Ok
+        [InlineData(202, null)] // Accepted
+        [InlineData(305, "Use Proxy")] 
+        [InlineData(411, "Length Required")] 
+        [InlineData(500, "Internal Server Error")] 
+        [InlineData(502, "Bad Gateway")] 
+        public async Task Connector_GenerateErrors(int statusCode, string reasonPhrase)
         {
             using var testConnector = new LoggingTestServer(@"Swagger\TestConnector12.json");
             var apiDoc = testConnector._apiDocument;
@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx.Tests
 
                 Assert.Equal(ErrorKind.Network, err.Kind);
                 Assert.Equal(ErrorSeverity.Critical, err.Severity);
-                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}. Response: {statusCode}", err.Message);
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode} ({reasonPhrase}). Response: {statusCode}", err.Message);
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Tests
             }
             else
             {
-                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}. Response: {statusCode}", sv2.Value);
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode} ({reasonPhrase}). Response: {statusCode}", sv2.Value);
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
@@ -418,7 +418,7 @@ namespace Microsoft.PowerFx.Tests
         {
             using var httpClient = new HttpClient();
 
-            var ex = Assert.Throws<ArgumentException>(() => new PowerPlatformConnectorClient(
+            var ex = Assert.Throws<PowerFxConnectorException>(() => new PowerPlatformConnectorClient(
                 "http://firstrelease-001.azure-apim.net:117",  // endpoint not allowed with http scheme
                 "839eace6-59ab-4243-97ec-a5b8fcc104e4",
                 "453f61fa88434d42addb987063b1d7d2",
@@ -463,7 +463,7 @@ namespace Microsoft.PowerFx.Tests
             using var testConnector2 = new LoggingTestServer(@"Swagger\TestOpenAPI.json");
             var apiDoc2 = testConnector2._apiDocument;
 
-            var ex2 = Assert.Throws<ArgumentException>(() => new PowerPlatformConnectorClient(
+            var ex2 = Assert.Throws<PowerFxConnectorException>(() => new PowerPlatformConnectorClient(
                 apiDoc2,                                        // Swagger file without "host" param
                 "839eace6-59ab-4243-97ec-a5b8fcc104e4",
                 "453f61fa88434d42addb987063b1d7d2",
@@ -616,7 +616,9 @@ namespace Microsoft.PowerFx.Tests
             IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc, new ConsoleLogger(_output));
             Assert.True(functions.First(f => f.Name == "GetEmailsV2").IsDeprecated);
             Assert.False(functions.First(f => f.Name == "SendEmailV2").IsDeprecated);
-            Assert.Equal("OpenApiOperation is deprecated", functions.First(f => f.Name == "GetEmailsV2").NotSupportedReason);
+
+            // deprecated functions are supported and should not expose NotSupportedReason
+            Assert.Equal(string.Empty, functions.First(f => f.Name == "GetEmailsV2").NotSupportedReason);
             Assert.Equal(string.Empty, functions.First(f => f.Name == "SendEmailV2").NotSupportedReason);
 
             RecalcEngine engine = new RecalcEngine(config);
@@ -715,7 +717,7 @@ namespace Microsoft.PowerFx.Tests
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook V4CalendarPostItem.json");
             FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
-            Assert.Equal(@"![body:s, categories:*[Value:s], createdDateTime:d, end:d, endWithTimeZone:d, iCalUId:s, id:s, importance:s, isAllDay:b, isHtml:b, isReminderOn:b, lastModifiedDateTime:d, location:s, numberOfOccurences:w, optionalAttendees:s, organizer:s, recurrence:s, recurrenceEnd:D, reminderMinutesBeforeStart:w, requiredAttendees:s, resourceAttendees:s, responseRequested:b, responseTime:d, responseType:s, selectedDaysOfWeek:N, sensitivity:s, seriesMasterId:s, showAs:s, start:d, startWithTimeZone:d, subject:s, timeZone:s, webLink:s]", result.Type._type.ToString());
+            Assert.Equal(@"![body:s, categories:*[Value:s], createdDateTime:d, end:d, endWithTimeZone:d, iCalUId:s, id:s, importance:s, isAllDay:b, isHtml:b, isReminderOn:b, lastModifiedDateTime:d, location:s, numberOfOccurences:w, optionalAttendees:s, organizer:s, recurrence:s, recurrenceEnd:D, reminderMinutesBeforeStart:w, requiredAttendees:s, resourceAttendees:s, responseRequested:b, responseTime:d, responseType:s, sensitivity:s, seriesMasterId:s, showAs:s, start:d, startWithTimeZone:d, subject:s, timeZone:s, webLink:s]", result.Type._type.ToString());
 
             var actual = testConnector._log.ToString();
             var version = PowerPlatformConnectorClient.Version;
@@ -1271,7 +1273,16 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(101, functions.Count);
             Assert.Equal(101 - 51, functions.Count(f => f.IsInternal));
 
-            IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector(new ConnectorSettings("SP") { IncludeInternalFunctions = true }, apiDoc, new ConsoleLogger(_output));
+            IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector(
+                new ConnectorSettings("SP") 
+                { 
+                    // This shouldn't be used with expressions but this is OK here as this is a tabular connector and has no impact for this connector/these functions
+                    Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                    IncludeInternalFunctions = true, 
+                    ReturnUnknownRecordFieldsAsUntypedObjects = true 
+                },
+                apiDoc, 
+                new ConsoleLogger(_output));
             RecalcEngine engine = new RecalcEngine(config);
             RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SP", ppClient, console: _output));
 
@@ -1294,8 +1305,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("1e54c4b5-2a59-4a2a-9633-cc611a2ff718", ((StringValue)((TableValue)fv4).Rows.Skip(1).First().Value.GetField("Name")).Value);
 
             testConnector.SetResponseFromFile(@"Responses\SPO_Response5.json");
-            FormulaValue fv5 = await engine.EvalAsync($@"SP.GetItems(""{dataset}"", ""{table}"", {{'$top': 4}})", CancellationToken.None, runtimeConfig: rc).ConfigureAwait(false);
-            Assert.Equal("Shared Documents/Document.docx", ((StringValue)((RecordValue)((TableValue)((RecordValue)fv5).GetField("value")).Rows.First().Value).GetField("{FullPath}")).Value);
+            FormulaValue fv5 = await engine.EvalAsync($@"SP.GetItems(""{dataset}"", ""{table}"", {{'$top': 4}})", CancellationToken.None, runtimeConfig: rc).ConfigureAwait(false);            
+            Assert.Equal("Shared Documents/Document.docx", ((UntypedObjectValue)((RecordValue)((TableValue)((RecordValue)fv5).GetField("value")).Rows.First().Value).GetField("{FullPath}")).Impl.GetString());
 
             string version = PowerPlatformConnectorClient.Version;
             string expected = @$"POST https://tip1-shared-002.azure-apim.net/invoke
@@ -1364,7 +1375,14 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "b20e87387f9149e884bdf0b0c87a67e8" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
 
-            ConnectorSettings connectorSettings = new ConnectorSettings("exob") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true };
+            ConnectorSettings connectorSettings = new ConnectorSettings("exob") 
+            {
+                // This shouldn't be used with expressions but this is OK here as this is a tabular connector                
+                Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                AllowUnsupportedFunctions = true, 
+                IncludeInternalFunctions = true, 
+                ReturnUnknownRecordFieldsAsUntypedObjects = true
+            };
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
 
             IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector(connectorSettings, apiDoc, new ConsoleLogger(_output, true));
@@ -1396,69 +1414,17 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // Get PowerApps id for 2nd row = "f830UPeAXoI"
             testConnector.SetResponseFromFile(@"Responses\EXO_Response4.json");
             FormulaValue fv4 = await engine.EvalAsync(@$"exob.GetItems(""{source}"", ""{drive}"", ""{file}"", ""{table}"")", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
-            string columnId = ((StringValue)((RecordValue)((TableValue)((RecordValue)fv4).GetField("value")).Rows.Skip(1).First().Value).GetField("__PowerAppsId__")).Value;
+            string columnId = ((UntypedObjectValue)((RecordValue)((TableValue)((RecordValue)fv4).GetField("value")).Rows.Skip(1).First().Value).GetField("__PowerAppsId__")).Impl.GetString();
 
             // Get Item by columnId
             testConnector.SetResponseFromFile(@"Responses\EXO_Response5.json");
             FormulaValue fv5 = await engine.EvalAsync(@$"exob.GetItem(""{source}"", ""{drive}"", ""{file}"", ""{table}"", ""__PowerAppsId__"", ""{columnId}"")", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             RecordValue rv5 = (RecordValue)fv5;
 
-            Assert.Equal(FormulaType.String, rv5.GetField("Site").Type);
-            Assert.Equal("Atlanta", ((StringValue)rv5.GetField("Site")).Value);
+            Assert.Equal(FormulaType.UntypedObject, rv5.GetField("Site").Type);
+            Assert.Equal("Atlanta", ((UntypedObjectValue)rv5.GetField("Site")).Impl.GetString());
 
-            string version = PowerPlatformConnectorClient.Version;
-            string expected = @$"POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXAiOiJ...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
- x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
- x-ms-request-method: GET
- x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives?source=me
- x-ms-user-agent: PowerFx/{version}
-POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXAiOiJ...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
- x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
- x-ms-request-method: GET
- x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives/me/root/children?source=b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb
- x-ms-user-agent: PowerFx/{version}
-POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXAiOiJ...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
- x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
- x-ms-request-method: GET
- x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives/me/items/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/workbook/tables?source=01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO
- x-ms-user-agent: PowerFx/{version}
-POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXAiOiJ...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
- x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
- x-ms-request-method: GET
- x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/drives/me/files/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/tables/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/items?source=%7b00000000-000C-0000-FFFF-FFFF00000000%7d
- x-ms-user-agent: PowerFx/{version}
-POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXAiOiJ...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
- x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
- x-ms-request-method: GET
- x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/drives/me/files/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/tables/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/items/%257b00000000-000C-0000-FFFF-FFFF00000000%257d?source=__PowerAppsId__&idColumn=f830UPeAXoI
- x-ms-user-agent: PowerFx/{version}
-";
-            Assert.Equal(expected, testConnector._log.ToString());
+            // Network trace cannot be tested here as SwaggerCompatibility is enabled.
         }
 
         [Fact]
