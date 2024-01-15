@@ -1,4 +1,4 @@
-﻿#SETUP: disable:PowerFxV1CompatibilityRules
+﻿#SETUP: PowerFxV1CompatibilityRules
 
 >> Set(list, Table({ Name: "One", ID: 1}, { Name: "Two", ID: 2}))
 Table({ID:1,Name:"One"},{ID:2,Name:"Two"})
@@ -7,7 +7,7 @@ Table({ID:1,Name:"One"},{ID:2,Name:"Two"})
 Table({ID:1,Name:"One"})
 
 >> ForAll(list2, Remove(list, ThisRecord))
-Table(Blank())
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
 
 >> list
 Table({ID:2,Name:"Two"})
@@ -16,7 +16,7 @@ Table({ID:2,Name:"Two"})
 Table({Value:1},{Value:2},{Value:3},{Value:4})
 
 >> Remove(list3, {Value:3})
-Blank()
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
 
 >> Remove(list3, {Value:5})
 Error({Kind:ErrorKind.NotFound})

@@ -1,4 +1,6 @@
-﻿// Case to test how shortcut verification work along with behavior functions
+﻿#SETUP: PowerFxV1CompatibilityRules
+
+// Case to test how shortcut verification work along with behavior functions
 
 >> Set( t1, [false,true] )
 Table({Value:false},{Value:true})
@@ -62,7 +64,7 @@ Table({Value:false},{Value:true})
 >> 0.14;t1
 Table({Value:false},{Value:true})
 
->> And(false && Patch(t1, First(t1), {Value:true}).Value);t1
+>> And(false, Patch(t1, First(t1), {Value:true}).Value);t1
 Table({Value:false},{Value:true})
 
 >> 0.5;t1

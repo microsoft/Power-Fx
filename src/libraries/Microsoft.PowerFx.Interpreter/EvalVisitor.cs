@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
@@ -174,7 +175,7 @@ namespace Microsoft.PowerFx
                     if (_symbolValues != null)
                     {
                         _symbolValues.Set(sym, newValue);
-                        return FormulaValue.NewVoid();
+                        return node.IRContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
                     }
 
                     // This may happen if the runtime symbols are missing a value and we failed to update. 

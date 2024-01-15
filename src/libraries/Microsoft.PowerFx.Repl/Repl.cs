@@ -293,7 +293,15 @@ namespace Microsoft.PowerFx
                     var innerExpr = cn.Args.ToString();
                     CheckResult psuedoCheck = this.Engine.Check(innerExpr, options: this.ParserOptions, symbolTable: extraSymbolTable);
 
-                    await psuedoFunction.ExecuteAsync(psuedoCheck, this, cancel).ConfigureAwait(false);
+                    try
+                    {
+                        await psuedoFunction.ExecuteAsync(psuedoCheck, this, cancel).ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        await this.Output.WriteLineAsync(lineError + ex.Message, OutputKind.Error, cancel)
+                            .ConfigureAwait(false);
+                    }
 
                     return new ReplResult();
                 }
