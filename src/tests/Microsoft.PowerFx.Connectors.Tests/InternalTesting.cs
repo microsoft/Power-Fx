@@ -37,33 +37,44 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
 #endif
         public void TestAllConnectors()
-        {
-            string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
-            string srcFolder = Path.GetFullPath(Path.Combine(outFolder, ".."));
+        {            
+            (string outFolder, string srcFolder) = GetFolders();
+
             string reportFolder = @"report";
             string reportName = @$"{reportFolder}\Analysis.txt";
             string jsonReport = @$"{reportFolder}\Report.json";
 
             // New report name every second
-            string jsonReport2 = @$"report\Report_{Math.Round(DateTime.UtcNow.Ticks / 1e7):00000000000}.json";
+            string jsonReport2 = @$"{reportFolder}\Report_{Math.Round(DateTime.UtcNow.Ticks / 1e7):00000000000}.json";
 
             string outFolderPath = Path.Combine(outFolder, reportFolder);
-            if (Directory.Exists(outFolderPath))
-            {
-                Directory.Delete(outFolderPath, true);
-            }
-
-            // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
-            // Locally         : ENV: C:\Data\Power-Fx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Debug\netcoreapp3.1
-            _output.WriteLine($"ENV: {Environment.CurrentDirectory}");
-            _output.WriteLine($"OUT: {outFolder}");
-            _output.WriteLine($"SRC: {srcFolder}");
-
+            BaseConnectorTest.EmptyFolder(outFolderPath);
             Directory.CreateDirectory(Path.Combine(outFolder, "report"));
+
             GenerateReport(reportFolder, reportName, outFolder, srcFolder);
             AnalyzeReport(reportName, outFolder, srcFolder, jsonReport);
 
             File.Copy(Path.Combine(outFolder, jsonReport), Path.Combine(outFolder, jsonReport2));
+        }
+
+        private (string outFolder, string srcFolder) GetFolders()
+        {
+            string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
+            string srcFolder = Path.GetFullPath(Path.Combine(outFolder, ".."));
+
+            // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
+            // Locally         : ENV: C:\Data\Power-Fx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Debug\netcoreapp3.1
+            _output.WriteLine($"ENV: {Environment.CurrentDirectory}");
+
+            // On build servers: OUT: C:\__w\1\s\pfx
+            // Locally         : OUT: C:\Data\Power-Fx
+            _output.WriteLine($"OUT: {outFolder}");
+
+            // On build servers: SRC: C:\__w\1\s
+            // Locally         : SRC: C:\Data
+            _output.WriteLine($"SRC: {srcFolder}");
+
+            return (outFolder, srcFolder);
         }
 
         private void AnalyzeReport(string reportName, string outFolder, string srcFolder, string jsonReport)
@@ -538,22 +549,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Theory(Skip = "Need files from AAPT-connector, PowerPlatformConnectors and Power-Fx-TexlFunctions-Baseline projects")]
 #endif
         [InlineData("Library")] // Default Power-Fx library
-        [InlineData("Aapt-Ppc", 0, "apidefinition*swagger*.json", @"C:\Data\aapt", @"C:\Data\ppc")]
-        [InlineData("Baseline", 1, "*.json", @"C:\Data\Power-Fx-TexlFunctions-Baseline\Swaggers")]
+        [InlineData("Aapt-Ppc", 0, "apidefinition*swagger*.json", @"aapt\src", @"ppc")]
+        [InlineData("Baseline", 1, "*.json", @"Power-Fx-TexlFunctions-Baseline\Swaggers")]
         public void GenerateYamlFiles(string reference, int folderExclusionIndex = -1, string pattern = null, params string[] folders)
         {
-            string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
-            string srcFolder = Path.GetFullPath(Path.Combine(outFolder, ".."));
-
-            // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
-            // Locally         : ENV: C:\Data\Power-Fx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Debug\netcoreapp3.1
-            _output.WriteLine($"ENV: {Environment.CurrentDirectory}");
-            _output.WriteLine($"OUT: {outFolder}");
-            _output.WriteLine($"SRC: {srcFolder}");
+            (string outFolder, string srcFolder) = GetFolders();
 
             string outFolderPath = Path.Combine(outFolder, "YamlOutput");
             BaseConnectorTest.EmptyFolder(Path.Combine(outFolderPath, reference));
 
+            // if no folder, use Library
             if (folders.Length == 0)
             {
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -575,14 +580,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 IncludeInternalFunctions = true, 
                 FailOnUnknownExtension = false, 
                 Compatibility = ConnectorCompatibility.PowerAppsCompatibility 
-            };            
+            };
+
+            string[] rootedFolders = folders.Select(f => Path.Combine(srcFolder, f)).ToArray();
 
             // Step 1: Identify the list of swagger files to consider
             // The output of LocateSwaggerFilesWithDocuments is a dictionary where
             // - Key is the connector display name
             // - Value is a (folder, location, document) tuple where folder is the source folder at the origin of the swagger identification, location is the exact swagger file location, document is the corresponding OpenApiDocument 
             // LocateSwaggerFiles could also be used here and would only return a Dictionary<displayName, location> (no source folder or document)
-            Dictionary<string, (string folder, string location, OpenApiDocument document)> swaggerFiles = SwaggerFileIdentification.LocateSwaggerFilesWithDocuments(folders, pattern, swaggerLocationSettings);
+            Dictionary<string, (string folder, string location, OpenApiDocument document)> swaggerFiles = SwaggerFileIdentification.LocateSwaggerFilesWithDocuments(rootedFolders, pattern, swaggerLocationSettings);
             _output.WriteLine($"Number of connectors found: {swaggerFiles.Count()}");
 
             foreach (KeyValuePair<string, (string folder, string location, OpenApiDocument document)> connector in swaggerFiles)
