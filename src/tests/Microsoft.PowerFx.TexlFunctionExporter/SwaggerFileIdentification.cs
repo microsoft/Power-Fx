@@ -117,6 +117,12 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
             try
             {
                 OpenApiDocument doc = ReadSwagger(swaggerFile);
+
+                if (doc == null || doc.Info == null)
+                {
+                    return;
+                }
+
                 string title = doc.Info.Title;
                 var item = (folder, swaggerFile, doc);
 
