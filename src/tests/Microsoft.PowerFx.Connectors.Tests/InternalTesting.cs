@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
@@ -596,9 +597,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 // Step 2: Get TexlFunctions to be exported
                 // Notice that TexlFunction is internal and requires InternalVisibleTo
                 List<TexlFunction> texlFunctions = OpenApiParser.ParseInternal(connectorSettings, connector.Value.document, logger).texlFunctions.Cast<TexlFunction>().ToList();
+                List<ConnectorFunction> connectorFunctions = OpenApiParser.ParseInternal(connectorSettings, connector.Value.document, logger).connectorFunctions.Cast<ConnectorFunction>().ToList();
 
                 // Step 3: Export TexlFunctions to Yaml
                 ExportTexlFunctionsToYaml(reference, outFolderPath, connector.Key, texlFunctions, false);
+
+                // Step 3: Export TexlFunctions to Yaml
+                ExportConnectorFunctionsToYaml(reference, outFolderPath, connector.Key, connectorFunctions);
             }
         }
 
@@ -609,6 +614,32 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 // Export TexlFunction definition as Yaml file
                 YamlExporter.ExportTexlFunction($"{Path.Combine(output, reference, connectorName.Replace("/", "_", StringComparison.OrdinalIgnoreCase))}", texlFunction, isLibrary);
             }
+        }
+
+        private static void ExportConnectorFunctionsToYaml(string reference, string output, string connectorName, List<ConnectorFunction> connectorFunctions)
+        {
+            foreach (ConnectorFunction connectorFunction in connectorFunctions)
+            {
+                // Export TexlFunction definition as Yaml file
+                ExportConnectorFunction($"{Path.Combine(output, reference, connectorName.Replace("/", "_", StringComparison.OrdinalIgnoreCase))}", connectorFunction);
+            }
+        }
+
+        private static void ExportConnectorFunction(string folder, ConnectorFunction connectorFunction)
+        {
+            dynamic obj = connectorFunction.ToExpando(null);
+            var serializer = new SerializerBuilder().Build();
+            string yaml = serializer.Serialize(obj);            
+
+            string functionFile = Path.Combine(folder, "ConnectorFunction_" + connectorFunction.Name.Replace("/", "_", StringComparison.OrdinalIgnoreCase) + ".yaml");
+            Directory.CreateDirectory(folder);
+
+            if (File.Exists(functionFile))
+            {
+                throw new IOException($"File {functionFile} already exists!");
+            }
+
+            File.WriteAllText(functionFile, yaml, Encoding.UTF8);
         }
     }
 
@@ -639,7 +670,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             func.OperationId = connectorFunction.OriginalName;
             func.Method = connectorFunction.HttpMethod.ToString().ToUpperInvariant();
             func.Path = connectorFunction.OperationPath;
-            func.SwaggerFile = swaggerFile;
+
+            if (!string.IsNullOrEmpty(swaggerFile))
+            {
+                func.SwaggerFile = swaggerFile;
+            }
 
             if (!string.IsNullOrEmpty(connectorFunction.Description))
             {
@@ -700,7 +735,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             if (connectorParam.DefaultValue != null)
             {
-                cParam.DefaultValue = connectorParam.DefaultValue.ToExpression();
+                StringBuilder sb = new StringBuilder();
+                connectorParam.DefaultValue.ToExpression(sb, new FormulaValueSerializerSettings() { UseCompactRepresentation = true });
+                cParam.DefaultValue = sb.ToString();
             }
 
             if (!string.IsNullOrEmpty(connectorParam.Title))
