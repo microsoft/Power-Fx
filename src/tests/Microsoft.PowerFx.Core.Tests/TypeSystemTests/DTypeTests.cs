@@ -2889,9 +2889,11 @@ namespace Microsoft.PowerFx.Tests
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
-        public void DTypeUnion_PowerFxV1CompatRules_VoidNotCompatibleWithAnything(bool usePFxV1CompatRules)
+        public void DTypeUnion_PowerFxV1CompatRules_Void(bool usePFxV1CompatRules)
         {
-            var typeEncodings = "ebnshdipmgo$wcDTlLZPQqVOXw";
+            // Nothing accepts Void (except for Void), while Void accepts everything (including Void).
+            // From a type union perspective, Void is the result of all union operations that involve a Void.
+            var typeEncodings = "ebnshdipmgo$wcDTlLZPQqVOXw-";
             foreach (var type in typeEncodings)
             {
                 TestUnion(type.ToString(), "-", "-", usePFxV1CompatRules);

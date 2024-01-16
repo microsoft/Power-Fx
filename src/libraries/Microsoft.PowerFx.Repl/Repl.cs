@@ -285,17 +285,17 @@ namespace Microsoft.PowerFx
                 }
 
                 // pseudo function call
-                if (check.Parse.Root is CallNode cn && _pseudoFunctions.TryGetValue(cn.Head.Name, out var psuedoFunction))
+                if (check.Parse.Root is CallNode cn && _pseudoFunctions.TryGetValue(cn.Head.Name, out var pseudoFunction))
                 {
                     // Foo(expr)
-                    // where Foo() is a peudo function, get CheckResult for just 'expr' and pass in. 
+                    // where Foo() is a pseudo function, get CheckResult for just 'expr' and pass in. 
                     // Inner expr doesn't get access to meta functions. 
                     var innerExpr = cn.Args.ToString();
-                    CheckResult psuedoCheck = this.Engine.Check(innerExpr, options: this.ParserOptions, symbolTable: extraSymbolTable);
+                    CheckResult pseudoCheck = this.Engine.Check(innerExpr, options: this.ParserOptions, symbolTable: extraSymbolTable);
 
                     try
                     {
-                        await psuedoFunction.ExecuteAsync(psuedoCheck, this, cancel).ConfigureAwait(false);
+                        await pseudoFunction.ExecuteAsync(pseudoCheck, this, cancel).ConfigureAwait(false);
                     }
                     catch (Exception ex)
                     {
