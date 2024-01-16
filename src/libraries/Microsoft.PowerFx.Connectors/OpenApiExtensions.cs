@@ -773,23 +773,22 @@ namespace Microsoft.PowerFx.Connectors
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
             if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicValues, out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
             {
-                if (apiObj.TryGetValue("parameters", out IOpenApiAny op_prms) && op_prms is OpenApiObject opPrms)
-                {
-                    ConnectorDynamicValue cdv = new (opPrms);
+                // Parameters is required in the spec but there are examples where it's not specified and we'll support this condition with an empty list
+                OpenApiObject op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is OpenApiObject apiString ? apiString : null;
+                ConnectorDynamicValue cdv = new (op_prms);
 
-                    // Mandatory operationId for connectors, except when capibility or builtInOperation are defined
-                    apiObj.WhenPresent("operationId", (opId) => cdv.OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId));                    
-                    apiObj.WhenPresent("value-title", (opValTitle) => cdv.ValueTitle = opValTitle);
-                    apiObj.WhenPresent("value-path", (opValPath) => cdv.ValuePath = opValPath);
-                    apiObj.WhenPresent("value-collection", (opValCollection) => cdv.ValueCollection = opValCollection);
+                // Mandatory operationId for connectors, except when capibility or builtInOperation are defined
+                apiObj.WhenPresent("operationId", (opId) => cdv.OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId));                    
+                apiObj.WhenPresent("value-title", (opValTitle) => cdv.ValueTitle = opValTitle);
+                apiObj.WhenPresent("value-path", (opValPath) => cdv.ValuePath = opValPath);
+                apiObj.WhenPresent("value-collection", (opValCollection) => cdv.ValueCollection = opValCollection);
                      
-                    // we don't support BuiltInOperations or capabilities right now
-                    // return null to indicate that the call to get suggestions is not needed for this parameter
-                    apiObj.WhenPresent("capability", (string op_capStr) => cdv = null);
-                    apiObj.WhenPresent("builtInOperation", (string op_bioStr) => cdv = null);
+                // we don't support BuiltInOperations or capabilities right now
+                // return null to indicate that the call to get suggestions is not needed for this parameter
+                apiObj.WhenPresent("capability", (string op_capStr) => cdv = null);
+                apiObj.WhenPresent("builtInOperation", (string op_bioStr) => cdv = null);
 
-                    return cdv;
-                }
+                return cdv;                
             }
 
             return null;
@@ -800,33 +799,32 @@ namespace Microsoft.PowerFx.Connectors
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
             if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicList, out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
             {
-                // Mandatory openrationId for connectors
+                // Mandatory operationId for connectors
                 if (apiObj.TryGetValue("operationId", out IOpenApiAny op_id) && op_id is OpenApiString opId)
                 {
-                    if (apiObj.TryGetValue("parameters", out IOpenApiAny op_prms) && op_prms is OpenApiObject opPrms)
+                    // Parameters is required in the spec but there are examples where it's not specified and we'll support this condition with an empty list
+                    OpenApiObject op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is OpenApiObject apiString ? apiString : null;
+                    ConnectorDynamicList cdl = new (op_prms)
                     {
-                        ConnectorDynamicList cdl = new (opPrms)
-                        {
-                            OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),                            
-                        };
+                        OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),
+                    };
 
-                        if (apiObj.TryGetValue("itemTitlePath", out IOpenApiAny op_valtitle) && op_valtitle is OpenApiString opValTitle)
-                        {
-                            cdl.ItemTitlePath = opValTitle.Value;
-                        }
-
-                        if (apiObj.TryGetValue("itemsPath", out IOpenApiAny op_valpath) && op_valpath is OpenApiString opValPath)
-                        {
-                            cdl.ItemPath = opValPath.Value;
-                        }
-
-                        if (apiObj.TryGetValue("itemValuePath", out IOpenApiAny op_valcoll) && op_valcoll is OpenApiString opValCollection)
-                        {
-                            cdl.ItemValuePath = opValCollection.Value;
-                        }
-
-                        return cdl;
+                    if (apiObj.TryGetValue("itemTitlePath", out IOpenApiAny op_valtitle) && op_valtitle is OpenApiString opValTitle)
+                    {
+                        cdl.ItemTitlePath = opValTitle.Value;
                     }
+
+                    if (apiObj.TryGetValue("itemsPath", out IOpenApiAny op_valpath) && op_valpath is OpenApiString opValPath)
+                    {
+                        cdl.ItemPath = opValPath.Value;
+                    }
+
+                    if (apiObj.TryGetValue("itemValuePath", out IOpenApiAny op_valcoll) && op_valcoll is OpenApiString opValCollection)
+                    {
+                        cdl.ItemValuePath = opValCollection.Value;
+                    }
+
+                    return cdl;                    
                 }
                 else
                 {
@@ -839,7 +837,12 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static Dictionary<string, IConnectorExtensionValue> GetParameterMap(this OpenApiObject opPrms, SupportsConnectorErrors errors, bool forceString = false)
         {
-            Dictionary<string, IConnectorExtensionValue> dvParams = new ();            
+            Dictionary<string, IConnectorExtensionValue> dvParams = new ();
+
+            if (opPrms == null)
+            {
+                return dvParams;
+            }
 
             foreach (KeyValuePair<string, IOpenApiAny> prm in opPrms)
             {                
@@ -907,23 +910,23 @@ namespace Microsoft.PowerFx.Connectors
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
             if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicSchema, out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
             {
-                // Mandatory openrationId for connectors
+                // Mandatory operationId for connectors
                 if (apiObj.TryGetValue("operationId", out IOpenApiAny op_id) && op_id is OpenApiString opId)
                 {
-                    if (apiObj.TryGetValue("parameters", out IOpenApiAny op_prms) && op_prms is OpenApiObject opPrms)
+                    // Parameters is required in the spec but there are examples where it's not specified and we'll support this condition with an empty list
+                    OpenApiObject op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is OpenApiObject apiString ? apiString : null;
+
+                    ConnectorDynamicSchema cds = new (op_prms)
                     {
-                        ConnectorDynamicSchema cds = new (opPrms)
-                        {
-                            OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),                            
-                        };
+                        OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),
+                    };
 
-                        if (apiObj.TryGetValue("value-path", out IOpenApiAny op_valpath) && op_valpath is OpenApiString opValPath)
-                        {
-                            cds.ValuePath = opValPath.Value;
-                        }
-
-                        return cds;
+                    if (apiObj.TryGetValue("value-path", out IOpenApiAny op_valpath) && op_valpath is OpenApiString opValPath)
+                    {
+                        cds.ValuePath = opValPath.Value;
                     }
+
+                    return cds;                    
                 }
                 else
                 {
@@ -939,23 +942,23 @@ namespace Microsoft.PowerFx.Connectors
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
             if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicProperties, out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
             {
-                // Mandatory openrationId for connectors
+                // Mandatory operationId for connectors
                 if (apiObj.TryGetValue("operationId", out IOpenApiAny op_id) && op_id is OpenApiString opId)
                 {
-                    if (apiObj.TryGetValue("parameters", out IOpenApiAny op_prms) && op_prms is OpenApiObject opPrms)
+                    // Parameters is required in the spec but there are examples where it's not specified and we'll support this condition with an empty list
+                    OpenApiObject op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is OpenApiObject apiString ? apiString : null;
+
+                    ConnectorDynamicProperty cdp = new (op_prms)
                     {
-                        ConnectorDynamicProperty cdp = new (opPrms)
-                        {
-                            OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),                            
-                        };
+                        OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),                            
+                    };
 
-                        if (apiObj.TryGetValue("itemValuePath", out IOpenApiAny op_valpath) && op_valpath is OpenApiString opValPath)
-                        {
-                            cdp.ItemValuePath = opValPath.Value;
-                        }
-
-                        return cdp;
+                    if (apiObj.TryGetValue("itemValuePath", out IOpenApiAny op_valpath) && op_valpath is OpenApiString opValPath)
+                    {
+                        cdp.ItemValuePath = opValPath.Value;
                     }
+
+                    return cdp;                    
                 }
                 else
                 {

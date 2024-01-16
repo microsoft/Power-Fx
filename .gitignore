@@ -364,3 +364,11 @@ suppress.*.xml
 # global.json
 /src/global.json
 /global.json
+
+# Guardian results
+.gdn/r
+.gdn/internal.gdnhistory
+
+# Yaml output
+YamlOutput/
+
