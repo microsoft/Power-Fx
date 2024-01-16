@@ -27,8 +27,7 @@ namespace Microsoft.PowerFx.Tests
         public OpenApiDocument _apiDocument;
         public bool SendAsyncCalled = false;
         public bool Live = false;
-        public HttpClient LiveClient = null;
-        public ITestOutputHelper Output;
+        public HttpClient LiveClient = null;        
 
         public LoggingTestServer(string swaggerName, ITestOutputHelper output, bool live = false)
         {
