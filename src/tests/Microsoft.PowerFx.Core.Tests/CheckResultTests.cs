@@ -263,6 +263,46 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Throws<InvalidOperationException>(() => check.ApplyBinding());
         }
 
+        [Fact]
+        public void GetFunctionInfoTest()
+        {
+            var check = new CheckResult(new Engine())
+                .SetText("Power(3,2)")
+                .SetBindingInfo();
+
+            var node = (CallNode)check.ApplyParse().Root;
+
+            var info = check.GetFunctionInfo(node);
+            
+            Assert.Equal("Power", info.Name);
+            var sigs = info.Signatures.Single();
+            Assert.Equal("Power(base, exponent)", sigs.DebugToString());
+        }
+
+        [Fact]
+        public void GetFunctionInfoTestNull()
+        {
+            var check = new CheckResult(new Engine())
+                .SetText("Power(3,2)")
+                .SetBindingInfo();
+
+            Assert.Throws<ArgumentNullException>(() => check.GetFunctionInfo(null));
+        }
+
+        [Fact]
+        public void GetFunctionMissingTest()
+        {
+            var check = new CheckResult(new Engine())
+                .SetText("Missing(3,2)")
+                .SetBindingInfo();
+
+            var node = (CallNode)check.ApplyParse().Root;
+
+            // No function Info.
+            var info = check.GetFunctionInfo(node);
+            Assert.Null(info);
+        }
+
         [Theory]
         
         // ****When Coercion is not allowed.****

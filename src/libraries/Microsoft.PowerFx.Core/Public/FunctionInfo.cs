@@ -2,8 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
 
 namespace Microsoft.PowerFx
 {
@@ -45,5 +50,79 @@ namespace Microsoft.PowerFx
         /// An optional URL for more help on this function. 
         /// </summary>
         public string HelpLink => _fnc.HelpLink;
+
+        /// <summary>
+        /// Get parameter names for the specific overload.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<FunctionInfoSignature> Signatures 
+        {
+            get
+            {
+                var sigs = _fnc.GetSignatures();
+
+                foreach (var paramList in sigs)
+                {
+                    yield return new FunctionInfoSignature(this, paramList);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Represent a possible signature for a <see cref="FunctionInfo"/>.
+    /// </summary>
+    [DebuggerDisplay("{DebugToString()}")]
+    [ThreadSafeImmutable]
+    public class FunctionInfoSignature
+    {
+        private readonly FunctionInfo _parent;
+        private readonly IReadOnlyCollection<TexlStrings.StringGetter> _paramNames;
+
+        /// <summary>
+        /// Number of parameters in this signature. 
+        /// </summary>
+        public int Length => _paramNames.Count;
+
+        public string[] GetParameterNames(CultureInfo locale = null)
+        {
+            var localeName = locale?.Name;
+
+            List<string> result = new List<string>();
+
+            foreach (var param in _paramNames)
+            {
+                var name = param(localeName);
+                result.Add(name);
+            }
+
+            return result.ToArray();
+        }
+
+        // Keep this debug-only, since there are too many possible formats to pick just one. 
+        internal string DebugToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(_parent.Name);
+            sb.Append('(');
+
+            var sep = string.Empty;
+            foreach (var param in GetParameterNames(null))
+            {
+                sb.Append(sep);
+                sb.Append(param);
+                sep = ", ";
+            }
+
+            sb.Append(')');
+
+            return sb.ToString();
+        }
+        
+        internal FunctionInfoSignature(FunctionInfo parent, TexlStrings.StringGetter[] paramNames)
+        {
+            _parent = parent;
+            _paramNames = paramNames;
+        }
     }
 }

@@ -24,6 +24,11 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(3, infoMid.MaxArity);
             Assert.Equal("Mid", infoMid.Name);
             Assert.Equal("https://go.microsoft.com/fwlink/?LinkId=722347#m", infoMid.HelpLink);
+
+            var sigs = infoMid.Signatures.ToArray();
+            Assert.Equal(2, sigs.Length);
+            Assert.Equal("Mid(text, start_num)", sigs[0].DebugToString());
+            Assert.Equal("Mid(text, start_num, num_chars)", sigs[1].DebugToString());
         }
     }
 }
