@@ -49,6 +49,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient",
               "Microsoft.PowerFx.Connectors.RuntimeConfigExtensions",
               "Microsoft.PowerFx.Connectors.RuntimeConnectorContextExtensions",
+              "Microsoft.PowerFx.Connectors.SupportsConnectorErrors",
               "Microsoft.PowerFx.Connectors.Visibility"
             };
 

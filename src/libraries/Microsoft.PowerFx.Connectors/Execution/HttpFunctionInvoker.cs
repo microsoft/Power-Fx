@@ -57,31 +57,28 @@ namespace Microsoft.PowerFx.Connectors
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
-            Dictionary<string, FormulaValue> map = ConvertToNamedParameters(args);
+            Dictionary<string, FormulaValue> incomingParameters = ConvertToNamedParameters(args);
 
-            foreach (ConnectorParameter param in _function._internals.OpenApiBodyParameters)
+            foreach (KeyValuePair<ConnectorParameter, FormulaValue> param in _function._internals.OpenApiBodyParameters)
             {
-                if (map.TryGetValue(param.Name, out var paramValue))
+                if (incomingParameters.TryGetValue(param.Key.Name, out var paramValue))
                 {
-                    bodyParts.Add(param.Name, (param.Schema, paramValue));
+                    bodyParts.Add(param.Key.Name, (param.Key.Schema, paramValue));
                 }
-                else if (param.Schema.Default != null)
-                {
-                    if (OpenApiExtensions.TryGetOpenApiValue(param.Schema.Default, null, out FormulaValue defaultValue))
-                    {
-                        bodyParts.Add(param.Name, (param.Schema, defaultValue));
-                    }
+                else if (param.Key.Schema.Default != null && param.Value != null)
+                {                    
+                    bodyParts.Add(param.Key.Name, (param.Key.Schema, param.Value));                    
                 }
             }
 
-            if (bodyParts.Any())
+            if (bodyParts.Count != 0)
             {
                 body = GetBody(_function._internals.BodySchemaReferenceId, _function._internals.SchemaLessBody, bodyParts, utcConverter, cancellationToken);                
             }
 
             foreach (OpenApiParameter param in _function.Operation.Parameters)
             {
-                if (map.TryGetValue(param.Name, out var paramValue))
+                if (incomingParameters.TryGetValue(param.Name, out var paramValue))
                 {
                     var valueStr = paramValue?.ToObject()?.ToString() ?? string.Empty;
 
@@ -154,23 +151,23 @@ namespace Microsoft.PowerFx.Connectors
             for (int i = 0; i < _function.RequiredParameters.Length; i++)
             {
                 string parameterName = _function.RequiredParameters[i].Name;
-                FormulaValue value = args[i];
+                FormulaValue paramValue = args[i];
 
                 // Objects are always flattenned                
-                if (value is RecordValue record && !_function.RequiredParameters[i].IsBodyParameter)
+                if (paramValue is RecordValue record && !_function.RequiredParameters[i].IsBodyParameter)
                 {
                     foreach (NamedValue field in record.Fields)
                     {
                         map.Add(field.Name, field.Value);
                     }
                 }
-                else if (!map.ContainsKey(parameterName))
+                else if (!map.TryGetValue(parameterName, out FormulaValue existingParamValue))
                 {
-                    map.Add(parameterName, value);
+                    map.Add(parameterName, paramValue);
                 }
-                else if (value is RecordValue r)
+                else if (paramValue is RecordValue r)
                 {
-                    map[parameterName] = MergeRecords(map[parameterName] as RecordValue, r);
+                    map[parameterName] = MergeRecords(existingParamValue as RecordValue, r);
                 }
             }
 
@@ -198,7 +195,7 @@ namespace Microsoft.PowerFx.Connectors
                 else
                 {
                     // Type check should have caught this. 
-                    throw new InvalidOperationException($"Optional arg must be the last arg and a record");
+                    throw new PowerFxConnectorException($"Optional arguments must be the last argument and a record");
                 }
             }
 
@@ -252,7 +249,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else
                     {
-                        throw new ArgumentException($"Cannot merge '{field1.Name}' of type {field1.Value.GetType().Name} with '{field2.Name}' of type {field2.Value.GetType().Name}");
+                        throw new PowerFxConnectorException($"Cannot merge '{field1.Name}' of type {field1.Value.GetType().Name} with '{field2.Name}' of type {field2.Value.GetType().Name}");
                     }
                 }
             }
@@ -268,7 +265,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, CancellationToken cancellationToken)
+        private StringContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, CancellationToken cancellationToken)
         {
             FormulaValueSerializer serializer = null;
 
@@ -284,7 +281,7 @@ namespace Microsoft.PowerFx.Connectors
                 };
 
                 serializer.StartSerialization(referenceId);
-                foreach (var kv in map)
+                foreach (KeyValuePair<string, (OpenApiSchema Schema, FormulaValue Value)> kv in map)
                 {
                     serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
                 }
@@ -353,16 +350,21 @@ namespace Microsoft.PowerFx.Connectors
 
             if (statusCode < 300)
             {
+                // We only return UO for unknown fields (not declared in swagger file) if compatibility is SwaggerCompatibility
+                bool returnUnknownRecordFieldAsUO = _function.ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility && _function.ConnectorSettings.ReturnUnknownRecordFieldsAsUntypedObjects;
+
                 return string.IsNullOrWhiteSpace(text)
                     ? FormulaValue.NewBlank(_function.ReturnType)
                     : _returnRawResults
                     ? FormulaValue.New(text)
-                    : FormulaValueJSON.FromJson(text, _function.ReturnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
+                    : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, _function.ReturnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
+
+            string reasonPhrase = string.IsNullOrEmpty(response.ReasonPhrase) ? string.Empty : $" ({response.ReasonPhrase})";
 
             if (throwOnError)
             {
-                throw new HttpRequestException($"Http Status Error {statusCode}: {text}");
+                throw new HttpRequestException($"Http Status Error {statusCode}{reasonPhrase}: {text}");
             }
 
             return FormulaValue.NewError(
@@ -370,7 +372,7 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         Kind = ErrorKind.Network,
                         Severity = ErrorSeverity.Critical,
-                        Message = $"The server returned an HTTP error with code {statusCode}. Response: {text}"
+                        Message = $"The server returned an HTTP error with code {statusCode}{reasonPhrase}. Response: {text}"
                     },
                     _function.ReturnType);
         }
@@ -432,7 +434,7 @@ namespace Microsoft.PowerFx.Connectors
             Name = name;
 
             _cacheScope = cacheScope;
-            _invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
+            _invoker = invoker ?? throw new ArgumentNullException(nameof(invoker), "Invoker cannot be null");
             _throwOnError = throwOnError;
         }
 
