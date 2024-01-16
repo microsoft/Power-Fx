@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -47,7 +46,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void ConnectorIntellisenseTest(int responseIndex, int queryIndex, string expression, string expectedSuggestions)
         {
             // These tests are exercising 'x-ms-dynamic-values' extension property
-            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
 
@@ -128,7 +127,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
         public void ConnectorIntellisenseTest2(int responseIndex, int networkCall, string expression, string expectedSuggestions)
         {
             // These tests are exercising 'x-ms-dynamic-schema' extension property
-            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
 
@@ -185,7 +184,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
         public void ConnectorIntellisenseTestLSP(int responseIndex, int networkCall, string expression, string expectedSuggestions)
         {
             // These tests are exercising 'x-ms-dynamic-schema' extension property
-            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
 
@@ -248,7 +247,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
         [Fact]
         public async Task ConnectorIntellisenseTest3()
         {
-            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SharePoint.json");
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
             PowerFxConfig config = new PowerFxConfig();
             string token = @"eyJ0eXA...";
@@ -283,7 +282,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
         {
             // This Path can be found in the Swagger file SQL Server.json
             var deprecatedFunctionExample = "SQL.ExecutePassThroughNativeQuery";
-            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
 

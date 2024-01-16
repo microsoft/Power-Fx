@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 configurationLogger?.LogError($"{nameof(openApiDocument)} is null");
                 return functions;
-            }
+            }            
 
             if (!ValidateSupportedOpenApiDocument(openApiDocument, ref connectorIsSupported, ref connectorNotSupportedReason, connectorSettings.FailOnUnknownExtension, configurationLogger))
             {
@@ -260,7 +260,11 @@ namespace Microsoft.PowerFx.Connectors
                 // openApiDocument.Components.RequestBodies is ok
                 // openApiDocument.Components.Responses contains references from "path" definitions
                 // openApiDocument.Components.Schemas contains global "definitions"
-                // openApiDocument.Components.SecuritySchemes are critical but as we don't manage them at all, we'll ignore this parameter                
+                                
+                if (openApiDocument.Components.SecuritySchemes.Count > 0)
+                {                                        
+                    logger?.LogInformation($"Unsupported document: {notSupportedReason}");
+                }
             }
 
             if (isSupported && failOnUnknownExtensions)
