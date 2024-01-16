@@ -3982,13 +3982,13 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("GetPropertyNames(ParseJSON('Hello'))")]
-        [InlineData("GetPropertyNames(ParseJSON('[]'))")]
-        [InlineData("GetPropertyNames(ParseJSON('Hello').a)")]
-        [InlineData("GetPropertyNames(ParseJSON('{''a'':1}').a)")]
-        [InlineData("GetPropertyNames(Blank())")]
-        [InlineData("GetPropertyNames(ParseJSON('{''a'':{''b'':1}}').a)")]
-        public void TexlFunctionTypeSemanticsGetPropertyNames(string expression)
+        [InlineData("ColumnNames(ParseJSON('Hello'))")]
+        [InlineData("ColumnNames(ParseJSON('[]'))")]
+        [InlineData("ColumnNames(ParseJSON('Hello').a)")]
+        [InlineData("ColumnNames(ParseJSON('{''a'':1}').a)")]
+        [InlineData("ColumnNames(Blank())")]
+        [InlineData("ColumnNames(ParseJSON('{''a'':{''b'':1}}').a)")]
+        public void TexlFunctionTypeSemanticsColumnNames(string expression)
         {
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(expression.Replace('\'', '\"'));
@@ -3999,10 +3999,10 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("GetPropertyNames({a:1,b:true})")] // Does not work with records
-        [InlineData("GetPropertyNames([1,2,3])")] // Does not work with arrays
-        [InlineData("GetPropertyNames(1)")]
-        public void TexlFunctionTypeSemanticsGetPropertyNames_Negative(string expression)
+        [InlineData("ColumnNames({a:1,b:true})")] // Does not work with records
+        [InlineData("ColumnNames([1,2,3])")] // Does not work with arrays
+        [InlineData("ColumnNames(1)")]
+        public void TexlFunctionTypeSemanticsColumnNames_Negative(string expression)
         {
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(expression);
@@ -4011,14 +4011,14 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("GetPropertyValue(ParseJSON('Hello'), 'a')")] // Compiles, would fail at runtime
-        [InlineData("GetPropertyValue(ParseJSON('[]'), 'Value')")] // Compiles, would fail at runtime
-        [InlineData("GetPropertyValue(ParseJSON('Hello').a, 'a')")] // Compiles, would fail at runtime
-        [InlineData("GetPropertyValue(ParseJSON('{''a'':1}'), 'a')")]
-        [InlineData("GetPropertyValue(ParseJSON('{''a'':1}').a, 'a')")] // Compiles, would fail at runtime
-        [InlineData("GetPropertyValue(Blank(), 'a')")]
-        [InlineData("GetPropertyValue(ParseJSON('{''a'':{''b'':1}}'), 'a')")]
-        public void TexlFunctionTypeSemanticsGetPropertyValue(string expression)
+        [InlineData("Column(ParseJSON('Hello'), 'a')")] // Compiles, would fail at runtime
+        [InlineData("Column(ParseJSON('[]'), 'Value')")] // Compiles, would fail at runtime
+        [InlineData("Column(ParseJSON('Hello').a, 'a')")] // Compiles, would fail at runtime
+        [InlineData("Column(ParseJSON('{''a'':1}'), 'a')")]
+        [InlineData("Column(ParseJSON('{''a'':1}').a, 'a')")] // Compiles, would fail at runtime
+        [InlineData("Column(Blank(), 'a')")]
+        [InlineData("Column(ParseJSON('{''a'':{''b'':1}}'), 'a')")]
+        public void TexlFunctionTypeSemanticsColumn(string expression)
         {
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(expression.Replace('\'', '\"'));
@@ -4028,11 +4028,11 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("GetPropertyValue({a:1,b:true}, 'a')")] // Does not work with records
-        [InlineData("GetPropertyValue([1,2,3], 'Value')")] // Does not work with arrays
-        [InlineData("GetPropertyValue(1)")]
-        [InlineData("GetPropertyValue(1, 'Value')")]
-        public void TexlFunctionTypeSemanticGetPropertyValue_Negative(string expression)
+        [InlineData("Column({a:1,b:true}, 'a')")] // Does not work with records
+        [InlineData("Column([1,2,3], 'Value')")] // Does not work with arrays
+        [InlineData("Column(1)")]
+        [InlineData("Column(1, 'Value')")]
+        public void TexlFunctionTypeSemanticColumn_Negative(string expression)
         {
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(expression.Replace('\'', '\"'));

@@ -446,11 +446,11 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter SplitArg1 = (b) => StringResources.Get("SplitArg1", b);
         public static StringGetter SplitArg2 = (b) => StringResources.Get("SplitArg2", b);
 
-        public static StringGetter AboutGetPropertyNames = (b) => StringResources.Get("AboutGetPropertyNames", b);
-        public static StringGetter GetPropertyNamesArg1 = (b) => StringResources.Get("GetPropertyNamesArg1", b);
-        public static StringGetter AboutGetPropertyValue = (b) => StringResources.Get("AboutGetPropertyValue", b);
-        public static StringGetter GetPropertyValueArg1 = (b) => StringResources.Get("GetPropertyValueArg1", b);
-        public static StringGetter GetPropertyValueArg2 = (b) => StringResources.Get("GetPropertyValueArg2", b);
+        public static StringGetter AboutColumnNames = (b) => StringResources.Get("AboutColumnNames", b);
+        public static StringGetter ColumnNamesArg1 = (b) => StringResources.Get("ColumnNamesArg1", b);
+        public static StringGetter AboutColumn = (b) => StringResources.Get("AboutColumn", b);
+        public static StringGetter ColumnArg1 = (b) => StringResources.Get("ColumnArg1", b);
+        public static StringGetter ColumnArg2 = (b) => StringResources.Get("ColumnArg2", b);
 
         public static StringGetter AboutIsType = (b) => StringResources.Get("AboutIsType", b);
         public static StringGetter IsTypeArg1 = (b) => StringResources.Get("IsTypeArg1", b);

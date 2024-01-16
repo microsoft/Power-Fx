@@ -62,6 +62,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction ColorFadeT = _library.Add(new ColorFadeTFunction());
         public static readonly TexlFunction ColorValue = _library.Add(new ColorValueFunction());
         public static readonly TexlFunction ColorValue_UO = _library.Add(new ColorValueFunction_UO());
+        public static readonly TexlFunction Column_UO = _library.Add(new ColumnFunction_UO());
+        public static readonly TexlFunction ColumnNames_UO = _library.Add(new ColumnNamesFunction_UO());
         public static readonly TexlFunction Concat = _library.Add(new ConcatFunction());
         public static readonly TexlFunction Concatenate = _library.Add(new ConcatenateFunction());
         public static readonly TexlFunction ConcatenateT = _library.Add(new ConcatenateTableFunction());
@@ -106,8 +108,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction FirstN_UO = _library.Add(new FirstLastNFunction_UO(isFirst: true));
         public static readonly TexlFunction ForAll = _library.Add(new ForAllFunction());
         public static readonly TexlFunction ForAll_UO = _library.Add(new ForAllFunction_UO());
-        public static readonly TexlFunction GetPropertyNames_UO = _library.Add(new GetPropertyNamesFunction_UO());
-        public static readonly TexlFunction GetPropertyValue_UO = _library.Add(new GetPropertyValueFunction_UO());
         public static readonly TexlFunction GUID_UO = _library.Add(new GUIDPureFunction_UO());
         public static readonly TexlFunction GUIDNoArg = _library.Add(new GUIDNoArgFunction());
         public static readonly TexlFunction GUIDPure = _library.Add(new GUIDPureFunction());

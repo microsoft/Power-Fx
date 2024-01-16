@@ -797,7 +797,7 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ForAll_UO)
             },
             {
-                BuiltinFunctionsCore.GetPropertyNames_UO,
+                BuiltinFunctionsCore.ColumnNames_UO,
                 StandardErrorHandling<UntypedObjectValue>(
                     BuiltinFunctionsCore.CountRows_UO.Name,
                     expandArguments: NoArgExpansion,
@@ -805,10 +805,10 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: GetPropertyNames_UO)
+                    targetFunction: ColumnNames_UO)
             },
             {
-                BuiltinFunctionsCore.GetPropertyValue_UO,
+                BuiltinFunctionsCore.Column_UO,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.CountRows_UO.Name,
                     expandArguments: NoArgExpansion,
@@ -818,7 +818,7 @@ namespace Microsoft.PowerFx.Functions
                         ExactValueTypeOrBlank<StringValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: GetPropertyValue_UO)
+                    targetFunction: Column_UO)
             },
             {
                 BuiltinFunctionsCore.GUIDNoArg,

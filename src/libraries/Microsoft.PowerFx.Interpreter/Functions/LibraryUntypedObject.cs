@@ -433,7 +433,7 @@ namespace Microsoft.PowerFx.Functions
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.CountRows_UO.Name, DType.EmptyTable.GetKindString(), impl);
         }
 
-        public static FormulaValue GetPropertyNames_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue ColumnNames_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -446,10 +446,10 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.GetPropertyNames_UO.Name, DType.EmptyRecord.GetKindString(), impl);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.ColumnNames_UO.Name, DType.EmptyRecord.GetKindString(), impl);
         }
 
-        public static FormulaValue GetPropertyValue_UO(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Column_UO(IRContext irContext, FormulaValue[] args)
         {
             var impl = (args[0] as UntypedObjectValue).Impl;
             var propertyName = (args[1] as StringValue).Value;
@@ -465,7 +465,7 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.GetPropertyNames_UO.Name, DType.EmptyRecord.GetKindString(), impl);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Column_UO.Name, DType.EmptyRecord.GetKindString(), impl);
         }
 
         public static FormulaValue DateValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)

@@ -1704,37 +1704,37 @@
     <value>separator</value>
     <comment>function_parameter - Second argument to the Split function - the delimiter text that is used to split SplitArg1 into substrings.</comment>
   </data>
-  <data name="AboutGetPropertyNames" xml:space="preserve">
-    <value>Enumerate and returns the property names of an untyped record.</value>
-    <comment>Description of 'GetPropertyNames' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Enumerate and returns the column names of an untyped record.</value>
+    <comment>Description of 'ColumnNames' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
   </data>
-  <data name="GetPropertyNamesArg1" xml:space="preserve">
+  <data name="ColumnNamesArg1" xml:space="preserve">
     <value>record</value>
-    <comment>function_parameter - First argument to the GetPropertyNames function - the record whose inputs will be returned. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+    <comment>function_parameter - First argument to the ColumnNames function - the record whose inputs will be returned. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
   </data>
-  <data name="AboutGetPropertyNames_record" xml:space="preserve">
-    <value>Record to have its properties enumerated.</value>
-    <comment>Description of first argument of the 'GetPropertyNames' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Record to have its columns enumerated.</value>
+    <comment>Description of first argument of the 'ColumnNames' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
   </data>
-  <data name="AboutGetPropertyValue" xml:space="preserve">
-    <value>Returns the value of a property of an untyped record, given the property name.</value>
-    <comment>Description of 'GetPropertyValue' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Returns the value of a property of an untyped record, given the column name.</value>
+    <comment>Description of 'Column' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
   </data>
-  <data name="GetPropertyValueArg1" xml:space="preserve">
+  <data name="ColumnArg1" xml:space="preserve">
     <value>record</value>
-    <comment>function_parameter - First argument to the GetPropertyValue function - the record to retrieve a property value. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+    <comment>function_parameter - First argument to the Column function - the record to retrieve a column value. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
   </data>
-  <data name="GetPropertyValueArg2" xml:space="preserve">
-    <value>property_name</value>
-    <comment>function_parameter - Second argument to the GetPropertyValue function - name of the property to retrieve from the given record. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>column_name</value>
+    <comment>function_parameter - Second argument to the Column function - name of the column to retrieve from the given record. Translate this string. Maintain as a single word (do not add spaces).</comment>
   </data>
-  <data name="AboutGetPropertyValue_record" xml:space="preserve">
-    <value>Record to retrieve a property value.</value>
-    <comment>Description of first argument of the 'GetPropertyValue' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Record to retrieve a column value.</value>
+    <comment>Description of first argument of the 'Column' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
   </data>
-  <data name="AboutGetPropertyValue_property_name" xml:space="preserve">
-    <value>Name of the property of the record to be retrieved.</value>
-    <comment>Description of second argument of the 'GetPropertyValue' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Name of the column of the record to be retrieved.</value>
+    <comment>Description of second argument of the 'Column' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
   </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Returns true if the provided value is of the given type.</value>

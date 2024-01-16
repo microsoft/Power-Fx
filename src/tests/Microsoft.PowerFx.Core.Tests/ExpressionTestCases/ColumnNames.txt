@@ -1,0 +1,63 @@
+
+>> With(
+     {myJson:ParseJSON("{""a"":1,""b"":true}")},ForAll(ColumnNames(myJson),{Name:ThisRecord.Value,StrValue:Text(Column(myJson, ThisRecord.Value))}))
+Table({Name:"a",StrValue:"1"},{Name:"b",StrValue:"true"})
+
+>> ColumnNames(ParseJSON("{""a"":1,""b"":true,""c"":null,""d"":[1,2,3],""e"":""hello""}"))
+Table({Value:"a"},{Value:"b"},{Value:"c"},{Value:"d"},{Value:"e"})
+
+>> CountRows(ColumnNames(ParseJSON("{""a"":1,""b"":true,""c"":null,""d"":[1,2,3],""e"":""hello""}")))
+5
+
+>> With({myJson:ParseJSON("{""a"":1,""b"":true,""c"":null,""e"":""hello""}")},Concat(ColumnNames(myJson),$"{ThisRecord.Value}:{Column(myJson, ThisRecord.Value)}", ","))
+"a:1,b:true,c:,e:hello"
+
+>> CountRows(Column(ParseJSON("{""a"":1,""b"":true,""c"":null,""d"":[1,2,3],""e"":""hello""}"),"d"))
+3
+
+>> ColumnNames(ParseJSON("{""a"":1,""b"":{}}").b)
+Table()
+
+>> With(
+    {myJson:ParseJSON("{""a"":1,""b"":{""c1"":1,""c2"":2}}")},
+    ForAll(
+      ColumnNames(myJson.b),
+      {Name:ThisRecord.Value,NumValue:Value(Column(myJson.b, ThisRecord.Value))}
+    ))
+Table({Name:"c1",NumValue:1},{Name:"c2",NumValue:2})
+
+>> ColumnNames(ParseJSON("{}"))
+Table()
+
+>> ColumnNames(ParseJSON("null"))
+Blank()
+
+>> ColumnNames(ParseJSON("1"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColumnNames(ParseJSON("[]"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColumnNames(ParseJSON("false"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColumnNames(ParseJSON("""hello"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> IsBlank(Column(ParseJSON("{}"), "a"))
+true
+
+>> IsBlank(Column(ParseJSON("null"), "b"))
+true
+
+>> Column(ParseJSON("1"), "Value")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Column(ParseJSON("[]"), "Value")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Column(ParseJSON("false"), "Value")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Column(ParseJSON("""hello"""), "Value")
+Error({Kind:ErrorKind.InvalidArgument})
