@@ -62,6 +62,15 @@ namespace Microsoft.PowerFx.Core.Functions
             this.UdfBody = body;
         }
 
+        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, string description)
+            : base(DPath.Root, functionName, functionName, SG(!string.IsNullOrWhiteSpace(description) ? description : "Using " + functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType()._type).ToArray())
+        {
+            this._args = args;
+            this._isImperative = isImperative;
+
+            this.UdfBody = body;
+        }
+
         /// <summary>
         /// Gets argument index for a given argument.
         /// </summary>
@@ -177,7 +186,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(binderGlue));
             }
 
-            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args));
+            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), this.Description);
             binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
 
             return func;
