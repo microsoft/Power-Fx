@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
@@ -11,7 +10,8 @@ namespace Microsoft.PowerFx.Connectors
     // Only contains parameters only used in HttpFunctionInvoker and determined in ConnectorFunction initialization.
     internal class ConnectorParameterInternals
     {
-        internal List<ConnectorParameter> OpenApiBodyParameters { get; init; }
+        // parameter and its default value, if any
+        internal Dictionary<ConnectorParameter, FormulaValue> OpenApiBodyParameters { get; init; }
 
         internal bool SchemaLessBody { get; init; }
 

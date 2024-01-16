@@ -226,7 +226,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConnectorFunction getWithDynamicValuesMultipleDynamic = functions.First(cf => cf.Name == "GetWithDynamicValuesMultipleDynamic");
             Assert.True(getWithDynamicValuesMultipleDynamic.RequiredParameters[2].SupportsDynamicIntellisense);
-            Assert.Equal(Visibility.Important, getWithDynamicValuesMultipleDynamic.ConnectorReturnType.Fields[0].Fields[4].Visibility); // Array.index, inside RandomData schema
+            Assert.Equal(Visibility.Important, getWithDynamicValuesMultipleDynamic.ReturnParameterType.Fields[0].Fields[4].Visibility); // Array.index, inside RandomData schema
 
             GetEngine(doc, out RecalcEngine engine, out BaseRuntimeConnectorContext connectorContext, out BasicServiceProvider services);
 

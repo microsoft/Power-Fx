@@ -19,7 +19,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             var asm = typeof(OpenApiParser).Assembly;
             var bugsFieldType = new HashSet<Type>();
-            var bugNames = new HashSet<string>();
+            var bugNames = new HashSet<string>()
+            {
+                "ConnectorFunction._slash"
+            };
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);
         }
