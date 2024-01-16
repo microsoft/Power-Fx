@@ -589,6 +589,30 @@ namespace Microsoft.PowerFx
             return FormulaType.Build(type);
         }
 
+        /// <summary>
+        /// Get binding data for this call node and determine how it was resolved.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns>Null if the node is not bound.</returns>
+        public FunctionInfo GetFunctionInfo(CallNode node)
+        {
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            var binding = this.ApplyBindingInternal();
+            var info = binding.GetInfo(node);
+            var func = info.Function;
+
+            if (func == null)
+            {
+                return null;
+            }
+
+            return new FunctionInfo(func);            
+        }
+
         // Called by language server to get custom tokens.
         // If binding is available, returns context sensitive tokens.  $$$
         // Keeping this temporarily for custom publish tokens notification
