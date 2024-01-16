@@ -107,6 +107,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.BindingErrorType",
                 "Microsoft.PowerFx.Types.BlankType",
                 "Microsoft.PowerFx.Types.BlankValue",
+                "Microsoft.PowerFx.Types.BlobType",
+                "Microsoft.PowerFx.Types.BlobValue",
                 "Microsoft.PowerFx.Types.BooleanType",
                 "Microsoft.PowerFx.Types.BooleanValue",
                 "Microsoft.PowerFx.Types.CollectionTableValue`1",

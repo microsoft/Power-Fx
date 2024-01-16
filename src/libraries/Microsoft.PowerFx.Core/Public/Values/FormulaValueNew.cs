@@ -137,5 +137,10 @@ namespace Microsoft.PowerFx.Types
         {
             return new VoidValue(IRContext.NotInSource(FormulaType.Void));
         }
+
+        public static BlobValue NewBlob(string id)
+        {
+            return new BlobValue(IRContext.NotInSource(FormulaType.Blob), id);
+        }
     }
 }
