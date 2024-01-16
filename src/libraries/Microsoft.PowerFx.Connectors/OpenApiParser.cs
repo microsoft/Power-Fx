@@ -262,8 +262,7 @@ namespace Microsoft.PowerFx.Connectors
                 // openApiDocument.Components.Schemas contains global "definitions"
                                 
                 if (openApiDocument.Components.SecuritySchemes.Count > 0)
-                {                    
-                    notSupportedReason = $"OpenApiDocument contains SecuritySchemes.";
+                {                                        
                     logger?.LogInformation($"Unsupported document: {notSupportedReason}");
                 }
             }
