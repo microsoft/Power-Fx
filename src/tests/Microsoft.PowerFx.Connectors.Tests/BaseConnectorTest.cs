@@ -23,12 +23,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
 {
     public abstract class BaseConnectorTest : PowerFxTest, IDisposable
     {
-        internal ITestOutputHelper _output;                
+        internal ITestOutputHelper _output;
         internal string _swaggerFile;
         private bool _disposedValue;
 
         public BaseConnectorTest(ITestOutputHelper output, string swaggerFile)
-        {            
+        {
             _swaggerFile = swaggerFile;
             _output = output;
         }
@@ -43,11 +43,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         public virtual ConnectorSettings GetConnectorSettings(bool returnUnknownRecordFieldsAsUntypedObjects = false)
         {
-            return new ConnectorSettings(GetNamespace()) 
-            { 
-                Compatibility = returnUnknownRecordFieldsAsUntypedObjects ? ConnectorCompatibility.SwaggerCompatibility : ConnectorCompatibility.PowerAppsCompatibility, 
-                IncludeInternalFunctions = true, 
-                ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldsAsUntypedObjects 
+            return new ConnectorSettings(GetNamespace())
+            {
+                Compatibility = returnUnknownRecordFieldsAsUntypedObjects ? ConnectorCompatibility.SwaggerCompatibility : ConnectorCompatibility.PowerAppsCompatibility,
+                IncludeInternalFunctions = true,
+                ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldsAsUntypedObjects
             };
         }
 
@@ -73,10 +73,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         internal (LoggingTestServer testConnector, OpenApiDocument apiDoc, PowerFxConfig config, HttpClient httpClient, PowerPlatformConnectorClient client, ConnectorSettings connectorSettings, RuntimeConfig runtimeConfig) GetElements(bool live = false, bool returnUO = false)
         {
-            var testConnector = new LoggingTestServer(_swaggerFile, live);                                  
+            var testConnector = new LoggingTestServer(_swaggerFile, _output, live);
             HttpClient httpClient = new HttpClient(testConnector);
             PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(GetEndpoint(), GetEnvironment(), GetConnectionId(), () => GetJWTToken(), httpClient) { SessionId = "9315f316-5182-4260-b333-7a43a36ca3b0" };
-            
+
             PowerFxConfig config = new PowerFxConfig();
             OpenApiDocument apiDoc = testConnector._apiDocument;
             ConnectorSettings connectorSettings = GetConnectorSettings(returnUO);
@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     : ($@"Responses\{ef.Substring(4)}", (HttpStatusCode)int.Parse(ef.Substring(0, 3)))).ToArray());
             }
 
-            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);           
+            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
 
             string network = testConnector._log.ToString();
             string urls = string.Join("|", Regex.Matches(network, @"x-ms-request-method: (?<r>[^ \r\n]+)\s*x-ms-request-url: (?<u>[^ \r\n]+)").Select(g => $"{g.Groups["r"].Value}:{g.Groups["u"].Value}"));
@@ -150,7 +150,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             else if (expectedResult.StartsWith("DATETIME:"))
             {
                 Assert.True(fv is not ErrorValue, fv is ErrorValue ev ? $"EvalAsync Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}" : null);
-                DateTimeValue dtv = Assert.IsType<DateTimeValue>(fv);                                
+                DateTimeValue dtv = Assert.IsType<DateTimeValue>(fv);
 
                 Assert.Equal(DateTime.Parse(expectedResult.Substring(9)).ToUniversalTime(), new ConvertToUTC(GetTimeZoneInfo()).ToUTC(dtv));
             }
@@ -171,8 +171,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
 
             Assert.Equal(xUrls, urls);
-            Assert.Equal(xBodies, bodies);     
-            
+            Assert.Equal(xBodies, bodies);
+
             if (!string.IsNullOrEmpty(extra))
             {
                 foreach (string e in extra.Split("|"))
@@ -237,7 +237,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             if (!_disposedValue)
             {
                 if (disposing)
-                {                    
+                {
                 }
 
                 _disposedValue = true;
