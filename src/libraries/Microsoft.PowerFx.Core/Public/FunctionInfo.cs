@@ -44,7 +44,19 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Get a short description of the function.  
         /// </summary>
+        [Obsolete("Use GetDescription() which takes a locale")]
         public string Description => _fnc.Description;
+
+        /// <summary>
+        /// Get a short description of the function.
+        /// </summary>
+        /// <param name="culture"></param>
+        /// <returns></returns>
+        public string GetDescription(CultureInfo culture = null)
+        {
+            culture ??= CultureInfo.InvariantCulture;
+            return _fnc.GetDescription(culture.Name);
+        }
 
         /// <summary>
         /// An optional URL for more help on this function. 
@@ -84,9 +96,10 @@ namespace Microsoft.PowerFx
         /// </summary>
         public int Length => _paramNames.Count;
 
-        public string[] GetParameterNames(CultureInfo locale = null)
+        public string[] GetParameterNames(CultureInfo culture = null)
         {
-            var localeName = locale?.Name;
+            culture ??= CultureInfo.InvariantCulture;
+            var localeName = culture.Name;
 
             List<string> result = new List<string>();
 
@@ -100,14 +113,14 @@ namespace Microsoft.PowerFx
         }
 
         // Keep this debug-only, since there are too many possible formats to pick just one. 
-        internal string DebugToString()
+        internal string DebugToString(CultureInfo culture = null)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(_parent.Name);
             sb.Append('(');
 
             var sep = string.Empty;
-            foreach (var param in GetParameterNames(null))
+            foreach (var param in GetParameterNames(culture))
             {
                 sb.Append(sep);
                 sb.Append(param);
