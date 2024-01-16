@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
@@ -38,32 +39,43 @@ namespace Microsoft.PowerFx.Connectors.Tests
 #endif
         public void TestAllConnectors()
         {
-            string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
-            string srcFolder = Path.GetFullPath(Path.Combine(outFolder, ".."));
+            (string outFolder, string srcFolder) = GetFolders();
+
             string reportFolder = @"report";
             string reportName = @$"{reportFolder}\Analysis.txt";
             string jsonReport = @$"{reportFolder}\Report.json";
 
             // New report name every second
-            string jsonReport2 = @$"report\Report_{Math.Round(DateTime.UtcNow.Ticks / 1e7):00000000000}.json";
+            string jsonReport2 = @$"{reportFolder}\Report_{Math.Round(DateTime.UtcNow.Ticks / 1e7):00000000000}.json";
 
             string outFolderPath = Path.Combine(outFolder, reportFolder);
-            if (Directory.Exists(outFolderPath))
-            {
-                Directory.Delete(outFolderPath, true);
-            }
-
-            // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
-            // Locally         : ENV: C:\Data\Power-Fx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Debug\netcoreapp3.1
-            _output.WriteLine($"ENV: {Environment.CurrentDirectory}");
-            _output.WriteLine($"OUT: {outFolder}");
-            _output.WriteLine($"SRC: {srcFolder}");
-
+            BaseConnectorTest.EmptyFolder(outFolderPath);
             Directory.CreateDirectory(Path.Combine(outFolder, "report"));
+
             GenerateReport(reportFolder, reportName, outFolder, srcFolder);
             AnalyzeReport(reportName, outFolder, srcFolder, jsonReport);
 
             File.Copy(Path.Combine(outFolder, jsonReport), Path.Combine(outFolder, jsonReport2));
+        }
+
+        private (string outFolder, string srcFolder) GetFolders()
+        {
+            string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
+            string srcFolder = Path.GetFullPath(Path.Combine(outFolder, ".."));
+
+            // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
+            // Locally         : ENV: C:\Data\Power-Fx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Debug\netcoreapp3.1
+            _output.WriteLine($"ENV: {Environment.CurrentDirectory}");
+
+            // On build servers: OUT: C:\__w\1\s\pfx
+            // Locally         : OUT: C:\Data\Power-Fx
+            _output.WriteLine($"OUT: {outFolder}");
+
+            // On build servers: SRC: C:\__w\1\s
+            // Locally         : SRC: C:\Data
+            _output.WriteLine($"SRC: {srcFolder}");
+
+            return (outFolder, srcFolder);
         }
 
         private void AnalyzeReport(string reportName, string outFolder, string srcFolder, string jsonReport)
@@ -356,23 +368,22 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 try
                 {
                     ConsoleLogger logger = new ConsoleLogger(_output);
-                    OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile);
+                    OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile, _output);
+                    ConnectorSettings connectorSettings = new ConnectorSettings("Connector") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true };
+                    ConnectorSettings swaggerConnectorSettings = new ConnectorSettings("Connector") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true, Compatibility = ConnectorCompatibility.SwaggerCompatibility };
+
                     title = $"{doc.Info.Title} [{swaggerFile}]";
 
                     // Check we can get the functions
-                    IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc, logger);
+                    IEnumerable<ConnectorFunction> functions1 = OpenApiParser.GetFunctions(connectorSettings, doc, logger);
 
-                    allFunctions.Add(title, functions);
+                    allFunctions.Add(title, functions1);
                     var config = new PowerFxConfig();
-                    using var client = new PowerPlatformConnectorClient("firstrelease-001.azure-apim.net", "839eace6-59ab-4243-97ec-a5b8fcc104e4", "72c42ee1b3c7403c8e73aa9c02a7fbcc", () => "Some JWT token")
-                    {
-                        SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
-                    };
 
                     // Check we can add the service (more comprehensive test)
-                    config.AddActionConnector("Connector", doc, logger);
+                    config.AddActionConnector(connectorSettings, doc, logger);
 
-                    IEnumerable<ConnectorFunction> functions2 = OpenApiParser.GetFunctions(new ConnectorSettings("C1") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc);
+                    IEnumerable<ConnectorFunction> functions2 = OpenApiParser.GetFunctions(swaggerConnectorSettings, doc);
                     string cFolder = Path.Combine(outFolder, reportFolder, doc.Info.Title);
 
                     int ix = 2;
@@ -383,7 +394,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                     Directory.CreateDirectory(cFolder);
 
-                    foreach (ConnectorFunction cf1 in functions)
+                    foreach (ConnectorFunction cf1 in functions1)
                     {
                         ConnectorFunction cf2 = functions2.First(f => f.Name == cf1.Name);
 
@@ -512,7 +523,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void TestConnector1()
         {
             string swaggerFile = @"c:\data\AAPT-connectors\src\ConnectorPlatform\build-system\SharedTestAssets\Assets\BaselineBuild\locPublish\Connectors\AzureAD\apidefinition.swagger.json";
-            OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile);
+            OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile, _output);
             IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc, new ConsoleLogger(_output));
 
             var config = new PowerFxConfig();
@@ -538,22 +549,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Theory(Skip = "Need files from AAPT-connector, PowerPlatformConnectors and Power-Fx-TexlFunctions-Baseline projects")]
 #endif
         [InlineData("Library")] // Default Power-Fx library
-        [InlineData("Aapt-Ppc", 0, "apidefinition*swagger*.json", @"C:\Data\aapt", @"C:\Data\ppc")]
-        [InlineData("Baseline", 1, "*.json", @"C:\Data\Power-Fx-TexlFunctions-Baseline\Swaggers")]
+        [InlineData("Aapt-Ppc", 0, "apidefinition*swagger*.json", @"aapt\src", @"ppc")]
+        [InlineData("Baseline", 1, "*.json", @"Power-Fx-TexlFunctions-Baseline\Swaggers")]
         public void GenerateYamlFiles(string reference, int folderExclusionIndex = -1, string pattern = null, params string[] folders)
         {
-            string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
-            string srcFolder = Path.GetFullPath(Path.Combine(outFolder, ".."));
-
-            // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
-            // Locally         : ENV: C:\Data\Power-Fx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Debug\netcoreapp3.1
-            _output.WriteLine($"ENV: {Environment.CurrentDirectory}");
-            _output.WriteLine($"OUT: {outFolder}");
-            _output.WriteLine($"SRC: {srcFolder}");
+            (string outFolder, string srcFolder) = GetFolders();
 
             string outFolderPath = Path.Combine(outFolder, "YamlOutput");
             BaseConnectorTest.EmptyFolder(Path.Combine(outFolderPath, reference));
 
+            // if no folder, use Library
             if (folders.Length == 0)
             {
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -569,20 +574,22 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             SwaggerLocatorSettings swaggerLocationSettings = folderExclusionIndex == 0 ? null : new SwaggerLocatorSettings(new List<string>());
             ConsoleLogger logger = new ConsoleLogger(_output);
-            ConnectorSettings connectorSettings = new ConnectorSettings("FakeNamespace") 
-            { 
-                AllowUnsupportedFunctions = true, 
-                IncludeInternalFunctions = true, 
-                FailOnUnknownExtension = false, 
-                Compatibility = ConnectorCompatibility.PowerAppsCompatibility 
-            };            
+            ConnectorSettings connectorSettings = new ConnectorSettings("FakeNamespace")
+            {
+                AllowUnsupportedFunctions = true,
+                IncludeInternalFunctions = true,
+                FailOnUnknownExtension = false,
+                Compatibility = ConnectorCompatibility.PowerAppsCompatibility
+            };
+
+            string[] rootedFolders = folders.Select(f => Path.Combine(srcFolder, f)).ToArray();
 
             // Step 1: Identify the list of swagger files to consider
             // The output of LocateSwaggerFilesWithDocuments is a dictionary where
             // - Key is the connector display name
             // - Value is a (folder, location, document) tuple where folder is the source folder at the origin of the swagger identification, location is the exact swagger file location, document is the corresponding OpenApiDocument 
             // LocateSwaggerFiles could also be used here and would only return a Dictionary<displayName, location> (no source folder or document)
-            Dictionary<string, (string folder, string location, OpenApiDocument document)> swaggerFiles = SwaggerFileIdentification.LocateSwaggerFilesWithDocuments(folders, pattern, swaggerLocationSettings);
+            Dictionary<string, (string folder, string location, OpenApiDocument document)> swaggerFiles = SwaggerFileIdentification.LocateSwaggerFilesWithDocuments(rootedFolders, pattern, swaggerLocationSettings);
             _output.WriteLine($"Number of connectors found: {swaggerFiles.Count()}");
 
             foreach (KeyValuePair<string, (string folder, string location, OpenApiDocument document)> connector in swaggerFiles)
@@ -590,9 +597,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 // Step 2: Get TexlFunctions to be exported
                 // Notice that TexlFunction is internal and requires InternalVisibleTo
                 List<TexlFunction> texlFunctions = OpenApiParser.ParseInternal(connectorSettings, connector.Value.document, logger).texlFunctions.Cast<TexlFunction>().ToList();
+                List<ConnectorFunction> connectorFunctions = OpenApiParser.ParseInternal(connectorSettings, connector.Value.document, logger).connectorFunctions.Cast<ConnectorFunction>().ToList();
 
                 // Step 3: Export TexlFunctions to Yaml
                 ExportTexlFunctionsToYaml(reference, outFolderPath, connector.Key, texlFunctions, false);
+
+                // Step 3: Export TexlFunctions to Yaml
+                ExportConnectorFunctionsToYaml(reference, outFolderPath, connector.Key, connectorFunctions);
             }
         }
 
@@ -603,6 +614,32 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 // Export TexlFunction definition as Yaml file
                 YamlExporter.ExportTexlFunction($"{Path.Combine(output, reference, connectorName.Replace("/", "_", StringComparison.OrdinalIgnoreCase))}", texlFunction, isLibrary);
             }
+        }
+
+        private static void ExportConnectorFunctionsToYaml(string reference, string output, string connectorName, List<ConnectorFunction> connectorFunctions)
+        {
+            foreach (ConnectorFunction connectorFunction in connectorFunctions)
+            {
+                // Export TexlFunction definition as Yaml file
+                ExportConnectorFunction($"{Path.Combine(output, reference, connectorName.Replace("/", "_", StringComparison.OrdinalIgnoreCase))}", connectorFunction);
+            }
+        }
+
+        private static void ExportConnectorFunction(string folder, ConnectorFunction connectorFunction)
+        {
+            dynamic obj = connectorFunction.ToExpando(null);
+            var serializer = new SerializerBuilder().Build();
+            string yaml = serializer.Serialize(obj);            
+
+            string functionFile = Path.Combine(folder, "ConnectorFunction_" + connectorFunction.Name.Replace("/", "_", StringComparison.OrdinalIgnoreCase) + ".yaml");
+            Directory.CreateDirectory(folder);
+
+            if (File.Exists(functionFile))
+            {
+                throw new IOException($"File {functionFile} already exists!");
+            }
+
+            File.WriteAllText(functionFile, yaml, Encoding.UTF8);
         }
     }
 
@@ -633,7 +670,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             func.OperationId = connectorFunction.OriginalName;
             func.Method = connectorFunction.HttpMethod.ToString().ToUpperInvariant();
             func.Path = connectorFunction.OperationPath;
-            func.SwaggerFile = swaggerFile;
+
+            if (!string.IsNullOrEmpty(swaggerFile))
+            {
+                func.SwaggerFile = swaggerFile;
+            }
 
             if (!string.IsNullOrEmpty(connectorFunction.Description))
             {
@@ -646,6 +687,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
 
             func.IsBehavior = connectorFunction.IsBehavior;
+            func.IsSupported = connectorFunction.IsSupported;
+            func.NotSupportedReason = connectorFunction.NotSupportedReason;
             func.IsDeprecated = connectorFunction.IsDeprecated;
             func.IsInternal = connectorFunction.IsInternal;
             func.IsPageable = connectorFunction.IsPageable;
@@ -692,7 +735,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             if (connectorParam.DefaultValue != null)
             {
-                cParam.DefaultValue = connectorParam.DefaultValue.ToExpression();
+                StringBuilder sb = new StringBuilder();
+                connectorParam.DefaultValue.ToExpression(sb, new FormulaValueSerializerSettings() { UseCompactRepresentation = true });
+                cParam.DefaultValue = sb.ToString();
             }
 
             if (!string.IsNullOrEmpty(connectorParam.Title))

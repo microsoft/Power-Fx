@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Connectors.Tests;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -66,7 +65,7 @@ namespace Microsoft.PowerFx.Tests
             var swaggerFile = @"Swagger\TestOpenAPI.json";
             Console.Write(i);
 
-            using var testConnector = new LoggingTestServer(swaggerFile);
+            using var testConnector = new LoggingTestServer(swaggerFile, _output);
             testConnector.SetResponseFromFile(@"Responses\HttpCall_1.json");
 
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions("Test", testConnector._apiDocument, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
@@ -82,7 +81,7 @@ namespace Microsoft.PowerFx.Tests
             var checkResult = engine.Check(fxQuery, options: _optionsPost);
             Assert.True(checkResult.IsSuccess, string.Join("\r\n", checkResult.Errors.Select(er => er.Message)));
 
-            var rConfig = new RuntimeConfig();            
+            var rConfig = new RuntimeConfig();
             rConfig.SetTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
             rConfig.AddRuntimeContext(new TestConnectorRuntimeContext("Test", httpClient, console: _output));
 
@@ -105,7 +104,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task BasicHttpCallNullInvoker()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\TestOpenAPI.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\TestOpenAPI.json", _output);
 
             var config = new PowerFxConfig();
             var apiDoc = testConnector._apiDocument;
@@ -125,7 +124,7 @@ namespace Microsoft.PowerFx.Tests
         public void BasicHttpBinding()
         {
             var config = new PowerFxConfig();
-            var apiDoc = Helpers.ReadSwagger(@"Swagger\TestOpenAPI.json");
+            var apiDoc = Helpers.ReadSwagger(@"Swagger\TestOpenAPI.json", _output);
 
             // If we don't pass httpClient, we can still bind, we just can't invoke.
             config.AddActionConnector("Test", apiDoc, new ConsoleLogger(_output));
@@ -139,7 +138,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task PetStore_MultiServer()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\PetStore.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\PetStore.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
