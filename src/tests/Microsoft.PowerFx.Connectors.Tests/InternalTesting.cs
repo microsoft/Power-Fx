@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 #if GENERATE_CONNECTOR_STATS
         [Fact]
 #else
-        [Fact] //(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
+        [Fact(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
 #endif
         public void TestAllConnectors()
         {
