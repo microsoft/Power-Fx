@@ -10,16 +10,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Validations;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
-    public class DynamicTests    
+    public class DynamicTests
     {
         public const string Host = @"http://localhost:5189";
         public const string SwaggerFile = @"http://localhost:5189/swagger/v1/swagger.json";
@@ -32,18 +32,35 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _output = output;
         }
 
-        private void GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions)
+        private void GetFunctionsInternal(ITestOutputHelper output, out OpenApiDocument doc, out List<ConnectorFunction> functions)
         {
             functions = null;
             doc = null;
 
-            try 
+            try
             {
                 // lock managed by XUnit
                 if (!skip)
                 {
                     using WebClient webClient = new WebClient();
-                    doc = new OpenApiStreamReader().Read(webClient.OpenRead(SwaggerFile), out var diagnostic);
+                    doc = new OpenApiStreamReader().Read(webClient.OpenRead(SwaggerFile), out var diag);
+
+                    if (diag != null && diag.Errors.Count > 0)
+                    {
+                        foreach (OpenApiError error in diag.Errors)
+                        {
+                            if (error is OpenApiValidatorError vError)
+                            {
+                                output.WriteLine($"[OpenApi Error] {vError.RuleName} {vError.Pointer} {vError.Message}");
+                            }
+                            else
+                            {
+                                // Could be OpenApiError or OpenApiReferenceError
+                                output.WriteLine($"[OpenApi Error] {error.Pointer} {error.Message}");
+                            }
+                        }
+                    }
+
                     functions = OpenApiParser.GetFunctions("Test", doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
                 }
             }
@@ -80,7 +97,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [SkippableFact]
         public async Task DynamicValues_GetWithDynamicValuesStatic_RequiredParameters()
         {
-            GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions);
+            GetFunctionsInternal(_output, out OpenApiDocument doc, out List<ConnectorFunction> functions);
 
             ConnectorFunction getWithDynamicValuesStatic = functions.First(cf => cf.Name == "GetWithDynamicValuesStatic");
             Assert.True(getWithDynamicValuesStatic.RequiredParameters[0].SupportsDynamicIntellisense);
@@ -89,7 +106,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             string expr = "Test.GetWithDynamicValuesStatic(";
             CheckResult result = engine.Check(expr, symbolTable: null);
-            
+
             IIntellisenseResult suggestions = engine.Suggest(result, expr.Length, services);
             Assert.Equal("14|24", string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
 
@@ -100,7 +117,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [SkippableFact]
         public async Task DynamicValues_GetWithDynamicValuesStatic_OptionalParameters()
         {
-            GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions);
+            GetFunctionsInternal(_output, out OpenApiDocument doc, out List<ConnectorFunction> functions);
 
             ConnectorFunction getWithDynamicValuesStaticOptional = functions.First(cf => cf.Name == "GetWithDynamicValuesStaticOptional");
             Assert.True(getWithDynamicValuesStaticOptional.OptionalParameters[0].SupportsDynamicIntellisense);
@@ -122,7 +139,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [SkippableFact]
         public async Task DynamicValues_GetWithDynamicValuesStaticNoValueCollection_RequiredParameters()
         {
-            GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions);
+            GetFunctionsInternal(_output, out OpenApiDocument doc, out List<ConnectorFunction> functions);
 
             ConnectorFunction getWithDynamicValuesStaticNoValueCollection = functions.First(cf => cf.Name == "GetWithDynamicValuesStaticNoValueCollection");
             Assert.True(getWithDynamicValuesStaticNoValueCollection.RequiredParameters[0].SupportsDynamicIntellisense);
@@ -142,7 +159,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [SkippableFact]
         public async Task DynamicValues_GetWithDynamicValuesStaticInvalidValueCollection_RequiredParameters()
         {
-            GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions);
+            GetFunctionsInternal(_output, out OpenApiDocument doc, out List<ConnectorFunction> functions);
 
             ConnectorFunction getWithDynamicValuesStaticInvalidValueCollection = functions.First(cf => cf.Name == "GetWithDynamicValuesStaticInvalidValueCollection");
             Assert.True(getWithDynamicValuesStaticInvalidValueCollection.RequiredParameters[0].SupportsDynamicIntellisense);
@@ -162,7 +179,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [SkippableFact]
         public async Task DynamicValues_GetWithDynamicValuesStaticInvalidDisplayName_RequiredParameters()
         {
-            GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions);
+            GetFunctionsInternal(_output, out OpenApiDocument doc, out List<ConnectorFunction> functions);
 
             ConnectorFunction getWithDynamicValuesStaticInvalidDisplayName = functions.First(cf => cf.Name == "GetWithDynamicValuesStaticInvalidDisplayName");
             Assert.True(getWithDynamicValuesStaticInvalidDisplayName.RequiredParameters[0].SupportsDynamicIntellisense);
@@ -182,7 +199,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [SkippableFact]
         public async Task DynamicValues_GetWithDynamicValuesStaticInvalidValuePath_RequiredParameters()
         {
-            GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions);
+            GetFunctionsInternal(_output, out OpenApiDocument doc, out List<ConnectorFunction> functions);
 
             ConnectorFunction getWithDynamicValuesStaticInvalidValuePath = functions.First(cf => cf.Name == "GetWithDynamicValuesStaticInvalidValuePath");
             Assert.True(getWithDynamicValuesStaticInvalidValuePath.RequiredParameters[0].SupportsDynamicIntellisense);
@@ -202,7 +219,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [SkippableFact]
         public async Task DynamicValues_GetWithDynamicValuesDynamic_RequiredParameters()
         {
-            GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions);
+            GetFunctionsInternal(_output, out OpenApiDocument doc, out List<ConnectorFunction> functions);
 
             ConnectorFunction getWithDynamicValuesDynamic = functions.First(cf => cf.Name == "GetWithDynamicValuesDynamic");
             Assert.True(getWithDynamicValuesDynamic.RequiredParameters[1].SupportsDynamicIntellisense);
@@ -222,7 +239,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [SkippableFact]
         public async Task DynamicValues_GetWithDynamicValuesMultipleDynamic_RequiredParameters()
         {
-            GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions);
+            GetFunctionsInternal(_output, out OpenApiDocument doc, out List<ConnectorFunction> functions);
 
             ConnectorFunction getWithDynamicValuesMultipleDynamic = functions.First(cf => cf.Name == "GetWithDynamicValuesMultipleDynamic");
             Assert.True(getWithDynamicValuesMultipleDynamic.RequiredParameters[2].SupportsDynamicIntellisense);
@@ -255,13 +272,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("![Index:w, Name:s, PrimaryKey:s]", innerType.FormulaType.ToStringWithDisplayNames());
 
             ConnectorEnhancedSuggestions ces = await getWithDynamicValuesMultipleDynamic.GetConnectorSuggestionsAsync(Array.Empty<NamedValue>(), innerType.Fields.First(field => field.Name == "Index"), connectorContext, CancellationToken.None).ConfigureAwait(false);
-            Assert.Equal("110|120", string.Join("|", ces.ConnectorSuggestions.Suggestions.Select(cs => cs.DisplayName)));            
+            Assert.Equal("110|120", string.Join("|", ces.ConnectorSuggestions.Suggestions.Select(cs => cs.DisplayName)));
         }
 
         [SkippableFact]
         public async Task DynamicValues_GetWithDynamicListStatic_RequiredParameters()
         {
-            GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions);
+            GetFunctionsInternal(_output, out OpenApiDocument doc, out List<ConnectorFunction> functions);
 
             ConnectorFunction getWithDynamicListStatic = functions.First(cf => cf.Name == "GetWithDynamicListStatic");
             Assert.True(getWithDynamicListStatic.RequiredParameters[0].SupportsDynamicIntellisense);
@@ -281,7 +298,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [SkippableFact]
         public async Task DynamicValues_GetWithDynamicListDynamic_RequiredParameters()
         {
-            GetFunctionsInternal(out OpenApiDocument doc, out List<ConnectorFunction> functions);
+            GetFunctionsInternal(_output, out OpenApiDocument doc, out List<ConnectorFunction> functions);
 
             ConnectorFunction getWithDynamicListDynamic = functions.First(cf => cf.Name == "GetWithDynamicListDynamic");
             Assert.True(getWithDynamicListDynamic.RequiredParameters[1].SupportsDynamicIntellisense);
