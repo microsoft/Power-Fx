@@ -278,6 +278,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // A description associated with this function.
         public string Description => _description(null);
 
+        // Locale aware description.
+        public string GetDescription(string locale) => _description(locale);
+
         /// <summary>
         /// This function requires an AI disclaimer. 
         /// </summary>

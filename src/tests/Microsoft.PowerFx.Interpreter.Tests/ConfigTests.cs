@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -886,27 +887,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Useful for testing per-thread properties
         internal static void RunOnIsolatedThread(CultureInfo culture, Action<CultureInfo> worker)
         {
-            Exception exception = null;
-
-            var t = new Thread(() =>
-            {
-                try
-                {                    
-                    worker(culture);
-                }
-                catch (Exception ex)
-                {
-                    exception = ex;
-                }
-            });
-
-            t.Start();
-            t.Join();
-
-            if (exception != null)
-            {
-                throw exception;
-            }
+            culture.RunOnIsolatedThread(worker);
         }
     }
 
