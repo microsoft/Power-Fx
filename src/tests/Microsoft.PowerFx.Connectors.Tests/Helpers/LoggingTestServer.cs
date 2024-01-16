@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -27,11 +28,12 @@ namespace Microsoft.PowerFx.Tests
         public bool SendAsyncCalled = false;
         public bool Live = false;
         public HttpClient LiveClient = null;
+        public ITestOutputHelper Output;
 
-        public LoggingTestServer(string swaggerName, bool live = false)
+        public LoggingTestServer(string swaggerName, ITestOutputHelper output, bool live = false)
         {
             Live = live;
-            _apiDocument = Helpers.ReadSwagger(swaggerName);
+            _apiDocument = Helpers.ReadSwagger(swaggerName, output);
 
             if (live)
             {
@@ -189,7 +191,7 @@ namespace Microsoft.PowerFx.Tests
                 {
                     clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
                 }
-                
+
                 return await LiveClient.SendAsync(clone, cancellationToken).ConfigureAwait(false);
             }
 

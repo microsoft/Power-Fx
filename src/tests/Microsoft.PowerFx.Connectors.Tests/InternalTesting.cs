@@ -34,10 +34,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
 #if GENERATE_CONNECTOR_STATS
         [Fact]
 #else
-        [Fact(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
+        [Fact] //(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
 #endif
         public void TestAllConnectors()
-        {            
+        {
             (string outFolder, string srcFolder) = GetFolders();
 
             string reportFolder = @"report";
@@ -367,23 +367,22 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 try
                 {
                     ConsoleLogger logger = new ConsoleLogger(_output);
-                    OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile);
+                    OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile, _output);
+                    ConnectorSettings connectorSettings = new ConnectorSettings("Connector") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true };
+                    ConnectorSettings swaggerConnectorSettings = new ConnectorSettings("Connector") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true, Compatibility = ConnectorCompatibility.SwaggerCompatibility };
+
                     title = $"{doc.Info.Title} [{swaggerFile}]";
 
                     // Check we can get the functions
-                    IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc, logger);
+                    IEnumerable<ConnectorFunction> functions1 = OpenApiParser.GetFunctions(connectorSettings, doc, logger);
 
-                    allFunctions.Add(title, functions);
+                    allFunctions.Add(title, functions1);
                     var config = new PowerFxConfig();
-                    using var client = new PowerPlatformConnectorClient("firstrelease-001.azure-apim.net", "839eace6-59ab-4243-97ec-a5b8fcc104e4", "72c42ee1b3c7403c8e73aa9c02a7fbcc", () => "Some JWT token")
-                    {
-                        SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
-                    };
 
                     // Check we can add the service (more comprehensive test)
-                    config.AddActionConnector("Connector", doc, logger);
+                    config.AddActionConnector(connectorSettings, doc, logger);
 
-                    IEnumerable<ConnectorFunction> functions2 = OpenApiParser.GetFunctions(new ConnectorSettings("C1") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc);
+                    IEnumerable<ConnectorFunction> functions2 = OpenApiParser.GetFunctions(swaggerConnectorSettings, doc);
                     string cFolder = Path.Combine(outFolder, reportFolder, doc.Info.Title);
 
                     int ix = 2;
@@ -394,7 +393,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                     Directory.CreateDirectory(cFolder);
 
-                    foreach (ConnectorFunction cf1 in functions)
+                    foreach (ConnectorFunction cf1 in functions1)
                     {
                         ConnectorFunction cf2 = functions2.First(f => f.Name == cf1.Name);
 
@@ -523,7 +522,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void TestConnector1()
         {
             string swaggerFile = @"c:\data\AAPT-connectors\src\ConnectorPlatform\build-system\SharedTestAssets\Assets\BaselineBuild\locPublish\Connectors\AzureAD\apidefinition.swagger.json";
-            OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile);
+            OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile, _output);
             IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc, new ConsoleLogger(_output));
 
             var config = new PowerFxConfig();
@@ -574,12 +573,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             SwaggerLocatorSettings swaggerLocationSettings = folderExclusionIndex == 0 ? null : new SwaggerLocatorSettings(new List<string>());
             ConsoleLogger logger = new ConsoleLogger(_output);
-            ConnectorSettings connectorSettings = new ConnectorSettings("FakeNamespace") 
-            { 
-                AllowUnsupportedFunctions = true, 
-                IncludeInternalFunctions = true, 
-                FailOnUnknownExtension = false, 
-                Compatibility = ConnectorCompatibility.PowerAppsCompatibility 
+            ConnectorSettings connectorSettings = new ConnectorSettings("FakeNamespace")
+            {
+                AllowUnsupportedFunctions = true,
+                IncludeInternalFunctions = true,
+                FailOnUnknownExtension = false,
+                Compatibility = ConnectorCompatibility.PowerAppsCompatibility
             };
 
             string[] rootedFolders = folders.Select(f => Path.Combine(srcFolder, f)).ToArray();
@@ -653,6 +652,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
 
             func.IsBehavior = connectorFunction.IsBehavior;
+            func.IsSupported = connectorFunction.IsSupported;
+            func.NotSupportedReason = connectorFunction.NotSupportedReason;
             func.IsDeprecated = connectorFunction.IsDeprecated;
             func.IsInternal = connectorFunction.IsInternal;
             func.IsPageable = connectorFunction.IsPageable;
