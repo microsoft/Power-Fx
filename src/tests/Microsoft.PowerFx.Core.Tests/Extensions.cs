@@ -1,8 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -141,6 +144,33 @@ namespace Microsoft.PowerFx.Core.Tests
             }
 
             sb.Append("]");
+        }
+
+        // Run on an isolated thread.
+        // Useful for testing per-thread properties
+        internal static void RunOnIsolatedThread(this CultureInfo culture, Action<CultureInfo> worker)
+        {
+            Exception exception = null;
+
+            var t = new Thread(() =>
+            {
+                try
+                {
+                    worker(culture);
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }
+            });
+
+            t.Start();
+            t.Join();
+
+            if (exception != null)
+            {
+                throw exception;
+            }
         }
     }
 }

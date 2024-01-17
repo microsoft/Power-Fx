@@ -51,6 +51,8 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
                 }
             }
 
+            funcName = "Texl_" + funcName;
+
             string functionFile = Path.Combine(folder, funcName.Replace("/", "_", StringComparison.OrdinalIgnoreCase) + ".yaml");
             Directory.CreateDirectory(folder);
 

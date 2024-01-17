@@ -62,6 +62,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction ColorFadeT = _library.Add(new ColorFadeTFunction());
         public static readonly TexlFunction ColorValue = _library.Add(new ColorValueFunction());
         public static readonly TexlFunction ColorValue_UO = _library.Add(new ColorValueFunction_UO());
+        public static readonly TexlFunction Column_UO = _library.Add(new ColumnFunction_UO());
+        public static readonly TexlFunction ColumnNames_UO = _library.Add(new ColumnNamesFunction_UO());
         public static readonly TexlFunction Concat = _library.Add(new ConcatFunction());
         public static readonly TexlFunction Concatenate = _library.Add(new ConcatenateFunction());
         public static readonly TexlFunction ConcatenateT = _library.Add(new ConcatenateTableFunction());

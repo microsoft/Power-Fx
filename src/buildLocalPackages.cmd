@@ -2,11 +2,10 @@
 setlocal enabledelayedexpansion
 
 set MSBUILDARGS=-p:PublishRepositoryUrl=true -p:GeneratePackages=true -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:InternalBuild=true -p:Configuration=Debug -p:Platform="Any CPU"
+set MSBUILD=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\MSBuild.exe
 
-for /f "usebackq tokens=*" %%i in (`"%programfiles(x86)%\Microsoft Visual Studio\Installer\vswhere" -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe`) do (
-    @REM Restore dependencies first if needed
-    "%%i" -t:restore
-    @REM Run build and generate nuget packages 
-    "%%i" %MSBUILDARGS%
-    exit /b !errorlevel!
-)
+@REM Restore dependencies first if needed
+"%MSBUILD%" -t:restore
+
+@REM Run build and generate nuget packages 
+"%MSBUILD%" %MSBUILDARGS%
