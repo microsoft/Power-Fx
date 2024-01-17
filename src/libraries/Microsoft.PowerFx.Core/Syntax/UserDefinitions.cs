@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -68,9 +69,55 @@ namespace Microsoft.PowerFx.Syntax
         private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult)
         {
             var parseResult = TexlParser.ParseUserDefinitionScript(_script, _parserOptions);
-            
+            var spans = new List<(int, int, Token, UDF)>();
+            var commentsByUdf = new Dictionary<UDF, string>();
+            foreach (var udf in parseResult.UDFs)
+            {
+                var span = udf.Ident.Span;
+                spans.Add((udf.Ident.Span.Min, udf.Body.GetCompleteSpan().Lim, null, udf));
+            }
+
+            foreach (var comment in parseResult.Comments ?? Enumerable.Empty<Token>())
+            {
+                spans.Add((comment.Span.Min, comment.Span.Lim, comment, null));
+            }
+
+            spans.Sort((a, b) => a.Item1.CompareTo(b.Item1));
+
+            var descripion = new StringBuilder();
+            foreach (var span in spans)
+            {
+                var (low, high, comment, udf) = span;
+                if (comment != null)
+                {
+                    var commentText = comment.Span.GetFragment(_script);
+                    var isMultliLineComment = commentText.StartsWith("/*", StringComparison.InvariantCulture);
+                    if (isMultliLineComment)
+                    {
+                        commentText = commentText.Replace("/*", string.Empty).Replace("*/", string.Empty);
+                    }
+                    else
+                    {
+                        commentText = commentText.Replace("//", string.Empty);
+                    }
+
+                    commentText = commentText.Trim();   
+                    if (!commentText.EndsWith("\n", StringComparison.InvariantCulture))
+                    {
+                        commentText += "\n";
+                    }
+
+                    descripion.Append(commentText);
+                }
+                else
+                {
+                    commentsByUdf[udf] = descripion.ToString();
+                    descripion = new StringBuilder();
+                }
+            }
+
             // Parser returns both complete & incomplete UDFs, and we are only interested in creating TexlFunctions for valid UDFs. 
-            var functions = CreateUserDefinedFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
+            var functions = CreateUserDefinedFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), commentsByUdf, out var errors);
 
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
             userDefinitionResult = new UserDefinitionResult(
@@ -81,7 +128,7 @@ namespace Microsoft.PowerFx.Syntax
             return true;
         }
 
-        private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, out List<TexlError> errors)
+        private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, IDictionary<UDF, string> descriptions, out List<TexlError> errors)
         {
             Contracts.AssertValue(uDFs);
 
@@ -105,7 +152,8 @@ namespace Microsoft.PowerFx.Syntax
                     continue;
                 }
 
-                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args);
+                descriptions.TryGetValue(udf, out var description);
+                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args, description);
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);

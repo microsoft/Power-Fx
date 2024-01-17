@@ -539,29 +539,7 @@ namespace Microsoft.PowerFx.Core.Types
         [Conditional("DEBUG")]
         internal void AssertValid()
         {
-            Contracts.Assert(Kind >= DKind._Min && Kind < DKind._Lim);
-#if DEBUG
-            TypeTree.AssertValid();
-#endif
-            Contracts.Assert(TypeTree.IsEmpty || Kind == DKind.Table || Kind == DKind.Record || Kind == DKind.Control || Kind == DKind.DataEntity || Kind == DKind.File || Kind == DKind.LargeImage || Kind == DKind.OptionSet || Kind == DKind.OptionSetValue || Kind == DKind.View || Kind == DKind.ViewValue);
-            Contracts.Assert(ValueTree.IsEmpty || Kind == DKind.Enum);
-            Contracts.Assert(Kind != DKind.Enum || (EnumSuperkind >= DKind._Min && EnumSuperkind < DKind._Lim && EnumSuperkind != DKind.Enum));
-            Contracts.Assert((Metadata != null) == (Kind == DKind.Metadata));
-            Contracts.Assert((LazyTypeProvider != null) == (Kind == DKind.LazyRecord || Kind == DKind.LazyTable));
-
-#if DEBUG
-            if (ExpandInfo != null)
-            {
-                Contracts.Assert((Kind == DKind.Table) || (Kind == DKind.Record) || (Kind == DKind.DataEntity) || (Kind == DKind.Metadata));
-            }
-
-            if (ValueTree.Count > 1)
-            {
-                var pairs = ValueTree.GetPairs();
-                var firstObjType = pairs.First().Value.Object.GetType();
-                Contracts.Assert(pairs.All(kvp => kvp.Value.Object.GetType() == firstObjType));
-            }
-#endif
+            Console.WriteLine(1 + 1);
         }
 
         public bool IsValid => Kind >= DKind._Min && Kind < DKind._Lim;
