@@ -1658,7 +1658,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         Version = 1
                     },
                     Expression = "Score > 3",
-                    NLContext = context
+                    Context = context
                 }
             });
         }
@@ -1831,7 +1831,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 Name = "Foobar"
             })));
 
-            var nlContext = nlHandlerFactory.NLParams.NLContext;
+            var nlContext = nlHandlerFactory.NLParams.Context;
             Assert.NotNull(nlContext);
             Assert.NotNull(nlHandlerFactory.Scope);
 

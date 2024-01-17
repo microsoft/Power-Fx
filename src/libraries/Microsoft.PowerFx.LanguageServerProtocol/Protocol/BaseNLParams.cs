@@ -8,6 +8,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <summary>
         /// Additional context for NL operation. Usually, a stringified JSON object.
         /// </summary>
-        public string NLContext { get; set; } = null;
+        public string Context { get; set; } = null;
     }
 }
