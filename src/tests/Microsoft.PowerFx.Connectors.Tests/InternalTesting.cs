@@ -655,32 +655,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             File.WriteAllText(functionFile, yaml, Encoding.UTF8);
         }
-
-        private static void ExportConnectorFunctionsToYaml(string reference, string output, string connectorName, List<ConnectorFunction> connectorFunctions)
-        {
-            foreach (ConnectorFunction connectorFunction in connectorFunctions)
-            {
-                // Export TexlFunction definition as Yaml file
-                ExportConnectorFunction($"{Path.Combine(output, reference, connectorName.Replace("/", "_", StringComparison.OrdinalIgnoreCase))}", connectorFunction);
-            }
-        }
-
-        private static void ExportConnectorFunction(string folder, ConnectorFunction connectorFunction)
-        {
-            dynamic obj = connectorFunction.ToExpando(null);
-            var serializer = new SerializerBuilder().Build();
-            string yaml = serializer.Serialize(obj);            
-
-            string functionFile = Path.Combine(folder, "ConnectorFunction_" + connectorFunction.Name.Replace("/", "_", StringComparison.OrdinalIgnoreCase) + ".yaml");
-            Directory.CreateDirectory(folder);
-
-            if (File.Exists(functionFile))
-            {
-                throw new IOException($"File {functionFile} already exists!");
-            }
-
-            File.WriteAllText(functionFile, yaml, Encoding.UTF8);
-        }
     }
 
     public static class Exts
