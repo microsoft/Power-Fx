@@ -35,6 +35,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
     {
         private const char EOL = '\n';
 
+        /// <summary>
+        /// This const represents the dummy formula that is used to create an infrastructure needed to get the symbols for Nl2Fx operation.
+        /// </summary>
+        internal static readonly string Nl2FxDummyFormula = "\"f7979178-07f0-424d-8f8b-00fee6fd19b8\"";
+
         public delegate void SendToClient(string data);
 
         private readonly SendToClient _sendToClient;
@@ -60,8 +65,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         /// <summary>
         /// If set, provides the handler for $/nlSuggestion message.
+        /// Note: This is not a thread safe. Consider using the NlHandlerFactory.
         /// </summary>
         public NLHandler NL2FxImplementation { get; set; }
+
+        /// <summary>
+        /// A factory to get the NLHandler from the given scope.
+        /// </summary>
+        public INLHandlerFactory NLHandlerFactory { get; init; }
 
         public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
         {
@@ -464,7 +475,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             {
                 var result = new CustomGetCapabilitiesResult();
 
-                var nl = _parent.NL2FxImplementation;
+                var nl = GetNLHandler(_parent, scope, null);
                 if (nl != null)
                 {
                     result.SupportsNL2Fx = nl.SupportsNL2Fx;
@@ -484,13 +495,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             protected override CustomNL2FxResult Handle(IPowerFxScope scope, CustomNL2FxParams request)
             {
-                var nl = _parent.NL2FxImplementation;
+                var nl = GetNLHandler(_parent, scope, request);
                 if (nl == null || !nl.SupportsNL2Fx)
                 {
                     throw new NotSupportedException($"NL2Fx not enabled");
                 }
 
-                var check = scope.Check("1"); // just need to get the symbols 
+                var check = scope.Check(Nl2FxDummyFormula); // just need to get the symbols 
                 var summary = check.ApplyGetContextSummary();
 
                 var req = new NL2FxParameters
@@ -501,7 +512,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 };
 
                 CancellationToken cancel = default;
-                var result = _parent.NL2FxImplementation.NL2FxAsync(req, cancel)
+                var result = nl.NL2FxAsync(req, cancel)
                     .ConfigureAwait(false).GetAwaiter().GetResult();
 
                 FinalCheck(scope, result);
@@ -537,7 +548,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             protected override CustomFx2NLResult Handle(IPowerFxScope scope, CustomFx2NLParams request)
             {
-                var nl = _parent.NL2FxImplementation;
+                var nl = GetNLHandler(_parent, scope, request);
                 if (nl == null || !nl.SupportsFx2NL)
                 {
                     throw new NotSupportedException($"NL2Fx not enabled");
@@ -550,6 +561,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     .ConfigureAwait(false).GetAwaiter().GetResult();
                 return result;
             }
+        }
+
+        private static NLHandler GetNLHandler(LanguageServer server, IPowerFxScope scope, BaseNLParams nlParams)
+        {
+            return server.NLHandlerFactory?.GetNLHandler(scope, nlParams) ?? server.NL2FxImplementation;
         }
 
         private void HandleCodeActionRequest(string id, string paramsJson)
