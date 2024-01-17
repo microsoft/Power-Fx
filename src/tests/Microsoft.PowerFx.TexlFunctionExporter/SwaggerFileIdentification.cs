@@ -8,11 +8,14 @@ using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Readers.Exceptions;
+using Microsoft.OpenApi.Validations;
 
 namespace Microsoft.PowerFx.TexlFunctionExporter
 {
     public static class SwaggerFileIdentification
     {
+        public const string UNKNOWN_SWAGGER = "UNKNOWN_SWAGGER";
+
         /// <summary>
         /// Recursively identify swagger files located in a set of folders and uniquely identify (connector name, file) elements.
         /// </summary>
@@ -25,10 +28,12 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
 
         /// <summary>
         /// Recursively identify swagger files located in a set of folders and uniquely identify (connector name, file) elements.
+        /// If errors were identified during OpenApi reading they are also returned (and ignored).
+        /// If the OpenApi errors do not allow identifying the document name (title), the dictionary key will be "UNKNOWN_SWAGGER_xxx" (where xxx is a unique number).
         /// </summary>
         /// <param name="folders">Set of folders to scan.</param>
         /// <returns>Dictionary of unique (connector name, file location) couples.</returns>
-        public static Dictionary<string, (string folder, string location, OpenApiDocument document)> LocateSwaggerFilesWithDocuments(string[] folders, string pattern, SwaggerLocatorSettings locatorSettings = null)
+        public static Dictionary<string, (string folder, string location, OpenApiDocument document, List<string> errors)> LocateSwaggerFilesWithDocuments(string[] folders, string pattern, SwaggerLocatorSettings locatorSettings = null)
         {
             SwaggerLocatorSettings settings = locatorSettings ?? new SwaggerLocatorSettings();
 
@@ -36,8 +41,8 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
                                                                      .Where(f => settings.FoldersToExclude.All(fte => f.file.IndexOf(fte, 0, StringComparison.OrdinalIgnoreCase) < 0));
 
             // items: <connector title, (source folder, swagger location, OpenApiDocument)>
-            Dictionary<string, List<(string folder, string location, OpenApiDocument document)>> list = new (StringComparer.OrdinalIgnoreCase);
-            Dictionary<string, (string folder, string location, OpenApiDocument document)> list2 = new (StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>> list = new (StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, (string folder, string location, OpenApiDocument document, List<string> errors)> list2 = new (StringComparer.OrdinalIgnoreCase);
 
             // parse all files we have
             foreach ((string folder, string file) in files)
@@ -46,10 +51,15 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
             }
 
             // if we have multiple files with the same title, let's identify the ones we want to keep
-            foreach (KeyValuePair<string, List<(string folder, string location, OpenApiDocument document)>> swagger in list)
+            foreach (KeyValuePair<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>> swagger in list)
             {
-                List<(string folder, string location, OpenApiDocument document)> docs = swagger.Value;
+                if (swagger.Key == UNKNOWN_SWAGGER)
+                { 
+                    continue;
+                }
 
+                List<(string folder, string location, OpenApiDocument document, List<string> errors)> docs = swagger.Value;
+                
                 // determine vMax and only keep those versions
                 Version vMax = docs.Max(d => d.document.GetVersion());
                 docs = swagger.Value.Where(d => d.document.GetVersion() == vMax).ToList();
@@ -99,59 +109,97 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
                         }
                         else
                         {
-                            throw new InvalidDataException($"Two documents with same number of operations, can't determine which one to select {new KeyValuePair<string, List<(string folder, string location, OpenApiDocument document)>>(swagger.Key, docs).GetString()}");
+                            throw new InvalidDataException($"Two documents with same number of operations, can't determine which one to select {new KeyValuePair<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>>(swagger.Key, docs).GetString()}");
                         }
                     }
                 }
                 else
                 {
-                    throw new InvalidDataException($"More than 2 documents are found, can't determine which one to select {new KeyValuePair<string, List<(string folder, string location, OpenApiDocument document)>>(swagger.Key, docs).GetString()}");
+                    throw new InvalidDataException($"More than 2 documents are found, can't determine which one to select {new KeyValuePair<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>>(swagger.Key, docs).GetString()}");
                 }
+            }
+
+            if (list.ContainsKey(UNKNOWN_SWAGGER))
+            {
+                list2 = list2.Union(list[UNKNOWN_SWAGGER].Select(((string, string, OpenApiDocument, List<string>) f, int i) => new KeyValuePair<string, (string, string, OpenApiDocument, List<string>)>($"{UNKNOWN_SWAGGER}_{i}", f))).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
 
             return list2;
         }
 
-        private static void ParseSwagger(string folder, string swaggerFile, Dictionary<string, List<(string folder, string location, OpenApiDocument document)>> list)
+        private static void ParseSwagger(string folder, string swaggerFile, Dictionary<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>> list)
         {
+            (OpenApiDocument doc, List<string> errors) = ReadSwagger(swaggerFile);
+            string title = null;
+
+            if (doc == null)
+            {
+                errors.Add("No OpenApiDocument");
+                title = UNKNOWN_SWAGGER;
+            }
+            else if (doc.Info == null)
+            {
+                errors.Add("No OpenApiDocument Info");
+                title = UNKNOWN_SWAGGER;
+            }
+            else
+            {
+                title = doc.Info.Title;
+            }
+
+            (string, string, OpenApiDocument, List<string>) item = (folder, swaggerFile, doc, errors);
+
+            if (list.ContainsKey(title))
+            {
+                list[title].Add(item);
+            }
+            else
+            {
+                list.Add(title, new List<(string folder, string location, OpenApiDocument document, List<string> errors)>() { item });
+            }
+        }
+
+        public static (OpenApiDocument document, List<string> errors) ReadSwagger(string name)
+        {
+            List<string> errors = new List<string>();
+            OpenApiDocument doc = null;
+
             try
             {
-                OpenApiDocument doc = ReadSwagger(swaggerFile);
+                using FileStream stream = File.OpenRead(name);
+                doc = new OpenApiStreamReader().Read(stream, out OpenApiDiagnostic diag);
 
-                if (doc == null || doc.Info == null)
+                if (diag != null && diag.Errors != null)
                 {
-                    return;
-                }
-
-                string title = doc.Info.Title;
-                var item = (folder, swaggerFile, doc);
-
-                if (list.ContainsKey(title))
-                {
-                    list[title].Add(item);
-                }
-                else
-                {
-                    list.Add(title, new List<(string folder, string location, OpenApiDocument document)>() { item });
+                    foreach (OpenApiError error in diag.Errors)
+                    {
+                        if (error is OpenApiValidatorError vError)
+                        {
+                            errors.Add($"{vError.RuleName} {vError.Pointer} {vError.Message}");
+                        }
+                        else
+                        {
+                            // Could be OpenApiError or OpenApiReferenceError
+                            errors.Add($"{error.Pointer} {error.Message}");
+                        }
+                    }
                 }
             }
             catch (Exception ex) when (ex is InvalidDataException || ex is OpenApiUnsupportedSpecVersionException || ex is OpenApiReaderException)
             {
+                errors.Add("Cannot read swagger file");
+                errors.Add($"Exception: {ex.Message}");
             }
-        }
 
-        public static OpenApiDocument ReadSwagger(string name)
-        {
-            using FileStream stream = File.OpenRead(name);
-            return new OpenApiStreamReader().Read(stream, out OpenApiDiagnostic diag);
+            return (doc, errors);
         }
     }
 
     public static class Ext
     {
-        internal static string GetString(this KeyValuePair<string, List<(string folder, string location, OpenApiDocument document)>> s) => $"{s.Key}, {string.Join("\r\n  ", s.Value.Select(v => v.GetString()))}";
+        internal static string GetString(this KeyValuePair<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>> s) => $"{s.Key}, {string.Join("\r\n  ", s.Value.Select(v => v.GetString()))}";
 
-        internal static string GetString(this (string folder, string location, OpenApiDocument document) v) => $"{v.location}, VER: {v.document.Info.Version}, DESC: {v.document.Info.Description}, OP_COUNT: {v.document.Paths.SelectMany(p => p.Value.Operations).Count()}";
+        internal static string GetString(this (string folder, string location, OpenApiDocument document, List<string> errors) v) => $"{v.location}, VER: {v.document.Info.Version}, DESC: {v.document.Info.Description}, OP_COUNT: {v.document.Paths.SelectMany(p => p.Value.Operations).Count()}, ERRORS: {(v.errors.Any() ? "None" : string.Join(",", v.errors))}";
 
         internal static Version GetVersion(this OpenApiDocument d)
         {
