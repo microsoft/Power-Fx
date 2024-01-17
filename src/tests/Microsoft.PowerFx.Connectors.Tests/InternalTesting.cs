@@ -58,6 +58,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             File.Copy(Path.Combine(outFolder, jsonReport), Path.Combine(outFolder, jsonReport2));
         }
 
+        [Fact]
+        public void DisplayEnvVariables()
+        {
+            foreach (DictionaryEntry envVar in Environment.GetEnvironmentVariables().Cast<DictionaryEntry>().OrderBy(x => x.Key))
+            {
+                _output.WriteLine($"{envVar.Key} = {envVar.Value}");
+            }
+        }
+
         private (string outFolder, string srcFolder) GetFolders()
         {
             string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
