@@ -317,6 +317,30 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ColorFade)
             },
             {
+                BuiltinFunctionsCore.Column_UO,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.CountRows_UO.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<UntypedObjectValue>,
+                        ExactValueTypeOrBlank<StringValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Column_UO)
+            },
+            {
+                BuiltinFunctionsCore.ColumnNames_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    BuiltinFunctionsCore.CountRows_UO.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: ColumnNames_UO)
+            },
+            {
                 BuiltinFunctionsCore.Concatenate,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Concatenate.Name,
