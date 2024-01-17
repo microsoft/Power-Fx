@@ -58,6 +58,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             File.Copy(Path.Combine(outFolder, jsonReport), Path.Combine(outFolder, jsonReport2));
         }
 
+        [Fact]
+        public void DisplayEnvVariables()
+        {
+            foreach (DictionaryEntry envVar in Environment.GetEnvironmentVariables().Cast<DictionaryEntry>().OrderBy(x => x.Key))
+            {
+                _output.WriteLine($"{envVar.Key} = {envVar.Value}");
+            }
+        }
+
         private (string outFolder, string srcFolder) GetFolders()
         {
             string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
@@ -589,11 +598,25 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // - Key is the connector display name
             // - Value is a (folder, location, document) tuple where folder is the source folder at the origin of the swagger identification, location is the exact swagger file location, document is the corresponding OpenApiDocument 
             // LocateSwaggerFiles could also be used here and would only return a Dictionary<displayName, location> (no source folder or document)
-            Dictionary<string, (string folder, string location, OpenApiDocument document)> swaggerFiles = SwaggerFileIdentification.LocateSwaggerFilesWithDocuments(rootedFolders, pattern, swaggerLocationSettings);
-            _output.WriteLine($"Number of connectors found: {swaggerFiles.Count()}");
+            Dictionary<string, (string folder, string location, OpenApiDocument document, List<string> errors)> swaggerFiles = SwaggerFileIdentification.LocateSwaggerFilesWithDocuments(rootedFolders, pattern, swaggerLocationSettings);
+            _output.WriteLine($"Total number of connectors found: {swaggerFiles.Count()}");
+            _output.WriteLine($"Number of connectors found: {swaggerFiles.Count(sf => !sf.Key.StartsWith(SwaggerFileIdentification.UNKNOWN_SWAGGER))}");
 
-            foreach (KeyValuePair<string, (string folder, string location, OpenApiDocument document)> connector in swaggerFiles)
+            foreach (KeyValuePair<string, (string folder, string location, OpenApiDocument document, List<string> errors)> connector in swaggerFiles)
             {
+                if (connector.Value.errors != null && connector.Value.errors.Any())
+                {
+                    // Log OpenApi errors
+                    string folderName = $"{Path.Combine(outFolderPath, reference, connector.Key.Replace("/", "_", StringComparison.OrdinalIgnoreCase))}";
+                    Directory.CreateDirectory(folderName);
+                    File.WriteAllText(Path.Combine(folderName, "OpenApiErrors.txt"), string.Join("\r\n", new string[] { connector.Value.location }.Union(connector.Value.errors)));
+                }
+
+                if (connector.Key.StartsWith(SwaggerFileIdentification.UNKNOWN_SWAGGER))
+                {                    
+                    continue;
+                }
+
                 // Step 2: Get TexlFunctions to be exported
                 // Notice that TexlFunction is internal and requires InternalVisibleTo
                 List<TexlFunction> texlFunctions = OpenApiParser.ParseInternal(connectorSettings, connector.Value.document, logger).texlFunctions.Cast<TexlFunction>().ToList();
