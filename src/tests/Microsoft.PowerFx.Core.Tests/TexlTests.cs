@@ -3981,6 +3981,65 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
+        [Theory]
+        [InlineData("ColumnNames(ParseJSON('Hello'))")]
+        [InlineData("ColumnNames(ParseJSON('[]'))")]
+        [InlineData("ColumnNames(ParseJSON('Hello').a)")]
+        [InlineData("ColumnNames(ParseJSON('{''a'':1}').a)")]
+        [InlineData("ColumnNames(Blank())")]
+        [InlineData("ColumnNames(ParseJSON('{''a'':{''b'':1}}').a)")]
+        public void TexlFunctionTypeSemanticsColumnNames(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression.Replace('\'', '\"'));
+
+            Assert.True(DType.TryParse("*[Value:s]", out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("ColumnNames({a:1,b:true})")] // Does not work with records
+        [InlineData("ColumnNames([1,2,3])")] // Does not work with arrays
+        [InlineData("ColumnNames(1)")]
+        public void TexlFunctionTypeSemanticsColumnNames_Negative(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression);
+
+            Assert.False(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("Column(ParseJSON('Hello'), 'a')")] // Compiles, would fail at runtime
+        [InlineData("Column(ParseJSON('[]'), 'Value')")] // Compiles, would fail at runtime
+        [InlineData("Column(ParseJSON('Hello').a, 'a')")] // Compiles, would fail at runtime
+        [InlineData("Column(ParseJSON('{''a'':1}'), 'a')")]
+        [InlineData("Column(ParseJSON('{''a'':1}').a, 'a')")] // Compiles, would fail at runtime
+        [InlineData("Column(Blank(), 'a')")]
+        [InlineData("Column(ParseJSON('{''a'':{''b'':1}}'), 'a')")]
+        public void TexlFunctionTypeSemanticsColumn(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression.Replace('\'', '\"'));
+
+            Assert.Equal(DType.UntypedObject, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("Column({a:1,b:true}, 'a')")] // Does not work with records
+        [InlineData("Column([1,2,3], 'Value')")] // Does not work with arrays
+        [InlineData("Column(1)")]
+        [InlineData("Column(1, 'Value')")]
+        public void TexlFunctionTypeSemanticColumn_Negative(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression.Replace('\'', '\"'));
+
+            Assert.False(result.IsSuccess);
+        }
+
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig

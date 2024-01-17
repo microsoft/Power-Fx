@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -429,6 +431,41 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.CountRows_UO.Name, DType.EmptyTable.GetKindString(), impl);
+        }
+
+        public static FormulaValue ColumnNames_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Object)
+            {
+                if (impl.TryGetPropertyNames(out var propertyNames))
+                {
+                    var rows = propertyNames.Select(s => new StringValue(IRContext.NotInSource(FormulaType.String), s));
+                    return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
+                }
+            }
+
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.ColumnNames_UO.Name, DType.EmptyRecord.GetKindString(), impl);
+        }
+
+        public static FormulaValue Column_UO(IRContext irContext, FormulaValue[] args)
+        {
+            var impl = (args[0] as UntypedObjectValue).Impl;
+            var propertyName = (args[1] as StringValue).Value;
+
+            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Object)
+            {
+                if (impl.TryGetProperty(propertyName, out var propertyValue))
+                {
+                    return new UntypedObjectValue(irContext, propertyValue);
+                }
+
+                // Consistent with the '.' operator
+                return new BlankValue(irContext);
+            }
+
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Column_UO.Name, DType.EmptyRecord.GetKindString(), impl);
         }
 
         public static FormulaValue DateValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
