@@ -1704,6 +1704,38 @@
     <value>separator</value>
     <comment>function_parameter - Second argument to the Split function - the delimiter text that is used to split SplitArg1 into substrings.</comment>
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Enumerate and returns the column names of an untyped record.</value>
+    <comment>Description of 'ColumnNames' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>record</value>
+    <comment>function_parameter - First argument to the ColumnNames function - the record whose inputs will be returned. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Record to have its columns enumerated.</value>
+    <comment>Description of first argument of the 'ColumnNames' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Returns the value of a property of an untyped record, given the column name.</value>
+    <comment>Description of 'Column' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>record</value>
+    <comment>function_parameter - First argument to the Column function - the record to retrieve a column value. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>column_name</value>
+    <comment>function_parameter - Second argument to the Column function - name of the column to retrieve from the given record. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Record to retrieve a column value.</value>
+    <comment>Description of first argument of the 'Column' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Name of the column of the record to be retrieved.</value>
+    <comment>Description of second argument of the 'Column' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Returns true if the provided value is of the given type.</value>
     <comment>Description of the 'IsType' function.</comment>
