@@ -18,6 +18,9 @@ Table({Value:"a"},{Value:"b"},{Value:"c"},{Value:"d"},{Value:"e"})
 >> ColumnNames(ParseJSON("{""a"":1,""b"":{}}").b)
 Table()
 
+>> ColumnNames(ParseJSON("{""a"":{""a1"":2,""a2"":3},""b"":{}}").a)
+Table({Value:"a1"},{Value:"a2"})
+
 >> With(
     {myJson:ParseJSON("{""a"":1,""b"":{""c1"":1,""c2"":2}}")},
     ForAll(
@@ -61,3 +64,19 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Column(ParseJSON("""hello"""), "Value")
 Error({Kind:ErrorKind.InvalidArgument})
+
+// Coercions
+>> "Number " & Column(ParseJSON("{""2"":""two""}"), 2)
+"Number two"
+
+>> "Boolean " & Column(ParseJSON("{""false"":""is false""}"), false)
+"Boolean is false"
+
+>> "Value " & Column(ParseJSON("{"""":""empty""}"), "")
+"Value empty"
+
+>> "Value " & Column(ParseJSON("{"""":""empty""}"), Blank())
+"Value empty"
+
+>> 0 + Column(ParseJSON("{""a"":{""b"":3}}").a, "b")
+3
