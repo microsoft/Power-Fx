@@ -14,3 +14,6 @@ Errors: Error 7-8: Invalid argument type (Decimal). Expecting a Table value inst
 
 >> IsError(Clear(1))
 Errors: Error 14-15: Invalid argument type (Decimal). Expecting a Table value instead.|Error 8-16: The function 'Clear' has some invalid arguments.
+
+>> Clear(t1);Clear(t2)
+true

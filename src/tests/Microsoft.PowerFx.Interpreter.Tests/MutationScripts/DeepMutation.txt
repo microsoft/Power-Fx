@@ -157,7 +157,8 @@ Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value
 >> Set( clb, First(cla) )
 {Value:Table({Value:1},{Value:2},{Value:3})}
 
->> Clear( clb.Value )
+// ; true on the end so that we get the same result with and without V1Compat
+>> Clear( clb.Value ); true
 true
 
 >> clb
@@ -166,7 +167,8 @@ true
 >> Set( clc, Last(cla) )
 {Value:Table({Value:4},{Value:5},{Value:6})}
 
->> Clear( clc.Value )
+// ; true on the end so that we get the same result with and without V1Compat
+>> Clear( clc.Value ); true
 true
 
 >> clc
@@ -184,10 +186,12 @@ true
 >> Set( cle, Index(ca,2) )
 {Value:Table({Value:4},{Value:5},{Value:6})}
 
->> Clear( cld.Value)
+// ; true on the end so that we get the same result with and without V1Compat
+>> Clear( cld.Value); true
 true
 
->> Clear( cle.Value)
+// ; true on the end so that we get the same result with and without V1Compat
+>> Clear( cle.Value); true
 true
 
 >> cld
@@ -213,8 +217,9 @@ Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value
 >> Set( rb, First(ra) )
 {Value:Table({Value:1},{Value:2},{Value:3})}
 
->> Remove( rb.Value, {Value:2} )
-Blank()
+// ; true on the end so that we get the same result with and without V1Compat
+>> Remove( rb.Value, {Value:2} ); true
+true
 
 >> rb
 {Value:Table({Value:1},{Value:3})}
@@ -222,8 +227,9 @@ Blank()
 >> Set( rc, Last(ra) )
 {Value:Table({Value:4},{Value:5},{Value:6})}
 
->> Remove( rc.Value, {Value:4} )
-Blank()
+// ; true on the end so that we get the same result with and without V1Compat
+>> Remove( rc.Value, {Value:4} ); true
+true
 
 >> rc
 {Value:Table({Value:5},{Value:6})}
@@ -234,11 +240,13 @@ Blank()
 >> Set( re, Index(ra,2) )
 {Value:Table({Value:4},{Value:5},{Value:6})}
 
->> Remove( rd.Value, {Value:3})
-Blank()
+// ; true on the end so that we get the same result with and without V1Compat
+>> Remove( rd.Value, {Value:3}); true
+true
 
->> Remove( re.Value, {Value:4})
-Blank()
+// ; true on the end so that we get the same result with and without V1Compat
+>> Remove( re.Value, {Value:4}); true
+true
 
 >> rd
 {Value:Table({Value:1},{Value:2})}
