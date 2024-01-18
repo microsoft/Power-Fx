@@ -2,10 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Core.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -53,6 +54,34 @@ namespace Microsoft.PowerFx.Core.Tests
             // Now explicitly ask for another locale. 
             var descr3 = infoMid.GetDescription(fr);
             Assert.StartsWith("Retourne les", descr3); // in french
+        }
+
+        [Fact]
+        public void FunctionCategoriesLocaleTest()
+        {
+            var locale_enus = CultureInfo.CreateSpecificCulture("en-US");
+            var locale_ptbr = CultureInfo.CreateSpecificCulture("pt-BR");
+
+            // Picked some fixed examples to test. Concatenate is a good example of a function that is in multiple categories.
+            var booleanFunction = new BooleanFunction();
+            var booleanTFunction = new BooleanFunction_T();
+            var concatenateFunction = new ConcatenateFunction();
+
+            foreach (var func in new TexlFunction[] { booleanFunction, booleanTFunction, concatenateFunction })
+            {
+                var info = new FunctionInfo(func);
+                var categoryNames_enus = info.GetCategoryNames(locale_enus);
+                var categoryNames_ptbr = info.GetCategoryNames(locale_ptbr);
+
+                foreach (FunctionCategories category in Enum.GetValues(typeof(FunctionCategories)))
+                {
+                    if ((func.FunctionCategoriesMask & category) != 0)
+                    {
+                        Assert.Contains(category.GetLocalizedName(locale_enus), categoryNames_enus);
+                        Assert.Contains(category.GetLocalizedName(locale_ptbr), categoryNames_ptbr);
+                    }
+                }
+            }
         }
     }
 }

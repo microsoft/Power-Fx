@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx
             {
                 if ((_fnc.FunctionCategoriesMask & category) != 0)
                 {
-                    yield return StringResources.Get(category.ToString(), culture.Name);
+                    yield return category.GetLocalizedName(culture);
                 }
             }
         }
