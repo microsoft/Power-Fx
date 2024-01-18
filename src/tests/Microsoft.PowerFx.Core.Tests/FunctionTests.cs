@@ -3,13 +3,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using NuGet.Frameworks;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -33,6 +37,42 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     Assert.True(function.TryGetParamDescription(paramName, out var descr), "Missing parameter description. Please add the following to Resources.pares: " + "About" + function.LocaleInvariantName + "_" + paramName);
                 }
+            }
+        }
+
+        [Fact]
+        public void FunctionCategoriesLocaleTest()
+        {
+            var texlFunctionsLibrary = BuiltinFunctionsCore.BuiltinFunctionsLibrary;
+            var locale_enus = CultureInfo.CreateSpecificCulture("en-US");
+            var locale_ptbr = CultureInfo.CreateSpecificCulture("pt-BR");
+
+            foreach (var func in texlFunctionsLibrary)
+            {
+                var info = new FunctionInfo(func);
+
+                var categoriesNames_enus = info.GetCategoryNames(locale_enus);
+                var categoriesNames_ptbr = info.GetCategoryNames(locale_ptbr);
+
+                foreach (FunctionCategories category in Enum.GetValues(typeof(FunctionCategories)))
+                {
+                    if ((func.FunctionCategoriesMask & category) != 0)
+                    {
+                        Assert.Contains(StringResources.Get(category.ToString(), locale_enus.Name), categoriesNames_enus);
+                        Assert.Contains(StringResources.Get(category.ToString(), locale_ptbr.Name), categoriesNames_ptbr);
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public void FunctionCategoriesResourcesTest()
+        {
+            foreach (FunctionCategories category in Enum.GetValues(typeof(FunctionCategories)))
+            {
+                // Ensure that all categories have an equivalent resource
+                var resource = StringResources.Get(category.ToString(), "en-US");
+                Assert.NotNull(resource);
             }
         }
 

@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -76,6 +76,18 @@ namespace Microsoft.PowerFx
                 foreach (var paramList in sigs)
                 {
                     yield return new FunctionInfoSignature(this, paramList);
+                }
+            }
+        }
+
+        public IEnumerable<string> GetCategoryNames(CultureInfo culture = null)
+        {
+            culture ??= CultureInfo.InvariantCulture;
+            foreach (FunctionCategories category in Enum.GetValues(typeof(FunctionCategories)))
+            {
+                if ((_fnc.FunctionCategoriesMask & category) != 0)
+                {
+                    yield return StringResources.Get(category.ToString(), culture.Name);
                 }
             }
         }

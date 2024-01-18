@@ -2398,6 +2398,9 @@
     <value>Invalid json pointer.</value>
     <comment>Generic json pointer parsing error.</comment>
   </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Text</value>
   </data>
@@ -2428,6 +2431,9 @@
   <data name="REST" xml:space="preserve">
     <value>Services</value>
     <comment>REST is an acronym for REpresentational State Transfer, a category of web services.</comment>
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Component</value>
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
     <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
