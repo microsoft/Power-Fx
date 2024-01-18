@@ -85,12 +85,5 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// The parameters of this signature.
         /// </summary>
         public ParameterInformation[] Parameters { get; set; }
-
-        /// <summary>
-        /// The index of the active parameter.
-        ///
-        /// If provided, this is used in place of `SignatureHelp.activeParameter`.
-        /// </summary>
-        public uint ActiveParameter { get; set; }
     }
 }
