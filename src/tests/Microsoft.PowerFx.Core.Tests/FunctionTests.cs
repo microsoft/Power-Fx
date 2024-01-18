@@ -7,13 +7,11 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using NuGet.Frameworks;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
