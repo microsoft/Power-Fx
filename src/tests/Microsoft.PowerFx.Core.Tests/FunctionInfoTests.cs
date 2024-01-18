@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
@@ -56,30 +57,39 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.StartsWith("Retourne les", descr3); // in french
         }
 
-        [Fact]
-        public void FunctionCategoriesLocaleTest()
+        [Theory]
+        [InlineData("Boolean", "Text", "Texto")]
+        [InlineData("Sqrt", "Math and Statistical", "Matemático e estatístico")]
+        [InlineData("ConcatenateT", "Table", "Tabela", "Text", "Texto")]
+        public void FunctionCategoriesLocaleTest(string functionName, params string[] localizedResources)
         {
             var locale_enus = CultureInfo.CreateSpecificCulture("en-US");
             var locale_ptbr = CultureInfo.CreateSpecificCulture("pt-BR");
 
-            // Picked some fixed examples to test. Concatenate is a good example of a function that is in multiple categories.
-            var booleanFunction = new BooleanFunction();
-            var booleanTFunction = new BooleanFunction_T();
-            var concatenateFunction = new ConcatenateFunction();
-
-            foreach (var func in new TexlFunction[] { booleanFunction, booleanTFunction, concatenateFunction })
+            // Picked some fixed examples to test.Concatenate is a good example of a function that is in multiple categories.
+            var funcDict = new Dictionary<string, TexlFunction>
             {
-                var info = new FunctionInfo(func);
-                var categoryNames_enus = info.GetCategoryNames(locale_enus);
-                var categoryNames_ptbr = info.GetCategoryNames(locale_ptbr);
+                { "Boolean", new BooleanFunction() },
+                { "Sqrt", new SqrtFunction() },
+                { "ConcatenateT", new ConcatenateTableFunction() }
+            };
 
-                foreach (FunctionCategories category in Enum.GetValues(typeof(FunctionCategories)))
+            funcDict.TryGetValue(functionName, out var func);
+
+            var info = new FunctionInfo(func);
+            var categoryNames_enus = info.GetCategoryNames(locale_enus);
+            var categoryNames_ptbr = info.GetCategoryNames(locale_ptbr);
+            var enumerator = localizedResources.GetEnumerator();
+
+            foreach (FunctionCategories category in Enum.GetValues(typeof(FunctionCategories)))
+            {
+                if ((func.FunctionCategoriesMask & category) != 0)
                 {
-                    if ((func.FunctionCategoriesMask & category) != 0)
-                    {
-                        Assert.Contains(category.GetLocalizedName(locale_enus), categoryNames_enus);
-                        Assert.Contains(category.GetLocalizedName(locale_ptbr), categoryNames_ptbr);
-                    }
+                    enumerator.MoveNext();
+                    Assert.Contains(enumerator.Current, categoryNames_enus);
+
+                    enumerator.MoveNext();
+                    Assert.Contains(enumerator.Current, categoryNames_ptbr);
                 }
             }
         }
