@@ -1,7 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using System.Numerics;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions
@@ -14,6 +17,11 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.Assert(bitIndex >= 0);
 
             return !(value & (BigInteger.One << bitIndex)).IsZero;
+        }
+
+        public static string GetLocalizedName(this FunctionCategories category, CultureInfo culture)
+        {            
+            return StringResources.Get(category.ToString(), culture.Name);
         }
     }
 }
