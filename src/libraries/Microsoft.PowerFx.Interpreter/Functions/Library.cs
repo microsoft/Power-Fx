@@ -2265,8 +2265,8 @@ namespace Microsoft.PowerFx.Functions
                 // It's another condition. Loop around
             }
 
-            // If there's no value here, then use blank. 
-            return new BlankValue(irContext);
+            // If there's no value here, then use blank or void (for example, "If(false,Set(x,5))")
+            return irContext.ResultType == FormulaType.Void ? new VoidValue(irContext) : new BlankValue(irContext);
         }
 
         private static FormulaValue MaybeAdjustToCompileTimeType(FormulaValue result, IRContext irContext)
@@ -2597,7 +2597,8 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return new BlankValue(irContext);
+                // If there's no value here, then use blank or void (for example, "Switch(4,5,Set(x,6))")
+                return irContext.ResultType == FormulaType.Void ? new VoidValue(irContext) : new BlankValue(irContext);
             }
         }
 
