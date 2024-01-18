@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx
 
             if (type is Types.Void)
             {
-                throw new NotSupportedException();
+                throw new InvalidOperationException($"Can't set {name} to a Void value.");
             }
 
             if (displayName != null)

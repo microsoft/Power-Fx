@@ -101,8 +101,8 @@ namespace Microsoft.PowerFx
         {
             var enabled = new StringBuilder();
 
-            Console.InputEncoding = System.Text.Encoding.Unicode;
-            Console.OutputEncoding = System.Text.Encoding.Unicode;
+            Console.InputEncoding = System.Text.Encoding.UTF8;
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             var version = typeof(RecalcEngine).Assembly.GetName().Version.ToString();
             Console.WriteLine($"Microsoft Power Fx Console Formula REPL, Version {version}");
@@ -194,7 +194,7 @@ namespace Microsoft.PowerFx
         private class Run1Function : ReflectionFunction
         {
             public Run1Function()
-                : base("Run", FormulaType.Boolean, new[] { FormulaType.String })
+                : base("Run", FormulaType.Void, new[] { FormulaType.String })
             {
             }
 
@@ -208,7 +208,7 @@ namespace Microsoft.PowerFx
         private class Run2Function : ReflectionFunction
         {
             public Run2Function()
-                : base("Run", FormulaType.Boolean, new[] { FormulaType.String, FormulaType.Boolean })
+                : base("Run", FormulaType.Void, new[] { FormulaType.String, FormulaType.Boolean })
             {
             }
 
@@ -222,13 +222,11 @@ namespace Microsoft.PowerFx
                 }
                 catch (Exception ex)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Error: " + ex.Message);
-                    Console.ResetColor();
-                    return FormulaValue.New(false);
+                    var error = new ExpressionError() { Message = ex.Message };
+                    return FormulaValue.NewError(error);
                 }
 
-                return FormulaValue.New(true);
+                return FormulaValue.NewVoid();
             }
         }
 
@@ -476,7 +474,6 @@ Use Help( ""Options"" ) for more information.
 
 Once a formula is defined or a variable's type is defined, it cannot be changed.
 Use Reset() to clear all formulas and variables.
-
 ";
 
                 await WriteAsync(repl, pre, cancel)
