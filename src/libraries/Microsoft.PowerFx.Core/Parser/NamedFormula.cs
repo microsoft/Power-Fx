@@ -6,7 +6,7 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Parser
 {
-    internal class NamedFormula 
+    internal class NamedFormula
     {
         internal IdentToken Ident { get; }
 
@@ -14,14 +14,17 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal int StartingIndex { get; }
 
-        public NamedFormula(IdentToken ident, Formula formula, int startingIndex)
+        internal DefinitionAttribute Attribute { get; }
+
+        public NamedFormula(IdentToken ident, Formula formula, int startingIndex, DefinitionAttribute attribute = null)
         {
             Contracts.AssertValue(ident);
             Contracts.AssertValue(formula);
-            
+
             Ident = ident;
             Formula = formula;
             StartingIndex = startingIndex;
+            Attribute = attribute;
         }
     }
 }

@@ -39,6 +39,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             // Text first.  Implemented entirely in the Lexer.
             TextFirst = 1 << 5,
+
+            // Parse supports Attributes on Named Formulas/Udfs.
+            AllowAttributes = 1 << 6,
         }
 
         private bool _hasSemicolon = false;
@@ -89,6 +92,23 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             Contracts.AssertValue(parserOptions);
             var flags = (Flags.NamedFormulas | (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0)) | (parserOptions.AllowParseAsTypeLiteral ? Flags.AllowTypeLiteral : 0);
+            var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
+            var parser = new TexlParser(formulaTokens, flags);
+
+            return parser.ParseUDFsAndNamedFormulas(script, parserOptions);
+        }
+
+        /// <summary>
+        /// Parses a script with user definitions. Same as <see cref="ParseUserDefinitionScript(string, ParserOptions)"/>.
+        /// but internal for prototyping of attribute support. 
+        /// </summary>
+        /// <param name="script">Script to be parsed.</param>
+        /// <param name="parserOptions">Options for parsing an expression.</param>
+        /// <returns><see cref="ParseUserDefinitionResult"/>.</returns>
+        internal static ParseUserDefinitionResult ParseUserDefinitionScriptWithAttributes(string script, ParserOptions parserOptions)
+        {
+            Contracts.AssertValue(parserOptions);
+            var flags = (Flags.NamedFormulas | Flags.AllowAttributes | (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0)) | (parserOptions.AllowParseAsTypeLiteral ? Flags.AllowTypeLiteral : 0);
             var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
             var parser = new TexlParser(formulaTokens, flags);
 
