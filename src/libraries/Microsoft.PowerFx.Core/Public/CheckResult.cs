@@ -624,7 +624,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="tokenTypesToSkip">Optional: Token types that would be skipped and not included in the final result. Usually provided by the language server.</param>
         /// <returns> Enumerable of tokens. Tokens are ordered only if comparer is provided.</returns>
-        internal IEnumerable<ITokenTextSpan> GetTokens(IReadOnlyCollection<TokenType> tokenTypesToSkip = null) => Tokenization.Tokenize(_expression, _binding, Parse?.Comments, null, false, tokenTypesToSkip);
+        public IEnumerable<ITokenTextSpan> GetTokens(IReadOnlyCollection<TokenType> tokenTypesToSkip = null) => Tokenization.Tokenize(_expression, _binding, Parse?.Comments, null, false, tokenTypesToSkip);
 
         private string _expressionInvariant;
 

@@ -8,7 +8,7 @@ using Microsoft.AppMagic.Transport;
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
     [TransportType(TransportKind.ByValue)]
-    internal interface ITokenTextSpan
+    public interface ITokenTextSpan
     {
         string TokenName { get; }
 
@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         bool CanBeHidden { get; }
     }
 
-    internal sealed class TokenTextSpan : ITokenTextSpan
+    public sealed class TokenTextSpan : ITokenTextSpan
     {
         public string TokenName { get; private set; }
 
@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         }
     }
 
-    internal sealed class TokenTextSpanComparer : IComparer<ITokenTextSpan>
+    public sealed class TokenTextSpanComparer : IComparer<ITokenTextSpan>
     {
         public int Compare(ITokenTextSpan self, ITokenTextSpan other)
         {
