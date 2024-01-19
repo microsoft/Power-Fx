@@ -88,14 +88,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         }
                         else
                         {
-                            var recordValueCopy = FormulaValue.NewRecordFromFields(row.Value.Fields);
+                            var recordValueCopy = (RecordValue)row.Value.MaybeShallowCopy();
                             resultRows.Add(await tableValue.AppendAsync(recordValueCopy, cancellationToken).ConfigureAwait(false));
                         }
                     }
                 }
-                else if (arg is RecordValue recordValue)
+                else if (arg is RecordValue)
                 {
-                    var recordValueCopy = FormulaValue.NewRecordFromFields(recordValue.Fields);
+                    var recordValueCopy = (RecordValue)arg.MaybeShallowCopy();
                     resultRows.Add(await tableValue.AppendAsync(recordValueCopy, cancellationToken).ConfigureAwait(false));
                 }
                 else if (arg is ErrorValue)
