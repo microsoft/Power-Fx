@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Collect(lazyTable, lazyCoercibleRecord)", true)]
         [InlineData("Collect(lazyTable, lazyNotCoercibleRecord)", false)]
         [InlineData("Collect(lazyTable, {Value:1})", false)]
-        [InlineData("Collect(lazyTable, lazyTable)", false)]
+        [InlineData("Collect(lazyTable, lazyTable)", true)]
         [InlineData("Collect(lazyRecord, lazyRecord)", false)]
         [InlineData("Collect(lazyRecord, lazyTable)", false)]
 

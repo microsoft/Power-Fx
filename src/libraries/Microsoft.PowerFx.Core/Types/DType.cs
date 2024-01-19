@@ -637,6 +637,8 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool HasPolymorphicInfo => PolymorphicInfo != null;
 
+        public bool IsSingleColumnTable => IsTable && GetNames(DPath.Root).Count() == 1;
+
         /// <summary>
         ///  Whether this type is a subtype of all possible types, meaning that it can be placed in
         ///  any location without coercion.

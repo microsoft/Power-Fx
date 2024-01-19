@@ -4430,4 +4430,14 @@
     <value>**Disclaimer:** AI-generated content can have mistakes. Make sure it's accurate and appropriate before using it. [See terms](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
     <comment>The disclaimer we show on AI functions. This is github flavored markdown. So ** marks text in bold. </comment>
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>The data source that you want to add data to.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
+    <comment>function_parameter - Second parameter for the Collect function. The item to be added.</comment>
+  </data>
 </root>
