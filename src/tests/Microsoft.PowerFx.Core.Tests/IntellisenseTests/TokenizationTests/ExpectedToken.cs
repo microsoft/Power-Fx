@@ -6,7 +6,7 @@ using Microsoft.PowerFx.Core.Texl.Intellisense;
 
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
-    public class ExpectedToken : ITokenTextSpan
+    internal class ExpectedToken : ITokenTextSpan
     {
         /// <summary>
         /// Special start index to indicate that start index shoud be computed based on previous token end index.

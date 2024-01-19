@@ -185,10 +185,15 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
-                "Microsoft.PowerFx.Core.Utils.ICheckable",                
+                "Microsoft.PowerFx.Core.Utils.ICheckable",
                 "Microsoft.PowerFx.UserInfo",
                 "Microsoft.PowerFx.Logging.ITracer",
-                "Microsoft.PowerFx.Logging.TraceSeverity"
+                "Microsoft.PowerFx.Logging.TraceSeverity",
+
+                "Microsoft.PowerFx.Core.Texl.Intellisense.ITokenTextSpan",
+                "Microsoft.PowerFx.Core.Texl.Intellisense.TokenTextSpan",
+                "Microsoft.PowerFx.Core.Texl.Intellisense.TokenType",
+                "Microsoft.PowerFx.Core.Texl.Intellisense.TokenTextSpanComparer"
             };
 
             var sb = new StringBuilder();
@@ -219,7 +224,10 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var exceptionList = new HashSet<string>()
             {
-                "Microsoft.PowerFx.Syntax.Span"
+                "Microsoft.PowerFx.Syntax.Span",
+                "Microsoft.PowerFx.Core.Texl.Intellisense.ITokenTextSpan",
+                "Microsoft.PowerFx.Core.Texl.Intellisense.TokenTextSpan",
+                "Microsoft.PowerFx.Core.Texl.Intellisense.TokenType",
             };
 
             var asm = typeof(Parser.TexlParser).Assembly;
