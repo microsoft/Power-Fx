@@ -541,6 +541,24 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.Equal(expected, suggestion);
         }
 
+        [Theory]
+        [InlineData("Abs", "Abs")]
+        [InlineData("Abs", "If(Abs")]
+        public void DontSuggestRemovedFunctionsTest(string functionName, string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var symbolTable = engine.SupportedFunctions.GetMutableCopyOfFunctions();
+
+            symbolTable.RemoveFunction(functionName);
+
+            var engine2 = new Engine2();
+            engine2.UpdateSupportedFunctions(symbolTable);
+
+            var suggestions = engine2.Suggest(expression, RecordType.Empty(), expression.Length);
+
+            Assert.Empty(suggestions.Suggestions);
+        }
+
         private class LazyRecursiveRecordType : RecordType
         {
             public override IEnumerable<string> FieldNames => GetFieldNames();
@@ -592,6 +610,20 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             public override int GetHashCode()
             {
                 return 1;
+            }
+        }
+
+        // Helper to set Engine.SupportedFunctions.
+        private class Engine2 : Engine
+        {
+            public Engine2()
+                : base(new PowerFxConfig())
+            {
+            }
+
+            public void UpdateSupportedFunctions(SymbolTable s)
+            {
+                SupportedFunctions = s;
             }
         }
     }
