@@ -1621,6 +1621,10 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Table_UO)
             },
             {
+                BuiltinFunctionsCore.TableConcatenate,
+                NoErrorHandling(TableConcatenate)
+            },
+            {
                 BuiltinFunctionsCore.Tan,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Tan.Name,

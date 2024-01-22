@@ -1,0 +1,18 @@
+
+>> TableConcatenate()
+Table()
+
+>> TableConcatenate([{a:0, b:false, c:"Hello"}], [{a:1, b:true, c:"World"}])
+Table({a:0,b:false,c:"Hello"},{a:1,b:true,c:"World"})
+
+>> TableConcatenate([{a:0}], [{a:true}], [{a:2}])
+Table({a:0},{a:1},{a:2})
+
+>> TableConcatenate([{a:0, b:"hello"}], [{a:true}], [{a:2}])
+Table({a:0,b:"hello"},{a:1,b:Blank()},{a:2,b:Blank()})
+
+>> TableConcatenate([{a:0}], [{b:true}], [{c:"Hello"}])
+Table({a:0,b:Blank(),c:Blank()},{a:Blank(),b:true,c:Blank()},{a:Blank(),b:Blank(),c:"Hello"})
+
+>> TableConcatenate([{a:0}], [{b:true}], [{c:"Hello", d: {x: "World"}}])
+Table({a:0,b:Blank(),c:Blank(),d:Blank()},{a:Blank(),b:true,c:Blank(),d:Blank()},{a:Blank(),b:Blank(),c:"Hello",d:{x:"World"}})

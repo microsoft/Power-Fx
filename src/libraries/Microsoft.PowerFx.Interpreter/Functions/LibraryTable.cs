@@ -676,6 +676,19 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        public static FormulaValue TableConcatenate(IRContext irContext, FormulaValue[] args)
+        {
+            var tables = Array.ConvertAll(
+                args,
+                arg => arg switch
+                {
+                    TableValue r => r.Rows,
+                    _ => new List<DValue<RecordValue>> { DValue<RecordValue>.Of((ErrorValue)arg) },
+                });
+
+            return new InMemoryTableValue(irContext, tables.SelectMany(x => x));
+        }
+
         private static ErrorValue CreateInvalidSortColumnError(IRContext irContext, CultureInfo cultureInfo, string columnName)
         {
             // Needs to be localized - https://github.com/microsoft/Power-Fx/issues/908

@@ -549,6 +549,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter SearchArg2 = (b) => StringResources.Get("SearchArg2", b);
         public static StringGetter SearchArg3 = (b) => StringResources.Get("SearchArg3", b);
 
+        public static StringGetter AboutTableConcatenate = (b) => StringResources.Get("AboutTableConcatenate", b);
+        public static StringGetter TableConcatenateArg1 = (b) => StringResources.Get("TableConcatenateArg1", b);
+
         public static StringGetter None = (b) => StringResources.Get("None", b);
         public static StringGetter Text = (b) => StringResources.Get("Text", b);
         public static StringGetter Logical = (b) => StringResources.Get("Logical", b);
