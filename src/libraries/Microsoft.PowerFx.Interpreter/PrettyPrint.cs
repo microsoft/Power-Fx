@@ -10,9 +10,9 @@ namespace Microsoft.PowerFx.Interpreter
 {
     public class PrettyPrint
     {
-        public static string GetPrettyPrint(string input)
+        public static string RemoveNonNecessaryCharacters(string expression)
         {
-            var parseResult = TexlParser.ParseScript(input);
+            var parseResult = TexlParser.ParseScript(expression);
             var node = parseResult.Root;
             return TexlPretty.PrettyPrint(node);
         }

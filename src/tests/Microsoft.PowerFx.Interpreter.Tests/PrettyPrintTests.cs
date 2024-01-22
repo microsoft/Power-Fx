@@ -11,13 +11,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class PrettyPrintTests
     {
         [Theory]
+        [InlineData("1 + 2 + 3", "1 + 2 + 3")] // No change
         [InlineData("((1 + 2) + 3)", "1 + 2 + 3")]
         [InlineData("(((1  +  2)) + 3)", "1 + 2 + 3")]
         [InlineData("((1  +  (2)) + (3))", "1 + 2 + 3")]
         [InlineData("((1  +  (2)) * 3) - (4 * 5)", "(1 + 2) * 3 + -(4 * 5)")]
-        public void TestPrettyPrint(string expr, string expectedExpr)
+        public void TestNonNecessaryCharacters(string expr, string expectedExpr)
         {
-            var actual = PrettyPrint.GetPrettyPrint(expr);
+            var actual = PrettyPrint.RemoveNonNecessaryCharacters(expr);
 
             Assert.Equal(expectedExpr, actual);
         }
