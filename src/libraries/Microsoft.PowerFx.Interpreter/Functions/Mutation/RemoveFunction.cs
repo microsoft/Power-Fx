@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Functions
         }
     }
 
-    internal class RemoveFunction : RemoveFunctionBase, IAsyncTexlFunction3
+    internal class RemoveFunction : RemoveFunctionBase, IAsyncTexlFunction
     {
         public override bool IsSelfContained => false;
 
@@ -172,7 +172,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.Void : collectionType;
+            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.ObjNull : collectionType;
 
             return fValid;
         }
@@ -183,7 +183,7 @@ namespace Microsoft.PowerFx.Functions
             base.ValidateArgumentIsMutable(binding, args[0], errors);
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaType irContextRet, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var validArgs = CheckArgs(args, out FormulaValue faultyArg);
 
@@ -226,11 +226,11 @@ namespace Microsoft.PowerFx.Functions
             FormulaValue result;
             if (ret.IsError)
             {
-                result = FormulaValue.NewError(ret.Error.Errors, irContextRet == FormulaType.Void ? FormulaType.Void : FormulaType.Blank);
+                result = FormulaValue.NewError(ret.Error.Errors, FormulaType.Blank);
             }
             else
             {
-                result = irContextRet == FormulaType.Void ? FormulaValue.NewVoid() : FormulaValue.NewBlank();
+                result = FormulaValue.NewBlank();
             }
 
             return result;

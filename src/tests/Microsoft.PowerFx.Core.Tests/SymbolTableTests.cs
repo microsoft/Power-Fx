@@ -309,7 +309,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void VoidIsNotAllowed()
         {
             var symbol = new SymbolTable();
-            Assert.Throws<InvalidOperationException>(() => symbol.AddVariable("x", FormulaType.Void, mutable: true));
+            Assert.Throws<NotSupportedException>(() => symbol.AddVariable("x", FormulaType.Void, mutable: true));
         }
     }
 }

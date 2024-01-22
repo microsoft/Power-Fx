@@ -309,7 +309,7 @@ Errors: Error 0-28: The function 'Abs' has some invalid arguments.|Error 4-27: I
 
 // Expression generating void value can be used inside of the switch. If(1<0, 1, {x:1}) => void value
 >> Switch(1, 1, 2, If(1<0, 1, {x:4}))
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
 
 // Void expressions can become error
 >> Switch(1, 1, 1/0, 10, {x:4})
@@ -317,7 +317,7 @@ Error({Kind:ErrorKind.Div0})
 
 // Void expressions that are not errors have a void value
 >> Switch(10, 1, 1/0, 10, {x:4})
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
 
 >> Switch("a", "a", 2, {x:4}, 3)
 Errors: Error 20-25: Invalid argument type (Record). Expecting a Text value instead.|Error 0-29: The function 'Switch' has some invalid arguments.

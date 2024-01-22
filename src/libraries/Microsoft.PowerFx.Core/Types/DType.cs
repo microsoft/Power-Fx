@@ -1882,15 +1882,9 @@ namespace Microsoft.PowerFx.Core.Types
             schemaDifference = new KeyValuePair<string, DType>(null, Invalid);
             schemaDifferenceType = Invalid;
 
-            // Void accepts everything (including Void).
-            if (Kind == DKind.Void)
+            if (Kind == DKind.Void || type.Kind == DKind.Void)
             {
-                return true;
-            }
-
-            // Except for Void (see above), no types accept Void.
-            if (type.Kind == DKind.Void)
-            {
+                // No types accept a void type, void type doesn't accept any type
                 return false;
             }
 

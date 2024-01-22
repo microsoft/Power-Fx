@@ -279,32 +279,25 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void VoidIsNotSubtypeOfAnyExceptVoid()
+        public void VoidIsNotSubtypeOfAny()
         {
             foreach (var dType in _dTypes)
             {
                 foreach (var usePowerFxV1CompatRules in new[] { false, true })
                 {
-                    if (dType == DType.Void)
-                    {
-                        Assert.True(dType.Accepts(DType.Void, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatRules));
-                    }
-                    else
-                    {
-                        Assert.False(dType.Accepts(DType.Void, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatRules));
-                    }
+                    Assert.False(dType.Accepts(DType.Void, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatRules));
                 }
             }
         }
 
         [Fact]
-        public void VoidIsSupertypeOfAll()
+        public void VoidIsNotSupertypeOfAny()
         {
             foreach (var dType in _dTypes)
             {
                 foreach (var usePowerFxV1CompatRules in new[] { false, true })
                 {
-                    Assert.True(DType.Void.Accepts(dType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatRules));
+                    Assert.False(DType.Void.Accepts(dType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatRules));
                 }
             }
         }
@@ -2586,7 +2579,7 @@ namespace Microsoft.PowerFx.Tests
             foreach (var type in typeEncodings)
             {
                 TestUnion(type.ToString(), "X", type.ToString(), false);
-                TestUnion(type.ToString(), "-", "-", false);
+                TestUnion(type.ToString(), "-", "e", false);
             }
         }
 
@@ -2889,15 +2882,13 @@ namespace Microsoft.PowerFx.Tests
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
-        public void DTypeUnion_PowerFxV1CompatRules_Void(bool usePFxV1CompatRules)
+        public void DTypeUnion_PowerFxV1CompatRules_VoidNotCompatibleWithAnything(bool usePFxV1CompatRules)
         {
-            // Nothing accepts Void (except for Void), while Void accepts everything (including Void).
-            // From a type union perspective, Void is the result of all union operations that involve a Void.
-            var typeEncodings = "ebnshdipmgo$wcDTlLZPQqVOXw-";
+            var typeEncodings = "ebnshdipmgo$wcDTlLZPQqVOXw";
             foreach (var type in typeEncodings)
             {
-                TestUnion(type.ToString(), "-", "-", usePFxV1CompatRules);
-                TestUnion("-", type.ToString(), "-", usePFxV1CompatRules);
+                TestUnion(type.ToString(), "-", "e", usePFxV1CompatRules);
+                TestUnion("-", type.ToString(), "e", usePFxV1CompatRules);
             }
         }
 

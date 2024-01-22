@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            sb.Append($"If(true, {{test:1}}, \"Void value (result of the expression can't be used).\")");
+            sb.Append($"If(true, {{test:1}}, \"Mismatched args (result of the expression can't be used).\")");
         }
 
         public override object ToObject()

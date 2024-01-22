@@ -1,6 +1,4 @@
-﻿#SETUP: disable:PowerFxV1CompatibilityRules
-
-// Case to test how shortcut verification work along with behavior functions
+﻿// Case to test how shortcut verification work along with behavior functions
 
 >> Set( t1, [false,true] )
 Table({Value:false},{Value:true})
@@ -18,7 +16,7 @@ Table({Value:false},{Value:true})
 >> 0.01;t1
 Table({Value:false},{Value:true})
 
->> false && First(Remove(t1, First(t1))).Value;t1
+>> false && Remove(t1, First(t1));t1
 Table({Value:false},{Value:true})
 
 >> 0.02;t1
@@ -42,7 +40,7 @@ Table({Value:false},{Value:true})
 >> 0.11;t1
 Table({Value:false},{Value:true})
 
->> false And First(Remove(t1, First(t1))).Value;t1
+>> false And Remove(t1, First(t1));t1
 Table({Value:false},{Value:true})
 
 >> 0.12;t1
@@ -60,19 +58,19 @@ Table({Value:false},{Value:true})
 >> 0.14;t1
 Table({Value:false},{Value:true})
 
->> And(false, Patch(t1, First(t1), {Value:true}).Value);t1
+>> And(false && Patch(t1, First(t1), {Value:true}).Value);t1
 Table({Value:false},{Value:true})
 
 >> 0.5;t1
 Table({Value:false},{Value:true})
 
->> And(false, First(Remove(t1, First(t1))).Value);t1
+>> And(false && Remove(t1, First(t1)));t1
 Table({Value:false},{Value:true})
 
 >> 0.6;t1
 Table({Value:false},{Value:true})
 
->> And(false, Set(t1, [true,true]));t1
+>> And(false && Set(t1, [true,true]));t1
 Table({Value:false},{Value:true})
 
 >> 0.7;t1

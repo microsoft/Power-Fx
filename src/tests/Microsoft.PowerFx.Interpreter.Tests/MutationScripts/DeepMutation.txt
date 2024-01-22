@@ -157,8 +157,7 @@ Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value
 >> Set( clb, First(cla) )
 {Value:Table({Value:1},{Value:2},{Value:3})}
 
-// ; true on the end so that we get the same result with and without V1Compat
->> Clear( clb.Value ); true
+>> Clear( clb.Value )
 true
 
 >> clb
@@ -167,8 +166,7 @@ true
 >> Set( clc, Last(cla) )
 {Value:Table({Value:4},{Value:5},{Value:6})}
 
-// ; true on the end so that we get the same result with and without V1Compat
->> Clear( clc.Value ); true
+>> Clear( clc.Value )
 true
 
 >> clc
@@ -186,12 +184,10 @@ true
 >> Set( cle, Index(ca,2) )
 {Value:Table({Value:4},{Value:5},{Value:6})}
 
-// ; true on the end so that we get the same result with and without V1Compat
->> Clear( cld.Value); true
+>> Clear( cld.Value)
 true
 
-// ; true on the end so that we get the same result with and without V1Compat
->> Clear( cle.Value); true
+>> Clear( cle.Value)
 true
 
 >> cld
@@ -217,9 +213,8 @@ Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value
 >> Set( rb, First(ra) )
 {Value:Table({Value:1},{Value:2},{Value:3})}
 
-// ; true on the end so that we get the same result with and without V1Compat
->> Remove( rb.Value, {Value:2} ); true
-true
+>> Remove( rb.Value, {Value:2} )
+Blank()
 
 >> rb
 {Value:Table({Value:1},{Value:3})}
@@ -227,9 +222,8 @@ true
 >> Set( rc, Last(ra) )
 {Value:Table({Value:4},{Value:5},{Value:6})}
 
-// ; true on the end so that we get the same result with and without V1Compat
->> Remove( rc.Value, {Value:4} ); true
-true
+>> Remove( rc.Value, {Value:4} )
+Blank()
 
 >> rc
 {Value:Table({Value:5},{Value:6})}
@@ -240,13 +234,11 @@ true
 >> Set( re, Index(ra,2) )
 {Value:Table({Value:4},{Value:5},{Value:6})}
 
-// ; true on the end so that we get the same result with and without V1Compat
->> Remove( rd.Value, {Value:3}); true
-true
+>> Remove( rd.Value, {Value:3})
+Blank()
 
-// ; true on the end so that we get the same result with and without V1Compat
->> Remove( re.Value, {Value:4}); true
-true
+>> Remove( re.Value, {Value:4})
+Blank()
 
 >> rd
 {Value:Table({Value:1},{Value:2})}

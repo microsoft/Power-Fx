@@ -4,7 +4,6 @@
 using System;
 using System.Data;
 using System.Threading;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -29,7 +28,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var r2 = engine.Eval("Set(x, 15)", null, _opts);
 
-            Assert.IsType<VoidValue>(r2);
+            // Set() returns constant 'true;
+            Assert.Equal(true, r2.ToObject());
 
             r1 = engine.Eval("x"); // 15
             Assert.Equal(15m, r1.ToObject());
@@ -71,7 +71,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 var isSuccess = check.GetEvaluator().Eval();
 
-                Assert.IsType<VoidValue>(isSuccess);
+                // Set() returns constant true;
+                Assert.Equal(true, isSuccess.ToObject());
 
                 var result = engine.Eval("x");
                 Assert.Equal(expectedValue, result.ToObject());

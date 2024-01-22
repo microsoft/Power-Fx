@@ -46,9 +46,8 @@ Blank()
 >> Set(t4,[1])
 Table({Value:1})
 
-// ; true on the end so that we get the same result with and without V1Compat
->> Remove(t4,First(t4)); true
-true
+>> Remove(t4,First(t4))
+Blank()
 
 >> 1;t4
 Table()

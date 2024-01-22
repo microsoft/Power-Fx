@@ -163,11 +163,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 TableSyntaxDoesntWrapRecords = true,
                 ConsistentOneColumnTableResult = true,
+                PowerFxV1CompatibilityRules = true,    // although not in Canvas today, mutation tests assume this semantic, which doesn't conflict with what is being tested
             };
 
-            // disable:CoalesceShortCircuit and disable:PowerFxV1CompatibilityRules will force the tests specifically for those behaviors to be excluded from this run.
+            // disable:CoalesceShortCircuit will force the tests specifically for that behavior to be excluded from this run
             // DecimalSupport allows tests that are written with Float and Decimal functions to operate; it is not itself a feature
-            RunMutationTestFile(file, features, "disable:CoalesceShortCircuit,disable:PowerFxV1CompatibilityRules,TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,DecimalSupport");
+            RunMutationTestFile(file, features, "disable:CoalesceShortCircuit,TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,PowerFxV1CompatibilityRules,DecimalSupport");
         }
 
         private void RunMutationTestFile(string file, Features features, string setup)

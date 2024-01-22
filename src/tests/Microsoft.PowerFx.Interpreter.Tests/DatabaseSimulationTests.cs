@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Contains(check.Errors, err => err.IsWarning && err.MessageKey == "WrnSetExpandableType");
 
             var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, symbolValues: symbols.CreateValues()).ConfigureAwait(false);
-            Assert.IsType<VoidValue>(result);
+            Assert.IsType<BooleanValue>(result);
         }
 
         [Theory]

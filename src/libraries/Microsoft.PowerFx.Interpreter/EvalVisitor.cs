@@ -13,7 +13,6 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
@@ -175,7 +174,7 @@ namespace Microsoft.PowerFx
                     if (_symbolValues != null)
                     {
                         _symbolValues.Set(sym, newValue);
-                        return node.IRContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
+                        return FormulaValue.New(true);
                     }
 
                     // This may happen if the runtime symbols are missing a value and we failed to update. 
@@ -266,10 +265,6 @@ namespace Microsoft.PowerFx
 #pragma warning restore CS0618 // Type or member is obsolete
             {
                 result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is IAsyncTexlFunction3 asyncFunc3)
-            {
-                result = await asyncFunc3.InvokeAsync(node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
             }
             else if (func is IAsyncTexlFunction4 asyncFunc4)
             {                

@@ -15,7 +15,7 @@ Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Div0}))
 
 // void values are allowed in With function's argument.
 >> With({y:1}, If(true, {a:1}, "test"))
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
 
 >> With( { x : 5 }, With( ThisRecord, ThisRecord.x + 1 ) )
 6

@@ -1,8 +1,4 @@
 ﻿#SETUP: DecimalSupport
-#SETUP: PowerFxV1CompatibilityRules
-
-// There is no Patch_V1CompatDisabled.txt because running with disable:PowerFxV1CompatilityRules has 
-// many problems in the interpreter and not worth pursuing.
 
 // basic mutations with blanks and coercions
 

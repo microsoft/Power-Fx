@@ -402,7 +402,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(FormulaType.Void, formulaValue.Type);
 
             var resultStr = formulaValue.Dump();
-            Assert.Equal("If(true, {test:1}, \"Void value (result of the expression can't be used).\")", resultStr);
+            Assert.Equal("If(true, {test:1}, \"Mismatched args (result of the expression can't be used).\")", resultStr);
         }
 
         [Theory]
