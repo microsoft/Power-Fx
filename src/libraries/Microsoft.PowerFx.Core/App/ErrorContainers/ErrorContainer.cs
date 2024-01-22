@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
 
         public DocumentErrorSeverity DefaultSeverity => DocumentErrorSeverity.Critical;
 
+        public int Count => CollectionUtils.Size(_errors);
+
         public void MergeErrors(IEnumerable<TexlError> errors)
         {
             if (_errors == null)
