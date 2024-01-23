@@ -1187,6 +1187,46 @@ namespace Microsoft.PowerFx.Functions
             return resultDateTime.UtcDateTime;
         }
 
+        public static FormulaValue UniChar(IRContext irContext, NumberValue[] args)
+        {
+            // Excel floors the input number
+            double number = Math.Floor(args[0].Value);
+
+            // Unicode upper and lower bounds
+            const double lowerBound = 0x1; // Excel returns error for UniChar(0)
+            const double upperBound = 0x10FFFF; // 1114111
+
+            // https://unicode.org/glossary/#surrogate_pair
+            const double surrogateMin = 0xD800; // 55296
+            const double surrogateMax = 0xDFFF; // 57343
+
+            bool isOutOfRange = number < lowerBound || number > upperBound;
+            bool isPartialSurrogate = number >= surrogateMin && number <= surrogateMax;
+
+            if (isOutOfRange)
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = $"Input value {number} falls outside the allowable range",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.InvalidArgument
+                });
+            }
+            
+            if (isPartialSurrogate)
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = $"Input value {number} is an invalid input",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.NotApplicable
+                });
+            }
+            
+            string unicode = char.ConvertFromUtf32((int)number);
+            return new StringValue(irContext, unicode);
+        }
+
         internal static bool TryGetInt(FormulaValue value, out int outputValue)
         {
             double inputValue;

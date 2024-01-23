@@ -226,6 +226,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction TrimT = _library.Add(new TrimTFunction());
         public static readonly TexlFunction Trunc = _library.Add(new TruncFunction());
         public static readonly TexlFunction TruncT = _library.Add(new TruncTableFunction());
+        public static readonly TexlFunction UniChar = _library.Add(new UniCharFunction());
+        public static readonly TexlFunction UniCharT = _library.Add(new UniCharTFunction());
         public static readonly TexlFunction Upper = _library.Add(new LowerUpperFunction(isLower: false));
         public static readonly TexlFunction UpperT = _library.Add(new LowerUpperTFunction(isLower: false));
         public static readonly TexlFunction Value = _library.Add(new ValueFunction());
