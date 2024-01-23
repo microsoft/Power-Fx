@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Functions
 
             var clearFunction = new ClearFunction();
 
-            var cleared = await clearFunction.InvokeAsync(args, cancellationToken).ConfigureAwait(false);
+            var cleared = await clearFunction.InvokeAsync(FormulaType.Void, args, cancellationToken).ConfigureAwait(false);
 
             if (cleared is ErrorValue)
             {
