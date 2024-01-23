@@ -9,8 +9,6 @@ namespace Microsoft.PowerFx.Core.Types
     {
         IExternalControlTemplate ControlTemplate { get; }
 
-        bool IsDataLimitedControl { get; }
-
         bool IsMetaField { get; }
     }
 }
