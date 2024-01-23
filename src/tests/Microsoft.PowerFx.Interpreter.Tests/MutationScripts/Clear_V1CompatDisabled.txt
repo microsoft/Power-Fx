@@ -1,4 +1,6 @@
-﻿>> Set(t1, Table({a:1},{a:2}))
+﻿#SETUP: disable:PowerFxV1CompatibilityRules
+
+>> Set(t1, Table({a:1},{a:2}))
 Table({a:1},{a:2})
 
 >> Clear(t1)

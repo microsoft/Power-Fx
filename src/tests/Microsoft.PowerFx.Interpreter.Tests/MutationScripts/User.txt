@@ -1,3 +1,5 @@
+#SETUP: PowerFxV1CompatibilityRules
+
 // User is immutable, but a copy of User is mutable
 
 >> Set( x, [User] )

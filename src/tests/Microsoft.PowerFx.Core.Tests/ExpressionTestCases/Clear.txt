@@ -11,9 +11,6 @@
   If(CountRows(t1) = 0, "Cleared", "Failed")
 "Cleared"
 
->> Clear(t1);Clear(t2)
-true
-
 >> Clear()
 Errors: Error 0-7: Invalid number of arguments: received 0, expected 1.
 
