@@ -228,6 +228,15 @@ namespace Microsoft.PowerFx.Core.Parser
             return new TypeLiteralNode(ref _idNext, parenOpen, expr, new SourceList(sourceList));
         }
 
+        private bool TryParseAttribute(out DefinitionAttribute attribute)
+        {
+            attribute = null;
+            if (_curs.TidCur != TokKind.BracketOpen)
+            {
+                return false;
+            }
+        }
+
         private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, ParserOptions parserOptions)
         {
             var udfs = new List<UDF>();
@@ -238,6 +247,12 @@ namespace Microsoft.PowerFx.Core.Parser
 
             while (_curs.TokCur.Kind != TokKind.Eof)
             {
+                DefinitionAttribute attribute = null;
+                if (_flagsMode.Peek().HasFlag(Flags.AllowAttributes))
+                {
+                    TryParseAttribute(out attribute);
+                }
+
                 var thisIdentifier = TokEat(TokKind.Ident);
                 if (thisIdentifier == null)
                 {
@@ -284,7 +299,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             continue;
                         }
 
-                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex));
+                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, attribute));
 
                         // If the result was an error, keep moving cursor until end of named formula expression
                         if (result.Kind == NodeKind.Error)
