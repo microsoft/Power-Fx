@@ -4177,4 +4177,8 @@
     <value>La taula no conté cap columna de tipus de text.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Deprecated use of '.'. Please use the 'ShowColumns' function instead.</value>
+    
+  </data>
 </root>

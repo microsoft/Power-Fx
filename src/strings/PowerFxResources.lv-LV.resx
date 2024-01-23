@@ -4177,4 +4177,8 @@
     <value>Tabulā nav nevienas teksta tipa kolonnas.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Novecojis “.” lietojums. Tā vietā, lūdzu, izmantojiet funkciju “ShowColumns”.</value>
+    
+  </data>
 </root>

@@ -4177,4 +4177,8 @@
     <value>Jadual tidak mengandungi sebarang lajur jenis teks.</value>
     
   </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Penamatan penggunaan '.'. Sila gunakan fungsi 'ShowColumns'.</value>
+    
+  </data>
 </root>
