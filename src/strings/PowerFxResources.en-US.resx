@@ -1878,6 +1878,10 @@
     <value>Invalid argument type ({1}). Expecting a {0} value instead.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>A void expression cannot be used in this context.</value>
+    <comment>Error message shown to the user when they try to use a void expression in a function argument that requires a value.</comment>
+  </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
     <value>Invalid argument type. Expecting a {0} value, but of a different schema.</value>
     <comment>Error Message.</comment>

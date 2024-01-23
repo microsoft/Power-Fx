@@ -424,6 +424,49 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("Switch(1, 2, true, 3, {}, 4, [])", "-")] // Mismatched return types: Void result
+        [InlineData("Switch(11;If(true, 123, {}); 1, 2, true, 3, false)", "b")] // Void inside a chain - ok
+        [InlineData("Switch(1, 2, If(1<2, true, 1<3, []), 3, Color.Blue)", "-")] // Void as one of return types: Void result
+        public void TexlFunctionTypeSemanticsSwitch_VoidExpressions(string expression, string expectedType)
+        {
+            foreach (var usePowerFxV1Rules in new[] { false, true })
+            {
+                var features = new Features(Features.PowerFxV1)
+                {
+                    PowerFxV1CompatibilityRules = usePowerFxV1Rules
+                };
+
+                var engine = new Engine(new PowerFxConfig(features));
+                var parserOptions = new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true };
+                var result = engine.Check(expression, parserOptions);
+
+                Assert.True(result.IsSuccess, $"For PFxV1={usePowerFxV1Rules}, expression {expression} should succeed");
+                Assert.Equal(TestUtils.DT(expectedType), result.Binding.ResultType);
+            }
+        }
+
+        [Theory]
+        [InlineData("Switch(If(true, true, {}), true, 1, 2)")]
+        [InlineData("Switch(11;22;If(true, 10;20;If(true, 33, 123;{}), false), true, 1, false, 2)")]
+        [InlineData("Switch(If(1<2, true, 1<3, [], 1<4, {},1<5, Color.Blue), true, true, 1, false, 2)")]
+        public void TexlFunctionTypeSemanticsSwitch_MismatchedTypes_Negative(string expression)
+        {
+            foreach (var usePowerFxV1Rules in new[] { false, true })
+            {
+                var features = new Features(Features.PowerFxV1)
+                {
+                    PowerFxV1CompatibilityRules = usePowerFxV1Rules
+                };
+
+                var engine = new Engine(new PowerFxConfig(features));
+                var parserOptions = new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true };
+                var result = engine.Check(expression, parserOptions);
+
+                Assert.False(result.IsSuccess, $"For PFxV1={usePowerFxV1Rules}, expression {expression} should fail");
+            }
+        }
+
+        [Theory]
         [InlineData("Average(\"3\")")]
         [InlineData("Average(\"3\", 4)")]
         [InlineData("Average(true, 4)")]
