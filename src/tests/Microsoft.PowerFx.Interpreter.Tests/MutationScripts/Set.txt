@@ -69,9 +69,8 @@ Table({Value:1},{Value:2},{Value:3})
 >> Set( cb, ca )
 Table({Value:1},{Value:2},{Value:3})
 
-// ; true on the end so that we get the same result with and without V1Compat
->> Remove( cb, {Value:2} ); true
-true
+>> Remove( cb, {Value:2} )
+Blank()
 
 >> ca // again
 Table({Value:1},{Value:2},{Value:3})
@@ -79,9 +78,8 @@ Table({Value:1},{Value:2},{Value:3})
 >> cb // again
 Table({Value:1},{Value:3})
 
-// ; true on the end so that we get the same result with and without V1Compat
->> Remove( ca, {Value:1} ); true
-true
+>> Remove( ca, {Value:1} )
+Blank()
 
 >> ca // again 2
 Table({Value:2},{Value:3})
@@ -103,8 +101,7 @@ Table({Value:1},{Value:2},{Value:3})
 >> db
 Table({Value:1},{Value:2},{Value:3})
 
-// ; true on the end so that we get the same result with and without V1Compat
->> Clear( da ); true
+>> Clear( da )
 true
 
 >> da // again
@@ -157,8 +154,7 @@ Table({Value:1},{Value:2},{Value:7})
 >> ed // again
 Table({Value:1},{Value:2},{Value:3})
 
-// ; true on the end so that we get the same result with and without V1Compat
->> Clear( ea ); true
+>> Clear( ea )
 true
 
 >> ea // again 2

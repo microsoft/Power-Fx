@@ -21,16 +21,15 @@ namespace Microsoft.PowerFx.Repl.Functions
         private readonly PowerFxREPL _repl;
 
         public ExitFunction(PowerFxREPL repl)
-                : base("Exit", FormulaType.Void)
         {
             _repl = repl;
         }
 
-        public async Task<VoidValue> Execute(CancellationToken cancel)
+        public async Task<BooleanValue> Execute(CancellationToken cancel)
         {
             _repl.ExitRequested = true;
 
-            return FormulaValue.NewVoid();
+            return FormulaValue.New(true);
         }
     }
 }

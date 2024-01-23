@@ -47,39 +47,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var arg in faultyArs)
             {
-                var result = await function.InvokeAsync(FormulaType.Void, new FormulaValue[] { arg }, CancellationToken.None).ConfigureAwait(false);
-
-                if (arg is ErrorValue)
-                {
-                    Assert.IsType<ErrorValue>(result);
-                }
-                else
-                {
-                    Assert.IsType<VoidValue>(result);
-                }
-            }
-        }
-
-        [Fact]
-        public async Task CheckArgsTestAsync_V1CompatDisabled()
-        {
-            var function = new ClearFunction();
-            var expressionError = new ExpressionError()
-            {
-                Kind = ErrorKind.ReadOnlyValue,
-                Severity = ErrorSeverity.Critical,
-                Message = "Something went wrong"
-            };
-
-            var faultyArs = new FormulaValue[]
-            {
-                FormulaValue.NewError(expressionError),
-                FormulaValue.NewBlank()
-            };
-
-            foreach (var arg in faultyArs)
-            {
-                var result = await function.InvokeAsync(FormulaType.Boolean, new FormulaValue[] { arg }, CancellationToken.None).ConfigureAwait(false);
+                var result = await function.InvokeAsync(new FormulaValue[] { arg }, CancellationToken.None).ConfigureAwait(false);
 
                 if (arg is ErrorValue)
                 {

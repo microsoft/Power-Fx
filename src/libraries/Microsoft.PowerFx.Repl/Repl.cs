@@ -285,23 +285,15 @@ namespace Microsoft.PowerFx
                 }
 
                 // pseudo function call
-                if (check.Parse.Root is CallNode cn && _pseudoFunctions.TryGetValue(cn.Head.Name, out var pseudoFunction))
+                if (check.Parse.Root is CallNode cn && _pseudoFunctions.TryGetValue(cn.Head.Name, out var psuedoFunction))
                 {
                     // Foo(expr)
-                    // where Foo() is a pseudo function, get CheckResult for just 'expr' and pass in. 
+                    // where Foo() is a peudo function, get CheckResult for just 'expr' and pass in. 
                     // Inner expr doesn't get access to meta functions. 
                     var innerExpr = cn.Args.ToString();
-                    CheckResult pseudoCheck = this.Engine.Check(innerExpr, options: this.ParserOptions, symbolTable: extraSymbolTable);
+                    CheckResult psuedoCheck = this.Engine.Check(innerExpr, options: this.ParserOptions, symbolTable: extraSymbolTable);
 
-                    try
-                    {
-                        await pseudoFunction.ExecuteAsync(pseudoCheck, this, cancel).ConfigureAwait(false);
-                    }
-                    catch (Exception ex)
-                    {
-                        await this.Output.WriteLineAsync(lineError + ex.Message, OutputKind.Error, cancel)
-                            .ConfigureAwait(false);
-                    }
+                    await psuedoFunction.ExecuteAsync(psuedoCheck, this, cancel).ConfigureAwait(false);
 
                     return new ReplResult();
                 }
@@ -363,14 +355,7 @@ namespace Microsoft.PowerFx
                         var setCheck = this.Engine.Check(rhsExpr, ParserOptions, this.ExtraSymbolValues?.SymbolTable);
                         if (!setCheck.IsSuccess)
                         {
-                            await this.Output.WriteLineAsync($"Error: Failed to initialize '{name}'.", OutputKind.Error, cancel)
-                                .ConfigureAwait(false);
-                            return new ReplResult { CheckResult = setCheck };
-                        }
-
-                        if (setCheck.ReturnType == FormulaType.Void)
-                        {
-                            await this.Output.WriteLineAsync($"Error: Can't set '{name}' to a Void value.", OutputKind.Error, cancel)
+                            await this.Output.WriteLineAsync($"Failed to initialize '{name}'.", OutputKind.Error, cancel)
                                 .ConfigureAwait(false);
                             return new ReplResult { CheckResult = setCheck };
                         }
@@ -470,10 +455,7 @@ namespace Microsoft.PowerFx
                 }
 
                 // Now print the result for this expression
-                if (result is ErrorValue || !(result is VoidValue))
-                {
-                    await this.WriteLineVarAsync(result, cancel);
-                }
+                await this.WriteLineVarAsync(result, cancel);
             }
 
             return replResult;

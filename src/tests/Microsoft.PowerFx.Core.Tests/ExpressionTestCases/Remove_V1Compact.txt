@@ -4,15 +4,15 @@
 // Check MutationFunctionsTestSetup handler (PowerFxEvaluationTests.cs) for documentation.
 
 >> Remove(t2, {Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false}, "All")
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Blank()
 
 >> Collect(t1, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
   Remove(t1, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Blank()
 
 >> Collect(t1, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
   If(true, Remove(t1, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}))
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Blank()
 
 // Remove propagates error.
 >> Remove(t1, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})

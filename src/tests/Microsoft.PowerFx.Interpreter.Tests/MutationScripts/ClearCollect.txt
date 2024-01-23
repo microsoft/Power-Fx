@@ -1,5 +1,4 @@
 ﻿#SETUP: DecimalSupport
-#SETUP: PowerFxV1CompatibilityRules
 
 >> Set(t1, Table({a:1},{a:2},{a:3}))
 Table({a:1},{a:2},{a:3})

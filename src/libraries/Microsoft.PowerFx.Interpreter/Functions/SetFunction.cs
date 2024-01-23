@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Interpreter
               "Set",
               TexlStrings.AboutSet,
               FunctionCategories.Behavior,
-              DType.Unknown,
+              DType.Boolean,
               0, // no lambdas
               2,
               2)
@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Interpreter
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             nodeToCoercedTypeMap = null;
-            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.Void : DType.Boolean;
+            returnType = DType.Boolean;
 
             var isValid = CheckType(context, args[1], argTypes[1], argTypes[0], errors, ref nodeToCoercedTypeMap);
 
