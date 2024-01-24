@@ -229,8 +229,9 @@ Boy: I wonder where I'll float next?
         private static async Task<OpenApiDocument> ReadSwaggerFromUrl(string url, ITestOutputHelper output)
         {
             using HttpClient http = new HttpClient();
-            using Stream stream = await http.GetStreamAsync(new Uri(url)).ConfigureAwait(false);
-            ReadResult rr = await new OpenApiStreamReader().ReadAsync(stream, CancellationToken.None).ConfigureAwait(false);
+            using Stream stream = await http.GetStreamAsync(new Uri(url)).ConfigureAwait(false);         
+            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = ConnectorFunction.DefaultValidationRuleSet };
+            ReadResult rr = await new OpenApiStreamReader(oars).ReadAsync(stream, CancellationToken.None).ConfigureAwait(false);
             OpenApiDiagnostic diag = rr.OpenApiDiagnostic;
             OpenApiDocument doc = rr.OpenApiDocument;
 

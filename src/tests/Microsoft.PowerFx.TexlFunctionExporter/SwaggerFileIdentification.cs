@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Models;
@@ -38,7 +39,7 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
             SwaggerLocatorSettings settings = locatorSettings ?? new SwaggerLocatorSettings();
 
             IEnumerable<(string folder, string file)> files = folders.SelectMany(folder => Directory.EnumerateFiles(folder, pattern, new EnumerationOptions() { RecurseSubdirectories = true }).Select(f => (folder, file: f)))
-                                                                     .Where(f => settings.FoldersToExclude.All(fte => f.file.IndexOf(fte, 0, StringComparison.OrdinalIgnoreCase) < 0));
+                                                                     .Where(f => settings.FoldersToExclude.All(fte => f.file.IndexOf(fte, 0, StringComparison.OrdinalIgnoreCase) < 0));                                                                     
 
             // items: <connector title, (source folder, swagger location, OpenApiDocument)>
             Dictionary<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>> list = new (StringComparer.OrdinalIgnoreCase);
@@ -192,6 +193,20 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
             }
 
             return (doc, errors);
+        }
+
+        internal static ValidationRuleSet DefaultValidationRuleSet
+        {
+            get
+            {
+                IList<ValidationRule> rules = ValidationRuleSet.GetDefaultRuleSet().Rules;
+
+                // OpenApiComponentsRules.KeyMustBeRegularExpression is the only rule with this type
+                var keyMustBeRegularExpression = rules.First(r => r.GetType() == typeof(ValidationRule<OpenApiComponents>));
+                rules.Remove(keyMustBeRegularExpression);
+
+                return new ValidationRuleSet(rules);
+            }
         }
     }
 
