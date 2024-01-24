@@ -294,6 +294,20 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Empty(tfs.WithNamespace(DPath.Root));
         }
 
+        [Fact]
+        public void TestScopeArguments()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Assert.Equal(i % 2 == 1, BuiltinFunctionsCore.AddColumns.ScopeInfo.AppliesToArgument(i));
+                Assert.Equal(i > 0, BuiltinFunctionsCore.RenameColumns.ScopeInfo.AppliesToArgument(i));
+                Assert.Equal(i > 0, BuiltinFunctionsCore.ShowColumns.ScopeInfo.AppliesToArgument(i));
+                Assert.Equal(i > 0, BuiltinFunctionsCore.DropColumns.ScopeInfo.AppliesToArgument(i));
+                Assert.Equal(i > 1, BuiltinFunctionsCore.Search.ScopeInfo.AppliesToArgument(i));
+                Assert.Equal(i % 2 == 1, BuiltinFunctionsCore.SortByColumns.ScopeInfo.AppliesToArgument(i));
+            }
+        }
+
         private class TestTexlFunction : TexlFunction
         {
             private readonly int _requiredEnums = 0;
