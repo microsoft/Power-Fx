@@ -402,8 +402,8 @@
     <value>Novo nome da columna.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>A columna "{0}" especificada non se pode renomear dúas veces.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Devolve as filas da táboa nas que todas as condicións especificadas son verdadeiras.</value>
@@ -1076,7 +1076,7 @@
           
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Número de meses en función dos que se vai cambiar de data. Un valor positivo xera unha data futura, un valor negativo xera unha data pasada e o cero non modifica o mes.</value>
+    <value>Número de meses en función dos que se vai cambiar de data. Un valor positivo xera unha data futura, un valor negativo xera unha data pasada e o cero non modifica o mes.</value>
          
   </data>
   <data name="AboutInt" xml:space="preserve">
@@ -1704,6 +1704,38 @@
     <value>separador</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Enumera e devolve os nomes das columnas dun rexistro sen tipo.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>rexistro</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Rexistro cuxas columnas se van enumerar.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Devolve o valor dunha propiedade dun rexistro sen tipo ao indicar o nome da columna.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>rexistro</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>nome_da_columna</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Rexistro cuxo valor de columna se vai recuperar.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Nome da columna do rexistro que se vai recuperar.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Devolve verdadeiro se o valor proporcionado é do tipo indicado.</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Tipo de argumento non válido ({1}). Esperábase un valor {0} no seu lugar.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>A void expression cannot be used in this context.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>Especificouse un campo denominado "{0}" máis dunha vez neste rexistro.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>A columna "{0}" especificada non se pode renomear dúas veces.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Especificouse unha columna denominada '{0}' máis dunha vez.</value>
     
@@ -2370,35 +2402,52 @@
     <value>Punteiro JSON non válido.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Ningún</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Texto</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Lóxica</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Táboa</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Comportamento</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Data e hora</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matemáticas e estatística</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Definido polo usuario</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Información</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Cor</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Servizos</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Compoñente</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -4134,7 +4183,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>A función JSON non pode serializar datos binarios na expresión non conductual.</value>    
+    <value>A función JSON non pode serializar datos binarios na expresión non condutual.</value>    
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>O parámetro {0} contén unha propiedade de tipo {1} que non é compatible.</value>
@@ -4176,5 +4225,35 @@
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>A táboa non contén ningunha columna de tipo texto.</value>
     
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>O uso de "." quedou obsoleto. No seu lugar, empregue a función "ShowColumns".</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Exención de responsabilidade:** O contido xerado pola IA pode ter erros. Asegúrese de que é pertinente e apropiado antes de usalo. [Consulte as condicións de uso](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Returns the Unicode character that is referenced by the given numeric value.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Numeric value to be converted into a Unicode character.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>number</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Converts a table of numeric values to a table of Unicode characters.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>column_of_numbers</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>A table column of numeric values to be converted into Unicode characters.</value>
   </data>
 </root>

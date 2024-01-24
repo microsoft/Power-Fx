@@ -402,8 +402,8 @@
     <value>列の新しい名前。</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>指定された列 '{0}' の名前を 2 回変更することはできません。</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>指定の条件すべてが True となるテーブルの行を返します。</value>
@@ -1076,7 +1076,7 @@
           
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;日付の変更に適用する月数です。正の値を指定すると未来の日付に、負の値を指定すると過去の日付に変わります。ゼロを指定すると月は変わりません。</value>
+    <value>日付を変更する月数。正の値は未来の日付、負の値は過去の日付になり、ゼロは月を変更しません。</value>
          
   </data>
   <data name="AboutInt" xml:space="preserve">
@@ -1704,6 +1704,38 @@
     <value>区切り記号</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>型指定されていないレコードの列名を列挙して返します。</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>レコード</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>列を列挙するレコードです。</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>列名が指定された、型指定されていないレコードのプロパティの値を返します。</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>レコード</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>列名</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>列の値を取得するレコードです。</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>取得するレコードの列の名前です。</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>指定された値が、指定された型である場合は true を返します。</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>無効な引数の型です ({1})。代わりに、{0} 値が必要です。</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>A void expression cannot be used in this context.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>このレコードの中で '{0}' という名前のフィールドが複数回指定されました。</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>指定された列 '{0}' の名前を 2 回変更することはできません。</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>'{0}' という列が 2 回以上指定されました。</value>
     
@@ -2370,35 +2402,52 @@
     <value>無効な json のポインター。</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>なし</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>テキスト</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>論理</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>テーブル</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>動作</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
-    <value>日付/時刻</value>
+    <value>日付と時刻</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>数学 &amp; 統計</value>
+    <value>数学と統計</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>ユーザーによる定義</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>情報</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>色</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>サービス</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>コンポーネント</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -4176,5 +4225,35 @@
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>テーブルにテキスト型の列が含まれていません。</value>
     
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>「.」の使用は廃止されました。代わりに 'ShowColumns' 関数を使用してください。</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**免責事項:** AIが生成したコンテンツには間違いがある可能性があります。使用する前に、正確で適切であることを確認してください。[使用条件を見る](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Returns the Unicode character that is referenced by the given numeric value.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Numeric value to be converted into a Unicode character.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>number</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Converts a table of numeric values to a table of Unicode characters.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>column_of_numbers</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>A table column of numeric values to be converted into Unicode characters.</value>
   </data>
 </root>

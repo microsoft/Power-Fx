@@ -402,8 +402,8 @@
     <value>Kolonnens nye navn.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Den angivne kolonne '{0}' kan ikke omdøbes to gange.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Returnerer rækker fra tabellen, for hvilke alle de angivne betingelser er sande.</value>
@@ -1076,7 +1076,7 @@
           
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Det antal måneder, datoen skal ændres med. En positiv værdi giver en fremtidig dato, en negativ værdi en tidligere dato og nul ændrer ikke måneden.</value>
+    <value>Det antal måneder, datoen skal ændres med. En positiv værdi giver en fremtidig dato, en negativ værdi giver en tidligere dato, og nul ændrer ikke måneden.</value>
          
   </data>
   <data name="AboutInt" xml:space="preserve">
@@ -1704,6 +1704,38 @@
     <value>separator</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Optæl og returnerer kolonnenavnene for en ikke-skrevet post.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>post</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Post, der skal have kolonnerne optalt.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Returnerer værdien af en egenskab for en ikke-indtastet post under navnet på kolonnen.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>post</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>kolonne_navn</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Post, der skal hente en kolonneværdi.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Navnet på kolonnen til den post, der skal hentes.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Returnerer Sand, hvis den angivne værdi er af den givne type.</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Ugyldig argumenttype ({1}). Forventer en {0}-værdi i stedet.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>A void expression cannot be used in this context.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>Et felt med navnet '{0}' blev angivet mere end én gang i denne post.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Den angivne kolonne '{0}' kan ikke omdøbes to gange.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>En kolonne med navnet '{0}' blev angivet mere end én gang.</value>
     
@@ -2370,35 +2402,52 @@
     <value>Ugyldig json-markør.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Ingen</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Tekst</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logisk</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Tabel</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Adfærd</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Dato og klokkeslæt</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Matematik og statistisk</value>
+    <value>Matematisk og statistisk</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Defineret af brugeren</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Oplysninger</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Farve</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Tjenester</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Komponent</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -4176,5 +4225,35 @@
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Tabel indeholder ikke nogen teksttypekolonner.</value>
     
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Udfaset brug af '.'. Brug i stedet 'ShowColumns'-funktionen.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Ansvarsfraskrivelse:** AI-genereret indhold kan indeholde fejl. Kontrollér, at det er nøjagtigt og relevant, før du bruger det. [Se vilkår](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Returns the Unicode character that is referenced by the given numeric value.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Numeric value to be converted into a Unicode character.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>number</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Converts a table of numeric values to a table of Unicode characters.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>column_of_numbers</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>A table column of numeric values to be converted into Unicode characters.</value>
   </data>
 </root>

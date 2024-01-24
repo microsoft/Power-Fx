@@ -402,8 +402,8 @@
     <value>Tên mới cho cột.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Không thể đặt lại tên hai lần cho cột '{0}' được chỉ định.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Trả về các hàng từ bảng mà theo đó tất cả các điều kiện được chỉ định đều đúng.</value>
@@ -1076,7 +1076,7 @@
           
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Số tháng để thay đổi ngày. Giá trị dương sẽ cho ra một ngày trong tương lai, giá trị âm sẽ cho ra một ngày trong quá khứ và số 0 sẽ giữ nguyên tháng.</value>
+    <value>Số tháng để thay đổi ngày. Giá trị dương sẽ cho ra một ngày trong tương lai, giá trị âm sẽ cho ra một ngày trong quá khứ và số 0 sẽ giữ nguyên tháng.</value>
          
   </data>
   <data name="AboutInt" xml:space="preserve">
@@ -1704,6 +1704,38 @@
     <value>dấu_tách</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Liệt kê và trả về tên cột của một bản ghi chưa được nhập.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>bản ghi</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Bản ghi có các cột được liệt kê.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Trả về giá trị một thuộc tính của một bản ghi chưa được nhập, với tên cột đã cho.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>bản ghi</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>tên_cột</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Bản ghi để truy xuất giá trị cột.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Tên cột của bản ghi sẽ được truy xuất.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Trả về true nếu giá trị được cung cấp thuộc loại đã cho.</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Loại đối số không hợp lệ ({1}). Dự kiến một giá trị {0} thay vào đó.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>A void expression cannot be used in this context.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>Một trường có tên là '{0}' được chỉ định nhiều lần trong bản ghi này.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Không thể đặt lại tên hai lần cho cột '{0}' được chỉ định.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Đã chỉ định cột có tên là '{0}' nhiều lần.</value>
     
@@ -2370,35 +2402,52 @@
     <value>Con trỏ json không hợp lệ.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Không có</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Văn bản</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Lô-gic</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Bảng</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Hành vi</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
-    <value>Ngày và giờ</value>
+    <value>Ngày và giờ</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Toán học &amp; Thống kê</value>
+    <value>Toán học và thống kê</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Được xác định bởi người dùng</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Thông tin</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Màu</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Dịch vụ</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Thành phần</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -4176,5 +4225,35 @@
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Bảng không chứa bất kỳ cột nào thuộc loại văn bản.</value>
     
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Ngừng sử dụng ".". Thay vào đó, hãy sử dụng hàm "ShowColumns".</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Tuyên bố từ chối trách nhiệm:** Nội dung do trí tuệ nhân tạo tạo có thể có lỗi. Hãy đảm bảo rằng nội dung này chính xác và phù hợp trước khi sử dụng. [Đọc điều khoản](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Returns the Unicode character that is referenced by the given numeric value.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Numeric value to be converted into a Unicode character.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>number</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Converts a table of numeric values to a table of Unicode characters.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>column_of_numbers</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>A table column of numeric values to be converted into Unicode characters.</value>
   </data>
 </root>

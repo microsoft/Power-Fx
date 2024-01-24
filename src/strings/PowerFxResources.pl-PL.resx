@@ -402,8 +402,8 @@
     <value>Nowa nazwa dla kolumny.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Nazwy określonej kolumny „{0}” nie można zmienić dwa razy.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Zwraca wiersze z tabeli, dla której wszystkie określone warunki zostały spełnione.</value>
@@ -1704,6 +1704,38 @@
     <value>separator</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Wylicza i zwraca nazwy kolumn rekordu bez typu.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>rekord</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Rekord, którego kolumny mają zostać wyliczone.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Zwraca wartość właściwości rekordu bez typu dla danej nazwy kolumny.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>rekord</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>nazwa_kolumny</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Rekord, dla którego ma zostać pobrana wartość kolumny.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Nazwa kolumny rekordu do pobrania.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Zwraca wartość true, jeśli podana wartość jest danego typu.</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Nieprawidłowy typ argumentu ({1}). Oczekiwana jest wartość {0}.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>Wyrażenia typu void nie można użyć w tym kontekście.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>Pole o nazwie „{0}” zostało określone więcej niż jeden raz w tym rekordzie.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Nazwy określonej kolumny „{0}” nie można zmienić dwa razy.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Kolumna o nazwie „{0}” została określona więcej niż jeden raz.</value>
     
@@ -2370,35 +2402,52 @@
     <value>Nieprawidłowy wskaźnik JSON.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Brak</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Tekst</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logiczna</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Tabela</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Zachowanie</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Data i godzina</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Matematyczna i statystyczna</value>
+    <value>Matematyczne i statystyczne</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Zdefiniowane przez użytkownika</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informacje</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Kolor</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Usługi</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Składnik</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -4176,5 +4225,35 @@
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Tabela nie zawiera żadnej kolumny typu tekstowego.</value>
     
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Przestarzałe użycie znaku „.”. Użyj w zamian funkcji „ShowColumns”.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Zastrzeżenie:** Zawartość wygenerowana przez sztuczną inteligencję może zawierać błędy. Zanim jej użyjesz, upewnij się, że jest dokładna i odpowiednia. [Zobacz postanowienia](https://go.microsoft.com/fwlink/?linkid=2225491).</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Returns the Unicode character that is referenced by the given numeric value.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Numeric value to be converted into a Unicode character.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>number</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Converts a table of numeric values to a table of Unicode characters.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>column_of_numbers</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>A table column of numeric values to be converted into Unicode characters.</value>
   </data>
 </root>
