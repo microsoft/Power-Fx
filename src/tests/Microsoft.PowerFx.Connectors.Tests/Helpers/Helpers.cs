@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
+using Microsoft.PowerFx.Connectors;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -56,8 +57,9 @@ namespace Microsoft.PowerFx.Tests
         // Get a swagger file from the embedded resources. 
         public static OpenApiDocument ReadSwagger(string name, ITestOutputHelper output)
         {
-            using var stream = GetStream(name);
-            OpenApiDocument doc = new OpenApiStreamReader().Read(stream, out OpenApiDiagnostic diag);
+            using var stream = GetStream(name);            
+            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = ConnectorFunction.DefaultValidationRuleSet };
+            OpenApiDocument doc = new OpenApiStreamReader(oars).Read(stream, out OpenApiDiagnostic diag);
 
             if (diag != null && diag.Errors.Count > 0)
             {

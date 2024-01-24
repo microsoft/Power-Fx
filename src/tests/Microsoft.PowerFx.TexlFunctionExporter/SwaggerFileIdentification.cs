@@ -3,11 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Readers.Exceptions;
+using Microsoft.OpenApi.Validations;
 
 namespace Microsoft.PowerFx.TexlFunctionExporter
 {
@@ -33,7 +35,7 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
             SwaggerLocatorSettings settings = locatorSettings ?? new SwaggerLocatorSettings();
 
             IEnumerable<(string folder, string file)> files = folders.SelectMany(folder => Directory.EnumerateFiles(folder, pattern, new EnumerationOptions() { RecurseSubdirectories = true }).Select(f => (folder, file: f)))
-                                                                     .Where(f => settings.FoldersToExclude.All(fte => f.file.IndexOf(fte, 0, StringComparison.OrdinalIgnoreCase) < 0));
+                                                                     .Where(f => settings.FoldersToExclude.All(fte => f.file.IndexOf(fte, 0, StringComparison.OrdinalIgnoreCase) < 0));                                                                     
 
             // items: <connector title, (source folder, swagger location, OpenApiDocument)>
             Dictionary<string, List<(string folder, string location, OpenApiDocument document)>> list = new (StringComparer.OrdinalIgnoreCase);
@@ -144,6 +146,20 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
         {
             using FileStream stream = File.OpenRead(name);
             return new OpenApiStreamReader().Read(stream, out OpenApiDiagnostic diag);
+        }
+
+        internal static ValidationRuleSet DefaultValidationRuleSet
+        {
+            get
+            {
+                IList<ValidationRule> rules = ValidationRuleSet.GetDefaultRuleSet().Rules;
+
+                // OpenApiComponentsRules.KeyMustBeRegularExpression is the only rule with this type
+                var keyMustBeRegularExpression = rules.First(r => r.GetType() == typeof(ValidationRule<OpenApiComponents>));
+                rules.Remove(keyMustBeRegularExpression);
+
+                return new ValidationRuleSet(rules);
+            }
         }
     }
 

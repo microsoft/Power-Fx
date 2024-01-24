@@ -187,8 +187,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         private OpenApiDocument GetOpenApiDocument(string str)
-        {
-            OpenApiDocument doc = new OpenApiStringReader().Read(str, out OpenApiDiagnostic diag);
+        {           
+            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = ConnectorFunction.DefaultValidationRuleSet };
+            OpenApiDocument doc = new OpenApiStringReader(oars).Read(str, out OpenApiDiagnostic diag);
 
             if (doc == null || (diag != null && diag.Errors.Count > 0))
             {
