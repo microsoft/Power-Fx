@@ -3468,13 +3468,6 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
-                    // Explicitly block access to design properties referenced via Selected/AllItems.
-                    if (leftControl.IsDataLimitedControl && property.PropertyCategory != PropertyRuleCategory.Data)
-                    {
-                        SetDottedNameError(node, TexlStrings.ErrNotAccessibleInCurrentContext);
-                        return;
-                    }
-
                     // For properties requiring default references, block non-defaultable properties
                     if (_txb.CurrentPropertyRequiresDefaultableReferences && property.UnloadedDefault == null)
                     {

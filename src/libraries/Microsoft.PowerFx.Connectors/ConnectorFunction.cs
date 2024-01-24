@@ -12,12 +12,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Validations;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
-using SharpYaml.Tokens;
 using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
@@ -699,7 +699,8 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             JsonElement je = ExtractFromJson(sv, cds.ValuePath);
-            OpenApiSchema schema = new OpenApiStringReader().ReadFragment<OpenApiSchema>(je.ToString(), Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
+            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
+            OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
             ConnectorType connectorType = new ConnectorType(schema, ConnectorSettings.Compatibility);
 
             if (connectorType.HasErrors)
@@ -732,8 +733,9 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            JsonElement je = ExtractFromJson(sv, cdp.ItemValuePath);
-            OpenApiSchema schema = new OpenApiStringReader().ReadFragment<OpenApiSchema>(je.ToString(), Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
+            JsonElement je = ExtractFromJson(sv, cdp.ItemValuePath);            
+            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
+            OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
             ConnectorType connectorType = new ConnectorType(schema, ConnectorSettings.Compatibility);
 
             if (connectorType.HasErrors)
@@ -746,6 +748,20 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return connectorType;
+        }
+
+        internal static ValidationRuleSet DefaultValidationRuleSet
+        {
+            get
+            {
+                IList<ValidationRule> rules = ValidationRuleSet.GetDefaultRuleSet().Rules;
+
+                // OpenApiComponentsRules.KeyMustBeRegularExpression is the only rule with this type
+                var keyMustBeRegularExpression = rules.First(r => r.GetType() == typeof(ValidationRule<OpenApiComponents>));
+                rules.Remove(keyMustBeRegularExpression);
+
+                return new ValidationRuleSet(rules);
+            }
         }
 
         private async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsFromDynamicValueAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicValue cdv, CancellationToken cancellationToken)
