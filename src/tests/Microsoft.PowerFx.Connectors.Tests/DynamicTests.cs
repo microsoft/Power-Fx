@@ -42,8 +42,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 // lock managed by XUnit
                 if (!skip)
                 {
-                    using WebClient webClient = new WebClient();
-                    doc = new OpenApiStreamReader().Read(webClient.OpenRead(SwaggerFile), out var diag);
+                    using WebClient webClient = new WebClient();                    
+                    OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = ConnectorFunction.DefaultValidationRuleSet };
+                    doc = new OpenApiStreamReader(oars).Read(webClient.OpenRead(SwaggerFile), out var diag);
 
                     if (diag != null && diag.Errors.Count > 0)
                     {
