@@ -180,7 +180,7 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
 
     public static class YamlComparer
     {
-        internal static Dictionary<Type, (PropertyInfo[], FieldInfo[])> Cache = new();
+        internal static Dictionary<Type, (PropertyInfo[], FieldInfo[])> Cache = new ();
 
         public static IReadOnlyList<string> Compare<T>(T leftObject, T rightObject, string leftDescription, string rightDescription)
         {
