@@ -300,7 +300,7 @@ namespace Microsoft.PowerFx.Core.Tests
             for (int i = 0; i < 10; i++)
             {
                 Assert.Equal(i % 2 == 1, BuiltinFunctionsCore.AddColumns.ScopeInfo.AppliesToArgument(i));
-                Assert.Equal(i > 0, BuiltinFunctionsCore.RenameColumns.ScopeInfo.AppliesToArgument(i));
+                Assert.Equal(i % 2 == 1, BuiltinFunctionsCore.RenameColumns.ScopeInfo.AppliesToArgument(i));
                 Assert.Equal(i > 0, BuiltinFunctionsCore.ShowColumns.ScopeInfo.AppliesToArgument(i));
                 Assert.Equal(i > 0, BuiltinFunctionsCore.DropColumns.ScopeInfo.AppliesToArgument(i));
                 Assert.Equal(i > 1, BuiltinFunctionsCore.Search.ScopeInfo.AppliesToArgument(i));
