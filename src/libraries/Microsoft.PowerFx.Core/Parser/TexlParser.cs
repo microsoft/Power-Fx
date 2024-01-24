@@ -426,7 +426,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     // = or ( expected here
                     ErrorTid(_curs.TokCur, TokKind.Equ);
-                    break;
+                    MoveToNextUserDefinition();
                 }
             }
 
