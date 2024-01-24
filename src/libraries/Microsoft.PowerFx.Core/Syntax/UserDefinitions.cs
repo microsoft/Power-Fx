@@ -47,6 +47,11 @@ namespace Microsoft.PowerFx.Syntax
         /// <returns><see cref="ParseUserDefinitionResult"/>.</returns>
         public static ParseUserDefinitionResult Parse(string script, ParserOptions parserOptions)
         {
+            if (parserOptions.AllowAttributes)
+            {
+                return TexlParser.ParseUserDefinitionScriptWithAttributes(script, parserOptions);
+            }
+
             return TexlParser.ParseUserDefinitionScript(script, parserOptions);
         }
 

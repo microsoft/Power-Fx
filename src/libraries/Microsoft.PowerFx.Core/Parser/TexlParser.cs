@@ -228,13 +228,39 @@ namespace Microsoft.PowerFx.Core.Parser
             return new TypeLiteralNode(ref _idNext, parenOpen, expr, new SourceList(sourceList));
         }
 
-        private bool TryParseAttribute(out DefinitionAttribute attribute)
-        {
-            attribute = null;
+        private DefinitionAttribute MaybeParseAttribute()
+        {            
             if (_curs.TidCur != TokKind.BracketOpen)
             {
-                return false;
+                return null;
             }
+
+            _curs.TokMove();
+            ParseTrivia();
+
+            var attributeName = TokEat(TokKind.Ident);
+            if (attributeName == null)
+            {
+                CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingValue);
+                _curs.TokMove();
+                return null;
+            }
+
+            ParseTrivia();
+
+            var attributeOp = TokEat(TokKind.Ident);
+            if (attributeOp == null)
+            {
+                CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingValue);
+                _curs.TokMove();
+                return null;
+            }
+
+            ParseTrivia();
+            TokEat(TokKind.BracketClose);
+            ParseTrivia();
+
+            return new DefinitionAttribute(attributeName.As<IdentToken>(), attributeOp.As<IdentToken>());
         }
 
         private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, ParserOptions parserOptions)
@@ -250,7 +276,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 DefinitionAttribute attribute = null;
                 if (_flagsMode.Peek().HasFlag(Flags.AllowAttributes))
                 {
-                    TryParseAttribute(out attribute);
+                    attribute = MaybeParseAttribute();
                 }
 
                 var thisIdentifier = TokEat(TokKind.Ident);
