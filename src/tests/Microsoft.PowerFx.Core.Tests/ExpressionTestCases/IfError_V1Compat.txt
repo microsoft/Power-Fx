@@ -4,15 +4,15 @@
 Time(12,0,0,0)
 
 >> IfError(1, {x:1}, {x:1}, {y:1}, 1)
-If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+If(true, {test:1}, "Void value (result of the expression can't be used).")
 
 // IfError can have mismatched arg types, but result can't be used.
 >> IfError(1/0, 1, {x:4})
-If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+If(true, {test:1}, "Void value (result of the expression can't be used).")
 
 // IfError accepts the void value. But then result of the expression can't be used. If(true, 1, {x:4}) => void value.
 >> IfError(1/0, 1, If(true, 1, {x:4}), 1)
-If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+If(true, {test:1}, "Void value (result of the expression can't be used).")
 
 // Errors are still returned.
 >> IfError(1, 2, 3/0, If(true, 1/0, {x:4}))
@@ -20,7 +20,7 @@ Error({Kind:ErrorKind.Div0})
 
 // Error is not returned.
 >> IfError(1, 2, 3/0, If(false, 1/0, {x:4}))
-If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+If(true, {test:1}, "Void value (result of the expression can't be used).")
 
 >> IfError(1, a)
 Errors: Error 11-12: Name isn't valid. 'a' isn't recognized.|Error 0-13: The function 'IfError' has some invalid arguments.

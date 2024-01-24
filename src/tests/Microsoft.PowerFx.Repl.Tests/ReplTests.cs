@@ -557,29 +557,29 @@ Notify(z)
 
             _repl.Echo = true;
             _repl.PrintResult = false;
-            _repl.HandleCommandAsync(@"Notify( 2345 )").Wait();
+            _repl.HandleCommandAsync(@"Notify( 2345 );true").Wait();
             Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"2345
 ");
-            Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"Notify( 2345 )
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"Notify( 2345 );true
 ");
             Assert.True(_output.Get(OutputKind.Control, trim: false) == @"
 >> ");
 
             _repl.Echo = false;
             _repl.PrintResult = true;
-            _repl.HandleCommandAsync(@"Notify( 3456 )").Wait();
+            _repl.HandleCommandAsync(@"Notify( 3456 );false").Wait();
             Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"3456
 ");
-            Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"true
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"false
 ");
             Assert.True(_output.Get(OutputKind.Control, trim: false) == string.Empty);
 
             _repl.Echo = true;
             _repl.PrintResult = true;
-            _repl.HandleCommandAsync(@"Notify( 4567 )").Wait();
+            _repl.HandleCommandAsync(@"Notify( 4567 );true").Wait();
             Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"4567
 ");
-            Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"Notify( 4567 )
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"Notify( 4567 );true
 true
 ");
             Assert.True(_output.Get(OutputKind.Control, trim: false) == @"

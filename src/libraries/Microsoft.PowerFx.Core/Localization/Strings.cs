@@ -549,6 +549,24 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter SearchArg2 = (b) => StringResources.Get("SearchArg2", b);
         public static StringGetter SearchArg3 = (b) => StringResources.Get("SearchArg3", b);
 
+        public static StringGetter None = (b) => StringResources.Get("None", b);
+        public static StringGetter Text = (b) => StringResources.Get("Text", b);
+        public static StringGetter Logical = (b) => StringResources.Get("Logical", b);
+        public static StringGetter Table = (b) => StringResources.Get("Table", b);
+        public static StringGetter Behavior = (b) => StringResources.Get("Behavior", b);
+        public static StringGetter DateTime = (b) => StringResources.Get("DateTime", b);
+        public static StringGetter MathAndStat = (b) => StringResources.Get("MathAndStat", b);
+        public static StringGetter Information = (b) => StringResources.Get("Information", b);
+        public static StringGetter Color = (b) => StringResources.Get("Color", b);
+        public static StringGetter REST = (b) => StringResources.Get("REST", b);
+        public static StringGetter Component = (b) => StringResources.Get("Component", b);
+        public static StringGetter UserDefined = (b) => StringResources.Get("UserDefined", b);
+
+        public static StringGetter AboutUniChar = (b) => StringResources.Get("AboutUniChar", b);
+        public static StringGetter UniCharArg1 = (b) => StringResources.Get("UniCharArg1", b);
+        public static StringGetter AboutUniCharT = (b) => StringResources.Get("AboutUniCharT", b);
+        public static StringGetter UniCharTArg1 = (b) => StringResources.Get("UniCharTArg1", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -586,6 +604,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrBadType_ExpectedType = new ErrorResourceKey("ErrBadType_ExpectedType");
         public static ErrorResourceKey ErrBadType_ExpectedTypesCSV = new ErrorResourceKey("ErrBadType_ExpectedTypesCSV");
         public static ErrorResourceKey ErrBadType_ExpectedType_ProvidedType = new ErrorResourceKey("ErrBadType_ExpectedType_ProvidedType");
+        public static ErrorResourceKey ErrBadType_VoidExpression = new ErrorResourceKey("ErrBadType_VoidExpression");
         public static ErrorResourceKey ErrBadSchema_ExpectedType = new ErrorResourceKey("ErrBadSchema_ExpectedType");
         public static ErrorResourceKey ErrInvalidArgs_Func = new ErrorResourceKey("ErrInvalidArgs_Func");
         public static ErrorResourceKey ErrNeedTable_Func = new ErrorResourceKey("ErrNeedTable_Func");

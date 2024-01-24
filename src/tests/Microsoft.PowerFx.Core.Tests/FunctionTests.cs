@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Numerics;
 using Microsoft.PowerFx.Core.Functions;
@@ -33,6 +34,17 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     Assert.True(function.TryGetParamDescription(paramName, out var descr), "Missing parameter description. Please add the following to Resources.pares: " + "About" + function.LocaleInvariantName + "_" + paramName);
                 }
+            }
+        }
+
+        [Fact]
+        public void FunctionCategoriesResourcesTest()
+        {
+            foreach (FunctionCategories category in Enum.GetValues(typeof(FunctionCategories)))
+            {
+                // Ensure that all categories have an equivalent resource
+                var resource = StringResources.Get(category.ToString(), "en-US");
+                Assert.NotNull(resource);
             }
         }
 
