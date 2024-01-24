@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         tableType,
                         argType,
                         context.Features,
-                        coerceToLeftTypeOnly: context.Features.StronglyTypedBuiltinEnums || context.Features.PowerFxV1CompatibilityRules,
+                        coerceToLeftTypeOnly: true,
                         out var newType,
                         out bool coercionNeeded))
                     {
