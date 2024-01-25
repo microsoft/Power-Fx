@@ -583,7 +583,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             SwaggerLocatorSettings swaggerLocationSettings = folderExclusionIndex == 0 ? null : new SwaggerLocatorSettings(new List<string>());
             ConsoleLogger logger = new ConsoleLogger(_output);
-            ConnectorSettings connectorSettings = new ConnectorSettings("FakeNamespace")
+            ConnectorSettings connectorSettings = new ConnectorSettings("NS")
             {
                 AllowUnsupportedFunctions = true,
                 IncludeInternalFunctions = true,
