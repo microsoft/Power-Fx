@@ -554,7 +554,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 #if GENERATE_CONNECTOR_STATS
         [Theory]        
 #else
-        [Theory] //(Skip = "Need files from AAPT-connector, PowerPlatformConnectors and Power-Fx-TexlFunctions-Baseline projects")]
+        [Theory(Skip = "Need files from AAPT-connector, PowerPlatformConnectors and Power-Fx-TexlFunctions-Baseline projects")]
 #endif
         [TestPriority(1)]
         [InlineData("Library")] // Default Power-Fx library
@@ -632,7 +632,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 #if GENERATE_CONNECTOR_STATS
         [Fact]        
 #else
-        [Fact] //(Skip = "Need files from AAPT-connector, PowerPlatformConnectors and Power-Fx-TexlFunctions-Baseline projects")]
+        [Fact(Skip = "Need files from AAPT-connector, PowerPlatformConnectors and Power-Fx-TexlFunctions-Baseline projects")]
 #endif
 
         // Executes after GenerateYamlFiles
@@ -729,8 +729,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Upload to SQL 
             string connectionString = Environment.GetEnvironmentVariable("PFXDEV_CONNECTORANALYSIS");
-            string buildId = Environment.GetEnvironmentVariable("BUILD_ID") ?? "5"; // int
-            string buildNumber = Environment.GetEnvironmentVariable("BUILD_NUMBER") ?? "Test-Binary"; // string
+            string buildId = Environment.GetEnvironmentVariable("BUILD_ID"); // int
+            string buildNumber = Environment.GetEnvironmentVariable("BUILD_NUMBER"); // string
 
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
