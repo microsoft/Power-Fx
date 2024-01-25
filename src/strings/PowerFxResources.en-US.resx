@@ -4051,6 +4051,10 @@
     <value>In namespace {1}, function {0} is deprecated.</value>
     <comment>A warning message when a function is deprecated.</comment>
   </data>
+  <data name="WarnFunctionUseBinary" xml:space="preserve">
+    <value>This function uses 'binary' format and might not work as expected.</value>
+    <comment>A warning message when a function is using binary type.</comment>
+  </data>  
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>In namespace {1}, function {0} is not supported.</value>
     <comment>An error message when a function is not supported.</comment>

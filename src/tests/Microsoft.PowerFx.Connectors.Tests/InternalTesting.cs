@@ -13,7 +13,9 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Data.SqlClient;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.TexlFunctionExporter;
@@ -552,7 +554,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 #if GENERATE_CONNECTOR_STATS
         [Theory]        
 #else
-        [Theory(Skip = "Need files from AAPT-connector, PowerPlatformConnectors and Power-Fx-TexlFunctions-Baseline projects")]
+        [Theory] //(Skip = "Need files from AAPT-connector, PowerPlatformConnectors and Power-Fx-TexlFunctions-Baseline projects")]
 #endif
         [TestPriority(1)]
         [InlineData("Library")] // Default Power-Fx library
@@ -611,7 +613,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 }
 
                 if (connector.Key.StartsWith(SwaggerFileIdentification.UNKNOWN_SWAGGER))
-                {                    
+                {
                     continue;
                 }
 
@@ -630,7 +632,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 #if GENERATE_CONNECTOR_STATS
         [Fact]        
 #else
-        [Fact(Skip = "Need files from AAPT-connector, PowerPlatformConnectors and Power-Fx-TexlFunctions-Baseline projects")]
+        [Fact] //(Skip = "Need files from AAPT-connector, PowerPlatformConnectors and Power-Fx-TexlFunctions-Baseline projects")]
 #endif
 
         // Executes after GenerateYamlFiles
@@ -727,8 +729,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Upload to SQL 
             string connectionString = Environment.GetEnvironmentVariable("PFXDEV_CONNECTORANALYSIS");
-            string buildId = Environment.GetEnvironmentVariable("BUILD_ID"); // int
-            string buildNumber = Environment.GetEnvironmentVariable("BUILD_NUMBER"); // string
+            string buildId = Environment.GetEnvironmentVariable("BUILD_ID") ?? "5"; // int
+            string buildNumber = Environment.GetEnvironmentVariable("BUILD_NUMBER") ?? "Test-Binary"; // string
 
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
@@ -737,22 +739,23 @@ namespace Microsoft.PowerFx.Connectors.Tests
             {
                 using DataTable connectorsTable = GetConnectorsTable();
 
-                foreach (ConnectorStat c in connectorStats)
-                {                    
+                foreach (ConnectorStat connectorStat in connectorStats)
+                {
                     DataRow row = connectorsTable.NewRow();
 
                     row[0] = buildId;
                     row[1] = buildNumber;
-                    row[2] = c.Category;
-                    row[3] = c.ConnectorName;
-                    row[4] = c.Functions;
-                    row[5] = c.Supported ?? (object)DBNull.Value;
-                    row[6] = c.Deprecated ?? (object)DBNull.Value;
-                    row[7] = c.Internal ?? (object)DBNull.Value;
-                    row[8] = c.Pageable ?? (object)DBNull.Value;
-                    row[9] = c.OpenApiErrors ?? (object)DBNull.Value;
-                    row[10] = c.DifferFromBaseline;
-                    row[11] = c.Differences == null ? (object)DBNull.Value : string.Join(", ", c.Differences);
+                    row[2] = connectorStat.Category;
+                    row[3] = connectorStat.ConnectorName;
+                    row[4] = connectorStat.Functions;
+                    row[5] = connectorStat.Supported ?? (object)DBNull.Value;
+                    row[6] = connectorStat.WithWarnings ?? (object)DBNull.Value;
+                    row[7] = connectorStat.Deprecated ?? (object)DBNull.Value;
+                    row[8] = connectorStat.Internal ?? (object)DBNull.Value;
+                    row[9] = connectorStat.Pageable ?? (object)DBNull.Value;
+                    row[10] = connectorStat.OpenApiErrors ?? (object)DBNull.Value;
+                    row[11] = connectorStat.DifferFromBaseline;
+                    row[12] = connectorStat.Differences == null ? (object)DBNull.Value : string.Join(", ", connectorStat.Differences);
 
                     connectorsTable.Rows.Add(row);
                 }
@@ -767,62 +770,65 @@ namespace Microsoft.PowerFx.Connectors.Tests
             {
                 using DataTable functionsTable = GetFunctionsTable();
 
-                foreach (FunctionStat c in functionStats)
-                {                    
+                foreach (FunctionStat functionStat in functionStats)
+                {
                     DataRow row = functionsTable.NewRow();
 
                     row[0] = buildId;
                     row[1] = buildNumber;
-                    row[2] = c.Category;
-                    row[3] = c.ConnectorName;
-                    row[4] = c.FunctionName;
-                    row[5] = c.IsSupported ?? (object)DBNull.Value;
-                    row[6] = c.NotSupportedReason ?? (object)DBNull.Value;
-                    row[7] = c.IsDeprecated ?? (object)DBNull.Value;
-                    row[8] = c.IsInternal ?? (object)DBNull.Value;
-                    row[9] = c.IsPageable ?? (object)DBNull.Value;
-                    row[10] = c.ArityMin;
-                    row[11] = c.ArityMax;
-                    row[12] = c.RequiredParameterTypes ?? (object)DBNull.Value;
-                    row[13] = c.OptionalParameterTypes ?? (object)DBNull.Value;
-                    row[14] = c.ReturnType ?? (object)DBNull.Value;
-                    row[15] = c.Parameters ?? (object)DBNull.Value;
-                    row[16] = c.DifferFromBaseline;
-                    row[17] = c.Differences == null ? (object)DBNull.Value : string.Join(", ", c.Differences);
+                    row[2] = functionStat.Category;
+                    row[3] = functionStat.ConnectorName;
+                    row[4] = functionStat.FunctionName;
+                    row[5] = functionStat.IsSupported ?? (object)DBNull.Value;
+                    row[6] = functionStat.NotSupportedReason ?? (object)DBNull.Value;
+                    row[7] = functionStat.Warnings ?? (object)DBNull.Value;
+                    row[8] = functionStat.IsDeprecated ?? (object)DBNull.Value;
+                    row[9] = functionStat.IsInternal ?? (object)DBNull.Value;
+                    row[10] = functionStat.IsPageable ?? (object)DBNull.Value;
+                    row[11] = functionStat.ArityMin;
+                    row[12] = functionStat.ArityMax;
+                    row[13] = functionStat.RequiredParameterTypes ?? (object)DBNull.Value;
+                    row[14] = functionStat.OptionalParameterTypes ?? (object)DBNull.Value;
+                    row[15] = functionStat.ReturnType ?? (object)DBNull.Value;
+                    row[16] = functionStat.Parameters ?? (object)DBNull.Value;
+                    row[17] = functionStat.DifferFromBaseline;
+                    row[18] = functionStat.Differences == null ? (object)DBNull.Value : string.Join(", ", functionStat.Differences);
 
                     functionsTable.Rows.Add(row);
                 }
 
                 bulkCopy.WriteToServer(functionsTable);
-               
+
                 _output.WriteLine($"Copied {bulkCopy.RowsCopied} rows in Functions table");
             }
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Managed outside")]
         private DataTable GetConnectorsTable()
-        {            
-            DataTable connectors = new DataTable("Connectors");  
-            
+        {
+            DataTable connectors = new DataTable("Connectors");
+
             DataColumn buildId = new DataColumn("BuildId", typeof(int));
             DataColumn buildNumber = new DataColumn("BuildNumber", typeof(string));
             DataColumn category = new DataColumn("Category", typeof(string));
             DataColumn connectorName = new DataColumn("ConnectorName", typeof(string));
             DataColumn functions = new DataColumn("Functions", typeof(int));
-            DataColumn supported = new DataColumn("Supported", typeof(int));            
+            DataColumn supported = new DataColumn("Supported", typeof(int));
+            DataColumn withWarnings = new DataColumn("WithWarnings", typeof(int));
             DataColumn deprecated = new DataColumn("Deprecated", typeof(int));
             DataColumn @internal = new DataColumn("Internal", typeof(int));
             DataColumn pageable = new DataColumn("Pageable", typeof(int));
             DataColumn openApiErrors = new DataColumn("OpenApiErrors", typeof(string));
             DataColumn differFromBaseline = new DataColumn("DifferFromBaseline", typeof(bool));
             DataColumn differences = new DataColumn("Differences", typeof(string));
-            
+
             connectors.Columns.Add(buildId);
             connectors.Columns.Add(buildNumber);
             connectors.Columns.Add(category);
             connectors.Columns.Add(connectorName);
             connectors.Columns.Add(functions);
             connectors.Columns.Add(supported);
+            connectors.Columns.Add(withWarnings);
             connectors.Columns.Add(deprecated);
             connectors.Columns.Add(@internal);
             connectors.Columns.Add(pageable);
@@ -845,6 +851,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             DataColumn functionName = new DataColumn("FunctionName", typeof(string));
             DataColumn isSupported = new DataColumn("IsSupported", typeof(bool));
             DataColumn notSupportedReason = new DataColumn("NotSupportedReason", typeof(string));
+            DataColumn warnings = new DataColumn("Warnings", typeof(string));
             DataColumn isDeprecated = new DataColumn("IsDeprecated", typeof(bool));
             DataColumn isInternal = new DataColumn("IsInternal", typeof(bool));
             DataColumn isPageable = new DataColumn("IsPageable", typeof(bool));
@@ -853,10 +860,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             DataColumn requiredParameterTypes = new DataColumn("RequiredParameterTypes", typeof(string));
             DataColumn optionalParameterTypes = new DataColumn("OptionalParameterTypes", typeof(string));
             DataColumn returnType = new DataColumn("ReturnType", typeof(string));
-            DataColumn parameters = new DataColumn("Parameters", typeof(string));            
+            DataColumn parameters = new DataColumn("Parameters", typeof(string));
             DataColumn differFromBaseline = new DataColumn("DifferFromBaseline", typeof(bool));
             DataColumn differences = new DataColumn("Differences", typeof(string));
-            
+
             functions.Columns.Add(buildId);
             functions.Columns.Add(buildNumber);
             functions.Columns.Add(category);
@@ -864,6 +871,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             functions.Columns.Add(functionName);
             functions.Columns.Add(isSupported);
             functions.Columns.Add(notSupportedReason);
+            functions.Columns.Add(warnings);
             functions.Columns.Add(isDeprecated);
             functions.Columns.Add(isInternal);
             functions.Columns.Add(isPageable);
@@ -968,6 +976,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IsBehavior = connectorFunction.IsBehavior;
             IsSupported = connectorFunction.IsSupported;
             NotSupportedReason = connectorFunction.NotSupportedReason;
+            Warnings = connectorFunction.Warnings.Any() ? string.Join(", ", connectorFunction.Warnings.Select(erk => ErrorUtils.FormatMessage(StringResources.Get(erk), null, Name, connectorFunction.Namespace))) : null;
             IsDeprecated = connectorFunction.IsDeprecated;
             IsInternal = connectorFunction.IsInternal;
             IsPageable = connectorFunction.IsPageable;
@@ -991,6 +1000,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public bool IsBehavior;
         public bool IsSupported;
         public string NotSupportedReason;
+        public string Warnings;
         public bool IsDeprecated;
         public bool IsInternal;
         public bool IsPageable;
@@ -1088,6 +1098,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
 
             return paramNames;
+        }
+
+        string IYamlFunction.GetWarnings()
+        {
+            return Warnings;
         }
     }
 
