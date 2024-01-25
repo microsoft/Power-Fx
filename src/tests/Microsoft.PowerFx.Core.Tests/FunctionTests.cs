@@ -299,11 +299,22 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             for (int i = 0; i < 10; i++)
             {
-                Assert.Equal(i % 2 == 1, BuiltinFunctionsCore.AddColumns.ScopeInfo.AppliesToArgument(i));
+                // AddColumns(<table>, <new column>, <expression using scope from arg0>[, <new column 2>, <expression using scope from arg0>, ...]
+                Assert.Equal(i > 0 && i % 2 == 0, BuiltinFunctionsCore.AddColumns.ScopeInfo.AppliesToArgument(i));
+
+                // RenameColumns(<table>, <old column from arg0>, <new column>[, <old column from arg0>, <new column 2>, ...]
                 Assert.Equal(i % 2 == 1, BuiltinFunctionsCore.RenameColumns.ScopeInfo.AppliesToArgument(i));
+
+                // ShowColumns(<table>, <column from arg0>, <column from arg0>, ...)
                 Assert.Equal(i > 0, BuiltinFunctionsCore.ShowColumns.ScopeInfo.AppliesToArgument(i));
+
+                // DropColumns(<table>, <column from arg0>, <column from arg0>, ...)
                 Assert.Equal(i > 0, BuiltinFunctionsCore.DropColumns.ScopeInfo.AppliesToArgument(i));
+
+                // Search(<table>, <text arg>, <column from arg0>, <column from arg0>, ...)
                 Assert.Equal(i > 1, BuiltinFunctionsCore.Search.ScopeInfo.AppliesToArgument(i));
+
+                // ShowColumns(<table>, <column from arg0>, <sort order>, <column from arg0>, <sort order>, ...)
                 Assert.Equal(i % 2 == 1, BuiltinFunctionsCore.SortByColumns.ScopeInfo.AppliesToArgument(i));
             }
         }
