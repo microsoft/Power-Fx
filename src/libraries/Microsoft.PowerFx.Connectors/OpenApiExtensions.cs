@@ -10,8 +10,8 @@ using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Connectors.Localization;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.Constants;
@@ -415,7 +415,7 @@ namespace Microsoft.PowerFx.Connectors
                             return new ConnectorType(schema, openApiParameter, FormulaType.DateTime);
 
                         case "binary":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.String, warning: TexlStrings.WarnFunctionUseBinary);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.String, warning: ConnectorStringResources.WarnFunctionUseBinary);
 
                         case "enum":
                             if (schema.Enum.All(e => e is OpenApiString))

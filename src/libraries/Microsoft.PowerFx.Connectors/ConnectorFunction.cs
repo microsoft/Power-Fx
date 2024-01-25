@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
+using Microsoft.PowerFx.Connectors.Localization;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -1170,8 +1171,8 @@ namespace Microsoft.PowerFx.Connectors
 
             if (IsDeprecated)
             {                
-                _warnings.Add(TexlStrings.WarnDeprecatedFunction);
-                string msg = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.WarnDeprecatedFunction), null, Name, Namespace);
+                _warnings.Add(ConnectorStringResources.WarnDeprecatedFunction);
+                string msg = ErrorUtils.FormatMessage(StringResources.Get(ConnectorStringResources.WarnDeprecatedFunction), null, Name, Namespace);
                 _configurationLogger?.LogWarning($"{msg}");
             }
 
