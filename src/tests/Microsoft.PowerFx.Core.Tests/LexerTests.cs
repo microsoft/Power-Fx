@@ -545,9 +545,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 TexlLexer.Flags.TextFirst,
                 str,
                 1,
-                TokKind.StrInterpStart,
-                TokKind.StrLit,
-                TokKind.StrInterpEnd,
+                TokKind.TextFirstStrInterpStart,
+                TokKind.TextFirstStrLit,
+                TokKind.TextFirstStrInterpEnd,
                 TokKind.Eof);
 
             Assert.True(lit.Span.Min == 0);
@@ -563,9 +563,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 TexlLexer.Flags.TextFirst,
                 str,
                 1,
-                TokKind.StrInterpStart,
-                TokKind.StrLit,
-                TokKind.StrInterpEnd,
+                TokKind.TextFirstStrInterpStart,
+                TokKind.TextFirstStrLit,
+                TokKind.TextFirstStrInterpEnd,
                 TokKind.Eof);
 
             Assert.True(lit.Span.Min == 0);
@@ -604,6 +604,26 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.True(lit.Span.Min == 1);
             Assert.True(lit.Span.Lim == str.Length);
+        }
+
+        [Fact]
+        public void TextFirstStrLitTokenTest()
+        {
+            string str = "Hello ${\"doe@john.com\"}";
+
+            var token = AssertTokensAndReturnOne(
+                TexlLexer.Flags.TextFirst,
+                str,
+                1,
+                TokKind.TextFirstStrInterpStart,
+                TokKind.TextFirstStrLit,
+                TokKind.IslandStart,
+                TokKind.StrLit,
+                TokKind.IslandEnd,
+                TokKind.TextFirstStrInterpEnd,
+                TokKind.Eof);
+
+            // Not Asserts here since all token types have been asserted in AssertTokensAndReturnOne.
         }
     }
 }

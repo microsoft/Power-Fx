@@ -48,6 +48,12 @@ namespace Microsoft.PowerFx.Syntax
         StrLit,
 
         /// <summary>
+        /// String literal when TextFirst is active.
+        /// <code>Hello world</code>
+        /// </summary>
+        TextFirstStrLit,
+
+        /// <summary>
         /// Comment.
         /// </summary>
         Comment,
@@ -286,6 +292,17 @@ namespace Microsoft.PowerFx.Syntax
         /// End of the string interpolation.
         /// </summary>
         StrInterpEnd,
+
+        /// <summary>
+        /// Start of the string interpolation when TextFirst is active.
+        /// <code>$"</code>
+        /// </summary>
+        TextFirstStrInterpStart,
+
+        /// <summary>
+        /// End of the string interpolation when TextFirst is active.
+        /// </summary>
+        TextFirstStrInterpEnd,
 
         /// <summary>
         /// Start of the string interpolation part (island).

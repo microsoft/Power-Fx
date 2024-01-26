@@ -8,8 +8,8 @@ namespace Microsoft.PowerFx.Syntax
 {
     internal class StrInterpEndToken : Token
     {
-        public StrInterpEndToken(Span span)
-            : base(TokKind.StrInterpEnd, span)
+        internal StrInterpEndToken(Span span, TokKind kind)
+            : base(kind, span)
         {
         }
 
@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Syntax
 
         internal override Token Clone(Span ts)
         {
-            return new StrInterpEndToken(ts);
+            return new StrInterpEndToken(ts, Kind);
         }
 
         public override bool Equals(Token that)

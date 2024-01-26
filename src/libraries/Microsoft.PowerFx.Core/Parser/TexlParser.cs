@@ -1016,10 +1016,12 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.False:
                     return new BoolLitNode(ref _idNext, _curs.TokMove());
                 case TokKind.StrInterpStart:
+                case TokKind.TextFirstStrInterpStart:
                     var res = ParseStringInterpolation();
                     var tokCur = _curs.TokCur;
                     return res;
                 case TokKind.StrLit:
+                case TokKind.TextFirstStrLit:
                     return new StrLitNode(ref _idNext, _curs.TokMove().As<StrLitToken>());
 
                 // Names
@@ -1185,7 +1187,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
         private TexlNode ParseStringInterpolation()
         {
-            Contracts.Assert(_curs.TidCur == TokKind.StrInterpStart);
+            Contracts.Assert(_curs.TidCur == TokKind.StrInterpStart || _curs.TidCur == TokKind.TextFirstStrInterpStart);
             var startToken = _curs.TokMove();
 
             var strInterpStart = startToken;
@@ -1198,7 +1200,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 strInterpTrivia
             };
 
-            if (_curs.TidCur == TokKind.StrInterpEnd)
+            if (_curs.TidCur == TokKind.StrInterpEnd || _curs.TidCur == TokKind.TextFirstStrInterpEnd)
             {
                 var tokenEnd = _curs.TokMove();
                 sourceList.Add(new TokenSource(tokenEnd));
@@ -1238,7 +1240,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         arguments.ToArray(),
                         _curs.TokCur);
                 }
-                else if (_curs.TidCur == TokKind.StrInterpEnd)
+                else if (_curs.TidCur == TokKind.StrInterpEnd || _curs.TidCur == TokKind.TextFirstStrInterpEnd)
                 {
                     break;
                 }
@@ -1251,12 +1253,17 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
             }
 
-            Contracts.Assert(_curs.TidCur == TokKind.StrInterpEnd || _curs.TidCur == TokKind.Eof || _curs.TidCur == TokKind.Semicolon);
+            Contracts.Assert(_curs.TidCur == TokKind.StrInterpEnd || _curs.TidCur == TokKind.TextFirstStrInterpEnd || _curs.TidCur == TokKind.Eof || _curs.TidCur == TokKind.Semicolon);
 
             Token strInterpEnd = null;
             if (_curs.TidCur == TokKind.StrInterpEnd)
             {
                 strInterpEnd = TokEat(TokKind.StrInterpEnd);
+            }
+
+            if (_curs.TidCur == TokKind.TextFirstStrInterpEnd)
+            {
+                strInterpEnd = TokEat(TokKind.TextFirstStrInterpEnd);
             }
 
             if (strInterpEnd != null)

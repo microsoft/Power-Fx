@@ -474,14 +474,14 @@ namespace Microsoft.PowerFx.Syntax
 
             // See if current token is preceded by start of the interpolated string or an end of an island
             // Example $"<current token>, }<current token>
-            if (precedingToken != null && (precedingToken.Kind == TokKind.StrInterpStart || precedingToken.Kind == TokKind.IslandEnd))
+            if (precedingToken != null && (precedingToken.Kind == TokKind.StrInterpStart || precedingToken.Kind == TokKind.TextFirstStrInterpStart || precedingToken.Kind == TokKind.IslandEnd))
             {
                 return true;
             }
 
             // See if current token is followed by end of the interpolated string or the start of an island
             // Example <current token>", <current token>{
-            if (followingToken != null && (followingToken.Kind == TokKind.StrInterpEnd || followingToken.Kind == TokKind.IslandStart))
+            if (followingToken != null && (followingToken.Kind == TokKind.StrInterpEnd || followingToken.Kind == TokKind.TextFirstStrInterpEnd || followingToken.Kind == TokKind.IslandStart))
             {
                 return true;
             }
@@ -1016,6 +1016,10 @@ namespace Microsoft.PowerFx.Syntax
 
             // If the mode stack is empty, fall back to the _intialLexerMode, which can be either Normal or TextFirst.
             private LexerMode CurrentMode => _modeStack.Count != 0 ? _modeStack.Peek() : _initialLexerMode;
+            
+            private bool IsTextFirstActive => CurrentMode == LexerMode.TextFirst;
+
+            private StrLitToken NewStrLitToken => new StrLitToken(_sb.ToString(), GetTextSpan(), IsTextFirstActive ? TokKind.TextFirstStrLit : TokKind.StrLit);
 
             private void EnterMode(LexerMode newMode)
             {
@@ -1118,10 +1122,10 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     if (Eof)
                     {
-                        if (CurrentMode == LexerMode.TextFirst && !_textFirstEndToken)
+                        if (IsTextFirstActive && !_textFirstEndToken)
                         {
                             _textFirstEndToken = true;
-                            return new StrInterpEndToken(GetTextEndSpan());
+                            return NewStrInterpEndToken(GetTextEndSpan());
                         }
                         else
                         {
@@ -1129,10 +1133,10 @@ namespace Microsoft.PowerFx.Syntax
                         }
                     }
 
-                    if (CurrentMode == LexerMode.TextFirst && !_textFirstStartToken)
+                    if (IsTextFirstActive && !_textFirstStartToken)
                     {
                         _textFirstStartToken = true;
-                        return new StrInterpStartToken(GetTextStartSpan());
+                        return NewStrInterpStartToken(GetTextStartSpan());
                     }
 
                     var tok = Dispatch(true, true);
@@ -1565,7 +1569,7 @@ namespace Microsoft.PowerFx.Syntax
                 }
 
                 NextChar();
-                return new StrLitToken(_sb.ToString(), GetTextSpan());
+                return NewStrLitToken;
             }
 
             // Lex an interpolated string body start.
@@ -1577,7 +1581,7 @@ namespace Microsoft.PowerFx.Syntax
                 NextChar();
                 EnterMode(LexerMode.StringInterpolation);
 
-                return new StrInterpStartToken(GetTextSpan());
+                return NewStrInterpStartToken(GetTextSpan());
             }
 
             // Lex an interpolated string body end.
@@ -1588,7 +1592,7 @@ namespace Microsoft.PowerFx.Syntax
                 NextChar();
                 ExitMode();
 
-                return new StrInterpEndToken(GetTextSpan());
+                return NewStrInterpEndToken(GetTextSpan());
             }
 
             // Lex an interpolated string island start.
@@ -1633,7 +1637,7 @@ namespace Microsoft.PowerFx.Syntax
                                 return new ErrorToken(GetTextSpan());
                             }
 
-                            return new StrLitToken(_sb.ToString(), GetTextSpan());
+                            return NewStrLitToken;
                         }
 
                         // If we are here, we are seeing a double quote followed immediately by another
@@ -1652,7 +1656,7 @@ namespace Microsoft.PowerFx.Syntax
                                 return new ErrorToken(GetTextSpan());
                             }
 
-                            return new StrLitToken(_sb.ToString(), GetTextSpan());
+                            return NewStrLitToken;
                         }
 
                         // If we are here, we are seeing a open curly followed immediately by another
@@ -1705,7 +1709,7 @@ namespace Microsoft.PowerFx.Syntax
                     }
                     else if (ch == '$' && IsCurlyOpen(PeekChar(1)))
                     {
-                        return new StrLitToken(_sb.ToString(), GetTextSpan());
+                        return NewStrLitToken;
                     }
                     else if (!CharacterUtils.IsFormatCh(ch))
                     {
@@ -1716,7 +1720,7 @@ namespace Microsoft.PowerFx.Syntax
                 }
                 while (!Eof);
 
-                return new StrLitToken(_sb.ToString(), GetTextSpan());
+                return NewStrLitToken;
             }
 
             // Lex a sequence of spacing characters.
@@ -1826,6 +1830,16 @@ namespace Microsoft.PowerFx.Syntax
                     NextChar();
                     return new ErrorToken(GetTextSpan());
                 }
+            }
+
+            private StrInterpStartToken NewStrInterpStartToken(Span span)
+            {
+                return new StrInterpStartToken(span, IsTextFirstActive ? TokKind.TextFirstStrInterpStart : TokKind.StrInterpStart);
+            }
+
+            private StrInterpEndToken NewStrInterpEndToken(Span span)
+            {
+                return new StrInterpEndToken(span, IsTextFirstActive ? TokKind.TextFirstStrInterpEnd : TokKind.StrInterpEnd);
             }
         }
     }

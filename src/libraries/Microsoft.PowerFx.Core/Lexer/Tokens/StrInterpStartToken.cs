@@ -3,13 +3,14 @@
 
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Syntax
 {
     internal class StrInterpStartToken : Token
     {
-        public StrInterpStartToken(Span span)
-            : base(TokKind.StrInterpStart, span)
+        internal StrInterpStartToken(Span span, TokKind kind)
+            : base(kind, span)
         {
         }
 
@@ -20,7 +21,7 @@ namespace Microsoft.PowerFx.Syntax
 
         internal override Token Clone(Span ts)
         {
-            return new StrInterpStartToken(ts);
+            return new StrInterpStartToken(ts, Kind);
         }
 
         public override bool Equals(Token that)

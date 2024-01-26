@@ -254,6 +254,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                         switch (token.Kind)
                         {
                             case TokKind.StrInterpStart:
+                            case TokKind.TextFirstStrInterpStart:
                                 tokens.AddTokenIfPossible(new TokenTextSpan(TokenizerConstants.StringInterpolationStart, span.Min, span.Lim, TokenType.StrInterpStart, false), tokenTypesToSkip);
                                 break;
                             case TokKind.StrInterpEnd:

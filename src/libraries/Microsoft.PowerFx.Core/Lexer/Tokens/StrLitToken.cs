@@ -18,6 +18,13 @@ namespace Microsoft.PowerFx.Syntax
             Value = val;
         }
 
+        internal StrLitToken(string val, Span span, TokKind kind)
+            : base(kind, span)
+        {
+            Contracts.AssertValue(val);
+            Value = val;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StrLitToken"/> class.
         /// Copy Ctor for StrLitToken used by Clone.

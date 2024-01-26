@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Syntax
         public override bool PreVisit(StrInterpNode node)
         {
             Contracts.AssertValue(node);
-            Contracts.Assert(node.Token.Kind == TokKind.StrInterpStart);
+            Contracts.Assert(node.Token.Kind == TokKind.StrInterpStart || node.Token.Kind == TokKind.TextFirstStrInterpStart);
 
             if (_cursorPosition <= node.Token.Span.Min // Cursor position is before the $"
                 || (node.StrInterpEnd != null && node.StrInterpEnd is StrInterpEndToken && node.StrInterpEnd.Span.Lim <= _cursorPosition) // Cursor is after the close quote.
@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx.Syntax
         public override bool PreVisit(CallNode node)
         {
             Contracts.AssertValue(node);
-            Contracts.Assert(node.Token.Kind == TokKind.ParenOpen || node.Token.Kind == TokKind.StrInterpStart);
+            Contracts.Assert(node.Token.Kind == TokKind.ParenOpen || node.Token.Kind == TokKind.StrInterpStart || node.Token.Kind == TokKind.TextFirstStrInterpStart);
 
             if (_cursorPosition <= node.Token.Span.Min // Cursor position is before the open paren.
                 || (node.ParenClose != null && node.ParenClose.Span.Lim <= _cursorPosition) // Cursor is after the closed paren.
