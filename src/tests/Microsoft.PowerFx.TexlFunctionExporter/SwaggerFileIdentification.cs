@@ -168,7 +168,7 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
             try
             {
                 using FileStream stream = File.OpenRead(name);
-                doc = new OpenApiStreamReader().Read(stream, out OpenApiDiagnostic diag);
+                doc = new OpenApiStreamReader(new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet }).Read(stream, out OpenApiDiagnostic diag);
 
                 if (diag != null && diag.Errors != null)
                 {
