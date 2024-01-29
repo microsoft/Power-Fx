@@ -605,5 +605,30 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(lit.Span.Min == 1);
             Assert.True(lit.Span.Lim == str.Length);
         }
+
+        [Theory]
+        [InlineData("Hello ${\"Word\"}", 0, 1, 5)]
+        [InlineData("Hello ${$\"World\"}", 0, 1, 7)]
+        public void TextFirstTokenFlagTest(string expression, params int[] textFirstTokenPositions)
+        {
+            var tokens = TexlLexer.InvariantLexer.LexSource(expression, TexlLexer.Flags.TextFirst);
+
+            for (int i = 0; i < tokens.Count; i++)
+            {
+                var token = tokens[i];
+
+                if (token is ITextFirstFlag textFirstFlag)
+                {
+                    if (textFirstTokenPositions.Contains(i))
+                    {
+                        Assert.True(textFirstFlag.IsTextFirst);
+                    }
+                    else
+                    {
+                        Assert.False(textFirstFlag.IsTextFirst);
+                    }
+                }
+            }
+        }
     }
 }
