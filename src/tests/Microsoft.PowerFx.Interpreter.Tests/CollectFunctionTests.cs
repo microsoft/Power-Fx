@@ -6,14 +6,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Options;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Syntax;
@@ -95,6 +99,64 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = engine.Check(expr, options);
 
             Assert.Equal(isCheckSuccess, result.IsSuccess);
+        }
+
+        // !!! Tactical fix for the case where we have a boolean option set and a boolean value.
+        [Theory]
+        [InlineData("Collect(t, {Choice:true})")]
+        [InlineData("Patch(t, First(t), {Choice:true})")]
+        public void BooleanOptionSetTest(string expression)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+
+            var optionSet = new EnumSymbol(
+                new DName("os"),
+                DType.Boolean,
+                new Dictionary<string, object>()
+                {
+                    { "Yes", true },
+                    { "No", false },
+                });
+
+            var osvType = new OptionSetValueType(optionSet);
+            var recordType = RecordType.Empty().Add("Choice", osvType);
+
+            optionSet.TryGetValue(new DName("Yes"), out var optionSetTrueValue);
+            optionSet.TryGetValue(new DName("No"), out var optionSetFalseValue);
+
+            var tableValue = FormulaValue.NewTable(
+                recordType,
+                FormulaValue.NewRecordFromFields(recordType, new NamedValue("Choice", optionSetTrueValue)),
+                FormulaValue.NewRecordFromFields(recordType, new NamedValue("Choice", optionSetFalseValue)));
+
+            engine.UpdateVariable("t", tableValue);
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+
+            var check = engine.Check(expression);
+            Assert.False(check.IsSuccess);
+        }
+
+        private class BooleanOptionSet : OptionSet, IExternalOptionSet
+        {
+            public BooleanOptionSet(string name, DisplayNameProvider displayNameProvider)
+                : base(name, displayNameProvider)
+            {
+            }
+
+            public new bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
+            {
+                if (!Options.Any(option => option.Key == fieldName))
+                {
+                    optionSetValue = null;
+                    return false;
+                }
+
+                optionSetValue = new OptionSetValue(fieldName, FormulaType, fieldName == "1");
+                return true;
+            }
+
+            DKind IExternalOptionSet.BackingKind => DKind.Boolean;
         }
 
         public class CustomTypeRecordType : RecordType

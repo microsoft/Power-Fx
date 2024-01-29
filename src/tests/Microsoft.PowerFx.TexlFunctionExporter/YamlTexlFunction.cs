@@ -414,6 +414,11 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
         {
             return Signatures?.OrderByDescending(s => (s.RequiredParameters?.Length ?? 0) + (s.OptionalParameters?.Length ?? 0)).First().GetParameterNames();
         }
+
+        string IYamlFunction.GetWarnings()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     internal class YamlTexlSignature

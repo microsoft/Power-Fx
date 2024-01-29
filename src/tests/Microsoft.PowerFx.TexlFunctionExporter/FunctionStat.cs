@@ -18,6 +18,7 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
 			[FunctionName] [nvarchar](180) NOT NULL,
 			[IsSupported] [bit] NULL,
 			[NotSupportedReason] [nvarchar](max) NULL,
+            [Warnings] [nvarchar](max) NULL,
 	        [IsDeprecated] [bit] NULL,
 	        [IsInternal] [bit] NULL,
 			[IsPageable] [bit] NULL,
@@ -53,6 +54,7 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
             FunctionName = func.GetName();
             IsSupported = func.HasDetailedProperties() ? func.GetIsSupported() : null;
             NotSupportedReason = func.HasDetailedProperties() ? func.GetNotSupportedReason() : null;
+            Warnings = func.HasDetailedProperties() ? func.GetWarnings() : null;
             IsDeprecated = func.HasDetailedProperties() ? func.GetIsDeprecated() : null;
             IsInternal = func.HasDetailedProperties() ? func.GetIsInternal() : null;
             IsPageable = func.HasDetailedProperties() ? func.GetIsPageable() : null;
@@ -69,7 +71,7 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
 
         public override string ToString()
         {
-            return $"{Category}|{ConnectorName}|{FunctionName}|{IsSupported}|{NotSupportedReason}|{IsDeprecated}|{IsInternal}|{IsPageable}|{ArityMin}|{ArityMax}|{RequiredParameterTypes}|{OptionalParameterTypes}|{ReturnType}|{Parameters}|{DifferFromBaseline}|{(Differences != null ? string.Join(", ", Differences) : "None")}";
+            return $"{Category}|{ConnectorName}|{FunctionName}|{IsSupported}|{NotSupportedReason}|{Warnings}|{IsDeprecated}|{IsInternal}|{IsPageable}|{ArityMin}|{ArityMax}|{RequiredParameterTypes}|{OptionalParameterTypes}|{ReturnType}|{Parameters}|{DifferFromBaseline}|{(Differences != null ? string.Join(", ", Differences) : "None")}";
         }
 
         internal string Category;
@@ -77,6 +79,7 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
         internal string FunctionName;
         internal bool? IsSupported;
         internal string NotSupportedReason;
+        internal string Warnings;
         internal bool? IsDeprecated;
         internal bool? IsInternal;
         internal bool? IsPageable;

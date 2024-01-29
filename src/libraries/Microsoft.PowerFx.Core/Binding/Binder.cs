@@ -5163,9 +5163,12 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Critical, node, TexlStrings.ErrUnsupportedFunction, func.Name, func.Namespace);
                     }
 
-                    if (sdf.IsDeprecated)
+                    if (sdf.Warnings != null)
                     {
-                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDeprecatedFunction, func.Name, func.Namespace);
+                        foreach (ErrorResourceKey erk in sdf.Warnings)
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, erk, func.Name, func.Namespace);
+                        }
                     }
                 }
             }

@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
+using Microsoft.PowerFx.Connectors.Localization;
+using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -64,6 +67,18 @@ namespace Microsoft.PowerFx.Connectors
             {
                 EnsureInitialized();
                 return _notSupportedReason;
+            }
+        }
+
+        /// <summary>
+        /// Warnings to be reported to end user.
+        /// </summary>
+        public IReadOnlyCollection<ErrorResourceKey> Warnings
+        {
+            get
+            {
+                EnsureInitialized();
+                return _warnings;
             }
         }
 
@@ -253,6 +268,7 @@ namespace Microsoft.PowerFx.Connectors
         private ConnectorType _returnType;
         private bool _isSupported;
         private string _notSupportedReason;
+        private List<ErrorResourceKey> _warnings;
 
         // Those properties are only used by HttpFunctionInvoker
         internal ConnectorParameterInternals _internals = null;
@@ -968,7 +984,7 @@ namespace Microsoft.PowerFx.Connectors
             bool schemaLessBody = false;
             bool fatalError = false;
             string contentType = OpenApiExtensions.ContentType_ApplicationJson;
-            ConnectorErrors errors = new ConnectorErrors();
+            ConnectorErrors errorsAndWarnings = new ConnectorErrors();
 
             foreach (OpenApiParameter parameter in Operation.Parameters)
             {
@@ -976,7 +992,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (parameter == null)
                 {
-                    errors.AddError($"OpenApiParameter is null, this swagger file is probably containing errors");
+                    errorsAndWarnings.AddError($"OpenApiParameter is null, this swagger file is probably containing errors");
                     fatalError = true;                    
                     break;
                 }
@@ -1005,15 +1021,15 @@ namespace Microsoft.PowerFx.Connectors
                     return null;
                 }
 
-                ConnectorParameter connectorParameter = errors.AggregateErrors(new ConnectorParameter(parameter, ConnectorSettings.Compatibility));
+                ConnectorParameter connectorParameter = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(parameter, ConnectorSettings.Compatibility));
 
                 if (connectorParameter.HiddenRecordType != null)
                 {
-                    errors.AddError("[Internal error] Unexpected HiddenRecordType non-null value");
+                    errorsAndWarnings.AddError("[Internal error] Unexpected HiddenRecordType non-null value");
                     fatalError = true;
                 }
 
-                if (parameter.Schema.TryGetDefaultValue(connectorParameter.FormulaType, out FormulaValue defaultValue, errors))
+                if (parameter.Schema.TryGetDefaultValue(connectorParameter.FormulaType, out FormulaValue defaultValue, errorsAndWarnings))
                 {
                     parameterDefaultValues[parameter.Name] = (connectorParameter.ConnectorType.IsRequired, defaultValue, connectorParameter.FormulaType._type);
                 }
@@ -1042,7 +1058,7 @@ namespace Microsoft.PowerFx.Connectors
                             // Additional properties are ignored for now
                             if (bodySchema.AnyOf.Any() || bodySchema.Not != null || (bodySchema.Items != null && bodySchema.Type != "array"))
                             {
-                                errors.AddError("[Body] OpenApiSchema is not supported - AnyOf, Not, AdditionalProperties or Items not array");
+                                errorsAndWarnings.AddError("[Body] OpenApiSchema is not supported - AnyOf, Not, AdditionalProperties or Items not array");
                             }
                             else if (bodySchema.AllOf.Any() || bodySchema.Properties.Any())
                             {
@@ -1071,12 +1087,12 @@ namespace Microsoft.PowerFx.Connectors
                                     }
 
                                     OpenApiParameter bodyParameter = new OpenApiParameter() { Name = bodyPropertyName, Schema = bodyPropertySchema, Description = requestBody.Description, Required = bodyPropertyRequired, Extensions = bodyPropertySchema.Extensions };
-                                    ConnectorParameter bodyConnectorParameter2 = errors.AggregateErrors(new ConnectorParameter(bodyParameter, requestBody, ConnectorSettings.Compatibility));
-                                    openApiBodyParameters.Add(bodyConnectorParameter2, OpenApiExtensions.TryGetOpenApiValue(bodyConnectorParameter2.Schema.Default, null, out FormulaValue defaultValue, errors) ? defaultValue : null);
+                                    ConnectorParameter bodyConnectorParameter2 = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter, requestBody, ConnectorSettings.Compatibility));
+                                    openApiBodyParameters.Add(bodyConnectorParameter2, OpenApiExtensions.TryGetOpenApiValue(bodyConnectorParameter2.Schema.Default, null, out FormulaValue defaultValue, errorsAndWarnings) ? defaultValue : null);
 
                                     if (bodyConnectorParameter2.HiddenRecordType != null)
                                     {
-                                        hiddenRequiredParameters.Add(errors.AggregateErrors(new ConnectorParameter(bodyParameter, true, ConnectorSettings.Compatibility)));
+                                        hiddenRequiredParameters.Add(errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter, true, ConnectorSettings.Compatibility)));
                                     }
 
                                     List<ConnectorParameter> parameterList = !bodyPropertyRequired ? optionalParameters : bodyPropertyHiddenRequired ? hiddenRequiredParameters : requiredParameters;
@@ -1088,12 +1104,12 @@ namespace Microsoft.PowerFx.Connectors
                                 schemaLessBody = true;
 
                                 OpenApiParameter bodyParameter2 = new OpenApiParameter() { Name = bodyName, Schema = bodySchema, Description = requestBody.Description, Required = requestBody.Required, Extensions = bodySchema.Extensions };
-                                ConnectorParameter bodyConnectorParameter3 = errors.AggregateErrors(new ConnectorParameter(bodyParameter2, requestBody, ConnectorSettings.Compatibility));
-                                openApiBodyParameters.Add(bodyConnectorParameter3, OpenApiExtensions.TryGetOpenApiValue(bodyConnectorParameter3.Schema.Default, null, out FormulaValue defaultValue, errors) ? defaultValue : null);
+                                ConnectorParameter bodyConnectorParameter3 = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter2, requestBody, ConnectorSettings.Compatibility));
+                                openApiBodyParameters.Add(bodyConnectorParameter3, OpenApiExtensions.TryGetOpenApiValue(bodyConnectorParameter3.Schema.Default, null, out FormulaValue defaultValue, errorsAndWarnings) ? defaultValue : null);
 
                                 if (bodyConnectorParameter3.HiddenRecordType != null)
                                 {
-                                    errors.AddError("[Internal error] Unexpected HiddenRecordType not-null value for schema-less body");
+                                    errorsAndWarnings.AddError("[Internal error] Unexpected HiddenRecordType not-null value for schema-less body");
                                 }
 
                                 List<ConnectorParameter> parameterList = requestBody.Required ? requiredParameters : optionalParameters;
@@ -1108,8 +1124,8 @@ namespace Microsoft.PowerFx.Connectors
                         OpenApiSchema bodyParameterSchema = new OpenApiSchema() { Type = "string" };
 
                         OpenApiParameter bodyParameter3 = new OpenApiParameter() { Name = bodyName, Schema = bodyParameterSchema, Description = "Body", Required = requestBody.Required };
-                        ConnectorParameter bodyParameter = errors.AggregateErrors(new ConnectorParameter(bodyParameter3, requestBody, ConnectorSettings.Compatibility));
-                        openApiBodyParameters.Add(bodyParameter, OpenApiExtensions.TryGetOpenApiValue(bodyParameter.Schema.Default, null, out FormulaValue defaultValue, errors) ? defaultValue : null);
+                        ConnectorParameter bodyParameter = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter3, requestBody, ConnectorSettings.Compatibility));
+                        openApiBodyParameters.Add(bodyParameter, OpenApiExtensions.TryGetOpenApiValue(bodyParameter.Schema.Default, null, out FormulaValue defaultValue, errorsAndWarnings) ? defaultValue : null);
 
                         List<ConnectorParameter> parameterList = requestBody.Required ? requiredParameters : optionalParameters;
                         parameterList.Add(bodyParameter);
@@ -1149,18 +1165,37 @@ namespace Microsoft.PowerFx.Connectors
             _hiddenRequiredParameters = hiddenRequiredParameters.ToArray();
             _arityMin = _requiredParameters.Length;
             _arityMax = _arityMin + (_optionalParameters.Length == 0 ? 0 : 1);
+            _warnings = new List<ErrorResourceKey>();
 
-            _returnType = errors.AggregateErrors(Operation.GetConnectorReturnType(ConnectorSettings.Compatibility));
+            _returnType = errorsAndWarnings.AggregateErrorsAndWarnings(Operation.GetConnectorReturnType(ConnectorSettings.Compatibility));
 
-            if (errors.HasErrors)
+            if (IsDeprecated)
+            {                
+                _warnings.Add(ConnectorStringResources.WarnDeprecatedFunction);
+                string msg = ErrorUtils.FormatMessage(StringResources.Get(ConnectorStringResources.WarnDeprecatedFunction), null, Name, Namespace);
+                _configurationLogger?.LogWarning($"{msg}");
+            }
+
+            if (errorsAndWarnings.HasErrors)
             {
-                foreach (string error in errors.Errors)
+                foreach (string error in errorsAndWarnings.Errors)
                 {
                     _configurationLogger?.LogError($"Function {Name}: {error}");
                 }
 
-                SetUnsupported(string.Join(", ", errors.Errors));
-            }           
+                SetUnsupported(string.Join(", ", errorsAndWarnings.Errors));
+            }
+
+            if (errorsAndWarnings.HasWarnings)
+            {
+                foreach (ErrorResourceKey warning in errorsAndWarnings.Warnings)
+                {
+                    string msg = ErrorUtils.FormatMessage(StringResources.Get(warning), null, Name, Namespace);
+                    _configurationLogger?.LogWarning($"Function {Name}: {msg}");
+                }
+
+                _warnings.AddRange(errorsAndWarnings.Warnings.ToArray());
+            }
 
             return new ConnectorParameterInternals()
             {

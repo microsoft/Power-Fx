@@ -335,12 +335,7 @@ namespace Microsoft.PowerFx.Connectors
                 isSupported = false;
                 notSupportedReason = $"OpenApiOperation contains unsupported Callbacks";
                 logger?.LogWarning($"Unsupported operationId {op.OperationId}: {notSupportedReason}");
-            }
-
-            if (isSupported && op.Deprecated)
-            {                
-                logger?.LogWarning($"OperationId {op.OperationId} is deprecated");
-            }
+            }            
 
             if (failOnUnknownExtensions)
             {
