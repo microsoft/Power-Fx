@@ -4,24 +4,27 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Dynamic;
+using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Microsoft.Data.SqlClient;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.TexlFunctionExporter;
-using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
-using YamlDotNet.Serialization;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
+    [TestCaseOrderer("Microsoft.PowerFx.Connectors.Tests.PriorityOrderer", "Microsoft.PowerFx.Connectors.Tests")]
     public class InternalTesting
     {
         public readonly ITestOutputHelper _output;
@@ -415,9 +418,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
                             if (rp1 != rp2)
                             {
                                 string s = $"Function {cf1.Name} - Required parameters are different: [{rp1}] -- [{rp2}]";
-                                if (w2.ContainsKey(title))
+                                if (w2.TryGetValue(title, out List<string> value))
                                 {
-                                    w2[title].Add(s);
+                                    value.Add(s);
                                 }
                                 else
                                 {
@@ -426,12 +429,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
                             }
                         }
 
-                        dynamic obj = cf1.ToExpando(swaggerFile);
-                        var serializer = new SerializerBuilder().Build();
-                        string yaml = serializer.Serialize(obj);
-
                         string functionFile = Path.Combine(cFolder, cf1.OriginalName.Replace("/", "_") + ".yaml");
-                        File.WriteAllText(functionFile, yaml);
+                        File.WriteAllText(functionFile, new YamlConnectorFunction(cf1, swaggerFile).GetYaml());
                     }
                 }
                 catch (Exception ex)
@@ -553,10 +552,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
         /// </param>
         // This test is only meant for internal testing
 #if GENERATE_CONNECTOR_STATS
-        [Theory]
+        [Theory]        
 #else
         [Theory(Skip = "Need files from AAPT-connector, PowerPlatformConnectors and Power-Fx-TexlFunctions-Baseline projects")]
 #endif
+        [TestPriority(1)]
         [InlineData("Library")] // Default Power-Fx library
         [InlineData("Aapt-Ppc", 0, "apidefinition*swagger*.json", @"aapt\src", @"ppc")]
         [InlineData("Baseline", 1, "*.json", @"Power-Fx-TexlFunctions-Baseline\Swaggers")]
@@ -583,7 +583,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             SwaggerLocatorSettings swaggerLocationSettings = folderExclusionIndex == 0 ? null : new SwaggerLocatorSettings(new List<string>());
             ConsoleLogger logger = new ConsoleLogger(_output);
-            ConnectorSettings connectorSettings = new ConnectorSettings("FakeNamespace")
+            ConnectorSettings connectorSettings = new ConnectorSettings("NS")
             {
                 AllowUnsupportedFunctions = true,
                 IncludeInternalFunctions = true,
@@ -613,21 +613,315 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 }
 
                 if (connector.Key.StartsWith(SwaggerFileIdentification.UNKNOWN_SWAGGER))
-                {                    
+                {
                     continue;
                 }
 
                 // Step 2: Get TexlFunctions to be exported
                 // Notice that TexlFunction is internal and requires InternalVisibleTo
-                List<TexlFunction> texlFunctions = OpenApiParser.ParseInternal(connectorSettings, connector.Value.document, logger).texlFunctions.Cast<TexlFunction>().ToList();
-                List<ConnectorFunction> connectorFunctions = OpenApiParser.ParseInternal(connectorSettings, connector.Value.document, logger).connectorFunctions.Cast<ConnectorFunction>().ToList();
+                (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(connectorSettings, connector.Value.document, logger);
 
                 // Step 3: Export TexlFunctions to Yaml
-                ExportTexlFunctionsToYaml(reference, outFolderPath, connector.Key, texlFunctions, false);
+                ExportTexlFunctionsToYaml(reference, outFolderPath, connector.Key, texlFunctions.Cast<TexlFunction>().ToList(), false);
 
                 // Step 3: Export TexlFunctions to Yaml
                 ExportConnectorFunctionsToYaml(reference, outFolderPath, connector.Key, connectorFunctions);
             }
+        }
+
+#if GENERATE_CONNECTOR_STATS
+        [Fact]        
+#else
+        [Fact(Skip = "Need files from AAPT-connector, PowerPlatformConnectors and Power-Fx-TexlFunctions-Baseline projects")]
+#endif
+
+        // Executes after GenerateYamlFiles
+        [TestPriority(2)]
+        public void YamlCompare()
+        {
+            (string outFolder, string srcFolder) = GetFolders();
+
+            string yamlFiles = Path.Combine(outFolder, "YamlOutput");
+            string yamlReference = Path.Combine(srcFolder, @"Power-Fx-TexlFunctions-Baseline\Yaml");
+
+            List<ConnectorStat> connectorStats = new List<ConnectorStat>();
+            List<FunctionStat> functionStats = new List<FunctionStat>();
+
+            // Compare Texl functions with baseline
+            new TexlYamlComparer("BaseLine", yamlReference, yamlFiles, connectorStats, functionStats, msg => _output.WriteLine(msg)).CompareYamlFiles();
+            new TexlYamlComparer("Aapt-Ppc", yamlReference, yamlFiles, connectorStats, functionStats, msg => _output.WriteLine(msg)).CompareYamlFiles();
+            new TexlYamlComparer("Library", yamlReference, yamlFiles, connectorStats, functionStats, msg => _output.WriteLine(msg)).CompareYamlFiles();
+
+            // Compare ConnectorFunction with baseline
+            new ConnectorFunctionYamlComparer("BaseLine", yamlReference, yamlFiles, connectorStats, functionStats, msg => _output.WriteLine(msg)).CompareYamlFiles();
+            new ConnectorFunctionYamlComparer("Aapt-Ppc", yamlReference, yamlFiles, connectorStats, functionStats, msg => _output.WriteLine(msg)).CompareYamlFiles();
+
+            // Display results
+            _output.WriteLine(string.Empty);
+            _output.WriteLine("Baseline (Texl)");
+            foreach (ConnectorStat connectorStat in connectorStats.Where(cs => cs.Category == "BaseLine_Texl"))
+            {
+                _output.WriteLine(connectorStat.ToString());
+            }
+
+            _output.WriteLine(string.Empty);
+            _output.WriteLine("Baseline (Texl) - functions");
+            foreach (FunctionStat functionStat in functionStats.Where(cs => cs.Category == "BaseLine_Texl"))
+            {
+                _output.WriteLine(functionStat.ToString());
+            }
+
+            _output.WriteLine(string.Empty);
+            _output.WriteLine("-- Baseline (ConnectorFunction) --");
+            foreach (ConnectorStat connectorStat in connectorStats.Where(cs => cs.Category == "BaseLine_ConnectorFunction"))
+            {
+                _output.WriteLine(connectorStat.ToString());
+            }
+
+            _output.WriteLine(string.Empty);
+            _output.WriteLine("-- Baseline (ConnectorFunction) - functions --");
+            foreach (FunctionStat functionStat in functionStats.Where(cs => cs.Category == "BaseLine_ConnectorFunction"))
+            {
+                _output.WriteLine(functionStat.ToString());
+            }
+
+            _output.WriteLine(string.Empty);
+            _output.WriteLine("-- Aapt-Ppc (Texl) --");
+            foreach (ConnectorStat connectorStat in connectorStats.Where(cs => cs.Category == "Aapt-Ppc_Texl"))
+            {
+                _output.WriteLine(connectorStat.ToString());
+            }
+
+            _output.WriteLine(string.Empty);
+            _output.WriteLine("--Aapt-Ppc (Texl) - functions --");
+            foreach (FunctionStat functionStat in functionStats.Where(cs => cs.Category == "Aapt-Ppc_Texl"))
+            {
+                _output.WriteLine(functionStat.ToString());
+            }
+
+            _output.WriteLine(string.Empty);
+            _output.WriteLine("-- Aapt-Ppc (ConnectorFunction) --");
+            foreach (ConnectorStat connectorStat in connectorStats.Where(cs => cs.Category == "Aapt-Ppc_ConnectorFunction"))
+            {
+                _output.WriteLine(connectorStat.ToString());
+            }
+
+            _output.WriteLine(string.Empty);
+            _output.WriteLine("-- Aapt-Ppc (ConnectorFunction) - functions --");
+            foreach (FunctionStat functionStat in functionStats.Where(cs => cs.Category == "Aapt-Ppc_ConnectorFunction"))
+            {
+                _output.WriteLine(functionStat.ToString());
+            }
+
+            _output.WriteLine(string.Empty);
+            _output.WriteLine("-- Library (Texl) --");
+            foreach (ConnectorStat connectorStat in connectorStats.Where(cs => cs.Category == "Library_Texl"))
+            {
+                _output.WriteLine(connectorStat.ToString());
+            }
+
+            _output.WriteLine(string.Empty);
+            _output.WriteLine("-- Library (Texl) - functions --");
+            foreach (FunctionStat functionStat in functionStats.Where(cs => cs.Category == "Library_Texl"))
+            {
+                _output.WriteLine(functionStat.ToString());
+            }
+
+            // Upload to SQL 
+            string connectionString = Environment.GetEnvironmentVariable("PFXDEV_CONNECTORANALYSIS");
+            string buildId = Environment.GetEnvironmentVariable("BUILD_ID"); // int
+            string buildNumber = Environment.GetEnvironmentVariable("BUILD_NUMBER"); // string
+
+            using SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection) { DestinationTableName = "dbo.Connectors" })
+            {
+                using DataTable connectorsTable = GetConnectorsTable();
+
+                foreach (ConnectorStat connectorStat in connectorStats)
+                {
+                    DataRow row = connectorsTable.NewRow();
+
+                    row[0] = buildId;
+                    row[1] = buildNumber;
+                    row[2] = connectorStat.Category;
+                    row[3] = connectorStat.ConnectorName;
+                    row[4] = connectorStat.Functions;
+                    row[5] = connectorStat.Supported ?? (object)DBNull.Value;
+                    row[6] = connectorStat.WithWarnings ?? (object)DBNull.Value;
+                    row[7] = connectorStat.Deprecated ?? (object)DBNull.Value;
+                    row[8] = connectorStat.Internal ?? (object)DBNull.Value;
+                    row[9] = connectorStat.Pageable ?? (object)DBNull.Value;
+                    row[10] = connectorStat.OpenApiErrors ?? (object)DBNull.Value;
+                    row[11] = connectorStat.DifferFromBaseline;
+                    row[12] = connectorStat.Differences == null ? (object)DBNull.Value : string.Join(", ", connectorStat.Differences);
+
+                    connectorsTable.Rows.Add(row);
+                }
+
+                bulkCopy.WriteToServer(connectorsTable);
+
+                _output.WriteLine(string.Empty);
+                _output.WriteLine($"Copied {bulkCopy.RowsCopied} rows in Connectors table");
+            }
+
+            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection) { DestinationTableName = "dbo.Functions" })
+            {
+                using DataTable functionsTable = GetFunctionsTable();
+
+                foreach (FunctionStat functionStat in functionStats)
+                {
+                    DataRow row = functionsTable.NewRow();
+
+                    row[0] = buildId;
+                    row[1] = buildNumber;
+                    row[2] = functionStat.Category;
+                    row[3] = functionStat.ConnectorName;
+                    row[4] = functionStat.FunctionName;
+                    row[5] = functionStat.IsSupported ?? (object)DBNull.Value;
+                    row[6] = functionStat.NotSupportedReason ?? (object)DBNull.Value;
+                    row[7] = functionStat.Warnings ?? (object)DBNull.Value;
+                    row[8] = functionStat.IsDeprecated ?? (object)DBNull.Value;
+                    row[9] = functionStat.IsInternal ?? (object)DBNull.Value;
+                    row[10] = functionStat.IsPageable ?? (object)DBNull.Value;
+                    row[11] = functionStat.ArityMin;
+                    row[12] = functionStat.ArityMax;
+                    row[13] = functionStat.RequiredParameterTypes ?? (object)DBNull.Value;
+                    row[14] = functionStat.OptionalParameterTypes ?? (object)DBNull.Value;
+                    row[15] = functionStat.ReturnType ?? (object)DBNull.Value;
+                    row[16] = functionStat.Parameters ?? (object)DBNull.Value;
+                    row[17] = functionStat.DifferFromBaseline;
+                    row[18] = functionStat.Differences == null ? (object)DBNull.Value : string.Join(", ", functionStat.Differences);
+
+                    functionsTable.Rows.Add(row);
+                }
+
+                bulkCopy.WriteToServer(functionsTable);
+
+                _output.WriteLine($"Copied {bulkCopy.RowsCopied} rows in Functions table");
+            }
+        }
+
+        [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Managed outside")]
+        private DataTable GetConnectorsTable()
+        {
+            DataTable connectors = new DataTable("Connectors");
+
+            DataColumn buildId = new DataColumn("BuildId", typeof(int));
+            DataColumn buildNumber = new DataColumn("BuildNumber", typeof(string));
+            DataColumn category = new DataColumn("Category", typeof(string));
+            DataColumn connectorName = new DataColumn("ConnectorName", typeof(string));
+            DataColumn functions = new DataColumn("Functions", typeof(int));
+            DataColumn supported = new DataColumn("Supported", typeof(int));
+            DataColumn withWarnings = new DataColumn("WithWarnings", typeof(int));
+            DataColumn deprecated = new DataColumn("Deprecated", typeof(int));
+            DataColumn @internal = new DataColumn("Internal", typeof(int));
+            DataColumn pageable = new DataColumn("Pageable", typeof(int));
+            DataColumn openApiErrors = new DataColumn("OpenApiErrors", typeof(string));
+            DataColumn differFromBaseline = new DataColumn("DifferFromBaseline", typeof(bool));
+            DataColumn differences = new DataColumn("Differences", typeof(string));
+
+            connectors.Columns.Add(buildId);
+            connectors.Columns.Add(buildNumber);
+            connectors.Columns.Add(category);
+            connectors.Columns.Add(connectorName);
+            connectors.Columns.Add(functions);
+            connectors.Columns.Add(supported);
+            connectors.Columns.Add(withWarnings);
+            connectors.Columns.Add(deprecated);
+            connectors.Columns.Add(@internal);
+            connectors.Columns.Add(pageable);
+            connectors.Columns.Add(openApiErrors);
+            connectors.Columns.Add(differFromBaseline);
+            connectors.Columns.Add(differences);
+
+            return connectors;
+        }
+
+        [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Managed outside")]
+        private DataTable GetFunctionsTable()
+        {
+            DataTable functions = new DataTable("Functions");
+
+            DataColumn buildId = new DataColumn("BuildId", typeof(int));
+            DataColumn buildNumber = new DataColumn("BuildNumber", typeof(string));
+            DataColumn category = new DataColumn("Category", typeof(string));
+            DataColumn connectorName = new DataColumn("ConnectorName", typeof(string));
+            DataColumn functionName = new DataColumn("FunctionName", typeof(string));
+            DataColumn isSupported = new DataColumn("IsSupported", typeof(bool));
+            DataColumn notSupportedReason = new DataColumn("NotSupportedReason", typeof(string));
+            DataColumn warnings = new DataColumn("Warnings", typeof(string));
+            DataColumn isDeprecated = new DataColumn("IsDeprecated", typeof(bool));
+            DataColumn isInternal = new DataColumn("IsInternal", typeof(bool));
+            DataColumn isPageable = new DataColumn("IsPageable", typeof(bool));
+            DataColumn arityMin = new DataColumn("ArityMin", typeof(int));
+            DataColumn arityMax = new DataColumn("ArityMax", typeof(int));
+            DataColumn requiredParameterTypes = new DataColumn("RequiredParameterTypes", typeof(string));
+            DataColumn optionalParameterTypes = new DataColumn("OptionalParameterTypes", typeof(string));
+            DataColumn returnType = new DataColumn("ReturnType", typeof(string));
+            DataColumn parameters = new DataColumn("Parameters", typeof(string));
+            DataColumn differFromBaseline = new DataColumn("DifferFromBaseline", typeof(bool));
+            DataColumn differences = new DataColumn("Differences", typeof(string));
+
+            functions.Columns.Add(buildId);
+            functions.Columns.Add(buildNumber);
+            functions.Columns.Add(category);
+            functions.Columns.Add(connectorName);
+            functions.Columns.Add(functionName);
+            functions.Columns.Add(isSupported);
+            functions.Columns.Add(notSupportedReason);
+            functions.Columns.Add(warnings);
+            functions.Columns.Add(isDeprecated);
+            functions.Columns.Add(isInternal);
+            functions.Columns.Add(isPageable);
+            functions.Columns.Add(arityMin);
+            functions.Columns.Add(arityMax);
+            functions.Columns.Add(requiredParameterTypes);
+            functions.Columns.Add(optionalParameterTypes);
+            functions.Columns.Add(returnType);
+            functions.Columns.Add(parameters);
+            functions.Columns.Add(differFromBaseline);
+            functions.Columns.Add(differences);
+
+            return functions;
+        }
+
+        public class ConnectorFunctionYamlComparer : YamlComparer<YamlConnectorFunction>
+        {
+            internal override string FilePattern => "ConnectorFunction_*.yaml";
+
+            internal override string CategorySuffix => "ConnectorFunction";
+
+            public ConnectorFunctionYamlComparer(string category, string referenceRoot, string currentRoot, List<ConnectorStat> connectorStats, List<FunctionStat> functionStats, Action<string> log)
+                : base(category, referenceRoot, currentRoot, connectorStats, functionStats, log)
+            {
+            }
+        }
+
+        [Theory]
+        [InlineData("", "", "", "", "")]
+        [InlineData("a", "", "a", "", "")]
+        [InlineData("", "a", "", "", "a")]
+        [InlineData("a", "a", "", "a", "")]
+        [InlineData("a,b", "", "a,b", "", "")]
+        [InlineData("", "a,b", "", "", "a,b")]
+        [InlineData("a,b", "a,b", "", "a,b", "")]
+        [InlineData("a,b", "b,c", "a", "b", "c")]
+        [InlineData("b,c", "a,b", "c", "b", "a")]
+        [InlineData("a", "b", "a", "", "b")]
+        [InlineData("a,b", "c,d,e", "a,b", "", "c,d,e")]
+        [InlineData("c,d,e", "a,b", "c,d,e", "", "a,b")]
+        [InlineData("b", "a,c", "b", "", "a,c")]
+        [InlineData("a,c", "b", "a,c", "", "b")]
+        [InlineData("a,b,c,d,e", "b,d,f", "a,c,e", "b,d", "f")]
+        public void CompareLists_Tests(string left, string right, string leftOnly, string common, string rightOnly)
+        {
+            (List<string> lo, List<string> c, List<string> ro) = YamlComparer.CompareLists(left.Split(",", StringSplitOptions.RemoveEmptyEntries).OrderBy(x => x), right.Split(",", StringSplitOptions.RemoveEmptyEntries).OrderBy(x => x), x => x);
+
+            Assert.Equal(leftOnly.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList(), lo);
+            Assert.Equal(common.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList(), c);
+            Assert.Equal(rightOnly.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList(), ro);
         }
 
         private static void ExportTexlFunctionsToYaml(string reference, string output, string connectorName, List<TexlFunction> texlFunctions, bool isLibrary)
@@ -650,9 +944,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         private static void ExportConnectorFunction(string folder, ConnectorFunction connectorFunction)
         {
-            dynamic obj = connectorFunction.ToExpando(null);
-            var serializer = new SerializerBuilder().Build();
-            string yaml = serializer.Serialize(obj);            
+            YamlConnectorFunction function = new YamlConnectorFunction(connectorFunction, null);
 
             string functionFile = Path.Combine(folder, "ConnectorFunction_" + connectorFunction.Name.Replace("/", "_", StringComparison.OrdinalIgnoreCase) + ".yaml");
             Directory.CreateDirectory(folder);
@@ -662,8 +954,371 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 throw new IOException($"File {functionFile} already exists!");
             }
 
-            File.WriteAllText(functionFile, yaml, Encoding.UTF8);
+            File.WriteAllText(functionFile, function.GetYaml(), Encoding.UTF8);
         }
+    }
+
+    public sealed class YamlConnectorFunction : YamlReaderWriter, IYamlFunction
+    {
+        public YamlConnectorFunction()
+        {
+        }
+
+        public YamlConnectorFunction(ConnectorFunction connectorFunction, string swaggerFile)
+        {
+            Name = connectorFunction.Name;
+            OperationId = connectorFunction.OriginalName;
+            Method = connectorFunction.HttpMethod.ToString().ToUpperInvariant();
+            Path = connectorFunction.OperationPath;
+            SwaggerFile = swaggerFile;
+            Description = connectorFunction.Description;
+            Summary = connectorFunction.Summary;
+            IsBehavior = connectorFunction.IsBehavior;
+            IsSupported = connectorFunction.IsSupported;
+            NotSupportedReason = connectorFunction.NotSupportedReason;
+            Warnings = connectorFunction.Warnings.Any() ? string.Join(", ", connectorFunction.Warnings.Select(erk => ErrorUtils.FormatMessage(StringResources.Get(erk), null, Name, connectorFunction.Namespace))) : null;
+            IsDeprecated = connectorFunction.IsDeprecated;
+            IsInternal = connectorFunction.IsInternal;
+            IsPageable = connectorFunction.IsPageable;
+            RequiresUserConfirmation = connectorFunction.RequiresUserConfirmation;
+            Visibility = connectorFunction.Visibility;
+            ReturnType = connectorFunction.ReturnType._type.ToString();
+            ReturnType_Detailed = connectorFunction.ReturnParameterType == null ? null : new YamlConnectorType(connectorFunction.ReturnParameterType);
+            ArityMin = connectorFunction.ArityMin;
+            ArityMax = connectorFunction.ArityMax;
+            RequiredParameters = connectorFunction.RequiredParameters?.Select(rp => new YamlConnectorParameter(rp)).ToArray();
+            OptionalParameters = connectorFunction.OptionalParameters?.Select(op => new YamlConnectorParameter(op)).ToArray();
+        }
+
+        public string Name;
+        public string OperationId;
+        public string Method;
+        public string Path;
+        public string SwaggerFile;
+        public string Description;
+        public string Summary;
+        public bool IsBehavior;
+        public bool IsSupported;
+        public string NotSupportedReason;
+        public string Warnings;
+        public bool IsDeprecated;
+        public bool IsInternal;
+        public bool IsPageable;
+        public bool RequiresUserConfirmation;
+        public string Visibility;
+        public string ReturnType;
+        public YamlConnectorType ReturnType_Detailed;
+        public int ArityMin;
+        public int ArityMax;
+        public YamlConnectorParameter[] RequiredParameters;
+        public YamlConnectorParameter[] OptionalParameters;
+
+        string IYamlFunction.GetName()
+        {
+            return Name;
+        }
+
+        bool IYamlFunction.HasDetailedProperties()
+        {
+            return true;
+        }
+
+        bool IYamlFunction.GetIsSupported()
+        {
+            return IsSupported;
+        }
+
+        bool IYamlFunction.GetIsDeprecated()
+        {
+            return IsDeprecated;
+        }
+
+        bool IYamlFunction.GetIsInternal()
+        {
+            return IsInternal;
+        }
+
+        bool IYamlFunction.GetIsPageable()
+        {
+            return IsPageable;
+        }
+
+        string IYamlFunction.GetNotSupportedReason()
+        {
+            return NotSupportedReason;
+        }
+
+        int IYamlFunction.GetArityMin()
+        {
+            return ArityMin;
+        }
+
+        int IYamlFunction.GetArityMax()
+        {
+            return ArityMax;
+        }
+
+        string IYamlFunction.GetRequiredParameterTypes()
+        {
+            if (RequiredParameters == null || RequiredParameters.Length == 0)
+            {
+                return null;
+            }
+
+            return string.Join(", ", RequiredParameters.Select(cp => cp.Type.FormulaType));
+        }
+
+        string IYamlFunction.GetOptionalParameterTypes()
+        {
+            if (OptionalParameters == null || OptionalParameters.Length == 0)
+            {
+                return null;
+            }
+
+            return string.Join(", ", OptionalParameters.Select(cp => cp.Type.FormulaType));
+        }
+
+        string IYamlFunction.GetReturnType()
+        {
+            return ReturnType;
+        }
+
+        string IYamlFunction.GetParameterNames()
+        {
+            string paramNames = string.Join(", ", RequiredParameters?.Select(rp => rp.Name) ?? Enumerable.Empty<string>());
+
+            if (OptionalParameters?.Any() == true)
+            {
+                if (!string.IsNullOrEmpty(paramNames))
+                {
+                    paramNames += ", ";
+                }
+
+                paramNames += $"{{ {string.Join(", ", OptionalParameters.Select(op => op.Name))} }}";
+            }
+
+            return paramNames;
+        }
+
+        string IYamlFunction.GetWarnings()
+        {
+            return Warnings;
+        }
+    }
+
+    public class YamlConnectorParameter
+    {
+        public YamlConnectorParameter()
+        {
+        }
+
+        public YamlConnectorParameter(ConnectorParameter connectorParam)
+        {
+            Name = connectorParam.Name;
+            Description = connectorParam.Description;
+            Location = connectorParam.Location.ToString();
+            FormulaType = connectorParam.FormulaType._type.ToString();
+            Type = new YamlConnectorType(connectorParam.ConnectorType);
+
+            if (connectorParam.DefaultValue != null)
+            {
+                StringBuilder sb = new StringBuilder();
+                connectorParam.DefaultValue.ToExpression(sb, new FormulaValueSerializerSettings() { UseCompactRepresentation = true });
+                DefaultValue = sb.ToString();
+            }
+
+            Title = connectorParam.Title;
+            ExplicitInput = connectorParam.ConnectorExtensions.ExplicitInput;
+        }
+
+        public string Name;
+        public string Description;
+        public string Location;
+        public string FormulaType;
+        public YamlConnectorType Type;
+        public string DefaultValue;
+        public string Title;
+        public bool ExplicitInput;
+    }
+
+    public class YamlConnectorType
+    {
+        public YamlConnectorType()
+        {
+        }
+
+        public YamlConnectorType(ConnectorType connectorType, bool noname = false)
+        {
+            if (!noname)
+            {
+                Name = connectorType.Name;
+                DisplayName = connectorType.DisplayName;
+                Description = connectorType.Description;
+            }
+
+            IsRequired = connectorType.IsRequired;
+
+            if (connectorType.Fields != null && connectorType.Fields.Any())
+            {
+                Fields = connectorType.Fields.Select(fieldCT => new YamlConnectorType(fieldCT)).ToArray();
+            }
+
+            FormulaType = connectorType.FormulaType._type.ToString();
+            ExplicitInput = connectorType.ExplicitInput;
+            IsEnum = connectorType.IsEnum;
+
+            if (connectorType.IsEnum)
+            {
+                bool hasDisplayNames = connectorType.EnumDisplayNames != null && connectorType.EnumDisplayNames.Length > 0;
+                EnumValues = connectorType.EnumValues.Select((ev, i) => new YamlEnumValue()
+                {
+                    DisplayName = hasDisplayNames ? connectorType.EnumDisplayNames[i] : null,
+                    Value = ev.ToObject().ToString(),
+                    Type = ev.Type._type.ToString()
+                }).ToArray();
+            }
+
+            Visibility = connectorType.Visibility.ToString();
+
+            if (connectorType.DynamicList != null)
+            {
+                DynamicList = new YamlDynamicList()
+                {
+                    OperationId = connectorType.DynamicList.OperationId,
+                    ItemValuePath = connectorType.DynamicList.ItemValuePath,
+                    ItemPath = connectorType.DynamicList.ItemPath,
+                    ItemTitlePath = connectorType.DynamicList.ItemTitlePath,
+                    Map = GetMap(connectorType.DynamicList.ParameterMap)
+                };
+            }
+
+            if (connectorType.DynamicProperty != null)
+            {
+                DynamicProperty = new YamlDynamicProperty()
+                {
+                    OperationId = connectorType.DynamicProperty.OperationId,
+                    ItemValuePath = connectorType.DynamicProperty.ItemValuePath,
+                    Map = GetMap(connectorType.DynamicProperty.ParameterMap)
+                };
+            }
+
+            if (connectorType.DynamicSchema != null)
+            {
+                DynamicSchema = new YamlDynamicSchema()
+                {
+                    OperationId = connectorType.DynamicSchema.OperationId,
+                    ValuePath = connectorType.DynamicSchema.ValuePath,
+                    Map = GetMap(connectorType.DynamicSchema.ParameterMap)
+                };
+            }
+
+            if (connectorType.DynamicValues != null)
+            {
+                DynamicValues = new YamlDynamicValues()
+                {
+                    OperationId = connectorType.DynamicValues.OperationId,
+                    ValueTitle = connectorType.DynamicValues.ValueTitle,
+                    ValuePath = connectorType.DynamicValues.ValuePath,
+                    ValueCollection = connectorType.DynamicValues.ValueCollection,
+                    Map = GetMap(connectorType.DynamicValues.ParameterMap)
+                };
+            }
+        }
+
+        public string Name;
+        public string DisplayName;
+        public string Description;
+        public bool IsRequired;
+        public YamlConnectorType[] Fields;
+        public string FormulaType;
+        public bool ExplicitInput;
+        public bool IsEnum;
+        public YamlEnumValue[] EnumValues;
+        public string Visibility;
+        public YamlDynamicList DynamicList;
+        public YamlDynamicProperty DynamicProperty;
+        public YamlDynamicSchema DynamicSchema;
+        public YamlDynamicValues DynamicValues;
+
+        private Dictionary<string, YamlMapping> GetMap(Dictionary<string, IConnectorExtensionValue> dic)
+        {
+            return dic.ToDictionary(kvp => kvp.Key, kvp => GetIP(kvp.Value));
+        }
+
+        private YamlMapping GetIP(IConnectorExtensionValue cev)
+        {
+            if (cev is StaticConnectorExtensionValue scev)
+            {
+                return new YamlMapping()
+                {
+                    Value = scev.Value.ToExpression(),
+                    Type = scev.Value.Type._type.ToString()
+                };
+            }
+
+            if (cev is DynamicConnectorExtensionValue dcev)
+            {
+                return new YamlMapping()
+                {
+                    Reference = dcev.Reference
+                };
+            }
+
+            throw new Exception("Invalid IConnectorExtensionValue");
+        }
+    }
+
+    public class YamlEnumValue
+    {
+        public string DisplayName;
+        public string Value;
+        public string Type;
+    }
+
+    public class YamlDynamicList
+    {
+        public string OperationId;
+        public string ItemValuePath;
+        public string ItemPath;
+        public string ItemTitlePath;
+        public Dictionary<string, YamlMapping> Map;
+    }
+
+    public class YamlDynamicProperty
+    {
+        public string OperationId;
+        public string ItemValuePath;
+        public Dictionary<string, YamlMapping> Map;
+    }
+
+    public class YamlDynamicSchema
+    {
+        public string OperationId;
+        public string ValuePath;
+        public Dictionary<string, YamlMapping> Map;
+    }
+
+    public class YamlDynamicValues
+    {
+        public string OperationId;
+        public string ValueTitle;
+        public string ValuePath;
+        public string ValueCollection;
+        public Dictionary<string, YamlMapping> Map;
+    }
+
+    public class YamlMapping
+    {
+        public YamlMapping()
+        {
+        }
+
+        // Static
+        public string Value;
+        public string Type;
+
+        // Dynamic
+        public string Reference;
     }
 
     public static class Exts
@@ -683,315 +1338,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
             {
                 console.WriteLine(obj.ToString());
             }
-        }
-
-        public static ExpandoObject ToExpando(this ConnectorFunction connectorFunction, string swaggerFile)
-        {
-            dynamic func = new ExpandoObject();
-
-            func.Name = connectorFunction.Name;
-            func.OperationId = connectorFunction.OriginalName;
-            func.Method = connectorFunction.HttpMethod.ToString().ToUpperInvariant();
-            func.Path = connectorFunction.OperationPath;
-
-            if (!string.IsNullOrEmpty(swaggerFile))
-            {
-                func.SwaggerFile = swaggerFile;
-            }
-
-            if (!string.IsNullOrEmpty(connectorFunction.Description))
-            {
-                func.Description = connectorFunction.Description;
-            }
-
-            if (!string.IsNullOrEmpty(connectorFunction.Summary))
-            {
-                func.Summary = connectorFunction.Summary;
-            }
-
-            func.IsBehavior = connectorFunction.IsBehavior;
-            func.IsSupported = connectorFunction.IsSupported;
-            func.NotSupportedReason = connectorFunction.NotSupportedReason;
-            func.IsDeprecated = connectorFunction.IsDeprecated;
-            func.IsInternal = connectorFunction.IsInternal;
-            func.IsPageable = connectorFunction.IsPageable;
-
-            if (connectorFunction.RequiresUserConfirmation)
-            {
-                func.RequiresUserConfirmation = connectorFunction.RequiresUserConfirmation;
-            }
-
-            if (!string.IsNullOrEmpty(connectorFunction.Visibility))
-            {
-                func.Visibility = connectorFunction.Visibility;
-            }
-
-            func.ReturnType = connectorFunction.ReturnType._type.ToString();
-            func.ReturnType_Detailed = connectorFunction.ReturnParameterType == null ? (dynamic)"null" : connectorFunction.ReturnParameterType.ToExpando(noname: true);
-
-            func.ArityMin = connectorFunction.ArityMin;
-            func.ArityMax = connectorFunction.ArityMax;
-            func.RequiredParameters = connectorFunction.RequiredParameters == null ? (dynamic)"null" : connectorFunction.RequiredParameters.Select(rp => rp.ToExpando()).ToList();
-            func.OptionalParameters = connectorFunction.OptionalParameters == null ? (dynamic)"null" : connectorFunction.OptionalParameters.Select(op => op.ToExpando()).ToList();
-
-            return func;
-        }
-
-        internal static ExpandoObject ToExpando(this ConnectorParameter connectorParam)
-        {
-            dynamic cParam = new ExpandoObject();
-
-            cParam.Name = connectorParam.Name;
-
-            if (!string.IsNullOrEmpty(connectorParam.Description))
-            {
-                cParam.Description = connectorParam.Description;
-            }
-
-            if (connectorParam.Location != null)
-            {
-                cParam.Location = connectorParam.Location.ToString();
-            }
-
-            cParam.FormulaType = connectorParam.FormulaType._type.ToString();
-            cParam.Type = connectorParam.ConnectorType.ToExpando();
-
-            if (connectorParam.DefaultValue != null)
-            {
-                StringBuilder sb = new StringBuilder();
-                connectorParam.DefaultValue.ToExpression(sb, new FormulaValueSerializerSettings() { UseCompactRepresentation = true });
-                cParam.DefaultValue = sb.ToString();
-            }
-
-            if (!string.IsNullOrEmpty(connectorParam.Title))
-            {
-                cParam.Title = connectorParam.Title;
-            }
-
-            if (connectorParam.ConnectorExtensions.ExplicitInput)
-            {
-                cParam.ExplicitInput = connectorParam.ConnectorExtensions.ExplicitInput;
-            }
-
-            return cParam;
-        }
-
-        internal static ExpandoObject ToExpando(this ConnectorType connectorType, bool noname = false)
-        {
-            dynamic cType = new ExpandoObject();
-
-            if (!noname)
-            {
-                cType.Name = connectorType.Name;
-
-                if (!string.IsNullOrEmpty(connectorType.DisplayName))
-                {
-                    cType.DisplayName = connectorType.DisplayName;
-                }
-
-                if (!string.IsNullOrEmpty(connectorType.Description))
-                {
-                    cType.Description = connectorType.Description;
-                }
-            }
-
-            cType.IsRequired = connectorType.IsRequired;
-
-            if (connectorType.Fields != null && connectorType.Fields.Any())
-            {
-                cType.Fields = connectorType.Fields.Select(fieldCT => fieldCT.ToExpando()).ToList();
-            }
-
-            cType.FormulaType = connectorType.FormulaType._type.ToString();
-
-            if (connectorType.ExplicitInput)
-            {
-                cType.ExplicitInput = connectorType.ExplicitInput;
-            }
-
-            cType.IsEnum = connectorType.IsEnum;
-
-            if (connectorType.IsEnum)
-            {
-                bool hasDisplayNames = connectorType.EnumDisplayNames != null && connectorType.EnumDisplayNames.Length > 0;
-                cType.EnumValues = connectorType.EnumValues.Select<FormulaValue, object>((ev, i) => GetEnumExpando(hasDisplayNames ? connectorType.EnumDisplayNames[i] : null, ev.ToObject().ToString(), ev.Type._type.ToString())).ToList();
-            }
-
-            if (connectorType.Visibility != Visibility.None && connectorType.Visibility != Visibility.Unknown)
-            {
-                cType.Visibility = connectorType.Visibility.ToString();
-            }
-
-            if (connectorType.DynamicList != null)
-            {
-                cType.DynamicList = connectorType.DynamicList.ToExpando();
-            }
-
-            if (connectorType.DynamicProperty != null)
-            {
-                cType.DynamicProperty = connectorType.DynamicProperty.ToExpando();
-            }
-
-            if (connectorType.DynamicSchema != null)
-            {
-                cType.DynamicSchema = connectorType.DynamicSchema.ToExpando();
-            }
-
-            if (connectorType.DynamicValues != null)
-            {
-                cType.DynamicValues = connectorType.DynamicValues.ToExpando();
-            }
-
-            return cType;
-        }
-
-        internal static ExpandoObject GetEnumExpando(string displayName, string value, string type)
-        {
-            dynamic e = new ExpandoObject();
-
-            if (!string.IsNullOrEmpty(displayName))
-            {
-                e.DisplayName = displayName;
-            }
-
-            e.Value = value;
-            e.Type = type;
-
-            return e;
-        }
-
-        internal static ExpandoObject ToExpando(this ConnectorDynamicList dynamicList)
-        {
-            dynamic dList = new ExpandoObject();
-
-            dList.OperationId = dynamicList.OperationId;
-
-            if (!string.IsNullOrEmpty(dynamicList.ItemValuePath))
-            {
-                dList.ItemValuePath = dynamicList.ItemValuePath;
-            }
-
-            if (!string.IsNullOrEmpty(dynamicList.ItemPath))
-            {
-                dList.ItemPath = dynamicList.ItemPath;
-            }
-
-            if (!string.IsNullOrEmpty(dynamicList.ItemTitlePath))
-            {
-                dList.ItemTitlePath = dynamicList.ItemTitlePath;
-            }
-
-            if (dynamicList.ParameterMap != null)
-            {
-                dList.Map = dynamicList.ParameterMap.ToExpando();
-            }
-
-            return dList;
-        }
-
-        internal static ExpandoObject ToExpando(this ConnectorDynamicProperty dynamicProp)
-        {
-            dynamic dProp = new ExpandoObject();
-
-            dProp.OperationId = dynamicProp.OperationId;
-
-            if (!string.IsNullOrEmpty(dynamicProp.ItemValuePath))
-            {
-                dProp.ItemValuePath = dynamicProp.ItemValuePath;
-            }
-
-            if (dynamicProp.ParameterMap != null)
-            {
-                dProp.Map = dynamicProp.ParameterMap.ToExpando();
-            }
-
-            return dProp;
-        }
-
-        internal static ExpandoObject ToExpando(this ConnectorDynamicSchema dynamicSchema)
-        {
-            dynamic dSchema = new ExpandoObject();
-
-            dSchema.OperationId = dynamicSchema.OperationId;
-
-            if (!string.IsNullOrEmpty(dynamicSchema.ValuePath))
-            {
-                dSchema.ValuePath = dynamicSchema.ValuePath;
-            }
-
-            if (dynamicSchema.ParameterMap != null)
-            {
-                dSchema.Map = dynamicSchema.ParameterMap.ToExpando();
-            }
-
-            return dSchema;
-        }
-
-        internal static ExpandoObject ToExpando(this ConnectorDynamicValue dynamicValue)
-        {
-            dynamic dValue = new ExpandoObject();
-
-            dValue.OperationId = dynamicValue.OperationId;
-
-            if (!string.IsNullOrEmpty(dynamicValue.ValuePath))
-            {
-                dValue.ValuePath = dynamicValue.ValuePath;
-            }
-
-            if (!string.IsNullOrEmpty(dynamicValue.ValueTitle))
-            {
-                dValue.ValueTitle = dynamicValue.ValueTitle;
-            }
-
-            if (!string.IsNullOrEmpty(dynamicValue.ValueCollection))
-            {
-                dValue.ValueCollection = dynamicValue.ValueCollection;
-            }
-
-            if (dynamicValue.ParameterMap != null)
-            {
-                dValue.Map = dynamicValue.ParameterMap.ToExpando();
-            }
-
-            return dValue;
-        }
-
-        internal static ExpandoObject ToExpando(this Dictionary<string, IConnectorExtensionValue> paramMap)
-        {
-            IDictionary<string, object> dMap = new ExpandoObject() as IDictionary<string, object>;
-
-            foreach (var kvp in paramMap)
-            {
-                if (kvp.Value is StaticConnectorExtensionValue scev)
-                {
-                    dMap[kvp.Key] = GetStaticExt(scev.Value.ToExpression(), scev.Value.Type._type.ToString());
-                }
-                else if (kvp.Value is DynamicConnectorExtensionValue dcev)
-                {
-                    dMap[kvp.Key] = GetDynamicExt(dcev.Reference);
-                }
-            }
-
-            return (dynamic)dMap;
-        }
-
-        internal static ExpandoObject GetStaticExt(string value, string type)
-        {
-            dynamic s = new ExpandoObject();
-
-            s.Value = value;
-            s.Type = type;
-
-            return s;
-        }
-
-        internal static ExpandoObject GetDynamicExt(string @ref)
-        {
-            dynamic s = new ExpandoObject();
-
-            s.Reference = @ref;
-
-            return s;
         }
     }
 }

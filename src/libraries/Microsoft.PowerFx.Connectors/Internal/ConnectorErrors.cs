@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Localization;
+
 namespace Microsoft.PowerFx.Connectors
 {
     internal class ConnectorErrors : SupportsConnectorErrors
@@ -10,8 +12,8 @@ namespace Microsoft.PowerFx.Connectors
         { 
         }
 
-        public ConnectorErrors(string error)
-            : base(error)
+        public ConnectorErrors(string error, ErrorResourceKey warning = default)
+            : base(error, warning)
         {            
         }
     }

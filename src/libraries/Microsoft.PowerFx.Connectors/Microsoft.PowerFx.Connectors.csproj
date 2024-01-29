@@ -14,6 +14,7 @@
     <Title>Microsoft Power Fx Connector Support</Title>
     <Description>Connectors</Description>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,4 +33,11 @@
     <ProjectReference Include="..\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />
     <ProjectReference Include="..\Microsoft.PowerFx.Json\Microsoft.PowerFx.Json.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\strings\PowerFxConnectorResources.*.resx">
+      <Link>strings\%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

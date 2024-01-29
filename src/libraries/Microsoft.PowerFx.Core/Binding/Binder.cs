@@ -3468,13 +3468,6 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
-                    // Explicitly block access to design properties referenced via Selected/AllItems.
-                    if (leftControl.IsDataLimitedControl && property.PropertyCategory != PropertyRuleCategory.Data)
-                    {
-                        SetDottedNameError(node, TexlStrings.ErrNotAccessibleInCurrentContext);
-                        return;
-                    }
-
                     // For properties requiring default references, block non-defaultable properties
                     if (_txb.CurrentPropertyRequiresDefaultableReferences && property.UnloadedDefault == null)
                     {
@@ -5170,9 +5163,12 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Critical, node, TexlStrings.ErrUnsupportedFunction, func.Name, func.Namespace);
                     }
 
-                    if (sdf.IsDeprecated)
+                    if (sdf.Warnings != null)
                     {
-                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDeprecatedFunction, func.Name, func.Namespace);
+                        foreach (ErrorResourceKey erk in sdf.Warnings)
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, erk, func.Name, func.Namespace);
+                        }
                     }
                 }
             }

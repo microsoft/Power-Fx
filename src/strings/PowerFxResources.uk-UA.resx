@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -119,62 +119,48 @@
   </resheader>
   <data name="ListItemSingleQuotedFormat" xml:space="preserve">
     <value>"{0}"</value>
-    
   </data>
   <data name="AboutIf" xml:space="preserve">
     <value>Перевіряє дані на відповідність визначеним умовам і повертає певне значення залежно від збігів. Якщо збігів немає, функція повертає вказане стандартне значення.</value>
-    
   </data>
   <data name="IfArgCond" xml:space="preserve">
     <value>логічна_перевірка</value>
-    
   </data>
   <data name="IfArgTrueValue" xml:space="preserve">
     <value>значення_true</value>
-    
   </data>
   <data name="IfArgElseValue" xml:space="preserve">
     <value>значення_else</value>
-    
   </data>
   <data name="AboutIf_logical_test" xml:space="preserve">
     <value>Умова, що викликає логічне значення.</value>
   </data>
   <data name="AboutIf_true_value" xml:space="preserve">
     <value>Вираз, що надає результати операції If, якщо дані відповідають умовам.</value>
-    
   </data>
   <data name="AboutIf_else_value" xml:space="preserve">
     <value>Вираз, що надає результат операції If, коли дані не відповідають жодній умові.</value>
-    
   </data>
   <data name="AboutSwitch" xml:space="preserve">
     <value>Зіставляє результат формули з рядом значень. Якщо знайдено збіг, обчислюється та повертається відповідна формула. Якщо збігів не знайдено, обчислюється та повертається остання стандартна формула.</value>
-    
   </data>
   <data name="SwitchExpression" xml:space="preserve">
     <value>значення_перемикача</value>
-    
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
     <value>стандартний_результат</value>
-    
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
     <value>значення_збігу</value>
-    
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
     <value>результат_збігу</value>
-    
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
     <value>Значення, яке потрібно порівняти з кожним значенням_збігу.</value>
-    
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
     <value>Значення, яке потрібно зіставити зі значенням_перемикача.</value>
-    
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
     <value>Формула, яку потрібно обчислити й повернути, якщо збіг знайдено.</value>
@@ -184,19 +170,15 @@
   </data>
   <data name="AboutAnd" xml:space="preserve">
     <value>Перевіряє, чи всі аргументи мають значення "Істина". Якщо це так, повертає значення "Істина".</value>
-    
   </data>
   <data name="AboutOr" xml:space="preserve">
     <value>Перевіряє істинність будь-якого з аргументів і повертає значення "Істина" або "Хибність". Повертає "Хибність", лише якщо всі аргументи хибні.</value>
-    
   </data>
   <data name="AboutNot" xml:space="preserve">
     <value>Змінює значення "Хибність" на "Істина" й навпаки.</value>
-    
   </data>
   <data name="LogicalFuncParam" xml:space="preserve">
     <value>логічна</value>
-    
   </data>
   <data name="AboutAnd_logical" xml:space="preserve">
     <value>Логічний вираз з оператором "І".</value>
@@ -209,19 +191,15 @@
   </data>
   <data name="AboutCount" xml:space="preserve">
     <value>Рахує числові значення в указаному стовпці.</value>
-    
   </data>
   <data name="AboutCountA" xml:space="preserve">
     <value>Рахує кількість непустих рядків у стовпці.</value>
-    
   </data>
   <data name="AboutCountRows" xml:space="preserve">
     <value>Рахує кількість рядків у вхідній таблиці або колекції.</value>
-    
   </data>
   <data name="CountArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="AboutCount_source" xml:space="preserve">
     <value>Стовпець зі значеннями, які потрібно підрахувати.</value>
@@ -234,15 +212,12 @@
   </data>
   <data name="AboutCountIf" xml:space="preserve">
     <value>Рахує кількість рядків, що відповідають зазначеним умовам.</value>
-    
   </data>
   <data name="CountIfArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="CountIfArg2" xml:space="preserve">
     <value>умова</value>
-    
   </data>
   <data name="AboutCountIf_source" xml:space="preserve">
     <value>Таблиця, де буде підраховано рядки, що відповідають визначеним умовам.</value>
@@ -252,27 +227,21 @@
   </data>
   <data name="AboutSumT" xml:space="preserve">
     <value>Повертає суму чисел, обчислену виразом у контексті певної таблиці.</value>
-    
   </data>
   <data name="AboutMaxT" xml:space="preserve">
     <value>Повертає найбільший результат виразу, який можна обчислити стосовно таблиці.</value>
-    
   </data>
   <data name="AboutMinT" xml:space="preserve">
     <value>Повертає найменший результат виразу, який можна обчислити стосовно таблиці.</value>
-    
   </data>
   <data name="AboutAverageT" xml:space="preserve">
     <value>Повертає середнє арифметичне значення чисел, отриманих у результаті обчислення виразу в контексті таблиці.</value>
-    
   </data>
   <data name="StatisticalTArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="StatisticalTArg2" xml:space="preserve">
     <value>вираз</value>
-    
   </data>
   <data name="AboutMin_source" xml:space="preserve">
     <value>Таблиця, стосовно якої буде обчислено цю операцію "Мінімум".</value>
@@ -300,23 +269,18 @@
   </data>
   <data name="AboutSum" xml:space="preserve">
     <value>Повертає суму аргументів.</value>
-    
   </data>
   <data name="AboutMax" xml:space="preserve">
     <value>Повертає найбільше значення в наборі. Пропускає логічні значення й текст.</value>
-    
   </data>
   <data name="AboutMin" xml:space="preserve">
     <value>Повертає найменше значення в наборі. Пропускає логічні значення й текст.</value>
-    
   </data>
   <data name="AboutAverage" xml:space="preserve">
     <value>Повертає середнє арифметичне значення своїх аргументів.</value>
-    
   </data>
   <data name="StatisticalArg" xml:space="preserve">
     <value>число</value>
-    
   </data>
   <data name="AboutSum_number" xml:space="preserve">
     <value>Числове значення для цієї операції "Додавання".</value>
@@ -332,43 +296,33 @@
   </data>
   <data name="AboutAddColumns" xml:space="preserve">
     <value>Повертає таблицю з новими стовпцями, отриманими після обчислення всіх виразів стосовно джерела даних.</value>
-    
   </data>
   <data name="AddColumnsArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="AddColumnsArg2" xml:space="preserve">
     <value>стовпець</value>
-    
   </data>
   <data name="AddColumnsArg3" xml:space="preserve">
     <value>вираз</value>
-    
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
     <value>Таблиця або запис, куди потрібно додати стовпці.</value>
-    
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
     <value>Унікальне ім’я стовпця.</value>
-    
   </data>
   <data name="AboutAddColumns_expression" xml:space="preserve">
     <value>Вираз, що додає значення до нового стовпця.</value>
-    
   </data>
   <data name="AboutDropColumns" xml:space="preserve">
     <value>Повертає таблицю з одним або кількома зазначеними стовпцями, вилученими з вихідної таблиці.</value>
-    
   </data>
   <data name="DropColumnsArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="DropColumnsArg2" xml:space="preserve">
     <value>ім’я_стовпця</value>
-    
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
     <value>Значення таблиці або запису, звідки потрібно вилучити стовпці.</value>
@@ -378,19 +332,15 @@
   </data>
   <data name="AboutRenameColumns" xml:space="preserve">
     <value>Повертає копію вказаної вихідної таблиці, де стовпець "старий_стовпець" перейменовано на значення "новий_стовпець".</value>
-    
   </data>
   <data name="RenameColumnsArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="RenameColumnsArg2" xml:space="preserve">
     <value>старий_стовпець</value>
-    
   </data>
   <data name="RenameColumnsArg3" xml:space="preserve">
     <value>новий_стовпець</value>
-    
   </data>
   <data name="AboutRenameColumns_source" xml:space="preserve">
     <value>Значення таблиці, яке потрібно обробити.</value>
@@ -402,20 +352,16 @@
     <value>Нове ім’я для стовпця.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Указаний стовпець "{0}" не можна перейменувати двічі.</value>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Повертає рядки з таблиці, що відповідає всім визначеним умовам.</value>
-    
   </data>
   <data name="FilterArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="FilterArg2" xml:space="preserve">
     <value>логічна_перевірка</value>
-    
   </data>
   <data name="AboutFilter_source" xml:space="preserve">
     <value>Таблиця, дані якої фільтруються.</value>
@@ -425,15 +371,12 @@
   </data>
   <data name="AboutFirst" xml:space="preserve">
     <value>Повертає перший рядок джерела.</value>
-    
   </data>
   <data name="AboutLast" xml:space="preserve">
     <value>Повертає останній рядок джерела.</value>
-    
   </data>
   <data name="FirstLastArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="AboutFirst_source" xml:space="preserve">
     <value>Таблиця, звідки потрібно повернути перший рядок.</value>
@@ -443,19 +386,15 @@
   </data>
   <data name="AboutFirstN" xml:space="preserve">
     <value>Повертає перші рядки джерела у вказаній кількості.</value>
-    
   </data>
   <data name="AboutLastN" xml:space="preserve">
     <value>Повертає останні рядки джерела у визначеній кількості.</value>
-    
   </data>
   <data name="FirstLastNArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="FirstLastNArg2" xml:space="preserve">
     <value>кількість</value>
-    
   </data>
   <data name="AboutFirstN_source" xml:space="preserve">
     <value>Таблиця, звідки потрібно отримати рядки.</value>
@@ -471,130 +410,105 @@
   </data>
   <data name="AboutText" xml:space="preserve">
     <value>Перетворює значення в текст певного чисельного формату "формат_текст".</value>
-    
   </data>
   <data name="TextArg1" xml:space="preserve">
     <value>значення</value>
-    
   </data>
   <data name="TextArg2" xml:space="preserve">
     <value>формат_текст</value>
-    
   </data>
   <data name="TextArg3" xml:space="preserve">
     <value>мова</value>
-    
   </data>
   <data name="AboutText_value" xml:space="preserve">
     <value>Значення, яке потрібно перетворити на текст.</value>
   </data>
   <data name="AboutText_format_text" xml:space="preserve">
     <value>Текстове значення, що визначає формат значення.</value>
-    
   </data>
   <data name="AboutText_language" xml:space="preserve">
     <value>Мовний код, який потрібно використовувати під час перетворення тексту.</value>
-    
   </data>
   <data name="AboutValue" xml:space="preserve">
     <value>Перетворює текст, який позначає число, на числове значення.</value>
-    
   </data>
   <data name="ValueArg1" xml:space="preserve">
     <value>текст</value>
-    
   </data>
   <data name="ValueArg2" xml:space="preserve">
     <value>мова</value>
-    
   </data>
   <data name="AboutValue_text" xml:space="preserve">
     <value>Текстове значення, яке потрібно перетворити на числове.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
     <value>Мовний код, який слід використовувати під час перетворення значення.</value>
-    
   </data>
   <data name="AboutBoolean" xml:space="preserve">
     <value>Перетворює "текст", що представляє логічне значення, у логічне значення.</value>
-    
   </data>
   <data name="BooleanArg1" xml:space="preserve">
     <value>текст</value>
-    
   </data>
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Текстове значення для перетворення на логічне значення.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
     <value>Перетворює стовпець текстових значень на стовпець логічних значень.</value>
-    
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
     <value>вхідні дані</value>
-    
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
     <value>Стовпець із текстовими значеннями, які потрібно обробити.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>Перетворює "число" на логічне значення.</value>
-    
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
     <value>число</value>
-    
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
     <value>Числове значення, яке потрібно перетворити на логічне значення.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
     <value>Перетворює стовпець числових значень на стовпець логічних значень.</value>
-    
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
     <value>вхідні дані</value>
-    
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Стовпець числових значень, який потрібно обробити.</value>
   </data>
   <data name="AboutBooleanB" xml:space="preserve">
     <value>Перетворює "boolean" на логічне значення.</value>
-    
   </data>
   <data name="BooleanBArg1" xml:space="preserve">
     <value>логічний</value>
-    
   </data>
   <data name="AboutBooleanB_boolean" xml:space="preserve">
     <value>Логічне значення, яке потрібно перетворити на логічне значення.</value>
   </data>
   <data name="AboutBooleanBT" xml:space="preserve">
     <value>Перетворює стовпець логічних значень на стовпець логічних значень.</value>
-    
   </data>
   <data name="BooleanBTArg1" xml:space="preserve">
     <value>вхідні дані</value>
-    
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Стовпець логічних значень, який потрібно обробити.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Повертає перший непустий аргумент.</value>
-    
   </data>
   <data name="CoalesceArg1" xml:space="preserve">
     <value>значення</value>
-    
   </data>
   <data name="AboutCoalesce_value" xml:space="preserve">
     <value>Аргумент, який потрібно повернути, якщо це перший непустий аргумент.</value>
   </data>
   <data name="AboutConcatenate" xml:space="preserve">
     <value>Об’єднує кілька текстових значень в одне.</value>
-    
   </data>
   <data name="AboutDecimal" xml:space="preserve">
     <value>Перетворює "текст", що представляє число, на десяткове значення.</value>
@@ -616,37 +530,30 @@
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>текст</value>
-    
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
     <value>Текстове значення, яке потрібно об’єднати з рештою аргументів.</value>
   </data>
   <data name="AboutConcatenateT" xml:space="preserve">
     <value>Об’єднує кілька текстових значень або таблиць в один стовпець текстових значень.</value>
-    
   </data>
   <data name="ConcatenateTArg1" xml:space="preserve">
     <value>значення</value>
-    
   </data>
   <data name="AboutConcatenate_value" xml:space="preserve">
     <value>Текстове значення або стовпець текстових значень, який потрібно об’єднати з рештою аргументів.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Об’єднує в одне всі текстові значення, отримані в результаті обчислення вказаного виразу стосовно певної таблиці.</value>
-    
   </data>
   <data name="ConcatArg1" xml:space="preserve">
     <value>таблиця</value>
-    
   </data>
   <data name="ConcatArg2" xml:space="preserve">
     <value>вираз</value>
-    
   </data>
   <data name="ConcatArg3" xml:space="preserve">
     <value>роздільна лінія</value>
-    
   </data>
   <data name="AboutConcat_table" xml:space="preserve">
     <value>Значення таблиці, стосовно якого потрібно обчислити вираз, визначений другим параметром.</value>
@@ -656,37 +563,30 @@
   </data>
   <data name="AboutConcat_separator" xml:space="preserve">
     <value>Текстове значення, яке потрібно вставити між об’єднаними рядками таблиці.</value>
-    
   </data>
   <data name="AboutLen" xml:space="preserve">
     <value>Повертає кількість символів у текстовому значенні.</value>
-    
   </data>
   <data name="AboutLen_text" xml:space="preserve">
     <value>Текстове значення, кількість символів якого потрібно повернути.</value>
   </data>
   <data name="AboutLenT" xml:space="preserve">
     <value>Повертає кількість символів у текстовому значенні, визначену для кожного рядка в межах указаної таблиці або колекції.</value>
-    
   </data>
   <data name="AboutLen_text_column" xml:space="preserve">
     <value>Стовпець із текстовими значеннями, кількість символів яких потрібно повернути, відобразивши їх у новому стовпці.</value>
   </data>
   <data name="LenArg1" xml:space="preserve">
     <value>текст</value>
-    
   </data>
   <data name="LenTArg1" xml:space="preserve">
     <value>текстовий_стовпець</value>
-    
   </data>
   <data name="AboutUpper" xml:space="preserve">
     <value>Застосовує до текстового значення верхній регістр.</value>
-    
   </data>
   <data name="AboutUpperT" xml:space="preserve">
     <value>Застосовує верхній регістр до всіх букв у текстових значеннях кожного рядка в межах указаної таблиці або колекції.</value>
-    
   </data>
   <data name="AboutUpper_text" xml:space="preserve">
     <value>Текстове значення, до якого потрібно застосувати верхній регістр.</value>
@@ -696,11 +596,9 @@
   </data>
   <data name="AboutLower" xml:space="preserve">
     <value>Застосовує нижній регістр до всіх букв у текстовому значенні.</value>
-    
   </data>
   <data name="AboutLowerT" xml:space="preserve">
     <value>Застосовує нижній регістр до всіх букв у текстових значеннях указаної таблиці або колекції (результат обчислюється окремо для кожного рядка).</value>
-    
   </data>
   <data name="AboutLower_text" xml:space="preserve">
     <value>Текстове значення, до якого потрібно застосувати нижній регістр.</value>
@@ -710,11 +608,9 @@
   </data>
   <data name="AboutProper" xml:space="preserve">
     <value>Застосовує до текстового значення належний регістр: до першої букви кожного слова – верхній, до всіх інших – нижній.</value>
-    
   </data>
   <data name="AboutProperT" xml:space="preserve">
     <value>Застосовує до текстового значення кожного рядка в указаній таблиці або колекції, належний регістр: до першої букви кожного слова – верхній, до всіх інших – нижній.</value>
-    
   </data>
   <data name="AboutProper_text" xml:space="preserve">
     <value>Текстове значення, до якого потрібно застосувати відповідний регістр.</value>
@@ -724,7 +620,6 @@
   </data>
   <data name="AboutTrim" xml:space="preserve">
     <value>Видаляє всі пробіли з текстового значення за винятком одинарних пробілів між словами.</value>
-    
   </data>
   <data name="AboutTrim_text" xml:space="preserve">
     <value>Текстове значення, яке потрібно обітнути.</value>
@@ -734,7 +629,6 @@
   </data>
   <data name="AboutTrimEnds" xml:space="preserve">
     <value>Видаляє всі пробіли із самого почату та самого кінця текстового значення.</value>
-    
   </data>
   <data name="AboutTrimEnds_text" xml:space="preserve">
     <value>Текстове значення, де потрібно видалити всі пробіли із самого початку та самого кінця.</value>
@@ -744,11 +638,9 @@
   </data>
   <data name="AboutMid" xml:space="preserve">
     <value>Повертає символи із середини текстового значення з урахуванням початкового положення та довжини.</value>
-    
   </data>
   <data name="AboutMidT" xml:space="preserve">
     <value>Повертає символи із середини текстового значення, яке визначається для кожного рядка в межах указаної таблиці або колекції, з урахуванням початкового положення та довжини.</value>
-    
   </data>
   <data name="AboutMid_text" xml:space="preserve">
     <value>Текстове значення, звідки видобуватимуться символи.</value>
@@ -764,35 +656,27 @@
   </data>
   <data name="StringFuncArg1" xml:space="preserve">
     <value>текст</value>
-    
   </data>
   <data name="StringTFuncArg1" xml:space="preserve">
     <value>текстовий_стовпець</value>
-    
   </data>
   <data name="StringFuncArg2" xml:space="preserve">
     <value>початкове_число</value>
-    
   </data>
   <data name="StringFuncArg3" xml:space="preserve">
     <value>кількість_символів</value>
-    
   </data>
   <data name="AboutReplace" xml:space="preserve">
     <value>Замінює частину текстового значення іншим текстовим значенням.</value>
-    
   </data>
   <data name="AboutReplaceT" xml:space="preserve">
     <value>Замінює частину текстового значення іншим текстовим значенням, яке обчислюється для кожного рядка в межах указаної таблиці або колекції.</value>
-    
   </data>
   <data name="ReplaceFuncArg1" xml:space="preserve">
     <value>старий_текст</value>
-    
   </data>
   <data name="ReplaceFuncArg4" xml:space="preserve">
     <value>новий_текст</value>
-    
   </data>
   <data name="AboutReplace_old_text" xml:space="preserve">
     <value>Текстове значення, яке потрібно обробити.</value>
@@ -811,67 +695,51 @@
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>Створює помилку зі спеціальними значеннями.</value>
-    
   </data>
   <data name="AboutError_error_information" xml:space="preserve">
     <value>Запис, що містить спеціальні значення для створеної помилки.</value>
-    
   </data>
   <data name="ErrorArg1" xml:space="preserve">
     <value>відомостіпропомилку</value>
-    
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
     <value>Функція Error використовує лише поля "Kind", "Message", "Notify", "Control" і "Property".</value>
-    
   </data>
   <data name="AboutIfError" xml:space="preserve">
     <value>Обчислює та повертає перший аргумент без помилки.</value>
-    
   </data>
   <data name="IfErrorArg1" xml:space="preserve">
     <value>значення</value>
-    
   </data>
   <data name="AboutIfError_value" xml:space="preserve">
     <value>Значення, що повертається, якщо це не помилка.</value>
-    
   </data>
   <data name="IfErrorArg2" xml:space="preserve">
     <value>резервний_варіант</value>
-    
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
     <value>Значення, що повертається, якщо попередній аргумент є помилкою.</value>
-    
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
     <value>Замінює наявний текст на новий у текстовому значенні.</value>
-    
   </data>
   <data name="AboutSubstituteT" xml:space="preserve">
     <value>Замінює наявний текст на новий, обчислюючи його для кожного рядка в межах указаної таблиці або колекції.</value>
-    
   </data>
   <data name="SubstituteFuncArg1" xml:space="preserve">
     <value>текст</value>
-    
   </data>
   <data name="SubstituteTFuncArg1" xml:space="preserve">
     <value>текстовий_стовпець</value>
-    
   </data>
   <data name="SubstituteFuncArg2" xml:space="preserve">
     <value>старий_текст</value>
-    
   </data>
   <data name="SubstituteFuncArg3" xml:space="preserve">
     <value>новий_текст</value>
-    
   </data>
   <data name="SubstituteFuncArg4" xml:space="preserve">
     <value>номер_екземпляра</value>
-    
   </data>
   <data name="AboutSubstitute_text" xml:space="preserve">
     <value>Текстове значення, яке потрібно обробити.</value>
@@ -890,19 +758,15 @@
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>Сортує дані джерела на основі результатів обчислення виразу стосовно кожного рядка. Додатково можна визначити порядок сортування.</value>
-    
   </data>
   <data name="SortArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="SortArg2" xml:space="preserve">
     <value>вираз</value>
-    
   </data>
   <data name="SortArg3" xml:space="preserve">
     <value>порядок</value>
-    
   </data>
   <data name="AboutSort_source" xml:space="preserve">
     <value>Таблиця, дані якої потрібно відсортувати.</value>
@@ -912,23 +776,18 @@
   </data>
   <data name="AboutSort_order" xml:space="preserve">
     <value>SortOrder.Ascending або SortOrder.Descending</value>
-    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Сортує дані джерела стосовно стовпця. Додатково можна визначити порядок сортування.</value>
-    
   </data>
   <data name="SortByColumnsArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="SortByColumnsArg2" xml:space="preserve">
     <value>стовпець</value>
-    
   </data>
   <data name="SortByColumnsArg3" xml:space="preserve">
     <value>порядок</value>
-    
   </data>
   <data name="AboutSortByColumns_source" xml:space="preserve">
     <value>Таблиця, дані якої потрібно відсортувати.</value>
@@ -938,22 +797,18 @@
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
     <value>SortOrder.Ascending або SortOrder.Descending</value>
-    
   </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>значення</value>
-    
   </data>
   <data name="AboutSortByColumns_values" xml:space="preserve">
     <value>Стовпець зі значеннями, які використовуються під час сортування. Воно виконується не за зростанням або спаданням, а на основі індексу відповідних значень у стовпці. </value>
   </data>
   <data name="AboutRand" xml:space="preserve">
     <value>Повертає рівномірно розподілене довільне число, більше або рівне 0 та менше 1.</value>
-    
   </data>
   <data name="AboutRandBetween" xml:space="preserve">
     <value>Повертає випадкове число між нижнім і верхнім числом, рівномірно розподілено.</value>
-    
   </data>
   <data name="AboutRandBetween_bottom" xml:space="preserve">
     <value>Найменше ціле число, яке може повернути функція.</value>
@@ -963,129 +818,99 @@
   </data>
   <data name="RandBetweenArg1" xml:space="preserve">
     <value>найменше число</value>
-    
   </data>
   <data name="RandBetweenArg2" xml:space="preserve">
     <value>найбільше число</value>
-    
   </data>
   <data name="AboutGUID" xml:space="preserve">
     <value>Створює GUID з рядка або повертає випадковий GUID, якщо аргументів не надано.</value>
-    
   </data>
   <data name="GUIDArg" xml:space="preserve">
     <value>рядок_GUID</value>
-    
   </data>
   <data name="AboutGUID_GUID_string" xml:space="preserve">
     <value>Рядок для перетворення на GUID</value>
-    
   </data>
   <data name="AboutNow" xml:space="preserve">
     <value>Повертає поточні дату та час.</value>
-    
   </data>
   <data name="AboutUTCNow" xml:space="preserve">
     <value>Повертає поточні дату й час за часовим поясом UTC.</value>
-    
   </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Повертає різницю між часом UTC та локальним часом у хвилинах. Наприклад, якщо ваш часовий пояс UTC+2, буде повернуто –120.</value>
-    
   </data>
   <data name="TimeZoneOffsetArg1" xml:space="preserve">
     <value>дата</value>
-    
   </data>
   <data name="AboutTimeZoneOffset_date" xml:space="preserve">
     <value>Дата для обчислення функції TimeZoneOffset.</value>
-    
   </data>
   <data name="AboutToday" xml:space="preserve">
     <value>Повертає поточну дату.</value>
-    
   </data>
   <data name="AboutUTCToday" xml:space="preserve">
     <value>Повертає поточну дату за часовим поясом UTC.</value>
-    
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Повертає номер тижня для вказаної дати.</value>
-    
   </data>
   <data name="WeekNumArg1" xml:space="preserve">
     <value>дата</value>
-    
   </data>
   <data name="WeekNumArg2" xml:space="preserve">
     <value>початок_тижня</value>
-    
   </data>
   <data name="AboutWeekNum_date" xml:space="preserve">
     <value>Значення дати, для якого буде обчислено номер тижня.</value>
   </data>
   <data name="AboutWeekNum_start_of_week" xml:space="preserve">
     <value>Значення параметра StartOfWeek або число з відповідної функції Excel, що визначає нумерацію днів тижня.</value>
-    
   </data>
   <data name="AboutISOWeekNum" xml:space="preserve">
     <value>Повертає номер тижня відповідно до правил ISO для певної дати.</value>
-    
   </data>
   <data name="ISOWeekNumArg1" xml:space="preserve">
     <value>дата</value>
-    
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Значення дати, для якого буде обчислено номер тижня ISO.</value>
   </data>
   <data name="AboutEDate" xml:space="preserve">
     <value>Повертає дату, відкориговану на кількість місяців. День місяця залишається незмінним, але його обмежено кількістю днів у новому місяці.</value>
-    
   </data>
   <data name="EDateArg1" xml:space="preserve">
     <value>дата</value>
-    
   </data>
   <data name="EDateArg2" xml:space="preserve">
     <value>міс.</value>
-    
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Значення дати, яке потрібно скоригувати на задану кількість місяців.</value>
-          
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Кількість місяців, на яку потрібно скоригувати дату. Додатне значення означає дату в майбутньому, від’ємне значення — дату в минулому, а нуль не змінює місяць.</value>
-        
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Повертає останній день місяця для заданої дати, скоригованої на кількість місяців.</value>
-    
   </data>
   <data name="EOMonthArg1" xml:space="preserve">
     <value>дата</value>
-    
   </data>
   <data name="EOMonthArg2" xml:space="preserve">
     <value>міс.</value>
-    
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Значення дати, яке потрібно скоригувати на задану кількість місяців.</value>
-          
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>&gt;Кількість місяців, на яку потрібно скоригувати дату. Додатне значення означає дату в майбутньому, від’ємне значення — дату в минулому, а нуль не змінює місяць.</value>
-         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Скорочує "число" за допомогою округлення до від’ємної нескінченності.</value>
-    
   </data>
   <data name="AboutIntT" xml:space="preserve">
     <value>Скорочує значення у стовпці чисел за допомогою округлення до від’ємної нескінченності.</value>
-    
   </data>
   <data name="AboutInt_number" xml:space="preserve">
     <value>Числове значення, яке потрібно обробити.</value>
@@ -1095,7 +920,6 @@
   </data>
   <data name="AboutTrunc" xml:space="preserve">
     <value>Скорочує "число" за допомогою округлення до нуля.</value>
-    
   </data>
   <data name="AboutTrunc_number" xml:space="preserve">
     <value>Число, яке потрібно скоротити.</value>
@@ -1108,43 +932,33 @@
   </data>
   <data name="AboutTruncT" xml:space="preserve">
     <value>Скорочує всі числа в "джерелі" за допомогою округлення до нуля.</value>
-    
   </data>
   <data name="TruncArg1" xml:space="preserve">
     <value>число</value>
-    
   </data>
   <data name="TruncArg2" xml:space="preserve">
     <value>кількість_цифр</value>
-    
   </data>
   <data name="TruncTArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="TruncTArg2" xml:space="preserve">
     <value>кількість_цифр</value>
-    
   </data>
   <data name="AboutRound" xml:space="preserve">
     <value>Округлює число до вказаної кількості цифр.</value>
-    
   </data>
   <data name="AboutRoundUp" xml:space="preserve">
     <value>Округлює число до більшого значення.</value>
-    
   </data>
   <data name="AboutRoundDown" xml:space="preserve">
     <value>Округлює число до меншого значення.</value>
-    
   </data>
   <data name="RoundArg1" xml:space="preserve">
     <value>число</value>
-    
   </data>
   <data name="RoundArg2" xml:space="preserve">
     <value>кількість_цифр</value>
-    
   </data>
   <data name="AboutRound_number" xml:space="preserve">
     <value>Число, яке потрібно округлити.</value>
@@ -1175,43 +989,33 @@
   </data>
   <data name="AboutRoundT" xml:space="preserve">
     <value>Округлює всі числа в джерелі до вказаної кількості цифр.</value>
-    
   </data>
   <data name="AboutRoundUpT" xml:space="preserve">
     <value>Округлює всі числа в джерелі до більшого значення.</value>
-    
   </data>
   <data name="AboutRoundDownT" xml:space="preserve">
     <value>Округлює всі числа в джерелі до меншого значення.</value>
-    
   </data>
   <data name="RoundTArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="RoundTArg2" xml:space="preserve">
     <value>кількість_цифр</value>
-    
   </data>
   <data name="AboutRGBA" xml:space="preserve">
     <value>Використовує числові значення колірних компонентів "Червоний", "Зелений", "Синій" і "Альфа" й створює відповідний колір. Компоненти кольорів – числові значення від 0 до 255. Альфа – десяткове значення від 0 до 1.</value>
-    
   </data>
   <data name="RGBAArg1" xml:space="preserve">
     <value>значення_червоний</value>
-    
   </data>
   <data name="RGBAArg2" xml:space="preserve">
     <value>значення_зелений</value>
-    
   </data>
   <data name="RGBAArg3" xml:space="preserve">
     <value>значення_синій</value>
-    
   </data>
   <data name="RGBAArg4" xml:space="preserve">
     <value>значення_альфа</value>
-    
   </data>
   <data name="AboutRGBA_red_value" xml:space="preserve">
     <value>Компонент "Червоний": від 0 до 255.</value>
@@ -1227,15 +1031,12 @@
   </data>
   <data name="AboutColorFade" xml:space="preserve">
     <value>Створює новий відтінок визначеного кольору відповідно до вказаного відсотка затемнення.</value>
-    
   </data>
   <data name="ColorFadeArg1" xml:space="preserve">
     <value>колір</value>
-    
   </data>
   <data name="ColorFadeArg2" xml:space="preserve">
     <value>затемнення</value>
-    
   </data>
   <data name="AboutColorFade_color" xml:space="preserve">
     <value>Колір, який потрібно затемнити.</value>
@@ -1248,11 +1049,9 @@
   </data>
   <data name="ColorFadeTArg1" xml:space="preserve">
     <value>колір_стовпця</value>
-    
   </data>
   <data name="ColorFadeTArg2" xml:space="preserve">
     <value>затемнення_стовпця</value>
-    
   </data>
   <data name="AboutColorFade_color_or_column" xml:space="preserve">
     <value>Колір (або стовпець колірних значень), які потрібно затемнити.</value>
@@ -1262,11 +1061,9 @@
   </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Повертає абсолютне числове значення (без знаку).</value>
-    
   </data>
   <data name="AboutAbsT" xml:space="preserve">
     <value>Повертає абсолютні числові значення (без знаків) з числового стовпця.</value>
-    
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
     <value>Числове значення, яке потрібно обробити.</value>
@@ -1282,11 +1079,9 @@
   </data>
   <data name="AboutSin" xml:space="preserve">
     <value>Повертає значення синуса для числа.</value>
-    
   </data>
   <data name="AboutSinT" xml:space="preserve">
     <value>Повертає значення синуса для стовпця чисел.</value>
-    
   </data>
   <data name="AboutAsin_number" xml:space="preserve">
     <value>Числове значення, яке потрібно обробити.</value>
@@ -1296,19 +1091,15 @@
   </data>
   <data name="AboutAsin" xml:space="preserve">
     <value>Повертає значення арксинуса (у радіанах) для числа.</value>
-    
   </data>
   <data name="AboutAsinT" xml:space="preserve">
     <value>Повертає значення арксинуса (у радіанах) для стовпця чисел.</value>
-    
   </data>
   <data name="AboutCos" xml:space="preserve">
     <value>Повертає значення косинуса для числа.</value>
-    
   </data>
   <data name="AboutCosT" xml:space="preserve">
     <value>Повертає значення косинуса для стовпця чисел.</value>
-    
   </data>
   <data name="AboutCos_number" xml:space="preserve">
     <value>Числове значення (у радіанах) для обробки.</value>
@@ -1318,14 +1109,12 @@
   </data>
   <data name="AboutAcos" xml:space="preserve">
     <value>Повертає значення арккосинуса (у радіанах) для числа.</value>
-    
   </data>
   <data name="AboutAcos_number" xml:space="preserve">
     <value>Числове значення, яке потрібно обробити.</value>
   </data>
   <data name="AboutAcosT" xml:space="preserve">
     <value>Повертає значення арккосинуса (у радіанах) для стовпця чисел.</value>
-    
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
     <value>Числовий стовпець, який потрібно обробити.</value>
@@ -1338,19 +1127,15 @@
   </data>
   <data name="AboutAcot" xml:space="preserve">
     <value>Повертає значення арккотангенса (у радіанах) для числа.</value>
-    
   </data>
   <data name="AboutAcotT" xml:space="preserve">
     <value>Повертає значення арккотангенса (у радіанах) для стовпця чисел.</value>
-    
   </data>
   <data name="AboutTan" xml:space="preserve">
     <value>Повертає значення тангенса для числа.</value>
-    
   </data>
   <data name="AboutTanT" xml:space="preserve">
     <value>Повертає значення тангенса для стовпця чисел.</value>
-    
   </data>
   <data name="AboutTan_number" xml:space="preserve">
     <value>Числове значення (у радіанах) для обробки.</value>
@@ -1360,11 +1145,9 @@
   </data>
   <data name="AboutAtan" xml:space="preserve">
     <value>Повертає значення арктангенса (у радіанах) для числа.</value>
-    
   </data>
   <data name="AboutAtanT" xml:space="preserve">
     <value>Повертає значення арктангенса (у радіанах) для стовпця чисел.</value>
-    
   </data>
   <data name="AboutAtan_number" xml:space="preserve">
     <value>Числове значення, яке потрібно обробити.</value>
@@ -1374,11 +1157,9 @@
   </data>
   <data name="AboutCot" xml:space="preserve">
     <value>Повертає значення котангенса для числа.</value>
-    
   </data>
   <data name="AboutCotT" xml:space="preserve">
     <value>Повертає значення котангенса для стовпця чисел.</value>
-    
   </data>
   <data name="AboutCot_number" xml:space="preserve">
     <value>Числове значення (у радіанах) для обробки.</value>
@@ -1388,11 +1169,9 @@
   </data>
   <data name="AboutLn" xml:space="preserve">
     <value>Повертає натуральний логарифм (основа E) для числа.</value>
-    
   </data>
   <data name="AboutLnT" xml:space="preserve">
     <value>Повертає значення натурального логарифма (основа E) для стовпця чисел.</value>
-    
   </data>
   <data name="AboutLn_number" xml:space="preserve">
     <value>Числове значення, яке потрібно обробити.</value>
@@ -1402,11 +1181,9 @@
   </data>
   <data name="AboutLog" xml:space="preserve">
     <value>Повертає логарифм числа за вказаною основою. Стандартна основа: 10.</value>
-    
   </data>
   <data name="AboutLogT" xml:space="preserve">
     <value>Повертає логарифмічні значення числа або стовпця чисел за вказаною основою чи вказаним стовпцем основ. Стандартна основа: 10.</value>
-    
   </data>
   <data name="AboutLog_number" xml:space="preserve">
     <value>Числове значення, яке потрібно обробити.</value>
@@ -1416,18 +1193,15 @@
   </data>
   <data name="LogBase" xml:space="preserve">
     <value>основа</value>
-    
   </data>
   <data name="AboutLog_base" xml:space="preserve">
     <value>Основа логарифма.</value>
   </data>
   <data name="AboutExp" xml:space="preserve">
     <value>Повертає число E, піднесене до степені числа. Щоб обчислити степені для інших основ, скористайтесь оператором піднесення до степеня (^).</value>
-    
   </data>
   <data name="AboutExpT" xml:space="preserve">
     <value>Повертає стовпець значень, де число E піднесено до степеня кожного відповідного числа в стовпці чисел. Щоб обчислити степені для інших основ, скористайтеся оператором піднесення до степеня (^).</value>
-    
   </data>
   <data name="AboutExp_number" xml:space="preserve">
     <value>Числове значення, яке потрібно обробити.</value>
@@ -1440,11 +1214,9 @@
   </data>
   <data name="AboutRadians" xml:space="preserve">
     <value>Повертає значення в радіанах для числа.</value>
-    
   </data>
   <data name="AboutRadiansT" xml:space="preserve">
     <value>Повертає значення в радіанах для стовпця чисел.</value>
-    
   </data>
   <data name="AboutRadians_number" xml:space="preserve">
     <value>Числове значення (у градусах) для обробки.</value>
@@ -1454,11 +1226,9 @@
   </data>
   <data name="AboutDegrees" xml:space="preserve">
     <value>Повертає значення в градусах для числа.</value>
-    
   </data>
   <data name="AboutDegreesT" xml:space="preserve">
     <value>Повертає значення в градусах для стовпця чисел.</value>
-    
   </data>
   <data name="AboutDegrees_number" xml:space="preserve">
     <value>Числове значення (у радіанах) для обробки.</value>
@@ -1471,11 +1241,9 @@
   </data>
   <data name="DistinctArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="DistinctArg2" xml:space="preserve">
     <value>вираз</value>
-    
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
     <value>Таблиця, з якої потрібно видобувати унікальні значення.</value>
@@ -1488,11 +1256,9 @@
   </data>
   <data name="AboutAtan2Arg1" xml:space="preserve">
     <value>Координата_X</value>
-    
   </data>
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>Координата_Y</value>
-    
   </data>
   <data name="AboutAtan2_x_coordinate" xml:space="preserve">
     <value>Координата X.</value>
@@ -1502,11 +1268,9 @@
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Повертає корінь квадратний числа.</value>
-    
   </data>
   <data name="AboutSqrtT" xml:space="preserve">
     <value>Повертає корінь квадратний для чисел у стовпці.</value>
-    
   </data>
   <data name="AboutSqrt_number" xml:space="preserve">
     <value>Числове значення, яке потрібно обробити.</value>
@@ -1516,27 +1280,21 @@
   </data>
   <data name="MathFuncArg1" xml:space="preserve">
     <value>число</value>
-    
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>вхідні_дані</value>
-    
   </data>
   <data name="MathFuncArg2" xml:space="preserve">
     <value>модифікатор</value>
-    
   </data>
   <data name="MathTFuncArg2" xml:space="preserve">
     <value>модифікатор</value>
-    
   </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Повертає вказану кількість символів із початку текстового значення.</value>
-    
   </data>
   <data name="AboutLeftT" xml:space="preserve">
     <value>Повертає стовпець, що містить указану кількість символів із початку текстового значення. Функція обчислюється окремо для кожного рядка в межах указаної таблиці або колекції.</value>
-    
   </data>
   <data name="AboutLeft_text" xml:space="preserve">
     <value>Текстове значення, звідки потрібно видобути символи.</value>
@@ -1549,11 +1307,9 @@
   </data>
   <data name="AboutRight" xml:space="preserve">
     <value>Повертає вказану кількість символів із кінця текстового значення.</value>
-    
   </data>
   <data name="AboutRightT" xml:space="preserve">
     <value>Повертає стовпець, що містить указану кількість символів із кінця текстового значення, яке обчислюється стосовно кожного рядка в межах указаної таблиці або колекції.</value>
-    
   </data>
   <data name="AboutRight_text" xml:space="preserve">
     <value>Текстове значення, звідки потрібно видобути символи.</value>
@@ -1566,76 +1322,60 @@
   </data>
   <data name="LeftRightArg1" xml:space="preserve">
     <value>текст</value>
-    
   </data>
   <data name="LeftRightTArg1" xml:space="preserve">
     <value>текстовий_стовпець</value>
-    
   </data>
   <data name="LeftRightArg2" xml:space="preserve">
     <value>кількість_символів</value>
-    
   </data>
   <data name="AboutIsBlank" xml:space="preserve">
     <value>Перевіряє, чи не повертає вираз пусте значення, і надає результат у форматі істина-хибність.</value>
-    
   </data>
   <data name="IsBlankArg1" xml:space="preserve">
     <value>вираз</value>
-    
   </data>
   <data name="AboutIsBlank_expression" xml:space="preserve">
     <value>Вираз, який потрібно перевірити.</value>
   </data>
   <data name="AboutIsBlankOrError" xml:space="preserve">
     <value>Перевіряє, результат виразу пустий чи містить помилку, і повертає значення true або false.</value>
-    
   </data>
   <data name="IsBlankOrErrorArg1" xml:space="preserve">
     <value>вираз</value>
-    
   </data>
   <data name="AboutIsBlankOrError_expression" xml:space="preserve">
     <value>Вираз, який потрібно перевірити.</value>
-    
   </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Перевіряє, чи колекція пуста, і надає результат у форматі істина-хибність.</value>
-    
   </data>
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="AboutIsEmpty_source" xml:space="preserve">
     <value>Таблиця, яку потрібно перевірити.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Повертає копію вихідної таблиці з вхідними даними, перетасованими в довільному порядку.</value>
-    
   </data>
   <data name="ShuffleArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="AboutShuffle_source" xml:space="preserve">
     <value>Таблиця, дані якої потрібно перетасувати.</value>
   </data>
   <data name="AboutLookUp" xml:space="preserve">
     <value>Шукає перший рядок, що відповідає вказаній умові, і повертає результат обчислення виразу стосовно цього рядка, а якщо вираз не вказано – увесь рядок.</value>
-    
   </data>
   <data name="LookUpArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="LookUpArg2" xml:space="preserve">
     <value>умова</value>
-    
   </data>
   <data name="LookUpArg3" xml:space="preserve">
     <value>результат</value>
-    
   </data>
   <data name="AboutLookUp_source" xml:space="preserve">
     <value>Таблиця, де потрібно шукати значення.</value>
@@ -1648,7 +1388,6 @@
   </data>
   <data name="AboutStdevP" xml:space="preserve">
     <value>Обчислює стандартне відхилення на основі всієї сукупності, наданої у вигляді аргументів (пропускає логічні значення й текст).</value>
-    
   </data>
   <data name="AboutStdevP_number" xml:space="preserve">
     <value>Число, стосовно якого обчислюється стандартне відхилення.</value>
@@ -1661,11 +1400,9 @@
   </data>
   <data name="AboutStdevPT" xml:space="preserve">
     <value>Обчислює стандартне відхилення на основі всієї сукупності, наданої у вигляді стовпця (пропускає логічні значення й текст у стовпці).</value>
-    
   </data>
   <data name="AboutVarP" xml:space="preserve">
     <value>Обчислює відхилення на основі всієї сукупності (пропускає логічні значення й текст у сукупності).</value>
-    
   </data>
   <data name="AboutVarP_number" xml:space="preserve">
     <value>Число, що використовується для обчислення відхилення.</value>
@@ -1678,55 +1415,42 @@
   </data>
   <data name="AboutVarPT" xml:space="preserve">
     <value>Обчислює відхилення на основі всієї сукупності, наданої у вигляді стовпця (пропускає логічні значення й текст у стовпці).</value>
-    
   </data>
   <data name="SetArg1" xml:space="preserve">
     <value>змінна</value>
-    
   </data>
   <data name="AboutSplit" xml:space="preserve">
     <value>Розділяє рядок на підрядки за допомогою роздільника.</value>
-    
   </data>
   <data name="AboutSplit_text" xml:space="preserve">
     <value>Текст, який потрібно розділити на підрядки.</value>
-    
   </data>
   <data name="AboutSplit_separator" xml:space="preserve">
     <value>Роздільник тексту, який розділяє вхідний текст на підрядки.</value>
-    
   </data>
   <data name="SplitArg1" xml:space="preserve">
     <value>текст</value>
-    
   </data>
   <data name="SplitArg2" xml:space="preserve">
     <value>роздільна_лінія</value>
-    
   </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Повертає значення "істина", якщо надане значення відповідає заданому типу.</value>
-    
   </data>
   <data name="IsTypeArg1" xml:space="preserve">
     <value>значення</value>
-    
   </data>
   <data name="IsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
-    
   </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Застосовує надане значення як заданий тип.</value>
-    
   </data>
   <data name="AsTypeArg1" xml:space="preserve">
     <value>значення</value>
-    
   </data>
   <data name="AsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
-    
   </data>
   <data name="AboutAsType_value" xml:space="preserve">
     <value>Поліморфний запис для створення нового типу.</value>
@@ -1736,331 +1460,249 @@
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Виконує формулу, представлену як другий параметр, з використанням області, наданої як перший параметр.</value>
-    
   </data>
   <data name="WithArg1" xml:space="preserve">
     <value>область</value>
-    
   </data>
   <data name="WithArg2" xml:space="preserve">
     <value>формула</value>
-    
   </data>
   <data name="AboutWith_scope" xml:space="preserve">
     <value>Область, за якою потрібно викликати формулу, визначена другим параметром.</value>
-    
   </data>
   <data name="AboutWith_formula" xml:space="preserve">
     <value>Формула, яку потрібно викликати, скориставшись областю, наданою як перший параметр.</value>
-    
   </data>
   <data name="AboutSequence" xml:space="preserve">
     <value>Створення таблиці послідовних чисел</value>
-    
   </data>
   <data name="SequenceArg1" xml:space="preserve">
     <value>записи</value>
-    
   </data>
   <data name="AboutSequence_records" xml:space="preserve">
     <value>Кількість записів у таблиці з одним стовпцем із назвою "Значення". Максимальна кількість – 50 000.</value>
-    
   </data>
   <data name="SequenceArg2" xml:space="preserve">
     <value>початок</value>
-    
   </data>
   <data name="AboutSequence_start" xml:space="preserve">
     <value>Необов'язково. Перше число в послідовності. Стандартне значення – 1.</value>
-    
   </data>
   <data name="SequenceArg3" xml:space="preserve">
     <value>крок</value>
-    
   </data>
   <data name="AboutSequence_step" xml:space="preserve">
     <value>Необов'язково. Крок збільшення кожного наступного значення в таблиці. Стандартне значення – 1.</value>
-    
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
     <value>Неприпустиме використання символу "."</value>
-    
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>"{0}" – невідома або непідтримувана функція.</value>
-    
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>"{0}" – невідома або непідтримувана функція в просторі імен "{1}".</value>
-    
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>Поведінку компонента можна викликати лише з компонента.</value>
-    
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
     <value>Властивість функції або параметр компонента доступні лише з компонента або з властивостей вихідних даних компонента.</value>
-    
   </data>
   <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
     <value>Властивість або параметр функції компонента може посилатися лише на інші властивості функції.</value>
-    
   </data>
   <data name="ErrBadArity" xml:space="preserve">
     <value>Неприпустима кількість аргументів: отримано {0}, очікувалося {1}.</value>
-    
   </data>
   <data name="ErrBadArityEven" xml:space="preserve">
     <value>Неприпустима кількість аргументів: отримано {0}, очікувалося парне число.</value>
-    
   </data>
   <data name="ErrBadArityOdd" xml:space="preserve">
     <value>Неприпустима кількість аргументів: отримано {0}, очікувалося непарне число.</value>
-    
   </data>
   <data name="ErrBadType" xml:space="preserve">
     <value>Неприпустимий тип аргументу.</value>
-    
   </data>
   <data name="ErrBadType_Type" xml:space="preserve">
     <value>Неприпустимий тип аргументу. У цьому контексті не можна використати значення типу "{0}".</value>
-    
   </data>
   <data name="ErrBadOperatorTypes" xml:space="preserve">
     <value>Ця операція недійсна для цих типів: {0}, {1}.</value>
-    
   </data>
   <data name="ErrGuidStrictComparison" xml:space="preserve">
     <value>Значення GUID можна порівнювати лише з іншими значеннями GUID.</value>
-    
   </data>
   <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
     <value>Неприпустимий тип для поля "{0}". Очікується тип поля "{1}".</value>
-    
   </data>
   <data name="ErrBadType_ExpectedType" xml:space="preserve">
     <value>Неприпустимий тип аргументу. Очікується значення "{0}".</value>
-    
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Неприпустимий тип аргументу ({1}). Очікується значення "{0}".</value>
-    
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
     <value>Неприпустимий тип аргументу. Очікується значення "{0}", але схема має бути іншою.</value>
-    
   </data>
   <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
     <value>Неприпустимий тип аргументу. Очікується одне з таких значень: {0}.</value>
-    
   </data>
   <data name="ErrInvalidArgs_Func" xml:space="preserve">
     <value>Функція "{0}" має кілька неприпустимих аргументів.</value>
-    
   </data>
   <data name="ErrNeedTable_Func" xml:space="preserve">
     <value>Перший аргумент функції "{0}" має бути таблицею.</value>
-    
   </data>
   <data name="ErrInvalidPropertyAccess" xml:space="preserve">
     <value>Властивість очікує обов’язковий параметр. Використовуйте круглі дужки для передавання обов’язкового параметра.</value>
-    
   </data>
   <data name="ErrNeedTableCol_Func" xml:space="preserve">
     <value>Перший аргумент функції "{0}" має бути таблицею з одним стовпцем.</value>
-    
   </data>
   <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
     <value>Неприпустима схема. Очікувався стовпець {0} значень для елемента "{1}".</value>
-    
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
     <value>Неприпустима схема. Очікувалася таблиця з одним стовпцем.</value>
-    
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>У цьому контексті не можна використати значення, що не є записом.</value>
-    
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Не вдалося використати цей запис. Він може містити конфліктні поля несумісних типів.</value>
-    
   </data>
   <data name="ErrNeedRecord_Func" xml:space="preserve">
     <value>Перший аргумент функції "{0}" має бути записом.</value>
-    
   </data>
   <data name="ErrNeedEntity_EntityName" xml:space="preserve">
     <value>Щоб використати цей набір параметрів як значення переліку або у функції Choices, сутність "{0}" необхідно додати як джерело даних. Для цього відкрийте меню "Подання" та виберіть "Джерела даних".</value>
-    
   </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Указана властивість недоступна в цьому контексті.</value>
-    
   </data>
   <data name="ErrInternalControlInInputProperty" xml:space="preserve">
     <value>На елементи керування в компоненті не можна посилатися у вхідних властивостях того ж компонента.</value>
-    
   </data>
   <data name="ErrColumnNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Указаний стовпець недоступний у цьому контексті.</value>
-    
   </data>
   <data name="WrnRowScopeOneToNExpandNumberOfCalls" xml:space="preserve">
     <value>В області записів цієї функції є посилання на зв’язок "один-до-багатьох" або "багато-до-багатьох". Через це до джерела даних може надходити багато викликів, що може зменшити швидкодію.</value>
-    
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Числове значення завелике.</value>
-    
   </data>
   <data name="ErrReservedKeyword" xml:space="preserve">
     <value>Використання зарезервованого слова, яке наразі не підтримується.</value>
-    
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
     <value>У виразі не може бути більше {0} символів. Вираз містить {1} символів.</value>
-    
   </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Розмір рядка формату не може бути більше {0} симв.</value>
-    
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Неприпустимий формат.</value>
-    
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Аргумент є неприпустимим значенням дати або часу.</value>
-    
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Неприпустиме джерело даних. Виправте помилку в області "Джерела даних", натиснувши елементи "Вміст" -&gt; "Джерела даних" або "Подання" -&gt; "Параметри".</value>
-    
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Очікується ідентифікатор джерела даних, щоб обмежити вбудований запис.</value>
-    
   </data>
   <data name="ErrIncompatibleTypes" xml:space="preserve">
     <value>Указані типи несумісні.</value>
-    
   </data>
   <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
     <value>Тип цього аргументу "{2}" не відповідає одному з очікуваних ("{0}" або "{1}").</value>
-    
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Тип цього аргументу "{0}" ({2}) не відповідає очікуваному типу "{1}".</value>
-    
   </data>
   <data name="ErrTypeError_WrongType" xml:space="preserve">
     <value>Тип цього виразу не відповідає очікуваному типу "{0}". Знайдено тип "{1}".</value>
-    
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
     <value>Тип запису несумісний із джерелом.</value>
-    
   </data>
   <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
     <value>Аргумент "{0}" неприпустимий. Очікувався текстовий літерал.</value>
-    
   </data>
   <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
     <value>Аргумент "{0}" – це неприпустимий ідентифікатор.</value>
-    
   </data>
   <data name="ErrColExists_Name" xml:space="preserve">
     <value>Стовпець з іменем "{0}" уже існує.</value>
-    
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Конфлікт імен стовпців для елемента "{0}".</value>
-    
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Указаний стовпець "{0}" не існує.</value>
-    
   </data>
   <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
     <value>Зазначений стовпець "{0}" не існує. Стовпець із найбільш схожим іменем – "{1}".</value>
-    
   </data>
   <data name="ErrSortIncorrectOrder" xml:space="preserve">
     <value>Порядок сортування не відповідає типу виразу.</value>
-    
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Неможливо відсортувати за типом виразу.</value>
-    
   </data>
   <data name="ErrDistinctWrongType" xml:space="preserve">
     <value>Неможливо застосувати операцію вибору унікальних значень для цього типу виразу.</value>
-    
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
     <value>Помилковий тип: функція {0} очікує елемент типу "{1}" чи табличний стовпець типу "{1}".</value>
-    
   </data>
   <data name="ErrIncorrectFormat_Func" xml:space="preserve">
     <value>Неправильний специфікатор формату для функції "{0}".</value>
-    
   </data>
   <data name="ErrAsyncLambda" xml:space="preserve">
     <value>Асинхронні виклики не можна використовувати в умовах і функціях для операцій зі значеннями.</value>
-    
   </data>
   <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
     <value>Це простір імен, до учасників якого можна отримати доступ за допомогою оператора ".".</value>
-    
   </data>
   <data name="ErrScopeModificationLambda" xml:space="preserve">
     <value>Ця функція не може застосовуватися до того самого джерела даних, що використовується в такому контексті: {0}.</value>
-    
   </data>
   <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
     <value>Цю функцію не можна викликати в такому контексті: {0}.</value>
-    
   </data>
   <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
     <value>Неправильний аргумент. Ця формула очікує таблицю з підключеного джерела даних. Функції AsType та IsType вимагають підключених джерел даних.</value>
-    
   </data>
   <data name="InfoMessage" xml:space="preserve">
     <value>Повідомлення: </value>
-    
   </data>
   <data name="InfoNode_Node" xml:space="preserve">
     <value>Вузол: {0}</value>
-    
   </data>
   <data name="InfoTok_Tok" xml:space="preserve">
     <value>Маркер: {0}</value>
-    
   </data>
   <data name="FormatSpan_Min_Lim" xml:space="preserve">
     <value>({0},{1}) </value>
-    
   </data>
   <data name="FormatErrorSeparator" xml:space="preserve">
     <value>, </value>
-    
   </data>
   <data name="AboutDate" xml:space="preserve">
     <value>Повертає число, яке представляє дату в коді дати й часу Power Apps.</value>
-    
   </data>
   <data name="DateArg1" xml:space="preserve">
     <value>рік</value>
-    
   </data>
   <data name="DateArg2" xml:space="preserve">
     <value>місяць</value>
-    
   </data>
   <data name="DateArg3" xml:space="preserve">
     <value>день</value>
-    
   </data>
   <data name="AboutDate_year" xml:space="preserve">
     <value>Рік.</value>
@@ -2073,23 +1715,18 @@
   </data>
   <data name="AboutTime" xml:space="preserve">
     <value>Перетворює години, хвилини й секунди в десяткове число.</value>
-    
   </data>
   <data name="TimeArg1" xml:space="preserve">
     <value>година</value>
-    
   </data>
   <data name="TimeArg2" xml:space="preserve">
     <value>хвилина</value>
-    
   </data>
   <data name="TimeArg3" xml:space="preserve">
     <value>секунда</value>
-    
   </data>
   <data name="TimeArg4" xml:space="preserve">
     <value>мілісекунда</value>
-    
   </data>
   <data name="AboutTime_hour" xml:space="preserve">
     <value>Компонент години.</value>
@@ -2105,160 +1742,126 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>Створює значення, яке представляє момент у часі, виражене як дата та час дня.</value>
-    
   </data>
   <data name="AboutDateTime_year" xml:space="preserve">
     <value>Рік.</value>
-    
   </data>
   <data name="AboutDateTime_month" xml:space="preserve">
     <value>Місяць.</value>
-    
   </data>
   <data name="AboutDateTime_day" xml:space="preserve">
     <value>День.</value>
-    
   </data>
   <data name="AboutDateTime_hour" xml:space="preserve">
     <value>Година.</value>
-    
   </data>
   <data name="AboutDateTime_minute" xml:space="preserve">
     <value>Хвилина.</value>
-    
   </data>
   <data name="AboutDateTime_second" xml:space="preserve">
     <value>Секунда.</value>
-    
   </data>
   <data name="AboutDateTime_millisecond" xml:space="preserve">
     <value>Мілісекунди.</value>
-    
   </data>
   <data name="AboutYear" xml:space="preserve">
     <value>Функція "Рік" повертає рік указаної дати.</value>
-    
   </data>
   <data name="YearArg1" xml:space="preserve">
     <value>дата_час</value>
-    
   </data>
   <data name="AboutYear_date_time" xml:space="preserve">
     <value>Значення дати, звідки потрібно видобувати компонент року.</value>
   </data>
   <data name="AboutMonth" xml:space="preserve">
     <value>Повертає місяць (число від 1 (січень) до 12 (грудень)).</value>
-    
   </data>
   <data name="MonthArg1" xml:space="preserve">
     <value>дата_час</value>
-    
   </data>
   <data name="AboutMonth_date_time" xml:space="preserve">
     <value>Значення дати, звідки потрібно видобути компонент місяця.</value>
   </data>
   <data name="AboutDay" xml:space="preserve">
     <value>Функція "День" повертає день місяця (число від 1 до 31).</value>
-    
   </data>
   <data name="DayArg1" xml:space="preserve">
     <value>дата_час</value>
-    
   </data>
   <data name="AboutDay_date_time" xml:space="preserve">
     <value>Значення дати, з якого потрібно видобувати компонент дня.</value>
   </data>
   <data name="AboutHour" xml:space="preserve">
     <value>Функція "Година" овертає годину як число від 0 (00:00:00) до 23 (23:00:00)</value>
-    
   </data>
   <data name="HourArg1" xml:space="preserve">
     <value>дата_час</value>
-    
   </data>
   <data name="AboutHour_date_time" xml:space="preserve">
     <value>Значення дати або часу, з якого потрібно видобувати компонент.</value>
   </data>
   <data name="AboutMinute" xml:space="preserve">
     <value>Повертає хвилину (число від 0 до 59).</value>
-    
   </data>
   <data name="MinuteArg1" xml:space="preserve">
     <value>дата_час</value>
-    
   </data>
   <data name="AboutMinute_date_time" xml:space="preserve">
     <value>Значення дати або часу, звідки потрібно видобути компонент хвилин.</value>
   </data>
   <data name="AboutSecond" xml:space="preserve">
     <value>Повертає секунду (число від 0 до 59).</value>
-    
   </data>
   <data name="SecondArg1" xml:space="preserve">
     <value>дата_час</value>
-    
   </data>
   <data name="AboutSecond_date_time" xml:space="preserve">
     <value>Значення дати або часу, звідки потрібно видобувати компонент секунди.</value>
   </data>
   <data name="AboutWeekday" xml:space="preserve">
     <value>Повертає компонент дня тижня зі значення дати й часу. Стандартний результат варіюється в діапазоні від 1 (неділя) до 7 (субота). Інший діапазон можна вказати за допомогою параметра переліку "ПочатокТижня" або коду функції "ДеньТижня" в Microsoft Excel.</value>
-    
   </data>
   <data name="WeekdayArg1" xml:space="preserve">
     <value>дата</value>
-    
   </data>
   <data name="WeekdayArg2" xml:space="preserve">
     <value>початок_тижня</value>
-    
   </data>
   <data name="AboutWeekday_date" xml:space="preserve">
     <value>Значення дати, для якого буде обчислено день тижня.</value>
   </data>
   <data name="AboutWeekday_start_of_week" xml:space="preserve">
     <value>Значення параметра StartOfWeek або число з відповідної функції Excel, що визначає нумерацію днів тижня.</value>
-    
   </data>
   <data name="AboutCalendar__MonthsLong" xml:space="preserve">
     <value>Повертає таблицю з одним стовпцем, що містить повну назву кожного місяця.</value>
-    
   </data>
   <data name="AboutCalendar__MonthsShort" xml:space="preserve">
     <value>Повертає таблицю з одним стовпцем, що містить скорочену назву кожного місяця.</value>
-    
   </data>
   <data name="AboutCalendar__WeekdaysLong" xml:space="preserve">
     <value>Повертає таблицю з одним стовпцем, що містить повну назву кожного дня тижня.</value>
-    
   </data>
   <data name="AboutCalendar__WeekdaysShort" xml:space="preserve">
     <value>Повертає таблицю з одним стовпцем, що містить скорочену назву кожного дня тижня.</value>
-    
   </data>
   <data name="AboutClock__AmPm" xml:space="preserve">
     <value>Повертає таблицю з одним стовпцем, що містить позначення "до полудня" й "після полудня" у верхньому регістрі.</value>
-    
   </data>
   <data name="AboutClock__AmPmShort" xml:space="preserve">
     <value>Повертає таблицю з одним стовпцем, що містить скорочені позначення "до полудня" й "після полудня" у верхньому регістрі.</value>
-    
   </data>
   <data name="AboutClock__IsClock24" xml:space="preserve">
     <value>Повертає логічне значення, що визначає, чи використовує годинник 24-годинний формат.</value>
-    
   </data>
   <data name="AboutDateValue" xml:space="preserve">
     <value>Перетворює дату у вигляді тексту на число, що відповідає даті в коді дати й часу Power Apps.</value>
-    
   </data>
   <data name="DateValueArg1" xml:space="preserve">
     <value>текст_дати</value>
-    
   </data>
   <data name="DateValueArg2" xml:space="preserve">
     <value>мовний_код</value>
-    
   </data>
   <data name="AboutDateValue_date_text" xml:space="preserve">
     <value>Текстове значення позначки дати й часу в підтримуваному форматі.</value>
@@ -2268,15 +1871,12 @@
   </data>
   <data name="AboutTimeValue" xml:space="preserve">
     <value>Перетворює час у вигляді тексту на число, яке відповідає даті в коді дати й часу Microsoft Power Apps, ігноруючи будь-яку частину дати.</value>
-    
   </data>
   <data name="TimeValueArg1" xml:space="preserve">
     <value>текст_часу</value>
-    
   </data>
   <data name="TimeValueArg2" xml:space="preserve">
     <value>мовний_код</value>
-    
   </data>
   <data name="AboutTimeValue_time_text" xml:space="preserve">
     <value>Текстове значення позначки дати й часу в підтримуваному форматі.</value>
@@ -2286,39 +1886,27 @@
   </data>
   <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
     <value>У правилах дій не можна використовувати функції служби, що автоматично оновлюються.</value>
-    
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
     <value>Поле з ім’ям "{0}" зустрічається в цьому записі більше одного разу.</value>
-    
-  </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Указаний стовпець "{0}" не можна перейменувати двічі.</value>
-    
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Стовпець з ім’ям "{0}" указано більше одного разу.</value>
-    
   </data>
   <data name="WarnLiteralPredicate" xml:space="preserve">
     <value>Попередження. Цей предикат має буквальне значення й не посилається на вхідну таблицю.</value>
-    
   </data>
   <data name="WarnDynamicMetadata" xml:space="preserve">
     <value>Попередження. Натисніть кнопку "Зафіксувати схему" внизу розгорнутого рядка формул, щоб налаштувати й оновити схему результатів цього методу. Інакше він не поверне результатів.</value>
-    
   </data>
   <data name="FindArg1" xml:space="preserve">
     <value>знайти_текст</value>
-    
   </data>
   <data name="FindArg2" xml:space="preserve">
     <value>у_тексті</value>
-    
   </data>
   <data name="FindArg3" xml:space="preserve">
     <value>початкове_число</value>
-    
   </data>
   <data name="AboutFind_find_text" xml:space="preserve">
     <value>Текстове значення, яке потрібно знайти.</value>
@@ -2331,23 +1919,18 @@
   </data>
   <data name="AboutFind" xml:space="preserve">
     <value>Повертає початкове положення одного текстового значення в межах іншого текстового значення. Функція "Пошук" ураховує регістр.</value>
-    
   </data>
   <data name="AboutFindT" xml:space="preserve">
     <value>Повертає стовпець із початковими положеннями одного текстового значення (або стовпця з рядками) у межах іншого текстового значення (або стовпця з рядками). Функція Find (Пошук) ураховує регістр.</value>
-    
   </data>
   <data name="FindTArg1" xml:space="preserve">
     <value>пошук_тексту_або_стовпця</value>
-    
   </data>
   <data name="FindTArg2" xml:space="preserve">
     <value>у_тексті_або_стовпці</value>
-    
   </data>
   <data name="FindTArg3" xml:space="preserve">
     <value>початкове_число</value>
-    
   </data>
   <data name="AboutFind_find_text_or_column" xml:space="preserve">
     <value>Текстове значення (або стовпець із текстовими значеннями), що потрібно знайти.</value>
@@ -2357,18 +1940,15 @@
   </data>
   <data name="AboutColorValue" xml:space="preserve">
     <value>Повертає колір, що відповідає вказаному колірному рядку.</value>
-    
   </data>
   <data name="ColorValueArg1" xml:space="preserve">
     <value>колір_тексту</value>
-    
   </data>
   <data name="AboutColorValue_color_text" xml:space="preserve">
     <value>Колір, указаний за назвою (наприклад, Синій) або за допомогою стандартного 6-значного ідентифікатора у форматі HEX (##rrggbb).</value>
   </data>
   <data name="ErrInvalidJsonPointer" xml:space="preserve">
     <value>Неприпустимий вказівник JSON.</value>
-    
   </data>
   <data name="Text" xml:space="preserve">
     <value>Текст</value>
@@ -2399,43 +1979,33 @@
   </data>
   <data name="REST" xml:space="preserve">
     <value>Служби</value>
-    
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
     <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>В елементі "{0}" відсутній атрибут "{1}".</value>
-    
   </data>
   <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
     <value>Атрибут "{0}" не може бути пустим рядком.</value>
-    
   </data>
   <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
     <value>Атрибут "{0}" містить неприпустиме значення GUID "{1}".</value>
-    
   </data>
   <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
     <value>Властивість "{0}" відсутня.</value>
-    
   </data>
   <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
     <value>Властивість "{0}" має значення неприпустимого типу: {2}. Очікувий тип: {1}.</value>
-    
   </data>
   <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
     <value>Властивість "{0}" не може бути пустою.</value>
-    
   </data>
   <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
     <value>Для властивості "{0}" очікується припустиме значення, але її значення {1} виходить за межі діапазону для переліку.</value>
-    
   </data>
   <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
     <value>Для властивості "{0}" очікується ціле значення, але її значення {1} виходить за межі діапазону.</value>
-    
   </data>
   <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
     <value>Елемент індексу {0} має значення неприпустимого типу: {2}. Очікуваний тип: {1}.</value>
@@ -2445,23 +2015,18 @@
   </data>
   <data name="AboutDateAdd" xml:space="preserve">
     <value>Додавання до дати вказаної кількості одиниць вимірювання.</value>
-    
   </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Обчислення різниці між двома датами.</value>
-    
   </data>
   <data name="DateAddArg1" xml:space="preserve">
     <value>дата</value>
-    
   </data>
   <data name="DateAddArg2" xml:space="preserve">
     <value>кількість_одиниць</value>
-    
   </data>
   <data name="DateAddArg3" xml:space="preserve">
     <value>одиниця</value>
-    
   </data>
   <data name="AboutDateAdd_date" xml:space="preserve">
     <value>Власне значення дати.</value>
@@ -2471,19 +2036,15 @@
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
     <value>Одиниця вимірювання для використання, наприклад: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds або TimeUnit.Milliseconds.</value>
-    
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
     <value>початкова_дата</value>
-    
   </data>
   <data name="DateDiffArg2" xml:space="preserve">
     <value>кінцева_дата</value>
-    
   </data>
   <data name="DateDiffArg3" xml:space="preserve">
     <value>одиниця</value>
-    
   </data>
   <data name="AboutDateDiff_start_date" xml:space="preserve">
     <value>Дата запуску для операції "Різниця".</value>
@@ -2493,42 +2054,33 @@
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
     <value>Одиниця вимірювання для вираження результату, наприклад: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
-    
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
     <value>Додавання до стовпця з датами вказаної кількості одиниць вимірювання.</value>
-    
   </data>
   <data name="AboutDateDiffT" xml:space="preserve">
     <value>Обчислення різниці між датами у двох різних стовпцях.</value>
-    
   </data>
   <data name="DateAddTArg1" xml:space="preserve">
     <value>стовпець_дати</value>
-    
   </data>
   <data name="DateAddTArg2" xml:space="preserve">
     <value>кількість_одиниць</value>
-    
   </data>
   <data name="DateAddTArg3" xml:space="preserve">
     <value>одиниця</value>
-    
   </data>
   <data name="AboutDateAdd_date_column" xml:space="preserve">
     <value>Стовпець із датами.</value>
   </data>
   <data name="DateDiffTArg1" xml:space="preserve">
     <value>стовпець_початкової_дати</value>
-    
   </data>
   <data name="DateDiffTArg2" xml:space="preserve">
     <value>стовпець_кінцевої_дати</value>
-    
   </data>
   <data name="DateDiffTArg3" xml:space="preserve">
     <value>одиниця</value>
-    
   </data>
   <data name="AboutDateDiff_start_date_column" xml:space="preserve">
     <value>Стовпець із початковими датами для операції "Різниця".</value>
@@ -2538,202 +2090,156 @@
   </data>
   <data name="AboutChar" xml:space="preserve">
     <value>Повертає символ, визначений кодовим числом, з набору в середовищі вашої платформи.</value>
-    
   </data>
   <data name="CharArg1" xml:space="preserve">
     <value>число</value>
-    
   </data>
   <data name="AboutChar_number" xml:space="preserve">
     <value>Кодове число з набору символів у середовищі вашої платформи.</value>
   </data>
   <data name="AboutCharT" xml:space="preserve">
     <value>Повертає таблицю символів, визначених кодовими числами, з набору в середовищі вашої платформи.</value>
-    
   </data>
   <data name="CharTArg1" xml:space="preserve">
     <value>кількість_стовпців</value>
-    
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Стовпець кодових чисел із набору символів у середовищі вашої платформи.</value>
   </data>
   <data name="AboutParseJSON" xml:space="preserve">
     <value>Перетворює рядок JSON на об’єкт.</value>
-    
   </data>
   <data name="ParseJSONArg1" xml:space="preserve">
     <value>вхідні дані</value>
-    
   </data>
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Рядок JSON для обробки.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Повертає запис у таблиці із заданим індексом.</value>
-    
   </data>
   <data name="IndexArg1" xml:space="preserve">
     <value>таблиця</value>
-    
   </data>
   <data name="IndexArg2" xml:space="preserve">
     <value>індекс</value>
-    
   </data>
   <data name="AboutIndex_table" xml:space="preserve">
     <value>Таблиця.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Індекс запису, який потрібно отримати.</value>
-    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Ім’я</value>
-    
   </data>
   <data name="Screen_Printing_DisplayName" xml:space="preserve">
     <value>Друк</value>
-    
   </data>
   <data name="Screen_ImagePosition_DisplayName" xml:space="preserve">
     <value>Положення зображення</value>
-    
   </data>
   <data name="Screen_Size_DisplayName" xml:space="preserve">
     <value>Розмір</value>
-    
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Тип штрих-коду</value>
-    
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
     <value>Контраст</value>
-    
   </data>
   <data name="camera_Zoom_DisplayName" xml:space="preserve">
     <value>Масштаб</value>
-    
   </data>
   <data name="camera_Camera_DisplayName" xml:space="preserve">
     <value>Камера</value>
-    
   </data>
   <data name="export_Data_DisplayName" xml:space="preserve">
     <value>Дані</value>
-    
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Редагувати</value>
-    
   </data>
   <data name="Dust" xml:space="preserve">
     <value>Пил</value>
-    
   </data>
   <data name="image_Image_DisplayName" xml:space="preserve">
     <value>Зображення</value>
-    
   </data>
   <data name="icon_Icon_DisplayName" xml:space="preserve">
     <value>Піктограма</value>
-    
   </data>
   <data name="icon_Rotation_DisplayName" xml:space="preserve">
     <value>Обертання</value>
-    
   </data>
   <data name="image_ImagePosition_DisplayName" xml:space="preserve">
     <value>Положення зображення</value>
-    
   </data>
   <data name="image_ImageRotation_DisplayName" xml:space="preserve">
     <value>Повернути</value>
-    
   </data>
   <data name="label_Live_DisplayName" xml:space="preserve">
     <value>Динамічний</value>
-    
   </data>
   <data name="label_Overflow_DisplayName" xml:space="preserve">
     <value>Переповнення</value>
-    
   </data>
   <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
     <value>Часовий пояс</value>
-    
   </data>
   <data name="DatePicker_Format_DisplayName" xml:space="preserve">
     <value>Формат</value>
-    
   </data>
   <data name="DatePicker_Language_DisplayName" xml:space="preserve">
     <value>Мова</value>
-    
   </data>
   <data name="Calendar_Width_DisplayName" xml:space="preserve">
     <value>Ширина календаря</value>
-    
   </data>
   <data name="Hide_Calendar_DisplayName" xml:space="preserve">
     <value>Приховати календар</value>
-    
   </data>
   <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
     <value>Початок тижня</value>
-    
   </data>
   <data name="microphone_Mic_DisplayName" xml:space="preserve">
     <value>Мікрофон</value>
-    
   </data>
   <data name="text_Default_DisplayName" xml:space="preserve">
     <value>Стандарт</value>
-    
   </data>
   <data name="text_Mode_DisplayName" xml:space="preserve">
     <value>Режим</value>
-    
   </data>
   <data name="text_Format_DisplayName" xml:space="preserve">
     <value>Формат</value>
-    
   </data>
   <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
     <value>Режим віртуальної клавіатури</value>
-    
   </data>
   <data name="text_TeamsTheme_DisplayName" xml:space="preserve">
     <value>Тема Teams</value>
-    
   </data>
   <data name="text_Clear_DisplayName" xml:space="preserve">
     <value>Кнопка очищення</value>
-    
   </data>
   <data name="AboutIsNumeric" xml:space="preserve">
     <value>Перевіряє, чи значення числове, і надає результат у форматі істина-хибність.</value>
-    
   </data>
   <data name="IsNumericArg1" xml:space="preserve">
     <value>значення</value>
-    
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Значення для перевірки.</value>
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Перетворює дату й час у вигляді тексту на число, що відповідає даті в коді дати й часу Power Apps.</value>
-    
   </data>
   <data name="DateTimeValueArg1" xml:space="preserve">
     <value>текст_часу</value>
-    
   </data>
   <data name="DateTimeValueArg2" xml:space="preserve">
     <value>мовний_код</value>
-    
   </data>
   <data name="AboutDateTimeValue_time_text" xml:space="preserve">
     <value>Текстове значення позначки дати й часу в підтримуваному форматі.</value>
@@ -2743,26 +2249,21 @@
   </data>
   <data name="AboutTable" xml:space="preserve">
     <value>Створює таблицю на основі вказаних записів, кількість стовпців у якій відповідає кількості полів з унікальними записами. Наприклад: Таблиця({key1: val1, key2: val2, ...}, ...)</value>
-    
   </data>
   <data name="TableArg1" xml:space="preserve">
     <value>запис</value>
-    
   </data>
   <data name="AboutTable_record" xml:space="preserve">
     <value>Запис, що стане рядком в отриманій таблиці.</value>
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Повертає таблицю лише з указаними стовпцями, видаливши решту стовпців із вихідної таблиці.</value>
-    
   </data>
   <data name="ShowColumnsArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="ShowColumnsArg2" xml:space="preserve">
     <value>ім’я_стовпця</value>
-    
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
     <value>Значення таблиці або запису, звідки потрібно вилучити стовпці.</value>
@@ -2772,33 +2273,27 @@
   </data>
   <data name="AboutIsToday" xml:space="preserve">
     <value>Перевіряє, чи вказана дата сьогоднішня, і надає результат у форматі істина-хибність.</value>
-    
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
     <value>Значення дати для перевірки.</value>
   </data>
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>дата</value>
-    
   </data>
   <data name="AboutIsUTCToday" xml:space="preserve">
     <value>Перевіряє, чи вказано дану дату сьогодні за часом UTC і чи повертається значення true чи false.</value>
-    
   </data>
   <data name="AboutIsUTCToday_date" xml:space="preserve">
     <value>Значення дати для перевірки.</value>
   </data>
   <data name="IsUTCTodayFuncArg1" xml:space="preserve">
     <value>дата</value>
-    
   </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Повертає частку після ділення числа на дільник. Частка має той самий знак, що й дільник.</value>
-    
   </data>
   <data name="AboutModT" xml:space="preserve">
     <value>Повертає стовпець із результатом ділення числа (або стовпця з числами) на дільник (або стовпець із дільниками).</value>
-    
   </data>
   <data name="AboutMod_divisor" xml:space="preserve">
     <value>Число, на яке ділять.</value>
@@ -2814,35 +2309,27 @@
   </data>
   <data name="ModFuncArg1" xml:space="preserve">
     <value>число</value>
-    
   </data>
   <data name="ModFuncArg2" xml:space="preserve">
     <value>дільник</value>
-    
   </data>
   <data name="ModTFuncArg1" xml:space="preserve">
     <value>число_або_стовпець</value>
-    
   </data>
   <data name="ModTFuncArg2" xml:space="preserve">
     <value>дільник_або_стовпець</value>
-    
   </data>
   <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
     <value>Документ</value>
-    
   </data>
   <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
     <value>Масштаб</value>
-    
   </data>
   <data name="pdfViewer_Password_DisplayName" xml:space="preserve">
     <value>Пароль</value>
-    
   </data>
   <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
     <value>Стан пароля</value>
-    
   </data>
   <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
     <value>Неприпустимий опис даних: {0}</value>
@@ -2852,7 +2339,6 @@
   </data>
   <data name="AboutForAll" xml:space="preserve">
     <value>Застосовує вказану формулу до кожного рядка в джерелі даних, а потім повертає нову таблицю з результатами окремо для кожного рядка.</value>
-    
   </data>
   <data name="AboutForAll_source" xml:space="preserve">
     <value>Джерело даних або таблиця для обробки.</value>
@@ -2862,15 +2348,12 @@
   </data>
   <data name="ForAllArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="ForAllArg2" xml:space="preserve">
     <value>формула</value>
-    
   </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Підносить число x до степеня іншого числа y. Те саме, що x^y.</value>
-    
   </data>
   <data name="AboutPower_base" xml:space="preserve">
     <value>Число основи, яке потрібно піднести до степеня.</value>
@@ -2880,15 +2363,12 @@
   </data>
   <data name="PowerFuncArg1" xml:space="preserve">
     <value>основа</value>
-    
   </data>
   <data name="PowerFuncArg2" xml:space="preserve">
     <value>показник_степеня</value>
-    
   </data>
   <data name="AboutStartsWith" xml:space="preserve">
     <value>Повертає true, якщо вказаний текст починається з указаного початкового рядка.</value>
-    
   </data>
   <data name="AboutStartsWith_text" xml:space="preserve">
     <value>Текст для перевірки.</value>
@@ -2898,15 +2378,12 @@
   </data>
   <data name="StartsWithArg1" xml:space="preserve">
     <value>текст</value>
-    
   </data>
   <data name="StartsWithArg2" xml:space="preserve">
     <value>початковий_рядок</value>
-    
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
     <value>Повертає true, якщо наданий текст закінчується вказаним кінцевим рядком.</value>
-    
   </data>
   <data name="AboutEndsWith_text" xml:space="preserve">
     <value>Текст для перевірки.</value>
@@ -2916,18 +2393,15 @@
   </data>
   <data name="EndsWithArg1" xml:space="preserve">
     <value>текст</value>
-    
   </data>
   <data name="EndsWithArg2" xml:space="preserve">
     <value>кінець</value>
-    
   </data>
   <data name="AboutBlank" xml:space="preserve">
     <value>Повертає Null-значення (пусте).</value>
   </data>
   <data name="AboutPowerT" xml:space="preserve">
     <value>Підносить число x (або стовпець чисел) до степеня іншого числа y (або стовпця чисел). Аналог рівняння x^y.</value>
-    
   </data>
   <data name="AboutPower_base_or_column" xml:space="preserve">
     <value>Число, яке підносять до степеня (чи стовпець таких чисел).</value>
@@ -2937,166 +2411,126 @@
   </data>
   <data name="PowerTFuncArg1" xml:space="preserve">
     <value>основа_чи_стовпець</value>
-    
   </data>
   <data name="PowerTFuncArg2" xml:space="preserve">
     <value>степінь_чи_стовпець</value>
-    
   </data>
   <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
     <value>Частину цієї формули не можна обчислити віддалено. Зараз у цьому контексті не підтримується операція "{0}".</value>
-    
   </data>
   <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
     <value>Частину цієї формули не можна обчислити віддалено. Функцію "{0}" не можна делегувати, якщо назва поля зустрічається в другому аргументі.</value>
-    
   </data>
   <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
     <value>Форма сутності</value>
-    
   </data>
   <data name="TeamsTheme_Default_DisplayName" xml:space="preserve">
     <value>Стандартна тема</value>
-    
   </data>
   <data name="TeamsTheme_Dark_DisplayName" xml:space="preserve">
     <value>Темна тема</value>
-    
   </data>
   <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
     <value>Контрастна тема</value>
-    
   </data>
   <data name="AboutCollect" xml:space="preserve">
     <value>Додаються записи до джерела даних.</value>
-    
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>запис</value>
-    
   </data>
   <data name="AboutClear" xml:space="preserve">
     <value>Видаляються всі записи колекції. Стовпці колекції залишаються.</value>
-    
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Видаляються всі записи з колекції, після чого до тієї ж колекції додається інший набір записів.</value>
-    
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
     <value>запис</value>
-    
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Застосовує оновлення до вказаного рядка й змінює його в зазначеному джерелі даних. Повертає оновлений рядок.</value>
-    
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="PatchBaseRecordArg" xml:space="preserve">
     <value>base_record</value>
-    
   </data>
   <data name="PatchChangeRecordsArg" xml:space="preserve">
     <value>change_record(s)</value>
-    
   </data>
   <data name="AboutRemove" xml:space="preserve">
     <value>Видаляє певний запис або записи із джерела даних</value>
-    
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
     <value>remove_record(s)</value>
-    
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
     <value>Якщо цей параметр вказано, значення останнього аргументу має бути "RemoveFlags.All". Можливо, наявна орфографічна помилка?</value>
-    
   </data>
   <data name="NotificationType_Error_DisplayName" xml:space="preserve">
     <value>Помилка</value>
-    
   </data>
   <data name="NotificationType_Warning_DisplayName" xml:space="preserve">
     <value>Попередження</value>
-    
   </data>
   <data name="NotificationType_Success_DisplayName" xml:space="preserve">
     <value>Успішно</value>
-    
   </data>
   <data name="NotificationType_Information_DisplayName" xml:space="preserve">
     <value>Відомості</value>
-    
   </data>
   <data name="AboutIsError" xml:space="preserve">
     <value>Повідомляє про помилку під час оцінювання заданого аргументу.</value>
-    
   </data>
   <data name="IsErrorArg" xml:space="preserve">
     <value>значення</value>
-    
   </data>
   <data name="AboutIsError_value" xml:space="preserve">
     <value>Значення для перевірки помилок.</value>
-    
   </data>
   <data name="ErrBadArityMinimum" xml:space="preserve">
     <value>Неприпустима кількість аргументів: отримано {0}, очікувалося {1} або більше.</value>
-    
   </data>
   <data name="ErrBadArityRange" xml:space="preserve">
     <value>Неприпустима кількість аргументів: отримано {0}, очікувалося від {1} до {2}.</value>
-    
   </data>
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
-    
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Потрібен операнд. Формулі або виразу потрібен припустимий операнд. Наприклад, можна додати операнд "2" до виразу "1 + _", щоб отримати результат "3". Операнд "дня" можна додати до виразу "Доброго _", щоб отримати результат "Доброго дня".</value>
-    
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
     <value>Додайте операнд, щоб вираз був закінченим. Переконайтеся, що тип операнда (текст, число, дата або істина/хибність) підходить для виразу. Підставляйте числа до чисел, текст до тексту тощо. Наприклад, вираз "1 + Доброго" неприпустимий, а "1 + 2" – припустимий.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
     <value>Неочікувані символи. Символи використовуються у формулі неочікуваним чином.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Наприклад, після числа не має бути символу "\", як тут: "32\". Там очікується пробіл (наприклад, "32 ", якщо це просто число 32) або цифра (наприклад, "323").</value>
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Вилучіть або замініть неочікувані символи.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
     <value>Стаття: "Посилання на формулу в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Неочікуваний символ "{0}" в позиції "{1}" у формулі.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Наприклад, після числа не має бути символу "\", як тут: "32\". Там очікується пробіл (наприклад, "32 ", якщо це просто число 32) або цифра (наприклад, "323").</value>
@@ -3106,475 +2540,375 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Стаття: "Посилання на формулу в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
     <value>Бракує ідентифікатора кінця примітки. Блок приміток не має ідентифікатора кінця.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Кожен блок приміток має починатися з "/*" і закінчуватися на "*/". Якщо блок не має належного закінчення, увесь код після примітки стає частиною примітки. Якщо примітка складається лише з одного рядка, її можна починати з "//" і не позначати закінчення.</value>
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Додайте "*/" у кінці блоку приміток або розбийте його на набір однорядкових.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
     <value>Стаття: "Посилання на формулу в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Неочікувані символи. Формула містить "{0}", де очікується "{1}".</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Така помилка стається, якщо, наприклад, формула містить "{{Val@ 7}}" замість "{{Val: 7}}". Якщо потрібно встановити значення змінної, використовуйте двокрапку замість символу "@".</value>
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Вилучіть неочікувані символи або замініть їх на очікуваний.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Стаття: "Посилання на формулу в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
     <value>Неприпустиме ім’я. "{0}" не розпізнано.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Ця помилка найчастіше з’являється, коли формула посилається на те, чого більше не існує (наприклад, елемент керування, який ви видалили).</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Вилучіть або виправте посилання на неприпустиме ім’я.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>Стаття: "Посилання на формулу в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Неприпустиме ім’я. Цей ідентифікатор не розпізнано.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
     <value>Ця помилка найчастіше з’являється, коли формула посилається на те, чого більше не існує (наприклад, елемент керування, який ви видалили).</value>
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Вилучіть або виправте посилання на неприпустиме ім’я.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Стаття: "Посилання на формулу в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>Неприпустиме посилання на властивість.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Ця помилка виникає, коли формула посилається на властивості функції компонентів із неприпустимим синтаксисом. (Наприклад, Component.CustomFunction замість Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Щоб послатися на властивість функції компонента, використовуйте правильний синтаксис, наприклад Component.CustomFunction()</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
     <value>Стаття: посилання на формулу в PowerApps</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Неприпустиме посилання на батьківський елемент: його не можна використовувати в цьому контексті.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Оператор "батьківський елемент" не можна використовувати для елемента, який не має батьківського, тобто елемента, який його містить і забезпечує доступність усіх його властивостей.</value>
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Вилучіть оператор "Батьківський елемент".</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Стаття: "Додавання й налаштування елемента керування компонованої програми в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
     <value>Заглибоке вкладення області рядка. Область рядка у формулі вкладена глибше ніж на 63 рівні.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>З кожним рівнем вкладеності зростає складність, тому Power Apps підтримує вкладення області рядка лише до 63 рівнів.</value>
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Перепишіть формулу, використовуючи менше рівнів вкладення.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
     <value>Заглибоке вкладення виразу. Вираз у формулі вкладено глибше ніж на 50 рівнів.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps підтримує вкладення виразів лише до 50 рівнів. Настільки глибокий вираз важко зрозуміти й підтримувати.</value>
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Перепишіть формулу, використовуючи менше рівнів вкладення.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
     <value>Очікувався оператор. У цьому місці формули очікується оператор, як-от "+", "*" або "&amp;".</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Оператор об’єднує два операнди. Ця помилка стається, якщо між двома функціями (операндами) немає оператора. Приклад: Len("текст")Len("текст").</value>
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Відредагуйте формулу, щоб між операндами в ній стояв оператор.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_Link_1" xml:space="preserve">
     <value>Модуль: використання базових формул</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Очікувалося число. У цьому місці формули очікується число.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Ця помилка стається, якщо замість обов’язкового числа для функції надається, наприклад, зображення.</value>
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Відредагуйте формулу, щоб у цьому місці результат її обчислення становив число.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Стаття: "Посилання на формулу в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
     <value>Очікувалося логічне значення. У цьому місці формули очікується логічне значення (true або false).</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>У програмах на зразок Microsoft Excel логічне значення називається "Істина/Хибність". Ця помилка стається, якщо замість обов’язкового логічного значення для функції надається, наприклад, дата.</value>
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Відредагуйте формулу, щоб у цьому місці результат її обчислення становив логічне значення.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
     <value>Стаття: "Посилання на формулу в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Очікувалася двокрапка. У цьому місці формули очікується двокрапка (":").</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Двокрапка відділяє в записі ім’я поля (стовпця) від його значення (наприклад, {Month:"1"}, {Month:"2"} тощо), а також години від хвилин і секунд (наприклад, "03:04").</value>
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Відредагуйте формулу, щоб вона містила двокрапку.</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_Link_1" xml:space="preserve">
     <value>Стаття: "Відображення тексту, дати й часу в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Поведінкова функція в неповедінковій властивості, яка не дає змоги змінювати значення деінде в програмі.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Поведінкові функції змінюють стан програми, змінюючи в ній інші значення. До типових поведінкових функцій належать Navigate, Patch, UpdateContext і Collect. До типових властивостей на основі поведінки належать OnSelect, OnVisible та інші властивості типу "On…".</value>
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Перемістіть поведінкову функцію до властивості на основі поведінки.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Стаття: "Формули поведінки для компонованих програм у Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Тестова функція в нетестовій властивості. Цю властивість не можна використовувати, щоб викликати лише тестові функції.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Тестові функції – це функції, які можна використовувати для імітації введених користувачем даних під час тестування програми. SetProperty, SelectRow і Assert – загальні тестові функції. Їх можна використовувати лише в тестовому сценарії.</value>
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Використовуйте функцію в тестовому сценарії, а не в самій програмі.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
     <value>Не вдалося перетворити цей тип даних. Power Apps не може перетворити тип "{0}" на тип "{1}".</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps може перетворити деякі типи даних у формулі. Наприклад, можна перетворити "1" (рядок) на 1 (число). Проте перетворення можливі лише між певними типами даних. Скажімо, зображення не можна перетворити на число.</value>
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Змініть формулу так, щоб перетворити тип даних на очікуваний.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_ShortMessage" xml:space="preserve">
     <value>Очікувався текст. У цьому місці формули очікується текст.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Ця помилка стається, якщо замість обов’язкового тексту (або рядка) як аргумент для функції надається, наприклад, дата.</value>
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Відредагуйте формулу, щоб у цьому місці результат її обчислення становив текст.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
     <value>Стаття: "Посилання на формулу в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Очікувалося текстове або числове значення. У цьому місці формули очікується текст або число.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Ця помилка стається, якщо замість обов’язкового тексту або числа для функції надається, наприклад, логічне значення (true або false).</value>
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Відредагуйте формулу, щоб у цьому місці результат її обчислення становив текст або число.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
     <value>Стаття: "Посилання на формулу в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Очікувалася закривна дужка. У цьому місці формули очікується закривна дужка ("}").</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Закривна дужка вказує на кінець запису (наприклад, {Month:"1"}, {Month:"2"} тощо).</value>
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Відредагуйте формулу, щоб вона містила дужку.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Ідентифікатор не містить припустимого тексту.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Переконайтеся, що ідентифікатор містить текст. Ця помилка стається, якщо ідентифікатор пустий або містить тільки пробіли.</value>
-    
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
     <value>Не вдалося порівняти значення типу {0}.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Несумісні типи для порівняння. Ці типи не можна порівняти: {0}, {1}.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Нам не вдалось обчислити формулу, бо в ній порівнюються значення різних типів.</value>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Можливо, доцільно перетворити значення на однаковий тип. Наприклад, рядок дати (як-от "31.12.2018") можна перетворити на значення дати.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
     <value>Якщо ви порівнюєте записи або таблиці, типи полів або стовпців мають точно збігатися.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
     <value>Модуль: використання базових формул</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Модуль: створення базових формул із таблицями й записами</value>
-    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
     <value>Немає параметра. Ця функція не має додаткового параметра з ім’ям "{0}".</value>
-    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
     <value>Щоб виправити, вилучіть або перейменуйте параметр у формулі.</value>
-    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
     <value>Стаття: "Посилання на формулу в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Несумісний тип. Для стовпця "{0}", який ви оновлюєте в джерелі даних, очікується тип "{1}", а ви використовуєте тип "{2}".</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
     <value>Можливо, доцільно перетворити значення на відповідний тип. Наприклад, можна перетворити рядок дати (як-от "31.12.2018") на значення дати або рядок на число.</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1" xml:space="preserve">
     <value>Модуль: використання базових формул</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Модуль: створення базових формул із таблицями й записами</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
     <value>Бракує стовпця. У формулі бракує стовпця "{0}" типу "{1}".</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
     <value>Додайте до формули стовпець.</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Стаття: "Посилання на формулу в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Несумісний тип. Елемент, який ви намагаєтеся вставити в запис, має несумісний із нею тип.</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Несумісний тип. Елемент, який ви намагаєтеся вставити в таблицю, має несумісний із нею тип.</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
     <value>Переконайтеся, що елемент, який потрібно примусово надіслати в таблицю, має сумісний із нею тип. Можливо, доцільно змінити його тип, як-от на запис.</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1" xml:space="preserve">
     <value>Модуль: використання базових формул</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Модуль: створення базових формул із таблицями й записами</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
     <value>Несумісний тип. Нам не вдалось обчислити формулу через помилку типу.</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Можливо, дані не відповідають очікуваному типу (текст, число, дата, таблиця, запис).</value>
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Перевірте типи значень для формули та переконайтеся, що вони відповідні.</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
     <value>Модуль: використання базових формул</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Модуль: створення базових формул із таблицями й записами</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
     <value>Очікувалася дата. У цьому місці формули очікується дата.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Ця помилка стається, якщо замість обов’язкової дати для функції надається, наприклад, текст.</value>
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Відредагуйте формулу, щоб у цьому місці результат її обчислення становив дату.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Стаття: "Посилання на формулу в Power Apps"</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
     <value>Попередження про делегування. Частина "{0}" цієї формули може неправильно працювати з великими наборами даних.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Якщо формулу не вдасться обробити, джерело даних може повернути їх неповний набір, а тому програма не зможе повернути правильні результати або належно працювати.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Якщо для даних перевищено обмеження в 500 записів, але не досягнуто 2000 записів, спробуйте змінити обмеження.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
     <value>Спробуйте спростити формулу.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
     <value>Спробуйте перемістити дані до іншого джерела.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
     <value>Стаття: делегування в компонованій програмі</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Блоґ: обмеження на рядки даних під час делегування</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
     <value>Попередження про делегування. Виділена частина цієї формули може неправильно працювати зі стовпцем "{0}" або великими наборами даних.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Якщо формулу не вдасться обробити, джерело даних може повернути їх неповний набір, а тому програма не зможе повернути правильні результати або належно працювати.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Якщо для даних перевищено обмеження в 500 записів, але не досягнуто 2000 записів, спробуйте змінити обмеження.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
     <value>Спробуйте спростити формулу.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
     <value>Спробуйте перемістити дані до іншого джерела.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
     <value>Стаття: делегування в компонованій програмі</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Блоґ: обмеження на рядки даних під час делегування</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
     <value>Попередження про делегування. Виділена частина цієї формули може неправильно працювати з великими наборами даних.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Праворуч від оператора "в" має бути ім’я стовпця з правильного джерела даних. Якщо формулу не вдасться обробити, джерело даних може повернути їх неповний набір, а тому програма не зможе повернути правильні результати або належно працювати.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Замініть елемент праворуч від оператора "в" на стовпець із правильного джерела даних.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
     <value>Якщо для даних перевищено обмеження в 500 записів, але не досягнуто 2000 записів, спробуйте змінити обмеження.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
     <value>Спробуйте спростити формулу.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
     <value>Спробуйте перемістити дані до іншого джерела.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
     <value>Стаття: делегування в компонованій програмі</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Блоґ: обмеження на рядки даних під час делегування</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
     <value>Виділена частина цієї формули може неправильно працювати з великими наборами даних. </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Праворуч від оператора "в" не вказано стовпець із правильного джерела даних. Якщо формулу не вдасться обробити, джерело даних може повернути їх неповний набір, а тому програма не зможе повернути правильні результати або належно працювати.
@@ -3582,185 +2916,142 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Замініть елемент праворуч від оператора "в" на стовпець із правильного джерела даних.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
     <value>Якщо для даних перевищено обмеження в 500 записів, але не досягнуто 2000 записів, спробуйте змінити обмеження.
 </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
     <value>Спробуйте спростити формулу.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
     <value>Спробуйте перемістити дані до іншого джерела.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
     <value>Стаття: делегування в компонованій програмі</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Блоґ: обмеження на рядки даних під час делегування</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Попередження про делегування. Виділена частина цієї формули може неправильно працювати з великими наборами даних. Операція "{0}" не підтримується цим з’єднувачем.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_LongMessage" xml:space="preserve">
     <value>Якщо формулу не вдасться обробити, джерело даних може повернути їх неповний набір, а тому програма не зможе повернути правильні результати або належно працювати.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
     <value>Якщо для даних перевищено обмеження в 500 записів, але не досягнуто 2000 записів, спробуйте змінити обмеження.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
     <value>Спробуйте спростити формулу.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
     <value>Спробуйте перемістити дані до іншого джерела.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
     <value>Стаття: делегування в компонованій програмі</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Блоґ: обмеження на рядки даних під час делегування</value>
-    
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
     <value>Очікувалося лише одне подання. У цьому місці формули очікується лише одне подання.</value>
-    
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
     <value>Відредагуйте формулу, щоб у цьому місці в неї було тільки одне подання.</value>
-    
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_ShortMessage" xml:space="preserve">
     <value>Очікувалося подання з джерела даних {0}.</value>
-    
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_HowToFix_1" xml:space="preserve">
     <value>Відредагуйте формулу, щоб у ній було подання з джерела даних {0}.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
     <value>Посилання на цей елемент керування не можна використовувати в цій властивості</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
     <value>Ця властивість підтримує лише посилання на глобальні змінні, колекції та деякі властивості елементів керування й екрана. Перейдіть за посиланням, щоб переглянути список підтримуваних властивостей елементів керування.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Посилання: ConfirmExit для компонованих програм</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
     <value>Вирази, які з’являються в інтерпольованому рядку, мають бути оцінені як "Текстове значення" або як сумісний тип.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
     <value>Перевірте типи виразів в інтерпольованому рядку.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
     <value>Пусті вирази не можуть відображатися в інтерпольованому рядку.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
     <value>Перевірте наявність пустих виразів у інтерпольованому рядку.</value>
-    
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>Це не дозволено в цьому контексті</value>
-    
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
     <value>Нетипізовані об’єкти не можна використовувати як перший аргумент для функцій, які підтримують області записів.</value>
-    
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Названа формула має закінчуватись крапкою з комою.</value>
-    
   </data>
   <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
     <value>Іменована формула має бути виразом.</value>
-    
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Визначена користувачем функція повинна мати тіло.</value>
-    
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Функцію {0} уже визначено.</value>
-    
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Параметр {0} є дублікатом.</value>
-    
   </data>
   <data name="ErrUDF_UnknownType" xml:space="preserve">
     <value>Невідомий тип {0}.</value>
-    
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Зазначений тип повернення функції не відповідає типу повернення тіла функції.</value>
-    
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
     <value>Відсутній тип повернення функції, наприклад, ":Number" у полі "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
-    
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
     <value>Відсутній тип аргументу функції, наприклад, ":Text" у полі "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
-    
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula "{0}" вже існує.</value>
   </data>
   <data name="ErrorResource_NameConflict" xml:space="preserve">
     <value>Не вдалося створити {0} з іменем "{1}", оскільки воно вже використовується для {2}.</value>
-    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Як перший аргумент функції "{0}" слід указати припустиме ім’я змінної, що не має конфліктувати з будь-якими іменами наявних елементів керування, екранів, колекцій або джерел даних. Знайдено тип "{1}".</value>
-    
   </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Створення та налаштування глобальної змінної.</value>
-    
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>значення</value>
-    
   </data>
   <data name="AboutDec2Hex" xml:space="preserve">
     <value>Перетворює десяткове число на шістнадцяткове</value>
-    
   </data>
   <data name="Dec2HexArg1" xml:space="preserve">
     <value>число</value>
   </data>
   <data name="AboutDec2Hex_number" xml:space="preserve">
     <value>Числове десяткове значення для перетворення на шістнадцятковий рядок.</value>
-    
   </data>
   <data name="Dec2HexArg2" xml:space="preserve">
     <value>місця</value>
   </data>
   <data name="AboutDec2Hex_places" xml:space="preserve">
     <value>Числове значення для додавання заповнення до шістнадцяткового рядка.</value>
-    
   </data>
   <data name="AboutDec2HexT" xml:space="preserve">
     <value>Перетворює стовпець десяткових чисел на шістнадцяткові числа</value>
-    
   </data>
   <data name="Dec2HexTArg1" xml:space="preserve">
     <value>таблиця</value>
@@ -3770,65 +3061,48 @@
   </data>
   <data name="AboutDec2HexT_places" xml:space="preserve">
     <value>Числове значення або масив значень для додавання заповнення до шістнадцяткових рядків.</value>
-    
   </data>
   <data name="AboutDec2Hex_table" xml:space="preserve">
     <value>Стовпець числових десяткових значень для перетворення на шістнадцяткові числа.</value>
-    
   </data>
   <data name="AboutHex2Dec" xml:space="preserve">
     <value>Перетворює шістнадцяткове число на десяткове</value>
-    
   </data>
   <data name="Hex2DecArg1" xml:space="preserve">
     <value>число</value>
   </data>
   <data name="AboutHex2Dec_number" xml:space="preserve">
     <value>Перетворення шістнадцяткового рядка на десятковий.</value>
-    
   </data>
   <data name="AboutHex2DecT" xml:space="preserve">
     <value>Перетворює стовпець шістнадцяткових чисел на десяткові числа</value>
-    
   </data>
   <data name="Hex2DecTArg1" xml:space="preserve">
     <value>таблиця</value>
   </data>
   <data name="AboutHex2Dec_table" xml:space="preserve">
     <value>Стовпець шістнадцяткових рядків для перетворення на десяткові числа.</value>
-    
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Цю функцію вилучено. Вона більше не підтримується.</value>
-    
-  </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>У просторі імен "{1}" функція "{0}" застаріла.</value>
-    
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>У просторі імен "{1}" функція "{0}" не підтримується.</value>
-    
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Попередження! Надано відкладений тип.</value>
-    
   </data>
   <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
     <value>Очікуване ім’я ідентифікатора</value>
-    
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Ця функція неоднозначна, вона містить лямбда-вирази та ідентифікатори стовпців для одного аргументу.</value>
-    
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
     <value>Значення параметра {0} не відноситься до очікуваного типу {1}.</value>
-    
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
     <value>Повертає логічне ім’я даного значення набору параметрів.</value>
-    
   </data>
   <data name="AboutOptionSetInfoArg1" xml:space="preserve">
     <value>параметр</value>
@@ -3838,54 +3112,42 @@
   </data>
   <data name="AboutLanguage" xml:space="preserve">
     <value>Налаштування мовних і регіональних параметрів за замовчуванням під час виконання.</value>
-    
   </data>
   <data name="AboutEncodeUrl" xml:space="preserve">
     <value>Кодує рядок URL-адреси, замінюючи певні символи, відмінні від букв і цифр, на % і шістнадцяткове число.</value>
-    
   </data>
   <data name="EncodeUrlArg1" xml:space="preserve">
     <value>url-адреса</value>
-    
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL-адреса, яку потрібно закодувати.</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" є розпізнаною, але непідтримуваною функцією.</value>
-    
   </data>
   <data name="InvalidCast" xml:space="preserve">
     <value>Не вдалося перетворити тип, оскільки надано значення типу "{0}", а очікується тип "{1}".</value>
-    
   </data>
   <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
     <value>Вираз ’"{0}" може представляти стовпець, який не є частиною джерела даних або не був завантажений. Спробуйте натомість використати саму назву стовпця.</value>
-    
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Ця операція з таблицею "{0}" може не працювати, якщо вона містить більше такої кількості рядків: {1}.</value>
-    
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Цей предикат завжди матиме значення "Істина". Ви хотіли використати ThisRecord або [@ ]?</value>
-    
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Не вдалося делегувати {0}: делегування підтримується лише для підстановки в поле первинного ключа "{1}".</value>
-    
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Не вдалося делегувати {0}: вираз порівнює кілька полів.</value>
-    
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Не вдалося делегувати {0}: містить поведінкову функцію "{1}".</value>
-    
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Визначає, чи вказаний текст відповідає вказаному текстовому формату.</value>
-    
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">
     <value>Текст, який потрібно оцінити стосовно певного формату.</value>
@@ -3895,125 +3157,96 @@
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
     <value>Визначає, для якої частини тексту потрібно знайти збіг; це може бути значення переліку MatchOptions.</value>
-    
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
     <value>текст</value>
-    
   </data>
   <data name="IsMatchArg2" xml:space="preserve">
     <value>формат</value>
-    
   </data>
   <data name="IsMatchArg3" xml:space="preserve">
     <value>обсяг</value>
-    
   </data>
   <data name="AboutMatch" xml:space="preserve">
     <value>Шукає в наданому тексті вказаний регулярний вираз і повертає перший збіг.</value>
-    
   </data>
   <data name="AboutMatchAll" xml:space="preserve">
     <value>Шукає в наданому тексті вказаний регулярний вираз і повертає всі збіги.</value>
-    
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
     <value>Текст, у якому потрібно шукати регулярний вираз.</value>
-    
   </data>
   <data name="AboutMatch_regular_expression" xml:space="preserve">
     <value>Регулярний вираз, за яким потрібно перевірити текст; може містити групи захоплення (значення в дужках), які повертатимуться для успішно знайдених збігів</value>
-    
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
     <value>Визначає, для якої частини тексту потрібно знайти збіг; це може бути значення переліку MatchOptions.</value>
-    
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
     <value>Текст, у якому потрібно шукати регулярний вираз.</value>
-    
   </data>
   <data name="AboutMatchAll_regular_expression" xml:space="preserve">
     <value>Регулярний вираз, за яким потрібно перевірити текст; може містити групи захоплення (значення в дужках), які повертатимуться для успішно знайдених збігів</value>
-    
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
     <value>Визначає, для якої частини тексту потрібно знайти збіг; це може бути значення переліку MatchOptions.</value>
-    
   </data>
   <data name="MatchArg1" xml:space="preserve">
     <value>текст</value>
-    
   </data>
   <data name="MatchArg2" xml:space="preserve">
     <value>регулярний_вираз</value>
-    
   </data>
   <data name="MatchArg3" xml:space="preserve">
     <value>параметри</value>
-    
   </data>
   <data name="AboutRefresh" xml:space="preserve">
     <value>Оновлює вказане джерело даних.</value>
-    
   </data>
   <data name="RefreshArg1" xml:space="preserve">
     <value>підключене_джерело_даних</value>
-    
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
     <value>Очікувався запис або значення таблиці.</value>
-    
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
     <value>Підключене джерело даних, яке потрібно оновити.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Можна оновити тільки керовані підключення.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Неприпустимий регулярний вираз.</value>
-    
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Регулярні вирази мають бути константами.</value>
-    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Значення, передане функції "{0}" не можна змінити.</value>
-    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Ім’я групи захоплення "{0}" приховує попередньо визначену властивість, що повертає повний збіг із регулярним виразом. Перейменуйте групу, якщо хочете за допомогою цієї іменованої властивості видобути з указаного тексту повний збіг.</value>
-    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
     <value>Ім’я групи захоплення "{0}" приховує попередньо визначену властивість, що повертає групові збіги в регулярному виразі. Перейменуйте групу, якщо хочете за допомогою цієї іменованої властивості видобути з указаного тексту всі вкладені збіги.</value>
-    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Ім’я групи захоплення "{0}" приховує попередньо визначену властивість, що повертає розташування збігу з регулярним виразом. Перейменуйте групу, якщо хочете за допомогою цієї іменованої властивості видобути з указаного тексту розташування повного збігу.</value>
-    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Ця функція видаляє все форматування та повертає значення у вигляді звичайного тексту.</value>
-    
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
     <value>текст</value>
-    
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Текст, для якого потрібно видалити теги HTML і XML.</value>
   </data>
   <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
     <value>Функції фільтра не дають змоги використовувати функції поведінки як предикати.</value>
-    
   </data>
   <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
     <value>Використовуйте оператор And для об’єднання кількох предикатів у другий аргумент.</value>
-    
   </data>
   <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
     <value>Цю таблицю не можна скопіювати. Натомість створіть вбудовану таблицю за допомогою функції ForAll і нотації "{...}", щоб скопіювати окремі потрібні стовпці.</value>
@@ -4023,130 +3256,99 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Другий аргумент функції "{0}" підтримується лише для числових значень і значень дати й часу.</value>
-    
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Установлення змінної зі значенням онлайнового джерела даних (таблиці або запису) може призвести до появи кількох запитів до сервера. Незабаром це буде заблоковано.</value>
-    
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Неприпустиме оголошення літерала типу</value>
-    
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
     <value>Невідповідність між вихідним і кінцевим типами записів. Заданий тип має зайві поля: {0}.</value>
-    
   </data>
   <data name="ErrExpectedRVMissingFields" xml:space="preserve">
     <value>Невідповідність між вихідним і кінцевим типами записів. У заданому типі відсутні поля: {0}.</value>
-    
   </data>
   <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
     <value>Невідповідність між вихідним і кінцевим типами записів. Ім’я поля {0} не знайдено.</value>
-    
   </data>
   <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
     <value>Невідповідність між вихідним і кінцевим типами записів. Ім’я поля: {0}; очікувалося {1}; знайдено: {2}.</value>
-    
   </data>
   <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
     <value>Заданий тип {0} не можна привести до типу джерела {1}.</value>
-    
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Невідповідність між вихідним і кінцевим типами. Очікувалося {0}; знайдено {1}.</value>
-    
   </data>
   <data name="AboutJSON" xml:space="preserve">
     <value>Створює текстовий рядок JSON для таблиці, запису або значення.</value>
-    
   </data>
   <data name="JSONArg1" xml:space="preserve">
     <value>дані</value>
-    
   </data>
   <data name="AboutJSON_data" xml:space="preserve">
     <value>Структура даних, яку потрібно конвертувати у формат JSON. Підтримуються таблиці, записи й примітивні значення, вкладені довільно.</value>
-    
   </data>
   <data name="JSONArg2" xml:space="preserve">
     <value>формат</value>
-    
   </data>
   <data name="AboutJSON_format" xml:space="preserve">
     <value>Формат, що використовуватиметься під час перетворення JSON. Значення буде елементом перелічення JSONFormat.</value>
-    
   </data>
   <data name="AboutTrace" xml:space="preserve">
     <value>Якщо активувати цей параметр, інформація реєструватиметься в Application Insights, а також у сеансі Test Studio, що буде доступний у результатах перевірки.</value>
-    
   </data>
   <data name="TraceArg1" xml:space="preserve">
     <value>повідомлення</value>
-    
   </data>
   <data name="TraceArg2" xml:space="preserve">
     <value>важливість</value>
-    
   </data>
   <data name="TraceArg3" xml:space="preserve">
     <value>custom_record</value>
-    
   </data>
   <data name="TraceArg4" xml:space="preserve">
     <value>trace_options</value>
-    
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
     <value>Інформація, для якої потрібно виконати трасування.</value>
-    
   </data>
   <data name="AboutTrace_severity" xml:space="preserve">
     <value>Рівень важливості інформації, для якої потрібно виконати трасування до Application Insights.</value>
-    
   </data>
   <data name="AboutTrace_custom_record" xml:space="preserve">
     <value>Ви зможете виконати трасування запису, що містить спеціальні дані, до Application Insights.</value>
-    
   </data>
   <data name="AboutTrace_trace_options" xml:space="preserve">
     <value>Додаткові параметри для функції Trace.</value>
-    
   </data>
   <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
     <value>Параметр "{1}" функції "{0}" має бути постійним значенням.</value>
-    
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Значення JSONFormat "{0}" і "{1}" не можна використовувати разом.</value>
-    
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Значення, передане до функції JSON, містить медіадані та не підтримується за замовчуванням. Щоб дозволити серіалізацію JSON для значень медіаданих, виберіть для параметра "формат" варіант "IncludeBinaryData".</value>
-    
   </data>
   <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
     <value>Функція JSON не може серіалізувати об’єкти типу "{0}".</value>
-    
   </data>
   <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
     <value>Функція JSON не може серіалізувати таблиці або об’єкти з вкладеною властивістю "{0}" типу "{1}".</value>
-    
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Функція JSON не може серіалізувати двійкові дані у неповедінковому виразі.</value>    
+    <value>Функція JSON не може серіалізувати двійкові дані у неповедінковому виразі.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Параметр {0} містить непідтримувану властивість типу "{1}".</value>
-    
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Указаний стовпець доступний лише для читання, і в нього не можна вносити зміни: {0}.</value>
-    
   </data>
   <data name="AboutSearch" xml:space="preserve">
     <value>Шукає текст у джерелі й повертає рядки, де знайдено текст (без урахування регістра).</value>
-    
   </data>
   <data name="AboutSearch_source" xml:space="preserve">
     <value>Таблиці, де потрібно шукати.</value>
@@ -4159,22 +3361,17 @@
   </data>
   <data name="SearchArg1" xml:space="preserve">
     <value>джерело</value>
-    
   </data>
   <data name="SearchArg2" xml:space="preserve">
     <value>текст</value>
-    
   </data>
   <data name="SearchArg3" xml:space="preserve">
     <value>стовпець</value>
-    
   </data>
   <data name="ErrSearchWrongType" xml:space="preserve">
     <value>Неправильний тип стовпця. Очікується текстовий тип.</value>
-    
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Таблиця не містить жодного текстового стовпця.</value>
-    
   </data>
 </root>

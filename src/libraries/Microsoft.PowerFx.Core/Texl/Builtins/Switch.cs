@@ -91,10 +91,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var count = args.Length;
 
+            nodeToCoercedTypeMap = null;
+
+            if (argTypes[0].IsVoid)
+            {
+                errors.Error(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrBadType_VoidExpression);
+                returnType = DType.Void;
+                return false;
+            }
+
             // Check the switch expression type matches all case expression types in list.
             var fArgsValid = true;
             for (var i = 1; i < count - 1; i += 2)
             {
+                if (argTypes[i].IsVoid)
+                {
+                    errors.Error(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBadType_VoidExpression);
+                    returnType = DType.Void;
+                    return false;
+                }
+
                 if (!argTypes[0].Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
                     !argTypes[i].Accepts(argTypes[0], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
@@ -111,7 +127,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var type = ReturnType;
-            nodeToCoercedTypeMap = null;
 
             // Compute the result type by joining the types of all non-predicate args.
             Contracts.Assert(type == DType.Unknown);

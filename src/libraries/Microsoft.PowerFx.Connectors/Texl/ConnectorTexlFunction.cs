@@ -36,6 +36,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public string NotSupportedReason => ConnectorFunction.NotSupportedReason;
 
+        public IReadOnlyCollection<ErrorResourceKey> Warnings => ConnectorFunction.Warnings;
+
         public override bool IsBehaviorOnly => ConnectorFunction.IsBehavior;
 
         public override bool IsSelfContained => !ConnectorFunction.IsBehavior;

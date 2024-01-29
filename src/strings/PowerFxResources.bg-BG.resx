@@ -3802,10 +3802,6 @@
     <value>Тази функция е отхвърлена и вече не се поддържа.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>В пространството на имената {1} функцията {0} е отхвърлена.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>В пространството на имената {1} функцията {0} не се поддържа.</value>
     
