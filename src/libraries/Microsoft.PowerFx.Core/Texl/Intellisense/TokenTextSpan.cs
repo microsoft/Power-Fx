@@ -48,12 +48,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         }
 
         public TokenTextSpan(string name, Token token, TokenType type, bool canHide = false)
+            : this(name, token.VerifyValue().Span.Min, token.VerifyValue().Span.Lim, type, canHide)
         {
-            TokenName = name;
-            StartIndex = token.VerifyValue().Span.Min;
-            EndIndex = token.VerifyValue().Span.Lim;
-            TokenType = type;
-            CanBeHidden = canHide;
             IsTextFirst = token is ITextFirstFlag flag ? flag.IsTextFirst : false;
         }
     }
