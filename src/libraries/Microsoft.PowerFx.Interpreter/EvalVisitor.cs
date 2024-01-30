@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx
 
         public TimeZoneInfo TimeZoneInfo { get; private set; }
 
-        public DateTimeKind DateTimeKind => TimeZoneInfo == TimeZoneInfo.Utc ? DateTimeKind.Utc : DateTimeKind.Unspecified;
+        public DateTimeKind DateTimeKind => TimeZoneInfo.Equals(TimeZoneInfo.Utc) ? DateTimeKind.Utc : DateTimeKind.Unspecified;
 
         public Governor Governor { get; private set; }
 
