@@ -4083,6 +4083,17 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
+        [Fact]
+        public void TexlFunctionTypeSemanticTableConcat()
+        {
+            var schema = DType.CreateTable(new TypedName(DType.CreateAttachmentType(TestUtils.DT("*[Value:o, Name:s, Link:s]")), new DName("Attach")), new TypedName(TestUtils.DT("b"), new DName("Value")));
+
+            var symbol = new SymbolTable();
+            symbol.AddEntity(new TestDataSource("DS", schema));
+
+            TestBindingErrors("TableConcatenate(DS)", schema, symbol);
+        }
+
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig

@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
@@ -42,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        // Typecheck an invocation of Table.
+        // Typecheck an invocation of TableConcatenate.
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -63,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (!argType.IsTable)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedRecord);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedTable);
                     isValid = false;
                 }
                 else
@@ -96,6 +98,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = tableType;
 
             return isValid;
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            base.CheckSemantics(binding, args, argTypes, errors);
+
+            for (var i = 0; i < argTypes.Length; i++)
+            {
+                if (argTypes[i].AssociatedDataSources.Count > 0)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.WrnDelegationTableNotSupported);
+                    continue;
+                }
+            }
         }
     }
 }

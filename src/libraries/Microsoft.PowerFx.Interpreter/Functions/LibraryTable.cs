@@ -683,6 +683,7 @@ namespace Microsoft.PowerFx.Functions
                 arg => arg switch
                 {
                     TableValue r => r.Rows,
+                    BlankValue b => new List<DValue<RecordValue>> { DValue<RecordValue>.Of(b) },
                     _ => new List<DValue<RecordValue>> { DValue<RecordValue>.Of((ErrorValue)arg) },
                 });
 
