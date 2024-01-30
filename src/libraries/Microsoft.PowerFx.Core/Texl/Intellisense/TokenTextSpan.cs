@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AppMagic.Transport;
+using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
@@ -21,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         bool CanBeHidden { get; }
     }
 
-    internal sealed class TokenTextSpan : ITokenTextSpan
+    internal sealed class TokenTextSpan : ITokenTextSpan, ITextFirstFlag
     {
         public string TokenName { get; private set; }
 
@@ -33,6 +35,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         public bool CanBeHidden { get; private set; }
 
+        public bool IsTextFirst { get; private set; }
+
         public TokenTextSpan(string name, int startIndex, int endIndex, TokenType type, bool canHide)
         {
             TokenName = name;
@@ -40,6 +44,17 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             EndIndex = endIndex;
             TokenType = type;
             CanBeHidden = canHide;
+            IsTextFirst = false;
+        }
+
+        public TokenTextSpan(string name, Token token, TokenType type, bool canHide = false)
+        {
+            TokenName = name;
+            StartIndex = token.VerifyValue().Span.Min;
+            EndIndex = token.VerifyValue().Span.Lim;
+            TokenType = type;
+            CanBeHidden = canHide;
+            IsTextFirst = token is ITextFirstFlag flag ? flag.IsTextFirst : false;
         }
     }
 
