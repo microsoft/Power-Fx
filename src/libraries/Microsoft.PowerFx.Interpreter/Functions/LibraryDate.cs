@@ -566,10 +566,6 @@ namespace Microsoft.PowerFx.Functions
                     result = _epoch.Add(result.TimeOfDay);
                 }
 
-                var tzi = runner.TimeZoneInfo;
-
-                result = DateTimeValue.GetConvertedDateTimeValue(result, tzi);
-
                 return new DateValue(irContext, result.Date);
             }
             else
