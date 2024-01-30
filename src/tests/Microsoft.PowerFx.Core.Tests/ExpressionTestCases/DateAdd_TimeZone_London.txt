@@ -1,0 +1,22 @@
+﻿// (UTC+0:00) London
+#SETUP: TimeZoneInfo("GMT Standard Time")
+
+// Adding a day when clocks are set forward back during the day (1am->2am here) should still result in the next day
+>> DateAdd(Date(2024, 10, 27), 1)
+Date(2024,10,28)
+
+>> DateAdd(DateTime(2024, 10, 27, 0, 0, 0), 1)
+DateTime(2024,10,28,0,0,0,0)
+
+>> DateAdd("2024-10-27", 1)
+DateTime(2024,10,28,0,0,0,0)
+
+// Adding a day when clocks are set back during that day (2am->1am here) should still result in the next day
+>> DateAdd(Date(2024, 3, 31), 1)
+Date(2024,4,1)
+
+>> DateAdd(DateTime(2024, 03, 31, 0, 0, 0), 1)
+DateTime(2024,4,1,0,0,0,0)
+
+>> DateAdd("2024-03-31", 1)
+DateTime(2024,4,1,0,0,0,0)
