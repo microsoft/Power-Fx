@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -119,48 +119,62 @@
   </resheader>
   <data name="ListItemSingleQuotedFormat" xml:space="preserve">
     <value>{0}</value>
+    
   </data>
   <data name="AboutIf" xml:space="preserve">
     <value>Hiermee wordt gecontroleerd of aan een van de opgegeven voorwaarden wordt voldaan en wordt de bijbehorende waarde geretourneerd. Als aan geen van de voorwaarden wordt voldaan, retourneert de functie de opgegeven standaardwaarde.</value>
+    
   </data>
   <data name="IfArgCond" xml:space="preserve">
     <value>logische_test</value>
+    
   </data>
   <data name="IfArgTrueValue" xml:space="preserve">
     <value>waarde_voor_waar</value>
+    
   </data>
   <data name="IfArgElseValue" xml:space="preserve">
     <value>waarde_voor_anders</value>
+    
   </data>
   <data name="AboutIf_logical_test" xml:space="preserve">
     <value>Een voorwaarde die resulteert in een booleaanse waarde.</value>
   </data>
   <data name="AboutIf_true_value" xml:space="preserve">
     <value>Een expressie waarmee het resultaat van If wordt opgegeven als aan de voorwaarde wordt voldaan.</value>
+    
   </data>
   <data name="AboutIf_else_value" xml:space="preserve">
     <value>Een expressie waarmee het resultaat van If wordt opgegeven als aan geen van de opgegeven voorwaarden wordt voldaan.</value>
+    
   </data>
   <data name="AboutSwitch" xml:space="preserve">
     <value>Hiermee wordt voor het resultaat van een formule naar een overeenkomst gezocht in een reeks met waarden. Als er een overkomst wordt gevonden, wordt de bijbehorende formule geëvalueerd en geretourneerd. Wanneer er geen overeenkomsten worden gevonden, wordt de laatste standaardformule geëvalueerd en geretourneerd.</value>
+    
   </data>
   <data name="SwitchExpression" xml:space="preserve">
     <value>schakelwaarde</value>
+    
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
     <value>standaardresultaat</value>
+    
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
     <value>overeenkomende_waarde</value>
+    
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
     <value>overeenkomend_resultaat</value>
+    
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
     <value>Waarde die wordt vergeleken met elke overeenkomende_waarde.</value>
+    
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
     <value>Waarde die moet overeenkomen met schakelwaarde.</value>
+    
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
     <value>De formule die moet worden geëvalueerd en geretourneerd als er een overkomst is gevonden.</value>
@@ -170,15 +184,19 @@
   </data>
   <data name="AboutAnd" xml:space="preserve">
     <value>Hiermee wordt gecontroleerd of alle argumenten waar zijn, en retourneert de waarde waar als alle argumenten waar zijn.</value>
+    
   </data>
   <data name="AboutOr" xml:space="preserve">
     <value>Hiermee wordt gecontroleerd of de argumenten waar zijn, waarna de waarde waar of onwaar wordt geretourneerd. Onwaar wordt alleen geretourneerd als alle argumenten onwaar zijn.</value>
+    
   </data>
   <data name="AboutNot" xml:space="preserve">
     <value>Hiermee wordt de waarde onwaar gewijzigd in waar en waar in onwaar.</value>
+    
   </data>
   <data name="LogicalFuncParam" xml:space="preserve">
     <value>logisch</value>
+    
   </data>
   <data name="AboutAnd_logical" xml:space="preserve">
     <value>Een logische expressie om de And-bewerking in overweging te nemen.</value>
@@ -191,15 +209,19 @@
   </data>
   <data name="AboutCount" xml:space="preserve">
     <value>Hiermee wordt het aantal numerieke waarden in de opgegeven kolom geteld.</value>
+    
   </data>
   <data name="AboutCountA" xml:space="preserve">
     <value>Hiermee wordt het aantal rijen in de kolom geteld die niet leeg zijn.</value>
+    
   </data>
   <data name="AboutCountRows" xml:space="preserve">
     <value>Hiermee wordt het aantal rijen in de invoertabel of verzameling geteld.</value>
+    
   </data>
   <data name="CountArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="AboutCount_source" xml:space="preserve">
     <value>Een kolom met waarden die moeten worden geteld.</value>
@@ -212,12 +234,15 @@
   </data>
   <data name="AboutCountIf" xml:space="preserve">
     <value>Hiermee wordt het aantal rijen geteld die aan de opgegeven voorwaarde voldoen.</value>
+    
   </data>
   <data name="CountIfArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="CountIfArg2" xml:space="preserve">
     <value>voorwaarde</value>
+    
   </data>
   <data name="AboutCountIf_source" xml:space="preserve">
     <value>Een tabel waarin rijen worden geteld die aan bepaalde criteria voldoen.</value>
@@ -227,21 +252,27 @@
   </data>
   <data name="AboutSumT" xml:space="preserve">
     <value>Hiermee wordt de som geretourneerd van de nummers die door de expressie in de context van de tabel worden geëvalueerd.</value>
+    
   </data>
   <data name="AboutMaxT" xml:space="preserve">
     <value>Hiermee wordt de grootste waarde als resultaat van de expressie in de context van de tabel geretourneerd.</value>
+    
   </data>
   <data name="AboutMinT" xml:space="preserve">
     <value>Hiermee wordt de kleinste waarde als resultaat van de expressie in de context van de tabel geretourneerd.</value>
+    
   </data>
   <data name="AboutAverageT" xml:space="preserve">
     <value>Hiermee wordt het (rekenkundig) gemiddelde geretourneerd van de nummers die door de expressie in de context van de tabel worden geëvalueerd.</value>
+    
   </data>
   <data name="StatisticalTArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="StatisticalTArg2" xml:space="preserve">
     <value>expressie</value>
+    
   </data>
   <data name="AboutMin_source" xml:space="preserve">
     <value>Een tabel waarover deze Min-bewerking wordt berekend.</value>
@@ -269,18 +300,23 @@
   </data>
   <data name="AboutSum" xml:space="preserve">
     <value>Hiermee wordt de som van de argumenten geretourneerd.</value>
+    
   </data>
   <data name="AboutMax" xml:space="preserve">
     <value>Hiermee wordt de grootste waarde in een set waarden geretourneerd. Logische waarden en tekst worden genegeerd.</value>
+    
   </data>
   <data name="AboutMin" xml:space="preserve">
     <value>Hiermee wordt de kleinste waarde in een set waarden geretourneerd. Logische waarden en tekst worden genegeerd.</value>
+    
   </data>
   <data name="AboutAverage" xml:space="preserve">
     <value>Hiermee wordt het (rekenkundig) gemiddelde van de argumenten geretourneerd.</value>
+    
   </data>
   <data name="StatisticalArg" xml:space="preserve">
     <value>getal</value>
+    
   </data>
   <data name="AboutSum_number" xml:space="preserve">
     <value>Een numerieke waarde voor de Sum-bewerking.</value>
@@ -296,33 +332,43 @@
   </data>
   <data name="AboutAddColumns" xml:space="preserve">
     <value>Hiermee wordt een tabel geretourneerd met nieuwe kolommen die zijn berekend door het evalueren van alle waarden voor expression hoger dan source.</value>
+    
   </data>
   <data name="AddColumnsArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="AddColumnsArg2" xml:space="preserve">
     <value>kolom</value>
+    
   </data>
   <data name="AddColumnsArg3" xml:space="preserve">
     <value>expressie</value>
+    
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
     <value>Een tabel of record waaraan kolommen worden toegevoegd.</value>
+    
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
     <value>Een unieke kolomnaam.</value>
+    
   </data>
   <data name="AboutAddColumns_expression" xml:space="preserve">
     <value>Een expressie waarmee waarden voor de nieuwe kolom worden geleverd.</value>
+    
   </data>
   <data name="AboutDropColumns" xml:space="preserve">
     <value>Hiermee wordt een tabel geretourneerd waaruit een of meer opgegeven columns zijn verwijderd uit de tabel source.</value>
+    
   </data>
   <data name="DropColumnsArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="DropColumnsArg2" xml:space="preserve">
     <value>naam_kolom</value>
+    
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
     <value>Een tabel- of recordwaarde waaruit kolommen moeten worden verwijderd.</value>
@@ -332,15 +378,19 @@
   </data>
   <data name="AboutRenameColumns" xml:space="preserve">
     <value>Hiermee wordt een kopie van de opgegeven tabel bron geretourneerd, waarbij de naam van de kolom oude kolom is gewijzigd in nieuwe kolom.</value>
+    
   </data>
   <data name="RenameColumnsArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="RenameColumnsArg2" xml:space="preserve">
     <value>oude_kolom</value>
+    
   </data>
   <data name="RenameColumnsArg3" xml:space="preserve">
     <value>nieuwe_kolom</value>
+    
   </data>
   <data name="AboutRenameColumns_source" xml:space="preserve">
     <value>Een tabelwaarde die moet worden verwerkt.</value>
@@ -353,15 +403,19 @@
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
     <value>De naam van de opgegeven kolom {0} kan niet tweemaal worden gewijzigd.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Hiermee worden de rijen uit de tabel geretourneerd waarvoor alle opgegeven voorwaarden waar zijn.</value>
+    
   </data>
   <data name="FilterArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="FilterArg2" xml:space="preserve">
     <value>logische_test</value>
+    
   </data>
   <data name="AboutFilter_source" xml:space="preserve">
     <value>Een tabel die moet worden gefilterd.</value>
@@ -371,12 +425,15 @@
   </data>
   <data name="AboutFirst" xml:space="preserve">
     <value>Hiermee wordt de eerste rij van source geretourneerd.</value>
+    
   </data>
   <data name="AboutLast" xml:space="preserve">
     <value>Hiermee wordt de laatste rij van bron geretourneerd.</value>
+    
   </data>
   <data name="FirstLastArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="AboutFirst_source" xml:space="preserve">
     <value>Een tabel waaruit de eerste rij wordt geretourneerd.</value>
@@ -386,15 +443,19 @@
   </data>
   <data name="AboutFirstN" xml:space="preserve">
     <value>Hiermee worden de eerste count rijen van source geretourneerd.</value>
+    
   </data>
   <data name="AboutLastN" xml:space="preserve">
     <value>Hiermee wordt de laatste 'count' van 'source' geretourneerd.</value>
+    
   </data>
   <data name="FirstLastNArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="FirstLastNArg2" xml:space="preserve">
     <value>aantal</value>
+    
   </data>
   <data name="AboutFirstN_source" xml:space="preserve">
     <value>Een tabel waaruit rijen worden geretourneerd.</value>
@@ -410,105 +471,130 @@
   </data>
   <data name="AboutText" xml:space="preserve">
     <value>Hiermee wordt een waarde geconverteerd naar een specifiek getal voor 'tekstopmaak'.</value>
+    
   </data>
   <data name="TextArg1" xml:space="preserve">
     <value>waarde</value>
+    
   </data>
   <data name="TextArg2" xml:space="preserve">
     <value>tekstopmaak</value>
+    
   </data>
   <data name="TextArg3" xml:space="preserve">
     <value>taal</value>
+    
   </data>
   <data name="AboutText_value" xml:space="preserve">
     <value>Een waarde die moet worden opgemaakt als tekst.</value>
   </data>
   <data name="AboutText_format_text" xml:space="preserve">
     <value>Een tekstwaarde waarmee wordt aangegeven op welke manier 'value' wordt ingedeeld.</value>
+    
   </data>
   <data name="AboutText_language" xml:space="preserve">
     <value>De taalcode die moet worden gebruikt bij het converteren naar tekst.</value>
+    
   </data>
   <data name="AboutValue" xml:space="preserve">
     <value>Hiermee wordt een 'text' in de vorm van een getal geconverteerd naar een numerieke waarde.</value>
+    
   </data>
   <data name="ValueArg1" xml:space="preserve">
     <value>tekst</value>
+    
   </data>
   <data name="ValueArg2" xml:space="preserve">
     <value>taal</value>
+    
   </data>
   <data name="AboutValue_text" xml:space="preserve">
     <value>De tekstwaarde die moet worden geconverteerd naar een numerieke waarde.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
     <value>De taalcode die moet worden gebruikt bij het converteren van de waarde.</value>
+    
   </data>
   <data name="AboutBoolean" xml:space="preserve">
     <value>Converteert een 'tekst' die een booleaanse waarde vertegenwoordigt naar een booleaanse waarde.</value>
+    
   </data>
   <data name="BooleanArg1" xml:space="preserve">
     <value>tekst</value>
+    
   </data>
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>De tekstwaarde die moet worden geconverteerd naar een booleaanse waarde.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
     <value>Hiermee wordt een kolom met tekstwaarden naar een kolom met booleaanse waarden geconverteerd.</value>
+    
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
     <value>invoer</value>
+    
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
     <value>Een kolom met tekstwaarden die moeten worden verwerkt.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>Hiermee wordt een 'getal' naar een booleaanse waarde geconverteerd.</value>
+    
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
     <value>getal</value>
+    
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
     <value>De getalwaarde die moet worden geconverteerd naar een booleaanse waarde.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
     <value>Hiermee wordt een kolom met numerieke waarden naar een kolom met booleaanse waarden geconverteerd.</value>
+    
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
     <value>invoer</value>
+    
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Een kolom met getalwaarden die moeten worden verwerkt.</value>
   </data>
   <data name="AboutBooleanB" xml:space="preserve">
     <value>Hiermee wordt een 'booleaanse waarde' naar een booleaanse waarde geconverteerd.</value>
+    
   </data>
   <data name="BooleanBArg1" xml:space="preserve">
     <value>booleaanse waarde</value>
+    
   </data>
   <data name="AboutBooleanB_boolean" xml:space="preserve">
     <value>De booleaanse waarde die moet worden geconverteerd naar een booleaanse waarde.</value>
   </data>
   <data name="AboutBooleanBT" xml:space="preserve">
     <value>Hiermee wordt een kolom met booleaanse waarden naar een kolom met booleaanse waarden geconverteerd.</value>
+    
   </data>
   <data name="BooleanBTArg1" xml:space="preserve">
     <value>invoer</value>
+    
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Een kolom met booleaanse waarden die moet worden verwerkt.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Hiermee wordt het eerste niet-lege argument geretourneerd</value>
+    
   </data>
   <data name="CoalesceArg1" xml:space="preserve">
     <value>waarde</value>
+    
   </data>
   <data name="AboutCoalesce_value" xml:space="preserve">
     <value>Een argument dat moet worden geretourneerd als dit het eerste niet-lege argument is.</value>
   </data>
   <data name="AboutConcatenate" xml:space="preserve">
     <value>Hiermee worden verschillende tekstwaarden samengevoegd in één tekstwaarde.</value>
+    
   </data>
   <data name="AboutDecimal" xml:space="preserve">
     <value>Hiermee wordt een 'text' in de vorm van een getal geconverteerd naar een decimale waarde.</value>
@@ -530,30 +616,37 @@
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>tekst</value>
+    
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
     <value>Een tekstwaarde die moet worden samengevoegd met de rest van de argumenten.</value>
   </data>
   <data name="AboutConcatenateT" xml:space="preserve">
     <value>Voegt verschillende tekstwaarden of tabellen samen in een kolom met tekstwaarden.</value>
+    
   </data>
   <data name="ConcatenateTArg1" xml:space="preserve">
     <value>waarde</value>
+    
   </data>
   <data name="AboutConcatenate_value" xml:space="preserve">
     <value>Een tekstwaarde of een kolom met tekstwaarden, die moet worden samengevoegd met de rest van de argumenten.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Hiermee worden alle tekstwaarden die zijn geproduceerd door het evalueren van de opgegeven expressie over de opgegeven tabel in één tekstwaarde samengevoegd.</value>
+    
   </data>
   <data name="ConcatArg1" xml:space="preserve">
     <value>tabel</value>
+    
   </data>
   <data name="ConcatArg2" xml:space="preserve">
     <value>expressie</value>
+    
   </data>
   <data name="ConcatArg3" xml:space="preserve">
     <value>scheidingsteken</value>
+    
   </data>
   <data name="AboutConcat_table" xml:space="preserve">
     <value>Een tabelwaarde waarover de expressie die is opgegeven door de tweede parameter moet worden geëvalueerd.</value>
@@ -563,30 +656,37 @@
   </data>
   <data name="AboutConcat_separator" xml:space="preserve">
     <value>Een tekstwaarde die moet worden ingevoegd tussen de samengevoegde rijen van de tabel.</value>
+    
   </data>
   <data name="AboutLen" xml:space="preserve">
     <value>Hiermee wordt het aantal tekens in een tekstwaarde geretourneerd.</value>
+    
   </data>
   <data name="AboutLen_text" xml:space="preserve">
     <value>Een tekstwaarde waarvan de lengte in tekens wordt geretourneerd.</value>
   </data>
   <data name="AboutLenT" xml:space="preserve">
     <value>Hiermee wordt het aantal tekens in een tekstwaarde geretourneerd die per rij in de opgegeven tabel of verzameling wordt geëvalueerd.</value>
+    
   </data>
   <data name="AboutLen_text_column" xml:space="preserve">
     <value>Een kolom met tekstwaarden waarvan de lengte in tekens wordt geretourneerd (als een nieuwe kolom).</value>
   </data>
   <data name="LenArg1" xml:space="preserve">
     <value>tekst</value>
+    
   </data>
   <data name="LenTArg1" xml:space="preserve">
     <value>kolom_tekst</value>
+    
   </data>
   <data name="AboutUpper" xml:space="preserve">
     <value>Hiermee wordt tekstwaarde volledig geconverteerd naar hoofdletters.</value>
+    
   </data>
   <data name="AboutUpperT" xml:space="preserve">
     <value>Hiermee worden alle letters in een tekstwaarde, die per rij in de opgegeven tabel of verzameling wordt geëvalueerd, geconverteerd naar hoofdletters.</value>
+    
   </data>
   <data name="AboutUpper_text" xml:space="preserve">
     <value>Een tekstwaarde die moet worden geconverteerd naar hoofdletters.</value>
@@ -596,9 +696,11 @@
   </data>
   <data name="AboutLower" xml:space="preserve">
     <value>Hiermee worden alle letters in een tekstwaarde geconverteerd naar kleine letters.</value>
+    
   </data>
   <data name="AboutLowerT" xml:space="preserve">
     <value>Hiermee worden alle letters in een tekstwaarde, die per rij in de opgegeven tabel of verzameling wordt geëvalueerd, geconverteerd naar kleine letters.</value>
+    
   </data>
   <data name="AboutLower_text" xml:space="preserve">
     <value>Een tekstwaarde die moet worden geconverteerd naar kleine letters.</value>
@@ -608,9 +710,11 @@
   </data>
   <data name="AboutProper" xml:space="preserve">
     <value>Hiermee wordt de eerste letter van elk woord in een tekstwaarde geconverteerd naar een hoofdletter en worden alle andere letters geconverteerd naar kleine letters.</value>
+    
   </data>
   <data name="AboutProperT" xml:space="preserve">
     <value>Hiermee wordt de eerste letter van elk woord in een tekstwaarde, die per rij in de opgegeven tabel of verzameling wordt geëvalueerd, geconverteerd naar een hoofdletter en worden alle andere letters geconverteerd naar kleine letters.</value>
+    
   </data>
   <data name="AboutProper_text" xml:space="preserve">
     <value>Een tekstwaarde die moet worden geconverteerd naar het juiste hoofdlettergebruik.</value>
@@ -620,6 +724,7 @@
   </data>
   <data name="AboutTrim" xml:space="preserve">
     <value>Hiermee worden alle spaties uit een tekstwaarde verwijderd, met uitzondering van de enkele spaties tussen woorden.</value>
+    
   </data>
   <data name="AboutTrim_text" xml:space="preserve">
     <value>Een tekstwaarde die moet worden geconverteerd naar trim.</value>
@@ -629,6 +734,7 @@
   </data>
   <data name="AboutTrimEnds" xml:space="preserve">
     <value>Hiermee worden alle voorloop- en volgspaties uit een tekstwaarde verwijderd.</value>
+    
   </data>
   <data name="AboutTrimEnds_text" xml:space="preserve">
     <value>Een tekstwaarde waaruit de volg- en voorloopspatie moet worden verwijderd.</value>
@@ -638,9 +744,11 @@
   </data>
   <data name="AboutMid" xml:space="preserve">
     <value>Hiermee worden de tekens uit het midden van een tekstwaarde geretourneerd op basis van de beginpositie en lengte.</value>
+    
   </data>
   <data name="AboutMidT" xml:space="preserve">
     <value>Hiermee worden de tekens uit het midden van een tekstwaarde geretourneerd op basis van de beginpositie en lengte, geëvalueerd per rij in de opgegeven tabel of verzameling.</value>
+    
   </data>
   <data name="AboutMid_text" xml:space="preserve">
     <value>Een tekstwaarde waaruit tekens worden geëxtraheerd.</value>
@@ -656,27 +764,35 @@
   </data>
   <data name="StringFuncArg1" xml:space="preserve">
     <value>tekst</value>
+    
   </data>
   <data name="StringTFuncArg1" xml:space="preserve">
     <value>kolom_tekst</value>
+    
   </data>
   <data name="StringFuncArg2" xml:space="preserve">
     <value>waarde_begin</value>
+    
   </data>
   <data name="StringFuncArg3" xml:space="preserve">
     <value>aantal_tekens</value>
+    
   </data>
   <data name="AboutReplace" xml:space="preserve">
     <value>Vervang een deel van de tekstwaarde door een andere tekstwaarde.</value>
+    
   </data>
   <data name="AboutReplaceT" xml:space="preserve">
     <value>Vervang een deel van de tekstwaarde door een andere tekstwaarde, geëvalueerd per rij in de opgegeven tabel of verzameling.</value>
+    
   </data>
   <data name="ReplaceFuncArg1" xml:space="preserve">
     <value>oude_tekst</value>
+    
   </data>
   <data name="ReplaceFuncArg4" xml:space="preserve">
     <value>nieuwe_tekst</value>
+    
   </data>
   <data name="AboutReplace_old_text" xml:space="preserve">
     <value>De tekstwaarde die moet worden verwerkt.</value>
@@ -695,51 +811,67 @@
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>Hiermee wordt een fout met aangepaste waarden gegenereerd.</value>
+    
   </data>
   <data name="AboutError_error_information" xml:space="preserve">
     <value>Een record met de aangepaste waarden voor de geproduceerde fout.</value>
+    
   </data>
   <data name="ErrorArg1" xml:space="preserve">
     <value>foutinformatie</value>
+    
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
     <value>De functie Error gebruikt alleen de velden Kind, Message, Notify, Control en Property.</value>
+    
   </data>
   <data name="AboutIfError" xml:space="preserve">
     <value>Hiermee word het eerste argument zonder fout geëvalueerd en geretourneerd.</value>
+    
   </data>
   <data name="IfErrorArg1" xml:space="preserve">
     <value>waarde</value>
+    
   </data>
   <data name="AboutIfError_value" xml:space="preserve">
     <value>De waarde die wordt geretourneerd als het geen fout is.</value>
+    
   </data>
   <data name="IfErrorArg2" xml:space="preserve">
     <value>terugval</value>
+    
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
     <value>De waarde die wordt als het vorige argument een fout is.</value>
+    
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
     <value>Hiermee wordt de bestaande tekst in een tekstwaarde vervangen door nieuwe tekst.</value>
+    
   </data>
   <data name="AboutSubstituteT" xml:space="preserve">
     <value>Hiermee wordt de bestaande tekst in een tekstwaarde, die per rij in de opgegeven tabel of verzameling wordt geëvalueerd, vervangen door nieuwe tekst.</value>
+    
   </data>
   <data name="SubstituteFuncArg1" xml:space="preserve">
     <value>tekst</value>
+    
   </data>
   <data name="SubstituteTFuncArg1" xml:space="preserve">
     <value>kolom_tekst</value>
+    
   </data>
   <data name="SubstituteFuncArg2" xml:space="preserve">
     <value>oude_tekst</value>
+    
   </data>
   <data name="SubstituteFuncArg3" xml:space="preserve">
     <value>nieuwe_tekst</value>
+    
   </data>
   <data name="SubstituteFuncArg4" xml:space="preserve">
     <value>waarde_exemplaar</value>
+    
   </data>
   <data name="AboutSubstitute_text" xml:space="preserve">
     <value>De tekstwaarde die moet worden verwerkt.</value>
@@ -758,15 +890,19 @@
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>Hiermee wordt 'source' gesorteerd op basis van de resultaten van de 'expression' waarmee elke rij is geëvalueerd en kunt eventueel een 'order' voor sorteren opgeven.</value>
+    
   </data>
   <data name="SortArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="SortArg2" xml:space="preserve">
     <value>expressie</value>
+    
   </data>
   <data name="SortArg3" xml:space="preserve">
     <value>volgorde</value>
+    
   </data>
   <data name="AboutSort_source" xml:space="preserve">
     <value>De tabel die moet worden gesorteerd.</value>
@@ -776,18 +912,23 @@
   </data>
   <data name="AboutSort_order" xml:space="preserve">
     <value>SortOrder.Ascending of SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Hiermee wordt 'source' gesorteerd op basis van de kolom en kunt eventueel een 'order' voor sorteren opgeven.</value>
+    
   </data>
   <data name="SortByColumnsArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="SortByColumnsArg2" xml:space="preserve">
     <value>kolom</value>
+    
   </data>
   <data name="SortByColumnsArg3" xml:space="preserve">
     <value>volgorde</value>
+    
   </data>
   <data name="AboutSortByColumns_source" xml:space="preserve">
     <value>De tabel die moet worden gesorteerd.</value>
@@ -797,18 +938,22 @@
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
     <value>SortOrder.Ascending of SortOrder.Descending</value>
+    
   </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>waarden</value>
+    
   </data>
   <data name="AboutSortByColumns_values" xml:space="preserve">
     <value>Een kolom met waarden die voor sorteerdoeleinden moet worden gebruikt. Er wordt niet aflopend/oplopend gesorteerd. In plaats daarvan wordt er gesorteerd op de index van overeenkomende waarden in de kolom </value>
   </data>
   <data name="AboutRand" xml:space="preserve">
     <value>Hiermee wordt een gelijkmatig verdeeld willekeurig getal geretourneerd dat groter is dan 0 of gelijk is aan 1.</value>
+    
   </data>
   <data name="AboutRandBetween" xml:space="preserve">
     <value>Retourneert een willekeurig getal tussen het laagste en hoogste getal, gelijkmatig gedistribueerd.</value>
+    
   </data>
   <data name="AboutRandBetween_bottom" xml:space="preserve">
     <value>Het kleinste geheel getal dat de functie kan retourneren.</value>
@@ -818,99 +963,129 @@
   </data>
   <data name="RandBetweenArg1" xml:space="preserve">
     <value>onder</value>
+    
   </data>
   <data name="RandBetweenArg2" xml:space="preserve">
     <value>boven</value>
+    
   </data>
   <data name="AboutGUID" xml:space="preserve">
     <value>Hiermee wordt een GUID op basis van een tekenreeks gemaakt of een willekeurig gegenereerde GUID geretourneerd als er geen argumenten zijn opgegeven.</value>
+    
   </data>
   <data name="GUIDArg" xml:space="preserve">
     <value>GUID_string</value>
+    
   </data>
   <data name="AboutGUID_GUID_string" xml:space="preserve">
     <value>Tekenreeks die naar een GUID moet worden geconverteerd</value>
+    
   </data>
   <data name="AboutNow" xml:space="preserve">
     <value>Hiermee worden de huidige datum en tijd geretourneerd.</value>
+    
   </data>
   <data name="AboutUTCNow" xml:space="preserve">
     <value>Retourneert de huidige datum en tijd in UTC.</value>
+    
   </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Hiermee wordt het verschil in tijd tussen UTC-tijd en de lokale tijd geretourneerd in minuten. Als uw tijdzone bijvoorbeeld UTC+2 is, wordt -120 geretourneerd.</value>
+    
   </data>
   <data name="TimeZoneOffsetArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="AboutTimeZoneOffset_date" xml:space="preserve">
     <value>De datum op basis waarvan TimeZoneOffset wordt berekend.</value>
+    
   </data>
   <data name="AboutToday" xml:space="preserve">
     <value>Hiermee wordt de huidige datum geretourneerd.</value>
+    
   </data>
   <data name="AboutUTCToday" xml:space="preserve">
     <value>Retourneert de huidige datum in UTC.</value>
+    
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Retourneert het weeknummer voor een bepaalde datum.</value>
+    
   </data>
   <data name="WeekNumArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="WeekNumArg2" xml:space="preserve">
     <value>begin_van_week</value>
+    
   </data>
   <data name="AboutWeekNum_date" xml:space="preserve">
     <value>Een datumwaarde waarvoor het weeknummer wordt berekend.</value>
   </data>
   <data name="AboutWeekNum_start_of_week" xml:space="preserve">
     <value>Een waarde uit de opsomming StartOfWeek of een getal uit de overeenkomende Excel-functie om aan te geven hoe de dagen van de week moet worden genummerd.</value>
+    
   </data>
   <data name="AboutISOWeekNum" xml:space="preserve">
     <value>Retourneert het weeknummer volgens de ISO-regels voor een bepaalde datum.</value>
+    
   </data>
   <data name="ISOWeekNumArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Een datumwaarde waarvoor het ISO-weeknummer wordt berekend.</value>
   </data>
   <data name="AboutEDate" xml:space="preserve">
     <value>Retourneert een datum die is aangepast met een aantal maanden. De dag van de maand is gelijk, maar wordt begrensd door het aantal dagen in de nieuwe maand.</value>
+    
   </data>
   <data name="EDateArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="EDateArg2" xml:space="preserve">
     <value>maanden</value>
+    
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Een datumwaarde die moet worden aangepast aan het opgegeven aantal maanden.</value>
+          
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Aantal maanden waarmee de datum moet worden gewijzigd. Een positieve waarde heeft een datum in de toekomst, een negatieve waarde een datum in het verleden en nul wijzigt de maand niet.</value>
+        
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Retourneert de laatste dag van de maand voor een opgegeven datum, aangepast door een aantal maanden.</value>
+    
   </data>
   <data name="EOMonthArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="EOMonthArg2" xml:space="preserve">
     <value>maanden</value>
+    
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Een datumwaarde die moet worden aangepast aan het opgegeven aantal maanden.</value>
+          
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Aantal maanden waarmee de datum moet worden gewijzigd. Een positieve waarde heeft een datum in de toekomst, een negatieve waarde een datum in het verleden en nul wijzigt de maand niet.</value>
+    <value>Aantal maanden waarmee de datum moet worden gewijzigd. Een positieve waarde heeft een datum in de toekomst, een negatieve waarde een datum in het verleden en nul wijzigt de maand niet.</value>
+         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Getal wordt afgekapt door afronding op een negatieve oneindigheid.</value>
+    
   </data>
   <data name="AboutIntT" xml:space="preserve">
     <value>De waarden in een kolom met getallen worden afgekapt door afronding op een negatieve oneindigheid.</value>
+    
   </data>
   <data name="AboutInt_number" xml:space="preserve">
     <value>Een numerieke waarde die moet worden verwerkt.</value>
@@ -920,6 +1095,7 @@
   </data>
   <data name="AboutTrunc" xml:space="preserve">
     <value>Getal wordt afgekapt door afronding op een nul.</value>
+    
   </data>
   <data name="AboutTrunc_number" xml:space="preserve">
     <value>Het getal dat moet worden afgekapt.</value>
@@ -932,33 +1108,43 @@
   </data>
   <data name="AboutTruncT" xml:space="preserve">
     <value>Kapt alle getallen in 'bron' af door een afronding naar nul.</value>
+    
   </data>
   <data name="TruncArg1" xml:space="preserve">
     <value>getal</value>
+    
   </data>
   <data name="TruncArg2" xml:space="preserve">
     <value>aantal_decimalen</value>
+    
   </data>
   <data name="TruncTArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="TruncTArg2" xml:space="preserve">
     <value>aantal_decimalen</value>
+    
   </data>
   <data name="AboutRound" xml:space="preserve">
     <value>Hiermee wordt 'number' afgerond op het opgegeven aantal cijfers.</value>
+    
   </data>
   <data name="AboutRoundUp" xml:space="preserve">
     <value>Hiermee wordt 'number' naar boven afgerond, weg van nul.</value>
+    
   </data>
   <data name="AboutRoundDown" xml:space="preserve">
     <value>Hiermee wordt 'number' naar beneden afgerond naar nul.</value>
+    
   </data>
   <data name="RoundArg1" xml:space="preserve">
     <value>getal</value>
+    
   </data>
   <data name="RoundArg2" xml:space="preserve">
     <value>aantal_decimalen</value>
+    
   </data>
   <data name="AboutRound_number" xml:space="preserve">
     <value>Het getal dat moet worden afgrond.</value>
@@ -989,33 +1175,43 @@
   </data>
   <data name="AboutRoundT" xml:space="preserve">
     <value>Hiermee worden alle getallen in 'source' afgerond op het opgegeven aantal cijfers.</value>
+    
   </data>
   <data name="AboutRoundUpT" xml:space="preserve">
     <value>Hiermee worden alle getallen in 'source' naar boven afgerond, weg van nul.</value>
+    
   </data>
   <data name="AboutRoundDownT" xml:space="preserve">
     <value>Hiermee worden alle getallen in 'source' naar beneden afgerond naar nul.</value>
+    
   </data>
   <data name="RoundTArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="RoundTArg2" xml:space="preserve">
     <value>aantal_decimalen</value>
+    
   </data>
   <data name="AboutRGBA" xml:space="preserve">
     <value>Accepteert numerieke waarden voor de rode, groene, blauwe en alfacomponenten van de kleur en genereert de specifieke kleur. De RGB-waarden zijn numerieke waarden tussen 0 en 255. Alfa is een decimaal tussen 0 en 1.</value>
+    
   </data>
   <data name="RGBAArg1" xml:space="preserve">
     <value>waarde_rood</value>
+    
   </data>
   <data name="RGBAArg2" xml:space="preserve">
     <value>waarde_groen</value>
+    
   </data>
   <data name="RGBAArg3" xml:space="preserve">
     <value>waarde_blauw</value>
+    
   </data>
   <data name="RGBAArg4" xml:space="preserve">
     <value>waarde_alfa</value>
+    
   </data>
   <data name="AboutRGBA_red_value" xml:space="preserve">
     <value>De rode component, 0 tot en met 255.</value>
@@ -1031,12 +1227,15 @@
   </data>
   <data name="AboutColorFade" xml:space="preserve">
     <value>Hiermee wordt een nieuwe schaduw van de opgegeven color geproduceerd, gebaseerd op het opgegeven percentage fade.</value>
+    
   </data>
   <data name="ColorFadeArg1" xml:space="preserve">
     <value>kleur</value>
+    
   </data>
   <data name="ColorFadeArg2" xml:space="preserve">
     <value>vervaging</value>
+    
   </data>
   <data name="AboutColorFade_color" xml:space="preserve">
     <value>Een kleur die moet vervagen.</value>
@@ -1049,9 +1248,11 @@
   </data>
   <data name="ColorFadeTArg1" xml:space="preserve">
     <value>kleur_of_kolom</value>
+    
   </data>
   <data name="ColorFadeTArg2" xml:space="preserve">
     <value>vervagen_of_kolom</value>
+    
   </data>
   <data name="AboutColorFade_color_or_column" xml:space="preserve">
     <value>Een kleur (of kolom met kleurwaarden) die moet(en) vervagen.</value>
@@ -1061,9 +1262,11 @@
   </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Hiermee wordt de absolute waarde van een nummer, een nummer zonder het bijbehorende teken, geretourneerd.</value>
+    
   </data>
   <data name="AboutAbsT" xml:space="preserve">
     <value>Hiermee worden de absolute waarden (nummers zonder de bijbehorende tekens) van een kolom met cijfers geretourneerd.</value>
+    
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
     <value>Een numerieke waarde die moet worden verwerkt.</value>
@@ -1079,9 +1282,11 @@
   </data>
   <data name="AboutSin" xml:space="preserve">
     <value>Retourneert de sinuswaarde van een getal.</value>
+    
   </data>
   <data name="AboutSinT" xml:space="preserve">
     <value>Retourneert de sinuswaarden van een kolom getallen.</value>
+    
   </data>
   <data name="AboutAsin_number" xml:space="preserve">
     <value>Een numerieke waarde die moet worden verwerkt.</value>
@@ -1091,15 +1296,19 @@
   </data>
   <data name="AboutAsin" xml:space="preserve">
     <value>Retourneert de waarde voor de arcsinus (in radialen) van een getal.</value>
+    
   </data>
   <data name="AboutAsinT" xml:space="preserve">
     <value>Retourneert de waarden voor de arcsinus (in radialen) van een kolom getallen.</value>
+    
   </data>
   <data name="AboutCos" xml:space="preserve">
     <value>Retourneert de cosinuswaarde van een getal.</value>
+    
   </data>
   <data name="AboutCosT" xml:space="preserve">
     <value>Retourneert de cosinuswaarden van een kolom getallen.</value>
+    
   </data>
   <data name="AboutCos_number" xml:space="preserve">
     <value>Een numerieke waarde (in radialen) die moet worden verwerkt.</value>
@@ -1109,12 +1318,14 @@
   </data>
   <data name="AboutAcos" xml:space="preserve">
     <value>Retourneert de waarde voor de arccosinus (in radialen) van een getal.</value>
+    
   </data>
   <data name="AboutAcos_number" xml:space="preserve">
     <value>Een numerieke waarde die moet worden verwerkt.</value>
   </data>
   <data name="AboutAcosT" xml:space="preserve">
     <value>Retourneert de waarden voor de arccosinus (in radialen) van een kolom getallen.</value>
+    
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
     <value>Een kolom met numerieke waarden die moeten worden verwerkt.</value>
@@ -1127,15 +1338,19 @@
   </data>
   <data name="AboutAcot" xml:space="preserve">
     <value>Retourneert de waarde voor de arccotangens (in radialen) van een getal.</value>
+    
   </data>
   <data name="AboutAcotT" xml:space="preserve">
     <value>Retourneert de waarden voor de arccotangens (in radialen) van een kolom getallen.</value>
+    
   </data>
   <data name="AboutTan" xml:space="preserve">
     <value>Retourneert de tangenswaarde van een getal.</value>
+    
   </data>
   <data name="AboutTanT" xml:space="preserve">
     <value>Retourneert de tangenswaarden van een kolom getallen.</value>
+    
   </data>
   <data name="AboutTan_number" xml:space="preserve">
     <value>Een numerieke waarde (in radialen) die moet worden verwerkt.</value>
@@ -1145,9 +1360,11 @@
   </data>
   <data name="AboutAtan" xml:space="preserve">
     <value>Retourneert de waarde voor de arctangens (in radialen) van een getal.</value>
+    
   </data>
   <data name="AboutAtanT" xml:space="preserve">
     <value>Retourneert de waarden voor de arctangens (in radialen) van een kolom getallen.</value>
+    
   </data>
   <data name="AboutAtan_number" xml:space="preserve">
     <value>Een numerieke waarde die moet worden verwerkt.</value>
@@ -1157,9 +1374,11 @@
   </data>
   <data name="AboutCot" xml:space="preserve">
     <value>Retourneert de cotangenswaarde van een getal.</value>
+    
   </data>
   <data name="AboutCotT" xml:space="preserve">
     <value>Retourneert de cotangenswaarden van een kolom getallen.</value>
+    
   </data>
   <data name="AboutCot_number" xml:space="preserve">
     <value>Een numerieke waarde (in radialen) die moet worden verwerkt.</value>
@@ -1169,9 +1388,11 @@
   </data>
   <data name="AboutLn" xml:space="preserve">
     <value>Retourneert het natuurlijk logaritme (grondtal E) van een getal.</value>
+    
   </data>
   <data name="AboutLnT" xml:space="preserve">
     <value>Retourneert de natuurlijke logaritmewaarden (grondtal E) van een kolom getallen.</value>
+    
   </data>
   <data name="AboutLn_number" xml:space="preserve">
     <value>Een numerieke waarde die moet worden verwerkt.</value>
@@ -1181,9 +1402,11 @@
   </data>
   <data name="AboutLog" xml:space="preserve">
     <value>Hiermee wordt de logaritme voor een getal geretourneerd voor het grondtal dat is opgegeven. De standaardwaarde voor het grondtal is 10.</value>
+    
   </data>
   <data name="AboutLogT" xml:space="preserve">
     <value>Hiermee worden de logaritmewaarden voor een getal of een kolom met getallen geretourneerd voor het grondtal of de kolom met grondtallen die is opgegeven. De standaardwaarde voor het grondtal is 10.</value>
+    
   </data>
   <data name="AboutLog_number" xml:space="preserve">
     <value>Een numerieke waarde die moet worden verwerkt.</value>
@@ -1193,15 +1416,18 @@
   </data>
   <data name="LogBase" xml:space="preserve">
     <value>basis</value>
+    
   </data>
   <data name="AboutLog_base" xml:space="preserve">
     <value>Het grondtal voor de logaritme.</value>
   </data>
   <data name="AboutExp" xml:space="preserve">
     <value>Retourneert E verheven tot de macht van een getal. Als u de macht van andere grondtallen wilt berekenen, gebruikt u de exponentoperator (^).</value>
+    
   </data>
   <data name="AboutExpT" xml:space="preserve">
     <value>Retourneert een kolom met E verheven tot de macht van elk bijbehorend getal in een kolom getallen. Als u de macht van andere grondtallen wilt berekenen, gebruikt u de exponentoperator (^).</value>
+    
   </data>
   <data name="AboutExp_number" xml:space="preserve">
     <value>Een numerieke waarde die moet worden verwerkt.</value>
@@ -1214,9 +1440,11 @@
   </data>
   <data name="AboutRadians" xml:space="preserve">
     <value>Retourneert de radiaalwaarde van een getal.</value>
+    
   </data>
   <data name="AboutRadiansT" xml:space="preserve">
     <value>Retourneert de radiaalwaarden van een kolom getallen.</value>
+    
   </data>
   <data name="AboutRadians_number" xml:space="preserve">
     <value>Een numerieke waarde (in graden) die moet worden verwerkt.</value>
@@ -1226,9 +1454,11 @@
   </data>
   <data name="AboutDegrees" xml:space="preserve">
     <value>Retourneert de gradenwaarde van een getal.</value>
+    
   </data>
   <data name="AboutDegreesT" xml:space="preserve">
     <value>Retourneert de gradenwaarden van een kolom getallen.</value>
+    
   </data>
   <data name="AboutDegrees_number" xml:space="preserve">
     <value>Een numerieke waarde (in radialen) die moet worden verwerkt.</value>
@@ -1241,9 +1471,11 @@
   </data>
   <data name="DistinctArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="DistinctArg2" xml:space="preserve">
     <value>expressie</value>
+    
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
     <value>Een tabel waaruit de unieke waarden worden geëxtraheerd.</value>
@@ -1256,9 +1488,11 @@
   </data>
   <data name="AboutAtan2Arg1" xml:space="preserve">
     <value>x_coördinaat</value>
+    
   </data>
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>y_coördinaat</value>
+    
   </data>
   <data name="AboutAtan2_x_coordinate" xml:space="preserve">
     <value>x-coördinaat.</value>
@@ -1268,9 +1502,11 @@
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Hiermee wordt de vierkantswortel van een getal geretourneerd.</value>
+    
   </data>
   <data name="AboutSqrtT" xml:space="preserve">
     <value>Hiermee wordt de vierkantswortel van een kolom met getallen geretourneerd.</value>
+    
   </data>
   <data name="AboutSqrt_number" xml:space="preserve">
     <value>Een numerieke waarde die moet worden verwerkt.</value>
@@ -1280,21 +1516,27 @@
   </data>
   <data name="MathFuncArg1" xml:space="preserve">
     <value>getal</value>
+    
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>invoer</value>
+    
   </data>
   <data name="MathFuncArg2" xml:space="preserve">
     <value>modifier</value>
+    
   </data>
   <data name="MathTFuncArg2" xml:space="preserve">
     <value>modifier</value>
+    
   </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Hiermee wordt het opgegeven aantal tekens vanaf de start van een tekstwaarde geretourneerd.</value>
+    
   </data>
   <data name="AboutLeftT" xml:space="preserve">
     <value>Hiermee wordt een kolom geretourneerd die het opgegeven aantal tekens vanaf het begin van een tekstwaarde bevat, geëvalueerd per rij in de opgegeven tabel of verzameling.</value>
+    
   </data>
   <data name="AboutLeft_text" xml:space="preserve">
     <value>Een tekstwaarde waaruit tekens moeten worden geëxtraheerd.</value>
@@ -1307,9 +1549,11 @@
   </data>
   <data name="AboutRight" xml:space="preserve">
     <value>Hiermee wordt het opgegeven aantal tekens vanaf het begin van een tekstwaarde geretourneerd.</value>
+    
   </data>
   <data name="AboutRightT" xml:space="preserve">
     <value>Hiermee wordt een kolom geretourneerd die het opgegeven aantal tekens vanaf het eind van een tekstwaarde bevat, geëvalueerd per rij in de opgegeven tabel of verzameling.</value>
+    
   </data>
   <data name="AboutRight_text" xml:space="preserve">
     <value>Een tekstwaarde waaruit tekens moeten worden geëxtraheerd.</value>
@@ -1322,60 +1566,76 @@
   </data>
   <data name="LeftRightArg1" xml:space="preserve">
     <value>tekst</value>
+    
   </data>
   <data name="LeftRightTArg1" xml:space="preserve">
     <value>kolom_tekst</value>
+    
   </data>
   <data name="LeftRightArg2" xml:space="preserve">
     <value>aantal_tekens</value>
+    
   </data>
   <data name="AboutIsBlank" xml:space="preserve">
     <value>Hiermee wordt gecontroleerd of de expressie in lege waarden resulteert en wordt waar of onwaar geretourneerd.</value>
+    
   </data>
   <data name="IsBlankArg1" xml:space="preserve">
     <value>expressie</value>
+    
   </data>
   <data name="AboutIsBlank_expression" xml:space="preserve">
     <value>Een expressie die moet worden getest.</value>
   </data>
   <data name="AboutIsBlankOrError" xml:space="preserve">
     <value>Hiermee wordt gecontroleerd of de expressie in lege waarden of fouten resulteert en wordt waar of onwaar geretourneerd.</value>
+    
   </data>
   <data name="IsBlankOrErrorArg1" xml:space="preserve">
     <value>expressie</value>
+    
   </data>
   <data name="AboutIsBlankOrError_expression" xml:space="preserve">
     <value>Een expressie die moet worden getest.</value>
+    
   </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Hiermee wordt gecontroleerd of een verzameling leeg is en wordt waar of onwaar geretourneerd.</value>
+    
   </data>
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="AboutIsEmpty_source" xml:space="preserve">
     <value>Een tabel die moet worden getest.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Hiermee wordt een kopie van de invoertabel 'source' met een willekeurige volgorde weergegeven.</value>
+    
   </data>
   <data name="ShuffleArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="AboutShuffle_source" xml:space="preserve">
     <value>Een tabel die in willekeurige volgorde moet worden weergegeven.</value>
   </data>
   <data name="AboutLookUp" xml:space="preserve">
     <value>Hiermee wordt de eerste rij gezocht waarvoor de opgegeven voorwaarde resulteert in waar en wordt het resultaat van de evaluatie van de expressie in de context van die rij geretourneerd als er een expressie is opgegeven. Anders wordt het resultaat voor de hele rij geretourneerd.</value>
+    
   </data>
   <data name="LookUpArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="LookUpArg2" xml:space="preserve">
     <value>voorwaarde</value>
+    
   </data>
   <data name="LookUpArg3" xml:space="preserve">
     <value>resultaat</value>
+    
   </data>
   <data name="AboutLookUp_source" xml:space="preserve">
     <value>Een tabel waarin waarden worden opgezocht.</value>
@@ -1388,6 +1648,7 @@
   </data>
   <data name="AboutStdevP" xml:space="preserve">
     <value>Hiermee wordt de standaarddeviatie berekend op basis van de volledige populatie die als argumenten worden gegeven (logische waarden en tekst worden genegeerd).</value>
+    
   </data>
   <data name="AboutStdevP_number" xml:space="preserve">
     <value>Een getal die moet worden opgenomen in de berekening van de standaarddeviatie.</value>
@@ -1400,9 +1661,11 @@
   </data>
   <data name="AboutStdevPT" xml:space="preserve">
     <value>Hiermee wordt de standaarddeviatie berekend op basis van de volledige populatie die als kolom wordt gegeven (logische waarden en tekst in de kolom worden genegeerd).</value>
+    
   </data>
   <data name="AboutVarP" xml:space="preserve">
     <value>Hiermee wordt de afwijking berekend op basis van de volledige populatie (logische waarden en tekst in de populatie worden genegeerd).</value>
+    
   </data>
   <data name="AboutVarP_number" xml:space="preserve">
     <value>Een getal die moet worden opgenomen in de berekening van de afwijking.</value>
@@ -1415,42 +1678,87 @@
   </data>
   <data name="AboutVarPT" xml:space="preserve">
     <value>Hiermee wordt de afwijking berekend op basis van de volledige populatie die als een kolom is opgegeven (logische waarden en tekst in de kolom worden genegeerd).</value>
+    
   </data>
   <data name="SetArg1" xml:space="preserve">
     <value>variabele</value>
+    
   </data>
   <data name="AboutSplit" xml:space="preserve">
     <value>Hiermee wordt een tekenreeks gesplitst in subtekenreeksen met een scheidingsteken.</value>
+    
   </data>
   <data name="AboutSplit_text" xml:space="preserve">
     <value>Tekst die moet worden gesplitst in subtekenreeksen.</value>
+    
   </data>
   <data name="AboutSplit_separator" xml:space="preserve">
     <value>Scheidingstekentekst gebruikt om de invoertekst te splitsen in subtekenreeksen.</value>
+    
   </data>
   <data name="SplitArg1" xml:space="preserve">
     <value>tekst</value>
+    
   </data>
   <data name="SplitArg2" xml:space="preserve">
     <value>scheidingsteken</value>
+    
+  </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Hiermee worden de kolomnamen van een record zonder type opgesomd geretourneerd.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>record</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>De record waarvan de kolommen moeten worden opgesomd.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Hiermee wordt de waarde van een eigenschap van een record zonder type geretourneerd op basis van de kolomnaam.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>record</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>kolomnaam</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Record voor het ophalen van een kolomwaarde.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Naam van de kolom van de record die moet worden opgehaald.</value>
+    
   </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Hiermee wordt waar geretourneerd als de opgegeven waarde van het opgegeven type is.</value>
+    
   </data>
   <data name="IsTypeArg1" xml:space="preserve">
     <value>waarde</value>
+    
   </data>
   <data name="IsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
+    
   </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Hierbij wordt de opgegeven waarde als gegeven type gebruikt.</value>
+    
   </data>
   <data name="AsTypeArg1" xml:space="preserve">
     <value>waarde</value>
+    
   </data>
   <data name="AsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
+    
   </data>
   <data name="AboutAsType_value" xml:space="preserve">
     <value>Het polymorfische record dat als een nieuw type moet worden uitgebracht.</value>
@@ -1460,249 +1768,335 @@
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Hiermee wordt de formule uitgevoerd die als tweede parameter is opgegeven. Hiervoor wordt het bereik gebruikt dat voor de eerste parameter is opgegeven.</value>
+    
   </data>
   <data name="WithArg1" xml:space="preserve">
     <value>bereik</value>
+    
   </data>
   <data name="WithArg2" xml:space="preserve">
     <value>formule</value>
+    
   </data>
   <data name="AboutWith_scope" xml:space="preserve">
     <value>Het bereik waarmee de formule moet worden aangeroepen die door de tweede parameter is gedefinieerd.</value>
+    
   </data>
   <data name="AboutWith_formula" xml:space="preserve">
     <value>De formule die moet worden aangeroepen met het bereik dat voor de eerste parameter is opgegeven.</value>
+    
   </data>
   <data name="AboutSequence" xml:space="preserve">
     <value>Genereert een tabel met opeenvolgende getallen</value>
+    
   </data>
   <data name="SequenceArg1" xml:space="preserve">
     <value>records</value>
+    
   </data>
   <data name="AboutSequence_records" xml:space="preserve">
     <value>Aantal records in de tabel met één kolom met de naam 'Value'. Maximaal 50.000.</value>
+    
   </data>
   <data name="SequenceArg2" xml:space="preserve">
     <value>start</value>
+    
   </data>
   <data name="AboutSequence_start" xml:space="preserve">
     <value>Optioneel. Het eerste nummer in de reeks. Standaard 1.</value>
+    
   </data>
   <data name="SequenceArg3" xml:space="preserve">
     <value>stap</value>
+    
   </data>
   <data name="AboutSequence_step" xml:space="preserve">
     <value>Optioneel. De stappen waarmee de waarden in de tabel oplopen. Standaard 1.</value>
+    
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
     <value>Ongeldig gebruik van '.'</value>
+    
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>{0} is een onbekende of niet-ondersteunde functie.</value>
+    
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>{0} is een onbekende of niet-ondersteunde functie in naamruimte {1}.</value>
+    
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>Gedrag van onderdeel kan alleen worden aangeroepen vanuit een onderdeel.</value>
+    
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
     <value>Functie-eigenschappen of parameters voor onderdelen zijn alleen toegankelijk vanuit een onderdeel of eigenschappen van de onderdeeluitvoer.</value>
+    
   </data>
   <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
     <value>Functie-eigenschappen of parameters voor onderdelen kunnen alleen naar andere functie-eigenschappen verwijzen.</value>
+    
   </data>
   <data name="ErrBadArity" xml:space="preserve">
     <value>Ongeldig aantal argumenten: {0} ontvangen, {1} verwacht.</value>
+    
   </data>
   <data name="ErrBadArityEven" xml:space="preserve">
     <value>Ongeldig aantal argumenten: {0} ontvangen, een even aantal verwacht.</value>
+    
   </data>
   <data name="ErrBadArityOdd" xml:space="preserve">
     <value>Ongeldig aantal argumenten: {0} ontvangen, een oneven aantal verwacht.</value>
+    
   </data>
   <data name="ErrBadType" xml:space="preserve">
     <value>Ongeldig argumenttype.</value>
+    
   </data>
   <data name="ErrBadType_Type" xml:space="preserve">
     <value>Ongeldig argumenttype. Kan geen {0}-waarden gebruiken in deze context.</value>
+    
   </data>
   <data name="ErrBadOperatorTypes" xml:space="preserve">
     <value>Deze bewerking is niet geldig voor deze typen: {0}, {1}.</value>
+    
   </data>
   <data name="ErrGuidStrictComparison" xml:space="preserve">
     <value>GUID-waarden kunnen alleen worden vergeleken met andere GUID-waarden.</value>
+    
   </data>
   <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
     <value>Ongeldig type voor veld {0}. Veldtype {1} verwacht.</value>
+    
   </data>
   <data name="ErrBadType_ExpectedType" xml:space="preserve">
     <value>Ongeldig argumenttype. Er wordt een {0}-waarde verwacht.</value>
+    
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Ongeldig argumenttype ({1}). Er wordt in plaats daarvan een {0}-waarde verwacht.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>Een ongeldige expressie kan niet in deze context worden gebruikt.</value>
+    
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
     <value>Ongeldig argumenttype. Er wordt een {0}-waarde verwacht, maar van een ander schema.</value>
+    
   </data>
   <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
     <value>Ongeldig argumenttype. Er wordt een van de volgende waarden verwacht: {0}.</value>
+    
   </data>
   <data name="ErrInvalidArgs_Func" xml:space="preserve">
     <value>De functie {0} heeft enkel ongeldige argumenten.</value>
+    
   </data>
   <data name="ErrNeedTable_Func" xml:space="preserve">
     <value>Het eerste argument van {0} moet een tabel zijn.</value>
+    
   </data>
   <data name="ErrInvalidPropertyAccess" xml:space="preserve">
     <value>Eigenschap verwacht een vereiste parameter. Gebruik haakjes om de vereiste parameter door te geven.</value>
+    
   </data>
   <data name="ErrNeedTableCol_Func" xml:space="preserve">
     <value>Het eerste argument van {0} moet een tabel met één kolom zijn.</value>
+    
   </data>
   <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
     <value>Het schema is ongeldig. Er wordt een kolom met waarden met {0} voor {1} verwacht.</value>
+    
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
     <value>Het schema is ongeldig. Er wordt een tabel met één kolom verwacht.</value>
+    
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>Kan geen niet-recordwaarde in deze context gebruiken.</value>
+    
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Kan deze record niet gebruiken. De record bevat mogelijk conflicterende velden die incompatibel zijn.</value>
+    
   </data>
   <data name="ErrNeedRecord_Func" xml:space="preserve">
     <value>Het eerste argument van {0} moet een record zijn.</value>
+    
   </data>
   <data name="ErrNeedEntity_EntityName" xml:space="preserve">
     <value>Als deze optie is ingesteld als een opsommingswaarde of in de functie Choices, is het vereist dat de entiteit {0} wordt toegevoegd als een gegevensbron. Als u deze wilt toevoegen, opent u het menu Weergeven en selecteert u Gegevensbronnen.</value>
+    
   </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>De opgegeven eigenschap is niet toegankelijk in deze context.</value>
+    
   </data>
   <data name="ErrInternalControlInInputProperty" xml:space="preserve">
     <value>Er kan niet naar besturingselementen in een onderdeel worden verwezen in de invoereigenschappen van datzelfde onderdeel.</value>
+    
   </data>
   <data name="ErrColumnNotAccessibleInCurrentContext" xml:space="preserve">
     <value>De opgegeven kolom is niet toegankelijk in deze context.</value>
+    
   </data>
   <data name="WrnRowScopeOneToNExpandNumberOfCalls" xml:space="preserve">
     <value>Er wordt in de recordscope van deze functie verwezen naar een één-op-veel- of veel-op-veel-relatie. Dit kan resulteren in een groot aantal oproepen naar uw gegevensbron, wat van invloed kan zijn op de prestaties.</value>
+    
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>De numerieke waarde is te groot.</value>
+    
   </data>
   <data name="ErrReservedKeyword" xml:space="preserve">
     <value>Gebruik van een gereserveerd woord dat momenteel niet wordt ondersteund.</value>
+    
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
     <value>Expressie mag niet meer dan {0} tekens bevatten. De expressie bevat {1} tekens.</value>
+    
   </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Tekenreeksgrootte van indeling mag niet langer zijn dan {0} tekens.</value>
+    
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Ongeldige indeling.</value>
+    
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Het argument vertegenwoordigt geen geldige datum- of tijdwaarde.</value>
+    
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Deze gegevensbron is ongeldig. Los de fout in het deelvenster Gegevensbronnen op door achtereenvolgens op Inhoud -&gt; Gegevensbronnen of Weergeven -&gt; Opties te klikken</value>
+    
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Een gegevensbron-id wordt verwacht om de inlinerecord te beperken.</value>
+    
   </data>
   <data name="ErrIncompatibleTypes" xml:space="preserve">
     <value>De opgegeven typen zijn incompatibel.</value>
+    
   </data>
   <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
     <value>Het type van dit argument {2} komt niet overeen met een van de verwachte typen {0} of {1}.</value>
+    
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Het type van dit argument {0} komt niet overeen met het verwachte type {1}. Type {2} gevonden.</value>
+    
   </data>
   <data name="ErrTypeError_WrongType" xml:space="preserve">
     <value>Het type van deze expressie komt niet overeen met het verwachte type {0}. Type {1} gevonden.</value>
+    
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
     <value>Het type record is niet compatibel met de bron.</value>
+    
   </data>
   <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
     <value>Het argument {0} is ongeldig. Er wordt een letterlijke tekstwaarde verwacht.</value>
+    
   </data>
   <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
     <value>Het argument {0} is geen geldige id.</value>
+    
   </data>
   <data name="ErrColExists_Name" xml:space="preserve">
     <value>Er bestaat al een kolom met de naam {0}.</value>
+    
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Conflict met de kolomnaam voor {0}.</value>
+    
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>De opgegeven kolom {0} bestaat niet.</value>
+    
   </data>
   <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
     <value>De opgegeven kolom {0} bestaat niet. De kolom met de meest vergelijkbare naam is {1}.</value>
+    
   </data>
   <data name="ErrSortIncorrectOrder" xml:space="preserve">
     <value>De sorteervolgorde is onjuist voor het type expressie.</value>
+    
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Er kan niet worden gesorteerd voor het type expressie.</value>
+    
   </data>
   <data name="ErrDistinctWrongType" xml:space="preserve">
     <value>Er kan niet worden gesorteerd voor het type expressie.</value>
+    
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
     <value>Fout met type: {0} verwacht {1} of een tabelkolom van het type {1}.</value>
+    
   </data>
   <data name="ErrIncorrectFormat_Func" xml:space="preserve">
     <value>Onjuiste indelingsopgave voor {0}.</value>
+    
   </data>
   <data name="ErrAsyncLambda" xml:space="preserve">
     <value>Asynchrone aanroepen zijn niet toegestaan voor voorwaarden en functies.</value>
+    
   </data>
   <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
     <value>Dit is een naamruimte, u kunt toegang krijgen tot de leden met de operator '.'.</value>
+    
   </data>
   <data name="ErrScopeModificationLambda" xml:space="preserve">
     <value>Deze functie kan niet worden gebruikt voor dezelfde gegevensbron die wordt gebruikt in {0}.</value>
+    
   </data>
   <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
     <value>Deze functie kan niet worden aangeroepen binnen {0}.</value>
+    
   </data>
   <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
     <value>Onjuist argument. Deze formule verwacht een tabel uit een gekoppelde gegevensbron. De functies AsType en IsType vereisen verbonden gegevensbronnen.</value>
+    
   </data>
   <data name="InfoMessage" xml:space="preserve">
     <value>Bericht: </value>
+    
   </data>
   <data name="InfoNode_Node" xml:space="preserve">
     <value>Knooppunt: {0}</value>
+    
   </data>
   <data name="InfoTok_Tok" xml:space="preserve">
     <value>Tok: {0}</value>
+    
   </data>
   <data name="FormatSpan_Min_Lim" xml:space="preserve">
     <value>({0},{1}) </value>
+    
   </data>
   <data name="FormatErrorSeparator" xml:space="preserve">
     <value>, </value>
+    
   </data>
   <data name="AboutDate" xml:space="preserve">
     <value>Hiermee wordt het getal geretourneerd dat de datum weergeeft in de Power Apps datum/tijdcode.</value>
+    
   </data>
   <data name="DateArg1" xml:space="preserve">
     <value>jaar</value>
+    
   </data>
   <data name="DateArg2" xml:space="preserve">
     <value>maand</value>
+    
   </data>
   <data name="DateArg3" xml:space="preserve">
     <value>dag</value>
+    
   </data>
   <data name="AboutDate_year" xml:space="preserve">
     <value>Het jaar.</value>
@@ -1715,18 +2109,23 @@
   </data>
   <data name="AboutTime" xml:space="preserve">
     <value>Hiermee worden de uren, minuten en seconden geconverteerd naar een decimaal getal.</value>
+    
   </data>
   <data name="TimeArg1" xml:space="preserve">
     <value>uur</value>
+    
   </data>
   <data name="TimeArg2" xml:space="preserve">
     <value>minuut</value>
+    
   </data>
   <data name="TimeArg3" xml:space="preserve">
     <value>seconde</value>
+    
   </data>
   <data name="TimeArg4" xml:space="preserve">
     <value>milliseconde</value>
+    
   </data>
   <data name="AboutTime_hour" xml:space="preserve">
     <value>Het uurgedeelte.</value>
@@ -1742,126 +2141,160 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>Hiermee wordt een waarde gemaakt die een moment in tijd vertegenwoordigt, uitgedrukt als een datum en tijd van de dag.</value>
+    
   </data>
   <data name="AboutDateTime_year" xml:space="preserve">
     <value>Het jaar.</value>
+    
   </data>
   <data name="AboutDateTime_month" xml:space="preserve">
     <value>De maand.</value>
+    
   </data>
   <data name="AboutDateTime_day" xml:space="preserve">
     <value>De dag.</value>
+    
   </data>
   <data name="AboutDateTime_hour" xml:space="preserve">
     <value>Het uur.</value>
+    
   </data>
   <data name="AboutDateTime_minute" xml:space="preserve">
     <value>De minuut.</value>
+    
   </data>
   <data name="AboutDateTime_second" xml:space="preserve">
     <value>De seconde.</value>
+    
   </data>
   <data name="AboutDateTime_millisecond" xml:space="preserve">
     <value>De milliseconden.</value>
+    
   </data>
   <data name="AboutYear" xml:space="preserve">
     <value>Jaar retourneert het jaar voor de desbetreffende datum.</value>
+    
   </data>
   <data name="YearArg1" xml:space="preserve">
     <value>datum_tijd</value>
+    
   </data>
   <data name="AboutYear_date_time" xml:space="preserve">
     <value>Een datumwaarde waaruit het jaargedeelte wordt geëxtraheerd.</value>
   </data>
   <data name="AboutMonth" xml:space="preserve">
     <value>Hiermee wordt de maand geretourneerd, een getal tussen 1 (januari) en 12 (december).</value>
+    
   </data>
   <data name="MonthArg1" xml:space="preserve">
     <value>datum_tijd</value>
+    
   </data>
   <data name="AboutMonth_date_time" xml:space="preserve">
     <value>De datumwaarde waaruit het maandgedeelte wordt geëxtraheerd.</value>
   </data>
   <data name="AboutDay" xml:space="preserve">
     <value>Met Dag wordt de dag van de maand geretourneerd, een getal van 1 tot 31.</value>
+    
   </data>
   <data name="DayArg1" xml:space="preserve">
     <value>datum_tijd</value>
+    
   </data>
   <data name="AboutDay_date_time" xml:space="preserve">
     <value>De datumwaarde waaraan de het dagonderdeel wordt geëxtraheerd.</value>
   </data>
   <data name="AboutHour" xml:space="preserve">
     <value>Met Uren wordt het uur geretourneerd als getal tussen 0 (12:00:00 AM) en 23 (11:00:00 PM).</value>
+    
   </data>
   <data name="HourArg1" xml:space="preserve">
     <value>datum_tijd</value>
+    
   </data>
   <data name="AboutHour_date_time" xml:space="preserve">
     <value>De datum- of tijdwaarde waaruit het onderdeel wordt geëxtraheerd.</value>
   </data>
   <data name="AboutMinute" xml:space="preserve">
     <value>Hiermee wordt het aantal minuten geretourneerd, een getal tussen de 0 en 59.</value>
+    
   </data>
   <data name="MinuteArg1" xml:space="preserve">
     <value>datum_tijd</value>
+    
   </data>
   <data name="AboutMinute_date_time" xml:space="preserve">
     <value>De datum- of tijdwaarde waaruit het minuutgedeelte wordt geëxtraheerd.</value>
   </data>
   <data name="AboutSecond" xml:space="preserve">
     <value>Hiermee wordt het aantal seconden geretourneerd, een getal tussen 0 en 59.</value>
+    
   </data>
   <data name="SecondArg1" xml:space="preserve">
     <value>datum_tijd</value>
+    
   </data>
   <data name="AboutSecond_date_time" xml:space="preserve">
     <value>De datum- of tijdwaarde waaruit het secondegedeelte wordt geëxtraheerd.</value>
   </data>
   <data name="AboutWeekday" xml:space="preserve">
     <value>Hiermee wordt de weekdag voor een datum/tijd-waarde geretourneerd. Het resultaat ligt standaard tussen de 1 (zondag) en 7 (zaterdag). U kunt een ander bereik opgeven met een opsommingwaarde voor het begin van de week of een Microsoft Excel-functiecode voor de weekdag.</value>
+    
   </data>
   <data name="WeekdayArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="WeekdayArg2" xml:space="preserve">
     <value>begin_van_week</value>
+    
   </data>
   <data name="AboutWeekday_date" xml:space="preserve">
     <value>Een datumwaarde waarvoor de dag van de week wordt berekend.</value>
   </data>
   <data name="AboutWeekday_start_of_week" xml:space="preserve">
     <value>Een waarde uit de opsomming StartOfWeek of een getal uit de overeenkomende Excel-functie om aan te geven hoe de dagen van de week moet worden genummerd.</value>
+    
   </data>
   <data name="AboutCalendar__MonthsLong" xml:space="preserve">
     <value>Hiermee wordt een tabel geretourneerd met één kolom die de volledige naam van elke maand bevat.</value>
+    
   </data>
   <data name="AboutCalendar__MonthsShort" xml:space="preserve">
     <value>Hiermee wordt een tabel geretourneerd met één kolom die de stenonaam van elke maand bevat.</value>
+    
   </data>
   <data name="AboutCalendar__WeekdaysLong" xml:space="preserve">
     <value>Hiermee wordt een tabel geretourneerd met één kolom die de volledige naam van elke dag van de week bevat.</value>
+    
   </data>
   <data name="AboutCalendar__WeekdaysShort" xml:space="preserve">
     <value>Hiermee wordt een tabel geretourneerd met één kolom die de stenonaam van elke dag van de week bevat.</value>
+    
   </data>
   <data name="AboutClock__AmPm" xml:space="preserve">
     <value>Hiermee wordt een tabel geretourneerd met één kolom die de aanduiding in hoofdletters bevat voor het tijdstip voor en na de middag.</value>
+    
   </data>
   <data name="AboutClock__AmPmShort" xml:space="preserve">
     <value>Hiermee wordt een tabel geretourneerd met één kolom die de afgekorte aanduiding in hoofdletters bevat voor het tijdstip voor en na de middag.</value>
+    
   </data>
   <data name="AboutClock__IsClock24" xml:space="preserve">
     <value>Hiermee wordt een booleaanse waarde geretourneerd waarmee wordt aangeduid of voor de klok een 24-uurssysteem wordt gebruikt.</value>
+    
   </data>
   <data name="AboutDateValue" xml:space="preserve">
     <value>Hiermee worden een datum in het tekstformulier geconverteerd naar een getal dat de datum weergeeft in de Power Apps datum/tijdcode.</value>
+    
   </data>
   <data name="DateValueArg1" xml:space="preserve">
     <value>tekst_datum</value>
+    
   </data>
   <data name="DateValueArg2" xml:space="preserve">
     <value>code_taal</value>
+    
   </data>
   <data name="AboutDateValue_date_text" xml:space="preserve">
     <value>Een tekstweergave van een datum/tijdstempel in een indeling die door het platform wordt ondersteund.</value>
@@ -1871,12 +2304,15 @@
   </data>
   <data name="AboutTimeValue" xml:space="preserve">
     <value>Hiermee worden een datum en tijd in het tekstformulier geconverteerd naar een getal dat de datum weergeeft in de Microsoft Power Apps datum/tijdcode, waarbij alle datumgedeelten worden genegeerd.</value>
+    
   </data>
   <data name="TimeValueArg1" xml:space="preserve">
     <value>tekst_tijd</value>
+    
   </data>
   <data name="TimeValueArg2" xml:space="preserve">
     <value>code_taal</value>
+    
   </data>
   <data name="AboutTimeValue_time_text" xml:space="preserve">
     <value>Een tekstweergave van een datum/tijdstempel in een indeling die door het platform wordt ondersteund.</value>
@@ -1886,27 +2322,35 @@
   </data>
   <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
     <value>Er mogen geen servicefuncties in actieregels worden gebruikt die automatisch worden vernieuwd.</value>
+    
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
     <value>Er is meerdere keren een veld met de naam {0} opgegeven in deze record.</value>
+    
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Er is meerdere keren een kolom met de naam {0} opgegeven.</value>
+    
   </data>
   <data name="WarnLiteralPredicate" xml:space="preserve">
     <value>Waarschuwing: dit predicaat is een letterlijke waarde en verwijst niet naar de invoertabel.</value>
+    
   </data>
   <data name="WarnDynamicMetadata" xml:space="preserve">
     <value>Waarschuwing: Selecteer Schema vastleggen onderaan in de uitgevouwen formulebalk om het resultaatschema van deze methode in te stellen en te vernieuwen. Anders wordt er geen resultaat geretourneerd met deze methode.</value>
+    
   </data>
   <data name="FindArg1" xml:space="preserve">
     <value>tekst_zoeken</value>
+    
   </data>
   <data name="FindArg2" xml:space="preserve">
     <value>in_tekst</value>
+    
   </data>
   <data name="FindArg3" xml:space="preserve">
     <value>waarde_begin</value>
+    
   </data>
   <data name="AboutFind_find_text" xml:space="preserve">
     <value>Een tekstwaarde waarnaar moet worden gezocht.</value>
@@ -1919,18 +2363,23 @@
   </data>
   <data name="AboutFind" xml:space="preserve">
     <value>Hiermee wordt de beginpositie van een tekstwaarde binnen een andere tekstwaarde geretourneerd. Zoeken is hoofdlettergevoelig.</value>
+    
   </data>
   <data name="AboutFindT" xml:space="preserve">
     <value>Hiermee wordt een kolom met beginposities van een tekstwaarde (of kolom met tekenreeksen) binnen een andere tekstwaarde (of kolom met tekenreeksen) geretourneerd. Zoeken is hoofdlettergevoelig.</value>
+    
   </data>
   <data name="FindTArg1" xml:space="preserve">
     <value>tekst_of_kolom_zoeken</value>
+    
   </data>
   <data name="FindTArg2" xml:space="preserve">
     <value>in_tekst_of_kolom</value>
+    
   </data>
   <data name="FindTArg3" xml:space="preserve">
     <value>waarde_begin</value>
+    
   </data>
   <data name="AboutFind_find_text_or_column" xml:space="preserve">
     <value>Een tekstwaarde (of kolom met tekstwaarden) waarnaar moet worden gezocht.</value>
@@ -1940,72 +2389,102 @@
   </data>
   <data name="AboutColorValue" xml:space="preserve">
     <value>Hiermee wordt de kleur geretourneerd die overeenkomt met de opgegeven kleurreeks.</value>
+    
   </data>
   <data name="ColorValueArg1" xml:space="preserve">
     <value>kleur_tekst</value>
+    
   </data>
   <data name="AboutColorValue_color_text" xml:space="preserve">
     <value>Een kleur die is aangeduid met de naam, zoals Blue, of met de standaard 6-cijferige hexadecimale indeling #rrggb.</value>
   </data>
   <data name="ErrInvalidJsonPointer" xml:space="preserve">
     <value>Ongeldige JSON-aanwijzer.</value>
+    
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Geen</value>
+    
   </data>
   <data name="Text" xml:space="preserve">
     <value>Tekst</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logisch</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Tabel</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Gedrag</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Datum en tijd</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Wiskundig en statistisch</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Gedefinieerd door de gebruiker</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informatie</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Kleur</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Services</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Onderdeel</value>
+    
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
     <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
+    
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Voor het element {0} ontbreekt kenmerk {1}.</value>
+    
   </data>
   <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
     <value>Het kenmerk {0} mag geen lege tekenreeks zijn.</value>
+    
   </data>
   <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
     <value>Het kenmerk {0} heeft een ongeldige GUID-waarde {1}.</value>
+    
   </data>
   <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
     <value>De eigenschap {0} ontbreekt.</value>
+    
   </data>
   <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
     <value>De eigenschap {0} heeft een ongeldige typewaarde: {2}. De verwachte typewaarde is: {1}.</value>
+    
   </data>
   <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
     <value>De eigenschap {0} mag niet leeg zijn.</value>
+    
   </data>
   <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
     <value>Voor de opsomming {0} wordt een geldige waarde verwacht, maar de waarde {1} van de opsomming valt buiten het bereik van de opsomming.</value>
+    
   </data>
   <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
     <value>Voor de waarde van de eigenschap {0} wordt een geheel getal verwacht, maar de waarde {1} van de eigenschap valt buiten het bereik.</value>
+    
   </data>
   <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
     <value>Het item op index {0} heeft een ongeldige typewaarde: {2}. De verwachte typewaarde is: {1}.</value>
@@ -2015,18 +2494,23 @@
   </data>
   <data name="AboutDateAdd" xml:space="preserve">
     <value>Voeg het opgegeven aantal units toe aan een datum.</value>
+    
   </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Bereken het verschil tussen twee datums.</value>
+    
   </data>
   <data name="DateAddArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="DateAddArg2" xml:space="preserve">
     <value>aantal_van_eenheden</value>
+    
   </data>
   <data name="DateAddArg3" xml:space="preserve">
     <value>eenheid</value>
+    
   </data>
   <data name="AboutDateAdd_date" xml:space="preserve">
     <value>Een referentiedatumwaarde.</value>
@@ -2036,15 +2520,19 @@
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
     <value>De eenheid die moet worden gebruikt. Dit kan een van de volgende waarden zijn: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
+    
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
     <value>datum_begin</value>
+    
   </data>
   <data name="DateDiffArg2" xml:space="preserve">
     <value>datum_eind</value>
+    
   </data>
   <data name="DateDiffArg3" xml:space="preserve">
     <value>eenheid</value>
+    
   </data>
   <data name="AboutDateDiff_start_date" xml:space="preserve">
     <value>Een begindatum voor de bewerking Difference.</value>
@@ -2054,33 +2542,42 @@
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
     <value>De eenheid waarin het resultaat wordt uitgedrukt. Dit kan een van de volgende waarden zijn: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
+    
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
     <value>Voeg het opgegeven aantal units toe aan een kolom met datums.</value>
+    
   </data>
   <data name="AboutDateDiffT" xml:space="preserve">
     <value>Bereken het verschil tussen twee kolommen met datums.</value>
+    
   </data>
   <data name="DateAddTArg1" xml:space="preserve">
     <value>kolom_datum</value>
+    
   </data>
   <data name="DateAddTArg2" xml:space="preserve">
     <value>aantal_van_eenheden</value>
+    
   </data>
   <data name="DateAddTArg3" xml:space="preserve">
     <value>eenheid</value>
+    
   </data>
   <data name="AboutDateAdd_date_column" xml:space="preserve">
     <value>Een kolom met datumwaarden.</value>
   </data>
   <data name="DateDiffTArg1" xml:space="preserve">
     <value>kolom_voor_begindatum</value>
+    
   </data>
   <data name="DateDiffTArg2" xml:space="preserve">
     <value>kolom_voor_einddatum</value>
+    
   </data>
   <data name="DateDiffTArg3" xml:space="preserve">
     <value>eenheid</value>
+    
   </data>
   <data name="AboutDateDiff_start_date_column" xml:space="preserve">
     <value>Een kolom met begindatums voor de bewerking Difference.</value>
@@ -2090,156 +2587,202 @@
   </data>
   <data name="AboutChar" xml:space="preserve">
     <value>Hiermee wordt het teken geretourneerd dat is opgegeven door het codenummer van de tekenset op uw platform.</value>
+    
   </data>
   <data name="CharArg1" xml:space="preserve">
     <value>getal</value>
+    
   </data>
   <data name="AboutChar_number" xml:space="preserve">
     <value>Een codenummer van de tekenset op uw platform.</value>
   </data>
   <data name="AboutCharT" xml:space="preserve">
     <value>Hiermee wordt tabel met tekens geretourneerd die zijn opgegeven door de codenummers van de tekenset op uw platform.</value>
+    
   </data>
   <data name="CharTArg1" xml:space="preserve">
     <value>kolom_met_getallen</value>
+    
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Een kolom met codenummers van de tekenset op uw platform.</value>
   </data>
   <data name="AboutParseJSON" xml:space="preserve">
     <value>Converteert een JSON-tekenreeks naar een object.</value>
+    
   </data>
   <data name="ParseJSONArg1" xml:space="preserve">
     <value>invoer</value>
+    
   </data>
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Een JSON-tekenreeks die moet worden verwerkt.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Retourneert de record in een tabel bij een bepaalde index.</value>
+    
   </data>
   <data name="IndexArg1" xml:space="preserve">
     <value>tabel</value>
+    
   </data>
   <data name="IndexArg2" xml:space="preserve">
     <value>index</value>
+    
   </data>
   <data name="AboutIndex_table" xml:space="preserve">
     <value>Een tabel.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>De index van de record die moet worden opgehaald.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Naam</value>
+    
   </data>
   <data name="Screen_Printing_DisplayName" xml:space="preserve">
     <value>Afdrukken</value>
+    
   </data>
   <data name="Screen_ImagePosition_DisplayName" xml:space="preserve">
     <value>Afbeeldingspositie</value>
+    
   </data>
   <data name="Screen_Size_DisplayName" xml:space="preserve">
     <value>Grootte</value>
+    
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Type streepjescode</value>
+    
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
     <value>Contrast</value>
+    
   </data>
   <data name="camera_Zoom_DisplayName" xml:space="preserve">
     <value>In- en uitzoomen</value>
+    
   </data>
   <data name="camera_Camera_DisplayName" xml:space="preserve">
     <value>Camera</value>
+    
   </data>
   <data name="export_Data_DisplayName" xml:space="preserve">
     <value>Gegevens</value>
+    
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Bewerken</value>
+    
   </data>
   <data name="Dust" xml:space="preserve">
     <value>Stof</value>
+    
   </data>
   <data name="image_Image_DisplayName" xml:space="preserve">
     <value>Afbeelding</value>
+    
   </data>
   <data name="icon_Icon_DisplayName" xml:space="preserve">
     <value>Pictogram</value>
+    
   </data>
   <data name="icon_Rotation_DisplayName" xml:space="preserve">
     <value>Draaiing</value>
+    
   </data>
   <data name="image_ImagePosition_DisplayName" xml:space="preserve">
     <value>Afbeeldingspositie</value>
+    
   </data>
   <data name="image_ImageRotation_DisplayName" xml:space="preserve">
     <value>Draaien</value>
+    
   </data>
   <data name="label_Live_DisplayName" xml:space="preserve">
     <value>Live</value>
+    
   </data>
   <data name="label_Overflow_DisplayName" xml:space="preserve">
     <value>Overloop</value>
+    
   </data>
   <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
     <value>Datum van de tijdzone</value>
+    
   </data>
   <data name="DatePicker_Format_DisplayName" xml:space="preserve">
     <value>Indeling</value>
+    
   </data>
   <data name="DatePicker_Language_DisplayName" xml:space="preserve">
     <value>Taal</value>
+    
   </data>
   <data name="Calendar_Width_DisplayName" xml:space="preserve">
     <value>Agendabreedte</value>
+    
   </data>
   <data name="Hide_Calendar_DisplayName" xml:space="preserve">
     <value>Agenda verbergen</value>
+    
   </data>
   <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
     <value>Begin van week</value>
+    
   </data>
   <data name="microphone_Mic_DisplayName" xml:space="preserve">
     <value>Microfoon</value>
+    
   </data>
   <data name="text_Default_DisplayName" xml:space="preserve">
     <value>Standaard</value>
+    
   </data>
   <data name="text_Mode_DisplayName" xml:space="preserve">
     <value>Modus</value>
+    
   </data>
   <data name="text_Format_DisplayName" xml:space="preserve">
     <value>Indeling</value>
+    
   </data>
   <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
     <value>Modus Virtueel toetsenbord</value>
+    
   </data>
   <data name="text_TeamsTheme_DisplayName" xml:space="preserve">
     <value>Teams-thema</value>
+    
   </data>
   <data name="text_Clear_DisplayName" xml:space="preserve">
     <value>De knop Wissen</value>
+    
   </data>
   <data name="AboutIsNumeric" xml:space="preserve">
     <value>Hiermee wordt gecontroleerd of de waarde een getal is en wordt waar of onwaar geretourneerd.</value>
+    
   </data>
   <data name="IsNumericArg1" xml:space="preserve">
     <value>waarde</value>
+    
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>De waarde die moet worden getest.</value>
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Hiermee worden een datum en tijd in het tekstformulier geconverteerd naar een getal dat de datum weergeeft in de Power Apps datum/tijdcode.</value>
+    
   </data>
   <data name="DateTimeValueArg1" xml:space="preserve">
     <value>tekst_tijd</value>
+    
   </data>
   <data name="DateTimeValueArg2" xml:space="preserve">
     <value>code_taal</value>
+    
   </data>
   <data name="AboutDateTimeValue_time_text" xml:space="preserve">
     <value>Een tekstweergave van een datum/tijdstempel in een indeling die door het platform wordt ondersteund.</value>
@@ -2249,21 +2792,26 @@
   </data>
   <data name="AboutTable" xml:space="preserve">
     <value>Hiermee wordt een tabel van de opgegeven records gemaakt, met evenveel kolommen als unieke recordvelden. Bijvoorbeeld: Table({key1: val1, key2: val2, ...}, ...)</value>
+    
   </data>
   <data name="TableArg1" xml:space="preserve">
     <value>record</value>
+    
   </data>
   <data name="AboutTable_record" xml:space="preserve">
     <value>Een record die een rij wordt in de resulterende tabel.</value>
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Hiermee wordt een tabel geretourneerd waarvan alle kolommen zijn verwijderd uit de 'source'-tabel, met uitzondering van de opgegeven kolommen.</value>
+    
   </data>
   <data name="ShowColumnsArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="ShowColumnsArg2" xml:space="preserve">
     <value>naam_kolom</value>
+    
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
     <value>Een tabel- of recordwaarde waaruit kolommen moeten worden verwijderd.</value>
@@ -2273,27 +2821,33 @@
   </data>
   <data name="AboutIsToday" xml:space="preserve">
     <value>Hiermee wordt gecontroleerd of de opgegeven waarde vandaag is en wordt waar of onwaar geretourneerd.</value>
+    
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
     <value>De datumwaarde die moet worden getest.</value>
   </data>
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="AboutIsUTCToday" xml:space="preserve">
     <value>Controleert of de opgegeven datum vandaag in UTC is en retourneert waar of onwaar.</value>
+    
   </data>
   <data name="AboutIsUTCToday_date" xml:space="preserve">
     <value>De datumwaarde die moet worden getest.</value>
   </data>
   <data name="IsUTCTodayFuncArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Hiermee wordt het restgetal geretourneerd nadat een getal is gedeeld door een deler. Het resultaat heeft hetzelfde teken als de deler.</value>
+    
   </data>
   <data name="AboutModT" xml:space="preserve">
     <value>Hiermee wordt een tabel geretourneerd die het restgetal bevat nadat een getal (of een kolom met getallen) is gedeeld door een deler (of een kolom met delers).</value>
+    
   </data>
   <data name="AboutMod_divisor" xml:space="preserve">
     <value>Het getal waardoor moet worden gedeeld.</value>
@@ -2309,27 +2863,35 @@
   </data>
   <data name="ModFuncArg1" xml:space="preserve">
     <value>getal</value>
+    
   </data>
   <data name="ModFuncArg2" xml:space="preserve">
     <value>deler</value>
+    
   </data>
   <data name="ModTFuncArg1" xml:space="preserve">
     <value>aantal_of_kolom</value>
+    
   </data>
   <data name="ModTFuncArg2" xml:space="preserve">
     <value>deler_of_kolom</value>
+    
   </data>
   <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
     <value>Document</value>
+    
   </data>
   <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
     <value>In- en uitzoomen</value>
+    
   </data>
   <data name="pdfViewer_Password_DisplayName" xml:space="preserve">
     <value>Wachtwoord</value>
+    
   </data>
   <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
     <value>Wachtwoordstatus</value>
+    
   </data>
   <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
     <value>De beschrijving van de gegevens is ongeldig: {0}</value>
@@ -2339,6 +2901,7 @@
   </data>
   <data name="AboutForAll" xml:space="preserve">
     <value>Hiermee wordt een bepaalde formule toegepast op elke rij in een gegevensbron en wordt vervolgens een nieuwe tabel met resultaten per rij geretourneerd.</value>
+    
   </data>
   <data name="AboutForAll_source" xml:space="preserve">
     <value>De gegevensbron of tabel waarop de bewerking moet worden uitgevoerd.</value>
@@ -2348,12 +2911,15 @@
   </data>
   <data name="ForAllArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="ForAllArg2" xml:space="preserve">
     <value>formule</value>
+    
   </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Hiermee wordt het getal x verheven tot de macht van een ander getal y. Hetzelfde als x^y.</value>
+    
   </data>
   <data name="AboutPower_base" xml:space="preserve">
     <value>Het grondtal dat moet worden verheven.</value>
@@ -2363,12 +2929,15 @@
   </data>
   <data name="PowerFuncArg1" xml:space="preserve">
     <value>basis</value>
+    
   </data>
   <data name="PowerFuncArg2" xml:space="preserve">
     <value>exponent</value>
+    
   </data>
   <data name="AboutStartsWith" xml:space="preserve">
     <value>Retourneert true als de opgegeven tekst met de opgegeven begintekenreeks begint.</value>
+    
   </data>
   <data name="AboutStartsWith_text" xml:space="preserve">
     <value>De tekst die moet worden gecontroleerd.</value>
@@ -2378,12 +2947,15 @@
   </data>
   <data name="StartsWithArg1" xml:space="preserve">
     <value>tekst</value>
+    
   </data>
   <data name="StartsWithArg2" xml:space="preserve">
     <value>start</value>
+    
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
     <value>Retourneert true als de opgegeven tekst met de opgegeven eindtekenreeks eindigt.</value>
+    
   </data>
   <data name="AboutEndsWith_text" xml:space="preserve">
     <value>De tekst die moet worden gecontroleerd.</value>
@@ -2393,15 +2965,18 @@
   </data>
   <data name="EndsWithArg1" xml:space="preserve">
     <value>tekst</value>
+    
   </data>
   <data name="EndsWithArg2" xml:space="preserve">
     <value>einde</value>
+    
   </data>
   <data name="AboutBlank" xml:space="preserve">
     <value>Hiermee wordt een null-waarde (leeg) geretourneerd</value>
   </data>
   <data name="AboutPowerT" xml:space="preserve">
     <value>Hiermee wordt het getal x (of een kolom met getallen) verheven tot de macht van een ander getal y (of een kolom met getallen). Hetzelfde als x^y.</value>
+    
   </data>
   <data name="AboutPower_base_or_column" xml:space="preserve">
     <value>Het grondtal (of de kolom met grondtallen) dat moet worden verheven.</value>
@@ -2411,126 +2986,166 @@
   </data>
   <data name="PowerTFuncArg1" xml:space="preserve">
     <value>basis_of_kolom</value>
+    
   </data>
   <data name="PowerTFuncArg2" xml:space="preserve">
     <value>exponent_of_kolom</value>
+    
   </data>
   <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
     <value>Een deel van deze formule kan niet extern worden geëvalueerd. De bewerking {0} wordt momenteel niet ondersteund in deze context.</value>
+    
   </data>
   <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
     <value>Een deel van deze formule kan niet extern worden geëvalueerd. De functie {0} kan niet worden gedelegeerd als er een veldnaam in het tweede argument wordt weergegeven.</value>
+    
   </data>
   <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
     <value>Formulier voor entiteit</value>
+    
   </data>
   <data name="TeamsTheme_Default_DisplayName" xml:space="preserve">
     <value>Standaardthema</value>
+    
   </data>
   <data name="TeamsTheme_Dark_DisplayName" xml:space="preserve">
     <value>Donker thema</value>
+    
   </data>
   <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
     <value>Contrastthema</value>
+    
   </data>
   <data name="AboutCollect" xml:space="preserve">
     <value>Hiermee worden records aan een gegevensbron toegevoegd.</value>
+    
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>record</value>
+    
   </data>
   <data name="AboutClear" xml:space="preserve">
     <value>Hiermee worden alle records van een verzameling verwijderd. De kolommen van de verzameling blijven behouden.</value>
+    
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Hiermee worden alle records uit een verzameling verwijderd. Vervolgens wordt een andere set records aan dezelfde verzameling toegevoegd.</value>
+    
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
     <value>record</value>
+    
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Hiermee worden de updates toegepast op de opgegeven rijen en wordt de rij in de opgegeven gegevensbron gewijzigd. De bijgewerkte rij wordt geretourneerd.</value>
+    
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="PatchBaseRecordArg" xml:space="preserve">
     <value>base_record</value>
+    
   </data>
   <data name="PatchChangeRecordsArg" xml:space="preserve">
     <value>change_record(s)</value>
+    
   </data>
   <data name="AboutRemove" xml:space="preserve">
     <value>Verwijdert een specifieke record of records uit een gegevensbron</value>
+    
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
     <value>remove_record(s)</value>
+    
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
     <value>Het laatste argument moet, indien opgegeven, 'RemoveFlags.All' zijn. Is er een typfout?</value>
+    
   </data>
   <data name="NotificationType_Error_DisplayName" xml:space="preserve">
     <value>Fout</value>
+    
   </data>
   <data name="NotificationType_Warning_DisplayName" xml:space="preserve">
     <value>Waarschuwing</value>
+    
   </data>
   <data name="NotificationType_Success_DisplayName" xml:space="preserve">
     <value>Geslaagd</value>
+    
   </data>
   <data name="NotificationType_Information_DisplayName" xml:space="preserve">
     <value>Informatie</value>
+    
   </data>
   <data name="AboutIsError" xml:space="preserve">
     <value>Hiermee wordt geretourneerd of er een fout is opgetreden bij het evalueren van het opgegeven argument.</value>
+    
   </data>
   <data name="IsErrorArg" xml:space="preserve">
     <value>waarde</value>
+    
   </data>
   <data name="AboutIsError_value" xml:space="preserve">
     <value>De waarde om te controleren op fouten.</value>
+    
   </data>
   <data name="ErrBadArityMinimum" xml:space="preserve">
     <value>Ongeldig aantal argumenten: {0}ontvangen, {1} of meer verwacht.</value>
+    
   </data>
   <data name="ErrBadArityRange" xml:space="preserve">
     <value>Ongeldig aantal argumenten: {0} ontvangen, {1}-{2} verwacht.</value>
+    
   </data>
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
+    
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een operand verwacht. Voor de formule of expressie wordt een geldige operand verwacht. U kunt bijvoorbeeld de operand 2 toevoegen aan de expressie 1 +_ zodat het resultaat 3 ontstaat. U kunt ook de operand 'daar' toevoegen aan de expressie 'Hallo '&amp; _ voor het resultaat Hallo daar.</value>
+    
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
     <value>Geef een operand-waarde op waarmee de expressie wordt voltooid. Zorg ervoor dat het type van de operand (tekst, getal, datum of waar/onwaar) aansluit bij de expressie. Koppel getallen aan getallen, tekst aan tekst, enzovoort. De expressie 1 + 'Hallo' is bijvoorbeeld niet geldig, maar de expressie 1 + 2 is dat wel.</value>
+    
   </data>
   <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
     <value>Onverwachte tekens. De tekens worden in de formule op een onverwachte manier gebruikt.</value>
+    
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Het teken \ wordt bijvoorbeeld niet verwacht na een getal zoals bij 32\. Er wordt een spatie (32) verwacht als het alleen het getal 32 betreft, anders wordt er een ander getal (zoals 323) verwacht.</value>
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Verwijder de onverwachte tekens of vervang deze.</value>
+    
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Er staat een onverwacht teken {0} op positie {1} in de formule.</value>
+    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Het teken \ wordt bijvoorbeeld niet verwacht na een getal zoals bij 32\. Er wordt een spatie (32) verwacht als het alleen het getal 32 betreft, anders wordt er een ander getal (zoals 323) verwacht.</value>
@@ -2540,375 +3155,475 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
     <value>Ontbrekende id voor einde van opmerking. De blokopmerking heeft geen id voor het einde van de opmerking.</value>
+    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Elke blokopmerking moet beginnen met /* en eindigen met */. Als u niet alle blokopmerkingen juist afsluit, wordt alle code na de opmerking deel van de opmerking. Als een opmerking uit slechts één regel bestaat, kunt u de opmerking beginnen met // en hoeft u geen id te plaatsen aan het einde van de opmerking.</value>
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Voeg */ toe aan het einde van uw blokopmerking of vervang dit door een set regelopmerkingen.</value>
+    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Onverwachte tekens. De formule bevat {0} terwijl {1} wordt verwacht.</value>
+    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Deze fout treedt op als een formule bijvoorbeeld {{Val@ 7}} bevat in plaats van {{Val: 7}}. Wanneer u een variabele instelt, vereist de syntaxis een dubbele punt in plaats van een apenstaartje.</value>
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Verwijder de onverwachte tekens of vervang deze door een verwacht teken.</value>
+    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
     <value>De naam is ongeldig. {0} wordt niet herkend.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Deze fout treedt meestal op wanneer een formule verwijst naar een entiteit die niet meer bestaat (bijvoorbeeld een besturingselement dat u hebt verwijderd).</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Verwijder of corrigeer de verwijzing naar de ongeldige naam.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>De naam is ongeldig. Deze id wordt niet herkend.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
     <value>Deze fout treedt meestal op wanneer een formule verwijst naar een entiteit die niet meer bestaat (bijvoorbeeld een besturingselement dat u hebt verwijderd).</value>
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Verwijder of corrigeer de verwijzing naar de ongeldige naam.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>De eigenschapsverwijzing is niet geldig.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Deze fout wordt weergegeven wanneer een formule verwijst naar eigenschappen van componentfunctie met ongeldige syntaxis. (Bijvoorbeeld Component.CustomFunction in plaats van Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Gebruik de juiste syntaxis om te verwijzen naar de eigenschap van componentfunctie. Bijvoorbeeld Component.CustomFunction()</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor PowerApps</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>De verwijzing naar het bovenliggende item is ongeldig. U kunt in deze context niet verwijzen naar een bovenliggend besturingselement.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Deze operator verwijst naar het besturingselement dat host is van het gegeven besturingselement en alle eigenschappen beschikbaar maakt.</value>
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Verwijder de bovenliggende operator.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Artikel: Een canvas-app-besturingselement in Power Apps toevoegen of configureren</value>
+    
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
     <value>Het rijbereik voor nesten is te diep. Het rijbereik van de formule bevat meer dan 63 geneste niveaus.</value>
+    
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Bij elke nestniveau neemt de complexiteit toe. In Power Apps wordt het nesten van rijbereiken tot maximaal 63 niveaus ondersteund.</value>
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Herschrijf de formule met minder geneste niveaus.</value>
+    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
     <value>De expressie is te diep genest. Een expressie in de formule is meer dan 50 niveaus genest.</value>
+    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps ondersteunt het nesten van expressies tot maximaal 50 niveaus. Een dergelijk diep geneste expressie is moeilijk te begrijpen en onderhouden.</value>
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Herschrijf de formule met minder geneste niveaus.</value>
+    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een operator verwacht. Op deze positie in de formule wordt een operator zoals +, *, of &amp; verwacht.</value>
+    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Met operatoren worden operands samengevoegd. Deze fout doet zich voor als u twee functies (operands) combineert zonder dat hier een operator tussen staat, bijvoorbeeld Len("mijntekst")Len("mijntekst").</value>
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat hierin een operator tussen de operands is opgenomen.</value>
+    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_Link_1" xml:space="preserve">
     <value>Module: Basisformules gebruiken</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een getal verwacht. Op deze positie in de formule wordt een getal verwacht.</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Deze fout doet zich voor als u een functie gebruikt waarvoor een getal is vereist, maar u bijvoorbeeld een afbeelding opgeeft.</value>
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in een getal.</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een booleaanse waarde verwacht. Op deze positie in de formule wordt een booleaanse waarde (waar/onwaar) verwacht.</value>
+    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Een booleaanse waarde wordt ook wel een waar/onwaar-waarde genoemd in toepassingen zoals Microsoft Excel of een ja/nee-waarde in SharePoint. Deze fout doet zich voor als u een functie gebruikt waarvoor een booleaanse waarde is vereist, maar u bijvoorbeeld een datum opgeeft.</value>
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in een booleaanse waarde.</value>
+    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een dubbele punt verwacht. Op deze positie in de formule wordt een dubbele punt (:) verwacht.</value>
+    
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Met een dubbele punt wordt een veldnaam, soms ook een kolomnaam genoemd, gescheiden van een veldwaarde in een record (bijvoorbeeld {Month:"1"}, {Month:"2"} …). Een dubbele punt wordt ook gebruikt voor de scheiding tussen uren, minuten en seconden (bijvoorbeeld "3:04").</value>
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat deze een dubbele punt bevat.</value>
+    
   </data>
   <data name="ErrorResource_ErrColonExpected_Link_1" xml:space="preserve">
     <value>Artikel: Tekst, datums en tijden weergeven in Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>De gedragsfunctie in een niet-gedragseigenschap. U kunt deze eigenschap niet gebruiken om waarden elders in de app te wijzigen.</value>
+    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Gedragsfuncties wijzigen de status van de app door waarden elders in de app te wijzigen. De functies Navigate, Patch, UpdateContext en Collect zijn veelvoorkomende gedragsfuncties. De eigenschappen OnSelect, OnVisible en andere eigenschappen die beginnen met 'On …', zijn veelvoorkomende op gedrag gebaseerde eigenschappen.</value>
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>De gedragsfunctie verplaatsen naar een op gedrag gebaseerde eigenschap.</value>
+    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Artikel: Gedragsformules voor canvas-apps in Power Apps begrijpen</value>
+    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Een testfunctie in een niet-testeigenschap. U kunt deze eigenschap niet gebruiken om functies aan te roepen die uitsluitend zijn bedoeld voor testen.</value>
+    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Testfuncties zijn de functies die kunnen worden gebruikt om gebruikersinvoer te simuleren bij het testen van een app. Veelgebruikte testfuncties zijn SetProperty, SelectRow en Assert. Deze kunnen alleen worden gebruikt in de testcases.</value>
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Gebruik de functie in een testcase, maar niet in de app zelf.</value>
+    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
     <value>Kan dit gegevenstype niet converteren. Power Apps kan een {0} niet converteren naar een {1}.</value>
+    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps kan bepaalde gegevenstypen in de formule voor u converteren naar andere typen. Het is bijvoorbeeld mogelijk om de tekenreeks 1 te converteren naar het getal 1, maar niet alle gegevenstypen kunnen in andere typen worden omgezet. Een afbeelding kan bijvoorbeeld niet naar een getal worden geconverteerd.</value>
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat u de betrokken gegevens naar het verwachte type kunt converteren.</value>
+    
   </data>
   <data name="ErrorResource_ErrStringExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een tekst verwacht. Op deze positie in de formule wordt een tekst verwacht.</value>
+    
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Deze fout doet zich voor als u een functie gebruikt waarvoor een argument met tekst (of een tekenreeks) is vereist, maar u bijvoorbeeld een datum opgeeft.</value>
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in tekst.</value>
+    
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een tekst of een getal verwacht. Op deze positie in de formule wordt een tekst of een getal verwacht.</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Deze fout doet zich voor als u een functie gebruikt waarvoor tekst of een getal is vereist, maar u bijvoorbeeld een booleaanse (waar/onwaar) waarde opgeeft.</value>
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in tekst of een getal.</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een afsluitende accolade verwacht. Op deze positie in de formule wordt een afsluitende accolade (}) verwacht.</value>
+    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Een afsluitende accolade geeft het einde van een record aan (bijvoorbeeld {Month:"1"}, {Month:"2"} …).</value>
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodanig dat deze een accolade bevat.</value>
+    
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>De id heeft geen geldige tekst.</value>
+    
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Zorg dat er tekst voor de id is. Deze fout treedt op wanneer de id uitsluitend uit spaties of lege ruimte bestaat.</value>
+    
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
     <value>Kan waarden van het type {0} niet vergelijken.</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Incompatibele typen voor vergelijking. Deze typen kunnen niet worden vergeleken: {0}, {1}.</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Uw formule kan niet worden geëvalueerd omdat de waarden die in de formule worden vergeleken, niet van hetzelfde type zijn.</value>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Mogelijk moet u de waarde converteren om deze van hetzelfde type te maken, bijvoorbeeld door een datumtekenreeks (zoals '12/31/2018') te converteren naar een datumwaarde.</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
     <value>Als u records of tabellen vergelijkt, moeten de veld- of kolomtypen exact overeenkomen.</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
     <value>Module: Basisformules gebruiken</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Module: Basisformules met tabellen en records schrijven</value>
+    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
     <value>Geen parameter. De functie heeft geen optionele parameter met de naam {0}.</value>
+    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
     <value>De oplossing: verwijder of hernoem de parameter in de formule.</value>
+    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Niet-compatibel type. De kolom {0} in de gegevensbron die u bijwerkt, verwacht het type {1} en u gebruikt het type {2}.</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
     <value>Mogelijk moet u de waarde converteren naar hetzelfde type, bijvoorbeeld door een datumtekenreeks (zoals '12/31/2018') te converteren naar een datumwaarde of door een tekenreeks om te zetten in een getal.</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1" xml:space="preserve">
     <value>Module: Basisformules gebruiken</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Module: Basisformules met tabellen en records schrijven</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
     <value>Ontbrekende kolom. In uw formule ontbreekt de kolom {0} met het type {1}.</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
     <value>Een kolom toevoegen aan de formule.</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Niet-compatibel type. Het item dat u wilt opnemen in een record, is van een type dat is niet compatibel is met de record.</value>
+    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Niet-compatibel type. Het item dat u wilt opnemen in een tabel, is van een type dat is niet compatibel is met de tabel.</value>
+    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
     <value>Zorg dat het type van het item dat u in de tabel wilt opnemen, compatibel is met de tabel. Mogelijk moet u het type van het item converteren naar bijvoorbeeld een record.</value>
+    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1" xml:space="preserve">
     <value>Module: Basisformules gebruiken</value>
+    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Module: Basisformules met tabellen en records schrijven</value>
+    
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
     <value>Niet-compatibel type. Uw formule kan niet worden geëvalueerd vanwege een typfout.</value>
+    
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>De gegevens komen mogelijk niet overeen met het verwachte type. (tekst, nummer, datum, tabel, record.)</value>
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Controleer de typen van de waarden die worden gebruikt in de formule en zorg ervoor dat de typen overeenkomen.</value>
+    
   </data>
   <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
     <value>Module: Basisformules gebruiken</value>
+    
   </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Module: Basisformules met tabellen en records schrijven</value>
+    
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een datum verwacht. Op deze positie in de formule wordt een datum verwacht.</value>
+    
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Deze fout doet zich voor als u een functie gebruikt waarvoor een datum is vereist, maar u bijvoorbeeld tekst opgeeft.</value>
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in een datum.</value>
+    
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
     <value>Overdrachtswaarschuwing. Het deel {0} van deze formule werkt mogelijk niet correct bij grote gegevenssets.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Als uw gegevensset meer records bevat dan de limiet van 500, maar minder dan 2000 records, kunt u proberen de limiet opnieuw in te stellen.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
     <value>Probeer de formule te vereenvoudigen.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
     <value>Verplaats de gegevens naar een andere gegevensbron.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
     <value>Artikel: Overdracht in een canvas-app begrijpen</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blog: Gegevensrijlimieten voor overdracht</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
     <value>Overdrachtswaarschuwing. Het gemarkeerde deel van deze formule werkt mogelijk niet correct voor de kolom {0} bij grote gegevenssets.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Als uw gegevensset meer records bevat dan de limiet van 500, maar minder dan 2000 records, kunt u proberen de limiet opnieuw in te stellen.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
     <value>Probeer de formule te vereenvoudigen.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
     <value>Verplaats de gegevens naar een andere gegevensbron.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
     <value>Artikel: Overdracht in een canvas-app begrijpen</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blog: Gegevensrijlimieten voor overdracht</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
     <value>Overdrachtswaarschuwing. Het gemarkeerde deel van deze formule werkt mogelijk niet correct bij grote gegevenssets.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> De rechterzijde van de operator 'in' moet een kolomnaam zijn uit de juiste gegevensbron. Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Wijzig het item rechts van de operator 'in' naar een kolom uit de juiste gegevensbron.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
     <value>Als uw gegevensset meer records bevat dan de limiet van 500, maar minder dan 2000 records, kunt u proberen de limiet opnieuw in te stellen.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
     <value>Probeer de formule te vereenvoudigen.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
     <value>Verplaats de gegevens naar een andere gegevensbron.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
     <value>Artikel: Overdracht in een canvas-app begrijpen</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blog: Gegevensrijlimieten voor overdracht</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
     <value>Het gemarkeerde deel van deze formule werkt mogelijk niet correct bij grote gegevenssets. </value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> De rechterzijde van de operator 'in' is geen kolom uit de juiste gegevensbron. Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.
@@ -2916,142 +3631,185 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Wijzig het item rechts van de operator 'in' naar een kolom uit de juiste gegevensbron.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
     <value>Als uw gegevensset meer records bevat dan de limiet van 500, maar minder dan 2000 records, kunt u proberen de limiet opnieuw in te stellen.
       </value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
     <value>Probeer de formule te vereenvoudigen.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
     <value>Verplaats de gegevens naar een andere gegevensbron.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
     <value>Artikel: Overdracht in een canvas-app begrijpen</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blog: Gegevensrijlimieten voor overdracht</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Overdrachtswaarschuwing. Het gemarkeerde deel van deze formule werkt mogelijk niet correct bij grote gegevenssets. De bewerking {0} wordt niet door de connector ondersteunt.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_LongMessage" xml:space="preserve">
     <value>Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
     <value>Als uw gegevensset meer records bevat dan de limiet van 500, maar minder dan 2000 records, kunt u proberen de limiet opnieuw in te stellen.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
     <value>Probeer de formule te vereenvoudigen.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
     <value>Verplaats de gegevens naar een andere gegevensbron.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
     <value>Artikel: Overdracht in een canvas-app begrijpen</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blog: Gegevensrijlimieten voor overdracht</value>
+    
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
     <value>Slechts één weergave verwacht. Er wordt slechts één weergave op dit punt in de formule verwacht.</value>
+    
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat deze slechts één weergave heeft op dit punt in de formule.</value>
+    
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_ShortMessage" xml:space="preserve">
     <value>Een weergave van de gegevensbron {0} verwacht.</value>
+    
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat deze een weergave uit de gegevensbron {0} heeft.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
     <value>Deze verwijzing naar een besturingselement kan niet worden gebruikt in deze eigenschap</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
     <value>Deze eigenschap ondersteunt alleen verwijzingen naar globale variabelen, verzamelingen en bepaalde besturings- en schermeigenschappen. Zie de koppeling voor een lijst met ondersteunde besturingselementeigenschappen.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Verwijzing: ConfirmExit voor canvas-apps</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
     <value>Expressies die in een geïnterpoleerde tekenreeks verschijnen, moeten worden geëvalueerd op een tekstwaarde of op een compatibel type.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
     <value>Controleer de typen expressies in de geïnterpoleerde tekenreeks.</value>
+    
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
     <value>Lege expressies kunnen niet worden weergegeven in een geïnterpoleerde tekenreeks.</value>
+    
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
     <value>Controleer op lege expressies in de geïnterpoleerde tekenreeks.</value>
+    
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>De term 'as' is niet toegestaan in deze context</value>
+    
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
     <value>Niet-getypeerde objecten kunnen niet worden gebruikt als het eerste argument voor functies die recordbereik ondersteunen.</value>
+    
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>De genoemde formule moet eindigen met een puntkomma.</value>
+    
   </data>
   <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
     <value>De genoemde formule moet een expressie zijn.</value>
+    
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Door de gebruiker gedefinieerde functie moet een hoofdtekst hebben.</value>
+    
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Functie {0} is al gedefinieerd.</value>
+    
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameter {0} is een duplicaat.</value>
+    
   </data>
   <data name="ErrUDF_UnknownType" xml:space="preserve">
     <value>Onbekend type {0}.</value>
+    
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Het vermelde retourtype van de werkfunctie komt niet overeen met het retourtype van de functiehoofdtekst.</value>
+    
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
     <value>Ontbrekend retourtype van functie, bijvoorbeeld het ':Number' in 'FindMonth( d:Text ):Number = Month( DateParse( d ));'</value>
+    
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
     <value>Ontbrekend argumenttype van functie, bijvoorbeeld de ':Text' in 'FindMonth( d:Text ):Number = Month( DateParse( d ))'</value>
+    
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} bestaat al.</value>
   </data>
   <data name="ErrorResource_NameConflict" xml:space="preserve">
     <value>Kan geen {0} maken met de naam {1} omdat deze naam al wordt gebruikt voor een {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Het eerste argument van {0} moet een geldige naam voor een variabele zijn en mag geen conflict hebben met een bestaande naam van een besturingselement, scherm, verzameling of gegevensbron. Type {1} gevonden</value>
+    
   </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Een globale variabele maken en instellen.</value>
+    
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>waarde</value>
+    
   </data>
   <data name="AboutDec2Hex" xml:space="preserve">
     <value>Converteert een decimaal getal naar een hexadecimaal getal</value>
+    
   </data>
   <data name="Dec2HexArg1" xml:space="preserve">
     <value>getal</value>
   </data>
   <data name="AboutDec2Hex_number" xml:space="preserve">
     <value>Een numerieke decimale waarde om te converteren naar een hexadecimale tekenreeks.</value>
+    
   </data>
   <data name="Dec2HexArg2" xml:space="preserve">
     <value>plaatsen</value>
   </data>
   <data name="AboutDec2Hex_places" xml:space="preserve">
     <value>Een numerieke waarde om opvulling aan een hexadecimale tekenreeks toe te voegen.</value>
+    
   </data>
   <data name="AboutDec2HexT" xml:space="preserve">
     <value>Converteert een kolom met decimale getallen naar hexadecimale getallen</value>
+    
   </data>
   <data name="Dec2HexTArg1" xml:space="preserve">
     <value>tabel</value>
@@ -3061,48 +3819,61 @@
   </data>
   <data name="AboutDec2HexT_places" xml:space="preserve">
     <value>Een numerieke waarde of reeks van waarden om opvulling aan hexadecimale tekenreeksen toe te voegen.</value>
+    
   </data>
   <data name="AboutDec2Hex_table" xml:space="preserve">
     <value>Een kolom met numerieke decimale waarden om te converteren naar hexadecimale getallen.</value>
+    
   </data>
   <data name="AboutHex2Dec" xml:space="preserve">
     <value>Converteert een hexadecimaal getal naar een decimaal getal</value>
+    
   </data>
   <data name="Hex2DecArg1" xml:space="preserve">
     <value>getal</value>
   </data>
   <data name="AboutHex2Dec_number" xml:space="preserve">
     <value>Een hexadecimale tekenreeks geconverteerd naar een decimale tekenreeks.</value>
+    
   </data>
   <data name="AboutHex2DecT" xml:space="preserve">
     <value>Converteert een kolom met hexadecimale getallen naar decimale getallen</value>
+    
   </data>
   <data name="Hex2DecTArg1" xml:space="preserve">
     <value>tabel</value>
   </data>
   <data name="AboutHex2Dec_table" xml:space="preserve">
     <value>Een kolom met hexadecimale tekenreeksen om te converteren naar decimale tekenreeksen.</value>
+    
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Deze functie is afgeschaft en wordt niet meer ondersteund.</value>
+    
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>Functie {0} in naamruimte {1} wordt niet ondersteund.</value>
+    
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Waarschuwing: uitgesteld type opgegeven.</value>
+    
   </data>
   <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
     <value>Verwachte id-naam</value>
+    
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Deze functie is dubbelzinnig. De functie bevat een aantal lambda-expressies en kolom-id's voor hetzelfde argument.</value>
+    
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
     <value>De waarde van optie {0} is niet het verwachte type {1}.</value>
+    
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
     <value>Retourneert de logische naam van de opgegeven waarde in een optieset.</value>
+    
   </data>
   <data name="AboutOptionSetInfoArg1" xml:space="preserve">
     <value>optie</value>
@@ -3112,42 +3883,54 @@
   </data>
   <data name="AboutLanguage" xml:space="preserve">
     <value>Haal de standaardlandinstellingen tijdens de runtime op.</value>
+    
   </data>
   <data name="AboutEncodeUrl" xml:space="preserve">
     <value>Codeert een URL-tekenreeks, die bepaalde niet-alfanumerieke tekens vervangt door % en een hexadecimal getal.</value>
+    
   </data>
   <data name="EncodeUrlArg1" xml:space="preserve">
     <value>URL</value>
+    
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Een URL die moet worden gecodeerd.</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>{0} is een herkende maar niet ondersteunde functie.</value>
+    
   </data>
   <data name="InvalidCast" xml:space="preserve">
     <value>Typeconversie is mislukt omdat de gegeven waarde van het type {0} was en type {1} werd verwacht.</value>
+    
   </data>
   <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
     <value>De expressie {0} kan een kolom vertegenwoordigen die geen deel uitmaakt van de gegevensbron of die niet is gedownload. Overweeg in plaats daarvan de kolomnaam rechtstreeks te gebruiken.</value>
+    
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Deze bewerking op tabel {0} werkt mogelijk niet als deze meer {1} rijen bevat.</value>
+    
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Dit predicaat is altijd waar. Wilde u ThisRecord of [@ ] gebruiken?</value>
+    
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Kan {0} niet machtigen: machtiging alleen ondersteund voor opzoekactie van primaire-sleutelveld {1}.</value>
+    
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Kan {0} niet machtigen: expressie vergelijkt meerdere velden.</value>
+    
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Kan {0} niet machtigen: bevat de gedragsfunctie {1}.</value>
+    
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Bepaalt of er voor de opgegeven tekst een overeenkomst in de aangeleverde tekstindeling bestaat.</value>
+    
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">
     <value>De tekst die met de indeling moet worden vergeleken.</value>
@@ -3157,96 +3940,125 @@
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
     <value>Hiermee wordt bepaald voor welk deel van de tekst een overeenkomst moet worden gevonden. Dit kan een waarde van de enum MatchOptions zijn.</value>
+    
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
     <value>tekst</value>
+    
   </data>
   <data name="IsMatchArg2" xml:space="preserve">
     <value>indeling</value>
+    
   </data>
   <data name="IsMatchArg3" xml:space="preserve">
     <value>omvang</value>
+    
   </data>
   <data name="AboutMatch" xml:space="preserve">
     <value>Hiermee wordt in de opgegeven tekst naar de opgegeven reguliere expressie gezocht en worden de eerste overeenkomsten uit deze expressie geretourneerd.</value>
+    
   </data>
   <data name="AboutMatchAll" xml:space="preserve">
     <value>Hiermee wordt in de opgegeven tekst naar de opgegeven reguliere expressie gezocht en worden alle overeenkomsten uit deze expressie geretourneerd.</value>
+    
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
     <value>De tekst waarop moet worden gezocht voor de reguliere expressie.</value>
+    
   </data>
   <data name="AboutMatch_regular_expression" xml:space="preserve">
     <value>De reguliere expressie om de tekst op te controleren. Kan opnamen (waarden tussen haakjes) bevatten die in het geval van een overeenkomst worden geretourneerd.</value>
+    
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
     <value>Hiermee wordt bepaald voor welk deel van de tekst een overeenkomst moet worden gevonden. Dit kan een waarde van de enum MatchOptions zijn.</value>
+    
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
     <value>De tekst waarop moet worden gezocht voor de reguliere expressie.</value>
+    
   </data>
   <data name="AboutMatchAll_regular_expression" xml:space="preserve">
     <value>De reguliere expressie om de tekst op te controleren. Kan opnamen (waarden tussen haakjes) bevatten die in het geval van een overeenkomst worden geretourneerd.</value>
+    
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
     <value>Hiermee wordt bepaald voor welk deel van de tekst een overeenkomst moet worden gevonden. Dit kan een waarde van de enum MatchOptions zijn.</value>
+    
   </data>
   <data name="MatchArg1" xml:space="preserve">
     <value>tekst</value>
+    
   </data>
   <data name="MatchArg2" xml:space="preserve">
     <value>reguliere_expressie</value>
+    
   </data>
   <data name="MatchArg3" xml:space="preserve">
     <value>opties</value>
+    
   </data>
   <data name="AboutRefresh" xml:space="preserve">
     <value>Hiermee wordt de opgegeven gegevensbron vernieuwd.</value>
+    
   </data>
   <data name="RefreshArg1" xml:space="preserve">
     <value>verbonden_bron_gegevens</value>
+    
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
     <value>Er wordt een record of tabelwaarde verwacht.</value>
+    
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
     <value>Een gekoppelde gegevensbron die moet worden vernieuwd.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Alleen beheerde verbindingen kunnen worden vernieuwd.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Ongeldige reguliere expressie.</value>
+    
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Reguliere expressies moeten constante waarden zijn.</value>
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>De waarde die is doorgegeven aan functie {0} kan niet worden gewijzigd.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de volledige overeenkomst van de reguliere expressie wordt geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om de volledige overeenkomst in de opgegeven tekst te extraheren.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
     <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de groepsovereenkomsten in de reguliere expressie worden geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om alle subovereenkomsten in de opgegeven tekst te extraheren.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de locatie van de overeenkomst van de reguliere expressie wordt geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om de positie van de volledige overeenkomst in de opgegeven tekst te extraheren.</value>
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Hiermee wordt alle opmaak verwijderd en wordt er een tekstwaarde zonder opmaak geretourneerd.</value>
+    
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
     <value>tekst</value>
+    
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>De tekst waarvan de HTML- en XML-codes worden verwijderd.</value>
   </data>
   <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
     <value>Filterfuncties staan geen gedragsfuncties toe als predicaten.</value>
+    
   </data>
   <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
     <value>Gebruik de And-operator om meerdere predicaten in het tweede argument te combineren.</value>
+    
   </data>
   <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
     <value>Deze tabel kan niet worden gekopieerd. Maak in plaats daarvan een inlinetabel met de functie ForAll en notatie {...} om de gewenste individuele kolommen te kopiëren.</value>
@@ -3256,99 +4068,130 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Het tweede argument van de functie {0} wordt alleen ondersteund voor numerieke waarden en datum-/tijdwaarden.</value>
+    
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Het instellen van een variabele met een onlinegegevensbronwaarde (tabel of record) kan meerdere aanvragen bij de server veroorzaken. Dit wordt binnenkort geblokkeerd.</value>
+    
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Type letterlijke aangifte was ongeldig</value>
+    
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
     <value>Bron- en doelrecordtypen komen niet overeen. Het opgegeven type heeft extra velden: {0}.</value>
+    
   </data>
   <data name="ErrExpectedRVMissingFields" xml:space="preserve">
     <value>Bron- en doelrecordtypen komen niet overeen. Het opgegeven type heeft ontbrekende velden: {0}.</value>
+    
   </data>
   <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
     <value>Bron- en doelrecordtypen komen niet overeen. Veldnaam: {0} niet gevonden.</value>
+    
   </data>
   <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
     <value>Bron- en doelrecordtypen komen niet overeen. Veldnaam: {0} Verwacht {1}, gevonden {2}.</value>
+    
   </data>
   <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
     <value>Opgegeven type {0} kan niet worden overeengestemd met brontype {1}.</value>
+    
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Bron- en doeltypen komen niet overeen. Verwacht {0}, gevonden {1}.</value>
+    
   </data>
   <data name="AboutJSON" xml:space="preserve">
     <value>Hiermee wordt een JSON-tekenreeks gegenereerd voor een tabel, record of waarde.</value>
+    
   </data>
   <data name="JSONArg1" xml:space="preserve">
     <value>gegevens</value>
+    
   </data>
   <data name="AboutJSON_data" xml:space="preserve">
     <value>De gegevensstructuur die moet worden geconverteerd naar JSON. Tabellen, records en primitieve waarden worden ondersteund. Ze worden willekeurig genest.</value>
+    
   </data>
   <data name="JSONArg2" xml:space="preserve">
     <value>indeling</value>
+    
   </data>
   <data name="AboutJSON_format" xml:space="preserve">
     <value>De indeling die moet worden gebruikt bij de JSON-conversie. De waarde is een lid van de JSONFormat-inventarisatie.</value>
+    
   </data>
   <data name="AboutTrace" xml:space="preserve">
     <value>Hiermee wordt informatie vastgelegd in Application Insights wanneer dit is ingeschakeld en wordt een teststudiosessie vastgelegd die beschikbaar is in de testresultaten.</value>
+    
   </data>
   <data name="TraceArg1" xml:space="preserve">
     <value>bericht</value>
+    
   </data>
   <data name="TraceArg2" xml:space="preserve">
     <value>ernst</value>
+    
   </data>
   <data name="TraceArg3" xml:space="preserve">
     <value>custom_record</value>
+    
   </data>
   <data name="TraceArg4" xml:space="preserve">
     <value>trace_options</value>
+    
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
     <value>De informatie die moet worden getraceerd.</value>
+    
   </data>
   <data name="AboutTrace_severity" xml:space="preserve">
     <value>Het ernstniveau dat moet worden getraceerd naar Application Insights.</value>
+    
   </data>
   <data name="AboutTrace_custom_record" xml:space="preserve">
     <value>Een bestand met aangepaste gegevens die naar Application Insights worden getraceerd.</value>
+    
   </data>
   <data name="AboutTrace_trace_options" xml:space="preserve">
     <value>Aanvullende opties voor de Trace-functie.</value>
+    
   </data>
   <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
     <value>De parameter {1} voor de functie {0} moet een constante waarde zijn.</value>
+    
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>De JSONFormat-waarden {0} en {1} kunnen niet gezamenlijk worden gebruikt.</value>
+    
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>De waarde die is doorgegeven aan de JSON-functie, bevat media en wordt niet standaard ondersteund. Als u JSON-serialisatie van mediawaarden wilt toestaan, moet u de optie IncludeBinaryData gebruiken in de parameter format.</value>
+    
   </data>
   <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
     <value>De JSON-functie kan geen objecten van het type {0} serialiseren.</value>
+    
   </data>
   <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
     <value>Met de JSON-functie kunnen geen tabellen/objecten worden geserialiseerd die de geneste eigenschap {0} van het type {1} bevatten.</value>
+    
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>De JSON-functie kan binaire gegevens niet serialiseren in niet-gedragsexpressies.</value>
+    <value>De JSON-functie kan binaire gegevens niet serialiseren in niet-gedragsexpressies.</value>    
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>De parameter {0} bevat een eigenschap van het type {1} die niet wordt ondersteund.</value>
+    
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>De opgegeven kolom is alleen-lezen en kan niet worden gewijzigd: {0}.</value>
+    
   </data>
   <data name="AboutSearch" xml:space="preserve">
     <value>Hiermee wordt tekst gezocht in 'source'. De rijen waarin tekst wordt gevonden, worden geretourneerd. De vergelijking vindt plaats op een niet-hoofdlettergevoelige manier.</value>
+    
   </data>
   <data name="AboutSearch_source" xml:space="preserve">
     <value>De kolom die moet worden gezocht.</value>
@@ -3361,17 +4204,52 @@
   </data>
   <data name="SearchArg1" xml:space="preserve">
     <value>bron</value>
+    
   </data>
   <data name="SearchArg2" xml:space="preserve">
     <value>tekst</value>
+    
   </data>
   <data name="SearchArg3" xml:space="preserve">
     <value>kolom</value>
+    
   </data>
   <data name="ErrSearchWrongType" xml:space="preserve">
     <value>Verkeerd kolomtype. Het type Tekst wordt verwacht.</value>
+    
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>De tabel bevat geen kolom van het type Tekst.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Het gebruik van '.' is afgeschaft. Gebruik in plaats daarvan de functie ShowColumns.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Disclaimer:** Door AI gegenereerde inhoud kan fouten bevatten. Zorg ervoor dat de inhoud correct en passend is voordat u deze gebruikt. [Lees de voorwaarden](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Hiermee wordt het Unicode-teken geretourneerd waarnaar wordt verwezen door de opgegeven numerieke waarde.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Numerieke waarde die moet worden geconverteerd naar een Unicode-teken.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>getal</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Hiermee wordt een tabel met numerieke waarden geconverteerd naar een tabel met Unicode-tekens.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>kolom_met_getallen</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Een tabelkolom met numerieke waarden die moet worden geconverteerd naar Unicode-tekens.</value>
   </data>
 </root>
