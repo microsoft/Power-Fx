@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             Schema = openApiParameter.Schema;
             UseHiddenTypes = useHiddenTypes;
-            ConnectorType = AggregateErrors(openApiParameter.GetConnectorType(compatibility));
+            ConnectorType = AggregateErrorsAndWarnings(openApiParameter.GetConnectorType(compatibility));
             DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue, this) && defaultValue is not BlankValue ? defaultValue : null;
             ConnectorExtensions = new ConnectorExtensions(openApiParameter, bodyExtensions);
         }
@@ -44,10 +44,10 @@ namespace Microsoft.PowerFx.Connectors
         {
             Schema = connectorSchema.Schema;
             DefaultValue = connectorSchema.DefaultValue;
-            ConnectorType = AggregateErrors(connectorType ?? connectorSchema.ConnectorType);
+            ConnectorType = AggregateErrorsAndWarnings(connectorType ?? connectorSchema.ConnectorType);
             ConnectorExtensions = connectorSchema.ConnectorExtensions;
-            AggregateErrors(connectorSchema);
-            AggregateErrors(connectorType);
+            AggregateErrorsAndWarnings(connectorSchema);
+            AggregateErrorsAndWarnings(connectorType);
         }
     }
 }

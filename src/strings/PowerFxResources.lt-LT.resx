@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -119,62 +119,48 @@
   </resheader>
   <data name="ListItemSingleQuotedFormat" xml:space="preserve">
     <value>'{0}'</value>
-    
   </data>
   <data name="AboutIf" xml:space="preserve">
     <value>Tikrina, ar vykdoma kuri nors iš nurodytų sąlygų, ir pateikia atitinkamą reikšmę. Jei nė viena iš sąlygų nevykdoma, funkcija pateikia nurodytą numatytąją reikšmę.</value>
-    
   </data>
   <data name="IfArgCond" xml:space="preserve">
     <value>loginis_testas</value>
-    
   </data>
   <data name="IfArgTrueValue" xml:space="preserve">
     <value>reikšmė_teisinga</value>
-    
   </data>
   <data name="IfArgElseValue" xml:space="preserve">
     <value>kita_reikšmė</value>
-    
   </data>
   <data name="AboutIf_logical_test" xml:space="preserve">
     <value>Sąlyga, kuri pateikia Bulio logikos reikšmę.</value>
   </data>
   <data name="AboutIf_true_value" xml:space="preserve">
     <value>Reiškinys, kuris pateikia If sąlygos rezultatą, jei sąlygos reikšmė yra TRUE.</value>
-    
   </data>
   <data name="AboutIf_else_value" xml:space="preserve">
     <value>Reiškinys, kuris pateikia If sąlygos rezultatą, jei visų nuorodų sąlygų reikšmė yra FALSE.</value>
-    
   </data>
   <data name="AboutSwitch" xml:space="preserve">
     <value>Formulės rezultatai gretinami su reikšmių seka. Radus atitiktį, įvertinama ir pateikiama atitinkama formulė. Jei atitikčių nerandama, įvertinama ir pateikiama paskutinė numatytoji formulė.</value>
-    
   </data>
   <data name="SwitchExpression" xml:space="preserve">
     <value>reikšmė_perjungti</value>
-    
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
     <value>numatytasis_rezultatas</value>
-    
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
     <value>atitikties_reikšmė</value>
-    
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
     <value>atitikties_rezultatas</value>
-    
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
     <value>Reikšmė, kurią reikia lyginti su kiekviena atitikties_reikšme.</value>
-    
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
     <value>Reikšmė, kurią reikia gretinti su reikšme_perjungti.</value>
-    
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
     <value>Formulė, kurią reikia įvertinti ir pateikti, jei randama atitiktis.</value>
@@ -184,19 +170,15 @@
   </data>
   <data name="AboutAnd" xml:space="preserve">
     <value>Tikrina, ar visi argumentai yra tinkami, ir pateikia reikšmę TRUE, jei visų argumentų reikšmė yra TRUE.</value>
-    
   </data>
   <data name="AboutOr" xml:space="preserve">
     <value>Tikrina, ar kuris nors iš argumentų yra TRUE, ir pateikia TRUE arba FALSE. FALSE pateikia tik jei visi argumentai yra FALSE.</value>
-    
   </data>
   <data name="AboutNot" xml:space="preserve">
     <value>Pakeičia reikšmę FALSE į TRUE ir TRUE į FALSE.</value>
-    
   </data>
   <data name="LogicalFuncParam" xml:space="preserve">
     <value>loginis</value>
-    
   </data>
   <data name="AboutAnd_logical" xml:space="preserve">
     <value>Loginis reiškinys, skirtas naudoti operacijoje IR.</value>
@@ -209,19 +191,15 @@
   </data>
   <data name="AboutCount" xml:space="preserve">
     <value>Suskaičiuoja skaitines reikšmes nurodytame stulpelyje.</value>
-    
   </data>
   <data name="AboutCountA" xml:space="preserve">
     <value>Suskaičiuoja netuščias stulpelio eilutes.</value>
-    
   </data>
   <data name="AboutCountRows" xml:space="preserve">
     <value>Suskaičiuoja įvesties lentelėje ar rinkinyje esančias eilutes.</value>
-    
   </data>
   <data name="CountArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="AboutCount_source" xml:space="preserve">
     <value>Reikšmių, kurias reikia suskaičiuoti, stulpelis.</value>
@@ -234,15 +212,12 @@
   </data>
   <data name="AboutCountIf" xml:space="preserve">
     <value>Suskaičiuoja nurodytą sąlygą atitinkančių eilučių skaičių.</value>
-    
   </data>
   <data name="CountIfArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="CountIfArg2" xml:space="preserve">
     <value>sąlyga</value>
-    
   </data>
   <data name="AboutCountIf_source" xml:space="preserve">
     <value>Lentelė, kurioje bus skaičiuojamos tam tikrus kriterijus atitinkančios eilutės.</value>
@@ -252,27 +227,21 @@
   </data>
   <data name="AboutSumT" xml:space="preserve">
     <value>Pateikia skaičių, kuriuos reiškinys apskaičiuoja lentelės kontekste, sumą.</value>
-    
   </data>
   <data name="AboutMaxT" xml:space="preserve">
     <value>Pateikia didžiausią reikšmę, gautą apskaičiavus reiškinį lentelės kontekste.</value>
-    
   </data>
   <data name="AboutMinT" xml:space="preserve">
     <value>Pateikia mažiausią reikšmę, gautą apskaičiavus reiškinį lentelės kontekste.</value>
-    
   </data>
   <data name="AboutAverageT" xml:space="preserve">
     <value>Pateikia reiškinio apskaičiuotų skaičių vidurkį (aritmetinį vidurkį) lentelės kontekste.</value>
-    
   </data>
   <data name="StatisticalTArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="StatisticalTArg2" xml:space="preserve">
     <value>reiškinys</value>
-    
   </data>
   <data name="AboutMin_source" xml:space="preserve">
     <value>Lentelė, kurios mažiausia reikšmė bus skaičiuojama.</value>
@@ -300,23 +269,18 @@
   </data>
   <data name="AboutSum" xml:space="preserve">
     <value>Pateikia argumentų sumą.</value>
-    
   </data>
   <data name="AboutMax" xml:space="preserve">
     <value>Pateikia didžiausią reikšmę iš reikšmių aibės. Nepaisoma loginių reikšmių ir teksto.</value>
-    
   </data>
   <data name="AboutMin" xml:space="preserve">
     <value>Pateikia mažiausia reikšmę iš reikšmių aibės. Nepaisoma loginių reikšmių ir teksto.</value>
-    
   </data>
   <data name="AboutAverage" xml:space="preserve">
     <value>Pateikia argumentų vidurkį (aritmetinį vidurkį).</value>
-    
   </data>
   <data name="StatisticalArg" xml:space="preserve">
     <value>skaičius</value>
-    
   </data>
   <data name="AboutSum_number" xml:space="preserve">
     <value>Šio sumos skaičiavimo skaitinė reikšmė.</value>
@@ -332,43 +296,33 @@
   </data>
   <data name="AboutAddColumns" xml:space="preserve">
     <value>Pateikia lentelę su naujais stulpeliais, gautais apskaičiavus visus reiškinius pagal šaltinį.</value>
-    
   </data>
   <data name="AddColumnsArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="AddColumnsArg2" xml:space="preserve">
     <value>stulpelis</value>
-    
   </data>
   <data name="AddColumnsArg3" xml:space="preserve">
     <value>reiškinys</value>
-    
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
     <value>Lentelė arba įrašas, į kurį reikia įtraukti stulpelių.</value>
-    
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
     <value>Unikalus stulpelio pavadinimas.</value>
-    
   </data>
   <data name="AboutAddColumns_expression" xml:space="preserve">
     <value>Reiškinys, kuris pateikia reikšmes, skirtas naujajam stulpeliui.</value>
-    
   </data>
   <data name="AboutDropColumns" xml:space="preserve">
     <value>Pateikiama lentelė su vienu ar keliais nurodytais stulpeliais, pašalintais iš šaltinio lentelės.</value>
-    
   </data>
   <data name="DropColumnsArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="DropColumnsArg2" xml:space="preserve">
     <value>stulpelio_pavadinimas</value>
-    
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
     <value>Lentelės arba įrašo, iš kurio reikia pašalinti stulpelių, reikšmė.</value>
@@ -378,19 +332,15 @@
   </data>
   <data name="AboutRenameColumns" xml:space="preserve">
     <value>Pateikia nurodytos šaltinio lentelės kopiją, kurioje stulpelis senas_stulpelis pervardytas į naujas_stulpelis.</value>
-    
   </data>
   <data name="RenameColumnsArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="RenameColumnsArg2" xml:space="preserve">
     <value>senas_stulpelis</value>
-    
   </data>
   <data name="RenameColumnsArg3" xml:space="preserve">
     <value>naujas_stulpelis</value>
-    
   </data>
   <data name="AboutRenameColumns_source" xml:space="preserve">
     <value>Lentelės reikšmė, kurią reikia apdoroti.</value>
@@ -402,20 +352,16 @@
     <value>Naujas stulpelio pavadinimas.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Nurodyto stulpelio {0} negalima du kartus pervardyti.</value>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Iš lentelės pateikia eilutes, kurių visos nurodytos sąlygos yra teisingos.</value>
-    
   </data>
   <data name="FilterArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="FilterArg2" xml:space="preserve">
     <value>loginis_testas</value>
-    
   </data>
   <data name="AboutFilter_source" xml:space="preserve">
     <value>Lentelė, kurią reikia filtruoti.</value>
@@ -425,15 +371,12 @@
   </data>
   <data name="AboutFirst" xml:space="preserve">
     <value>Pateikia pirmą šaltinio eilutę.</value>
-    
   </data>
   <data name="AboutLast" xml:space="preserve">
     <value>Pateikia paskutinę šaltinio eilutę.</value>
-    
   </data>
   <data name="FirstLastArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="AboutFirst_source" xml:space="preserve">
     <value>Lentelė, kurios pirma eilutė bus pateikta.</value>
@@ -443,19 +386,15 @@
   </data>
   <data name="AboutFirstN" xml:space="preserve">
     <value>Pateikia pirmą šaltinio eilučių skaičių.</value>
-    
   </data>
   <data name="AboutLastN" xml:space="preserve">
     <value>Pateikia paskutinį šaltinio eilučių skaičių.</value>
-    
   </data>
   <data name="FirstLastNArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="FirstLastNArg2" xml:space="preserve">
     <value>skaičius</value>
-    
   </data>
   <data name="AboutFirstN_source" xml:space="preserve">
     <value>Lentelė, kurios eilutės bus pateiktos.</value>
@@ -471,130 +410,105 @@
   </data>
   <data name="AboutText" xml:space="preserve">
     <value>Konvertuoja parametrą „reikšmė“ į tekstą konkrečiu skaičiaus formatu „teksto_formatas“.</value>
-    
   </data>
   <data name="TextArg1" xml:space="preserve">
     <value>reikšmė</value>
-    
   </data>
   <data name="TextArg2" xml:space="preserve">
     <value>teksto_formatas</value>
-    
   </data>
   <data name="TextArg3" xml:space="preserve">
     <value>kalba</value>
-    
   </data>
   <data name="AboutText_value" xml:space="preserve">
     <value>Reikšmė, kuri bus suformatuota kaip tekstas.</value>
   </data>
   <data name="AboutText_format_text" xml:space="preserve">
     <value>Teksto reikšmė, nurodanti, kaip bus suformatuota reikšmė.</value>
-    
   </data>
   <data name="AboutText_language" xml:space="preserve">
     <value>Kalbos kodas, naudojamas konvertuojant į tekstą.</value>
-    
   </data>
   <data name="AboutValue" xml:space="preserve">
     <value>Konvertuoja tekstą, kuris išreiškia skaičių, į skaitinę reikšmę.</value>
-    
   </data>
   <data name="ValueArg1" xml:space="preserve">
     <value>tekstas</value>
-    
   </data>
   <data name="ValueArg2" xml:space="preserve">
     <value>kalba</value>
-    
   </data>
   <data name="AboutValue_text" xml:space="preserve">
     <value>Teksto reikšmė, kurią reikia konvertuoti į skaitinę reikšmę.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
     <value>Kalbos kodas, naudojamas konvertuojant reikšmę.</value>
-    
   </data>
   <data name="AboutBoolean" xml:space="preserve">
     <value>Konvertuoja Bulio logikos tekstą į Bulio logikos reikšmę.</value>
-    
   </data>
   <data name="BooleanArg1" xml:space="preserve">
     <value>tekstas</value>
-    
   </data>
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Teksto reikšmė, kurią reikia konvertuoti į Bulio logikos reikšmę.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
     <value>Konvertuoja teksto reikšmių stulpelį į Bulio logikos reikšmių stulpelį.</value>
-    
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
     <value>įvestis</value>
-    
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
     <value>Teksto reikšmių stulpelis, skirtas apdoroti.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>Konvertuoja skaičių į Bulio logikos reikšmę.</value>
-    
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
     <value>skaičius</value>
-    
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
     <value>Skaitinė reikšmė, kurią reikia konvertuoti į Bulio logikos reikšmę.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
     <value>Konvertuoja skaitinių reikšmių stulpelį į Bulio logikos reikšmių stulpelį.</value>
-    
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
     <value>įvestis</value>
-    
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Apdorotinų skaitinių reikšmių stulpelis.</value>
   </data>
   <data name="AboutBooleanB" xml:space="preserve">
     <value>Konvertuoja Bulio logikos reikšmę į Bulio logikos reikšmę.</value>
-    
   </data>
   <data name="BooleanBArg1" xml:space="preserve">
     <value>Bulio logikos</value>
-    
   </data>
   <data name="AboutBooleanB_boolean" xml:space="preserve">
     <value>Bulio logikos reikšmė, kurią reikia konvertuoti į Bulio logikos reikšmę.</value>
   </data>
   <data name="AboutBooleanBT" xml:space="preserve">
     <value>Konvertuoja Bulio logikos reikšmių stulpelį į Bulio logikos reikšmių stulpelį.</value>
-    
   </data>
   <data name="BooleanBTArg1" xml:space="preserve">
     <value>įvestis</value>
-    
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Bulio logikos reikšmių stulpelis, skirtas apdoroti.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Pateikiamas pirmasis netuščias argumentas</value>
-    
   </data>
   <data name="CoalesceArg1" xml:space="preserve">
     <value>reikšmė</value>
-    
   </data>
   <data name="AboutCoalesce_value" xml:space="preserve">
     <value>Argumentas, kurį reikia pateikti, jei jis yra pirmasis netuščias argumentas.</value>
   </data>
   <data name="AboutConcatenate" xml:space="preserve">
     <value>Sujungia kelias teksto reikšmes į vieną.</value>
-    
   </data>
   <data name="AboutDecimal" xml:space="preserve">
     <value>Konvertuoja tekstą, kuris išreiškia skaičių, į dešimtainio skaičiaus reikšmę.</value>
@@ -616,37 +530,30 @@
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>tekstas</value>
-    
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
     <value>Teksto reikšmė, kurią reikia susieti su likusiais argumentais.</value>
   </data>
   <data name="AboutConcatenateT" xml:space="preserve">
     <value>Sujungia kelias teksto reikšmes arba lenteles į vieną teksto reikšmių stulpelį.</value>
-    
   </data>
   <data name="ConcatenateTArg1" xml:space="preserve">
     <value>reikšmė</value>
-    
   </data>
   <data name="AboutConcatenate_value" xml:space="preserve">
     <value>Teksto reikšmė arba teksto reikšmių stulpelis, kurį reikia susieti su likusiais argumentais.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Sujungia visas teksto reikšmes, apskaičiuotas taikant nurodytą reiškinį pateiktoje lentelėje, į vieną teksto reikšmę.</value>
-    
   </data>
   <data name="ConcatArg1" xml:space="preserve">
     <value>lentelė</value>
-    
   </data>
   <data name="ConcatArg2" xml:space="preserve">
     <value>reiškinys</value>
-    
   </data>
   <data name="ConcatArg3" xml:space="preserve">
     <value>skyriklis</value>
-    
   </data>
   <data name="AboutConcat_table" xml:space="preserve">
     <value>Lentelės reikšmė, pagal kurią apskaičiuojamas reiškinys, kurį pateikia antras parametras.</value>
@@ -656,37 +563,30 @@
   </data>
   <data name="AboutConcat_separator" xml:space="preserve">
     <value>Tekstinė reikšmė, įterptina tarp sujungtų lentelės eilučių.</value>
-    
   </data>
   <data name="AboutLen" xml:space="preserve">
     <value>Pateikia simbolių teksto reikšmėje skaičių.</value>
-    
   </data>
   <data name="AboutLen_text" xml:space="preserve">
     <value>Teksto reikšmė, kurios ilgis simboliais bus pateiktas.</value>
   </data>
   <data name="AboutLenT" xml:space="preserve">
     <value>Pateikia simbolių teksto reikšmėje skaičių, apskaičiuotą kiekvienoje nurodytos lentelės ar rinkinio eilutėje.</value>
-    
   </data>
   <data name="AboutLen_text_column" xml:space="preserve">
     <value>Teksto reikšmių stulpelis, kurio ilgis simboliais bus pateiktas (kaip naujas stulpelis).</value>
   </data>
   <data name="LenArg1" xml:space="preserve">
     <value>tekstas</value>
-    
   </data>
   <data name="LenTArg1" xml:space="preserve">
     <value>teksto_stulpelis</value>
-    
   </data>
   <data name="AboutUpper" xml:space="preserve">
     <value>Konvertuoja teksto reikšmę į visas didžiąsias raides.</value>
-    
   </data>
   <data name="AboutUpperT" xml:space="preserve">
     <value>Visas teksto reikšmės, įvertintos pagal kiekvieną eilutę nurodytoje lentelėje ar rinkinyje, raides konvertuoja į didžiąsias.</value>
-    
   </data>
   <data name="AboutUpper_text" xml:space="preserve">
     <value>Teksto reikšmė, kurią reikia konvertuoti į didžiąsias raides.</value>
@@ -696,11 +596,9 @@
   </data>
   <data name="AboutLower" xml:space="preserve">
     <value>Visas teksto reikšmės raides konvertuoja į mažąsias raides.</value>
-    
   </data>
   <data name="AboutLowerT" xml:space="preserve">
     <value>Visas teksto reikšmės, įvertintos pagal kiekvieną eilutę nurodytoje lentelėje ar rinkinyje, raides konvertuoja į mažąsias.</value>
-    
   </data>
   <data name="AboutLower_text" xml:space="preserve">
     <value>Teksto reikšmė, kurią reikia konvertuoti į mažąsias raides.</value>
@@ -710,11 +608,9 @@
   </data>
   <data name="AboutProper" xml:space="preserve">
     <value>Konvertuoja teksto reikšmę į reikiamą, pvz., pirmoji kiekvieno žodžio raidė yra didžioji, o visos kitos – mažosios.</value>
-    
   </data>
   <data name="AboutProperT" xml:space="preserve">
     <value>Konvertuoja teksto reikšmę, įvertintą po eilutę nurodytoje lentelėje ar rinkinyje, į reikiamą, pvz., pirmoji kiekvieno žodžio raidė yra didžioji, o visos kitos – mažosios.</value>
-    
   </data>
   <data name="AboutProper_text" xml:space="preserve">
     <value>Teksto reikšmė, kurią reikia tinkamai konvertuoti į didžiąsias arba mažąsias raides.</value>
@@ -724,7 +620,6 @@
   </data>
   <data name="AboutTrim" xml:space="preserve">
     <value>Pašalina visus tarpus iš teksto reikšmės, išskyrus viengubus tarpus tarp žodžių.</value>
-    
   </data>
   <data name="AboutTrim_text" xml:space="preserve">
     <value>Teksto reikšmė, kurią reikia konvertuoti į koreguotą.</value>
@@ -734,7 +629,6 @@
   </data>
   <data name="AboutTrimEnds" xml:space="preserve">
     <value>Pašalina visus teksto reikšmės priekyje ir pabaigoje esančius tarpus.</value>
-    
   </data>
   <data name="AboutTrimEnds_text" xml:space="preserve">
     <value>Teksto reikšmė, tarpams pabaigoje ir pradžioje koreguoti.</value>
@@ -744,11 +638,9 @@
   </data>
   <data name="AboutMid" xml:space="preserve">
     <value>Pateikia simbolius iš teksto reikšmės vidurio, nurodžius pradinę padėtį ir ilgį.</value>
-    
   </data>
   <data name="AboutMidT" xml:space="preserve">
     <value>Pateikia simbolius iš teksto reikšmės vidurio, pateikus pradžios padėtį ir ilgį; apskaičiuotus po eilutė nurodytoje lentelėje ar rinkinyje.</value>
-    
   </data>
   <data name="AboutMid_text" xml:space="preserve">
     <value>Tekstinė reikšmė, iš kurios bus išgauti simboliai.</value>
@@ -764,35 +656,27 @@
   </data>
   <data name="StringFuncArg1" xml:space="preserve">
     <value>tekstas</value>
-    
   </data>
   <data name="StringTFuncArg1" xml:space="preserve">
     <value>teksto_stulpelis</value>
-    
   </data>
   <data name="StringFuncArg2" xml:space="preserve">
     <value>pradinis_skaičius</value>
-    
   </data>
   <data name="StringFuncArg3" xml:space="preserve">
     <value>simbolių_skaičius</value>
-    
   </data>
   <data name="AboutReplace" xml:space="preserve">
     <value>Pakeisti dalį teksto reikšmės kita teksto reikšme.</value>
-    
   </data>
   <data name="AboutReplaceT" xml:space="preserve">
     <value>Pakeisti dalį teksto reikšmės kita teksto reikšme, apskaičiuota pagal kiekvieną nurodytos lentelės ar rinkinio eilutę.</value>
-    
   </data>
   <data name="ReplaceFuncArg1" xml:space="preserve">
     <value>senas_tekstas</value>
-    
   </data>
   <data name="ReplaceFuncArg4" xml:space="preserve">
     <value>naujas_tekstas</value>
-    
   </data>
   <data name="AboutReplace_old_text" xml:space="preserve">
     <value>Teksto reikšmė, kurią reikia apdoroti.</value>
@@ -811,67 +695,51 @@
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>Pateikia klaidą su pasirinktinėmis reikšmėmis.</value>
-    
   </data>
   <data name="AboutError_error_information" xml:space="preserve">
     <value>Įrašas su pasirinktinėmis gamybos klaidos reikšmėmis.</value>
-    
   </data>
   <data name="ErrorArg1" xml:space="preserve">
     <value>klaidos_informacija</value>
-    
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
     <value>Funkcija „Error“ naudoja tik laukus „Kind“, „Message“, „Notify“, „Control“ ir „Property“.</value>
-    
   </data>
   <data name="AboutIfError" xml:space="preserve">
     <value>Įvertina ir pateikia pirmąjį neklaidingą argumentą.</value>
-    
   </data>
   <data name="IfErrorArg1" xml:space="preserve">
     <value>reikšmė</value>
-    
   </data>
   <data name="AboutIfError_value" xml:space="preserve">
     <value>Pateikta reikšmė, jei ji yra ne klaida.</value>
-    
   </data>
   <data name="IfErrorArg2" xml:space="preserve">
     <value>atsarginis</value>
-    
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
     <value>Grąžinama reikšmė, jei ankstesnis argumentas yra klaida.</value>
-    
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
     <value>Pakeičia esamą tekstą nauju tekstinės reikšmės tekstu.</value>
-    
   </data>
   <data name="AboutSubstituteT" xml:space="preserve">
     <value>Pakeičia esamą tekstą nauju tekstinės reikšmės, įvertintos po eilutę nurodytoje lentelėje ar rinkinyje, tekstu.</value>
-    
   </data>
   <data name="SubstituteFuncArg1" xml:space="preserve">
     <value>tekstas</value>
-    
   </data>
   <data name="SubstituteTFuncArg1" xml:space="preserve">
     <value>teksto_stulpelis</value>
-    
   </data>
   <data name="SubstituteFuncArg2" xml:space="preserve">
     <value>senas_tekstas</value>
-    
   </data>
   <data name="SubstituteFuncArg3" xml:space="preserve">
     <value>naujas_tekstas</value>
-    
   </data>
   <data name="SubstituteFuncArg4" xml:space="preserve">
     <value>egzempliorių_skaičius</value>
-    
   </data>
   <data name="AboutSubstitute_text" xml:space="preserve">
     <value>Teksto reikšmė, kurią reikia apdoroti.</value>
@@ -890,19 +758,15 @@
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>Rikiuoja šaltinį remiantis reiškinio rezultatais, apskaičiuotais pagal kiekvieną eilutę. Galima pasirinktinai nurodyti rikiavimo tvarką.</value>
-    
   </data>
   <data name="SortArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="SortArg2" xml:space="preserve">
     <value>reiškinys</value>
-    
   </data>
   <data name="SortArg3" xml:space="preserve">
     <value>tvarka</value>
-    
   </data>
   <data name="AboutSort_source" xml:space="preserve">
     <value>Lentelė, kurią reikia surikiuoti.</value>
@@ -912,23 +776,18 @@
   </data>
   <data name="AboutSort_order" xml:space="preserve">
     <value>SortOrder.Ascending arba SortOrder.Descending</value>
-    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Rikiuoja šaltinį pagal stulpelį. Galima pasirinktinai nurodyti rikiavimo tvarką.</value>
-    
   </data>
   <data name="SortByColumnsArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="SortByColumnsArg2" xml:space="preserve">
     <value>stulpelis</value>
-    
   </data>
   <data name="SortByColumnsArg3" xml:space="preserve">
     <value>tvarka</value>
-    
   </data>
   <data name="AboutSortByColumns_source" xml:space="preserve">
     <value>Lentelė, kurią reikia surikiuoti.</value>
@@ -938,22 +797,18 @@
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
     <value>SortOrder.Ascending arba SortOrder.Descending</value>
-    
   </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>reikšmės</value>
-    
   </data>
   <data name="AboutSortByColumns_values" xml:space="preserve">
     <value>Reikšmių stulpelis, kuris bus naudojamas rikiavimo tikslais. Rikiavimas atliekamas ne didėjimo / mažėjimo tvarka, bet pagal atitinkančių stulpelio reikšmių indeksą </value>
   </data>
   <data name="AboutRand" xml:space="preserve">
     <value>Pateikia atsitiktinį skaičių, didesnį arba lygų 0 ir mažesnį už 1, tolygiai paskirstytą.</value>
-    
   </data>
   <data name="AboutRandBetween" xml:space="preserve">
     <value>Pateikia tolygiai paskirstytą atsitiktinį skaičių tarp apatinės ir viršutinės verčių.</value>
-    
   </data>
   <data name="AboutRandBetween_bottom" xml:space="preserve">
     <value>Mažiausias sveikasis skaičius, kurį gali pateikti funkcija.</value>
@@ -963,129 +818,99 @@
   </data>
   <data name="RandBetweenArg1" xml:space="preserve">
     <value>apačia</value>
-    
   </data>
   <data name="RandBetweenArg2" xml:space="preserve">
     <value>viršus</value>
-    
   </data>
   <data name="AboutGUID" xml:space="preserve">
     <value>Iš eilutės sukuriamas GUID arba pateikiamas atsitiktine tvarka sugeneruotas GUID, jei nenurodyta jokių argumentų.</value>
-    
   </data>
   <data name="GUIDArg" xml:space="preserve">
     <value>GUID_eilutė</value>
-    
   </data>
   <data name="AboutGUID_GUID_string" xml:space="preserve">
     <value>Eilutė, kurią reikia konvertuoti į GUID</value>
-    
   </data>
   <data name="AboutNow" xml:space="preserve">
     <value>Pateikia dabartinę datą ir laiką.</value>
-    
   </data>
   <data name="AboutUTCNow" xml:space="preserve">
     <value>Pateikia dabartinę datą ir laiką UTC laiku.</value>
-    
   </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Pateikiamas laiko skirtumas minutėmis tarp UTC ir vietos laiko. Pavyzdžiui, jei jūsų laiko juosta yra UTC+2, bus pateikta reikšmė -120.</value>
-    
   </data>
   <data name="TimeZoneOffsetArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="AboutTimeZoneOffset_date" xml:space="preserve">
     <value>Data, kada reikia apskaičiuoti TimeZoneOffset.</value>
-    
   </data>
   <data name="AboutToday" xml:space="preserve">
     <value>Pateikia dabartinę datą.</value>
-    
   </data>
   <data name="AboutUTCToday" xml:space="preserve">
     <value>Pateikia dabartinę datą UTC laiku.</value>
-    
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Pateikia tam tikros datos savaitės numerį.</value>
-    
   </data>
   <data name="WeekNumArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="WeekNumArg2" xml:space="preserve">
     <value>savaitės_pradžia</value>
-    
   </data>
   <data name="AboutWeekNum_date" xml:space="preserve">
     <value>Datos reikšmė, kuriai bus skaičiuojamas savaitės numeris.</value>
   </data>
   <data name="AboutWeekNum_start_of_week" xml:space="preserve">
     <value>Reikšmė iš „StartOfWeek“ išvardijimo arba skaičius iš atitinkamos „Excel“ funkcijos, nurodantis, kaip turi būti numeruojamos savaitės dienos.</value>
-    
   </data>
   <data name="AboutISOWeekNum" xml:space="preserve">
     <value>Pateikia savaitės numerį pagal tam tikros datos ISO taisykles.</value>
-    
   </data>
   <data name="ISOWeekNumArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Datos reikšmė, kuriai bus skaičiuojamas ISO savaitės numeris.</value>
   </data>
   <data name="AboutEDate" xml:space="preserve">
     <value>Pateikia datą, pakoreguotą pagal mėnesių skaičių. Mėnesio diena išlieka tokia pati, bet ji apribojama naujojo mėnesio dienų skaičiumi.</value>
-    
   </data>
   <data name="EDateArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="EDateArg2" xml:space="preserve">
     <value>mėn.</value>
-    
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Datos reikšmė, kuri turi būti pakoreguota pagal nurodytą mėnesių skaičių.</value>
-          
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Mėnesių skaičius, pagal kurį reikia pakeisti datą. Teigiama reikšmė pateiks datą ateityje, neigiama reikšmė – datą praeityje, o nulis mėnesio nepakeis.</value>
-        
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Pateikia paskutinę nurodytos datos mėnesio dieną, pakoreguotą pagal mėnesių skaičių.</value>
-    
   </data>
   <data name="EOMonthArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="EOMonthArg2" xml:space="preserve">
     <value>mėn.</value>
-    
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Datos reikšmė, kuri turi būti pakoreguota pagal nurodytą mėnesių skaičių.</value>
-          
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>&gt;Mėnesių skaičius, pagal kurį reikia pakeisti datą. Teigiama reikšmė pateiks datą ateityje, neigiama reikšmė – datą praeityje, o nulis mėnesio nepakeis.</value>
-         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Skaičius trumpinamas suapvalinant iki neigiamos begalybės.</value>
-    
   </data>
   <data name="AboutIntT" xml:space="preserve">
     <value>Skaičių stulpelio reikšmės trumpinamos suapvalinant iki neigiamos begalybės.</value>
-    
   </data>
   <data name="AboutInt_number" xml:space="preserve">
     <value>Skaitinė reikšmė, skirta apdoroti.</value>
@@ -1095,7 +920,6 @@
   </data>
   <data name="AboutTrunc" xml:space="preserve">
     <value>Skaičius trumpinamas suapvalinant iki nulio.</value>
-    
   </data>
   <data name="AboutTrunc_number" xml:space="preserve">
     <value>Skaičius, kurį reikia sutrumpinti.</value>
@@ -1108,43 +932,33 @@
   </data>
   <data name="AboutTruncT" xml:space="preserve">
     <value>Visi šaltinyje esantys skaičiai sutrumpinami suapvalinant iki nulio.</value>
-    
   </data>
   <data name="TruncArg1" xml:space="preserve">
     <value>skaičius</value>
-    
   </data>
   <data name="TruncArg2" xml:space="preserve">
     <value>skaitmenų_skaičius</value>
-    
   </data>
   <data name="TruncTArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="TruncTArg2" xml:space="preserve">
     <value>skaitmenų_skaičius</value>
-    
   </data>
   <data name="AboutRound" xml:space="preserve">
     <value>Suapvalina skaičių iki nurodyto skaitmenų skaičiaus.</value>
-    
   </data>
   <data name="AboutRoundUp" xml:space="preserve">
     <value>Suapvalina skaičių į didžiąją pusę.</value>
-    
   </data>
   <data name="AboutRoundDown" xml:space="preserve">
     <value>Suapvalina skaičių į mažąją pusę link nulio.</value>
-    
   </data>
   <data name="RoundArg1" xml:space="preserve">
     <value>skaičius</value>
-    
   </data>
   <data name="RoundArg2" xml:space="preserve">
     <value>skaitmenų_skaičius</value>
-    
   </data>
   <data name="AboutRound_number" xml:space="preserve">
     <value>Apvalinamas skaičius.</value>
@@ -1175,43 +989,33 @@
   </data>
   <data name="AboutRoundT" xml:space="preserve">
     <value>Suapvalina visus šaltinio skaičius iki nurodyto skaitmenų skaičiaus.</value>
-    
   </data>
   <data name="AboutRoundUpT" xml:space="preserve">
     <value>Suapvalina visus šaltinio skaičius į didžiąją pusę.</value>
-    
   </data>
   <data name="AboutRoundDownT" xml:space="preserve">
     <value>Suapvalina visus šaltinio skaičius į mažąją pusę link nulio.</value>
-    
   </data>
   <data name="RoundTArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="RoundTArg2" xml:space="preserve">
     <value>skaitmenų_skaičius</value>
-    
   </data>
   <data name="AboutRGBA" xml:space="preserve">
     <value>Paima skaitines raudonos, žalios, mėlynos bei alfa spalvos komponentų reikšmes ir sugeneruoja konkrečią spalvą. R, G, B yra skaitinės reikšmės nuo 0 iki 255. Alfa yra dešimtainis skaičius nuo 0 iki 1.</value>
-    
   </data>
   <data name="RGBAArg1" xml:space="preserve">
     <value>raudonos_reikšmė</value>
-    
   </data>
   <data name="RGBAArg2" xml:space="preserve">
     <value>žalios_reikšmė</value>
-    
   </data>
   <data name="RGBAArg3" xml:space="preserve">
     <value>mėlynos_reikšmė</value>
-    
   </data>
   <data name="RGBAArg4" xml:space="preserve">
     <value>alfa_reikšmė</value>
-    
   </data>
   <data name="AboutRGBA_red_value" xml:space="preserve">
     <value>Raudonas komponentas nuo 0 iki 255.</value>
@@ -1227,15 +1031,12 @@
   </data>
   <data name="AboutColorFade" xml:space="preserve">
     <value>Sukuria naują nurodytos spalvos atspalvį pagal nurodytą blukimo procentą.</value>
-    
   </data>
   <data name="ColorFadeArg1" xml:space="preserve">
     <value>spalva</value>
-    
   </data>
   <data name="ColorFadeArg2" xml:space="preserve">
     <value>išnykimas</value>
-    
   </data>
   <data name="AboutColorFade_color" xml:space="preserve">
     <value>Spalvą, kurią reikia išblukinti.</value>
@@ -1248,11 +1049,9 @@
   </data>
   <data name="ColorFadeTArg1" xml:space="preserve">
     <value>spalva_arba_stulpelis</value>
-    
   </data>
   <data name="ColorFadeTArg2" xml:space="preserve">
     <value>išnykimas_arba_stulpelis</value>
-    
   </data>
   <data name="AboutColorFade_color_or_column" xml:space="preserve">
     <value>Spalva (arba spalvos reikšmių stulpelis), kurią reikia išblukinti.</value>
@@ -1262,11 +1061,9 @@
   </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Pateikia absoliučiąją skaičiaus reikšmę, skaičių be ženklo.</value>
-    
   </data>
   <data name="AboutAbsT" xml:space="preserve">
     <value>Pateikia absoliučiąsias skaičių stulpelio reikšmes (skaičių be ženklo).</value>
-    
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
     <value>Skaitinė reikšmė, skirta apdoroti.</value>
@@ -1282,11 +1079,9 @@
   </data>
   <data name="AboutSin" xml:space="preserve">
     <value>Pateikia skaičiaus sinuso reikšmę.</value>
-    
   </data>
   <data name="AboutSinT" xml:space="preserve">
     <value>Pateikia skaičių stulpelio sinuso reikšmes.</value>
-    
   </data>
   <data name="AboutAsin_number" xml:space="preserve">
     <value>Skaitinė reikšmė, skirta apdoroti.</value>
@@ -1296,19 +1091,15 @@
   </data>
   <data name="AboutAsin" xml:space="preserve">
     <value>Pateikia skaičiaus arksinuso reikšmę (radianais).</value>
-    
   </data>
   <data name="AboutAsinT" xml:space="preserve">
     <value>Pateikia skaičių stulpelio arksinuso reikšmes (radianais).</value>
-    
   </data>
   <data name="AboutCos" xml:space="preserve">
     <value>Pateikia skaičiaus kosinuso reikšmę.</value>
-    
   </data>
   <data name="AboutCosT" xml:space="preserve">
     <value>Pateikia skaičių stulpelio kosinuso reikšmes.</value>
-    
   </data>
   <data name="AboutCos_number" xml:space="preserve">
     <value>Skaitinė reikšmė (radianais), skirta apdoroti.</value>
@@ -1318,14 +1109,12 @@
   </data>
   <data name="AboutAcos" xml:space="preserve">
     <value>Pateikia skaičiaus arkkosinuso reikšmę (radianais).</value>
-    
   </data>
   <data name="AboutAcos_number" xml:space="preserve">
     <value>Skaitinė reikšmė, skirta apdoroti.</value>
   </data>
   <data name="AboutAcosT" xml:space="preserve">
     <value>Pateikia skaičių stulpelio arkkosinuso reikšmes (radianais).</value>
-    
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
     <value>Skaitinių reikšmių stulpelis, skirtas apdoroti.</value>
@@ -1338,19 +1127,15 @@
   </data>
   <data name="AboutAcot" xml:space="preserve">
     <value>Pateikia skaičiaus kotangento reikšmę (radianais).</value>
-    
   </data>
   <data name="AboutAcotT" xml:space="preserve">
     <value>Pateikia skaičių stulpelio kotangento reikšmes (radianais).</value>
-    
   </data>
   <data name="AboutTan" xml:space="preserve">
     <value>Pateikia skaičiaus tangento reikšmę.</value>
-    
   </data>
   <data name="AboutTanT" xml:space="preserve">
     <value>Pateikia skaičių stulpelio tangento reikšmes.</value>
-    
   </data>
   <data name="AboutTan_number" xml:space="preserve">
     <value>Skaitinė reikšmė (radianais), skirta apdoroti.</value>
@@ -1360,11 +1145,9 @@
   </data>
   <data name="AboutAtan" xml:space="preserve">
     <value>Pateikia skaičiaus arktangento reikšmę (radianais).</value>
-    
   </data>
   <data name="AboutAtanT" xml:space="preserve">
     <value>Pateikia skaičių stulpelio arktangento reikšmes (radianais).</value>
-    
   </data>
   <data name="AboutAtan_number" xml:space="preserve">
     <value>Skaitinė reikšmė, skirta apdoroti.</value>
@@ -1374,11 +1157,9 @@
   </data>
   <data name="AboutCot" xml:space="preserve">
     <value>Pateikia skaičiaus kotangento reikšmę.</value>
-    
   </data>
   <data name="AboutCotT" xml:space="preserve">
     <value>Pateikia skaičių stulpelio kotangento reikšmes.</value>
-    
   </data>
   <data name="AboutCot_number" xml:space="preserve">
     <value>Skaitinė reikšmė (radianais), skirta apdoroti.</value>
@@ -1388,11 +1169,9 @@
   </data>
   <data name="AboutLn" xml:space="preserve">
     <value>Pateikia skaičiaus natūralųjį logaritmą (pagrindas E).</value>
-    
   </data>
   <data name="AboutLnT" xml:space="preserve">
     <value>Pateikia skaičių stulpelio natūraliojo logaritmo reikšmes (pagrindas E).</value>
-    
   </data>
   <data name="AboutLn_number" xml:space="preserve">
     <value>Skaitinė reikšmė, skirta apdoroti.</value>
@@ -1402,11 +1181,9 @@
   </data>
   <data name="AboutLog" xml:space="preserve">
     <value>Pateikia nurodyto pagrindo skaičiaus logaritmą. Numatytasis pagrindas yra 10.</value>
-    
   </data>
   <data name="AboutLogT" xml:space="preserve">
     <value>Pateikia nurodyto pagrindo arba pagrindų stulpelio skaičiaus arba skaičių stulpelio logaritmo reikšmes. Numatytasis pagrindas yra 10.</value>
-    
   </data>
   <data name="AboutLog_number" xml:space="preserve">
     <value>Skaitinė reikšmė, skirta apdoroti.</value>
@@ -1416,18 +1193,15 @@
   </data>
   <data name="LogBase" xml:space="preserve">
     <value>pagrindas</value>
-    
   </data>
   <data name="AboutLog_base" xml:space="preserve">
     <value>Logaritmo pagrindas.</value>
   </data>
   <data name="AboutExp" xml:space="preserve">
     <value>Pateikia E, pakeltą skaičiaus laipsniu. Norėdami apskaičiuoti kitų pagrindų laipsnius, naudokite kėlimo laipsniu rodiklį (^).</value>
-    
   </data>
   <data name="AboutExpT" xml:space="preserve">
     <value>Pateikia stulpelį, apimantį E, pakeltą kiekvieno atitinkamo skaičiaus iš skaičių stulpelio laipsniu. Norėdami apskaičiuoti kitų pagrindų laipsnius, naudokite kėlimo laipsniu rodiklį (^).</value>
-    
   </data>
   <data name="AboutExp_number" xml:space="preserve">
     <value>Skaitinė reikšmė, skirta apdoroti.</value>
@@ -1440,11 +1214,9 @@
   </data>
   <data name="AboutRadians" xml:space="preserve">
     <value>Pateikia skaičiaus radianų reikšmę.</value>
-    
   </data>
   <data name="AboutRadiansT" xml:space="preserve">
     <value>Pateikia skaičių stulpelio radianų reikšmes.</value>
-    
   </data>
   <data name="AboutRadians_number" xml:space="preserve">
     <value>Skaitinė reikšmė (laipsniais), skirta apdoroti.</value>
@@ -1454,11 +1226,9 @@
   </data>
   <data name="AboutDegrees" xml:space="preserve">
     <value>Pateikia skaičiaus laipsnių reikšmę.</value>
-    
   </data>
   <data name="AboutDegreesT" xml:space="preserve">
     <value>Pateikia skaičių stulpelio laipsnių reikšmes.</value>
-    
   </data>
   <data name="AboutDegrees_number" xml:space="preserve">
     <value>Skaitinė reikšmė (radianais), skirta apdoroti.</value>
@@ -1471,11 +1241,9 @@
   </data>
   <data name="DistinctArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="DistinctArg2" xml:space="preserve">
     <value>reiškinys</value>
-    
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
     <value>Lentelė, iš kurios bus išgautos atskiros reikšmės.</value>
@@ -1488,11 +1256,9 @@
   </data>
   <data name="AboutAtan2Arg1" xml:space="preserve">
     <value>x_koordinatė</value>
-    
   </data>
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>y_koordinatė</value>
-    
   </data>
   <data name="AboutAtan2_x_coordinate" xml:space="preserve">
     <value>x koordinatė.</value>
@@ -1502,11 +1268,9 @@
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Pateikia skaičiaus kvadratinę šaknį.</value>
-    
   </data>
   <data name="AboutSqrtT" xml:space="preserve">
     <value>Pateikia skaičių stulpelio kvadratines šaknis.</value>
-    
   </data>
   <data name="AboutSqrt_number" xml:space="preserve">
     <value>Skaitinė reikšmė, skirta apdoroti.</value>
@@ -1516,27 +1280,21 @@
   </data>
   <data name="MathFuncArg1" xml:space="preserve">
     <value>skaičius</value>
-    
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>įvestis</value>
-    
   </data>
   <data name="MathFuncArg2" xml:space="preserve">
     <value>modifikatorius</value>
-    
   </data>
   <data name="MathTFuncArg2" xml:space="preserve">
     <value>modifikatorius</value>
-    
   </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Pateikia nurodytą simbolių iš teksto reikšmės pradžios skaičių.</value>
-    
   </data>
   <data name="AboutLeftT" xml:space="preserve">
     <value>Pateikia stulpelį, kuriame yra nurodytas simbolių iš teksto reikšmės pradžios skaičius, įvertinus kiekvieną eilutę konkrečioje lentelėje arba rinkinyje.</value>
-    
   </data>
   <data name="AboutLeft_text" xml:space="preserve">
     <value>Teksto reikšmė, iš kurios reikia išgauti simbolius.</value>
@@ -1549,11 +1307,9 @@
   </data>
   <data name="AboutRight" xml:space="preserve">
     <value>Pateikia nurodytą simbolių skaičių iš teksto reikšmės pabaigos.</value>
-    
   </data>
   <data name="AboutRightT" xml:space="preserve">
     <value>Pateikia stulpelį, kuriame yra nurodytas simbolių iš teksto reikšmės pabaigos skaičius, įvertinus kiekvieną eilutę konkrečioje lentelėje arba rinkinyje.</value>
-    
   </data>
   <data name="AboutRight_text" xml:space="preserve">
     <value>Teksto reikšmė, iš kurios reikia išgauti simbolius.</value>
@@ -1566,76 +1322,60 @@
   </data>
   <data name="LeftRightArg1" xml:space="preserve">
     <value>tekstas</value>
-    
   </data>
   <data name="LeftRightTArg1" xml:space="preserve">
     <value>teksto_stulpelis</value>
-    
   </data>
   <data name="LeftRightArg2" xml:space="preserve">
     <value>simbolių_skaičius</value>
-    
   </data>
   <data name="AboutIsBlank" xml:space="preserve">
     <value>Tikrina, ar reiškinio rezultatas yra tuščia reikšmė, ir pateikia „true“ arba „false“.</value>
-    
   </data>
   <data name="IsBlankArg1" xml:space="preserve">
     <value>reiškinys</value>
-    
   </data>
   <data name="AboutIsBlank_expression" xml:space="preserve">
     <value>Reiškinys, kurį reikia patikrinti.</value>
   </data>
   <data name="AboutIsBlankOrError" xml:space="preserve">
     <value>Tikrina, ar reiškinio rezultatas yra tuščia reikšmė ar klaida, ir pateikia „true“ arba „false“.</value>
-    
   </data>
   <data name="IsBlankOrErrorArg1" xml:space="preserve">
     <value>reiškinys</value>
-    
   </data>
   <data name="AboutIsBlankOrError_expression" xml:space="preserve">
     <value>Reiškinys, kurį reikia patikrinti.</value>
-    
   </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Tikrina, ar rinkinys yra tuščias, ir pateikia reikšmę TRUE arba FALSE.</value>
-    
   </data>
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="AboutIsEmpty_source" xml:space="preserve">
     <value>Lentelė, kurią reikia patikrinti.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Pateikia įvesties šaltinio lentelės atsitiktine tvarka sumaišytą kopiją.</value>
-    
   </data>
   <data name="ShuffleArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="AboutShuffle_source" xml:space="preserve">
     <value>Lentelė, kurią reikia sumaišyti.</value>
   </data>
   <data name="AboutLookUp" xml:space="preserve">
     <value>Ieško pirmos eilutės, kurioje pirma sąlyga įvertinama kaip TRUE, ir pateikia rezultatą reiškinio, apskaičiuotą tos eilutės kontekste, jei nurodytas reiškinys, kitu atveju pateikiama visa eilutė.</value>
-    
   </data>
   <data name="LookUpArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="LookUpArg2" xml:space="preserve">
     <value>sąlyga</value>
-    
   </data>
   <data name="LookUpArg3" xml:space="preserve">
     <value>rezultatas</value>
-    
   </data>
   <data name="AboutLookUp_source" xml:space="preserve">
     <value>Lentelė, kurioje bus ieškoma reikšmių.</value>
@@ -1648,7 +1388,6 @@
   </data>
   <data name="AboutStdevP" xml:space="preserve">
     <value>Skaičiuoja visos argumentų aibės standartinį nuokrypį (nepaiso loginių reikšmių ir teksto).</value>
-    
   </data>
   <data name="AboutStdevP_number" xml:space="preserve">
     <value>Skaičius, kuris turi būti įtrauktas skaičiuojant standartinį nuokrypį.</value>
@@ -1661,11 +1400,9 @@
   </data>
   <data name="AboutStdevPT" xml:space="preserve">
     <value>Skaičiuoja visos stulpelių aibės standartinį nuokrypį (stulpelyje nepaiso loginių reikšmių ir teksto).</value>
-    
   </data>
   <data name="AboutVarP" xml:space="preserve">
     <value>Skaičiuoja nuokrypį pagal visą aibę (nepaiso aibės loginių reikšmių ir teksto).</value>
-    
   </data>
   <data name="AboutVarP_number" xml:space="preserve">
     <value>Skaičius, kuris turi būti įtrauktas skaičiuojant nuokrypį.</value>
@@ -1678,55 +1415,42 @@
   </data>
   <data name="AboutVarPT" xml:space="preserve">
     <value>Skaičiuoja nuokrypį pagal visą aibę, nurodytą kaip stulpelis (stulpelyje nepaiso loginių reikšmių ir teksto).</value>
-    
   </data>
   <data name="SetArg1" xml:space="preserve">
     <value>kintamasis</value>
-    
   </data>
   <data name="AboutSplit" xml:space="preserve">
     <value>Skyrikliu suskaido eilutę į dalines eilutes.</value>
-    
   </data>
   <data name="AboutSplit_text" xml:space="preserve">
     <value>Į dalines eilutes skaidytinas tekstas.</value>
-    
   </data>
   <data name="AboutSplit_separator" xml:space="preserve">
     <value>Skyriklio tekstas, naudojamas įvesties tekstui suskaidyti į dalines eilutes.</value>
-    
   </data>
   <data name="SplitArg1" xml:space="preserve">
     <value>tekstas</value>
-    
   </data>
   <data name="SplitArg2" xml:space="preserve">
     <value>skyriklis</value>
-    
   </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Jei pateikta reikšmė yra nurodyto tipo, pateikiama reikšmė „True“.</value>
-    
   </data>
   <data name="IsTypeArg1" xml:space="preserve">
     <value>reikšmė</value>
-    
   </data>
   <data name="IsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
-    
   </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Pateikta reikšmė naudojama kaip nurodytas tipas.</value>
-    
   </data>
   <data name="AsTypeArg1" xml:space="preserve">
     <value>reikšmė</value>
-    
   </data>
   <data name="AsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
-    
   </data>
   <data name="AboutAsType_value" xml:space="preserve">
     <value>Polimorfinis įrašas, kurį reikia konvertuoti kaip naują tipą.</value>
@@ -1736,331 +1460,249 @@
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Vykdo formulę, pateiktą kaip antrą parametrą, naudojant pirmojo parametro pateiktą aprėptį.</value>
-    
   </data>
   <data name="WithArg1" xml:space="preserve">
     <value>aprėptis</value>
-    
   </data>
   <data name="WithArg2" xml:space="preserve">
     <value>formulė</value>
-    
   </data>
   <data name="AboutWith_scope" xml:space="preserve">
     <value>Aprėptis, kurią naudojant reikia iškviesti antrojo parametro apibrėžtą formulę.</value>
-    
   </data>
   <data name="AboutWith_formula" xml:space="preserve">
     <value>Formulė, kurią reikia iškviesti naudojant pirmojo parametro pateiktą aprėptį.</value>
-    
   </data>
   <data name="AboutSequence" xml:space="preserve">
     <value>Generuojama eilės numerių lentelė</value>
-    
   </data>
   <data name="SequenceArg1" xml:space="preserve">
     <value>įrašai</value>
-    
   </data>
   <data name="AboutSequence_records" xml:space="preserve">
     <value>Įrašų skaičius vieno stulpelio lentelėje pavadinimu „Reikšmė“. Didžiausia reikšmė – 50 000.</value>
-    
   </data>
   <data name="SequenceArg2" xml:space="preserve">
     <value>pradžia</value>
-    
   </data>
   <data name="AboutSequence_start" xml:space="preserve">
     <value>Pasirenkama. Pirmasis sekos numeris. Numatytoji reikšmė – 1.</value>
-    
   </data>
   <data name="SequenceArg3" xml:space="preserve">
     <value>veiksmas</value>
-    
   </data>
   <data name="AboutSequence_step" xml:space="preserve">
     <value>Pasirenkama. Suma, kuria reikia padidinti kiekvieną vėlesnę reikšmę lentelėje. Numatytoji reikšmė – 1.</value>
-    
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
     <value>Neleistinas „.“ naudojimas.</value>
-    
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>„{0}“ yra nežinoma arba nepalaikoma funkcija.</value>
-    
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>„{0}“ yra nežinoma arba nepalaikoma funkcija vardų srityje „{1}“.</value>
-    
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>Komponento veikimo būdą galima iškviesti tik komponento viduje.</value>
-    
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
     <value>Komponento funkcijos ypatybę arba parametrą galima pasiekti tik komponente arba iš komponento išvesties ypatybių.</value>
-    
   </data>
   <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
     <value>Komponento funkcijos ypatybė arba parametras gali nurodyti tik kitas funkcijos ypatybes.</value>
-    
   </data>
   <data name="ErrBadArity" xml:space="preserve">
     <value>Netinkamas argumentų skaičius: gauta {0}, buvo numatoma gauti {1}.</value>
-    
   </data>
   <data name="ErrBadArityEven" xml:space="preserve">
     <value>Netinkamas argumentų skaičius: gauta {0}, buvo numatoma gauti lyginį skaičių.</value>
-    
   </data>
   <data name="ErrBadArityOdd" xml:space="preserve">
     <value>Netinkamas argumentų skaičius: gauta {0}, buvo numatoma gauti nelyginį skaičių.</value>
-    
   </data>
   <data name="ErrBadType" xml:space="preserve">
     <value>Neleistinas argumento tipas.</value>
-    
   </data>
   <data name="ErrBadType_Type" xml:space="preserve">
     <value>Neleistinas argumento tipas. Negalima naudoti {0} reikšmių šiame kontekste.</value>
-    
   </data>
   <data name="ErrBadOperatorTypes" xml:space="preserve">
     <value>Ši operacija netinkama šiems tipams: {0}, {1}.</value>
-    
   </data>
   <data name="ErrGuidStrictComparison" xml:space="preserve">
     <value>GUID reikšmes gali būti lyginamos tik su kitomis GUID reikšmėmis.</value>
-    
   </data>
   <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
     <value>Netinkamas lauko {0} tipas. Tikėtasi {1} tipo lauko.</value>
-    
   </data>
   <data name="ErrBadType_ExpectedType" xml:space="preserve">
     <value>Neleistinas argumento tipas. Tikimasi {0} reikšmės.</value>
-    
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Neleistinas argumento tipas ({1}). Vietoj to tikimasi {0} reikšmės.</value>
-    
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
     <value>Neleistinas argumento tipas. Tikimasi {0} reikšmės, bet kitos schemos.</value>
-    
   </data>
   <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
     <value>Neleistinas argumento tipas. Tikimasi vieno iš šių: {0}.</value>
-    
   </data>
   <data name="ErrInvalidArgs_Func" xml:space="preserve">
     <value>Funkcija „{0}“ apima keletą neleistinų argumentų.</value>
-    
   </data>
   <data name="ErrNeedTable_Func" xml:space="preserve">
     <value>Pirmas „{0}“ argumentas turi būti lentelė.</value>
-    
   </data>
   <data name="ErrInvalidPropertyAccess" xml:space="preserve">
     <value>Ypatybė tikisi būtino parametro. Naudokite skliaustelius, kad būtinas parametras būtų patvirtintas.</value>
-    
   </data>
   <data name="ErrNeedTableCol_Func" xml:space="preserve">
     <value>Pirmas „{0}“ argumentas turi būti vieno stulpelio lentelė.</value>
-    
   </data>
   <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
     <value>Neleistina schema, {1} tikimasi {0} reikšmių stulpelio.</value>
-    
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
     <value>Neleistina schema, tikimasi vieno stulpelio lentelės.</value>
-    
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>Negalima naudoti ne įrašo reikšmės šiame kontekste.</value>
-    
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Negalima naudoti šio įrašo. Jame gali būti nesuderinamų tipų susikertančių laukų.</value>
-    
   </data>
   <data name="ErrNeedRecord_Func" xml:space="preserve">
     <value>Pirmas „{0}“ argumentas turėtų būti įrašas.</value>
-    
   </data>
   <data name="ErrNeedEntity_EntityName" xml:space="preserve">
     <value>Naudojant šią parinktį, nustatytą kaip išvardijimo reikšmė, arba funkciją Choices būtina kaip duomenų šaltinį įtraukti objektą {0}. Norėdami įtraukti eikite į meniu Rodymas ir pasirinkite Duomenų šaltiniai.</value>
-    
   </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Nurodyta ypatybė nėra prieinama šiame kontekste.</value>
-    
   </data>
   <data name="ErrInternalControlInInputProperty" xml:space="preserve">
     <value>Komponente esančių valdiklių negalima nurodyti to paties komponento įvesties ypatybėse.</value>
-    
   </data>
   <data name="ErrColumnNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Nurodytas stulpelis šiame kontekste nepasiekiamas.</value>
-    
   </data>
   <data name="WrnRowScopeOneToNExpandNumberOfCalls" xml:space="preserve">
     <value>Šios funkcijos įrašų aprėptyje nurodytas ryšys vienas su daugeliu arba daugelis su daugeliu. Tai gali lemti daugybę skambučių jūsų duomenų šaltiniui, o tai gali pakenkti našumui.</value>
-    
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Skaitinė reikšmė per didelė.</value>
-    
   </data>
   <data name="ErrReservedKeyword" xml:space="preserve">
     <value>Šiuo metu rezervuoto žodžio naudojimas nepalaikomas.</value>
-    
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
     <value>Reiškinio negali sudaryti daugiau nei {0} simb. Reiškinį sudaro {1} simb.</value>
-    
   </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Formato eilutės dydis negali viršyti {0} simb.</value>
-    
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Netinkamas formatas.</value>
-    
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argumentas neatspindi tinkamos datos arba laiko reikšmės.</value>
-    
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Šis duomenų šaltinis yra neleistinas. Ištaisykite klaidą srityje Duomenų šaltiniai spustelėdami Turinys -&gt; Duomenų šaltiniai arba Rodyti -&gt; Parinktys.</value>
-    
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Numatoma, kad duomenų šaltinio identifikatorius apribos įdėtąjį įrašą.</value>
-    
   </data>
   <data name="ErrIncompatibleTypes" xml:space="preserve">
     <value>Pateikti tipai yra nesuderinami.</value>
-    
   </data>
   <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
     <value>Šio argumento tipas „{2}“ neatitinka vieno iš numatytų tipų „{0}“ arba „{1}“.</value>
-    
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Šio argumento tipas „{0}“ neatitinka numatomo tipo „{1}“. Rastas tipas „{2}“.</value>
-    
   </data>
   <data name="ErrTypeError_WrongType" xml:space="preserve">
     <value>Šio reiškinio tipas neatitinka numatomo tipo „{0}“. Rastas tipas „{1}“.</value>
-    
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
     <value>Įrašo tipas nesuderinamas su šaltiniu.</value>
-    
   </data>
   <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
     <value>Argumentas „{0}“ yra neleistinas, tikimasi teksto literalo.</value>
-    
   </data>
   <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
     <value>Argumentas „{0}“ nėra leistinas identifikatorius.</value>
-    
   </data>
   <data name="ErrColExists_Name" xml:space="preserve">
     <value>Stulpelis pavadinimu {0} jau yra.</value>
-    
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>„{0}“ stulpelio pavadinimo konfliktas.</value>
-    
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Nurodyto stulpelio „{0}“ nėra.</value>
-    
   </data>
   <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
     <value>Nurodyto stulpelio {0} nėra. Stulpelis su panašiausiu pavadinimu yra {1}.</value>
-    
   </data>
   <data name="ErrSortIncorrectOrder" xml:space="preserve">
     <value>Naudojant šį reiškinio tipą rikiavimo tvarka yra neteisinga.</value>
-    
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Negalima rikiuoti pagal reiškinio tipą.</value>
-    
   </data>
   <data name="ErrDistinctWrongType" xml:space="preserve">
     <value>Negalima reiškinio tipui taikyti skirtingų reikšmių skaičiaus.</value>
-    
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
     <value>Tipo klaida: {0} laukia {1} arba {1} tipo lentelės stulpelio.</value>
-    
   </data>
   <data name="ErrIncorrectFormat_Func" xml:space="preserve">
     <value>Neteisingas „{0}“ formato specifikatorius.</value>
-    
   </data>
   <data name="ErrAsyncLambda" xml:space="preserve">
     <value>Asinchroninių iškvietimų negalima naudoti sąlygose ir reikšmės funkcijose.</value>
-    
   </data>
   <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
     <value>Tai yra vardų sritis; jos narius galite pasiekti naudodami operatorių „.“.</value>
-    
   </data>
   <data name="ErrScopeModificationLambda" xml:space="preserve">
     <value>Ši funkcija negali veikti tame pačiame duomenų šaltinyje, kuris naudojamas {0}.</value>
-    
   </data>
   <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
     <value>Šios funkcijos negalima iškviesti {0}.</value>
-    
   </data>
   <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
     <value>Netinkamas argumentas. Šioje formulėje numatoma gauti lentelę iš susieto duomenų šaltinio. Kad funkcijos AsType ir IsType veiktų, reikia prijungtų duomenų šaltinių.</value>
-    
   </data>
   <data name="InfoMessage" xml:space="preserve">
     <value>Pranešimas: </value>
-    
   </data>
   <data name="InfoNode_Node" xml:space="preserve">
     <value>Mazgas: {0}</value>
-    
   </data>
   <data name="InfoTok_Tok" xml:space="preserve">
     <value>Tok: {0}</value>
-    
   </data>
   <data name="FormatSpan_Min_Lim" xml:space="preserve">
     <value>({0},{1}) </value>
-    
   </data>
   <data name="FormatErrorSeparator" xml:space="preserve">
     <value>,</value>
-    
   </data>
   <data name="AboutDate" xml:space="preserve">
     <value>Pateikia skaičių, kuris pavaizduoja duomenis „Power Apps“ datos ir laiko kode.</value>
-    
   </data>
   <data name="DateArg1" xml:space="preserve">
     <value>metai</value>
-    
   </data>
   <data name="DateArg2" xml:space="preserve">
     <value>mėnuo</value>
-    
   </data>
   <data name="DateArg3" xml:space="preserve">
     <value>diena</value>
-    
   </data>
   <data name="AboutDate_year" xml:space="preserve">
     <value>Metai.</value>
@@ -2073,23 +1715,18 @@
   </data>
   <data name="AboutTime" xml:space="preserve">
     <value>Konvertuoja valandas, minutes ir sekundes į dešimtainį skaičių.</value>
-    
   </data>
   <data name="TimeArg1" xml:space="preserve">
     <value>valanda</value>
-    
   </data>
   <data name="TimeArg2" xml:space="preserve">
     <value>minutė</value>
-    
   </data>
   <data name="TimeArg3" xml:space="preserve">
     <value>sekundė</value>
-    
   </data>
   <data name="TimeArg4" xml:space="preserve">
     <value>milisekundė</value>
-    
   </data>
   <data name="AboutTime_hour" xml:space="preserve">
     <value>Valandos komponentas.</value>
@@ -2105,160 +1742,126 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>Sukuriama reikšmė, kuri atspindi laiko momentą, išreikštą dienos data ir laiku.</value>
-    
   </data>
   <data name="AboutDateTime_year" xml:space="preserve">
     <value>Metai.</value>
-    
   </data>
   <data name="AboutDateTime_month" xml:space="preserve">
     <value>Mėnuo.</value>
-    
   </data>
   <data name="AboutDateTime_day" xml:space="preserve">
     <value>Diena.</value>
-    
   </data>
   <data name="AboutDateTime_hour" xml:space="preserve">
     <value>Valanda.</value>
-    
   </data>
   <data name="AboutDateTime_minute" xml:space="preserve">
     <value>Minutė.</value>
-    
   </data>
   <data name="AboutDateTime_second" xml:space="preserve">
     <value>Sekundė.</value>
-    
   </data>
   <data name="AboutDateTime_millisecond" xml:space="preserve">
     <value>Milisekundės.</value>
-    
   </data>
   <data name="AboutYear" xml:space="preserve">
     <value>„Year“ pateikia nurodytos datos metus.</value>
-    
   </data>
   <data name="YearArg1" xml:space="preserve">
     <value>data_laikas</value>
-    
   </data>
   <data name="AboutYear_date_time" xml:space="preserve">
     <value>Datos reikšmė, iš kurios bus išgautas metų komponentas.</value>
   </data>
   <data name="AboutMonth" xml:space="preserve">
     <value>Pateikia mėnesį – skaičių nuo 1 (sausis) iki 12 (gruodis).</value>
-    
   </data>
   <data name="MonthArg1" xml:space="preserve">
     <value>data_laikas</value>
-    
   </data>
   <data name="AboutMonth_date_time" xml:space="preserve">
     <value>Datos reikšmė, iš kurios bus išgautas mėnesio komponentas.</value>
   </data>
   <data name="AboutDay" xml:space="preserve">
     <value>Diena pateikia mėnesio dieną – skaičių nuo 1 iki 31.</value>
-    
   </data>
   <data name="DayArg1" xml:space="preserve">
     <value>data_laikas</value>
-    
   </data>
   <data name="AboutDay_date_time" xml:space="preserve">
     <value>Datos reikšmė, iš kurios bus išgautas dienos komponentas.</value>
   </data>
   <data name="AboutHour" xml:space="preserve">
     <value>Parametras „Valanda“ pateikia valandas kaip skaičių nuo 0 (00:00:00) iki 23 (23:00:00).</value>
-    
   </data>
   <data name="HourArg1" xml:space="preserve">
     <value>data_laikas</value>
-    
   </data>
   <data name="AboutHour_date_time" xml:space="preserve">
     <value>Datos arba laiko reikšmė, iš kurios bus išgautas komponentas.</value>
   </data>
   <data name="AboutMinute" xml:space="preserve">
     <value>Pateikia minutę, skaičių nuo 0 iki 59.</value>
-    
   </data>
   <data name="MinuteArg1" xml:space="preserve">
     <value>data_laikas</value>
-    
   </data>
   <data name="AboutMinute_date_time" xml:space="preserve">
     <value>Datos arba laiko reikšmė, iš kurios bus išgautas minučių komponentas.</value>
   </data>
   <data name="AboutSecond" xml:space="preserve">
     <value>Pateikia sekundę, skaičių nuo 0 iki 59.</value>
-    
   </data>
   <data name="SecondArg1" xml:space="preserve">
     <value>data_laikas</value>
-    
   </data>
   <data name="AboutSecond_date_time" xml:space="preserve">
     <value>Datos arba laiko reikšmė, iš kurios bus išgautas sekundės komponentas.</value>
   </data>
   <data name="AboutWeekday" xml:space="preserve">
     <value>Pateikia savaitės dieną pagal datos ir laiko reikšmę. Pagal numatytuosius parametrus rezultatas yra nuo 1 (sekmadienis) iki 7 (šeštadienis). Galite nurodyti kitą diapazoną naudodami „StartOfWeek“ išvardijimo reikšmę arba „Microsoft Excel“ „Weekday“ funkcijos kodą.</value>
-    
   </data>
   <data name="WeekdayArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="WeekdayArg2" xml:space="preserve">
     <value>savaitės_pradžia</value>
-    
   </data>
   <data name="AboutWeekday_date" xml:space="preserve">
     <value>Datos reikšmė, kuriai bus skaičiuojama savaitės diena.</value>
   </data>
   <data name="AboutWeekday_start_of_week" xml:space="preserve">
     <value>Reikšmė iš „StartOfWeek“ išvardijimo arba skaičius iš atitinkamos „Excel“ funkcijos, nurodantis, kaip turi būti numeruojamos savaitės dienos.</value>
-    
   </data>
   <data name="AboutCalendar__MonthsLong" xml:space="preserve">
     <value>Pateikia vieno stulpelio lentelę, kurioje yra kiekvieno mėnesio pilni pavadinimai.</value>
-    
   </data>
   <data name="AboutCalendar__MonthsShort" xml:space="preserve">
     <value>Pateikia vieno stulpelio lentelę, kurioje yra kiekvieno mėnesio sutrumpinti pavadinimai.</value>
-    
   </data>
   <data name="AboutCalendar__WeekdaysLong" xml:space="preserve">
     <value>Pateikia vieno stulpelio lentelę, kurioje yra kiekvienos savaitės dienos pilni pavadinimai.</value>
-    
   </data>
   <data name="AboutCalendar__WeekdaysShort" xml:space="preserve">
     <value>Pateikia vieno stulpelio lentelę, kurioje yra kiekvienos savaitės dienos sutrumpinti pavadinimai.</value>
-    
   </data>
   <data name="AboutClock__AmPm" xml:space="preserve">
     <value>Pateikia vieno stulpelio lentelę, kurioje yra žymėjimai didžiosiomis raidėmis, skirti laikui prieš ir po vidurdienio nurodyti.</value>
-    
   </data>
   <data name="AboutClock__AmPmShort" xml:space="preserve">
     <value>Pateikia vieno stulpelio lentelę, kurioje yra sutrumpinti žymėjimai didžiosiomis raidėmis, skirti laikui prieš ir po vidurdienio nurodyti.</value>
-    
   </data>
   <data name="AboutClock__IsClock24" xml:space="preserve">
     <value>Pateikia bulio logikos reikšmę, nurodančią, ar laikrodyje naudojamas 24 val. laikas, ar ne.</value>
-    
   </data>
   <data name="AboutDateValue" xml:space="preserve">
     <value>Teksto formos datą ir laiką konvertuoja į skaičių, kuris žymi datą „Power Apps“ datos ir laiko kode.</value>
-    
   </data>
   <data name="DateValueArg1" xml:space="preserve">
     <value>data_kaip_tekstas</value>
-    
   </data>
   <data name="DateValueArg2" xml:space="preserve">
     <value>kalbos_kodas</value>
-    
   </data>
   <data name="AboutDateValue_date_text" xml:space="preserve">
     <value>Datos / laiko žymės pavaizdavimas tekstu platformoje palaikomu formatu.</value>
@@ -2268,15 +1871,12 @@
   </data>
   <data name="AboutTimeValue" xml:space="preserve">
     <value>Teksto formos laiką konvertuoja į skaičių, kuris pavaizduoja datą „Microsoft Power Apps“ datos ir laiko kode, nepaisydama jokios datos dalies.</value>
-    
   </data>
   <data name="TimeValueArg1" xml:space="preserve">
     <value>laikas_kaip_tekstas</value>
-    
   </data>
   <data name="TimeValueArg2" xml:space="preserve">
     <value>kalbos_kodas</value>
-    
   </data>
   <data name="AboutTimeValue_time_text" xml:space="preserve">
     <value>Datos / laiko žymės pavaizdavimas tekstu platformoje palaikomu formatu.</value>
@@ -2286,39 +1886,27 @@
   </data>
   <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
     <value>Automatinio tarnybos funkcijų atnaujinimo negalima naudoti veiksmų taisyklėse.</value>
-    
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
     <value>Laukas pavadinimu {0} buvo nurodytas daugiau nei vieną kartą.</value>
-    
-  </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Nurodyto stulpelio {0} negalima du kartus pervardyti.</value>
-    
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Stulpelis pavadinimu „{0}“ nurodytas daugiau nei vieną kartą.</value>
-    
   </data>
   <data name="WarnLiteralPredicate" xml:space="preserve">
     <value>Įspėjimas: šis predikatas yra literalas ir nenurodo įvesties lentelės.</value>
-    
   </data>
   <data name="WarnDynamicMetadata" xml:space="preserve">
     <value>Įspėjimas: išplečiamosios formulių juostos apačioje pasirinkite Įrašyti schemą, kad galėtumėte nustatyti ir atnaujinti šio metodo rezultatų schemą. Priešingu atveju šis metodas nepateiks jokių rezultatų.</value>
-    
   </data>
   <data name="FindArg1" xml:space="preserve">
     <value>rasti_tekstą</value>
-    
   </data>
   <data name="FindArg2" xml:space="preserve">
     <value>tekste</value>
-    
   </data>
   <data name="FindArg3" xml:space="preserve">
     <value>pradinis_skaičius</value>
-    
   </data>
   <data name="AboutFind_find_text" xml:space="preserve">
     <value>Teksto reikšmė, kurios reikia ieškoti.</value>
@@ -2331,23 +1919,18 @@
   </data>
   <data name="AboutFind" xml:space="preserve">
     <value>Pateikia vienos teksto reikšmės pradžios padėtį kitoje teksto reikšmėje. Ieškos funkcija skiria didžiąsias ir mažąsias raides.</value>
-    
   </data>
   <data name="AboutFindT" xml:space="preserve">
     <value>Pateikia vienos teksto reikšmės pradžios padėčių stulpelį (arba eilučių stulpelį) kitoje teksto reikšmėje (arba eilučių stulpelyje). Ieškos funkcija skiria didžiąsias ir mažąsias raides.</value>
-    
   </data>
   <data name="FindTArg1" xml:space="preserve">
     <value>ieškoti_tekste_arba_stulpelyje</value>
-    
   </data>
   <data name="FindTArg2" xml:space="preserve">
     <value>tekste_arba_stulpelyje</value>
-    
   </data>
   <data name="FindTArg3" xml:space="preserve">
     <value>pradinis_skaičius</value>
-    
   </data>
   <data name="AboutFind_find_text_or_column" xml:space="preserve">
     <value>Teksto reikšmė (arba teksto reikšmių stulpelis), kurios reikia ieškoti.</value>
@@ -2357,18 +1940,15 @@
   </data>
   <data name="AboutColorValue" xml:space="preserve">
     <value>Pateikia spalvą pagal duotos spalvos eilutę.</value>
-    
   </data>
   <data name="ColorValueArg1" xml:space="preserve">
     <value>spalvos_tekstas</value>
-    
   </data>
   <data name="AboutColorValue_color_text" xml:space="preserve">
     <value>Spalva, nurodyta pagal pavadinimą, pvz., mėlyna, arba naudojant standartinį 6 skaitmenų šešioliktainį žymėjimą – #rrggbb.</value>
   </data>
   <data name="ErrInvalidJsonPointer" xml:space="preserve">
     <value>Neleistina „json“ rodyklė.</value>
-    
   </data>
   <data name="Text" xml:space="preserve">
     <value>Tekstas</value>
@@ -2399,43 +1979,33 @@
   </data>
   <data name="REST" xml:space="preserve">
     <value>Paslaugos</value>
-    
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
     <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Elemente „{0}“ nėra atributo „{1}“.</value>
-    
   </data>
   <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
     <value>Atributas „{0}“ negali būti tuščia eilutė.</value>
-    
   </data>
   <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
     <value>Atributas „{0}“ turi neleistiną GUID reikšmę „{1}“.</value>
-    
   </data>
   <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
     <value>Nėra ypatybės „{0}“.</value>
-    
   </data>
   <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
     <value>Ypatybė „{0}“ turi neleistiną tipo reikšmę: {2}. Numatyta tipo reikšmė: {1}.</value>
-    
   </data>
   <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
     <value>Ypatybė „{0}“ negali būti tuščia.</value>
-    
   </data>
   <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
     <value>Numatyta, kad išvardijimo {0} reikšmė bus tinkama, bet jo reikšmė {1} nepatenka į diapazoną.</value>
-    
   </data>
   <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
     <value>Numatyta, kad ypatybės {0} reikšmė bus sveikasis skaičius, bet jos reikšmė {1} nepatenka į diapazoną.</value>
-    
   </data>
   <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
     <value>Elementas indekse {0} turi neleistiną tipo reikšmę: {2}. Numatyta tipo reikšmė: {1}.</value>
@@ -2445,23 +2015,18 @@
   </data>
   <data name="AboutDateAdd" xml:space="preserve">
     <value>Į datą įtraukti nurodytą vienetų skaičių.</value>
-    
   </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Apskaičiuoti skirtumą tarp dviejų datų.</value>
-    
   </data>
   <data name="DateAddArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="DateAddArg2" xml:space="preserve">
     <value>vienetų_skaičius</value>
-    
   </data>
   <data name="DateAddArg3" xml:space="preserve">
     <value>vienetas</value>
-    
   </data>
   <data name="AboutDateAdd_date" xml:space="preserve">
     <value>Nuorodinės datos reikšmė.</value>
@@ -2471,19 +2036,15 @@
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
     <value>Naudotinas vienetas, galintis būti vienas iš šių: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
-    
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
     <value>pradžios_data</value>
-    
   </data>
   <data name="DateDiffArg2" xml:space="preserve">
     <value>pabaigos_data</value>
-    
   </data>
   <data name="DateDiffArg3" xml:space="preserve">
     <value>vienetas</value>
-    
   </data>
   <data name="AboutDateDiff_start_date" xml:space="preserve">
     <value>Skirtumo operacijos pradžios data.</value>
@@ -2493,42 +2054,33 @@
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
     <value>Vienetas, kuriuo turėtų būti išreikštas rezultatas, galintis būti vienas iš šių: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
-    
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
     <value>Į datų stulpelį įtraukti nurodytą vienetų skaičių.</value>
-    
   </data>
   <data name="AboutDateDiffT" xml:space="preserve">
     <value>Apskaičiuoti skirtumą tarp dviejų datų stulpelių.</value>
-    
   </data>
   <data name="DateAddTArg1" xml:space="preserve">
     <value>datos_stulpelis</value>
-    
   </data>
   <data name="DateAddTArg2" xml:space="preserve">
     <value>vienetų_skaičius</value>
-    
   </data>
   <data name="DateAddTArg3" xml:space="preserve">
     <value>vienetas</value>
-    
   </data>
   <data name="AboutDateAdd_date_column" xml:space="preserve">
     <value>Datos reikšmių stulpelis.</value>
   </data>
   <data name="DateDiffTArg1" xml:space="preserve">
     <value>pradžios_datos_stulpelis</value>
-    
   </data>
   <data name="DateDiffTArg2" xml:space="preserve">
     <value>pabaigos_datos_stulpelis</value>
-    
   </data>
   <data name="DateDiffTArg3" xml:space="preserve">
     <value>vienetas</value>
-    
   </data>
   <data name="AboutDateDiff_start_date_column" xml:space="preserve">
     <value>Skirtumo operacijos pradžios datų stulpelis.</value>
@@ -2538,202 +2090,156 @@
   </data>
   <data name="AboutChar" xml:space="preserve">
     <value>Pateikia simbolį, kurį nurodo kodas iš simbolių rinkinio jūsų platformoje.</value>
-    
   </data>
   <data name="CharArg1" xml:space="preserve">
     <value>skaičius</value>
-    
   </data>
   <data name="AboutChar_number" xml:space="preserve">
     <value>Kodas iš simbolių rinkinio jūsų platformoje.</value>
   </data>
   <data name="AboutCharT" xml:space="preserve">
     <value>Pateikia lentelę simbolių, kuriuos nurodo kodas iš simbolių rinkinio jūsų platformoje.</value>
-    
   </data>
   <data name="CharTArg1" xml:space="preserve">
     <value>skaičių_stulpelis</value>
-    
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Stulpelis su kodais iš simbolių rinkinio jūsų platformoje.</value>
   </data>
   <data name="AboutParseJSON" xml:space="preserve">
     <value>Konvertuoja JSON eilutę į objektą.</value>
-    
   </data>
   <data name="ParseJSONArg1" xml:space="preserve">
     <value>įvestis</value>
-    
   </data>
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Apdorotina JSON eilutė.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Pateikia įrašą lentelėje pagal nurodytą rodyklę.</value>
-    
   </data>
   <data name="IndexArg1" xml:space="preserve">
     <value>lentelė</value>
-    
   </data>
   <data name="IndexArg2" xml:space="preserve">
     <value>rodyklė</value>
-    
   </data>
   <data name="AboutIndex_table" xml:space="preserve">
     <value>Lentelė.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Nuskaitoma įrašo rodyklė.</value>
-    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Pavadinimas</value>
-    
   </data>
   <data name="Screen_Printing_DisplayName" xml:space="preserve">
     <value>Spausdinimas</value>
-    
   </data>
   <data name="Screen_ImagePosition_DisplayName" xml:space="preserve">
     <value>Vaizdo padėtis</value>
-    
   </data>
   <data name="Screen_Size_DisplayName" xml:space="preserve">
     <value>Dydis</value>
-    
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Brūkšninio kodo tipas</value>
-    
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
     <value>Kontrastingumas</value>
-    
   </data>
   <data name="camera_Zoom_DisplayName" xml:space="preserve">
     <value>Mastelis</value>
-    
   </data>
   <data name="camera_Camera_DisplayName" xml:space="preserve">
     <value>Fotoaparatas</value>
-    
   </data>
   <data name="export_Data_DisplayName" xml:space="preserve">
     <value>Duomenys</value>
-    
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Redaguoti</value>
-    
   </data>
   <data name="Dust" xml:space="preserve">
     <value>Dulkės</value>
-    
   </data>
   <data name="image_Image_DisplayName" xml:space="preserve">
     <value>Vaizdas</value>
-    
   </data>
   <data name="icon_Icon_DisplayName" xml:space="preserve">
     <value>Piktograma</value>
-    
   </data>
   <data name="icon_Rotation_DisplayName" xml:space="preserve">
     <value>Pasukimas</value>
-    
   </data>
   <data name="image_ImagePosition_DisplayName" xml:space="preserve">
     <value>Vaizdo padėtis</value>
-    
   </data>
   <data name="image_ImageRotation_DisplayName" xml:space="preserve">
     <value>Sukti</value>
-    
   </data>
   <data name="label_Live_DisplayName" xml:space="preserve">
     <value>Sąveikusis</value>
-    
   </data>
   <data name="label_Overflow_DisplayName" xml:space="preserve">
     <value>Perpilda</value>
-    
   </data>
   <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
     <value>Data ir laiko juosta</value>
-    
   </data>
   <data name="DatePicker_Format_DisplayName" xml:space="preserve">
     <value>Formatas</value>
-    
   </data>
   <data name="DatePicker_Language_DisplayName" xml:space="preserve">
     <value>Kalba</value>
-    
   </data>
   <data name="Calendar_Width_DisplayName" xml:space="preserve">
     <value>Kalendoriaus plotis</value>
-    
   </data>
   <data name="Hide_Calendar_DisplayName" xml:space="preserve">
     <value>Slėpti kalendorių</value>
-    
   </data>
   <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
     <value>Savaitės pradžia</value>
-    
   </data>
   <data name="microphone_Mic_DisplayName" xml:space="preserve">
     <value>Mikrofonas</value>
-    
   </data>
   <data name="text_Default_DisplayName" xml:space="preserve">
     <value>Numatytasis</value>
-    
   </data>
   <data name="text_Mode_DisplayName" xml:space="preserve">
     <value>Režimas</value>
-    
   </data>
   <data name="text_Format_DisplayName" xml:space="preserve">
     <value>Formatas</value>
-    
   </data>
   <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
     <value>Virtualiosios klaviatūros režimas</value>
-    
   </data>
   <data name="text_TeamsTheme_DisplayName" xml:space="preserve">
     <value>„Teams“ tema</value>
-    
   </data>
   <data name="text_Clear_DisplayName" xml:space="preserve">
     <value>Išvalymo mygtukas</value>
-    
   </data>
   <data name="AboutIsNumeric" xml:space="preserve">
     <value>Tikrina, ar reikšmė yra skaičius, ir pateikia reikšmę TRUE arba FALSE.</value>
-    
   </data>
   <data name="IsNumericArg1" xml:space="preserve">
     <value>reikšmė</value>
-    
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Reikšmė, kurią reikia patikrinti.</value>
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Teksto formos datą ir laiką konvertuoja į skaičių, kuris pavaizduoja datą „Power Apps“ datos ir laiko kode.</value>
-    
   </data>
   <data name="DateTimeValueArg1" xml:space="preserve">
     <value>laikas_kaip_tekstas</value>
-    
   </data>
   <data name="DateTimeValueArg2" xml:space="preserve">
     <value>kalbos_kodas</value>
-    
   </data>
   <data name="AboutDateTimeValue_time_text" xml:space="preserve">
     <value>Datos / laiko žymės pavaizdavimas tekstu platformoje palaikomu formatu.</value>
@@ -2743,26 +2249,21 @@
   </data>
   <data name="AboutTable" xml:space="preserve">
     <value>Sukuria lentelę iš nurodytų įrašų su tiek stulpelių, kiek yra unikalių įrašų laukų. Pavyzdžiui: Table({key1: val1, key2: val2, ...}, ...)</value>
-    
   </data>
   <data name="TableArg1" xml:space="preserve">
     <value>įrašas</value>
-    
   </data>
   <data name="AboutTable_record" xml:space="preserve">
     <value>Įrašas, kuris taps eilute gautoje lentelėje.</value>
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Pateikia lentelę iš šaltinio lentelės pašalinus visus stulpelius, išskyrus nurodytus.</value>
-    
   </data>
   <data name="ShowColumnsArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="ShowColumnsArg2" xml:space="preserve">
     <value>stulpelio_pavadinimas</value>
-    
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
     <value>Lentelės arba įrašo, iš kurio reikia pašalinti stulpelių, reikšmė.</value>
@@ -2772,33 +2273,27 @@
   </data>
   <data name="AboutIsToday" xml:space="preserve">
     <value>Tikrina, ar nurodyta data yra šiandienos, ir pateikia TRUE arba FALSE.</value>
-    
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
     <value>Datos reikšmė, kurią reikia patikrinti.</value>
   </data>
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="AboutIsUTCToday" xml:space="preserve">
     <value>Tikrina, ar pateikta data yra šiandien UTC laiku, ir nurodo, ar tai yra teisinga ar klaidinga reikšmė.</value>
-    
   </data>
   <data name="AboutIsUTCToday_date" xml:space="preserve">
     <value>Datos reikšmė, kurią reikia patikrinti.</value>
   </data>
   <data name="IsUTCTodayFuncArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Pateikia liekaną, kai skaičius yra dalinamas iš daliklio. Rezultatas yra to paties ženklo kaip daliklis.</value>
-    
   </data>
   <data name="AboutModT" xml:space="preserve">
     <value>Pateikia stulpelį su liekana, gauta skaičių (arba skaičių stulpelį) padalijus iš daliklio (arba daliklių stulpelio).</value>
-    
   </data>
   <data name="AboutMod_divisor" xml:space="preserve">
     <value>Skaičius, iš kurio dalijama.</value>
@@ -2814,35 +2309,27 @@
   </data>
   <data name="ModFuncArg1" xml:space="preserve">
     <value>skaičius</value>
-    
   </data>
   <data name="ModFuncArg2" xml:space="preserve">
     <value>daliklis</value>
-    
   </data>
   <data name="ModTFuncArg1" xml:space="preserve">
     <value>skaičius_arba_stulpelis</value>
-    
   </data>
   <data name="ModTFuncArg2" xml:space="preserve">
     <value>daliklis_arba_stulpelis</value>
-    
   </data>
   <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
     <value>Dokumentas</value>
-    
   </data>
   <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
     <value>Mastelis</value>
-    
   </data>
   <data name="pdfViewer_Password_DisplayName" xml:space="preserve">
     <value>Slaptažodis</value>
-    
   </data>
   <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
     <value>Slaptažodžio būsena</value>
-    
   </data>
   <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
     <value>Duomenų aprašas yra netinkamas: {0}</value>
@@ -2852,7 +2339,6 @@
   </data>
   <data name="AboutForAll" xml:space="preserve">
     <value>Taiko nurodytą formulę kiekvienai duomenų šaltinio eilutei, tada pateikia naują lentelę su kiekvienos eilutės rezultatais.</value>
-    
   </data>
   <data name="AboutForAll_source" xml:space="preserve">
     <value>Apdorojamas duomenų šaltinis arba lentelė.</value>
@@ -2862,15 +2348,12 @@
   </data>
   <data name="ForAllArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="ForAllArg2" xml:space="preserve">
     <value>formulė</value>
-    
   </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Pakelia skaičių x kito skaičiaus y laipsniu. Taip pat kaip x^y.</value>
-    
   </data>
   <data name="AboutPower_base" xml:space="preserve">
     <value>Pagrindas, kuris bus pakeltas laipsniu.</value>
@@ -2880,15 +2363,12 @@
   </data>
   <data name="PowerFuncArg1" xml:space="preserve">
     <value>pagrindas</value>
-    
   </data>
   <data name="PowerFuncArg2" xml:space="preserve">
     <value>laipsnio_rodiklis</value>
-    
   </data>
   <data name="AboutStartsWith" xml:space="preserve">
     <value>Jei pateiktas tekstas prasideda nurodyta pradžios eilute, pateikiama „true“.</value>
-    
   </data>
   <data name="AboutStartsWith_text" xml:space="preserve">
     <value>Tikrintinas tekstas.</value>
@@ -2898,15 +2378,12 @@
   </data>
   <data name="StartsWithArg1" xml:space="preserve">
     <value>tekstas</value>
-    
   </data>
   <data name="StartsWithArg2" xml:space="preserve">
     <value>pradžia</value>
-    
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
     <value>Jei pateiktas tekstas baigiasi nurodyta pabaigos eilute, pateikiama reikšmė „true“.</value>
-    
   </data>
   <data name="AboutEndsWith_text" xml:space="preserve">
     <value>Tikrintinas tekstas.</value>
@@ -2916,18 +2393,15 @@
   </data>
   <data name="EndsWithArg1" xml:space="preserve">
     <value>tekstas</value>
-    
   </data>
   <data name="EndsWithArg2" xml:space="preserve">
     <value>pabaiga</value>
-    
   </data>
   <data name="AboutBlank" xml:space="preserve">
     <value>Pateikiama „null“ (tuščia) reikšmė</value>
   </data>
   <data name="AboutPowerT" xml:space="preserve">
     <value>Pakelia skaičių x (arba skaičių stulpelį) kito skaičiaus y (arba skaičių stulpelio) laipsniu. Tas pats kaip x^y.</value>
-    
   </data>
   <data name="AboutPower_base_or_column" xml:space="preserve">
     <value>Pagrindas (arba pagrindo skaičių stulpelis), kurį reikia pakelti.</value>
@@ -2937,166 +2411,126 @@
   </data>
   <data name="PowerTFuncArg1" xml:space="preserve">
     <value>pagrindas_arba_stulpelis</value>
-    
   </data>
   <data name="PowerTFuncArg2" xml:space="preserve">
     <value>eksponentė_arba_stulpelis</value>
-    
   </data>
   <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
     <value>Šios formulės dalies negalima įvertinti nuotoliniu būdu. Šiame kontekste operacija {0} šiuo metu nepalaikoma.</value>
-    
   </data>
   <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
     <value>Šios formulės dalies negalima įvertinti nuotoliniu būdu. Jei lauko pavadinimas rodomas antrajame argumente, funkcijos {0} perduoti negalima.</value>
-    
   </data>
   <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
     <value>Objekto forma</value>
-    
   </data>
   <data name="TeamsTheme_Default_DisplayName" xml:space="preserve">
     <value>Numatytoji tema</value>
-    
   </data>
   <data name="TeamsTheme_Dark_DisplayName" xml:space="preserve">
     <value>Tamsi tema</value>
-    
   </data>
   <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
     <value>Didelio kontrasto tema</value>
-    
   </data>
   <data name="AboutCollect" xml:space="preserve">
     <value>Į duomenų šaltinį įtraukiami įrašai.</value>
-    
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>įrašas</value>
-    
   </data>
   <data name="AboutClear" xml:space="preserve">
     <value>Panaikinami visi rinkinio įrašai. Rinkinio stulpeliai liks.</value>
-    
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Panaikinami visi rinkinio įrašai. Tada į tą patį rinkinį įtraukiamas kitas įrašų rinkinys.</value>
-    
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
     <value>įrašas</value>
-    
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Taiko naujinimus nurodytai eilutei ir pakeičia eilutę į nurodytą duomenų šaltinį. Pateikia atnaujintą eilutę.</value>
-    
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="PatchBaseRecordArg" xml:space="preserve">
     <value>base_record</value>
-    
   </data>
   <data name="PatchChangeRecordsArg" xml:space="preserve">
     <value>change_record(s)</value>
-    
   </data>
   <data name="AboutRemove" xml:space="preserve">
     <value>Pašalina iš duomenų šaltinio konkretų įrašą arba įrašus</value>
-    
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
     <value>remove_record(s)</value>
-    
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
     <value>Jei pateikta, paskutinis argumentas turi būti „RemoveFlags.All“. Ar tai spaudos klaida?</value>
-    
   </data>
   <data name="NotificationType_Error_DisplayName" xml:space="preserve">
     <value>Klaida</value>
-    
   </data>
   <data name="NotificationType_Warning_DisplayName" xml:space="preserve">
     <value>Įspėjimas</value>
-    
   </data>
   <data name="NotificationType_Success_DisplayName" xml:space="preserve">
     <value>Sėkmingai</value>
-    
   </data>
   <data name="NotificationType_Information_DisplayName" xml:space="preserve">
     <value>Informacija</value>
-    
   </data>
   <data name="AboutIsError" xml:space="preserve">
     <value>Pateikia informaciją, ar vertinant nurodytą argumentą įvyko klaida.</value>
-    
   </data>
   <data name="IsErrorArg" xml:space="preserve">
     <value>reikšmė</value>
-    
   </data>
   <data name="AboutIsError_value" xml:space="preserve">
     <value>Reikšmė, kurios klaidas reikia patikrinti.</value>
-    
   </data>
   <data name="ErrBadArityMinimum" xml:space="preserve">
     <value>Netinkamas argumentų skaičius: gauta {0}, buvo numatoma gauti {1} arba daugiau.</value>
-    
   </data>
   <data name="ErrBadArityRange" xml:space="preserve">
     <value>Netinkamas argumentų skaičius: gauta {0}, buvo numatoma gauti {1}–{2}.</value>
-    
   </data>
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
-    
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Numatomas operandas. Formulė arba reiškinys numato gauti tinkamą operandą. Pvz., į reiškinį 1 +_ galite įtraukti operandą 2, kad rezultatas būtų 3. Arba į išraišką Sveiki "&amp; _ galite įtraukti operandą visi, kad rezultatas būtų Sveiki visi.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
     <value>Nurodykite operando reikšmę, kuri užbaigs išraišką. Įsitikinkite, kad operando tipas (tekstas, skaičius, data arba TRUE/FALSE), tinka išraiškai. Skaičius derinkite su skaičiais, tekstą – su tekstu ir t. t. Pavyzdžiui, 1 + Sveiki netinka, o 1 + 2 tinka.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
     <value>Netikėti simboliai. Simboliai, kurie formulėje naudojami netikėtai.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Pavyzdžiui, po skaičiaus nenumatomas simbolis \, kaip antai: 32\. Galima numatyti tarpą (32), jei tai yra tiesiog skaičius 32, arba galima numatyti kitą skaičių (pvz., 323).</value>
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Pašalinkite arba pakeiskite netikėtus simbolius.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Nenumatytas simbolis „{0}“ formulės padėtyje „{1}“.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Pavyzdžiui, po skaičiaus nenumatomas simbolis \, kaip antai: 32\. Galima numatyti tarpą (32), jei tai yra tiesiog skaičius 32, arba galima numatyti kitą skaičių (pvz., 323).</value>
@@ -3106,475 +2540,375 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
     <value>Trūksta komentaro pabaigos identifikatoriaus. Komentaro bloke nėra komentaro pabaigos identifikatoriaus.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Kiekvieno komentaro bloko pradžioje turi būti /*, o pabaigoje – */. Jei tinkamai neužbaigsite kiekvieno komentaro bloko, visi kodai, esantys po komentaro, taps komentaro dalimi. Jei komentaras yra tik viena eilutė, galite jį pradėti nuo // ir neidentifikuoti komentaro pabaigos.</value>
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Komentaro bloko pabaigoje įtraukite */ arba pakeiskite į eilutės komentarų rinkinį.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Netikėti simboliai. Formulėje yra „{0}“, kur tikimasi „{1}“.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Ši klaida įvyksta, jei, pavyzdžiui, formulėje yra {{Val@ 7}}, o ne {{Val: 7}}. Kai nustatote kintamąjį, sintaksė reikalauja dėti dvitaškį, o ne simbolį @.</value>
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Pašalinkite arba pakeiskite netikėtus simbolius numatytais simboliais.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
     <value>Pavadinimas yra netinkamas. „{0}“ neatpažintas.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Ši klaida paprastai įvyksta tada, kai formulė nurodo kažką, ko jau nebėra (pavyzdžiui, valdiklį, kurį panaikinote).</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Pašalinkite arba pataisykite nuorodą į netinkamą pavadinimą.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Pavadinimas yra netinkamas. Šis identifikatorius neatpažintas.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
     <value>Ši klaida paprastai įvyksta tada, kai formulė nurodo kažką, ko jau nebėra (pavyzdžiui, valdiklį, kurį panaikinote).</value>
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Pašalinkite arba pataisykite nuorodą į netinkamą pavadinimą.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>Ypatybės nuoroda netinkama.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Ši klaida rodoma, kai formulė nurodo komponento funkcijų ypatybes su netinkama sintakse. (Pvz., „Component.CustomFunction“ vietoj „Component.CustomFunction()“)</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Norėdami nurodyti komponento funkcijos ypatybę, naudokite tinkamą sintaksę. Pvz., Component.CustomFunction()</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „PowerApps“</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>„Pirminė“ nuoroda yra netinkama. Šiame kontekste negalite nurodyti pirminio valdiklio.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Parinkties Pirminis operatorius negalite naudoti valdikliui, kuris neturi pirminio valdiklio. Šis operatorius nurodo valdiklį, kuriame yra nurodytas valdiklis ir per kurį pasiekiamos visos šio valdiklio ypatybės.</value>
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Pašalinkite operatorių Pirminis.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Straipsnis: į „Power Apps“ įtraukti ir konfigūruoti drobės programos valdymą</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
     <value>Eilučių aprėptis įdėta per giliai. Jūsų formulės eilučių aprėptis viršija 63 įdėjimo lygius.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Kiekvienas įdėjimo lygis padidina sudėtingumo lygį, todėl „Power Apps“ palaiko tik iki 63 lygių eilučių aprėpties įdėjimą.</value>
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Perrašykite formulę naudodami mažiau įdėjimo lygių.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
     <value>Išraiška įdėta per giliai. Jūsų formulėje išraiškos įdėjimas viršija 50 lygių.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>„Power Apps“ palaiko išraiškų įdėjimą tik iki 50 lygių. Taip giliai įdėtą išraišką sunku suprasti ir palaikyti.</value>
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Perrašykite formulę naudodami mažiau įdėjimo lygių.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
     <value>Numatomas operatorius. Šioje formulės dalyje numatomas operatorius, pvz., +, * arba &amp;.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operatoriai sujungia du operandus. Ši klaida įvyksta, jei dvi funkcijos (operandai) sujungiamos nededant jokio operatoriaus tarp jų, pvz., Len("mytext")Len("mytext").</value>
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad joje tarp operandų būtų operatorius.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_Link_1" xml:space="preserve">
     <value>Modulis: naudoti pagrindines formules</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Numatomas skaičius. Šioje formulės dalyje numatomas skaičius.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Ši klaida įvyks, jei naudosite funkciją, reikalaujančią skaičiaus, o jūs pateiksite pvz., vaizdą.</value>
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad šios formulės dalies rezultatas būtų skaičius.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
     <value>Numatoma Bulio logika. Šioje formulės dalyje numatoma Bulio logika („true“ / „false“).</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Bulio logikos reikšmė taip pat žinoma kaip „true“ / „false“ reikšmė programose, pvz., „Microsoft Excel“. Ši klaida įvyks, jei naudosite funkciją, reikalaujančią Bulio logikos reikšmės, o jūs pateiksite, pvz., datą.</value>
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad šios formulės dalies rezultatas būtų Bulio logikos reikšmė.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Numatomas dvitaškis. Šioje formulės dalyje numatomas dvitaškis (:).</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Dvitaškis skiria lauko pavadinimą, kartais vadinamą stulpelio pavadinimu, nuo lauko reikšmės įraše (pvz., {Month:"1"}, {Month:"2"} …). Dvitaškis taip pat skiria valandas nuo minučių ir sekundžių (pvz., 3:04).</value>
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad joje būtų dvitaškis.</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_Link_1" xml:space="preserve">
     <value>Straipsnis: „Power Apps“ rodyti tekstą, datas ir laiką</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Ne veikimo ypatybės veikimo funkcija. Šios ypatybės negalite naudoti norėdami pakeisti reikšmes kitoje programos vietoje.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Veikimo funkcijos keičia programos būseną pakeisdamos reikšmes kitose programos vietose. Navigate, Patch, UpdateContext ir Collect – tai bendrosios veikimo funkcijos. Ypatybės OnSelect, OnVisible ir kitos On... ypatybės yra bendrosios veikimo ypatybės.</value>
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Perkelkite veikimo funkciją į veikimo ypatybę.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Straipsnis: suprasti „Power Apps“ drobės programų veikimo formules</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Tikrinimo funkcija yra ne tikrinimo ypatybė. Negalite naudoti šios ypatybės norėdami iškviesti tik tikrinimo funkcijos.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Tikrinimo funkcijos yra tos, kurias galima naudoti vartotojo įvesčiai modeliuoti tikrinant programą. Įprastos tikrinimo funkcijos yra „SetProperty“, „SelectRow“ ir „Assert“. Jas galima naudoti tik tikrinimo atvejuose.</value>
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Naudokite funkciją tikrinimo atvejyje, o ne pačioje programoje.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
     <value>Negalima konvertuoti šio duomenų tipo. „Power Apps“ negali konvertuoti šio {0} į {1}.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>„Power Apps“ gali konvertuoti kai kuriuos jūsų formulės duomenų tipus į kitus tipus. Pavyzdžiui, ji gali konvertuoti „1“ (eilutė) į 1 (skaičius), tačiau negali konvertuoti visų duomenų tipų į visus kitus duomenų tipus. Pavyzdžiui, ji negali konvertuoti vaizdo į skaičių.</value>
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad atitinkamus duomenis konvertuotumėte į numatytą tipą.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_ShortMessage" xml:space="preserve">
     <value>Numatomas tekstas. Šioje formulės dalyje numatomas tekstas.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Ši klaida įvyks, jei naudosite funkciją, reikalaujančią teksto (arba eilutės) argumento, o jūs pateiksite, pvz., datą.</value>
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad šios formulės dalies rezultatas būtų tekstas.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Numatomas tekstas arba skaičius. Šioje formulės dalyje numatomas tekstas arba skaičius.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Ši klaida įvyks, jei naudosite funkciją, reikalaujančią teksto arba skaičiaus, o jūs pateiksite, pvz., Bulio logikos („true“ / „false“) reikšmę.</value>
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo taip formulę taip, kad šios formulės dalies rezultatas būtų tekstas arba skaičius.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Numatomas dešinysis skliaustas. Šioje formulės dalyje numatomas dešinysis skliaustas (}).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Dešinysis skliaustas nurodo įrašo pabaigą (pvz., {Month:"1"}, {Month:"2"}…).</value>
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad joje būtų skliaustas.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Identifikatoriuje nėra tinkamo teksto.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Įsitikinkite, kad turite savo identifikatoriaus tekstą. Ši klaida įvyksta, kai identifikatoriuje yra visi tušti langeliai arba tarpai.</value>
-    
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
     <value>Negalima palyginti {0} tipo reikšmių.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Nesuderinami palyginimo tipai. Negalima palyginti šių tipų: {0}, {1}.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Negalime įvertinti formulės, nes lyginamos formulės reikšmės nėra to paties tipo.</value>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Gali prireikti konvertuoti reikšmę, kad ji būtų to paties tipo, pavyzdžiui, konvertuoti datos eilutę (pvz., 12/31/2018) į datos reikšmę.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
     <value>Jei lyginate įrašus arba lenteles, laukų arba stulpelių tipai turi tiksliai sutapti.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
     <value>Modulis: naudoti pagrindines formules</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Modulis: autoriaus pagrindinės formulės su lentelėmis ir įrašais</value>
-    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
     <value>Nėra parametro. Šioje funkcijoje nėra pasirenkamo parametro pavadinimu {0}.</value>
-    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
     <value>Kaip sutvarkyti: pašalinkite arba pervardykite parametrą savo formulėje.</value>
-    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Nesuderinamas tipas. Jūsų atnaujinamo duomenų šaltinio stulpelyje {0} tikimasi gauti tipą {1}, o jūs naudojate tipą {2}.</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
     <value>Gali prireikti konvertuoti reikšmę į tą patį tipą, pavyzdžiui, konvertuoti datos eilutę (pvz., 12/31/2018) į datos reikšmę arba eilutę į skaičių.</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1" xml:space="preserve">
     <value>Modulis: naudoti pagrindines formules</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Modulis: autoriaus pagrindinės formulės su lentelėmis ir įrašais</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
     <value>Trūksta stulpelio. Jūsų formulėje nėra stulpelio {0}, kurio tipas {1}.</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
     <value>Įtraukite stulpelį į formulę.</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
-    
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Nesuderinamas tipas. Elementas, kurį bandote įdėti į įrašą, yra nesuderinamo su įrašu tipo.</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Nesuderinamas tipas. Elementas, kurį bandote įdėti į lentelę, yra nesuderinamo su lentele tipo.</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
     <value>Įsitikinkite, kad elemento, kurį norite priverstinai teikti į lentelę, tipas yra suderinamas su lentele. Gali prireikti konvertuoti elemento tipą, pavyzdžiui, į įrašą.</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1" xml:space="preserve">
     <value>Modulis: naudoti pagrindines formules</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Modulis: autoriaus pagrindinės formulės su lentelėmis ir įrašais</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
     <value>Nesuderinamas tipas. Negalime įvertinti jūsų formulės dėl tipo klaidos.</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Duomenys gali neatitikti numatyto tipo (teksto, skaičiaus, datos, lentelės, įrašo).</value>
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Patikrinkite į formulę įtrauktų reikšmių tipus ir įsitikinkite, kad tipai sutampa.</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
     <value>Modulis: naudoti pagrindines formules</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Modulis: autoriaus pagrindinės formulės su lentelėmis ir įrašais</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
     <value>Numatoma data. Šioje formulės dalyje numatoma data.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Ši klaida įvyks, jei naudosite funkciją, reikalaujančią datos, o jūs pateiksite, pvz., tekstą.</value>
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad šios formulės vietos rezultatas būtų data.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
     <value>Perdavimo įspėjimas. „{0}“ šios formulės dalis gali tinkamai neveikti, jei duomenų rinkiniai yra dideli.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Duomenų šaltinis gali nepajėgti apdoroti formulės ir pateikti ne visą duomenų rinkinį. Jei duomenų rinkinys bus ne visas, jūsų programa gali teikti neteisingus rezultatus arba veikti netinkamai.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Jei jūsų duomenų rinkinys viršija 500 įrašų limitą, bet jame yra mažiau nei 2000 įrašų, pabandykite nustatyti limitą iš naujo.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
     <value>Pabandykite supaprastinti formulę.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
     <value>Pabandykite perkelti savo duomenis į kitą duomenų šaltinį.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
     <value>Straipsnis: perdavimo drobės programoje supratimas</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Tinklaraštis: perdavimo duomenų eilučių limitai</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
     <value>Perdavimo įspėjimas. Paryškinta šios formulės dalis dideliuose duomenų rinkiniuose su stulpeliu „{0}“ gali veikti netinkamai.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Duomenų šaltinis gali nepajėgti apdoroti formulės ir pateikti ne visą duomenų rinkinį. Jei duomenų rinkinys bus ne visas, jūsų programa gali teikti neteisingus rezultatus arba veikti netinkamai.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Jei jūsų duomenų rinkinys viršija 500 įrašų limitą, bet jame yra mažiau nei 2000 įrašų, pabandykite nustatyti limitą iš naujo.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
     <value>Pabandykite supaprastinti formulę.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
     <value>Pabandykite perkelti savo duomenis į kitą duomenų šaltinį.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
     <value>Straipsnis: perdavimo drobės programoje supratimas</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Tinklaraštis: perdavimo duomenų eilučių limitai</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
     <value>Perdavimo įspėjimas. Paryškinta šios formulės dalis gali tinkamai neveikti, jei duomenų rinkiniai yra dideli.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value>Operatoriaus „in“ dešinėje turi būti stulpelio pavadinimas iš teisingo duomenų šaltinio. Duomenų šaltinis gali nepajėgti apdoroti formulės ir pateikti ne visą duomenų rinkinį. Jei duomenų rinkinys bus ne visas, jūsų programa gali teikti neteisingus rezultatus arba veikti netinkamai.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Operatoriaus „in“ dešinėje esantį elementą pakeiskite stulpeliu iš teisingo duomenų šaltinio.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
     <value>Jei jūsų duomenų rinkinys viršija 500 įrašų limitą, bet jame yra mažiau nei 2000 įrašų, pabandykite nustatyti limitą iš naujo.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
     <value>Pabandykite supaprastinti formulę.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
     <value>Pabandykite perkelti savo duomenis į kitą duomenų šaltinį.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
     <value>Straipsnis: perdavimo drobės programoje supratimas</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Tinklaraštis: perdavimo duomenų eilučių limitai</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
     <value>Paryškinta šios formulės dalis gali tinkamai neveikti, jei duomenų rinkiniai yra dideli.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Operatoriaus „in“ dešinėje nėra stulpelio iš teisingo duomenų šaltinio. Duomenų šaltinis gali nepajėgti apdoroti formulės ir pateikti ne visą duomenų rinkinį. Jei duomenų rinkinys bus ne visas, jūsų programa gali teikti neteisingus rezultatus arba veikti netinkamai.
@@ -3582,185 +2916,142 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Operatoriaus „in“ dešinėje esantį elementą pakeiskite stulpeliu iš teisingo duomenų šaltinio.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
     <value>Jei jūsų duomenų rinkinys viršija 500 įrašų limitą, bet jame yra mažiau nei 2000 įrašų, pabandykite nustatyti limitą iš naujo.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
     <value>Pabandykite supaprastinti formulę.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
     <value>Pabandykite perkelti savo duomenis į kitą duomenų šaltinį.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
     <value>Straipsnis: perdavimo drobės programoje supratimas</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Tinklaraštis: perdavimo duomenų eilučių limitai</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Perdavimo įspėjimas. Paryškinta šios formulės dalis dideliuose duomenų rinkiniuose gali veikti netinkamai. Operacijos „{0}“ ši jungtis nepalaiko.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_LongMessage" xml:space="preserve">
     <value>Duomenų šaltinis gali nepajėgti apdoroti formulės ir pateikti ne visą duomenų rinkinį. Jei duomenų rinkinys bus ne visas, jūsų programa gali teikti neteisingus rezultatus arba veikti netinkamai.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
     <value>Jei jūsų duomenų rinkinys viršija 500 įrašų limitą, bet jame yra mažiau nei 2000 įrašų, pabandykite nustatyti limitą iš naujo.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
     <value>Pabandykite supaprastinti formulę.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
     <value>Pabandykite perkelti savo duomenis į kitą duomenų šaltinį.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
     <value>Straipsnis: perdavimo drobės programoje supratimas</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Tinklaraštis: perdavimo duomenų eilučių limitai</value>
-    
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
     <value>Numatytas tik vienas rodinys. Šiame formulės taške numatome tik vieną rodinį.</value>
-    
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite formulę taip, kad šiame jos raške būtų tik vienas rodinys.</value>
-    
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_ShortMessage" xml:space="preserve">
     <value>Numatytas rodinys iš duomenų šaltinio {0}.</value>
-    
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite formulę taip, kad joje būtų rodinys iš duomenų šaltinio {0}.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
     <value>Šioje ypatybėje negalima naudoti šios valdymo nuorodos</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
     <value>Ši ypatybė palaiko tik nuorodas į visuotinius kintamuosius, rinkinius ir kai kurias valdymo bei ekrano ypatybes. Peržiūrėkite palaikomų valdymo ypatybių sąrašo saitą.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Nuoroda: ConfirmExit drobės programoms</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
     <value>Išraiškos, rodomos interpoliuotoje eilutėje, įvertinimas turi būti teksto reikšmė arba suderinamas tipas.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
     <value>Patikrinkite išraiškų tipus interpoliuotoje eilutėje.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
     <value>Interpoliuotoje eilutėje negali būti tuščių išraiškų.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
     <value>Patikrinkite, ar interpoliuotoje eilutėje yra tuščių išraiškų.</value>
-    
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>Raktinis žodis „kaip“ šiame kontekste neleidžiamas</value>
-    
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
     <value>Neapibrėžto tipo objektai negali būti naudojami kaip pirmas argumentas funkcijoms, palaikančioms įrašų aprėptis.</value>
-    
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Įvardytoji formulė turi baigtis kabliataškiu.</value>
-    
   </data>
   <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
     <value>Įvardytoji formulė turi būti reiškinys.</value>
-    
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Vartotojo apibrėžtoje funkcijoje turi būti teksto.</value>
-    
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Funkcija {0} jau apibrėžta.</value>
-    
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parametras {0} kartojasi.</value>
-    
   </data>
   <data name="ErrUDF_UnknownType" xml:space="preserve">
     <value>Nežinomas tipas {0}.</value>
-    
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Nurodytas funkcijos grąžinimo tipas neatitinka funkcijos teksto grąžinimo tipo.</value>
-    
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
     <value>Trūksta funkcijos grąžinimo tipo, pvz., „:Number“ funkcijoje „FindMonth( d:Text ):Number = Month( DateParse( d ));“</value>
-    
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
     <value>Trūksta funkcijos argumento tipo, pvz., „:Text“ funkcijoje „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
-    
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ jau yra.</value>
   </data>
   <data name="ErrorResource_NameConflict" xml:space="preserve">
     <value>Negalima sukurti {0} su pavadinimu {1}, nes šis pavadinimas jau naudojamas {2}.</value>
-    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Pirmasis {0} argumentas turi būti tinkamas kintamojo pavadinimas ir negali būti nesuderinamas su esamais valdiklių, ekranų, rinkinių arba duomenų šaltinių pavadinimais. Rastas tipas {1}</value>
-    
   </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Sukurkite ir nustatykite visuotinį kintamąjį.</value>
-    
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>reikšmė</value>
-    
   </data>
   <data name="AboutDec2Hex" xml:space="preserve">
     <value>Konvertuoja dešimtainį skaičių į šešioliktainį</value>
-    
   </data>
   <data name="Dec2HexArg1" xml:space="preserve">
     <value>skaičius</value>
   </data>
   <data name="AboutDec2Hex_number" xml:space="preserve">
     <value>Skaitinė dešimtainė reikšmė konvertavimui į šešioliktainio formato eilutę.</value>
-    
   </data>
   <data name="Dec2HexArg2" xml:space="preserve">
     <value>vietos</value>
   </data>
   <data name="AboutDec2Hex_places" xml:space="preserve">
     <value>Skaitinė reikšmė, norint pridėti užpildymą šešioliktainio formato eilutei.</value>
-    
   </data>
   <data name="AboutDec2HexT" xml:space="preserve">
     <value>Konvertuoja dešimtainių skaičių stulpelį į šešioliktainius</value>
-    
   </data>
   <data name="Dec2HexTArg1" xml:space="preserve">
     <value>lentelė</value>
@@ -3770,65 +3061,48 @@
   </data>
   <data name="AboutDec2HexT_places" xml:space="preserve">
     <value>Skaitinė reikšmė arba reikšmių masyvas, norint pridėti užpildymą šešioliktainio formato eilutėms.</value>
-    
   </data>
   <data name="AboutDec2Hex_table" xml:space="preserve">
     <value>Skaitinių dešimtainių dalių reikšmių stulpelis konvertavimui į šešioliktainius.</value>
-    
   </data>
   <data name="AboutHex2Dec" xml:space="preserve">
     <value>Konvertuoja šešioliktainį skaičių į dešimtainį</value>
-    
   </data>
   <data name="Hex2DecArg1" xml:space="preserve">
     <value>skaičius</value>
   </data>
   <data name="AboutHex2Dec_number" xml:space="preserve">
     <value>Šešioliktainio formato eilutės konvertavimas į dešimtainį skaičių.</value>
-    
   </data>
   <data name="AboutHex2DecT" xml:space="preserve">
     <value>Konvertuoja šešioliktainių skaičių stulpelį į dešimtainius</value>
-    
   </data>
   <data name="Hex2DecTArg1" xml:space="preserve">
     <value>lentelė</value>
   </data>
   <data name="AboutHex2Dec_table" xml:space="preserve">
     <value>Šešioliktainio formato eilučių stulpelis konvertavimui į dešimtainius skaičius.</value>
-    
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Ši funkcija nerekomenduojama ir nebepalaikoma.</value>
-    
-  </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>Vardų srities {1} funkcija {0} nerekomenduojama.</value>
-    
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>Vardų srityje {1} funkcija {0} nepalaikoma.</value>
-    
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Įspėjimas: pateiktas atidėtas tipas.</value>
-    
   </data>
   <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
     <value>Numatomas identifikatoriaus pavadinimas</value>
-    
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Ši funkcija yra nevienareikšmiška, joje yra to paties argumento lambda išraiškos ir stulpelių identifikatoriai.</value>
-    
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
     <value>Parinkties {0} reikšmė nėra laukiamo tipo {1}.</value>
-    
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
     <value>Grąžina pateiktos parinkčių rinkinio reikšmės loginį pavadinimą.</value>
-    
   </data>
   <data name="AboutOptionSetInfoArg1" xml:space="preserve">
     <value>parinktis</value>
@@ -3838,54 +3112,42 @@
   </data>
   <data name="AboutLanguage" xml:space="preserve">
     <value>Gaukite numatytąją lokalę, nustatytą vykdyklėje.</value>
-    
   </data>
   <data name="AboutEncodeUrl" xml:space="preserve">
     <value>Užkoduoja URL eilutę, kai kuriuos ne raidinius ir skaitinius simbolius pakeičiant % ir šešioliktainiu skaičiumi.</value>
-    
   </data>
   <data name="EncodeUrlArg1" xml:space="preserve">
     <value>URL</value>
-    
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL, kuris bus užkoduotas.</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}“ funkcija yra atpažįstama, bet nepalaikoma.</value>
-    
   </data>
   <data name="InvalidCast" xml:space="preserve">
     <value>Nepavyko konvertuoti tipo, nes nurodytos reikšmės tipas buvo „{0}“, o tikimasi tipo „{1}“.</value>
-    
   </data>
   <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
     <value>Išraiška „{0}“ gali rodyti stulpelį, kuris nėra duomenų šaltinio dalis arba nebuvo atsisiųstas. Apsvarstykite galimybę vietoj to tiesiogiai naudoti stulpelio pavadinimą.</value>
-    
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Ši operacija lentelėje „{0}“ gali neveikti, jei joje yra daugiau nei {1} eil.</value>
-    
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Ši taisyklės sąlyga visada bus teisinga. Ar norėjote naudoti „ThisRecord“, ar [@ ]?</value>
-    
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Negalima perduoti {0}: palaikomas tik pirminio rakto lauko „{1}“ peržvalgos perdavimas.</value>
-    
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Negalima deleguoti {0}: išraiška lygina kelis laukus.</value>
-    
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Negalima perduoti {0}: yra veikimo funkcija „{1}“.</value>
-    
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Nustatoma, ar yra pateikto teksto atitikmuo pateikto teksto formatu.</value>
-    
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">
     <value>Tekstas, kuris bus tikrinamas pagal formatą.</value>
@@ -3895,125 +3157,96 @@
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
     <value>Nustatoma, kurią teksto dalį norime gretinti. Tai gali būti MatchOptions išvardijimo reikšmė.</value>
-    
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
     <value>tekstas</value>
-    
   </data>
   <data name="IsMatchArg2" xml:space="preserve">
     <value>formatas</value>
-    
   </data>
   <data name="IsMatchArg3" xml:space="preserve">
     <value>sritis</value>
-    
   </data>
   <data name="AboutMatch" xml:space="preserve">
     <value>Pateiktame tekste ieškoma nurodytos paprastosios išraiškos ir pateikiamas pirmasis atitikmuo.</value>
-    
   </data>
   <data name="AboutMatchAll" xml:space="preserve">
     <value>Pateiktame tekste ieškoma nurodytos paprastosios išraiškos ir pateikiami visi jos atitikmenys.</value>
-    
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
     <value>Tekstas, kurio reikia ieškoti pagal paprastąją išraišką.</value>
-    
   </data>
   <data name="AboutMatch_regular_expression" xml:space="preserve">
     <value>Paprastoji išraiška, pagal kurią reikia tikrinti tekstą. Ji gali apimti užfiksuotus įrašus (reikšmes skliausteliuose), kurie bus pateikti sėkmingo sutapimo atveju.</value>
-    
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
     <value>Nustatoma, kurią teksto dalį norime gretinti. Tai gali būti MatchOptions išvardijimo reikšmė.</value>
-    
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
     <value>Tekstas, kurio reikia ieškoti pagal paprastąją išraišką.</value>
-    
   </data>
   <data name="AboutMatchAll_regular_expression" xml:space="preserve">
     <value>Paprastoji išraiška, pagal kurią reikia tikrinti tekstą. Ji gali apimti užfiksuotus įrašus (reikšmes skliausteliuose), kurie bus pateikti sėkmingo sutapimo atveju.</value>
-    
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
     <value>Nustatoma, kurią teksto dalį norime gretinti. Tai gali būti MatchOptions išvardijimo reikšmė.</value>
-    
   </data>
   <data name="MatchArg1" xml:space="preserve">
     <value>tekstas</value>
-    
   </data>
   <data name="MatchArg2" xml:space="preserve">
     <value>reguliarusis_reiškinys</value>
-    
   </data>
   <data name="MatchArg3" xml:space="preserve">
     <value>parinktys</value>
-    
   </data>
   <data name="AboutRefresh" xml:space="preserve">
     <value>Atnaujina nurodytą duomenų šaltinį.</value>
-    
   </data>
   <data name="RefreshArg1" xml:space="preserve">
     <value>prijungtas_duomenų_šaltinis</value>
-    
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
     <value>Tikimasi įrašo arba lentelės reikšmės.</value>
-    
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
     <value>Prijungtas duomenų šaltinis, kurį reikia atnaujinti.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Galima atnaujinti tik valdomus ryšius.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Netinkama paprastoji išraiška.</value>
-    
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Paprastosios išraiškos turi būti pastovios vertės.</value>
-    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Reikšmės, perduotos funkcijai „{0}“, pakeisti negalima.</value>
-    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Įrašytas pavadinimas {0} įvardija iš anksto nustatytą ypatybę, kuri pateikia visišką paprastosios išraiškos atitiktį. Pervardykite ją, jei norite naudoti ypatybę šiuo pavadinimu siekdami gauti visišką atitiktį nurodytame tekste.</value>
-    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
     <value>Įrašytas pavadinimas {0} įvardija iš anksto nustatytą ypatybę, kuri pateikia atitikčių grupes paprastojoje išraiškoje. Pervardykite ją, jei norite naudoti ypatybę šiuo pavadinimu siekdami gauti visas dalines atitiktis nurodytame tekste.</value>
-    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Įrašytas pavadinimas {0} įvardija iš anksto nustatytą ypatybę, kuri pateikia grupių atitiktis paprastojoje išraiškoje. Pervardykite ją, jei norite naudoti ypatybę šiuo pavadinimu siekdami gauti visiškos atitikties vietą nurodytame tekste.</value>
-    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Pašalina visą formatavimą ir pateikia paprastojo teksto reikšmę.</value>
-    
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
     <value>tekstas</value>
-    
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Tekstas, kuriame reikia pašalinti HTML ir XML žymes.</value>
   </data>
   <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
     <value>Filtro funkcijos neleidžia veikimo funkcijų kaip taisyklių sąlygų.</value>
-    
   </data>
   <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
     <value>Naudodami operatorių And sujunkite kelias taisyklių sąlygas antrajame argumente.</value>
-    
   </data>
   <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
     <value>Šios lentelės negalima nukopijuoti. Vietoje to sukurkite įdėjimo lentelę naudodami funkciją ForAll ir {...} notaciją, kad galėtumėte kopijuoti atskirus norimus stulpelius.</value>
@@ -4023,130 +3256,99 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Antrasis funkcijos „{0}“ argumentas palaiko tik skaitinėse ir datos / laiko reikšmėse.</value>
-    
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Nustačius kintamąjį su internetinio duomenų šaltinio reikšme (lentele arba įrašu), į serverį gali būti pateikiamos kelios užklausos. Ši funkcija greitai bus užblokuota.</value>
-    
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Tipo literalo deklaracija buvo neteisinga</value>
-    
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
     <value>Šaltinio ir paskirties įrašų tipai neatitinka. Pateiktame tipe yra papildomų laukų: {0}.</value>
-    
   </data>
   <data name="ErrExpectedRVMissingFields" xml:space="preserve">
     <value>Šaltinio ir paskirties įrašų tipai neatitinka. Pateiktame tipe trūksta laukų: {0}.</value>
-    
   </data>
   <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
     <value>Šaltinio ir paskirties įrašų tipai neatitinka. Lauko pavadinimas „{0}“ nerastas.</value>
-    
   </data>
   <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
     <value>Šaltinio ir paskirties įrašų tipai neatitinka. Lauko pavadinimas „{0}“. Tikimasi „{1}“. Rasta „{2}“.</value>
-    
   </data>
   <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
     <value>Pateikto {0} tipo negalima pakeisti į šaltinio tipą {1}.</value>
-    
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Šaltinio ir paskirties tipai neatitinka. Tikimasi „{0}“. Rasta „{1}“.</value>
-    
   </data>
   <data name="AboutJSON" xml:space="preserve">
     <value>Sugeneruojama lentelės, įrašo arba reikšmės JSON teksto eilutė.</value>
-    
   </data>
   <data name="JSONArg1" xml:space="preserve">
     <value>duomenys</value>
-    
   </data>
   <data name="AboutJSON_data" xml:space="preserve">
     <value>Į JSON konvertuotina duomenų struktūra. Palaikomos pasirinktinai įdėtos lentelės, įrašai ir pagrindinės reikšmės.</value>
-    
   </data>
   <data name="JSONArg2" xml:space="preserve">
     <value>formatas</value>
-    
   </data>
   <data name="AboutJSON_format" xml:space="preserve">
     <value>Konvertuojant į JSON naudotinas formatas. Reikšmė bus išvardijimo JSONFormat narys.</value>
-    
   </data>
   <data name="AboutTrace" xml:space="preserve">
     <value>Kai įjungta, registruoja informaciją „Application Insights“ ir prisijungia prie „Test Studio“ seanso, kuris bus pasiekiamas bandymo rezultatuose.</value>
-    
   </data>
   <data name="TraceArg1" xml:space="preserve">
     <value>pranešimas</value>
-    
   </data>
   <data name="TraceArg2" xml:space="preserve">
     <value>svarba</value>
-    
   </data>
   <data name="TraceArg3" xml:space="preserve">
     <value>custom_record</value>
-    
   </data>
   <data name="TraceArg4" xml:space="preserve">
     <value>Sekimo_parinktys</value>
-    
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
     <value>Informacija, kurią reikia sekti.</value>
-    
   </data>
   <data name="AboutTrace_severity" xml:space="preserve">
     <value>Svarbos lygis, kurį reikia sekti iki „Application Insights“.</value>
-    
   </data>
   <data name="AboutTrace_custom_record" xml:space="preserve">
     <value>Įrašas su pasirinktiniais duomenimis, kurie bus atsekti iki „Application Insights“.</value>
-    
   </data>
   <data name="AboutTrace_trace_options" xml:space="preserve">
     <value>Papildomos „Trace“ funkcijos parinktys.</value>
-    
   </data>
   <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
     <value>Funkcijos {0} parametro {1} reikšmė turi būti pastovi.</value>
-    
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>JSONFormat reikšmių {0} ir {1} negalima naudoti kartu.</value>
-    
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>JSON funkcijai perduota reikšmė apima mediją, o pagal numatytuosius parametrus ji nepalaikoma. Norėdami leisti medijos reikšmių JSON nuoseklinimą, būtinai naudokite parinktį IncludeBinaryData, esančią parametre formatas.</value>
-    
   </data>
   <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
     <value>JSON funkcija negali nuoseklinti tipo {0} objektų.</value>
-    
   </data>
   <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
     <value>JSON funkcija negali nuoseklinti lentelių / objektų su tipo {1} įdėtąja ypatybe {0}.</value>
-    
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Funkcija JSON negali išdėstyti dvejetainių duomenų eilutėmis ne veikimo būdo išraiškoje.</value>    
+    <value>Funkcija JSON negali išdėstyti dvejetainių duomenų eilutėmis ne veikimo būdo išraiškoje.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parametras {0} turi {1} tipo tapatybę, kuri nėra palaikoma.</value>
-    
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Nurodytas stulpelis yra tik skaitomas, jo modifikuoti negalima: {0}.</value>
-    
   </data>
   <data name="AboutSearch" xml:space="preserve">
     <value>Ieško teksto šaltinyje. Pateikia eilutes, kuriose randama teksto. Palyginimas atliekamas neatsižvelgiant į didžiąsias ir mažąsias raides.</value>
-    
   </data>
   <data name="AboutSearch_source" xml:space="preserve">
     <value>Lentelė, kurioje ieškoma.</value>
@@ -4159,22 +3361,17 @@
   </data>
   <data name="SearchArg1" xml:space="preserve">
     <value>šaltinis</value>
-    
   </data>
   <data name="SearchArg2" xml:space="preserve">
     <value>tekstas</value>
-    
   </data>
   <data name="SearchArg3" xml:space="preserve">
     <value>stulpelis</value>
-    
   </data>
   <data name="ErrSearchWrongType" xml:space="preserve">
     <value>Neteisingas stulpelio tipas. Tikimasi teksto tipo.</value>
-    
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Lentelėje nėra jokio teksto tipo stulpelio.</value>
-    
   </data>
 </root>

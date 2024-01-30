@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
 	            [ConnectorName] [nvarchar](180) NOT NULL,
 	            [Functions] [int] NOT NULL,
 	            [Supported] [int] NULL,
+                [WithWarnings] [int] NULL,
 	            [Deprecated] [int] NULL,
 	            [Internal] [int] NULL,
 	            [Pageable] [int] NULL,
@@ -48,6 +49,7 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
             ConnectorName = connectorName;
             Functions = funcs.Length;
             Supported = hasDetailedProps ? funcs.Count(f => f.GetIsSupported()) : null;
+            WithWarnings = hasDetailedProps ? funcs.Count(f => !string.IsNullOrEmpty(f.GetWarnings())) : null;
             Deprecated = hasDetailedProps ? funcs.Count(f => f.GetIsDeprecated()) : null;
             Internal = hasDetailedProps ? funcs.Count(f => f.GetIsInternal()) : null;
             Pageable = hasDetailedProps ? funcs.Count(f => f.GetIsPageable()) : null;
@@ -58,13 +60,14 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
 
         public override string ToString()
         {
-            return $"{Category}|{ConnectorName}|{Functions}|{Supported}|{Deprecated}|{Internal}|{Pageable}|{OpenApiErrors}|{DifferFromBaseline}|{(Differences != null ? string.Join(", ", Differences) : "None")}";
+            return $"{Category}|{ConnectorName}|{Functions}|{Supported}|{WithWarnings}|{Deprecated}|{Internal}|{Pageable}|{OpenApiErrors}|{DifferFromBaseline}|{(Differences != null ? string.Join(", ", Differences) : "None")}";
         }
 
         internal string Category;
         internal string ConnectorName;
         internal int Functions;
         internal int? Supported;
+        internal int? WithWarnings;
         internal int? Deprecated;
         internal int? Internal;
         internal int? Pageable;

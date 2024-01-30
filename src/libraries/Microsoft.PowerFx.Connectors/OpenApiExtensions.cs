@@ -10,6 +10,7 @@ using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Connectors.Localization;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -414,7 +415,7 @@ namespace Microsoft.PowerFx.Connectors
                             return new ConnectorType(schema, openApiParameter, FormulaType.DateTime);
 
                         case "binary":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.String);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.String, warning: ConnectorStringResources.WarnFunctionUseBinary);
 
                         case "enum":
                             if (schema.Enum.All(e => e is OpenApiString))
@@ -424,7 +425,7 @@ namespace Microsoft.PowerFx.Connectors
                             }
                             else
                             {
-                                return new ConnectorType(error: $"Unsupported enum type {schema.Enum.GetType().Name}");                                
+                                return new ConnectorType(error: $"Unsupported enum type {schema.Enum.GetType().Name}"); 
                             }
 
                         default:
@@ -651,7 +652,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (response.Content.Count == 0)
             {
-                OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "binary" };
+                OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "no_format" };
                 return new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.GetConnectorType(compatibility);                
             }
 
@@ -671,7 +672,7 @@ namespace Microsoft.PowerFx.Connectors
                     if (openApiMediaType.Schema == null)
                     {
                         // Treat as void.                         
-                        OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "binary" };
+                        OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "no_format" };
                         return new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.GetConnectorType(compatibility);                        
                     }
 

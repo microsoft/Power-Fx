@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -119,62 +119,48 @@
   </resheader>
   <data name="ListItemSingleQuotedFormat" xml:space="preserve">
     <value>'{0}'</value>
-    
   </data>
   <data name="AboutIf" xml:space="preserve">
     <value>Zehaztutako baldintzaren bat betetzen den egiaztatzen du eta dagokion balioa itzultzen du. Ez bada baldintzarik betetzen, funtzioak balio lehenetsia itzuliko du.</value>
-    
   </data>
   <data name="IfArgCond" xml:space="preserve">
     <value>proba_logikoa</value>
-    
   </data>
   <data name="IfArgTrueValue" xml:space="preserve">
     <value>true_balioa</value>
-    
   </data>
   <data name="IfArgElseValue" xml:space="preserve">
     <value>beste_bat_balioa</value>
-    
   </data>
   <data name="AboutIf_logical_test" xml:space="preserve">
     <value>Emaitza gisa balio boolear bat izango duen baldintza.</value>
   </data>
   <data name="AboutIf_true_value" xml:space="preserve">
     <value>Baldintza egia denean "If" funtzioaren emaitza ematen duen espresioa.</value>
-    
   </data>
   <data name="AboutIf_else_value" xml:space="preserve">
     <value>Zehaztutako baldintza guztiak faltsuak direnean "If" funtzioaren emaitza ematen duen espresioa.</value>
-    
   </data>
   <data name="AboutSwitch" xml:space="preserve">
     <value>Formula baten emaitza balio-serie batekin erlazionatzen du. Bat datorren balio bat aurkitzen denean, horri dagokion formula kalkulatzen eta itzultzen da. Ez bada aurkitzen bat datorren baliorik, azken formula lehenetsia kalkulatzen eta itzultzen da.</value>
-    
   </data>
   <data name="SwitchExpression" xml:space="preserve">
     <value>aldatu_balioa</value>
-    
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
     <value>emaitza_lehenetsia</value>
-    
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
     <value>balioa_bat_etortzea</value>
-    
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
     <value>emaitza_bat_etortzea</value>
-    
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
     <value>balioa_bat_etortzea parametro bakoitzarekin konparatuko den balioa.</value>
-    
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
     <value>aldatu_balioa parametroarekin bat etorriko den balioa.</value>
-    
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
     <value>Bat datorren balioren bat aurkitzen bada, hau da kalkulatuko eta itzuliko den formula.</value>
@@ -184,19 +170,15 @@
   </data>
   <data name="AboutAnd" xml:space="preserve">
     <value>Argumentu guztiak egia diren egiaztatzen du eta, horrela bada, "egia" balioa itzultzen du.</value>
-    
   </data>
   <data name="AboutOr" xml:space="preserve">
     <value>Emandako argumenturen bat egia den egiaztatzen du eta "egia" edo "faltsua" balioa itzultzen du. Argumentu guztiak gezurra badira, "faltsua" balioa itzultzen du.</value>
-    
   </data>
   <data name="AboutNot" xml:space="preserve">
     <value>Faltsuak diren elementuak egi bihurtzen ditu eta alderantziz.</value>
-    
   </data>
   <data name="LogicalFuncParam" xml:space="preserve">
     <value>logikoa</value>
-    
   </data>
   <data name="AboutAnd_logical" xml:space="preserve">
     <value>"And" eragiketan faktorizatuko den espresio logikoa.</value>
@@ -209,19 +191,15 @@
   </data>
   <data name="AboutCount" xml:space="preserve">
     <value>Zehaztutako zutabeko zenbakizko balioak zehazten ditu.</value>
-    
   </data>
   <data name="AboutCountA" xml:space="preserve">
     <value>Hutsik ez dauden zutabeko errenkada kopurua zehazten du.</value>
-    
   </data>
   <data name="AboutCountRows" xml:space="preserve">
     <value>Sarrerako taularen edo bildumaren errenkada kopurua zehazten du.</value>
-    
   </data>
   <data name="CountArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="AboutCount_source" xml:space="preserve">
     <value>Zenbatzeko balioak dituen zutabea.</value>
@@ -234,15 +212,12 @@
   </data>
   <data name="AboutCountIf" xml:space="preserve">
     <value>Emandako baldintza betetzen duen errenkada kopurua zehazten du.</value>
-    
   </data>
   <data name="CountIfArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="CountIfArg2" xml:space="preserve">
     <value>baldintza</value>
-    
   </data>
   <data name="AboutCountIf_source" xml:space="preserve">
     <value>Taula, non irizpide jakin batzuk betetzen dituzten errenkadak zenbatuko diren.</value>
@@ -252,27 +227,21 @@
   </data>
   <data name="AboutSumT" xml:space="preserve">
     <value>Espresioak taularen testuinguruan ebaluatutako zenbakien batura itzultzen du.</value>
-    
   </data>
   <data name="AboutMaxT" xml:space="preserve">
     <value>Taularen testuinguruan ebaluatzen den espresioaren baliorik handiena itzultzen du.</value>
-    
   </data>
   <data name="AboutMinT" xml:space="preserve">
     <value>Espresioak taularen testuinguruan ebaluatutako baliorik txikiena itzultzen du.</value>
-    
   </data>
   <data name="AboutAverageT" xml:space="preserve">
     <value>Espresioak taularen testuinguruan ebaluatzen dituen zenbakien batezbesteko balioa (batez besteko aritmetikoa) itzultzen du.</value>
-    
   </data>
   <data name="StatisticalTArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="StatisticalTArg2" xml:space="preserve">
     <value>adierazpena</value>
-    
   </data>
   <data name="AboutMin_source" xml:space="preserve">
     <value>Min eragiketa prozesatzeko erabiliko den taula.</value>
@@ -300,23 +269,18 @@
   </data>
   <data name="AboutSum" xml:space="preserve">
     <value>Bere argumentuen batura itzultzen du.</value>
-    
   </data>
   <data name="AboutMax" xml:space="preserve">
     <value>Balio multzo bateko baliorik handiena itzultzen du. Balio eta testu logikoei ez ikusi egiten die.</value>
-    
   </data>
   <data name="AboutMin" xml:space="preserve">
     <value>Balio multzo baten baliorik txikiena itzultzen du. Balio logikoei eta testuari ez ikusi egiten die.</value>
-    
   </data>
   <data name="AboutAverage" xml:space="preserve">
     <value>Bere argumentuen batezbesteko balioa (batez besteko aritmetikoa) itzultzen du.</value>
-    
   </data>
   <data name="StatisticalArg" xml:space="preserve">
     <value>zenbakia</value>
-    
   </data>
   <data name="AboutSum_number" xml:space="preserve">
     <value>Batuketa-eragiketaren zenbakizko balioa.</value>
@@ -332,43 +296,33 @@
   </data>
   <data name="AboutAddColumns" xml:space="preserve">
     <value>"source" taulako "expression" elementuen arabera prozesatu diren zutabe berriak dituen taula bat itzultzen du.</value>
-    
   </data>
   <data name="AddColumnsArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="AddColumnsArg2" xml:space="preserve">
     <value>zutabea</value>
-    
   </data>
   <data name="AddColumnsArg3" xml:space="preserve">
     <value>adierazpena</value>
-    
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
     <value>Zutabeak gehitu zaizkion taula edo erregistroa.</value>
-    
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
     <value>Zutabearen izen esklusiboa.</value>
-    
   </data>
   <data name="AboutAddColumns_expression" xml:space="preserve">
     <value>Zutabe berriaren balioak ematen dituen espresioa.</value>
-    
   </data>
   <data name="AboutDropColumns" xml:space="preserve">
     <value>"source" taulatik kendutako "columns" eremu bat edo gehiago zehaztuta dituen taula bat itzultzen du.</value>
-    
   </data>
   <data name="DropColumnsArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="DropColumnsArg2" xml:space="preserve">
     <value>zutabe_izena</value>
-    
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
     <value>Zutabeak kenduko zaizkion taularen edo erregistroaren balioa.</value>
@@ -378,19 +332,15 @@
   </data>
   <data name="AboutRenameColumns" xml:space="preserve">
     <value>Zehaztutako "source" taularen kopia bat itzultzen du, "old_column" zutabearen izena "new_column" gisa ezarrita.</value>
-    
   </data>
   <data name="RenameColumnsArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="RenameColumnsArg2" xml:space="preserve">
     <value>zutabe_zaharra</value>
-    
   </data>
   <data name="RenameColumnsArg3" xml:space="preserve">
     <value>zutabe_berria</value>
-    
   </data>
   <data name="AboutRenameColumns_source" xml:space="preserve">
     <value>Prozesatuko den taula-balioa.</value>
@@ -402,20 +352,16 @@
     <value>Zutabearen izen berria.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Ezin da birritan aldatu zehaztutako "{0}" zutabearen izena.</value>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Zehaztutako baldintza guztiak egia gisa dituen taularen errenkadak itzultzen ditu.</value>
-    
   </data>
   <data name="FilterArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="FilterArg2" xml:space="preserve">
     <value>proba_logikoa</value>
-    
   </data>
   <data name="AboutFilter_source" xml:space="preserve">
     <value>Iragaziko den taula.</value>
@@ -425,15 +371,12 @@
   </data>
   <data name="AboutFirst" xml:space="preserve">
     <value>"source" taularen lehen errenkada itzultzen du.</value>
-    
   </data>
   <data name="AboutLast" xml:space="preserve">
     <value>"source" taularen azken errenkada itzultzen du.</value>
-    
   </data>
   <data name="FirstLastArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="AboutFirst_source" xml:space="preserve">
     <value>Taula, zeinaren lehen errenkada itzuliko den.</value>
@@ -443,19 +386,15 @@
   </data>
   <data name="AboutFirstN" xml:space="preserve">
     <value>"source" taularen lehen "count" errenkadak itzultzen ditu.</value>
-    
   </data>
   <data name="AboutLastN" xml:space="preserve">
     <value>"source" taularen azken "count" errenkadak itzultzen ditu.</value>
-    
   </data>
   <data name="FirstLastNArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="FirstLastNArg2" xml:space="preserve">
     <value>kopurua</value>
-    
   </data>
   <data name="AboutFirstN_source" xml:space="preserve">
     <value>Errenkadak itzuliko dituen taula.</value>
@@ -471,130 +410,105 @@
   </data>
   <data name="AboutText" xml:space="preserve">
     <value>"value" elementua bihurtzen du "formateatu_testua" zenbaki zehatz baten testu.</value>
-    
   </data>
   <data name="TextArg1" xml:space="preserve">
     <value>balioa</value>
-    
   </data>
   <data name="TextArg2" xml:space="preserve">
     <value>formateatu_testua</value>
-    
   </data>
   <data name="TextArg3" xml:space="preserve">
     <value>hizkuntza</value>
-    
   </data>
   <data name="AboutText_value" xml:space="preserve">
     <value>Testu-formatua emango zaion balioa.</value>
   </data>
   <data name="AboutText_format_text" xml:space="preserve">
     <value>"value" elementua formateatzeko modua zehazten duen testu-balioa.</value>
-    
   </data>
   <data name="AboutText_language" xml:space="preserve">
     <value>Testua bihurtzean erabiliko den hizkuntza-kodea.</value>
-    
   </data>
   <data name="AboutValue" xml:space="preserve">
     <value>Zenbaki bat adierazten duen "text" elementu bat zenbakizko balio bihurtzen du.</value>
-    
   </data>
   <data name="ValueArg1" xml:space="preserve">
     <value>testua</value>
-    
   </data>
   <data name="ValueArg2" xml:space="preserve">
     <value>hizkuntza</value>
-    
   </data>
   <data name="AboutValue_text" xml:space="preserve">
     <value>Zenbakizko balio bihurtuko den testu-balioa.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
     <value>Balioa bihurtzean erabiliko den hizkuntza-kodea.</value>
-    
   </data>
   <data name="AboutBoolean" xml:space="preserve">
     <value>Boolear bat adierazten duen "testua" balio boolear bihurtzen du.</value>
-    
   </data>
   <data name="BooleanArg1" xml:space="preserve">
     <value>testua</value>
-    
   </data>
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Balio boolear bihurtuko den testu-balioa.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
     <value>Testu-balioak dituen zutabe bat bihurtzen du balio boolearrak dituen zutabe.</value>
-    
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
     <value>sarrera</value>
-    
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
     <value>Prozesatuko den testu-balioen zutabea.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>"Zenbaki" bat balio boolear bihurtzen du.</value>
-    
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
     <value>zenbakia</value>
-    
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
     <value>Balio boolear bihurtuko den zenbakizko balioa.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
     <value>Zenbakizko balioak dituen zutabe bat bihurtzen du balio boolearrak dituen zutabe.</value>
-    
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
     <value>sarrera</value>
-    
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioen zutabea.</value>
   </data>
   <data name="AboutBooleanB" xml:space="preserve">
     <value>Elementu "boolear" bat bihurtzen du balio boolear.</value>
-    
   </data>
   <data name="BooleanBArg1" xml:space="preserve">
     <value>boolearra</value>
-    
   </data>
   <data name="AboutBooleanB_boolean" xml:space="preserve">
     <value>Balio boolearra bihurtzeko balio boolear.</value>
   </data>
   <data name="AboutBooleanBT" xml:space="preserve">
     <value>Balio boolearrak dituen zutabe bat bihurtzen du balio boolearrak dituen zutabe.</value>
-    
   </data>
   <data name="BooleanBTArg1" xml:space="preserve">
     <value>sarrera</value>
-    
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Prozesatuko diren balio boolearren zutabea.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Hutsa ez den lehen argumentua itzultzen du</value>
-    
   </data>
   <data name="CoalesceArg1" xml:space="preserve">
     <value>balioa</value>
-    
   </data>
   <data name="AboutCoalesce_value" xml:space="preserve">
     <value>Hutsa ez den lehen argumentua bada, itzuli beharreko argumentua.</value>
   </data>
   <data name="AboutConcatenate" xml:space="preserve">
     <value>Hainbat testu-balio konbinatzen ditu testu-balio bakarrean.</value>
-    
   </data>
   <data name="AboutDecimal" xml:space="preserve">
     <value>Zenbaki bat adierazten duen "text" elementu bat balio hamartar balio bihurtzen du.</value>
@@ -616,37 +530,30 @@
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>testua</value>
-    
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
     <value>Gainerako argumentuekin kateatuko den testu-balioa.</value>
   </data>
   <data name="AboutConcatenateT" xml:space="preserve">
     <value>Testu-balioak edo -taulak elkartzen ditu testu-balioen zutabe batean.</value>
-    
   </data>
   <data name="ConcatenateTArg1" xml:space="preserve">
     <value>balioa</value>
-    
   </data>
   <data name="AboutConcatenate_value" xml:space="preserve">
     <value>Gainerako argumentuekin kateatzeko testu-balioen testu-balio edo -zutabea.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Sortutako testu-balio guztiak konbinatzen ditu testu-balio bakarrean; horretarako, emandako taularen arabera ebaluatzen du emandako espresioa.</value>
-    
   </data>
   <data name="ConcatArg1" xml:space="preserve">
     <value>taula</value>
-    
   </data>
   <data name="ConcatArg2" xml:space="preserve">
     <value>adierazpena</value>
-    
   </data>
   <data name="ConcatArg3" xml:space="preserve">
     <value>bereizlea</value>
-    
   </data>
   <data name="AboutConcat_table" xml:space="preserve">
     <value>Bigarren parametroak emandako espresioa ebaluatzeko erabiliko den taula-balioa.</value>
@@ -656,37 +563,30 @@
   </data>
   <data name="AboutConcat_separator" xml:space="preserve">
     <value>Taulako errenkada kateatuen artean txertatuko den testu-balioa.</value>
-    
   </data>
   <data name="AboutLen" xml:space="preserve">
     <value>Testu-balio baten karaktere kopurua itzultzen du.</value>
-    
   </data>
   <data name="AboutLen_text" xml:space="preserve">
     <value>Testu-balioa, zeinaren karaktere-luzera itzuliko den.</value>
   </data>
   <data name="AboutLenT" xml:space="preserve">
     <value>Zehaztutako taulan edo bilduman errenkadako ebaluatu den testu-balio baten karaktere kopurua itzultzen du.</value>
-    
   </data>
   <data name="AboutLen_text_column" xml:space="preserve">
     <value>Karaktereen luzera (zutabe berri gisa) itzuliko duen testu-balioen zutabea.</value>
   </data>
   <data name="LenArg1" xml:space="preserve">
     <value>testua</value>
-    
   </data>
   <data name="LenTArg1" xml:space="preserve">
     <value>testu_zutabea</value>
-    
   </data>
   <data name="AboutUpper" xml:space="preserve">
     <value>Testu-balio baten letra guztiak maiuskulaz jartzen ditu.</value>
-    
   </data>
   <data name="AboutUpperT" xml:space="preserve">
     <value>Zehaztutako taulan edo bilduman errenkadako ebaluatu den testu-balio baten letra guztiak maiuskulaz jartzen ditu.</value>
-    
   </data>
   <data name="AboutUpper_text" xml:space="preserve">
     <value>Maiuskulaz jarriko den testu-balioa.</value>
@@ -696,11 +596,9 @@
   </data>
   <data name="AboutLower" xml:space="preserve">
     <value>Testu-balio baten letra guztiak minuskulaz jartzen ditu.</value>
-    
   </data>
   <data name="AboutLowerT" xml:space="preserve">
     <value>Zehaztutako taulan edo bilduman errenkadako ebaluatu den testu-balio baten letra guztiak minuskulaz jartzen ditu.</value>
-    
   </data>
   <data name="AboutLower_text" xml:space="preserve">
     <value>Minuskulaz jarriko den testu-balioa.</value>
@@ -710,11 +608,9 @@
   </data>
   <data name="AboutProper" xml:space="preserve">
     <value>Testu-balio baten letrak maiuskulaz eta minuskulaz jartzen ditu; hau da, hitz bakoitzaren lehen letra maiuskulaz jartzen du eta gainerako letrak minuskulaz jartzen ditu.</value>
-    
   </data>
   <data name="AboutProperT" xml:space="preserve">
     <value>Zehaztutako taulan edo bilduman errenkadako ebaluatu den testu-balioa maiuskulaz eta minuskulaz jartzen du; hau da, hitz bakoitzaren lehen letra maiuskulaz jartzen du eta gainerako letrak minuskulaz jartzen ditu.</value>
-    
   </data>
   <data name="AboutProper_text" xml:space="preserve">
     <value>Minuskulaz eta maiuskulaz jarriko den testu-balioa.</value>
@@ -724,7 +620,6 @@
   </data>
   <data name="AboutTrim" xml:space="preserve">
     <value>Testu-balio baten zuriune guztiak kentzen ditu, hitzen arteko zuriuneak izan ezik.</value>
-    
   </data>
   <data name="AboutTrim_text" xml:space="preserve">
     <value>Mozteko bihurtuko den testu-balioa.</value>
@@ -734,7 +629,6 @@
   </data>
   <data name="AboutTrimEnds" xml:space="preserve">
     <value>Testu-balio baten hasierako eta amaierako zuriune guztiak kentzen ditu.</value>
-    
   </data>
   <data name="AboutTrimEnds_text" xml:space="preserve">
     <value>Hasierako eta amaierako zuriuneak mozteko erabiliko den testu-balioa.</value>
@@ -744,11 +638,9 @@
   </data>
   <data name="AboutMid" xml:space="preserve">
     <value>Testu-balio baten erdian dauden karaktereak itzultzen ditu, hasierako posizio eta luzera jakin bat kontuan hartuta.</value>
-    
   </data>
   <data name="AboutMidT" xml:space="preserve">
     <value>Zehaztutako taulan edo bilduman errenkadako ebaluatuko den testu-balioaren erdian dauden karaktereak itzultzen ditu, hasierako posizio eta luzera jakin bat kontuan hartuta.</value>
-    
   </data>
   <data name="AboutMid_text" xml:space="preserve">
     <value>Testu-balioa, nondik karaktereak aterako diren.</value>
@@ -764,35 +656,27 @@
   </data>
   <data name="StringFuncArg1" xml:space="preserve">
     <value>testua</value>
-    
   </data>
   <data name="StringTFuncArg1" xml:space="preserve">
     <value>testu_zutabea</value>
-    
   </data>
   <data name="StringFuncArg2" xml:space="preserve">
     <value>hasiera_zk</value>
-    
   </data>
   <data name="StringFuncArg3" xml:space="preserve">
     <value>karaktere_kop</value>
-    
   </data>
   <data name="AboutReplace" xml:space="preserve">
     <value>Ordeztu testu-balio baten zati bat beste testu-balio batekin.</value>
-    
   </data>
   <data name="AboutReplaceT" xml:space="preserve">
     <value>Ordeztu testu-balio baten zati bat beste testu-balio batekin (zehaztutako taulan edo bilduman errenkadako ebaluatu dena).</value>
-    
   </data>
   <data name="ReplaceFuncArg1" xml:space="preserve">
     <value>testu_zaharra</value>
-    
   </data>
   <data name="ReplaceFuncArg4" xml:space="preserve">
     <value>testu_berria</value>
-    
   </data>
   <data name="AboutReplace_old_text" xml:space="preserve">
     <value>Prozesatuko den testu-balioa.</value>
@@ -811,67 +695,51 @@
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>Balio pertsonalizatuak dituen errore bat sortzen du.</value>
-    
   </data>
   <data name="AboutError_error_information" xml:space="preserve">
     <value>Sortutako errorearen balio pertsonalizatuak dituen erregistroa.</value>
-    
   </data>
   <data name="ErrorArg1" xml:space="preserve">
     <value>errorearen_informazioa</value>
-    
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
     <value>Error funtzioak "Kind", "Message", "Notify", "Control", eta "Property" eremuak soilik erabiltzen ditu.</value>
-    
   </data>
   <data name="AboutIfError" xml:space="preserve">
     <value>Errore bat ez den lehen argumentua ebaluatzen eta itzultzen du.</value>
-    
   </data>
   <data name="IfErrorArg1" xml:space="preserve">
     <value>balioa</value>
-    
   </data>
   <data name="AboutIfError_value" xml:space="preserve">
     <value>Itzultzen den balioa, ez bada errore bat.</value>
-    
   </data>
   <data name="IfErrorArg2" xml:space="preserve">
     <value>alternatiboa</value>
-    
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
     <value>Itzuliko den balioa, aurreko argumentua errore bat ez bada.</value>
-    
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
     <value>Lehendik dagoen testua ordezten du testu-balio baten testu berriarekin.</value>
-    
   </data>
   <data name="AboutSubstituteT" xml:space="preserve">
     <value>Lehendik dagoen testua ordezten du testu-balio baten testu berriarekin (zehaztutako taulan edo bilduman errenkadako ebaluatu dena).</value>
-    
   </data>
   <data name="SubstituteFuncArg1" xml:space="preserve">
     <value>testua</value>
-    
   </data>
   <data name="SubstituteTFuncArg1" xml:space="preserve">
     <value>testu_zutabea</value>
-    
   </data>
   <data name="SubstituteFuncArg2" xml:space="preserve">
     <value>testu_zaharra</value>
-    
   </data>
   <data name="SubstituteFuncArg3" xml:space="preserve">
     <value>testu_berria</value>
-    
   </data>
   <data name="SubstituteFuncArg4" xml:space="preserve">
     <value>instantzia_zenbakia</value>
-    
   </data>
   <data name="AboutSubstitute_text" xml:space="preserve">
     <value>Prozesatuko den testu-balioa.</value>
@@ -890,19 +758,15 @@
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>"source" ordenatzen du errenkada bakoitzean ebaluatutako "expression" elementuaren emaitzetan oinarrituta (aukera duzu "order" ordenatzeko irizpidea zehazteko).</value>
-    
   </data>
   <data name="SortArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="SortArg2" xml:space="preserve">
     <value>adierazpena</value>
-    
   </data>
   <data name="SortArg3" xml:space="preserve">
     <value>ordena</value>
-    
   </data>
   <data name="AboutSort_source" xml:space="preserve">
     <value>Ordenatuko den taula.</value>
@@ -912,23 +776,18 @@
   </data>
   <data name="AboutSort_order" xml:space="preserve">
     <value>SortOrder.Ascending edo SortOrder.Descending</value>
-    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>"source" ordenatzen du zutabeen arabera (aukera duzu "order" ordenatzeko irizpidea zehazteko).</value>
-    
   </data>
   <data name="SortByColumnsArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="SortByColumnsArg2" xml:space="preserve">
     <value>zutabea</value>
-    
   </data>
   <data name="SortByColumnsArg3" xml:space="preserve">
     <value>ordena</value>
-    
   </data>
   <data name="AboutSortByColumns_source" xml:space="preserve">
     <value>Ordenatuko den taula.</value>
@@ -938,22 +797,18 @@
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
     <value>SortOrder.Ascending edo SortOrder.Descending</value>
-    
   </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>balioak</value>
-    
   </data>
   <data name="AboutSortByColumns_values" xml:space="preserve">
     <value>Elementuak ordenatzeko erabiliko den balio-zutabea. Ordena ez da goranzkoa edo beheranzkoa izango, zutabean bat datozen balioen aurkibidearen araberakoa baizik.</value>
   </data>
   <data name="AboutRand" xml:space="preserve">
     <value>0 baino handiagoa edo berdina den eta 1 baino txikiagoa den ausazko zenbakia itzultzen du, uniformeki banatuta.</value>
-    
   </data>
   <data name="AboutRandBetween" xml:space="preserve">
     <value>Behealdearen eta goialdearen arteko ausazko zenbaki bat itzultzen du, modu uniformean banatuta.</value>
-    
   </data>
   <data name="AboutRandBetween_bottom" xml:space="preserve">
     <value>Funtzioak itzul dezakeen osoko zenbaki baxuena.</value>
@@ -963,129 +818,99 @@
   </data>
   <data name="RandBetweenArg1" xml:space="preserve">
     <value>behean</value>
-    
   </data>
   <data name="RandBetweenArg2" xml:space="preserve">
     <value>goialdea</value>
-    
   </data>
   <data name="AboutGUID" xml:space="preserve">
     <value>Kate bateko GUID bat sortzen du, edo ausaz sortutako GUID bat itzultzen du ez bada ematen argumenturik.</value>
-    
   </data>
   <data name="GUIDArg" xml:space="preserve">
     <value>GUID_katea</value>
-    
   </data>
   <data name="AboutGUID_GUID_string" xml:space="preserve">
     <value>GUID bihurtuko den katea</value>
-    
   </data>
   <data name="AboutNow" xml:space="preserve">
     <value>Uneko data eta ordua itzultzen ditu.</value>
-    
   </data>
   <data name="AboutUTCNow" xml:space="preserve">
     <value>Uneko data eta ordua itzultzen ditu UTC formatuan.</value>
-    
   </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>UTC eta tokiko orduen arteko ordu-diferentzia itzultzen du minututan adierazita. Adibidez, zure ordu-zona UTC+2 bada, -120 itzuliko da.</value>
-    
   </data>
   <data name="TimeZoneOffsetArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="AboutTimeZoneOffset_date" xml:space="preserve">
     <value>"TimeZoneOffset" kalkulatzeko erabiliko den data.</value>
-    
   </data>
   <data name="AboutToday" xml:space="preserve">
     <value>Uneko data itzultzen du.</value>
-    
   </data>
   <data name="AboutUTCToday" xml:space="preserve">
     <value>Uneko data itzultzen du UTC formatuan.</value>
-    
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Emandako dataren aste-zenbakia itzultzen du.</value>
-    
   </data>
   <data name="WeekNumArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="WeekNumArg2" xml:space="preserve">
     <value>aste_hasiera</value>
-    
   </data>
   <data name="AboutWeekNum_date" xml:space="preserve">
     <value>Aste-zenbakia kalkulatuko den data-balioa.</value>
   </data>
   <data name="AboutWeekNum_start_of_week" xml:space="preserve">
     <value>Asteko egunak zenbatzeko modua adierazteko erabiliko den StartOfWeek enumerazioaren balioa edo dagokion Excel funtzioaren zenbakia.</value>
-    
   </data>
   <data name="AboutISOWeekNum" xml:space="preserve">
     <value>Aste-zenbakia itzultzen du, emandako dataren ISO arauen arabera.</value>
-    
   </data>
   <data name="ISOWeekNumArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>ISO aste-zenbakia kalkulatuko den dataren balioa.</value>
   </data>
   <data name="AboutEDate" xml:space="preserve">
     <value>Hilabete kopuruaren arabera doitutako data bat itzultzen du aukera honek. Hileko eguna berdina izango da, baina hilabete berriaren egun kopuruaren arabera mugatuko da.</value>
-    
   </data>
   <data name="EDateArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="EDateArg2" xml:space="preserve">
     <value>hilabete</value>
-    
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Zehaztutako hilabete kopuruaren arabera doituko den data-balioa.</value>
-          
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Hilabete kopurua data aldatzeko. Balio positibo batek etorkizuneko data bat adierazten du, balio negatiboa iraganeko data eta zero balioak ez du hilabetea aldatuko.</value>
-        
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Zehaztutako data baten hileko azken eguna itzultzen du, hilabete kopuruaren arabera.</value>
-    
   </data>
   <data name="EOMonthArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="EOMonthArg2" xml:space="preserve">
     <value>hilabete</value>
-    
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Zehaztutako hilabete kopuruaren arabera doituko den data-balioa.</value>
-          
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>&gt;Hilabete kopurua data aldatzeko. Balio positibo batek etorkizuneko data bat adierazten du, balio negatiboa iraganeko data eta zero balioak ez du hilabetea aldatuko.</value>
-         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>"Zenbakia" laburtzen du infinitu negatiborantz borobilduz.</value>
-    
   </data>
   <data name="AboutIntT" xml:space="preserve">
     <value>Zenbaki-zutabe bateko balioak laburtzen du infinitu negatiborantz borobilduz.</value>
-    
   </data>
   <data name="AboutInt_number" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioa.</value>
@@ -1095,7 +920,6 @@
   </data>
   <data name="AboutTrunc" xml:space="preserve">
     <value>"Zenbakia" laburtzen du zerora borobilduz.</value>
-    
   </data>
   <data name="AboutTrunc_number" xml:space="preserve">
     <value>Laburtu beharreko zenbakia.</value>
@@ -1108,43 +932,33 @@
   </data>
   <data name="AboutTruncT" xml:space="preserve">
     <value>"Iturburuko" zenbaki guztiak laburtzen ditu zerora borobilduz.</value>
-    
   </data>
   <data name="TruncArg1" xml:space="preserve">
     <value>zenbakia</value>
-    
   </data>
   <data name="TruncArg2" xml:space="preserve">
     <value>digitu_kop</value>
-    
   </data>
   <data name="TruncTArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="TruncTArg2" xml:space="preserve">
     <value>digitu_kop</value>
-    
   </data>
   <data name="AboutRound" xml:space="preserve">
     <value>"number" zehaztutako digitu kopururantz biribiltzen du.</value>
-    
   </data>
   <data name="AboutRoundUp" xml:space="preserve">
     <value>"number" gorantz biribiltzen du.</value>
-    
   </data>
   <data name="AboutRoundDown" xml:space="preserve">
     <value>"number" beherantz biribiltzen du.</value>
-    
   </data>
   <data name="RoundArg1" xml:space="preserve">
     <value>zenbakia</value>
-    
   </data>
   <data name="RoundArg2" xml:space="preserve">
     <value>digitu_kop</value>
-    
   </data>
   <data name="AboutRound_number" xml:space="preserve">
     <value>Biribilduko den zenbakia.</value>
@@ -1175,43 +989,33 @@
   </data>
   <data name="AboutRoundT" xml:space="preserve">
     <value>"source" taulako zenbaki guztiak zehaztutako digitu kopururantz biribiltzen ditu.</value>
-    
   </data>
   <data name="AboutRoundUpT" xml:space="preserve">
     <value>"source" taulako zenbaki guztiak gorantz biribiltzen ditu.</value>
-    
   </data>
   <data name="AboutRoundDownT" xml:space="preserve">
     <value>"source" taulako zenbaki guztiak beherantz biribiltzen ditu.</value>
-    
   </data>
   <data name="RoundTArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="RoundTArg2" xml:space="preserve">
     <value>digitu_kop</value>
-    
   </data>
   <data name="AboutRGBA" xml:space="preserve">
     <value>Red (gorria), Green (berdea), Blue (urdina) eta Alpha kolore-osagaien zenbakizko balioak hartzen ditu eta kolore zehatza sortzen du. G, B, U balioak 0 eta 255 arteko zenbakiak dira. Alpha 0 eta 1 arteko hamartarra da.</value>
-    
   </data>
   <data name="RGBAArg1" xml:space="preserve">
     <value>balio_gorria</value>
-    
   </data>
   <data name="RGBAArg2" xml:space="preserve">
     <value>balio_berdea</value>
-    
   </data>
   <data name="RGBAArg3" xml:space="preserve">
     <value>balio_urdina</value>
-    
   </data>
   <data name="RGBAArg4" xml:space="preserve">
     <value>alfa_balioa</value>
-    
   </data>
   <data name="AboutRGBA_red_value" xml:space="preserve">
     <value>Red (gorria) osagaia, 0 eta 255 artekoa.</value>
@@ -1227,15 +1031,12 @@
   </data>
   <data name="AboutColorFade" xml:space="preserve">
     <value>Zehaztutako "color" balioaren itzaldura sortzen du, zehaztutako "fade" elementuaren ehuneko balioan oinarrituta.</value>
-    
   </data>
   <data name="ColorFadeArg1" xml:space="preserve">
     <value>kolorea</value>
-    
   </data>
   <data name="ColorFadeArg2" xml:space="preserve">
     <value>lausotua</value>
-    
   </data>
   <data name="AboutColorFade_color" xml:space="preserve">
     <value>Lausotuko den kolorea.</value>
@@ -1248,11 +1049,9 @@
   </data>
   <data name="ColorFadeTArg1" xml:space="preserve">
     <value>kolorea_edo_zutabea</value>
-    
   </data>
   <data name="ColorFadeTArg2" xml:space="preserve">
     <value>lausotua_edo_zutabea</value>
-    
   </data>
   <data name="AboutColorFade_color_or_column" xml:space="preserve">
     <value>Lausotuko den kolorea (edo kolore-balioen zutabea).</value>
@@ -1262,11 +1061,9 @@
   </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Zenbaki baten balio absolutua itzultzen du (ikurrik ez duen zenbaki bat).</value>
-    
   </data>
   <data name="AboutAbsT" xml:space="preserve">
     <value>Zenbaki-zutabe baten balio absolutuak itzultzen ditu (ikurrik ez duten zenbakiak).</value>
-    
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioa.</value>
@@ -1282,11 +1079,9 @@
   </data>
   <data name="AboutSin" xml:space="preserve">
     <value>Zenbaki baten sinuaren balioa itzultzen du.</value>
-    
   </data>
   <data name="AboutSinT" xml:space="preserve">
     <value>Zenbaki-zutabe baten sinuaren balioak itzultzen ditu.</value>
-    
   </data>
   <data name="AboutAsin_number" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioa.</value>
@@ -1296,19 +1091,15 @@
   </data>
   <data name="AboutAsin" xml:space="preserve">
     <value>Zenbaki baten arku sinuaren balioa itzultzen du (radianetan zehaztuta).</value>
-    
   </data>
   <data name="AboutAsinT" xml:space="preserve">
     <value>Zenbaki-zutabe baten arku sinuaren balioak itzultzen ditu (radianetan zehaztuta).</value>
-    
   </data>
   <data name="AboutCos" xml:space="preserve">
     <value>Zenbaki baten kosinuaren balioa itzultzen du.</value>
-    
   </data>
   <data name="AboutCosT" xml:space="preserve">
     <value>Zenbaki-zutabe baten kosinuaren balioak itzultzen ditu.</value>
-    
   </data>
   <data name="AboutCos_number" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioa (radianetan zehaztuta).</value>
@@ -1318,14 +1109,12 @@
   </data>
   <data name="AboutAcos" xml:space="preserve">
     <value>Zenbaki baten arku kosinuaren balioa itzultzen du (radianetan zehaztuta).</value>
-    
   </data>
   <data name="AboutAcos_number" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioa.</value>
   </data>
   <data name="AboutAcosT" xml:space="preserve">
     <value>Zenbaki-zutabe baten arku kosinuaren balioak itzultzen ditu (radianetan zehaztuta).</value>
-    
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
     <value>Prozesatzeko zenbakizko balioak dituen zutabea.</value>
@@ -1338,19 +1127,15 @@
   </data>
   <data name="AboutAcot" xml:space="preserve">
     <value>Zenbaki baten arku kotangentearen balioa itzultzen du (radianetan zehaztuta).</value>
-    
   </data>
   <data name="AboutAcotT" xml:space="preserve">
     <value>Zenbaki-zutabe baten arku kotangentearen balioak itzultzen ditu (radianetan zehaztuta).</value>
-    
   </data>
   <data name="AboutTan" xml:space="preserve">
     <value>Zenbaki baten tangentearen balioa itzultzen du.</value>
-    
   </data>
   <data name="AboutTanT" xml:space="preserve">
     <value>Zenbaki-zutabe baten tangentearen balioak itzultzen ditu.</value>
-    
   </data>
   <data name="AboutTan_number" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioa (radianetan zehaztuta).</value>
@@ -1360,11 +1145,9 @@
   </data>
   <data name="AboutAtan" xml:space="preserve">
     <value>Zenbaki baten arku tangentearen balioa itzultzen du (radianetan zehaztuta).</value>
-    
   </data>
   <data name="AboutAtanT" xml:space="preserve">
     <value>Zenbaki-zutabe baten arku tangentearen balioak itzultzen ditu (radianetan zehaztuta).</value>
-    
   </data>
   <data name="AboutAtan_number" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioa.</value>
@@ -1374,11 +1157,9 @@
   </data>
   <data name="AboutCot" xml:space="preserve">
     <value>Zenbaki baten kotangentearen balioa itzultzen du.</value>
-    
   </data>
   <data name="AboutCotT" xml:space="preserve">
     <value>Zenbaki-zutabe baten kotangentearen balioak itzultzen ditu.</value>
-    
   </data>
   <data name="AboutCot_number" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioa (radianetan zehaztuta).</value>
@@ -1388,11 +1169,9 @@
   </data>
   <data name="AboutLn" xml:space="preserve">
     <value>Zenbaki baten logaritmo hiperbolikoa itzultzen du (E oinarria).</value>
-    
   </data>
   <data name="AboutLnT" xml:space="preserve">
     <value>Zenbaki-zutabe baten logaritmo hiperbolikoaren balioak itzultzen ditu.</value>
-    
   </data>
   <data name="AboutLn_number" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioa.</value>
@@ -1402,11 +1181,9 @@
   </data>
   <data name="AboutLog" xml:space="preserve">
     <value>Emandako oinarriaren zenbaki baten logaritmoa itzultzen du. Oinarri lehenetsia 10 da.</value>
-    
   </data>
   <data name="AboutLogT" xml:space="preserve">
     <value>Emandako oinarriaren edo oinarri-zutabearen zenbaki baten edo zenbakien zutabe baten logaritmoaren balioak itzultzen ditu. Oinarri lehenetsia 10 da.</value>
-    
   </data>
   <data name="AboutLog_number" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioa.</value>
@@ -1416,18 +1193,15 @@
   </data>
   <data name="LogBase" xml:space="preserve">
     <value>oinarrizkoa</value>
-    
   </data>
   <data name="AboutLog_base" xml:space="preserve">
     <value>Logaritmoaren oinarria.</value>
   </data>
   <data name="AboutExp" xml:space="preserve">
     <value>"E balioa ber zenbaki bat" eragiketaren emaitza itzultzen du. Beste oinarri batzuekin berreketak egiteko, erabili eragile esponentziala (^).</value>
-    
   </data>
   <data name="AboutExpT" xml:space="preserve">
     <value>"E balioa ber zenbaki-zutabe baten zenbaki bakoitza" eragiketaren emaitza itzultzen du zutabe batean. Beste oinarri batzuekin berreketak egiteko, erabili eragile esponentziala (^).</value>
-    
   </data>
   <data name="AboutExp_number" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioa.</value>
@@ -1440,11 +1214,9 @@
   </data>
   <data name="AboutRadians" xml:space="preserve">
     <value>Zenbaki baten radianen balioa itzultzen du.</value>
-    
   </data>
   <data name="AboutRadiansT" xml:space="preserve">
     <value>Zenbaki-zutabe baten radianen balioak itzultzen ditu.</value>
-    
   </data>
   <data name="AboutRadians_number" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioa (gradutan zehaztuta).</value>
@@ -1454,11 +1226,9 @@
   </data>
   <data name="AboutDegrees" xml:space="preserve">
     <value>Zenbaki baten graduen balioa itzultzen du.</value>
-    
   </data>
   <data name="AboutDegreesT" xml:space="preserve">
     <value>Zenbaki-zutabe baten graduen balioak itzultzen ditu.</value>
-    
   </data>
   <data name="AboutDegrees_number" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioa (radianetan zehaztuta).</value>
@@ -1471,11 +1241,9 @@
   </data>
   <data name="DistinctArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="DistinctArg2" xml:space="preserve">
     <value>espresioa</value>
-    
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
     <value>Balio desberdinak ateratzeko erabiliko den taula.</value>
@@ -1488,11 +1256,9 @@
   </data>
   <data name="AboutAtan2Arg1" xml:space="preserve">
     <value>x_koordenatua</value>
-    
   </data>
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>y_koordenatua</value>
-    
   </data>
   <data name="AboutAtan2_x_coordinate" xml:space="preserve">
     <value>x koordenatua.</value>
@@ -1502,11 +1268,9 @@
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Zenbaki baten erro karratua itzultzen du.</value>
-    
   </data>
   <data name="AboutSqrtT" xml:space="preserve">
     <value>Zenbaki-zutabe baten erro karratuak itzultzen ditu.</value>
-    
   </data>
   <data name="AboutSqrt_number" xml:space="preserve">
     <value>Prozesatuko den zenbakizko balioa.</value>
@@ -1516,27 +1280,21 @@
   </data>
   <data name="MathFuncArg1" xml:space="preserve">
     <value>zenbakia</value>
-    
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>sarrera</value>
-    
   </data>
   <data name="MathFuncArg2" xml:space="preserve">
     <value>aldatzailea</value>
-    
   </data>
   <data name="MathTFuncArg2" xml:space="preserve">
     <value>aldatzailea</value>
-    
   </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Testu-balioaren hasieran zehaztutako karaktere kopurua itzultzen du.</value>
-    
   </data>
   <data name="AboutLeftT" xml:space="preserve">
     <value>Testu-balioaren hasieran zehaztutako karaktere kopurua duen zutabe bat itzultzen du (zehaztutako taulan edo bilduman errenkadako ebaluatu dena).</value>
-    
   </data>
   <data name="AboutLeft_text" xml:space="preserve">
     <value>Testu-balioa, zeinari karaktereak aterako zaizkion.</value>
@@ -1549,11 +1307,9 @@
   </data>
   <data name="AboutRight" xml:space="preserve">
     <value>Testu-balioaren amaieran zehaztutako karaktere kopurua itzultzen du.</value>
-    
   </data>
   <data name="AboutRightT" xml:space="preserve">
     <value>Testu-balioaren amaieran zehaztutako karaktere kopurua duen zutabe bat itzultzen du (zehaztutako taulan edo bilduman errenkadako ebaluatu dena).</value>
-    
   </data>
   <data name="AboutRight_text" xml:space="preserve">
     <value>Testu-balioa, zeinari karaktereak aterako zaizkion.</value>
@@ -1566,76 +1322,60 @@
   </data>
   <data name="LeftRightArg1" xml:space="preserve">
     <value>testua</value>
-    
   </data>
   <data name="LeftRightTArg1" xml:space="preserve">
     <value>testu_zutabea</value>
-    
   </data>
   <data name="LeftRightArg2" xml:space="preserve">
     <value>karaktere_kop</value>
-    
   </data>
   <data name="AboutIsBlank" xml:space="preserve">
     <value>Espresioa hutsik dagoen egiaztatzen du eta "egia" edo "faltsua" balioa itzultzen du.</value>
-    
   </data>
   <data name="IsBlankArg1" xml:space="preserve">
     <value>adierazpena</value>
-    
   </data>
   <data name="AboutIsBlank_expression" xml:space="preserve">
     <value>Probatuko den espresioa.</value>
   </data>
   <data name="AboutIsBlankOrError" xml:space="preserve">
     <value>Espresioaren emaitza "hutsik dago" edo "errorea" den egiaztatzen du, eta "true" edo "false" itzultzen du.</value>
-    
   </data>
   <data name="IsBlankOrErrorArg1" xml:space="preserve">
     <value>adierazpena</value>
-    
   </data>
   <data name="AboutIsBlankOrError_expression" xml:space="preserve">
     <value>Probatuko den espresioa.</value>
-    
   </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Bilduma hutsik dagoen egiaztatzen du eta "egia" edo "faltsua" balioa itzultzen du.</value>
-    
   </data>
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="AboutIsEmpty_source" xml:space="preserve">
     <value>Probatuko den taula.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Sarrerako "source" taularen ausazko kopia bat itzultzen du.</value>
-    
   </data>
   <data name="ShuffleArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="AboutShuffle_source" xml:space="preserve">
     <value>Ausaz ordenatuko den taula.</value>
   </data>
   <data name="AboutLookUp" xml:space="preserve">
     <value>Zehaztutako baldintza egia gisa ebaluatuta duen lehen errenkada bilatzen du eta, espresio bat eman bada, errenkada horren testuinguruan ebaluatutako espresioaren emaitza itzultzen du; horrela ez bada, errenkada osoaren emaitza itzultzen du.</value>
-    
   </data>
   <data name="LookUpArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="LookUpArg2" xml:space="preserve">
     <value>baldintza</value>
-    
   </data>
   <data name="LookUpArg3" xml:space="preserve">
     <value>emaitza</value>
-    
   </data>
   <data name="AboutLookUp_source" xml:space="preserve">
     <value>Taula, non balioak bilatuko diren.</value>
@@ -1648,7 +1388,6 @@
   </data>
   <data name="AboutStdevP" xml:space="preserve">
     <value>Desbideratze estandarra kalkulatzen du argumentu gisa emandako populazio osoan oinarrituta (testuari eta balio logikoei ez ikusi egiten die).</value>
-    
   </data>
   <data name="AboutStdevP_number" xml:space="preserve">
     <value>Desbideratze estandarraren kalkuluan faktorizatuko den zenbakia.</value>
@@ -1661,11 +1400,9 @@
   </data>
   <data name="AboutStdevPT" xml:space="preserve">
     <value>Desbideratze estandarra kalkulatzen du zutabe gisa emandako populazio osoan oinarrituta (zutabeko testuari eta balio logikoei ez ikusi egiten die).</value>
-    
   </data>
   <data name="AboutVarP" xml:space="preserve">
     <value>Bariantza kalkulatzen du populazio osoan oinarrituta (populazioko testuari eta balio logikoei ez ikusi egiten die).</value>
-    
   </data>
   <data name="AboutVarP_number" xml:space="preserve">
     <value>Bariantzaren kalkuluan faktorizatuko den zenbakia.</value>
@@ -1678,55 +1415,42 @@
   </data>
   <data name="AboutVarPT" xml:space="preserve">
     <value>Bariantza kalkulatzen du zutabe gisa zehaztutako populazio osoan oinarrituta (populazioko testuari eta balio logikoei ez ikusi egiten die).</value>
-    
   </data>
   <data name="SetArg1" xml:space="preserve">
     <value>aldagaia</value>
-    
   </data>
   <data name="AboutSplit" xml:space="preserve">
     <value>Kate bat azpikateetan zatitzen du mugatzaile bat erabiliz.</value>
-    
   </data>
   <data name="AboutSplit_text" xml:space="preserve">
     <value>Azpikateetan zatituko den testua.</value>
-    
   </data>
   <data name="AboutSplit_separator" xml:space="preserve">
     <value>Sarrerako testua azpikateetan zatitzeko erabiltzen den testu-mugatzailea.</value>
-    
   </data>
   <data name="SplitArg1" xml:space="preserve">
     <value>testua</value>
-    
   </data>
   <data name="SplitArg2" xml:space="preserve">
     <value>bereizlea</value>
-    
   </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>"Egia" itzultzen du emandako balioa emandako motakoa bada.</value>
-    
   </data>
   <data name="IsTypeArg1" xml:space="preserve">
     <value>balioa</value>
-    
   </data>
   <data name="IsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
-    
   </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Emandako mota gisa erabiltzen du zehaztutako balioa.</value>
-    
   </data>
   <data name="AsTypeArg1" xml:space="preserve">
     <value>balioa</value>
-    
   </data>
   <data name="AsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
-    
   </data>
   <data name="AboutAsType_value" xml:space="preserve">
     <value>Mota berri gisa erabili beharreko erregistro polimorfikoa.</value>
@@ -1736,331 +1460,249 @@
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Bigarren parametro gisa emandako formula exekutatzen du lehen parametroak emandako esparrua erabiliz.</value>
-    
   </data>
   <data name="WithArg1" xml:space="preserve">
     <value>esparrua</value>
-    
   </data>
   <data name="WithArg2" xml:space="preserve">
     <value>formula</value>
-    
   </data>
   <data name="AboutWith_scope" xml:space="preserve">
     <value>Bigarren parametroak zehaztutako formulari deitzeko erabiliko den esparrua.</value>
-    
   </data>
   <data name="AboutWith_formula" xml:space="preserve">
     <value>Lehen parametroak emandako esparrua erabiliz deituko den formula.</value>
-    
   </data>
   <data name="AboutSequence" xml:space="preserve">
     <value>Zenbaki sekuentzialen taula bat sortzen du</value>
-    
   </data>
   <data name="SequenceArg1" xml:space="preserve">
     <value>erregistroak</value>
-    
   </data>
   <data name="AboutSequence_records" xml:space="preserve">
     <value>"Balioa" izena duen zutabe bakarreko taulako erregistro kopurua. 50.000, gehienez.</value>
-    
   </data>
   <data name="SequenceArg2" xml:space="preserve">
     <value>hasi</value>
-    
   </data>
   <data name="AboutSequence_start" xml:space="preserve">
     <value>Aukerakoa. Sekuentziaren lehen zenbakia. 1 da balio lehenetsia.</value>
-    
   </data>
   <data name="SequenceArg3" xml:space="preserve">
     <value>urratsa</value>
-    
   </data>
   <data name="AboutSequence_step" xml:space="preserve">
     <value>Aukerakoa. Taulako ondorengo balio bakoitza handitzeko kopurua. 1 da balio lehenetsia.</value>
-    
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
     <value>Puntuaren (".") erabilerak ez du balio</value>
-    
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>Ezezaguna den edo onartzen ez den funtzio bat da "{0}".</value>
-    
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>"{1}" izen-lekuan ezezaguna den edo onartzen ez den funtzio bat da "{0}".</value>
-    
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>Osagaiaren portaera osagaitik bertatik dei daiteke soilik.</value>
-    
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
     <value>Osagai-funtzioaren propietatea edo parametroa atzi dezakezu osagai batetik edo osagai baten irteerako propietateetatik soilik.</value>
-    
   </data>
   <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
     <value>Osagai-funtzioaren propietateak edo parametroak beste funtzio-propietate batzuei soilik egin diezaieke erreferentzia.</value>
-    
   </data>
   <data name="ErrBadArity" xml:space="preserve">
     <value>Argumentu kopuruak ez du balio: {0} jaso dira, baina {1} espero ziren.</value>
-    
   </data>
   <data name="ErrBadArityEven" xml:space="preserve">
     <value>Argumentu kopuruak ez du balio: {0} jaso dira, baina kopuru bikoitia espero zen.</value>
-    
   </data>
   <data name="ErrBadArityOdd" xml:space="preserve">
     <value>Argumentu kopuruak ez du balio: {0} jaso dira, baina kopuru bakoitia espero zen.</value>
-    
   </data>
   <data name="ErrBadType" xml:space="preserve">
     <value>Argumentu motak ez du balio.</value>
-    
   </data>
   <data name="ErrBadType_Type" xml:space="preserve">
     <value>Argumentu motak ez du balio. Ezin dira erabili {0} balioak testuinguru honetan.</value>
-    
   </data>
   <data name="ErrBadOperatorTypes" xml:space="preserve">
     <value>Eragiketa ezin da egin mota hauetan: {0}, {1}.</value>
-    
   </data>
   <data name="ErrGuidStrictComparison" xml:space="preserve">
     <value>GUID balioak beste GUID balioekin soilik konpara daitezke.</value>
-    
   </data>
   <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
     <value>"{0}" eremu mota baliogabea da. "{1}" eremu mota espero zen.</value>
-    
   </data>
   <data name="ErrBadType_ExpectedType" xml:space="preserve">
     <value>Argumentu motak ez du balio. {0} balioa espero zen.</value>
-    
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Argumentu motak ez du balio ({1}). Horren ordez, {0} balioa espero zen.</value>
-    
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
     <value>Argumentu motak ez du balio. Beste eskema bateko {0} balioa espero zen.</value>
-    
   </data>
   <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
     <value>Argumentu motak ez du balio. Hauetako bat espero zen: {0}.</value>
-    
   </data>
   <data name="ErrInvalidArgs_Func" xml:space="preserve">
     <value>'{0}' funtzioak zenbait argumentu baliogabe ditu.</value>
-    
   </data>
   <data name="ErrNeedTable_Func" xml:space="preserve">
     <value>'{0}' elementuaren lehen argumentuak taula bat izan behar du.</value>
-    
   </data>
   <data name="ErrInvalidPropertyAccess" xml:space="preserve">
     <value>Propietateak beharrezko parametro bat espero du. Erabili parentesiak beharrezko parametroa pasatzeko.</value>
-    
   </data>
   <data name="ErrNeedTableCol_Func" xml:space="preserve">
     <value>'{0}' elementuaren lehen argumentuak zutabe bakarreko taula bat izan behar du.</value>
-    
   </data>
   <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
     <value>Eskemak ez du balio. "{1}" elementuaren {0} balioak dituen zutabe bat espero zen.</value>
-    
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
     <value>Eskemak ez du balio. Zutabe bakarreko taula bat espero zen.</value>
-    
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>Ezin da erabili erregistroa ez den baliorik testuinguru honetan.</value>
-    
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Ezin da erabili erregistro hau. Baliteke bateragarriak ez diren kontrako eremuak izatea.</value>
-    
   </data>
   <data name="ErrNeedRecord_Func" xml:space="preserve">
     <value>'{0}' elementuaren lehen argumentuak erregistro bat izan behar du.</value>
-    
   </data>
   <data name="ErrNeedEntity_EntityName" xml:space="preserve">
     <value>Aukera hori enumerazio-balio gisa edo Choices funtzioan erabili ahal izateko, datu-iturburu gisa gehitu behar duzu "{0}" entitatea. Hura gehitzeko, erabili Ikusi menua eta hautatu Datu-iturburuak.</value>
-    
   </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Ezin da atzitu zehaztutako propietatea testuinguru honetan.</value>
-    
   </data>
   <data name="ErrInternalControlInInputProperty" xml:space="preserve">
     <value>Ezin zaie osagaien barruko kontrolei erreferentzia egin osagai beraren sarrerako propietateetan.</value>
-    
   </data>
   <data name="ErrColumnNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Ezin da atzitu zehaztutako zutabea testuinguru honetan.</value>
-    
   </data>
   <data name="WrnRowScopeOneToNExpandNumberOfCalls" xml:space="preserve">
     <value>Batetik hainbatera edo Hainbatetik hainbatera motako erlazioa aipatzen da funtzioaren erregistro-esparru honetan. Horiek horrela, baliteke datu-iturburuak errendimenduari eragin diezaiokeen dei kopuru handia jasotzea.</value>
-    
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Zenbakizko balioa handiegia da.</value>
-    
   </data>
   <data name="ErrReservedKeyword" xml:space="preserve">
     <value>Onartzen ez den hitz erreserbatu bat erabili da.</value>
-    
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
     <value>Adierazpenak ezin ditu eduki {0} karaktere baino gehiago ({1} karaktere ditu).</value>
-    
   </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Formatu-katearen tamainak ezin du eduki {0} karaktere baino gehiago.</value>
-    
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Formatuak ez du balio.</value>
-    
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argumentuak ez du adierazten erabil daitekeen data- edo ordu-balioa.</value>
-    
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Datu-iturburu honek ez du balio. Konpondu errorea "Datu-iturburuak" panelean. Horretarako, sakatu "Edukia -&gt; Datu-iturburuak" edo "Ikusi -&gt; Aukerak".</value>
-    
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Datu-iturburuaren identifikatzaile bat espero zen txertatutako erregistroa mugatzeko.</value>
-    
   </data>
   <data name="ErrIncompatibleTypes" xml:space="preserve">
     <value>Emandako motak bateraezinak dira.</value>
-    
   </data>
   <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
     <value>'{2}' argumentuaren mota ez dator bat espero zen mota hauetako batekin: '{0}' edo '{1}'.</value>
-    
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>'{0}' argumentuaren mota ez dator bat espero zen '{1}' motarekin. Mota hau aurkitu da: '{2}'.</value>
-    
   </data>
   <data name="ErrTypeError_WrongType" xml:space="preserve">
     <value>Adierazpenaren mota ez dator bat espero zen '{0}' motarekin. Mota hau aurkitu da: '{1}'.</value>
-    
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
     <value>Erregistroaren mota eta iturburua bateraezinak dira.</value>
-    
   </data>
   <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
     <value>'{0}' argumentuak ez du balio. Hitzez hitzeko testua espero zen.</value>
-    
   </data>
   <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
     <value>'{0}' argumentua ez da baliozko identifikatzaile bat.</value>
-    
   </data>
   <data name="ErrColExists_Name" xml:space="preserve">
     <value>Badago '{0}' izeneko zutabe bat.</value>
-    
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Zutabe-izena gatazkan dago honekin: '{0}'.</value>
-    
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Zehaztutako '{0}' zutabea ez dago.</value>
-    
   </data>
   <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
     <value>Zehaztutako "{0}" zutabea ez dago. Gehien hurbiltzen zaion izena daukan zutabea hau da: "{1}".</value>
-    
   </data>
   <data name="ErrSortIncorrectOrder" xml:space="preserve">
     <value>Espresioaren mota honek ez ditu onartzen ordenatzeko irizpide horiek.</value>
-    
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Ezin da ordenatu espresio motaren arabera.</value>
-    
   </data>
   <data name="ErrDistinctWrongType" xml:space="preserve">
     <value>Ezin da aplikatu Distinct eragiketa espresio motan.</value>
-    
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
     <value>Mota-errorea: {0} funtzioak {1} edo {1} motako zutabeak dituen taula bat espero du.</value>
-    
   </data>
   <data name="ErrIncorrectFormat_Func" xml:space="preserve">
     <value>'{0}' elementuaren formatu baliogabea zehaztu da.</value>
-    
   </data>
   <data name="ErrAsyncLambda" xml:space="preserve">
     <value>Ezin dira erabili dei asinkronoak baldintzetan eta balio-funtzioetan.</value>
-    
   </data>
   <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
     <value>Hau izen-leku bat da. Bertako kideak atzitzeko, erabili "." eragilea.</value>
-    
   </data>
   <data name="ErrScopeModificationLambda" xml:space="preserve">
     <value>Funtzio horrek ezin du funtzionatu {0} eremuan erabiltzen den datu-iturburu berean.</value>
-    
   </data>
   <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
     <value>Ezin zaio deitu funtzio horri hemen: {0}.</value>
-    
   </data>
   <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
     <value>Argumentuak ez du balio. Konektatutako datu-iturburu bateko taula bat espero du formula honek. Konektatutako datu-iturburuak behar dituzte "AsType" eta "IsType" funtzioek.</value>
-    
   </data>
   <data name="InfoMessage" xml:space="preserve">
     <value>Mezua: </value>
-    
   </data>
   <data name="InfoNode_Node" xml:space="preserve">
     <value>Nodoa: {0}</value>
-    
   </data>
   <data name="InfoTok_Tok" xml:space="preserve">
     <value>Tok: {0}</value>
-    
   </data>
   <data name="FormatSpan_Min_Lim" xml:space="preserve">
     <value>({0},{1}) </value>
-    
   </data>
   <data name="FormatErrorSeparator" xml:space="preserve">
     <value>, </value>
-    
   </data>
   <data name="AboutDate" xml:space="preserve">
     <value>Power Apps-eko data eta orduaren kodeko data adierazten duen zenbakia itzultzen du.</value>
-    
   </data>
   <data name="DateArg1" xml:space="preserve">
     <value>urte</value>
-    
   </data>
   <data name="DateArg2" xml:space="preserve">
     <value>hilabete</value>
-    
   </data>
   <data name="DateArg3" xml:space="preserve">
     <value>egun</value>
-    
   </data>
   <data name="AboutDate_year" xml:space="preserve">
     <value>Urtea.</value>
@@ -2073,23 +1715,18 @@
   </data>
   <data name="AboutTime" xml:space="preserve">
     <value>Orduak, minutuak eta segundoak zenbaki hamartar bihurtzen ditu.</value>
-    
   </data>
   <data name="TimeArg1" xml:space="preserve">
     <value>ordu</value>
-    
   </data>
   <data name="TimeArg2" xml:space="preserve">
     <value>minutu</value>
-    
   </data>
   <data name="TimeArg3" xml:space="preserve">
     <value>segundo</value>
-    
   </data>
   <data name="TimeArg4" xml:space="preserve">
     <value>milisegundo</value>
-    
   </data>
   <data name="AboutTime_hour" xml:space="preserve">
     <value>Ordu-osagaia.</value>
@@ -2105,160 +1742,126 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>Une jakin bat adierazten duen balio bat sortzen du, eguneko data eta orduaren bidez adierazten dena.</value>
-    
   </data>
   <data name="AboutDateTime_year" xml:space="preserve">
     <value>Urtea.</value>
-    
   </data>
   <data name="AboutDateTime_month" xml:space="preserve">
     <value>Hilabetea.</value>
-    
   </data>
   <data name="AboutDateTime_day" xml:space="preserve">
     <value>Eguna.</value>
-    
   </data>
   <data name="AboutDateTime_hour" xml:space="preserve">
     <value>Ordua.</value>
-    
   </data>
   <data name="AboutDateTime_minute" xml:space="preserve">
     <value>Minutua.</value>
-    
   </data>
   <data name="AboutDateTime_second" xml:space="preserve">
     <value>Segundoa.</value>
-    
   </data>
   <data name="AboutDateTime_millisecond" xml:space="preserve">
     <value>Milisegundoak.</value>
-    
   </data>
   <data name="AboutYear" xml:space="preserve">
     <value>"Year" funtzioak emandako data baten urtea itzultzen du.</value>
-    
   </data>
   <data name="YearArg1" xml:space="preserve">
     <value>data_ordua</value>
-    
   </data>
   <data name="AboutYear_date_time" xml:space="preserve">
     <value>Data-balioa, nondik "urtea" osagaia aterako den.</value>
   </data>
   <data name="AboutMonth" xml:space="preserve">
     <value>Hilabetea itzultzen du (1 —urtarrila— eta 12 —abendua— arteko zenbaki bat).</value>
-    
   </data>
   <data name="MonthArg1" xml:space="preserve">
     <value>data_ordua</value>
-    
   </data>
   <data name="AboutMonth_date_time" xml:space="preserve">
     <value>Hilabete-osagaia ateratzeko erabiliko den data-balioa.</value>
   </data>
   <data name="AboutDay" xml:space="preserve">
     <value>"Day" funtzioak hilaren egunak (1 eta 31 arteko zenbaki bat) itzultzen ditu.</value>
-    
   </data>
   <data name="DayArg1" xml:space="preserve">
     <value>data_ordua</value>
-    
   </data>
   <data name="AboutDay_date_time" xml:space="preserve">
     <value>Egun-osagaia ateratzeko erabiliko den data-balioa.</value>
   </data>
   <data name="AboutHour" xml:space="preserve">
     <value>"Hour" funtzioak 0 (12:00:00 a.m.) eta 23 (11:00:00 p.m.) balioen arteko ordua itzultzen du zenbaki gisa.</value>
-    
   </data>
   <data name="HourArg1" xml:space="preserve">
     <value>data_ordua</value>
-    
   </data>
   <data name="AboutHour_date_time" xml:space="preserve">
     <value>Osagaia ateratzeko erabiliko den data- edo ordu-balioa.</value>
   </data>
   <data name="AboutMinute" xml:space="preserve">
     <value>Minutua itzultzen du (0 eta 59 arteko zenbaki bat).</value>
-    
   </data>
   <data name="MinuteArg1" xml:space="preserve">
     <value>data_ordua</value>
-    
   </data>
   <data name="AboutMinute_date_time" xml:space="preserve">
     <value>Minutu-osagaia ateratzeko erabiliko den data- edo ordu-balioa.</value>
   </data>
   <data name="AboutSecond" xml:space="preserve">
     <value>Segundoa itzultzen du (0 eta 59 arteko zenbaki bat).</value>
-    
   </data>
   <data name="SecondArg1" xml:space="preserve">
     <value>data_ordua</value>
-    
   </data>
   <data name="AboutSecond_date_time" xml:space="preserve">
     <value>Segundo-osagaia ateratzeko erabiliko den data- edo ordu-balioa.</value>
   </data>
   <data name="AboutWeekday" xml:space="preserve">
     <value>Data eta ordua balioaren asteguna itzultzen du. Modu lehenetsian, 1 (igandea) eta 7 (larunbata) zenbakien artekoa izango da emaitza. Nolanahi ere, beste barruti bat zehatz dezakezu StartOfWeek enumerazio-balio bat edo Microsoft Excel-eko Weekday funtzioa erabiliz.</value>
-    
   </data>
   <data name="WeekdayArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="WeekdayArg2" xml:space="preserve">
     <value>aste_hasiera</value>
-    
   </data>
   <data name="AboutWeekday_date" xml:space="preserve">
     <value>Asteko zenbakia kalkulatuko den data-balioa.</value>
   </data>
   <data name="AboutWeekday_start_of_week" xml:space="preserve">
     <value>Asteko egunak zenbatzeko modua adierazteko erabiliko den StartOfWeek enumerazioaren balioa edo dagokion Excel funtzioaren zenbakia.</value>
-    
   </data>
   <data name="AboutCalendar__MonthsLong" xml:space="preserve">
     <value>Hilabete guztien izenak dituen zutabe bakarreko taula itzultzen du.</value>
-    
   </data>
   <data name="AboutCalendar__MonthsShort" xml:space="preserve">
     <value>Hilabete guztien izenen laburdurak dituen zutabe bakarreko taula itzultzen du.</value>
-    
   </data>
   <data name="AboutCalendar__WeekdaysLong" xml:space="preserve">
     <value>Asteko egun guztien izenak dituen zutabe bakarreko taula bat itzultzen du.</value>
-    
   </data>
   <data name="AboutCalendar__WeekdaysShort" xml:space="preserve">
     <value>Asteko egunen izenen laburdurak dituen zutabe bakarreko taula itzultzen du.</value>
-    
   </data>
   <data name="AboutClock__AmPm" xml:space="preserve">
     <value>"Ante meridiem" eta "post meridiem" aukerak maiuskulaz zehazteko zutabe bakarreko taula bat itzultzen du.</value>
-    
   </data>
   <data name="AboutClock__AmPmShort" xml:space="preserve">
     <value>"Ante meridiem" eta "post meridiem" aukerak maiuskulaz eta laburbilduta dituen zutabe bakarreko taula itzultzen du.</value>
-    
   </data>
   <data name="AboutClock__IsClock24" xml:space="preserve">
     <value>Erlojuak 24 orduko formatua darabilen adierazten duen balio boolear bat itzultzen du.</value>
-    
   </data>
   <data name="AboutDateValue" xml:space="preserve">
     <value>Testu-formatua duen data bat bihurtzen du Power Apps-eko data eta orduaren kodeko data adierazten duen zenbaki.</value>
-    
   </data>
   <data name="DateValueArg1" xml:space="preserve">
     <value>data_testua</value>
-    
   </data>
   <data name="DateValueArg2" xml:space="preserve">
     <value>hizkuntza_kodea</value>
-    
   </data>
   <data name="AboutDateValue_date_text" xml:space="preserve">
     <value>Plataformarako baliozko formatua duen data- eta denbora-zigilu baten testu-adierazpena.</value>
@@ -2268,15 +1871,12 @@
   </data>
   <data name="AboutTimeValue" xml:space="preserve">
     <value>Testu-formatua duen ordu bat bihurtzen du Microsoft Power Apps-eko data eta orduaren kodeko data adierazten duen zenbaki, dataren zatirik kontuan hartu gabe.</value>
-    
   </data>
   <data name="TimeValueArg1" xml:space="preserve">
     <value>ordua_testua</value>
-    
   </data>
   <data name="TimeValueArg2" xml:space="preserve">
     <value>hizkuntza_kodea</value>
-    
   </data>
   <data name="AboutTimeValue_time_text" xml:space="preserve">
     <value>Plataformarako baliozko formatua duen data- eta denbora-zigilu baten testu-adierazpena.</value>
@@ -2286,39 +1886,27 @@
   </data>
   <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
     <value>Ekintza-arauetan ezin dira erabili elementuak automatikoki freskatzeko zerbitzuaren funtzioak.</value>
-    
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
     <value>Behin baino gehiagotan zehaztu da "{0}" eremua erregistro honetan.</value>
-    
-  </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Ezin da birritan aldatu zehaztutako "{0}" zutabearen izena.</value>
-    
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Behin baino gehiagotan zehaztu da '{0}' deitzen den zutabea.</value>
-    
   </data>
   <data name="WarnLiteralPredicate" xml:space="preserve">
     <value>Abisua: predikatu hau balio literala da eta ez dio egiten erreferentziarik sarrerako taulari.</value>
-    
   </data>
   <data name="WarnDynamicMetadata" xml:space="preserve">
     <value>Abisua: metodoaren emaitza-eskema ezartzeko eta freskatzeko, hautatu zabaldutako formula-barraren behealdeko "Kapturatu eskema". Bestela, metodo hori ez du itzuliko emaitzarik.</value>
-    
   </data>
   <data name="FindArg1" xml:space="preserve">
     <value>bilatu_testua</value>
-    
   </data>
   <data name="FindArg2" xml:space="preserve">
     <value>testu_barruan</value>
-    
   </data>
   <data name="FindArg3" xml:space="preserve">
     <value>hasiera_zk</value>
-    
   </data>
   <data name="AboutFind_find_text" xml:space="preserve">
     <value>Bilatuko den testu-balioa.</value>
@@ -2331,23 +1919,18 @@
   </data>
   <data name="AboutFind" xml:space="preserve">
     <value>Beste testu-balio batean dagoen testu-balioaren hasierako posizioa itzultzen du. Bilaketak maiuskulak eta minuskulak bereizten ditu.</value>
-    
   </data>
   <data name="AboutFindT" xml:space="preserve">
     <value>Beste testu-balio bateko testu-balioaren (edo kate-zutabe baten) hasierako posizioak dituen zutabe bat itzultzen du. Bilaketak maiuskulak eta minuskulak bereizten ditu.</value>
-    
   </data>
   <data name="FindTArg1" xml:space="preserve">
     <value>bilatu_testua_edo_zutabea</value>
-    
   </data>
   <data name="FindTArg2" xml:space="preserve">
     <value>testu_edo_zutabe_barruan</value>
-    
   </data>
   <data name="FindTArg3" xml:space="preserve">
     <value>hasiera_zk</value>
-    
   </data>
   <data name="AboutFind_find_text_or_column" xml:space="preserve">
     <value>Bilatuko den testu-balioa (edo testu-balioen zutabea).</value>
@@ -2357,18 +1940,15 @@
   </data>
   <data name="AboutColorValue" xml:space="preserve">
     <value>Emandako kolore-kateari dagokion kolorea itzultzen du.</value>
-    
   </data>
   <data name="ColorValueArg1" xml:space="preserve">
     <value>kolorea_testua</value>
-    
   </data>
   <data name="AboutColorValue_color_text" xml:space="preserve">
     <value>Izenaren arabera (hala nola "Blue" —urdina—) edo 6 digituko notazio hamaseitar estandarra (#rrggbb) erabiliz zehaztutako kolorea.</value>
   </data>
   <data name="ErrInvalidJsonPointer" xml:space="preserve">
     <value>JSON erakusleak ez du balio.</value>
-    
   </data>
   <data name="Text" xml:space="preserve">
     <value>Testua</value>
@@ -2399,43 +1979,33 @@
   </data>
   <data name="REST" xml:space="preserve">
     <value>Zerbitzuak</value>
-    
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
     <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>'{0}' elementuak ez du '{1}' atributua.</value>
-    
   </data>
   <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
     <value>'{0}' atributuak ezin du kate hutsa izan.</value>
-    
   </data>
   <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
     <value>'{0}' atributuak '{1}' GUID balio baliogabea du.</value>
-    
   </data>
   <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
     <value>'{0}' propietatea ez dago.</value>
-    
   </data>
   <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
     <value>'{0}' propietateak {2} motaren balio baliogabea du. Espero den motaren balioa: {1}.</value>
-    
   </data>
   <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
     <value>'{0}' propietateak ezin du hutsik egon.</value>
-    
   </data>
   <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
     <value>"{0}" enum balioak erabil daitekeen balio bat eduki behar du, baina balioa ({1}) enum balioaren barrutitik kanpo dago.</value>
-    
   </data>
   <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
     <value>"{0}" propietateak zenbaki osoko balio bat izan behar du, baina bere balioa ({1}) barrutitik kanpo dago.</value>
-    
   </data>
   <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
     <value>{0} aurkibidearen elementuak {2} motako balio baliogabea du. Espero den balio mota: {1}.</value>
@@ -2445,23 +2015,18 @@
   </data>
   <data name="AboutDateAdd" xml:space="preserve">
     <value>Gehitu zehaztutako unitate kopurua data batean.</value>
-    
   </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Kalkulatu bi daten arteko aldea.</value>
-    
   </data>
   <data name="DateAddArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="DateAddArg2" xml:space="preserve">
     <value>unitate_kopurua</value>
-    
   </data>
   <data name="DateAddArg3" xml:space="preserve">
     <value>unitatea</value>
-    
   </data>
   <data name="AboutDateAdd_date" xml:space="preserve">
     <value>Erreferentzia-dataren balioa.</value>
@@ -2471,19 +2036,15 @@
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
     <value>Erabili beharreko unitatea. Hauetako bat izan daiteke: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds edo TimeUnit.Milliseconds.</value>
-    
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
     <value>hasiera_data</value>
-    
   </data>
   <data name="DateDiffArg2" xml:space="preserve">
     <value>amaiera_data</value>
-    
   </data>
   <data name="DateDiffArg3" xml:space="preserve">
     <value>unitatea</value>
-    
   </data>
   <data name="AboutDateDiff_start_date" xml:space="preserve">
     <value>Diferentzia-eragiketaren hasiera-data.</value>
@@ -2493,42 +2054,33 @@
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
     <value>Emaitza adierazteko unitatea. Hauetako bat izan daiteke: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds edo TimeUnit.Milliseconds.</value>
-    
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
     <value>Gehitu zehaztutako unitate kopurua data-zutabe batean.</value>
-    
   </data>
   <data name="AboutDateDiffT" xml:space="preserve">
     <value>Kalkulatu data-zutabeen arteko aldea.</value>
-    
   </data>
   <data name="DateAddTArg1" xml:space="preserve">
     <value>dataren_zutabea</value>
-    
   </data>
   <data name="DateAddTArg2" xml:space="preserve">
     <value>unitate_kopurua</value>
-    
   </data>
   <data name="DateAddTArg3" xml:space="preserve">
     <value>unitatea</value>
-    
   </data>
   <data name="AboutDateAdd_date_column" xml:space="preserve">
     <value>Data-balioen zutabea.</value>
   </data>
   <data name="DateDiffTArg1" xml:space="preserve">
     <value>hasiera_dataren_zutabea</value>
-    
   </data>
   <data name="DateDiffTArg2" xml:space="preserve">
     <value>amaiera_dataren_zutabea</value>
-    
   </data>
   <data name="DateDiffTArg3" xml:space="preserve">
     <value>unitatea</value>
-    
   </data>
   <data name="AboutDateDiff_start_date_column" xml:space="preserve">
     <value>Diferentzia-eragiketaren hasiera-daten zutabea.</value>
@@ -2538,202 +2090,156 @@
   </data>
   <data name="AboutChar" xml:space="preserve">
     <value>Plataformako karaktere jokoaren kode-zenbakiak zehaztutako karakterea itzultzen du.</value>
-    
   </data>
   <data name="CharArg1" xml:space="preserve">
     <value>zenbakia</value>
-    
   </data>
   <data name="AboutChar_number" xml:space="preserve">
     <value>Plataformako karaktere jokoko kode-zenbakia.</value>
   </data>
   <data name="AboutCharT" xml:space="preserve">
     <value>Plataformako karaktere jokoaren kode-zenbakien arabera zehaztutako karaktere-taula itzultzen du.</value>
-    
   </data>
   <data name="CharTArg1" xml:space="preserve">
     <value>zenbakien_zutabea</value>
-    
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Plataformako karaktere jokoko kode-zenbakien zutabea.</value>
   </data>
   <data name="AboutParseJSON" xml:space="preserve">
     <value>JSON kateak objektu bihurtzen ditu.</value>
-    
   </data>
   <data name="ParseJSONArg1" xml:space="preserve">
     <value>sarrera</value>
-    
   </data>
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Prozesatzeko JSON katea.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Emandako indizeko taula bateko erregistro bat itzultzen du.</value>
-    
   </data>
   <data name="IndexArg1" xml:space="preserve">
     <value>taula</value>
-    
   </data>
   <data name="IndexArg2" xml:space="preserve">
     <value>indizea</value>
-    
   </data>
   <data name="AboutIndex_table" xml:space="preserve">
     <value>Taula bat.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Eskuratu nahi duzun erregistroaren indizea.</value>
-    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Izena</value>
-    
   </data>
   <data name="Screen_Printing_DisplayName" xml:space="preserve">
     <value>Inprimatzen</value>
-    
   </data>
   <data name="Screen_ImagePosition_DisplayName" xml:space="preserve">
     <value>Irudiaren posizioa</value>
-    
   </data>
   <data name="Screen_Size_DisplayName" xml:space="preserve">
     <value>Tamaina</value>
-    
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Barra-kodearen mota</value>
-    
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
     <value>Kontrastea</value>
-    
   </data>
   <data name="camera_Zoom_DisplayName" xml:space="preserve">
     <value>Zooma</value>
-    
   </data>
   <data name="camera_Camera_DisplayName" xml:space="preserve">
     <value>Kamera</value>
-    
   </data>
   <data name="export_Data_DisplayName" xml:space="preserve">
     <value>Datuak</value>
-    
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Editatu</value>
-    
   </data>
   <data name="Dust" xml:space="preserve">
     <value>Hautsa</value>
-    
   </data>
   <data name="image_Image_DisplayName" xml:space="preserve">
     <value>Irudia</value>
-    
   </data>
   <data name="icon_Icon_DisplayName" xml:space="preserve">
     <value>Ikonoa</value>
-    
   </data>
   <data name="icon_Rotation_DisplayName" xml:space="preserve">
     <value>Biraketa</value>
-    
   </data>
   <data name="image_ImagePosition_DisplayName" xml:space="preserve">
     <value>Irudiaren posizioa</value>
-    
   </data>
   <data name="image_ImageRotation_DisplayName" xml:space="preserve">
     <value>Biratu</value>
-    
   </data>
   <data name="label_Live_DisplayName" xml:space="preserve">
     <value>Dinamikoa</value>
-    
   </data>
   <data name="label_Overflow_DisplayName" xml:space="preserve">
     <value>Gainezkatzea</value>
-    
   </data>
   <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
     <value>Data- eta ordu-zona</value>
-    
   </data>
   <data name="DatePicker_Format_DisplayName" xml:space="preserve">
     <value>Formatua</value>
-    
   </data>
   <data name="DatePicker_Language_DisplayName" xml:space="preserve">
     <value>Hizkuntza</value>
-    
   </data>
   <data name="Calendar_Width_DisplayName" xml:space="preserve">
     <value>Egutegiaren zabalera</value>
-    
   </data>
   <data name="Hide_Calendar_DisplayName" xml:space="preserve">
     <value>Ezkutatu egutegia</value>
-    
   </data>
   <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
     <value>Astearen hasiera</value>
-    
   </data>
   <data name="microphone_Mic_DisplayName" xml:space="preserve">
     <value>MIC</value>
-    
   </data>
   <data name="text_Default_DisplayName" xml:space="preserve">
     <value>Lehenetsia</value>
-    
   </data>
   <data name="text_Mode_DisplayName" xml:space="preserve">
     <value>Modua</value>
-    
   </data>
   <data name="text_Format_DisplayName" xml:space="preserve">
     <value>Formatua</value>
-    
   </data>
   <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
     <value>Teklatu birtualaren modua</value>
-    
   </data>
   <data name="text_TeamsTheme_DisplayName" xml:space="preserve">
     <value>Teams gaia</value>
-    
   </data>
   <data name="text_Clear_DisplayName" xml:space="preserve">
     <value>Garbitu botoia</value>
-    
   </data>
   <data name="AboutIsNumeric" xml:space="preserve">
     <value>Balioa zenbaki bat den egiaztatzen du eta "egia" edo "faltsua" balioa itzultzen du.</value>
-    
   </data>
   <data name="IsNumericArg1" xml:space="preserve">
     <value>balioa</value>
-    
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Probatuko den balioa.</value>
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Testu-formatua duten data eta ordua bihurtzen ditu Power Apps-eko data eta orduaren kodeko data adierazten duen zenbaki.</value>
-    
   </data>
   <data name="DateTimeValueArg1" xml:space="preserve">
     <value>ordua_testua</value>
-    
   </data>
   <data name="DateTimeValueArg2" xml:space="preserve">
     <value>hizkuntza_kodea</value>
-    
   </data>
   <data name="AboutDateTimeValue_time_text" xml:space="preserve">
     <value>Plataformarako baliozko formatua duen data- eta denbora-zigilu baten testu-adierazpena.</value>
@@ -2743,26 +2249,21 @@
   </data>
   <data name="AboutTable" xml:space="preserve">
     <value>Taula bat sortzen du zehaztutako erregistroetan oinarrituta; erregistro-eremu esklusiboen kopurua eta zutabeen kopurua berdinak izango dira. Adibidez: Table({key1: val1, key2: val2, ...}, ...)</value>
-    
   </data>
   <data name="TableArg1" xml:space="preserve">
     <value>erregistroa</value>
-    
   </data>
   <data name="AboutTable_record" xml:space="preserve">
     <value>Emaitza-taulan errenkada bihurtuko den erregistroa.</value>
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>"source" taulako zutabe guztiak (zehaztu direnak izan ezik) ez dituen taula bat itzultzen du.</value>
-    
   </data>
   <data name="ShowColumnsArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="ShowColumnsArg2" xml:space="preserve">
     <value>zutabe_izena</value>
-    
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
     <value>Zutabeak kenduko zaizkion taularen edo erregistroaren balioa.</value>
@@ -2772,33 +2273,27 @@
   </data>
   <data name="AboutIsToday" xml:space="preserve">
     <value>Emandako data gaurkoa den egiaztatzen du eta "egia" edo "faltsua" balioa itzultzen du.</value>
-    
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
     <value>Probatuko den data-balioa.</value>
   </data>
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="AboutIsUTCToday" xml:space="preserve">
     <value>Gaur emandako data UTC formatuan dagoen egiaztatzen du eta "true" edo "false" balioak itzultzen ditu.</value>
-    
   </data>
   <data name="AboutIsUTCToday_date" xml:space="preserve">
     <value>Probatuko den data-balioa.</value>
   </data>
   <data name="IsUTCTodayFuncArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Zenbaki baten eta zatitzailearen arteko zatiketaren emaitza itzultzen du. Emaitza horrek zatitzailearen ikur berdina du.</value>
-    
   </data>
   <data name="AboutModT" xml:space="preserve">
     <value>Zenbaki baten (edo zenbaki-zutabe bat) eta zatitzaile baten (edo zatitzaile-zutabe baten) arteko zatiketaren emaitza duen zutabea itzultzen du.</value>
-    
   </data>
   <data name="AboutMod_divisor" xml:space="preserve">
     <value>Zatitzeko erabiliko den zenbakia.</value>
@@ -2814,35 +2309,27 @@
   </data>
   <data name="ModFuncArg1" xml:space="preserve">
     <value>zenbakia</value>
-    
   </data>
   <data name="ModFuncArg2" xml:space="preserve">
     <value>zatitzailea</value>
-    
   </data>
   <data name="ModTFuncArg1" xml:space="preserve">
     <value>zk_edo_zutabea</value>
-    
   </data>
   <data name="ModTFuncArg2" xml:space="preserve">
     <value>zatitzailea_edo_zutabea</value>
-    
   </data>
   <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
     <value>Dokumentua</value>
-    
   </data>
   <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
     <value>Zooma</value>
-    
   </data>
   <data name="pdfViewer_Password_DisplayName" xml:space="preserve">
     <value>Pasahitza</value>
-    
   </data>
   <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
     <value>Pasahitzaren egoera</value>
-    
   </data>
   <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
     <value>Datuen azalpenak ez du balio: {0}</value>
@@ -2852,7 +2339,6 @@
   </data>
   <data name="AboutForAll" xml:space="preserve">
     <value>Formula jakin bat aplikatzen du datu-iturburuaren errenkada bakoitzean eta, ondoren, taula berria itzultzen du errenkada bakoitzaren emaitzekin.</value>
-    
   </data>
   <data name="AboutForAll_source" xml:space="preserve">
     <value>Editatuko den datu-iturburua edo taula.</value>
@@ -2862,15 +2348,12 @@
   </data>
   <data name="ForAllArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="ForAllArg2" xml:space="preserve">
     <value>formula</value>
-    
   </data>
   <data name="AboutPower" xml:space="preserve">
     <value>x zenbakia y zenbakiaz berretzen du. x^y funtzioa bezala.</value>
-    
   </data>
   <data name="AboutPower_base" xml:space="preserve">
     <value>Berretu behar den oinarri-zenbakia.</value>
@@ -2880,15 +2363,12 @@
   </data>
   <data name="PowerFuncArg1" xml:space="preserve">
     <value>oinarrizkoa</value>
-    
   </data>
   <data name="PowerFuncArg2" xml:space="preserve">
     <value>berretzailea</value>
-    
   </data>
   <data name="AboutStartsWith" xml:space="preserve">
     <value>"True" parametroa itzultzen du idatzitako testua emandako hasiera-katearekin hasten bada.</value>
-    
   </data>
   <data name="AboutStartsWith_text" xml:space="preserve">
     <value>Egiaztatu behar den testua.</value>
@@ -2898,15 +2378,12 @@
   </data>
   <data name="StartsWithArg1" xml:space="preserve">
     <value>testua</value>
-    
   </data>
   <data name="StartsWithArg2" xml:space="preserve">
     <value>hasi</value>
-    
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
     <value>"True" parametroa itzultzen du idatzitako testua emandako amaiera-katearekin amaitzen bada.</value>
-    
   </data>
   <data name="AboutEndsWith_text" xml:space="preserve">
     <value>Egiaztatu behar den testua.</value>
@@ -2916,18 +2393,15 @@
   </data>
   <data name="EndsWithArg1" xml:space="preserve">
     <value>testua</value>
-    
   </data>
   <data name="EndsWithArg2" xml:space="preserve">
     <value>amaiera</value>
-    
   </data>
   <data name="AboutBlank" xml:space="preserve">
     <value>Balio nulu bat (hutsik) itzultzen du</value>
   </data>
   <data name="AboutPowerT" xml:space="preserve">
     <value>X zenbaki bat (edo zenbakien zutabe bat) beste Y zenbaki batekin (edo zenbakien zutabe batekin) berretzen du. x^y eragiketaren berdina da.</value>
-    
   </data>
   <data name="AboutPower_base_or_column" xml:space="preserve">
     <value>Berretuko den oinarri-zenbakia (edo oinarri-zenbakien zutabea).</value>
@@ -2937,166 +2411,126 @@
   </data>
   <data name="PowerTFuncArg1" xml:space="preserve">
     <value>oinarria_edo_zk</value>
-    
   </data>
   <data name="PowerTFuncArg2" xml:space="preserve">
     <value>berretzailea_edo_zutabea</value>
-    
   </data>
   <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
     <value>Ezin da ebaluatu urrunetik formularen zati bat. Une honetan ez da onartzen "{0}" eragiketa testuinguru honetan.</value>
-    
   </data>
   <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
     <value>Ezin da ebaluatu urrunetik formula honen zati bat. Ezin da eskuordetu "{0}" funtzioa, baldin eta eremu baten izena agertzen bada bigarren argumentuan.</value>
-    
   </data>
   <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
     <value>Entitate-inprimakia</value>
-    
   </data>
   <data name="TeamsTheme_Default_DisplayName" xml:space="preserve">
     <value>Gai lehenetsia</value>
-    
   </data>
   <data name="TeamsTheme_Dark_DisplayName" xml:space="preserve">
     <value>Gai iluna</value>
-    
   </data>
   <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
     <value>Kontraste-gaia</value>
-    
   </data>
   <data name="AboutCollect" xml:space="preserve">
     <value>Erregistroak gehitzen ditu datu-iturburu batean.</value>
-    
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>erregistroa</value>
-    
   </data>
   <data name="AboutClear" xml:space="preserve">
     <value>Bilduma bateko erregistro guztiak ezabatzen ditu, baina bildumaren zutabeak gordeko dira.</value>
-    
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Bilduma bateko erregistro guztiak ezabatzen ditu eta, ondoren, erregistro multzo desberdin bat gehitzen du bilduma berean.</value>
-    
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
     <value>erregistroa</value>
-    
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Zehaztutako errenkadan aplikatzen ditu eguneratzeak eta zehaztutako datu-iturburuko errenkada aldatzen du. Errenkada eguneratua itzultzen du.</value>
-    
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="PatchBaseRecordArg" xml:space="preserve">
     <value>base_record</value>
-    
   </data>
   <data name="PatchChangeRecordsArg" xml:space="preserve">
     <value>change_record(s)</value>
-    
   </data>
   <data name="AboutRemove" xml:space="preserve">
     <value>Datu-iturburu bateko erregistro jakin bat edo batzuk kentzen ditu</value>
-    
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
     <value>remove_record(s)</value>
-    
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
     <value>Ematen bada, "RemoveFlags.All" izan behar du azken argumentuak. Ortografia-erroreren bat al dago?</value>
-    
   </data>
   <data name="NotificationType_Error_DisplayName" xml:space="preserve">
     <value>Errorea</value>
-    
   </data>
   <data name="NotificationType_Warning_DisplayName" xml:space="preserve">
     <value>Abisua</value>
-    
   </data>
   <data name="NotificationType_Success_DisplayName" xml:space="preserve">
     <value>Ongi</value>
-    
   </data>
   <data name="NotificationType_Information_DisplayName" xml:space="preserve">
     <value>Informazioa</value>
-    
   </data>
   <data name="AboutIsError" xml:space="preserve">
     <value>Emandako argumentua egiaztatzean errore bat gertatu den itzultzen du.</value>
-    
   </data>
   <data name="IsErrorArg" xml:space="preserve">
     <value>balioa</value>
-    
   </data>
   <data name="AboutIsError_value" xml:space="preserve">
     <value>Erroreak egiaztatzeko erabiliko den balioa.</value>
-    
   </data>
   <data name="ErrBadArityMinimum" xml:space="preserve">
     <value>Argumentu kopuruak ez du balio: {0} jaso dira, baina {1} edo gehiago espero ziren.</value>
-    
   </data>
   <data name="ErrBadArityRange" xml:space="preserve">
     <value>Argumentu kopuruak ez du balio: {0} jaso dira, baina {1}-{2} espero ziren.</value>
-    
   </data>
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
-    
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Eragingai bat espero zen. Formulak edo espresioak erabil daitekeen eragingai bat espero du. Adibidez, "2" eragingaia gehi dezakezu " 1 +_" espresioan, eta "3" izango da emaitza. Bestela, "there" eragingaia gehi dezakezu ""Hi "&amp; _ " espresioan, eta "Hi there" izango da emaitza.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
     <value>Idatzi espresioa osatuko duen eragingaiaren balioa. Ziurtatu eragingaia mota (testua, zenbakia, data edo true/false) espresioarekin bat datorrela. Zenbakiak zenbakiekin bat datoz, testua testuarekin, eta abar. Adibidez, "1 + "Hi"" espresioak ez du balio, baina "1 + 2" erabil daiteke.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
     <value>Ustekabeko karaktereak. Ustekabeko modu batean erabili dira karaktereak.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Adibidez, ez da espero "\" karakterea zenbaki baten ondoren erabiltzea (adibidez, "32\"). Zuriune bat gehitu behar duzu ("32 ") zehaztutako zenbakia soilik adierazteko (32), edo beste zenbaki baten parte dela adierazteko (adibidez, "323").</value>
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Kendu edo aldatu espero ez diren karaktereak.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Ustekabeko "{0}" karakterea formulako "{1}" posizioan.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Adibidez, ez da espero "\" karakterea zenbaki baten ondoren erabiltzea (adibidez, "32\"). Zuriune bat gehitu behar duzu ("32 ") zehaztutako zenbakia soilik adierazteko (32), edo beste zenbaki baten parte dela adierazteko (adibidez, "323").</value>
@@ -3106,475 +2540,375 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
     <value>Iruzkinaren amaieraren identifikatzailea falta da. Blokearen iruzkinak ez du iruzkinaren amaieraren identifikatzailerik.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>"/*" ikurrarekin hasi eta "*/" ikurrarekin amaitu behar du blokearen iruzkin bakoitzak. Karaktere horiek erabiltzen ez badituzu bloke bakoitza amaitzeko, iruzkinaren ondoan dagoen kode guztia iruzkinaren parte izango da. Iruzkinak lerro bat soilik badu, "//" karaktereekin has daiteke; horri esker, ez duzu iruzkinaren amaiera zehaztu behar.</value>
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Gehitu "*/" blokearen iruzkinean, edo alda ezazu lerro-iruzkin multzo batera.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Ustekabeko karaktereak. Formulak "{0}" du, baina "{1}" espero zen.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Adibidez, errore hori gertatuko da formula batek "{{Val@ 7}}" badu "{{Val: 7}}" balioaren ordez. Aldagai bat zehazten duzunean, sintaxiak bi puntuak beharko ditu a bilduaren (@) ikurraren ordez.</value>
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Kendu edo aldatu espero ez diren karaktereak espero diren karaktereekin.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
     <value>Izenak balio ez duenez, ez da ezagutu "{0}".</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Normalean, errore hori gertatzen da formula batek jada ez dagoen elementu bati erreferentzia egiten dionean (adibidez, ezabatu duzun kontrol bat).</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Kendu edo zuzendu erabil ezin daitekeen izenari egindako erreferentzia.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Izenak balio ez duenez, ez da ezagutu identifikatzailea.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
     <value>Normalean, errore hori gertatzen da formula batek jada ez dagoen elementu bati erreferentzia egiten dionean (adibidez, ezabatu duzun kontrol bat).</value>
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Kendu edo zuzendu erabil ezin daitekeen izenari egindako erreferentzia.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>Propietate-erreferentziak ez du balio.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Formulak erabil ezin daitekeen sintaxia duten osagaiaren funtzioaren propietateei erreferentzia egiten dienean agertzen da errorea (adibidez, Component.CustomFunction sintaxia erabiltzen denean Component.CustomFunction() sintaxiaren ordez).</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Erabili sintaxi zuzena osagaiaren funtzioaren propietateei erreferentzia egiteko. Adibidez, Component.CustomFunction()</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
     <value>Artikulua: PowerApps-erako formula-erreferentzia</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Erreferentzia "nagusiak" ez du balio. Ezin diozu erreferentziarik egin testuinguru honetako kontrol nagusi bati.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Halaber, ezin duzu erabili eragile nagusia kontrol nagusirik ez duen kontrol batekin. Eragile horrek zehaztutako kontrola ostatatzen duen eta propietate guztiak erabilgarri dituen kontrolari egiten dio erreferentzia.</value>
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Kendu eragile "nagusia".</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Artikulua: Gehitu eta konfiguratu mihise-aplikazioen kontrol bat Power Apps-en</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
     <value>Errenkada-esparruaren habiaratzea sakonegia da. Formularen errenkada-esparruak 63 habiaratze-mailak gainditzen ditu.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Zenbat eta habiaratze-maila gehiago eduki, orduan eta zailagoa da izaten da edukia kudeatzea; horregatik, Power Apps-ek errenkada-esparrua 63. mailaraino habiaratzea onartzen du gehienez.</value>
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Idatzi berriro formula habiaratze-maila gutxiago eduki ditzan.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
     <value>Espresioaren habiaratzea sakonegia da. 50 mailara baino gehiagora habiaratu da formulako espresio bat.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps erabiltzen baduzu, gehienez, 50. mailaraino habiara dezakezu espresioa. Gogoan izan oso zaila dela hain sakon dagoen espresio bat ulertzea eta mantentzea.</value>
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Idatzi berriro formula habiaratze-maila gutxiago eduki ditzan.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
     <value>Eragile bat espero zen. +, *, &amp; edo antzeko eragile bat izan behar du formularen puntu horrek.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Eragileek bi eragigai bateratzen dituzte. Adibidez, errore hau gertatuko da eragilerik ez duten bi funtzio (eragigai) bateratzen dituzunean; hala nola, Len("mytext")Len("mytext").</value>
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula eragile bat eduki dezan eragigaien artean.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_Link_1" xml:space="preserve">
     <value>Modulua: Erabili oinarrizko formulak</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Zenbaki bat espero zen. Zenbaki bat izan behar du formularen puntu horrek.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Adibidez, errore hori gertatuko da irudi bat erabiltzen baduzu zenbaki bat behar duen funtzio batean.</value>
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula zenbaki bat erakutsi dezan formularen puntu honetan.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
     <value>Balio boolear bat espero zen. Balio boolear bat (true/false) izan behar du formularen puntu horrek.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Balio boolear bat Microsoft Excel eta antzeko aplikazioetan erabiltzen den true/false balio bat da. Adibidez, errore hori gertatuko da data bat erabiltzen baduzu balio boolear bat behar duen funtzio batean.</value>
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula balio boolear bat kalkula dezan formularen puntu honetan.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Bi puntu espero ziren. Bi puntu (:) izan behar ditu formularen puntu horrek.</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Eremu-izenak (zutabe-izena ere esaten zaio batzuetan) eta erregistro bateko eremu-balioak (adibidez, {Month:"1"}, {Month:"2"} …) bereizten dituzte bi puntuek; halaber, orduak, minutuak eta segundoak ere bereiz ditzakete (adibidez, "3:04").</value>
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula bi puntuen karakterea eduki dezan.</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_Link_1" xml:space="preserve">
     <value>Artikulua: Erakutsi testua, datak eta orduak Power Apps-en</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Portaerarik ez duen propietate bateko portaera-funtzioa. Ezin duzu erabili propietate hori aplikazioaren beste eremu batzuetako balioak aldatzeko.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Aplikazioaren egoera aldatzen dute portaera-funtzioek; horretarako, aplikazioaren beste eremu batzuetako balioak aldatzen dituzte. "Navigate", "Patch", "UpdateContext" eta "Collect" dira ohiko portaera-funtzioak. "OnSelect", "OnVisible" eta antzeko "On..." propietateak, ordea, portaeran oinarritutako ohiko propietateak dira.</value>
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Eraman portaera-funtzioa portaeran oinarritutako propietate batera.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-eko mihise-aplikazioetan portaera-formulak erabiltzeko aukeraren azalpena</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Probatu funtzio probakoa ez den propietate bat da. Ezin duzu erabili propietate hori proba funtzioak soilik deitzeko.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Probako funtzioak aplikazio bat probatzeak erabiltzaile-sarrera simulatzeko erabili daitezkeenak dira. "SetProperty", "SelectRow" eta "Baieztatu" probako funtzio ohikoak dira. Proba-kasuetan soilik erabil daitezke.</value>
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Erabili funtzioa proba-kasu batean, ez aplikazioan.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
     <value>Ezin da bihurtu datu mota hori. Power Apps-ek ezin du bihurtu {0} mota {1} mota.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps-ek formulako zenbait daturen mota alda dezake. Adibidez, "1" (kate bat) 1 (zenbaki bat) bihur dezake, baina ezin ditu aldatu datu mota guztiak beste datu mota batzuk. Adibidez, ezin ditu bihurtu irudiak zenbaki.</value>
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Editatu formula, datu jakin horiek espero den motakoak izan daitezen.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_ShortMessage" xml:space="preserve">
     <value>Testua espero zen. Testua izan behar du formularen puntu horrek.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Adibidez, errore hori gertatuko da data bat erabiltzen baduzu testu-argumentu bat (edo kate bat) behar duen funtzio batean.</value>
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula testu bat kalkula dezan formularen puntu honetan.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Testua edo zenbaki bat espero zen. Testua edo zenbaki bat izan behar du formularen puntu horrek.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Adibidez, errore hori gertatuko da balio boolear bat (true/false) erabiltzen baduzu testua edo zenbaki bat behar duen funtzio batean.</value>
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula testu edo zenbaki bat kalkula dezan formularen puntu honetan.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Ixteko giltza bat espero zen. Ixteko giltza (}) bat izan behar du formularen puntu horrek.</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Erregistro baten amaiera adierazten du (adibidez, {Month:"1"}, {Month:"2"} …) ixteko giltzak.</value>
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula giltzaren karaktere bat eduki dezan.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Identifikatzaileak ez du erabil daitekeen testurik.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Ziurtatu identifikatzaileak testua duela. Identifikatzailea hutsik badago edo zuriuneak soilik baditu gertatu ohi da errore hau.</value>
-    
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
     <value>Ezin dira alderatu {0} motako balioak.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Konparazioaren motak ez dira bateragarriak. Ezin dira konparatu honako mota hauek: {0}, {1}.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Formulan konparatuko diren balioek mota bera ez dutelako ezin dugu ebaluatu formula.</value>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Baliteke balioa bihurtu behar izatea mota bera izan dezan; adibidez, data-kate bat (2018/12/31) data-balio bihur dezakezu.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
     <value>Erregistroak edo taulak konparatzen ari bazara, zehazki bat etorri behar dute eremu edo zutabe motek.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
     <value>Modulua: Erabili oinarrizko formulak</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Modulua: Sortu oinarrizko formulak taula eta erregistroak erabilita</value>
-    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
     <value>Parametroa ez dago. Funtzio honek ez du "{0}" izeneko aukerako parametrorik.</value>
-    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
     <value>Konponbidea: kendu formulako parametroa edo alda iezaiozu izena.</value>
-    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Mota bateraezina. Eguneratzen ari zaren datu-iturburuko "{0}" zutabeak "{1}" mota espero zuen, baina "{2}" mota ari zara erabiltzen.</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
     <value>Baliteke balioa bihurtu behar izatea mota bera izan dezan; adibidez, data-kate bat (2018/12/31) data-balio bihur dezakezu, edo kate bat zenbaki bihur dezakezu.</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1" xml:space="preserve">
     <value>Modulua: Erabili oinarrizko formulak</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Modulua: Sortu oinarrizko formulak taula eta erregistroak erabilita</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
     <value>Zutabea falta da. Formulari "{1}" motako "{0}" zutabea falta zaio.</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
     <value>Gehitu zutabe bat formulan.</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
-    
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Mota bateraezina da. Erregistro batean gehitu nahi duzun elementuak erregistroarekin bateragarria ez den mota bat du.</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Mota bateraezina. Taulan jarri nahi duzun elementua taularekin bateraezina den mota batekoa da.</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
     <value>Ziurtatu taulan gehitu nahi duzun elementu mota bateragarria dela taularekin. Baliteke elementu mota bihurtu behar izatea, adibidez, erregistro bat izan dadin.</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1" xml:space="preserve">
     <value>Modulua: Erabili oinarrizko formulak</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Modulua: Sortu oinarrizko formulak taula eta erregistroak erabilita</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
     <value>Mota bateraezina da. Motak errore bat duelako ezin dugu ebaluatu formula.</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Agian datuak ez datoz bat espero zen motarekin (testua, zenbakia, data, taula erregistroa).</value>
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Egiaztatu formularen balio motak eta ziurtatu mota guztiak bat datozela.</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
     <value>Modulua: Erabili oinarrizko formulak</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Modulua: Sortu oinarrizko formulak taula eta erregistroak erabilita</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
     <value>Data espero zen. Data bat izan behar du formularen puntu horrek.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Adibidez, errore hori gertatuko da testua erabiltzen baduzu data bat behar duen funtzio batean.</value>
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula data bat kalkula dezan formularen puntu honetan.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
     <value>Ordezkaritzari buruzko abisua. Baliteke formulako "{0}" zatiak ez funtzionatzea datu multzo handietan.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Baliteke datu-iturburuak formula prozesatu ezin izatea eta osorik ez dagoen datu multzo bat itzultzea. Baliteke aplikazioak emaitza zuzenak ez itzultzea edo ez funtzionatzea datu multzoa osorik ez badago.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Datu multzoak 500 erregistroko muga gainditzen badu, baina 2.000 erregistro baino gutxiago baditu, saiatu muga berrezartzen.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
     <value>Erraztu formula.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
     <value>Eraman datuak beste datu-iturburu batera.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
     <value>Artikulua: Mihise-aplikazio batean ordezkaritza erabiltzeko aukeraren azalpena</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Bloga: Ordezkaritzan erabil daitezkeen datu-errenkaden mugak</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
     <value>Ordezkaritzari buruzko abisua. Baliteke formulan nabarmendutako zatiak ez funtzionatzea "{0}" zutabearekin datu multzo handietan.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Baliteke datu-iturburuak formula prozesatu ezin izatea eta osorik ez dagoen datu multzo bat itzultzea. Baliteke aplikazioak emaitza zuzenak ez itzultzea edo ez funtzionatzea datu multzoa osorik ez badago.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Datu multzoak 500 erregistroko muga gainditzen badu, baina 2.000 erregistro baino gutxiago baditu, saiatu muga berrezartzen.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
     <value>Erraztu formula.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
     <value>Eraman datuak beste datu-iturburu batera.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
     <value>Artikulua: Mihise-aplikazio batean ordezkaritza erabiltzeko aukeraren azalpena</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Bloga: Ordezkaritzan erabil daitezkeen datu-errenkaden mugak</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
     <value>Ordezkaritzari buruzko abisua. Baliteke formulan nabarmendutako zatiak ez funtzionatzea datu multzo handietan.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> "in" eragilearen eskuineko aldeak datu-iturburu zuzenaren zutabe bat izan behar du. Agian datu-iturburuak ezin du prozesatu formula eta, horregatik, osatu gabeko datu multzo bat itzultzen du. Halaber, datu multzoa osatu gabe badago, baliteke aplikazioak emaitza okerrak itzultzea edo ezin funtzionatzea.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Bihurtu "in" eragilearen eskuinean dagoen elementua datu-iturburu zuzenaren zutabe.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
     <value>Datu multzoak 500 erregistroko muga gainditzen badu, baina 2.000 erregistro baino gutxiago baditu, saiatu muga berrezartzen.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
     <value>Erraztu formula.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
     <value>Eraman datuak beste datu-iturburu batera.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
     <value>Artikulua: Mihise-aplikazio batean ordezkaritza erabiltzeko aukeraren azalpena</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Bloga: Ordezkaritzan erabil daitezkeen datu-errenkaden mugak</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
     <value>Baliteke formula honetan nabarmendutako zatiak ez funtzionatzea datu multzo handietan. </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> "in" eragilearen eskuineko aldea ez da datu-iturburu zuzenaren zutabe bat. Agian datu-iturburuak ezin du prozesatu formula eta, horregatik, osatu gabeko datu multzo bat itzultzen du. Halaber, datu multzoa osatu gabe badago, baliteke aplikazioak emaitza okerrak itzultzea edo ezin funtzionatzea.
@@ -3582,185 +2916,142 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Bihurtu "in" eragilearen eskuinean dagoen elementua datu-iturburu zuzenaren zutabe.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
     <value>Datu multzoak 500 erregistroko muga gainditzen badu, baina 2.000 erregistro baino gutxiago baditu, saiatu muga berrezartzen.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
     <value>Erraztu formula.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
     <value>Eraman datuak beste datu-iturburu batera.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
     <value>Artikulua: Mihise-aplikazio batean ordezkaritza erabiltzeko aukeraren azalpena</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Bloga: Ordezkaritzan erabil daitezkeen datu-errenkaden mugak</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Ordezkaritzari buruzko abisua. Baliteke formulan nabarmendutako zatiak ez funtzionatzea datu multzo handietan. Konektoreak ez du onartzen "{0}" eragiketa.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_LongMessage" xml:space="preserve">
     <value>Baliteke datu-iturburuak formula prozesatu ezin izatea eta osorik ez dagoen datu multzo bat itzultzea. Baliteke aplikazioak emaitza zuzenak ez itzultzea edo ez funtzionatzea datu multzoa osorik ez badago.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
     <value>Datu multzoak 500 erregistroko muga gainditzen badu, baina 2.000 erregistro baino gutxiago baditu, saiatu muga berrezartzen.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
     <value>Erraztu formula.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
     <value>Eraman datuak beste datu-iturburu batera.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
     <value>Artikulua: Mihise-aplikazio batean ordezkaritza erabiltzeko aukeraren azalpena</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Bloga: Ordezkaritzan erabil daitezkeen datu-errenkaden mugak</value>
-    
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
     <value>Ikuspegi bakarra espero zen. Ikuspegi bakarra espero dugu formularen puntu honetan.</value>
-    
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula ikuspegi bakarra eduki dezan formularen puntu honetan.</value>
-    
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_ShortMessage" xml:space="preserve">
     <value>{0} datu-iturburuaren ikuspegi bat espero zen</value>
-    
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula {0} datu-iturburuaren ikuspegia izan dezan.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
     <value>Kontrol-erreferentzia hori ezin da erabili propietate honetan</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
     <value>Aldagai orokorren, bildumen, eta zenbait kontrol- eta pantaila-propietateren erreferentziak soilik onartzen ditu propietateak. Onartzen diren kontrol-propietateen zerrenda bat ikusteko, atzitu esteka.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Erreferentzia: Mihise-aplikazioen ConfirmExit</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
     <value>Interpolatutako kateen barnean agertzen diren adierazpenek testu-balio edo mota bateragarri bat eman behar dute.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
     <value>Egiaztatu interpolatutako katearen barneko adierazpen motak.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
     <value>Ezin da hutsik dagoen adierazpenik egon kate interpolatuan.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
     <value>Egiaztatu hutsik dagoen adierazpenik dagoen kate interpolatuan.</value>
-    
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>As ez da onartzen testuinguru honetan</value>
-    
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
     <value>Motarik gabeko objektuak ezin dira erabili lehen argumentu gisa erregistro-esparruak onartzen dituzten funtzioetan.</value>
-    
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Izendatutako formulak puntu eta komaz amaitu behar du.</value>
-    
   </data>
   <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
     <value>Izendatutako formulak adierazpen bat izan behar du.</value>
-    
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Erabiltzaileak definitutako funtzioak gorputz bat izan behar du.</value>
-    
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>{0} funtzioa zehaztuta dago.</value>
-    
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>{0} parametroa bikoiztua da.</value>
-    
   </data>
   <data name="ErrUDF_UnknownType" xml:space="preserve">
     <value>{0} mota ezezaguna.</value>
-    
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Adierazitako funtzioak itzulitako elementu mota ez dator bat funtzioaren gorputzaren itzulitako elementu motarekin.</value>
-    
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
     <value>Funtzio-itzulera mota falta da, adibidez, ":Number" hemen: "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
-    
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
     <value>Funtzio-argudio mota falta da, adibidez, ":Text" hemen: "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
-    
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Badago "{0}" deitzen den formula bat.</value>
   </data>
   <data name="ErrorResource_NameConflict" xml:space="preserve">
     <value>Ezin da sortu "{1}" izeneko {0} entitatea {2} entitatea hura erabiltzen ari delako jada.</value>
-    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>"{0}" elementuaren lehen argumentuak balio duen aldagai-izen bat izan behar du eta ezin da gatazkan egon lehendik dauden kontrolen, pantailen, bildumen edo datu-iturburuen izenekin. Hau da aurkitutako mota: "{1}".</value>
-    
   </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Sortu eta ezarri aldagai orokor bat.</value>
-    
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>balioa</value>
-    
   </data>
   <data name="AboutDec2Hex" xml:space="preserve">
     <value>Zenbaki hamartarra hamaseitar bihurtzen du</value>
-    
   </data>
   <data name="Dec2HexArg1" xml:space="preserve">
     <value>zenbakia</value>
   </data>
   <data name="AboutDec2Hex_number" xml:space="preserve">
     <value>Kate hamaseitar bihurtzeko erabiliko den zenbakizko balio hamartarra.</value>
-    
   </data>
   <data name="Dec2HexArg2" xml:space="preserve">
     <value>lekuak</value>
   </data>
   <data name="AboutDec2Hex_places" xml:space="preserve">
     <value>Betegarriak kate hamaseitarrean gehitzeko zenbakizko balioa.</value>
-    
   </data>
   <data name="AboutDec2HexT" xml:space="preserve">
     <value>Zutabe bateko balio hamartarrak hamaseitar bihurtzen ditu</value>
-    
   </data>
   <data name="Dec2HexTArg1" xml:space="preserve">
     <value>taula</value>
@@ -3770,65 +3061,48 @@
   </data>
   <data name="AboutDec2HexT_places" xml:space="preserve">
     <value>Betegarria kate hamaseitarretan gehitzeko erabiliko diren balioen zenbakizko balio edo matrizea.</value>
-    
   </data>
   <data name="AboutDec2Hex_table" xml:space="preserve">
     <value>Balio hamaseitar bihurtzeko erabiliko diren zenbakizko balio hamartarren zutabea.</value>
-    
   </data>
   <data name="AboutHex2Dec" xml:space="preserve">
     <value>Zenbaki hamaseitarra hamartar bihurtzen du</value>
-    
   </data>
   <data name="Hex2DecArg1" xml:space="preserve">
     <value>zenbakia</value>
   </data>
   <data name="AboutHex2Dec_number" xml:space="preserve">
     <value>Balio hamartar bihurtzeko erabiliko den kate hamaseitarra.</value>
-    
   </data>
   <data name="AboutHex2DecT" xml:space="preserve">
     <value>Zutabe bateko balio hamaseitarrak hamartar bihurtzen ditu</value>
-    
   </data>
   <data name="Hex2DecTArg1" xml:space="preserve">
     <value>taula</value>
   </data>
   <data name="AboutHex2Dec_table" xml:space="preserve">
     <value>Balio hamartar bihurtzeko erabiliko diren kate hamaseitarren zutabea.</value>
-    
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Eginbidea zaharkituta dago eta ez da aurrerantzean onartuko.</value>
-    
-  </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>{0} funtzioa zaharkituta dago {1} izen-lekuan.</value>
-    
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>{0} funtzioa ez da onartzen {1} izen-lekuan.</value>
-    
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Abisua: atzeratutako mota bat eman da.</value>
-    
   </data>
   <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
     <value>Espero den identifikatzailearen izena</value>
-    
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Funtzioa anbiguoa da: argumentu bereko lambda adierazpenak eta zutabe-identifikatzaileak ditu.</value>
-    
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
     <value>{0} aukeraren balioa ez da esperotako motakoa ({1}).</value>
-    
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
     <value>Emandako aukera multzoaren balioaren izen logikoa itzultzen du.</value>
-    
   </data>
   <data name="AboutOptionSetInfoArg1" xml:space="preserve">
     <value>aukera</value>
@@ -3838,54 +3112,42 @@
   </data>
   <data name="AboutLanguage" xml:space="preserve">
     <value>Lortu eskualdeko ezarpen lokalek exekuzio-denbora ezartzea.</value>
-    
   </data>
   <data name="AboutEncodeUrl" xml:space="preserve">
     <value>URLaren kate bat kodetzen du. Horretarako, alfanumerikoak ez diren karaktere jakin batzuk ordezten ditu "%" ikurrarekin eta zenbaki hamaseitar batekin.</value>
-    
   </data>
   <data name="EncodeUrlArg1" xml:space="preserve">
     <value>URLa</value>
-    
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Kodetu nahi duzun URLa.</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' funtzio ezagutzen da, baina ez da onartzen.</value>
-    
   </data>
   <data name="InvalidCast" xml:space="preserve">
     <value>Mota-bihurketak huts egin du, emandako balioa "{0}" motakoa zelako eta "{1}" motakoa espero zelako.</value>
-    
   </data>
   <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
     <value>"{0}" adierazpenak datu-iturburuaren parte ez den edo deskargatu ez den zutabe bat adieraz dezake. Horren ordez, zutabearen izena zuzenean erabil dezakezu.</value>
-    
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>"{0}" taulako eragiketak ez du funtzionatuko {1} errenkada baino gehiago baditu.</value>
-    
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Predikatu hau beti izango da egiazkoa. ThisRecord edo [@ ] erabili nahi zenuen?</value>
-    
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Ezin da eskuordetu {0}: onartu soilik gako-eremu nagusiko ("{1}") bilaketa eskuordetzea.</value>
-    
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Ezin da eskuordetu {0}: adierazpenak hainbat eremu konparatzen ditu.</value>
-    
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Ezin da eskuordetu {0}: "{1}" portaera-funtzioa dauka.</value>
-    
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Emandako testua eta testuaren formatua bat datozen zehazten du.</value>
-    
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">
     <value>Formatuarekin konparatuko den testua.</value>
@@ -3895,125 +3157,96 @@
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
     <value>Eragiketa honek testuan konparatu nahi ditugun zatiak zehazten ditu. MatchOptions enumerazioaren balio bat izan daiteke.</value>
-    
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
     <value>testua</value>
-    
   </data>
   <data name="IsMatchArg2" xml:space="preserve">
     <value>formatua</value>
-    
   </data>
   <data name="IsMatchArg3" xml:space="preserve">
     <value>hedadura</value>
-    
   </data>
   <data name="AboutMatch" xml:space="preserve">
     <value>Zehaztutako espresio erregularra bilatzen du emandako testuan eta aurkitzen duen lehen emaitza itzultzen du.</value>
-    
   </data>
   <data name="AboutMatchAll" xml:space="preserve">
     <value>Zehaztutako espresio erregularra bilatzen du emandako testuan eta aurkitzen dituen emaitza guztiak itzultzen ditu.</value>
-    
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
     <value>Espresio erregularra kontuan hartuta bilatuko den testua.</value>
-    
   </data>
   <data name="AboutMatch_regular_expression" xml:space="preserve">
     <value>Testua egiaztatzeko erabiliko den espresio erregularra. Bat datorren balioren bat badago itzuliko diren kapturak eduki ditzake (hau da, parentesi arteko balioak).</value>
-    
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
     <value>Eragiketa honek testuan konparatu nahi ditugun zatiak zehazten ditu. MatchOptions enumerazioaren balio bat izan daiteke.</value>
-    
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
     <value>Espresio erregularra kontuan hartuta bilatuko den testua.</value>
-    
   </data>
   <data name="AboutMatchAll_regular_expression" xml:space="preserve">
     <value>Testua egiaztatzeko erabiliko den espresio erregularra. Bat datorren balioren bat badago itzuliko diren kapturak eduki ditzake (hau da, parentesi arteko balioak).</value>
-    
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
     <value>Eragiketa honek testuan konparatu nahi ditugun zatiak zehazten ditu. MatchOptions enumerazioaren balio bat izan daiteke.</value>
-    
   </data>
   <data name="MatchArg1" xml:space="preserve">
     <value>testua</value>
-    
   </data>
   <data name="MatchArg2" xml:space="preserve">
     <value>espresio_erregularra</value>
-    
   </data>
   <data name="MatchArg3" xml:space="preserve">
     <value>aukerak</value>
-    
   </data>
   <data name="AboutRefresh" xml:space="preserve">
     <value>Zehaztutako datu-iturburua freskatzen du.</value>
-    
   </data>
   <data name="RefreshArg1" xml:space="preserve">
     <value>konektatutako_datu_iturburua</value>
-    
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
     <value>Erregistro- edo taula-balio bat espero zen.</value>
-    
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
     <value>Freskatu behar den konektatutako datu-iturburua.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Kudeatutako konexioak soilik freska daitezke.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Espresio erregularrak ez du balio.</value>
-    
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Espresio erregularrek aldaketarik gabeko balioak izan behar dute.</value>
-    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Ezin da aldatu "{0}" funtzioari pasatako balioa.</value>
-    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>"{0}" kaptura-izena espresio erregularraren bat-etortze osoa itzultzen duen eta aurrez zehaztuta dagoen propietatea ezkutatzen ari da. Izen hori duen propietatea erabili nahi baduzu bat-etortze osoa ateratzeko zehaztutako testutik, alda iezaiozu izena kapturari.</value>
-    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
     <value>"{0}" kaptura-izena espresio erregularreko taldearen bat-etortzeak itzultzen dituen eta aurrez zehaztuta dagoen propietatea ezkutatzen ari da. Izen hori duen propietatea erabili nahi baduzu bat datozen azpielementu guztiak ateratzeko zehaztutako testutik, alda iezaiozu izena kapturari.</value>
-    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>"{0}" kaptura-izena espresio erregularraren bat-etortzearen kokalekua itzultzen duen eta aurrez zehaztuta dagoen propietatea ezkutatzen ari da. Izen hori duen propietatea erabili nahi baduzu bat-etortze osoaren kokalekua ateratzeko zehaztutako testutik, alda iezaiozu izena kapturari.</value>
-    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Formatua kendu eta testu-balio arrunta itzultzen du.</value>
-    
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
     <value>testua</value>
-    
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Testuari HTML eta XML etiketak kentzea.</value>
   </data>
   <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
     <value>Iragazteko funtzioek ez dituzte onartzen portaera-funtzioak predikatu gisa.</value>
-    
   </data>
   <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
     <value>Erabili And eragilea hainbat predikatu bigarren argumentuan konbinatzeko.</value>
-    
   </data>
   <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
     <value>Ezin da kopiatu taula hau. Horren ordez, sortu txertatutako taula bat ForAll funtzioa eta {...} erabiliz eta kopiatu behar dituzun zutabeak.</value>
@@ -4023,130 +3256,99 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>"{0}" funtzioaren bigarren argumentua zenbakizko balioetan eta dataren eta orduaren balioetan soilik onartzen da.</value>
-    
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Lineako datu-iturburuaren balio bat (taula edo erregistro bat) duen aldagai bat ezartzen baduzu, hainbat eskaera sortuko dira zerbitzarian. Laster blokeatuko da aukera hau.</value>
-    
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Deklarazio literalaren motak ez du balio</value>
-    
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
     <value>Iturburuko eta helburuko erregistro motak ez datoz bat. Emandako motak eremu gehigarriak ditu: {0}.</value>
-    
   </data>
   <data name="ErrExpectedRVMissingFields" xml:space="preserve">
     <value>Iturburuko eta helburuko erregistro motak ez datoz bat. Emandako motak falta diren eremuak ditu: {0}.</value>
-    
   </data>
   <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
     <value>Iturburuko eta helburuko erregistro motak ez datoz bat. Ez da aurkitu {0} eremua.</value>
-    
   </data>
   <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
     <value>Iturburuko eta helburuko erregistro motak ez datoz bat. Eremuaren izena {0} da, baina {1} espero zen; {2} aurkitu da.</value>
-    
   </data>
   <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
     <value>Emandako {0} mota ezin da gehitu {1} iturburu-motan.</value>
-    
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Iturburuko eta helburuko motak ez datoz bat. {0} espero zen, baina {1} aurkitu da.</value>
-    
   </data>
   <data name="AboutJSON" xml:space="preserve">
     <value>JSON formatuko testu-kate bat sortzen du taula, erregistro edo balio baterako.</value>
-    
   </data>
   <data name="JSONArg1" xml:space="preserve">
     <value>datuak</value>
-    
   </data>
   <data name="AboutJSON_data" xml:space="preserve">
     <value>JSON bihurtuko den datu-egitura. Ausaz habiaratutako taulak, erregistroak eta jatorrizko balioak onartzen dira.</value>
-    
   </data>
   <data name="JSONArg2" xml:space="preserve">
     <value>formatua</value>
-    
   </data>
   <data name="AboutJSON_format" xml:space="preserve">
     <value>JSON bihurketan erabiliko den formatua. Balioa JSONFormat enumerazioaren kidea izango da.</value>
-    
   </data>
   <data name="AboutTrace" xml:space="preserve">
     <value>Gaituta dagoenean, informazioa Application Insights-en erregistratzen du. Halaber, probaren emaitzetan erabilgarri egongo den Test Studio-ren saio bat erregistratzen du.</value>
-    
   </data>
   <data name="TraceArg1" xml:space="preserve">
     <value>mezua</value>
-    
   </data>
   <data name="TraceArg2" xml:space="preserve">
     <value>larritasuna</value>
-    
   </data>
   <data name="TraceArg3" xml:space="preserve">
     <value>custom_record</value>
-    
   </data>
   <data name="TraceArg4" xml:space="preserve">
     <value>jarraitze-aukerak</value>
-    
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
     <value>Jarraipena egin behar zaion informazioa.</value>
-    
   </data>
   <data name="AboutTrace_severity" xml:space="preserve">
     <value>Application Insights-en jarraipena egiteko erabiliko den larritasun-maila.</value>
-    
   </data>
   <data name="AboutTrace_custom_record" xml:space="preserve">
     <value>Application Insights-erainoko jarraipena egingo zaien datu pertsonalizatuak dituen erregistroa.</value>
-    
   </data>
   <data name="AboutTrace_trace_options" xml:space="preserve">
     <value>Trace funtzioaren aukera gehigarriak.</value>
-    
   </data>
   <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
     <value>{0} funtzioaren "{1}" parametroak balio konstante bat izan behar du.</value>
-    
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>"{0}" eta "{1}" JSONFormat balioak ezin dira batera erabili.</value>
-    
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>JSON funtziora eraman den balioak multimedia-edukia du eta ez da onartzen modu lehenetsian. JSON formatuari multimedia-balioak serializatzeko baimena emateko, ziurtatu IncludeBinaryData aukera erabiltzen duzula "format" parametroan.</value>
-    
   </data>
   <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
     <value>JSON funtzioak ezin ditu serializatu "{0}" motako objektuak.</value>
-    
   </data>
   <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
     <value>JSON funtzioak ezin ditu serializatu "{1}" motako eta "{0}" izeneko propietate habiaratu bat duten taulak edo objektuak.</value>
-    
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON funtzioak ezin ditu serializatu datu bitarrak portaerarekin zerikusirik ez duten espresioetan.</value>    
+    <value>JSON funtzioak ezin ditu serializatu datu bitarrak portaerarekin zerikusirik ez duten espresioetan.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>{0} parametroak onartzen ez den {1} motako propietate bat dauka.</value>
-    
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Zehaztutako zutabea irakurtzeko soilik da eta ezin da aldatu: {0}.</value>
-    
   </data>
   <data name="AboutSearch" xml:space="preserve">
     <value>Testua bilatzen du "source" taulan eta testua duten errenkadak itzultzen ditu. Konparazioak egitean, maiuskulak eta minuskulak bereizten dira.</value>
-    
   </data>
   <data name="AboutSearch_source" xml:space="preserve">
     <value>Bilatuko den taula.</value>
@@ -4159,22 +3361,17 @@
   </data>
   <data name="SearchArg1" xml:space="preserve">
     <value>iturburua</value>
-    
   </data>
   <data name="SearchArg2" xml:space="preserve">
     <value>testua</value>
-    
   </data>
   <data name="SearchArg3" xml:space="preserve">
     <value>zutabea</value>
-    
   </data>
   <data name="ErrSearchWrongType" xml:space="preserve">
     <value>Zutabe mota okerra. Testu motakoa espero da.</value>
-    
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Taulak ez du testu motako zutaberik.</value>
-    
   </data>
 </root>

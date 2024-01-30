@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -119,62 +119,48 @@
   </resheader>
   <data name="ListItemSingleQuotedFormat" xml:space="preserve">
     <value>'{0}'</value>
-    
   </data>
   <data name="AboutIf" xml:space="preserve">
     <value>Periksa jika salah satu kondisi yang ditentukan terpenuhi dan menghasilkan nilai yang sesuai. Jika tidak ada kondisi yang terpenuhi, fungsi menghasilkan nilai default tertentu.</value>
-    
   </data>
   <data name="IfArgCond" xml:space="preserve">
     <value>tes_logika</value>
-    
   </data>
   <data name="IfArgTrueValue" xml:space="preserve">
     <value>nilai_yang_benar</value>
-    
   </data>
   <data name="IfArgElseValue" xml:space="preserve">
     <value>nilai_yang_lain</value>
-    
   </data>
   <data name="AboutIf_logical_test" xml:space="preserve">
     <value>Kondisi yang menghasilkan nilai boolean.</value>
   </data>
   <data name="AboutIf_true_value" xml:space="preserve">
     <value>Ekspresi yang memberikan hasil ketika If kondisi benar.</value>
-    
   </data>
   <data name="AboutIf_else_value" xml:space="preserve">
     <value>Ekspresi yang memberikan hasil ketika semua If kondisi yang ditentukan false.</value>
-    
   </data>
   <data name="AboutSwitch" xml:space="preserve">
     <value>Memeriksa hasil formula dengan seri nilai. Ketika kecocokan ditemukan, formula terkait akan dievaluasi kemudian ditampilkan. Jika tidak ada kecocokan ditemukan, formula default terakhir akan dievaluasi kemudian ditampilkan.</value>
-    
   </data>
   <data name="SwitchExpression" xml:space="preserve">
     <value>nilai_pengalihan</value>
-    
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
     <value>hasil_default</value>
-    
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
     <value>nilai_yang_cocok</value>
-    
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
     <value>hasil_yang_cocok</value>
-    
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
     <value>Nilai yang akan dibandingkan dengan setiap nilai_yang_cocok.</value>
-    
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
     <value>Nilai yang akan dicocokkan dengan nilai_pengalihan.</value>
-    
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
     <value>Formula untuk dievaluasi dan ditampilkan jika ada kecocokan yang ditemukan.</value>
@@ -184,19 +170,15 @@
   </data>
   <data name="AboutAnd" xml:space="preserve">
     <value>Memeriksa apakah semua argumen benar, dan menampilkan true jika semua argumen true.</value>
-    
   </data>
   <data name="AboutOr" xml:space="preserve">
     <value>Memeriksa apakah argumen true, dan menampilkan true atau false. Hanya menampilkan false jika semua argumen false.</value>
-    
   </data>
   <data name="AboutNot" xml:space="preserve">
     <value>Perubahan false ke true dan true ke false.</value>
-    
   </data>
   <data name="LogicalFuncParam" xml:space="preserve">
     <value>logis</value>
-    
   </data>
   <data name="AboutAnd_logical" xml:space="preserve">
     <value>Ekspresi logis untuk disertakan ke operasi And.</value>
@@ -209,19 +191,15 @@
   </data>
   <data name="AboutCount" xml:space="preserve">
     <value>Menghitung nilai numerik dalam kolom tertentu.</value>
-    
   </data>
   <data name="AboutCountA" xml:space="preserve">
     <value>Menghitung jumlah baris yang tidak kosong dalam kolom.</value>
-    
   </data>
   <data name="AboutCountRows" xml:space="preserve">
     <value>Menghitung jumlah baris di kolom masukan atau koleksi.</value>
-    
   </data>
   <data name="CountArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="AboutCount_source" xml:space="preserve">
     <value>Kolom nilai untuk dihitung.</value>
@@ -234,15 +212,12 @@
   </data>
   <data name="AboutCountIf" xml:space="preserve">
     <value>Menghitung jumlah baris yang sesuai dengan kondisi tertentu.</value>
-    
   </data>
   <data name="CountIfArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="CountIfArg2" xml:space="preserve">
     <value>kondisi</value>
-    
   </data>
   <data name="AboutCountIf_source" xml:space="preserve">
     <value>Tabel yang barisnya sesuai dengan kriteria tertentu akan dihitng.</value>
@@ -252,27 +227,21 @@
   </data>
   <data name="AboutSumT" xml:space="preserve">
     <value>Menampilkan jumlah angka ekspresi yang dievaluasi dalam konteks tabel.</value>
-    
   </data>
   <data name="AboutMaxT" xml:space="preserve">
     <value>Menampilkan nilai terbesar yang dievaluasi ekspresi dalam konteks tabel.</value>
-    
   </data>
   <data name="AboutMinT" xml:space="preserve">
     <value>Menampilkan nilai terkecil yang dievaluasi ekspresi dalam konteks tabel.</value>
-    
   </data>
   <data name="AboutAverageT" xml:space="preserve">
     <value>Menampilkan rata-rata (dalam arti aritmatik) jumlah ekspresi yang dievaluasi dalam konteks taabel.</value>
-    
   </data>
   <data name="StatisticalTArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="StatisticalTArg2" xml:space="preserve">
     <value>ekspresi</value>
-    
   </data>
   <data name="AboutMin_source" xml:space="preserve">
     <value>Tabel tempat operasi min ini akan dikomputasi.</value>
@@ -300,23 +269,18 @@
   </data>
   <data name="AboutSum" xml:space="preserve">
     <value>Menampilkan jumlah dari argumennya.</value>
-    
   </data>
   <data name="AboutMax" xml:space="preserve">
     <value>Menampilkan nilai terbesar di satu kumpulan nilai. Mengabaikan nilai logis dan teks.</value>
-    
   </data>
   <data name="AboutMin" xml:space="preserve">
     <value>Menampilkan nilai terkecil di satu kumpulan nilai. Mengabaikan nilai logis dan teks.</value>
-    
   </data>
   <data name="AboutAverage" xml:space="preserve">
     <value>Menampilkan rata-rata (dalam arti aritmatik) dari argumennya.</value>
-    
   </data>
   <data name="StatisticalArg" xml:space="preserve">
     <value>angka</value>
-    
   </data>
   <data name="AboutSum_number" xml:space="preserve">
     <value>Nilai numerik untuk operasi penjumlahan.</value>
@@ -332,43 +296,33 @@
   </data>
   <data name="AboutAddColumns" xml:space="preserve">
     <value>Menampilkan tabel dengan kolom baru yang dikomputasi dengan mengevaluasi semua 'expr' atas 'source'.</value>
-    
   </data>
   <data name="AddColumnsArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="AddColumnsArg2" xml:space="preserve">
     <value>kolom</value>
-    
   </data>
   <data name="AddColumnsArg3" xml:space="preserve">
     <value>ekspresi</value>
-    
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
     <value>Kolom untuk ditambahkan ke tabel atau rekaman.</value>
-    
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
     <value>Nama kolom unik.</value>
-    
   </data>
   <data name="AboutAddColumns_expression" xml:space="preserve">
     <value>Ekspresi yang memberikan nilai untuk kolom baru.</value>
-    
   </data>
   <data name="AboutDropColumns" xml:space="preserve">
     <value>Menampilkan tabel dengan satu atau lebih 'kolom' tertentu yang dihapus dari tabel 'sumber'.</value>
-    
   </data>
   <data name="DropColumnsArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="DropColumnsArg2" xml:space="preserve">
     <value>nama_kolom</value>
-    
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
     <value>Nilai tabel atau rekaman yang kolomnya akan dihapus.</value>
@@ -378,19 +332,15 @@
   </data>
   <data name="AboutRenameColumns" xml:space="preserve">
     <value>Menampilkan salinan tabel 'sumber' yang ditentukan, dengan nama kolom 'old_column' yang sudah diubah menjadi 'new_column'.</value>
-    
   </data>
   <data name="RenameColumnsArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="RenameColumnsArg2" xml:space="preserve">
     <value>kolom_lama</value>
-    
   </data>
   <data name="RenameColumnsArg3" xml:space="preserve">
     <value>kolom_baru</value>
-    
   </data>
   <data name="AboutRenameColumns_source" xml:space="preserve">
     <value>Nilai tabel untuk diproses.</value>
@@ -402,20 +352,16 @@
     <value>Nama baru kolom.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Nama kolom yang ditentukan '{0}' tidak dapat diganti dua kali.</value>
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Menampilkan baris dari tabel yang semua kondisinya true.</value>
-    
   </data>
   <data name="FilterArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="FilterArg2" xml:space="preserve">
     <value>tes_logika</value>
-    
   </data>
   <data name="AboutFilter_source" xml:space="preserve">
     <value>Tabel untuk difilter.</value>
@@ -425,15 +371,12 @@
   </data>
   <data name="AboutFirst" xml:space="preserve">
     <value>Menampilkan baris pertama 'sumber'.</value>
-    
   </data>
   <data name="AboutLast" xml:space="preserve">
     <value>Menampilkan baris terkahir 'sumber'.</value>
-    
   </data>
   <data name="FirstLastArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="AboutFirst_source" xml:space="preserve">
     <value>Tabel yang baris pertamanya akan dikembalikan.</value>
@@ -443,19 +386,15 @@
   </data>
   <data name="AboutFirstN" xml:space="preserve">
     <value>Menampilkan 'jumlah' baris pertama 'sumber'.</value>
-    
   </data>
   <data name="AboutLastN" xml:space="preserve">
     <value>Menampilkan baris 'hitung' terkahir 'sumber'.</value>
-    
   </data>
   <data name="FirstLastNArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="FirstLastNArg2" xml:space="preserve">
     <value>jumlah</value>
-    
   </data>
   <data name="AboutFirstN_source" xml:space="preserve">
     <value>Tabel yang barisnya akan ditampilkan.</value>
@@ -471,130 +410,105 @@
   </data>
   <data name="AboutText" xml:space="preserve">
     <value>Mengonversi 'nilai' ke teks dalam jumlah 'format_teks' yang ditentukan.</value>
-    
   </data>
   <data name="TextArg1" xml:space="preserve">
     <value>nilai</value>
-    
   </data>
   <data name="TextArg2" xml:space="preserve">
     <value>format_teks</value>
-    
   </data>
   <data name="TextArg3" xml:space="preserve">
     <value>bahasa</value>
-    
   </data>
   <data name="AboutText_value" xml:space="preserve">
     <value>Nilai untuk diformat menjadi teks.</value>
   </data>
   <data name="AboutText_format_text" xml:space="preserve">
     <value>Nilai teks yang menentukan cara 'nilai' akan diformat.</value>
-    
   </data>
   <data name="AboutText_language" xml:space="preserve">
     <value>Kode bahasa yang harus digunakan saat mengonversi ke teks.</value>
-    
   </data>
   <data name="AboutValue" xml:space="preserve">
     <value>Mengkonversi 'teks' yang mewakili angka nilai numerik.</value>
-    
   </data>
   <data name="ValueArg1" xml:space="preserve">
     <value>teks</value>
-    
   </data>
   <data name="ValueArg2" xml:space="preserve">
     <value>bahasa</value>
-    
   </data>
   <data name="AboutValue_text" xml:space="preserve">
     <value>Nilai teks untuk dikonversi ke nilai numerik.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
     <value>Kode bahasa yang harus digunakan saat mengonversi nilai.</value>
-    
   </data>
   <data name="AboutBoolean" xml:space="preserve">
     <value>Mengonversi 'teks' yang mewakili boolean ke nilai boolean.</value>
-    
   </data>
   <data name="BooleanArg1" xml:space="preserve">
     <value>teks</value>
-    
   </data>
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Nilai teks untuk dikonversi ke nilai boolean.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
     <value>Mengonversi kolom nilai teks ke kolom nilai boolean.</value>
-    
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
     <value>masukan</value>
-    
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
     <value>Kolom nilai teks untuk diproses.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>Mengonversi 'angka' ke nilai boolean.</value>
-    
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
     <value>angka</value>
-    
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
     <value>Nilai angka untuk dikonversi ke nilai boolean.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
     <value>Mengonversi kolom nilai numerik ke kolom nilai boolean.</value>
-    
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
     <value>masukan</value>
-    
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Kolom nilai angka untuk diproses.</value>
   </data>
   <data name="AboutBooleanB" xml:space="preserve">
     <value>Mengonversi 'boolean' ke nilai boolean.</value>
-    
   </data>
   <data name="BooleanBArg1" xml:space="preserve">
     <value>boolean</value>
-    
   </data>
   <data name="AboutBooleanB_boolean" xml:space="preserve">
     <value>Nilai boolean untuk dikonversi ke nilai boolean.</value>
   </data>
   <data name="AboutBooleanBT" xml:space="preserve">
     <value>Mengonversi kolom nilai boolean ke kolom nilai boolean.</value>
-    
   </data>
   <data name="BooleanBTArg1" xml:space="preserve">
     <value>masukan</value>
-    
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Kolom nilai boolean untuk diproses.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Menampilkan argumen tidak kosong pertama</value>
-    
   </data>
   <data name="CoalesceArg1" xml:space="preserve">
     <value>nilai</value>
-    
   </data>
   <data name="AboutCoalesce_value" xml:space="preserve">
     <value>Sebuah argumen akan dikembalikan jika ini adalah argumen tidak kosong pertama.</value>
   </data>
   <data name="AboutConcatenate" xml:space="preserve">
     <value>Menggabungkan beberapa nilai teks menjadi satu nilai teks.</value>
-    
   </data>
   <data name="AboutDecimal" xml:space="preserve">
     <value>Mengonversi 'teks' yang mewakili angka ke nilai Desimal.</value>
@@ -616,37 +530,30 @@
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>teks</value>
-    
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
     <value>Nilai teks, untuk digabungkan dengan argumen lainnya.</value>
   </data>
   <data name="AboutConcatenateT" xml:space="preserve">
     <value>Menggabungkan beberapa nilai teks atau tabel ke satu kolom nilai teks.</value>
-    
   </data>
   <data name="ConcatenateTArg1" xml:space="preserve">
     <value>nilai</value>
-    
   </data>
   <data name="AboutConcatenate_value" xml:space="preserve">
     <value>Nilai teks atau kolom nilai teks, untuk digabungkan dengan argumen lainnya.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Menggabungkan semua nilai teks yang dihasilkan dengan mengevaluasi ekspresi atas tabel yang ditentukan menjadi satu nilai teks.</value>
-    
   </data>
   <data name="ConcatArg1" xml:space="preserve">
     <value>tabel</value>
-    
   </data>
   <data name="ConcatArg2" xml:space="preserve">
     <value>ekspresi</value>
-    
   </data>
   <data name="ConcatArg3" xml:space="preserve">
     <value>pemisah</value>
-    
   </data>
   <data name="AboutConcat_table" xml:space="preserve">
     <value>Nilai tabel, atas ekspresi yang ditentukan oleh parameter kedua untuk dievaluasi.</value>
@@ -656,37 +563,30 @@
   </data>
   <data name="AboutConcat_separator" xml:space="preserve">
     <value>Nilai teks yang akan disisipkan antara baris tabel yang dirangkaikan.</value>
-    
   </data>
   <data name="AboutLen" xml:space="preserve">
     <value>Menampilkan jumlah karakter dalam nilai teks.</value>
-    
   </data>
   <data name="AboutLen_text" xml:space="preserve">
     <value>Nilai teks yang panjang karakternya akan ditampilkan.</value>
   </data>
   <data name="AboutLenT" xml:space="preserve">
     <value>Menampilkan jumlah karakter dalam nilai teks, dievaluasi per baris dalam tabel atau koleksi yang ditentukan.</value>
-    
   </data>
   <data name="AboutLen_text_column" xml:space="preserve">
     <value>Kolom nilai teks yang panjang karakternya akan ditampilkan (sebagai kolom baru).</value>
   </data>
   <data name="LenArg1" xml:space="preserve">
     <value>teks</value>
-    
   </data>
   <data name="LenTArg1" xml:space="preserve">
     <value>kolom_teks</value>
-    
   </data>
   <data name="AboutUpper" xml:space="preserve">
     <value>Mengkonversi nilai teks ke huruf besar semua.</value>
-    
   </data>
   <data name="AboutUpperT" xml:space="preserve">
     <value>Mengkonversi semua huruf di nilai teks, dievaluasi per baris dalam tabel atau koleksi yang ditentukan, ke huruf besar.</value>
-    
   </data>
   <data name="AboutUpper_text" xml:space="preserve">
     <value>Nilai teks untuk dikonversi ke huruf besar.</value>
@@ -696,11 +596,9 @@
   </data>
   <data name="AboutLower" xml:space="preserve">
     <value>Mengkonversi semua huruf di nilai teks ke huruf kecil.</value>
-    
   </data>
   <data name="AboutLowerT" xml:space="preserve">
     <value>Mengkonversi semua huruf di nilai teks, yang dievaluasi per baris dalam tabel atau koleksi yang ditentukan, ke huruf kecil.</value>
-    
   </data>
   <data name="AboutLower_text" xml:space="preserve">
     <value>Nilai teks untuk dikonversi ke huruf kecil.</value>
@@ -710,11 +608,9 @@
   </data>
   <data name="AboutProper" xml:space="preserve">
     <value>mengkonversi nilai teks ke huruf yang tepat; huruf pertama setiap kata huruf besar, dan semua huruf lainnya huruf kecil.</value>
-    
   </data>
   <data name="AboutProperT" xml:space="preserve">
     <value>mengkonversi nilai teks, dievaluasi per baris dalam setiap tabel atau koleksi yang ditentukan, huruf yang tepat; huruf pertama setiap kata huruf besar, dan semua huruf lainnya huruf kecil.</value>
-    
   </data>
   <data name="AboutProper_text" xml:space="preserve">
     <value>Nilai teks untuk dikonversi ke huruf yang tepat.</value>
@@ -724,7 +620,6 @@
   </data>
   <data name="AboutTrim" xml:space="preserve">
     <value>Menghapus semua ruang dari nilai teks kecuali ruang tunggal antar kata.</value>
-    
   </data>
   <data name="AboutTrim_text" xml:space="preserve">
     <value>Nilai teks yang dikonversi untuk dipangkas.</value>
@@ -734,7 +629,6 @@
   </data>
   <data name="AboutTrimEnds" xml:space="preserve">
     <value>menghapus semua ruang maju atau mundur dari nilai teks.</value>
-    
   </data>
   <data name="AboutTrimEnds_text" xml:space="preserve">
     <value>Nilai teks untuk dipangkas whitespace maju dan mundurnya.</value>
@@ -744,11 +638,9 @@
   </data>
   <data name="AboutMid" xml:space="preserve">
     <value>Menampilkan karakter dari tengah nilai teks, diberikan posisi mulai dan panjang.</value>
-    
   </data>
   <data name="AboutMidT" xml:space="preserve">
     <value>Menampilkan karakter dari tengah nilai teks, diberikan posisi mulai dan panjang, dievaluasi per baris dalam tabel atau koleksi yang ditentukan.</value>
-    
   </data>
   <data name="AboutMid_text" xml:space="preserve">
     <value>Nilai teks dari mana karakter akan diekstrak.</value>
@@ -764,35 +656,27 @@
   </data>
   <data name="StringFuncArg1" xml:space="preserve">
     <value>teks</value>
-    
   </data>
   <data name="StringTFuncArg1" xml:space="preserve">
     <value>kolom_teks</value>
-    
   </data>
   <data name="StringFuncArg2" xml:space="preserve">
     <value>jumlah_awal</value>
-    
   </data>
   <data name="StringFuncArg3" xml:space="preserve">
     <value>jumlah_karakter</value>
-    
   </data>
   <data name="AboutReplace" xml:space="preserve">
     <value>Mengganti bagian nilai teks dengan nilai teks yang berbeda.</value>
-    
   </data>
   <data name="AboutReplaceT" xml:space="preserve">
     <value>Mengganti bagian nilai teks dengan nilai teks yang berbeda, dievaluasi per baris dalam tabel atau koleksi yang ditentukan.</value>
-    
   </data>
   <data name="ReplaceFuncArg1" xml:space="preserve">
     <value>teks_lama</value>
-    
   </data>
   <data name="ReplaceFuncArg4" xml:space="preserve">
     <value>teks_baru</value>
-    
   </data>
   <data name="AboutReplace_old_text" xml:space="preserve">
     <value>Nilai teks untuk diproses.</value>
@@ -811,67 +695,51 @@
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>Menghasilkan kesalahan dengan nilai kustom.</value>
-    
   </data>
   <data name="AboutError_error_information" xml:space="preserve">
     <value>Rekaman yang berisi nilai kustom untuk kesalahan yang dihasilkan.</value>
-    
   </data>
   <data name="ErrorArg1" xml:space="preserve">
     <value>informasi_kesalahan</value>
-    
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
     <value>Fungsi Error hanya menggunakan bidang "Kind", "Message", "Notify", "Control", dan "Property".</value>
-    
   </data>
   <data name="AboutIfError" xml:space="preserve">
     <value>Mengevaluasi dan mengembalikan argumen bebas kesalahan pertama.</value>
-    
   </data>
   <data name="IfErrorArg1" xml:space="preserve">
     <value>nilai</value>
-    
   </data>
   <data name="AboutIfError_value" xml:space="preserve">
     <value>Jika bukan kesalahan, nilai akan dikembalikan.</value>
-    
   </data>
   <data name="IfErrorArg2" xml:space="preserve">
     <value>fallback</value>
-    
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
     <value>Nilai yang dihasilkan jika argumen sebelumnya adalah kesalahan.</value>
-    
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
     <value>Menggantikan teks yang ada dengan teks baru di nilai teks.</value>
-    
   </data>
   <data name="AboutSubstituteT" xml:space="preserve">
     <value>menggantikan teks yang ada dengan teks baru di nilai teks dievaluasi per baris dalam tabel atau koleksi yang ditentukan.</value>
-    
   </data>
   <data name="SubstituteFuncArg1" xml:space="preserve">
     <value>teks</value>
-    
   </data>
   <data name="SubstituteTFuncArg1" xml:space="preserve">
     <value>kolom_teks</value>
-    
   </data>
   <data name="SubstituteFuncArg2" xml:space="preserve">
     <value>teks_lama</value>
-    
   </data>
   <data name="SubstituteFuncArg3" xml:space="preserve">
     <value>teks_baru</value>
-    
   </data>
   <data name="SubstituteFuncArg4" xml:space="preserve">
     <value>jumlah_kejadian</value>
-    
   </data>
   <data name="AboutSubstitute_text" xml:space="preserve">
     <value>Nilai teks untuk diproses.</value>
@@ -890,19 +758,15 @@
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>Menyortir 'sumber' berdasarkan hasil 'ekspresi' dievaluasi setiap baris, menentukan 'urutan' sortir opsional.</value>
-    
   </data>
   <data name="SortArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="SortArg2" xml:space="preserve">
     <value>ekspresi</value>
-    
   </data>
   <data name="SortArg3" xml:space="preserve">
     <value>urutan</value>
-    
   </data>
   <data name="AboutSort_source" xml:space="preserve">
     <value>Tabel untuk disortir.</value>
@@ -912,23 +776,18 @@
   </data>
   <data name="AboutSort_order" xml:space="preserve">
     <value>SortOrder.Ascending atau SortOrder.Descending</value>
-    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Menyortir 'sumber' berdasarkan kolom, menentukan 'urutan' sortir opsional.</value>
-    
   </data>
   <data name="SortByColumnsArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="SortByColumnsArg2" xml:space="preserve">
     <value>kolom</value>
-    
   </data>
   <data name="SortByColumnsArg3" xml:space="preserve">
     <value>urutan</value>
-    
   </data>
   <data name="AboutSortByColumns_source" xml:space="preserve">
     <value>Tabel untuk disortir.</value>
@@ -938,22 +797,18 @@
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
     <value>SortOrder.Ascending atau SortOrder.Descending</value>
-    
   </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>nilai</value>
-    
   </data>
   <data name="AboutSortByColumns_values" xml:space="preserve">
     <value>Kolom nilai yang digunakan untuk tujuan sortir. Proses sortir tidak dilakukan dengan urutan naik/turun, tetapi berdasarkan indeks nilai yang cocok dalam kolom </value>
   </data>
   <data name="AboutRand" xml:space="preserve">
     <value>Menampilkan angka acak yang lebih besar atau sama dengan 0 dan jurang dari 1, secara merata.</value>
-    
   </data>
   <data name="AboutRandBetween" xml:space="preserve">
     <value>Menampilkan angka acak antara terbawah dan teratas, yang didistribusikan secara merata.</value>
-    
   </data>
   <data name="AboutRandBetween_bottom" xml:space="preserve">
     <value>Bilangan bulat terkecil yang dapat ditampilkan fungsi.</value>
@@ -963,129 +818,99 @@
   </data>
   <data name="RandBetweenArg1" xml:space="preserve">
     <value>bawah</value>
-    
   </data>
   <data name="RandBetweenArg2" xml:space="preserve">
     <value>atas</value>
-    
   </data>
   <data name="AboutGUID" xml:space="preserve">
     <value>Membuat GUID dari string, atau menghasilkan GUID yang dibuat secara acak jika tidak ada argumen yang diberikan.</value>
-    
   </data>
   <data name="GUIDArg" xml:space="preserve">
     <value>String_GUID</value>
-    
   </data>
   <data name="AboutGUID_GUID_string" xml:space="preserve">
     <value>String untuk dikonversi ke GUID</value>
-    
   </data>
   <data name="AboutNow" xml:space="preserve">
     <value>Menggembalikan tanggal dan waktu saat ini.</value>
-    
   </data>
   <data name="AboutUTCNow" xml:space="preserve">
     <value>Menghasilkan tanggal dan waktu saat ini dalam waktu UTC.</value>
-    
   </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Menampilkan perbedaan waktu antara waktu UTC dan waktu lokal, dalam satuan menit. Misalnya, Jika zona waktu Anda adalah UTC+2, -120 akan ditampilkan.</value>
-    
   </data>
   <data name="TimeZoneOffsetArg1" xml:space="preserve">
     <value>tanggal</value>
-    
   </data>
   <data name="AboutTimeZoneOffset_date" xml:space="preserve">
     <value>Tanggal yang digunakan untuk menghitung 'TimeZoneOffset'.</value>
-    
   </data>
   <data name="AboutToday" xml:space="preserve">
     <value>Menampilkan tanggal saat ini.</value>
-    
   </data>
   <data name="AboutUTCToday" xml:space="preserve">
     <value>Menghasilkan tanggal saat ini dalam waktu UTC.</value>
-    
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Menampilkan nomor minggu untuk tanggal yang ditentukan.</value>
-    
   </data>
   <data name="WeekNumArg1" xml:space="preserve">
     <value>tanggal</value>
-    
   </data>
   <data name="WeekNumArg2" xml:space="preserve">
     <value>awal_minggu</value>
-    
   </data>
   <data name="AboutWeekNum_date" xml:space="preserve">
     <value>Nilai tanggal yang jumlah minggunya akan dihitung.</value>
   </data>
   <data name="AboutWeekNum_start_of_week" xml:space="preserve">
     <value>Nilai dari enumerasi StartOfWeek atau angka dari fungsi Excel yang sesuai untuk mengindikasi cara hari dalam minggu diberi nomor.</value>
-    
   </data>
   <data name="AboutISOWeekNum" xml:space="preserve">
     <value>Menampilkan nomor minggu berdasarkan aturan ISO untuk tanggal yang ditentukan.</value>
-    
   </data>
   <data name="ISOWeekNumArg1" xml:space="preserve">
     <value>tanggal</value>
-    
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Nilai tanggal yang jumlah minggu ISO-nya akan dihitung.</value>
   </data>
   <data name="AboutEDate" xml:space="preserve">
     <value>Mengembalikan tanggal yang disesuaikan dengan jumlah bulan. Hari dalam bulan tersebut tetap sama, tetapi dipetakan dengan jumlah hari pada bulan baru.</value>
-    
   </data>
   <data name="EDateArg1" xml:space="preserve">
     <value>tanggal</value>
-    
   </data>
   <data name="EDateArg2" xml:space="preserve">
     <value>bulan</value>
-    
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Nilai tanggal yang akan disesuaikan dengan jumlah bulan yang ditentukan.</value>
-          
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Jumlah bulan untuk mengubah tanggal. Nilai positif menghasilkan tanggal di masa mendatang, nilai negatif menghasilkan tanggal di masa lampau, dan nol tidak akan mengubah bulan.</value>
-        
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Mengembalikan hari terakhir dalam sebulan untuk tanggal yang ditentukan, yang disesuaikan dengan jumlah bulan.</value>
-    
   </data>
   <data name="EOMonthArg1" xml:space="preserve">
     <value>tanggal</value>
-    
   </data>
   <data name="EOMonthArg2" xml:space="preserve">
     <value>bulan</value>
-    
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Nilai tanggal yang akan disesuaikan dengan jumlah bulan yang ditentukan.</value>
-          
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>&gt;Jumlah bulan untuk mengubah tanggal. Nilai positif menghasilkan tanggal di masa mendatang, nilai negatif menghasilkan tanggal di masa lampau, dan nol tidak akan mengubah bulan.</value>
-         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Memotong 'angka' dengan membulatkan ke arah negatif tak terhingga.</value>
-    
   </data>
   <data name="AboutIntT" xml:space="preserve">
     <value>Memotong nilai dalam kolom angka dengan membulatkan ke arah negatif tak terhingga.</value>
-    
   </data>
   <data name="AboutInt_number" xml:space="preserve">
     <value>Nilai numerik untuk diproses.</value>
@@ -1095,7 +920,6 @@
   </data>
   <data name="AboutTrunc" xml:space="preserve">
     <value>Memotong 'angka' dengan membulatkan ke nol.</value>
-    
   </data>
   <data name="AboutTrunc_number" xml:space="preserve">
     <value>Nomor yang akan dipotong.</value>
@@ -1108,43 +932,33 @@
   </data>
   <data name="AboutTruncT" xml:space="preserve">
     <value>Memotong semua angka dalam 'sumber' dengan membulatkan ke nol.</value>
-    
   </data>
   <data name="TruncArg1" xml:space="preserve">
     <value>angka</value>
-    
   </data>
   <data name="TruncArg2" xml:space="preserve">
     <value>jumlah_digit</value>
-    
   </data>
   <data name="TruncTArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="TruncTArg2" xml:space="preserve">
     <value>jumlah_digit</value>
-    
   </data>
   <data name="AboutRound" xml:space="preserve">
     <value>Membulatkan 'angka' ke jumlah digit yang ditentukan.</value>
-    
   </data>
   <data name="AboutRoundUp" xml:space="preserve">
     <value>Membulatkan 'angka' ke atas, jauh dari nol.</value>
-    
   </data>
   <data name="AboutRoundDown" xml:space="preserve">
     <value>Membulatkan 'nomor' ke bawah, ke nol.</value>
-    
   </data>
   <data name="RoundArg1" xml:space="preserve">
     <value>angka</value>
-    
   </data>
   <data name="RoundArg2" xml:space="preserve">
     <value>jumlah_digit</value>
-    
   </data>
   <data name="AboutRound_number" xml:space="preserve">
     <value>Angka untuk dibulatkan.</value>
@@ -1175,43 +989,33 @@
   </data>
   <data name="AboutRoundT" xml:space="preserve">
     <value>Membulatkan semua angka dalam 'sumber' ke jumlah digit yang ditentukan.</value>
-    
   </data>
   <data name="AboutRoundUpT" xml:space="preserve">
     <value>Membulatkan semua angka di 'sumber' ke atas, jauh dari nol.</value>
-    
   </data>
   <data name="AboutRoundDownT" xml:space="preserve">
     <value>Membulatkan semua angka dalam 'sumber' ke bawah, ke nol.</value>
-    
   </data>
   <data name="RoundTArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="RoundTArg2" xml:space="preserve">
     <value>jumlah_digit</value>
-    
   </data>
   <data name="AboutRGBA" xml:space="preserve">
     <value>Memasukkan nilai numerik untuk komponen warna Merah, Hijau, Biru, dan Alfa dan menghasilkan warna tertentu. R, G, B adalah numerik antara 0 hingga 255. Alfa desimal antara 0 hingga 1.</value>
-    
   </data>
   <data name="RGBAArg1" xml:space="preserve">
     <value>nilai_merah</value>
-    
   </data>
   <data name="RGBAArg2" xml:space="preserve">
     <value>nilai_hijau</value>
-    
   </data>
   <data name="RGBAArg3" xml:space="preserve">
     <value>nilai_biru</value>
-    
   </data>
   <data name="RGBAArg4" xml:space="preserve">
     <value>nilai_alfa</value>
-    
   </data>
   <data name="AboutRGBA_red_value" xml:space="preserve">
     <value>Komponen merah, 0 hingga 255.</value>
@@ -1227,15 +1031,12 @@
   </data>
   <data name="AboutColorFade" xml:space="preserve">
     <value>Memproduksi bayangan baru dari 'warna' yang ditentukan, berdasarkan persentase 'pudar' tertentu.</value>
-    
   </data>
   <data name="ColorFadeArg1" xml:space="preserve">
     <value>warna</value>
-    
   </data>
   <data name="ColorFadeArg2" xml:space="preserve">
     <value>pudar</value>
-    
   </data>
   <data name="AboutColorFade_color" xml:space="preserve">
     <value>Warna yang memudar.</value>
@@ -1248,11 +1049,9 @@
   </data>
   <data name="ColorFadeTArg1" xml:space="preserve">
     <value>warna_atau_kolom</value>
-    
   </data>
   <data name="ColorFadeTArg2" xml:space="preserve">
     <value>pudar_atau_kolom</value>
-    
   </data>
   <data name="AboutColorFade_color_or_column" xml:space="preserve">
     <value>Warna (atau kolom nilai warna) yang memudar.</value>
@@ -1262,11 +1061,9 @@
   </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Menampilkan nilai absolut angka, angka tanpa tanda.</value>
-    
   </data>
   <data name="AboutAbsT" xml:space="preserve">
     <value>Menampilkan nilai absolut (angka tanpa tanda) kolom angka.</value>
-    
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
     <value>Nilai numerik untuk diproses.</value>
@@ -1282,11 +1079,9 @@
   </data>
   <data name="AboutSin" xml:space="preserve">
     <value>Mengembalikan nilai sinus sebuah bilangan.</value>
-    
   </data>
   <data name="AboutSinT" xml:space="preserve">
     <value>Mengembalikan nilai sinus sebuah kolom bilangan.</value>
-    
   </data>
   <data name="AboutAsin_number" xml:space="preserve">
     <value>Nilai numerik untuk diproses.</value>
@@ -1296,19 +1091,15 @@
   </data>
   <data name="AboutAsin" xml:space="preserve">
     <value>Mengembalikan nilai arc sinus (dalam radian) sebuah bilangan.</value>
-    
   </data>
   <data name="AboutAsinT" xml:space="preserve">
     <value>Mengembalikan nilai arc sinus (dalam radian) sebuah kolom bilangan.</value>
-    
   </data>
   <data name="AboutCos" xml:space="preserve">
     <value>Mengembalikan nilai kosinus sebuah bilangan.</value>
-    
   </data>
   <data name="AboutCosT" xml:space="preserve">
     <value>Mengembalikan nilai kosinus sebuah kolom bilangan.</value>
-    
   </data>
   <data name="AboutCos_number" xml:space="preserve">
     <value>Nilai numerik (dalam radian) untuk diproses.</value>
@@ -1318,14 +1109,12 @@
   </data>
   <data name="AboutAcos" xml:space="preserve">
     <value>Mengembalikan nilai arc kosinus (dalam radian) sebuah bilangan.</value>
-    
   </data>
   <data name="AboutAcos_number" xml:space="preserve">
     <value>Nilai numerik untuk diproses.</value>
   </data>
   <data name="AboutAcosT" xml:space="preserve">
     <value>Mengembalikan nilai arc kosinus (dalam radian) sebuah kolom bilangan.</value>
-    
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
     <value>Kolom nilai numerik untuk diproses.</value>
@@ -1338,19 +1127,15 @@
   </data>
   <data name="AboutAcot" xml:space="preserve">
     <value>Mengembalikan nilai arc kotangen (dalam radian) sebuah bilangan.</value>
-    
   </data>
   <data name="AboutAcotT" xml:space="preserve">
     <value>Mengembalikan nilai arc kotangen (dalam radian) sebuah kolom bilangan.</value>
-    
   </data>
   <data name="AboutTan" xml:space="preserve">
     <value>Mengembalikan nilai tangen bilangan.</value>
-    
   </data>
   <data name="AboutTanT" xml:space="preserve">
     <value>Mengembalikan nilai tangen kolom bilangan.</value>
-    
   </data>
   <data name="AboutTan_number" xml:space="preserve">
     <value>Nilai numerik (dalam radian) untuk diproses.</value>
@@ -1360,11 +1145,9 @@
   </data>
   <data name="AboutAtan" xml:space="preserve">
     <value>Mengembalikan nilai arc tangen (dalam radian) sebuah bilangan.</value>
-    
   </data>
   <data name="AboutAtanT" xml:space="preserve">
     <value>Mengembalikan nilai arc tangen (dalam radian) sebuah kolom bilangan.</value>
-    
   </data>
   <data name="AboutAtan_number" xml:space="preserve">
     <value>Nilai numerik untuk diproses.</value>
@@ -1374,11 +1157,9 @@
   </data>
   <data name="AboutCot" xml:space="preserve">
     <value>Mengembalikan nilai kotangen sebuah bilangan.</value>
-    
   </data>
   <data name="AboutCotT" xml:space="preserve">
     <value>Mengembalikan nilai kotangen sebuah kolom bilangan.</value>
-    
   </data>
   <data name="AboutCot_number" xml:space="preserve">
     <value>Nilai numerik (dalam radian) untuk diproses.</value>
@@ -1388,11 +1169,9 @@
   </data>
   <data name="AboutLn" xml:space="preserve">
     <value>Mengembalikan logaritma alami (bilangan dasar E) sebuah bilangan.</value>
-    
   </data>
   <data name="AboutLnT" xml:space="preserve">
     <value>Mengembalikan nilai logaritma alami (bilangan dasar E) kolom bilangan.</value>
-    
   </data>
   <data name="AboutLn_number" xml:space="preserve">
     <value>Nilai numerik untuk diproses.</value>
@@ -1402,11 +1181,9 @@
   </data>
   <data name="AboutLog" xml:space="preserve">
     <value>Menghasilkan logaritma dari angka untuk dasar yang disediakan. Dasar default adalah 10.</value>
-    
   </data>
   <data name="AboutLogT" xml:space="preserve">
     <value>Menghasilkan nilai logaritma dari angka atau kolom angkat untuk dasar atau kolom dasar yang disediakan. Dasar default adalah 10.</value>
-    
   </data>
   <data name="AboutLog_number" xml:space="preserve">
     <value>Nilai numerik untuk diproses.</value>
@@ -1416,18 +1193,15 @@
   </data>
   <data name="LogBase" xml:space="preserve">
     <value>basis</value>
-    
   </data>
   <data name="AboutLog_base" xml:space="preserve">
     <value>Dasar untuk logaritma.</value>
   </data>
   <data name="AboutExp" xml:space="preserve">
     <value>Mengembalikan E pangkat suatu bilangan. Untuk menghitung pangkat bilangan pokok lain, gunakan operator eksponensiasi (^).</value>
-    
   </data>
   <data name="AboutExpT" xml:space="preserve">
     <value>Mengembalikan kolom yang berisi E pangkat tiap bilangan yang terkait dalam kolom bilangan. Untuk menghitung pangkat dari bilangan pokok lain, gunakan operator eksponensiasi (^).</value>
-    
   </data>
   <data name="AboutExp_number" xml:space="preserve">
     <value>Nilai numerik untuk diproses.</value>
@@ -1440,11 +1214,9 @@
   </data>
   <data name="AboutRadians" xml:space="preserve">
     <value>Mengembalikan nilai radian bilangan.</value>
-    
   </data>
   <data name="AboutRadiansT" xml:space="preserve">
     <value>Mengembalikan nilai radian kolom bilangan.</value>
-    
   </data>
   <data name="AboutRadians_number" xml:space="preserve">
     <value>Nilai numerik (dalam derajat) untuk diproses.</value>
@@ -1454,11 +1226,9 @@
   </data>
   <data name="AboutDegrees" xml:space="preserve">
     <value>Mengembalikan nilai derajat sebuah bilangan.</value>
-    
   </data>
   <data name="AboutDegreesT" xml:space="preserve">
     <value>Mengembalikan nilai derajat sebuah kolom bilangan.</value>
-    
   </data>
   <data name="AboutDegrees_number" xml:space="preserve">
     <value>Nilai numerik (dalam radian) untuk diproses.</value>
@@ -1471,11 +1241,9 @@
   </data>
   <data name="DistinctArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="DistinctArg2" xml:space="preserve">
     <value>ekspresi</value>
-    
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
     <value>Tabel yang nilai tersendirinya akan diekstrak.</value>
@@ -1488,11 +1256,9 @@
   </data>
   <data name="AboutAtan2Arg1" xml:space="preserve">
     <value>koordinat_x</value>
-    
   </data>
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>koordinat_y</value>
-    
   </data>
   <data name="AboutAtan2_x_coordinate" xml:space="preserve">
     <value>Koordinat-x.</value>
@@ -1502,11 +1268,9 @@
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Menampilkan akar kuadrat angka.</value>
-    
   </data>
   <data name="AboutSqrtT" xml:space="preserve">
     <value>Menampilkan akar kuadrat kolom angka.</value>
-    
   </data>
   <data name="AboutSqrt_number" xml:space="preserve">
     <value>Nilai numerik untuk diproses.</value>
@@ -1516,27 +1280,21 @@
   </data>
   <data name="MathFuncArg1" xml:space="preserve">
     <value>angka</value>
-    
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>masukan</value>
-    
   </data>
   <data name="MathFuncArg2" xml:space="preserve">
     <value>pengubah</value>
-    
   </data>
   <data name="MathTFuncArg2" xml:space="preserve">
     <value>pengubah</value>
-    
   </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Menampilkan jumlah karakter tertentu dari awal nilai teks.</value>
-    
   </data>
   <data name="AboutLeftT" xml:space="preserve">
     <value>Menampilkan kolom yang berisi jumlah karakter tertentu dari awal nilai teks yang dievaluasi per baris dalam tabel atau koleksi yang ditentukan.</value>
-    
   </data>
   <data name="AboutLeft_text" xml:space="preserve">
     <value>Nilai teks yang karakternya akan diekstrak.</value>
@@ -1549,11 +1307,9 @@
   </data>
   <data name="AboutRight" xml:space="preserve">
     <value>Menampilkan karakter dengan jumlah tertentu dari akhir nilai teks.</value>
-    
   </data>
   <data name="AboutRightT" xml:space="preserve">
     <value>Menampilkan kolom yang berisi karakter dengan jumlah tertentu dari akhir nilai teks dievaluasi per baris dalam tabel atau koleksi yang ditentukan.</value>
-    
   </data>
   <data name="AboutRight_text" xml:space="preserve">
     <value>Nilai teks yang karakternya akan diekstrak.</value>
@@ -1566,76 +1322,60 @@
   </data>
   <data name="LeftRightArg1" xml:space="preserve">
     <value>teks</value>
-    
   </data>
   <data name="LeftRightTArg1" xml:space="preserve">
     <value>kolom_teks</value>
-    
   </data>
   <data name="LeftRightArg2" xml:space="preserve">
     <value>jumlah_karakter</value>
-    
   </data>
   <data name="AboutIsBlank" xml:space="preserve">
     <value>Periksa apakah ekspresi menghasilkan kosong, dan apakah hasil true atau false.</value>
-    
   </data>
   <data name="IsBlankArg1" xml:space="preserve">
     <value>ekspresi</value>
-    
   </data>
   <data name="AboutIsBlank_expression" xml:space="preserve">
     <value>Ekspresi untuk diuji.</value>
   </data>
   <data name="AboutIsBlankOrError" xml:space="preserve">
     <value>Memeriksa apakah ekspresi menghasilkan kosong atau kesalahan, dan apakah hasilnya true atau false.</value>
-    
   </data>
   <data name="IsBlankOrErrorArg1" xml:space="preserve">
     <value>ekspresi</value>
-    
   </data>
   <data name="AboutIsBlankOrError_expression" xml:space="preserve">
     <value>Ekspresi untuk diuji.</value>
-    
   </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Periksa apakah koleksi kosong atau tidak dan hasil true atau false.</value>
-    
   </data>
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="AboutIsEmpty_source" xml:space="preserve">
     <value>Tabel untuk diuji.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Menampilkan salinan acak tabel 'sumber' input.</value>
-    
   </data>
   <data name="ShuffleArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="AboutShuffle_source" xml:space="preserve">
     <value>Tabel untuk diacak.</value>
   </data>
   <data name="AboutLookUp" xml:space="preserve">
     <value>Mencari baris pertama yang kondisi tertentunya mengevaluasi true dan menampilkan hasil ekspresi dievaluasi dalam konteks baris tersebut jika diberikan ekspresi dan seluruh baris tidak.</value>
-    
   </data>
   <data name="LookUpArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="LookUpArg2" xml:space="preserve">
     <value>kondisi</value>
-    
   </data>
   <data name="LookUpArg3" xml:space="preserve">
     <value>hasil</value>
-    
   </data>
   <data name="AboutLookUp_source" xml:space="preserve">
     <value>Tabel tempat nilai akan dicari.</value>
@@ -1648,7 +1388,6 @@
   </data>
   <data name="AboutStdevP" xml:space="preserve">
     <value>Menghitung deviasi standar pada seluruh populasi tertentu sebagai argumen (mengabaikan nilai logis dan teks).</value>
-    
   </data>
   <data name="AboutStdevP_number" xml:space="preserve">
     <value>Angka untuk disertakan ke penghitungan deviasi standar.</value>
@@ -1661,11 +1400,9 @@
   </data>
   <data name="AboutStdevPT" xml:space="preserve">
     <value>Menghitung deviasi standar pada seluruh populasi tertentu sebagai kolom (mengabaikan nilai logis dan teks dalam kolom).</value>
-    
   </data>
   <data name="AboutVarP" xml:space="preserve">
     <value>Menghitung perbedaan berdasarkan seluruh populasi (mengabaikan nilai logis dan teks di populasi).</value>
-    
   </data>
   <data name="AboutVarP_number" xml:space="preserve">
     <value>Angka untuk disertakan ke penghitungan perbedaan.</value>
@@ -1678,55 +1415,42 @@
   </data>
   <data name="AboutVarPT" xml:space="preserve">
     <value>Menghitung perbedaan berdasarkan seluruh populasi yang ditentukan sebagai kolom (mengabaikan nilai logis dan teks kolom).</value>
-    
   </data>
   <data name="SetArg1" xml:space="preserve">
     <value>variabel</value>
-    
   </data>
   <data name="AboutSplit" xml:space="preserve">
     <value>Membagi string menjadi substring menggunakan pemisah string.</value>
-    
   </data>
   <data name="AboutSplit_text" xml:space="preserve">
     <value>Teks yang akan dibagi menjadi substring.</value>
-    
   </data>
   <data name="AboutSplit_separator" xml:space="preserve">
     <value>Pemisah teks digunakan untuk membagi teks input menjadi substring.</value>
-    
   </data>
   <data name="SplitArg1" xml:space="preserve">
     <value>teks</value>
-    
   </data>
   <data name="SplitArg2" xml:space="preserve">
     <value>pemisah</value>
-    
   </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Menghasilkan true jika nilai yang disediakan adalah dari tipe yang diberikan.</value>
-    
   </data>
   <data name="IsTypeArg1" xml:space="preserve">
     <value>nilai</value>
-    
   </data>
   <data name="IsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
-    
   </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Menggunakan nilai yang disediakan sebagai tipe yang diberikan.</value>
-    
   </data>
   <data name="AsTypeArg1" xml:space="preserve">
     <value>nilai</value>
-    
   </data>
   <data name="AsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
-    
   </data>
   <data name="AboutAsType_value" xml:space="preserve">
     <value>Rekaman polimorfik untuk dikonversi eksplisit sebagai jenis baru.</value>
@@ -1736,331 +1460,249 @@
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Mengeksekusi rumus yang diberikan sebagai parameter kedua menggunakan cakupan yang diberikan oleh parameter pertama.</value>
-    
   </data>
   <data name="WithArg1" xml:space="preserve">
     <value>lingkup</value>
-    
   </data>
   <data name="WithArg2" xml:space="preserve">
     <value>rumus</value>
-    
   </data>
   <data name="AboutWith_scope" xml:space="preserve">
     <value>Cakupan yang akan digunakan untuk memanggil rumus yang ditentukan oleh parameter kedua.</value>
-    
   </data>
   <data name="AboutWith_formula" xml:space="preserve">
     <value>Rumus yang akan dipanggil menggunakan cakupan yang diberikan oleh parameter pertama.</value>
-    
   </data>
   <data name="AboutSequence" xml:space="preserve">
     <value>Menghasilkan tabel nomor berurutan</value>
-    
   </data>
   <data name="SequenceArg1" xml:space="preserve">
     <value>rekaman</value>
-    
   </data>
   <data name="AboutSequence_records" xml:space="preserve">
     <value>Jumlah rekaman dalam tabel kolom tunggal dengan nama "Nilai". Maksimum 50.000.</value>
-    
   </data>
   <data name="SequenceArg2" xml:space="preserve">
     <value>mulai</value>
-    
   </data>
   <data name="AboutSequence_start" xml:space="preserve">
     <value>Opsional. Nomor pertama dalam urutan. Default 1.</value>
-    
   </data>
   <data name="SequenceArg3" xml:space="preserve">
     <value>langkah</value>
-    
   </data>
   <data name="AboutSequence_step" xml:space="preserve">
     <value>Opsional. Jumlah yang akan ditambahkan setiap nilai berikutnya dalam tabel. Default 1.</value>
-    
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
     <value>Penggunaan '.' tidak valid</value>
-    
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>'{0}' adalah fungsi yang tidak diketahui atau tidak didukung.</value>
-    
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>'{0}' adalah fungsi yang tidak diketahui atau tidak didukung dalam ruang nama '{1}'.</value>
-    
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>Perilaku komponen hanya dapat dijalankan dari dalam komponen.</value>
-    
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
     <value>Properti fungsi komponen atau parameter hanya dapat diakses dari dalam komponen atau dari properti output komponen.</value>
-    
   </data>
   <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
     <value>Properti fungsi komponen atau parameter hanya dapat mereferensikan properti fungsi lainnya.</value>
-    
   </data>
   <data name="ErrBadArity" xml:space="preserve">
     <value>Jumlah argumen tidak valid: diterima {0}, diharapkan {1}.</value>
-    
   </data>
   <data name="ErrBadArityEven" xml:space="preserve">
     <value>Jumlah argumen tidak valid: diterima {0}, diharapkan angka genap.</value>
-    
   </data>
   <data name="ErrBadArityOdd" xml:space="preserve">
     <value>Jumlah argumen tidak valid: diterima {0}, diharapkan angka ganjil.</value>
-    
   </data>
   <data name="ErrBadType" xml:space="preserve">
     <value>Jenis argumen tidak valid.</value>
-    
   </data>
   <data name="ErrBadType_Type" xml:space="preserve">
     <value>Jenis argumen tidak valid. Tidak dapat menggunakan nilai {0} dalam konteks ini.</value>
-    
   </data>
   <data name="ErrBadOperatorTypes" xml:space="preserve">
     <value>Operasi ini tidak valid pada jenis berikut: {0}, {1}.</value>
-    
   </data>
   <data name="ErrGuidStrictComparison" xml:space="preserve">
     <value>Nilai GUID hanya dapat dibandingkan dengan nilai GUID lainnya.</value>
-    
   </data>
   <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
     <value>Jenis bidang '{0}' tidak valid. Jenis bidang yang diharapkan adalah '{1}'.</value>
-    
   </data>
   <data name="ErrBadType_ExpectedType" xml:space="preserve">
     <value>Jenis argumen tidak valid. Mengharapkan nilai {0}.</value>
-    
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Jenis argumen tidak valid ({1}). Lebih mengharapkan nilai {0}.</value>
-    
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
     <value>Jenis argumen tidak valid. Mengharapkan nilai {0}, tapi dengan skema berbeda.</value>
-    
   </data>
   <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
     <value>Jenis argumen tidak valid. Mengharapkan salah satu nilai berikut: {0}.</value>
-    
   </data>
   <data name="ErrInvalidArgs_Func" xml:space="preserve">
     <value>Fungsi '{0}' memiliki beberapa argumen yang tidak valid.</value>
-    
   </data>
   <data name="ErrNeedTable_Func" xml:space="preserve">
     <value>Argumen pertama dari '{0}' harus berupa tabel.</value>
-    
   </data>
   <data name="ErrInvalidPropertyAccess" xml:space="preserve">
     <value>Properti mengharapkan parameter yang diperlukan. Gunakan tanda kurung untuk meneruskan parameter yang diperlukan.</value>
-    
   </data>
   <data name="ErrNeedTableCol_Func" xml:space="preserve">
     <value>Argumen pertama dari '{0}' harus berupa tabel kolom tunggal.</value>
-    
   </data>
   <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
     <value>Skema tidak valid, diharapkan kolom nilai {0} untuk '{1}'.</value>
-    
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
     <value>Skema tidak valid, diharapkan tabel satu kolom.</value>
-    
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>Tidak dapat menggunakan nilai bukan-catatan dalam konteks ini.</value>
-    
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Tidak dapat menggunakan catatan ini. Mungkin berisi bidang bertabrakan dengan jenis yang tidak kompatibel.</value>
-    
   </data>
   <data name="ErrNeedRecord_Func" xml:space="preserve">
     <value>Argumen pertama dari '{0}' harus berupa catatan.</value>
-    
   </data>
   <data name="ErrNeedEntity_EntityName" xml:space="preserve">
     <value>Menggunakan set opsi ini sebagai nilai pencacahan atau dalam fungsi Choices mengharuskan entitas '{0}' ditambahkan sebagai Sumber Data. Untuk menambahkan, gunakan menu Tampilan, lalu pilih Sumber data.</value>
-    
   </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Properti yang ditentukna tidak dapat diakses dalam konteks ini.</value>
-    
   </data>
   <data name="ErrInternalControlInInputProperty" xml:space="preserve">
     <value>Kontrol di dalam komponen tidak dapat direferensikan dalam properti input komponen yang sama.</value>
-    
   </data>
   <data name="ErrColumnNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Kolom yang ditentukan tidak dapat diakses dalam konteks ini.</value>
-    
   </data>
   <data name="WrnRowScopeOneToNExpandNumberOfCalls" xml:space="preserve">
     <value>Relasi Satu ke Banyak atau Banyak ke Banyak dirujuk dalam cakupan rekaman fungsi ini. Hal ini dapat mengakibatkan sejumlah besar panggilan ke sumber data yang dapat mempengaruhi performa.</value>
-    
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Nilai numerik terlalu besar.</value>
-    
   </data>
   <data name="ErrReservedKeyword" xml:space="preserve">
     <value>Penggunaan kata khusus yang saat ini tidak didukung.</value>
-    
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
     <value>Ekspresi tidak boleh lebih dari {0} karakter. Panjang ekspresi {1} karakter.</value>
-    
   </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Ukuran string format tidak boleh lebih dari {0} karakter.</value>
-    
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Format tidak valid.</value>
-    
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argumen tidak menunjukkan nilai tanggal atau waktu yang valid.</value>
-    
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Sumber Data ini tidak valid. Perbaiki kesalahan di panel "Sumber data" dengan mengeklik "Konten -&gt; Sumber data" atau "View -&gt; Opsi"</value>
-    
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Mengharapkan pengidentifikasi sumber data untuk membatasi catatan sebaris.</value>
-    
   </data>
   <data name="ErrIncompatibleTypes" xml:space="preserve">
     <value>Jenis yang ditentukan tidak kompatibel.</value>
-    
   </data>
   <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
     <value>Jenis argumen '{2}' tidak cocok dengan salah satu jenis yang diharapkan '{0}' atau '{1}'.</value>
-    
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Jenis argumen '{0}' tidak cocok dengan jenis yang diharapkan '{1}'. Jenis '{2}' ditemukan.</value>
-    
   </data>
   <data name="ErrTypeError_WrongType" xml:space="preserve">
     <value>Tipe ekspresi ini tidak cocok dengan tipe yang diharapkan '{0}'. Tipe yang ditemukan adalah '{1}'.</value>
-    
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
     <value>Jenis catatan tidak kompatibel dengan sumber.</value>
-    
   </data>
   <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
     <value>Argumen '{0}' tidak valid, disebabkan teks literal.</value>
-    
   </data>
   <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
     <value>Argumen '{0}' bukan merupakan pengidentifikasi yang valid.</value>
-    
   </data>
   <data name="ErrColExists_Name" xml:space="preserve">
     <value>Kolom bernama '{0}' sudah ada.</value>
-    
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Konflik nama kolom untuk '{0}'.</value>
-    
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Kolom yang ditentukan '{0}' tidak ada.</value>
-    
   </data>
   <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
     <value>Kolom '{0}' yang ditentukan tidak ada. Kolom dengan nama yang paling mirip adalah '{1}'.</value>
-    
   </data>
   <data name="ErrSortIncorrectOrder" xml:space="preserve">
     <value>Urutan sortir jenis ekspresi salah.</value>
-    
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Tidak dapat menyortir jenis ekspresi.</value>
-    
   </data>
   <data name="ErrDistinctWrongType" xml:space="preserve">
     <value>Tidak dapat menerapkan perbedaan pada tipe ekspresi.</value>
-    
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
     <value>Jenis kesalahan: {0} mengharapkan {1} atau kolom tabel jenis {1}.</value>
-    
   </data>
   <data name="ErrIncorrectFormat_Func" xml:space="preserve">
     <value>Format penentu '{0}' salah.</value>
-    
   </data>
   <data name="ErrAsyncLambda" xml:space="preserve">
     <value>Invokasi asynchronous tidak dapat digunakan di kondisi dan fungsi nilai.</value>
-    
   </data>
   <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
     <value>Ini adalah ruang nama, Anda dapat mengakses anggotanya menggunakan operator '.'.</value>
-    
   </data>
   <data name="ErrScopeModificationLambda" xml:space="preserve">
     <value>Fungsi ini tidak dapat beroperasi di sumber data yang sama dengan yang digunakan di {0}.</value>
-    
   </data>
   <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
     <value>Fungsi ini tidak dapat dipanggil dalam {0}.</value>
-    
   </data>
   <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
     <value>Argumen salah. Rumus ini mengharapkan tabel dari sumber data tersambung. Fungsi AsType dan IsType memerlukan sumber data tersambung.</value>
-    
   </data>
   <data name="InfoMessage" xml:space="preserve">
     <value>Pesan: </value>
-    
   </data>
   <data name="InfoNode_Node" xml:space="preserve">
     <value>Node: {0}</value>
-    
   </data>
   <data name="InfoTok_Tok" xml:space="preserve">
     <value>Tok: {0}</value>
-    
   </data>
   <data name="FormatSpan_Min_Lim" xml:space="preserve">
     <value>({0},{1}) </value>
-    
   </data>
   <data name="FormatErrorSeparator" xml:space="preserve">
     <value>, </value>
-    
   </data>
   <data name="AboutDate" xml:space="preserve">
     <value>Menampilkan angka yang mewakili tanggal dalam kode tanggal-waktu Power Apps.</value>
-    
   </data>
   <data name="DateArg1" xml:space="preserve">
     <value>tahun</value>
-    
   </data>
   <data name="DateArg2" xml:space="preserve">
     <value>bulan</value>
-    
   </data>
   <data name="DateArg3" xml:space="preserve">
     <value>hari</value>
-    
   </data>
   <data name="AboutDate_year" xml:space="preserve">
     <value>Tahun.</value>
@@ -2073,23 +1715,18 @@
   </data>
   <data name="AboutTime" xml:space="preserve">
     <value>Mengkonversi jam, menit, dan detik ke angka desimal.</value>
-    
   </data>
   <data name="TimeArg1" xml:space="preserve">
     <value>jam</value>
-    
   </data>
   <data name="TimeArg2" xml:space="preserve">
     <value>menit</value>
-    
   </data>
   <data name="TimeArg3" xml:space="preserve">
     <value>detik</value>
-    
   </data>
   <data name="TimeArg4" xml:space="preserve">
     <value>milidetik</value>
-    
   </data>
   <data name="AboutTime_hour" xml:space="preserve">
     <value>Komponen jam.</value>
@@ -2105,160 +1742,126 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>Membuat nilai yang menunjukkan instan dalam waktu, dinyatakan sebagai tanggal dan waktu dalam sehari.</value>
-    
   </data>
   <data name="AboutDateTime_year" xml:space="preserve">
     <value>Tahun.</value>
-    
   </data>
   <data name="AboutDateTime_month" xml:space="preserve">
     <value>Bulan.</value>
-    
   </data>
   <data name="AboutDateTime_day" xml:space="preserve">
     <value>Hari.</value>
-    
   </data>
   <data name="AboutDateTime_hour" xml:space="preserve">
     <value>Jam.</value>
-    
   </data>
   <data name="AboutDateTime_minute" xml:space="preserve">
     <value>Menit.</value>
-    
   </data>
   <data name="AboutDateTime_second" xml:space="preserve">
     <value>Detik.</value>
-    
   </data>
   <data name="AboutDateTime_millisecond" xml:space="preserve">
     <value>Milidetik.</value>
-    
   </data>
   <data name="AboutYear" xml:space="preserve">
     <value>Tahun menampilkan tahun tanggal tertentu.</value>
-    
   </data>
   <data name="YearArg1" xml:space="preserve">
     <value>tanggal_waktu</value>
-    
   </data>
   <data name="AboutYear_date_time" xml:space="preserve">
     <value>Nilai tanggal dari komponen tahun akan diekstrak.</value>
   </data>
   <data name="AboutMonth" xml:space="preserve">
     <value>Menampilkan bulan, angka dari 1 (Januari) hinga 12 (Desember).</value>
-    
   </data>
   <data name="MonthArg1" xml:space="preserve">
     <value>tanggal_waktu</value>
-    
   </data>
   <data name="AboutMonth_date_time" xml:space="preserve">
     <value>NIlai tanggal dari mana komponen bulan akan diekstrak.</value>
   </data>
   <data name="AboutDay" xml:space="preserve">
     <value>Hari yang dimaksud hari dalam bulan, angka dari 1 sampai 31.</value>
-    
   </data>
   <data name="DayArg1" xml:space="preserve">
     <value>tanggal_waktu</value>
-    
   </data>
   <data name="AboutDay_date_time" xml:space="preserve">
     <value>Nilai tanggal yang komponen harinya akan diekstrak.</value>
   </data>
   <data name="AboutHour" xml:space="preserve">
     <value>Jam menampilkan jam sebagai angka antara 0 (12:00:00 AM) dan 23 (11:00:00 PM).</value>
-    
   </data>
   <data name="HourArg1" xml:space="preserve">
     <value>tanggal_waktu</value>
-    
   </data>
   <data name="AboutHour_date_time" xml:space="preserve">
     <value>Nilai tanggal atau waktu komponen akan diekstrak.</value>
   </data>
   <data name="AboutMinute" xml:space="preserve">
     <value>Mengembalikan menit, bilangan antara 0 dan 59.</value>
-    
   </data>
   <data name="MinuteArg1" xml:space="preserve">
     <value>tanggal_waktu</value>
-    
   </data>
   <data name="AboutMinute_date_time" xml:space="preserve">
     <value>Nilai tanggal atau waktu dari mana komponen menit akan diekstrak.</value>
   </data>
   <data name="AboutSecond" xml:space="preserve">
     <value>Menampilkan detik, angka dari 0 hingga 59.</value>
-    
   </data>
   <data name="SecondArg1" xml:space="preserve">
     <value>tanggal_waktu</value>
-    
   </data>
   <data name="AboutSecond_date_time" xml:space="preserve">
     <value>Nilai tanggl atau waktu yang komponen detiknya akan diekstrak.</value>
   </data>
   <data name="AboutWeekday" xml:space="preserve">
     <value>Menampilkan hari kerja dari nilai tanggalwaktu. Secara default, rentang hasil dari 1 (Minggu) hingga 7 (Sabtu). Anda dapat menentukan beda rentang dengan nilai enumerasi StartOfWeek atau kode fungsi Hari kerja Microsoft Excel.</value>
-    
   </data>
   <data name="WeekdayArg1" xml:space="preserve">
     <value>tanggal</value>
-    
   </data>
   <data name="WeekdayArg2" xml:space="preserve">
     <value>awal_minggu</value>
-    
   </data>
   <data name="AboutWeekday_date" xml:space="preserve">
     <value>Nilai tanggal untuk hari dalam seminggunya yang akan dihitung.</value>
   </data>
   <data name="AboutWeekday_start_of_week" xml:space="preserve">
     <value>Nilai dari enumerasi StartOfWeek atau angka dari fungsi Excel yang sesuai untuk mengindikasi cara hari dalam minggu diberi nomor.</value>
-    
   </data>
   <data name="AboutCalendar__MonthsLong" xml:space="preserve">
     <value>Menampilkan tabel kolom tunggal yang berisi nama lengkap setiap bulan.</value>
-    
   </data>
   <data name="AboutCalendar__MonthsShort" xml:space="preserve">
     <value>Menampilkan tabel kolom tunggal yang berisi nama pintasan setiap bulan.</value>
-    
   </data>
   <data name="AboutCalendar__WeekdaysLong" xml:space="preserve">
     <value>Menampilkan tabel kolom tunggal yang berisi nama lengkap setiap hari dalam seminggu.</value>
-    
   </data>
   <data name="AboutCalendar__WeekdaysShort" xml:space="preserve">
     <value>Menampilkan tabel kolom tunggal yang berisi nama singkatan setiap hari dalam seminggu.</value>
-    
   </data>
   <data name="AboutClock__AmPm" xml:space="preserve">
     <value>Menampilkan kolom tunggal yang berisi Returns a single column table containing the uppercase designations for before and after noon.</value>
-    
   </data>
   <data name="AboutClock__AmPmShort" xml:space="preserve">
     <value>Menampilkan tabel kolom tunggal yang berisi singkatan penunjukan huruf besar saat sebelum dan sesudah siang.</value>
-    
   </data>
   <data name="AboutClock__IsClock24" xml:space="preserve">
     <value>Menampilkan nilai boolean yang mengindikasi jam menggunakan waktu 24 jam atau tidak.</value>
-    
   </data>
   <data name="AboutDateValue" xml:space="preserve">
     <value>Mengonversi tanggal dalam bentuk teks ke angka yang mewakili tanggal di kode tanggal-waktu Power Apps.</value>
-    
   </data>
   <data name="DateValueArg1" xml:space="preserve">
     <value>teks_data</value>
-    
   </data>
   <data name="DateValueArg2" xml:space="preserve">
     <value>kode_bahasa</value>
-    
   </data>
   <data name="AboutDateValue_date_text" xml:space="preserve">
     <value>representasi teks tanggal/cap waktu, dalam format yang didukung-platform.</value>
@@ -2268,15 +1871,12 @@
   </data>
   <data name="AboutTimeValue" xml:space="preserve">
     <value>Mengonversi waktu dalam bentuk teks ke angka yang mewakili tanggal di kode tanggal-waktu Microsoft Power Apps, sehingga mengabaikan porsi tanggal apapun.</value>
-    
   </data>
   <data name="TimeValueArg1" xml:space="preserve">
     <value>teks_waktu</value>
-    
   </data>
   <data name="TimeValueArg2" xml:space="preserve">
     <value>kode_bahasa</value>
-    
   </data>
   <data name="AboutTimeValue_time_text" xml:space="preserve">
     <value>representasi teks tanggal/cap waktu, dalam format yang didukung platform.</value>
@@ -2286,39 +1886,27 @@
   </data>
   <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
     <value>Layanan penyegaran otomatis tidak dapat digunakan di aturan Tindakan.</value>
-    
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
     <value>Bidang dengan nama '{0}' ditentukan lebih dari sekali di catatan ini.</value>
-    
-  </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Nama kolom yang ditentukan '{0}' tidak dapat diganti dua kali.</value>
-    
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Kolom dengan nama '{0}' ditentukan lebih dari satu kali.</value>
-    
   </data>
   <data name="WarnLiteralPredicate" xml:space="preserve">
     <value>Peringatan: Predikat ini adalah nilai literal dan tidak merujuk pada tabel masukan.</value>
-    
   </data>
   <data name="WarnDynamicMetadata" xml:space="preserve">
     <value>Peringatan: Pilih "Ambil Skema" di bagian bawah bilah rumus yang diperluas untuk mengatur dan me-refresh skema hasil metode ini. Jika tidak, metode ini tidak akan mengeluarkan hasil.</value>
-    
   </data>
   <data name="FindArg1" xml:space="preserve">
     <value>cari_teks</value>
-    
   </data>
   <data name="FindArg2" xml:space="preserve">
     <value>dalam_teks</value>
-    
   </data>
   <data name="FindArg3" xml:space="preserve">
     <value>jumlah_awal</value>
-    
   </data>
   <data name="AboutFind_find_text" xml:space="preserve">
     <value>Nilai teks yang dicari.</value>
@@ -2331,23 +1919,18 @@
   </data>
   <data name="AboutFind" xml:space="preserve">
     <value>Menampilkan posisi awal satu nilai teks dalam nilai teks lainnya. Pencarian merupakan case sensitive.</value>
-    
   </data>
   <data name="AboutFindT" xml:space="preserve">
     <value>Menampilkan kolom posisi awal satu nilai teks (atau kolom string) dalam nilai teks lainnya. Pencarian merupakan case sensitive.</value>
-    
   </data>
   <data name="FindTArg1" xml:space="preserve">
     <value>cari_teks_atau_kolom</value>
-    
   </data>
   <data name="FindTArg2" xml:space="preserve">
     <value>dalam_teks_atau_kolom</value>
-    
   </data>
   <data name="FindTArg3" xml:space="preserve">
     <value>jumlah_awal</value>
-    
   </data>
   <data name="AboutFind_find_text_or_column" xml:space="preserve">
     <value>Nilai teks (atau kolom nilai teks) yang dicari.</value>
@@ -2357,18 +1940,15 @@
   </data>
   <data name="AboutColorValue" xml:space="preserve">
     <value>Menampilkan warna sesuai dengan string warna yang diberikan.</value>
-    
   </data>
   <data name="ColorValueArg1" xml:space="preserve">
     <value>warna_teks</value>
-    
   </data>
   <data name="AboutColorValue_color_text" xml:space="preserve">
     <value>Warna yang ditentukan dengan nama, seperti "Biru", atau mennggunakan notasi heksadesimal 6 digit standar #rrggbb.</value>
   </data>
   <data name="ErrInvalidJsonPointer" xml:space="preserve">
     <value>Penunjuk JSON tidak valid.</value>
-    
   </data>
   <data name="Text" xml:space="preserve">
     <value>Teks</value>
@@ -2399,43 +1979,33 @@
   </data>
   <data name="REST" xml:space="preserve">
     <value>Layanan</value>
-    
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
     <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Elemen '{0}' kehilangan atribut '{1}'.</value>
-    
   </data>
   <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
     <value>Atribut '{0}' tidak boleh berupa string kosong.</value>
-    
   </data>
   <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
     <value>Atribut '{0}' memiliki nilai GUID tidak valid '{1}'.</value>
-    
   </data>
   <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
     <value>Properti '{0}' hilang.</value>
-    
   </data>
   <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
     <value>Properti '{0}' memiliki nilai jenis: {2} yang tidak valid. Diperlukan nilai jenis: {1}.</value>
-    
   </data>
   <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
     <value>Properti '{0}' tidak boleh kosong.</value>
-    
   </data>
   <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
     <value>Enum '{0}' diharapkan memiliki nilai valid namun nilainya {1} berada di luar rentang untuk enum.</value>
-    
   </data>
   <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
     <value>Properti '{0}' diharapkan memiliki nilai integer namun nilainya {1} berada di luar rentang.</value>
-    
   </data>
   <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
     <value>Item di indeks {0} memiliki jenis nilai: {2} yang tidak valid. Diperlukan nilai jenis: {1}.</value>
@@ -2445,23 +2015,18 @@
   </data>
   <data name="AboutDateAdd" xml:space="preserve">
     <value>Menambahkan jumlah unit yang ditentukan untuk tanggal.</value>
-    
   </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Menghitung Selisih dua tanggal.</value>
-    
   </data>
   <data name="DateAddArg1" xml:space="preserve">
     <value>tanggal</value>
-    
   </data>
   <data name="DateAddArg2" xml:space="preserve">
     <value>angka_unit</value>
-    
   </data>
   <data name="DateAddArg3" xml:space="preserve">
     <value>satuan</value>
-    
   </data>
   <data name="AboutDateAdd_date" xml:space="preserve">
     <value>Nilai tanggal referensi.</value>
@@ -2471,19 +2036,15 @@
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
     <value>Satuan yang akan digunakan, yang dapat berupa salah satu dari TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
-    
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
     <value>tanggal_mulai</value>
-    
   </data>
   <data name="DateDiffArg2" xml:space="preserve">
     <value>tanggal_berakhir</value>
-    
   </data>
   <data name="DateDiffArg3" xml:space="preserve">
     <value>satuan</value>
-    
   </data>
   <data name="AboutDateDiff_start_date" xml:space="preserve">
     <value>Tanggal mulai operasi perbedaan.</value>
@@ -2493,42 +2054,33 @@
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
     <value>Satuan untuk menyatakan hasil, yang dapat berupa salah satu dari TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
-    
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
     <value>Menambahkan jumlah unit yang ditentukan untuk kolom tanggal.</value>
-    
   </data>
   <data name="AboutDateDiffT" xml:space="preserve">
     <value>Menghitung selisih antara dua kolom tanggal.</value>
-    
   </data>
   <data name="DateAddTArg1" xml:space="preserve">
     <value>kolom_tanggal</value>
-    
   </data>
   <data name="DateAddTArg2" xml:space="preserve">
     <value>angka_unit</value>
-    
   </data>
   <data name="DateAddTArg3" xml:space="preserve">
     <value>satuan</value>
-    
   </data>
   <data name="AboutDateAdd_date_column" xml:space="preserve">
     <value>Kolom nilai tanggal.</value>
   </data>
   <data name="DateDiffTArg1" xml:space="preserve">
     <value>kolom_tanggal_mulai</value>
-    
   </data>
   <data name="DateDiffTArg2" xml:space="preserve">
     <value>kolom_tanggal_berakhir</value>
-    
   </data>
   <data name="DateDiffTArg3" xml:space="preserve">
     <value>satuan</value>
-    
   </data>
   <data name="AboutDateDiff_start_date_column" xml:space="preserve">
     <value>Kolom tanggal mulai operasi perbedaan.</value>
@@ -2538,202 +2090,156 @@
   </data>
   <data name="AboutChar" xml:space="preserve">
     <value>Menampilkan karakter yang ditentukan oleh nomor kode dari set karakter .</value>
-    
   </data>
   <data name="CharArg1" xml:space="preserve">
     <value>angka</value>
-    
   </data>
   <data name="AboutChar_number" xml:space="preserve">
     <value>Nomor kode dari set karakter .</value>
   </data>
   <data name="AboutCharT" xml:space="preserve">
     <value>Menampilkan tabel karakter yang ditentukan oleh nomor kode dari set karakter .</value>
-    
   </data>
   <data name="CharTArg1" xml:space="preserve">
     <value>kolom_angka</value>
-    
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Kolom nomor kode dari set karakter .</value>
   </data>
   <data name="AboutParseJSON" xml:space="preserve">
     <value>Mengonversi string JSON menjadi objek.</value>
-    
   </data>
   <data name="ParseJSONArg1" xml:space="preserve">
     <value>masukan</value>
-    
   </data>
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>String JSON yang akan diproses.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Mengembalikan rekaman di tabel pada indeks tertentu.</value>
-    
   </data>
   <data name="IndexArg1" xml:space="preserve">
     <value>tabel</value>
-    
   </data>
   <data name="IndexArg2" xml:space="preserve">
     <value>indeks</value>
-    
   </data>
   <data name="AboutIndex_table" xml:space="preserve">
     <value>Tabel.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Indeks rekaman yang akan diambil.</value>
-    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nama</value>
-    
   </data>
   <data name="Screen_Printing_DisplayName" xml:space="preserve">
     <value>Pencetakan</value>
-    
   </data>
   <data name="Screen_ImagePosition_DisplayName" xml:space="preserve">
     <value>Posisi gambar</value>
-    
   </data>
   <data name="Screen_Size_DisplayName" xml:space="preserve">
     <value>Ukuran</value>
-    
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Jenis kode batang</value>
-    
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
     <value>Kontras</value>
-    
   </data>
   <data name="camera_Zoom_DisplayName" xml:space="preserve">
     <value>Zoom</value>
-    
   </data>
   <data name="camera_Camera_DisplayName" xml:space="preserve">
     <value>Kamera</value>
-    
   </data>
   <data name="export_Data_DisplayName" xml:space="preserve">
     <value>Data</value>
-    
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
-    
   </data>
   <data name="Dust" xml:space="preserve">
     <value>Debu</value>
-    
   </data>
   <data name="image_Image_DisplayName" xml:space="preserve">
     <value>citra</value>
-    
   </data>
   <data name="icon_Icon_DisplayName" xml:space="preserve">
     <value>Ikon</value>
-    
   </data>
   <data name="icon_Rotation_DisplayName" xml:space="preserve">
     <value>Rotasi</value>
-    
   </data>
   <data name="image_ImagePosition_DisplayName" xml:space="preserve">
     <value>Posisi gambar</value>
-    
   </data>
   <data name="image_ImageRotation_DisplayName" xml:space="preserve">
     <value>Putar posisi</value>
-    
   </data>
   <data name="label_Live_DisplayName" xml:space="preserve">
     <value>Langsung</value>
-    
   </data>
   <data name="label_Overflow_DisplayName" xml:space="preserve">
     <value>Luapan</value>
-    
   </data>
   <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
     <value>Zona waktu tanggal</value>
-    
   </data>
   <data name="DatePicker_Format_DisplayName" xml:space="preserve">
     <value>Format</value>
-    
   </data>
   <data name="DatePicker_Language_DisplayName" xml:space="preserve">
     <value>Bahasa</value>
-    
   </data>
   <data name="Calendar_Width_DisplayName" xml:space="preserve">
     <value>Lebar kalender</value>
-    
   </data>
   <data name="Hide_Calendar_DisplayName" xml:space="preserve">
     <value>Sembunyikan kalender</value>
-    
   </data>
   <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
     <value>Awal minggu</value>
-    
   </data>
   <data name="microphone_Mic_DisplayName" xml:space="preserve">
     <value>MIC</value>
-    
   </data>
   <data name="text_Default_DisplayName" xml:space="preserve">
     <value>Default</value>
-    
   </data>
   <data name="text_Mode_DisplayName" xml:space="preserve">
     <value>Mode</value>
-    
   </data>
   <data name="text_Format_DisplayName" xml:space="preserve">
     <value>Format</value>
-    
   </data>
   <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
     <value>Mode keyboard virtual</value>
-    
   </data>
   <data name="text_TeamsTheme_DisplayName" xml:space="preserve">
     <value>Tema Teams</value>
-    
   </data>
   <data name="text_Clear_DisplayName" xml:space="preserve">
     <value>Tombol hapus</value>
-    
   </data>
   <data name="AboutIsNumeric" xml:space="preserve">
     <value>Periksa apakah nilai berupa angka atau tidak, dan hasil true atau false.</value>
-    
   </data>
   <data name="IsNumericArg1" xml:space="preserve">
     <value>nilai</value>
-    
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Nilai untuk diuji.</value>
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Mengonversi tanggal dan waktu dalam bentuk teks ke angka yang mewakili tanggal di kode tanggal-waktu Power Apps.</value>
-    
   </data>
   <data name="DateTimeValueArg1" xml:space="preserve">
     <value>teks_waktu</value>
-    
   </data>
   <data name="DateTimeValueArg2" xml:space="preserve">
     <value>kode_bahasa</value>
-    
   </data>
   <data name="AboutDateTimeValue_time_text" xml:space="preserve">
     <value>representasi teks tanggal/cap waktu, dalam format yang didukung platform.</value>
@@ -2743,26 +2249,21 @@
   </data>
   <data name="AboutTable" xml:space="preserve">
     <value>Membuat tabel dari catatan yang ditentukan, dengan kolom sebanyak bidang catatan unik. Misalnya: Table({key1: val1, key2: val2, ...}, ...)</value>
-    
   </data>
   <data name="TableArg1" xml:space="preserve">
     <value>catatan</value>
-    
   </data>
   <data name="AboutTable_record" xml:space="preserve">
     <value>Catatan yang akan menjadi baris di tabel yang dihasilkan.</value>
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Menampilkan tabel dengan semua kolom dihapus dari tabel 'sumber' kecuali kolom tertentu.</value>
-    
   </data>
   <data name="ShowColumnsArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="ShowColumnsArg2" xml:space="preserve">
     <value>nama_kolom</value>
-    
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
     <value>Nilai tabel atau rekaman yang kolomnya akan dihapus.</value>
@@ -2772,33 +2273,27 @@
   </data>
   <data name="AboutIsToday" xml:space="preserve">
     <value>Periksa apakah tanggal yang diberikan adalah tanggal sekarang atau tidak, dan hasil true atau false.</value>
-    
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
     <value>Nilai tanggal untuk diuji.</value>
   </data>
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>tanggal</value>
-    
   </data>
   <data name="AboutIsUTCToday" xml:space="preserve">
     <value>Memeriksa apakah tanggal yang diberikan adalah hari ini dalam UTC, dan menghasilkan true atau false.</value>
-    
   </data>
   <data name="AboutIsUTCToday_date" xml:space="preserve">
     <value>Nilai tanggal untuk diuji.</value>
   </data>
   <data name="IsUTCTodayFuncArg1" xml:space="preserve">
     <value>tanggal</value>
-    
   </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Menampilkan pengingat setelah jumlah dibagi dengan pembagi. Hasil memiliki tanda yang sama sebagai pembagi.</value>
-    
   </data>
   <data name="AboutModT" xml:space="preserve">
     <value>Menampilkan kolom yang berisi sisa setelah angka (atau kolom angka) dibagi dengan pembagi (atau kolom pembagi).</value>
-    
   </data>
   <data name="AboutMod_divisor" xml:space="preserve">
     <value>Angka untuk dibagi.</value>
@@ -2814,35 +2309,27 @@
   </data>
   <data name="ModFuncArg1" xml:space="preserve">
     <value>angka</value>
-    
   </data>
   <data name="ModFuncArg2" xml:space="preserve">
     <value>pembagi</value>
-    
   </data>
   <data name="ModTFuncArg1" xml:space="preserve">
     <value>jumlah_kolom</value>
-    
   </data>
   <data name="ModTFuncArg2" xml:space="preserve">
     <value>pembagi_atau_kolom</value>
-    
   </data>
   <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
     <value>Dokumen</value>
-    
   </data>
   <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
     <value>Zoom</value>
-    
   </data>
   <data name="pdfViewer_Password_DisplayName" xml:space="preserve">
     <value>Kata sandi</value>
-    
   </data>
   <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
     <value>Status sandi</value>
-    
   </data>
   <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
     <value>Deskripsi data tidak valid: {0}</value>
@@ -2852,7 +2339,6 @@
   </data>
   <data name="AboutForAll" xml:space="preserve">
     <value>Menerapkan rumus yang diberikan pada tiap baris dalam sumber data, kemudian mengembalikan tabel baru berisi hasil per baris.</value>
-    
   </data>
   <data name="AboutForAll_source" xml:space="preserve">
     <value>Sumber data atau tabel tempat operasi.</value>
@@ -2862,15 +2348,12 @@
   </data>
   <data name="ForAllArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="ForAllArg2" xml:space="preserve">
     <value>rumus</value>
-    
   </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Meningkatkan jumlah x dengan pangkat y. Sama dengan x^y.</value>
-    
   </data>
   <data name="AboutPower_base" xml:space="preserve">
     <value>Bilangan basis yang akan ditingkatkan.</value>
@@ -2880,15 +2363,12 @@
   </data>
   <data name="PowerFuncArg1" xml:space="preserve">
     <value>basis</value>
-    
   </data>
   <data name="PowerFuncArg2" xml:space="preserve">
     <value>eksponen</value>
-    
   </data>
   <data name="AboutStartsWith" xml:space="preserve">
     <value>Menghasilkan true jika teks yang disediakan dimulai dengan string mulai yang disediakan.</value>
-    
   </data>
   <data name="AboutStartsWith_text" xml:space="preserve">
     <value>Teks yang akan diperiksa.</value>
@@ -2898,15 +2378,12 @@
   </data>
   <data name="StartsWithArg1" xml:space="preserve">
     <value>teks</value>
-    
   </data>
   <data name="StartsWithArg2" xml:space="preserve">
     <value>mulai</value>
-    
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
     <value>Menghasilkan true jika teks yang disediakan diakhiri dengan string mulai yang disediakan.</value>
-    
   </data>
   <data name="AboutEndsWith_text" xml:space="preserve">
     <value>Teks yang akan diperiksa.</value>
@@ -2916,18 +2393,15 @@
   </data>
   <data name="EndsWithArg1" xml:space="preserve">
     <value>teks</value>
-    
   </data>
   <data name="EndsWithArg2" xml:space="preserve">
     <value>ujung</value>
-    
   </data>
   <data name="AboutBlank" xml:space="preserve">
     <value>Mengembalikan nilai null (kosong)</value>
   </data>
   <data name="AboutPowerT" xml:space="preserve">
     <value>Menaikkan angka x (untuk kolom angka) ke pangkat dari angka y lainnya (atau kolom angka). Sama seperti x^y.</value>
-    
   </data>
   <data name="AboutPower_base_or_column" xml:space="preserve">
     <value>Angka dasar (atau kolom angka dasar) untuk dinaikkan.</value>
@@ -2937,166 +2411,126 @@
   </data>
   <data name="PowerTFuncArg1" xml:space="preserve">
     <value>basis_atau_kolom</value>
-    
   </data>
   <data name="PowerTFuncArg2" xml:space="preserve">
     <value>eksponen_atau_kolom</value>
-    
   </data>
   <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
     <value>Bagian rumus ini tidak dapat dievaluasi dari jarak jauh. Operasi '{0}' saat ini tidak didukung dalam konteks ini.</value>
-    
   </data>
   <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
     <value>Bagian rumus ini tidak dapat dievaluasi dari jarak jauh. Fungsi '{0}' tidak dapat didelegasikan jika nama bidang muncul di argumen kedua.</value>
-    
   </data>
   <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
     <value>Formulir entitas</value>
-    
   </data>
   <data name="TeamsTheme_Default_DisplayName" xml:space="preserve">
     <value>Tema default</value>
-    
   </data>
   <data name="TeamsTheme_Dark_DisplayName" xml:space="preserve">
     <value>Tema gelap</value>
-    
   </data>
   <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
     <value>Tema kontras</value>
-    
   </data>
   <data name="AboutCollect" xml:space="preserve">
     <value>Menambahkan rekaman ke sumber data.</value>
-    
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>rekaman</value>
-    
   </data>
   <data name="AboutClear" xml:space="preserve">
     <value>Menghapus semua rekaman dari suatu kumpulan. Kolom kumpulan akan tetap ada.</value>
-    
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Menghapus semua rekaman dari suatu kumpulan, kemudian menambahkan rangkaian rekaman lain ke kumpulan yang sama.</value>
-    
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
     <value>rekaman</value>
-    
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Menerapkan pembaruan ke baris yang ditentukan dan mengubah baris di sumber data tertentu. Mengembalikan baris yang diperbarui.</value>
-    
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="PatchBaseRecordArg" xml:space="preserve">
     <value>base_record</value>
-    
   </data>
   <data name="PatchChangeRecordsArg" xml:space="preserve">
     <value>change_record(s)</value>
-    
   </data>
   <data name="AboutRemove" xml:space="preserve">
     <value>Menghapus satu atau beberapa rekaman tertentu dari sumber data</value>
-    
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
     <value>remove_record(s)</value>
-    
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
     <value>Jika diberikan, argumen terakhir harus 'RemoveFlags.All'. Apakah ada kesalahan ketik?</value>
-    
   </data>
   <data name="NotificationType_Error_DisplayName" xml:space="preserve">
     <value>Kesalahan</value>
-    
   </data>
   <data name="NotificationType_Warning_DisplayName" xml:space="preserve">
     <value>Peringatan</value>
-    
   </data>
   <data name="NotificationType_Success_DisplayName" xml:space="preserve">
     <value>Berhasil</value>
-    
   </data>
   <data name="NotificationType_Information_DisplayName" xml:space="preserve">
     <value>Informasi</value>
-    
   </data>
   <data name="AboutIsError" xml:space="preserve">
     <value>Menampilkan apakah kesalahan terjadi saat mengevaluasi argumen yang diberikan.</value>
-    
   </data>
   <data name="IsErrorArg" xml:space="preserve">
     <value>nilai</value>
-    
   </data>
   <data name="AboutIsError_value" xml:space="preserve">
     <value>Nilai yang diperiksa apakah terdapat kesalahan.</value>
-    
   </data>
   <data name="ErrBadArityMinimum" xml:space="preserve">
     <value>Jumlah argumen tidak valid: diterima {0}, diharapkan {1} atau lainnya.</value>
-    
   </data>
   <data name="ErrBadArityRange" xml:space="preserve">
     <value>Jumlah argumen tidak valid: diterima {0}, diharapkan {1}-{2}.</value>
-    
   </data>
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
-    
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Operand yang diharapkan. Rumus atau ekspresi mengharapkan operand yang valid. Misalnya, Anda dapat menambahkan operand '2' ke ekspresi ' 1 +_' sehingga hasilnya adalah '3'. Atau, Anda dapat menambahkan operand "di sana" ke ekspresi '"Hai "&amp; _ ' sehingga hasilnya adalah 'Hai di sana'.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
     <value>Sediakan nilai operand yang akan menyelesaikan ekspresi. Pastikan bahwa jenis operand (teks, angka, tanggal, atau true/false) cocok dengan ekspresi tersebut. Cocokkan nomor dengan angka, teks dengan teks, dan sebagainya. Misalnya, '1 + "Hai"' tidak valid, namun '1 + 2' valid.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
     <value>Karakter yang tidak terduga. Karakter digunakan dalam rumus dengan cara yang tidak terduga.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Misalnya, karakter '\' tidak diharapkan setelah angka, seperti ini: '32\'. Spasi ('32') akan diharapkan sehingga hanya angka 32, atau nomor lain (seperti dalam '323') akan diharapkan.</value>
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Hapus atau ganti karakter yang tidak diinginkan.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Karakter '{0}' tidak diharapkan pada posisi '{1}' dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Misalnya, karakter '\' tidak diharapkan setelah angka, seperti ini: '32\'. Spasi ('32') akan diharapkan sehingga hanya angka 32, atau nomor lain (seperti dalam '323') akan diharapkan.</value>
@@ -3106,475 +2540,375 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
     <value>Pengidentifikasi akhir komentar tidak ada. Blok komentar tidak memiliki pengidentifikasi akhir komentar.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Setiap blok komentar harus diawali dengan '/*' dan diakhiri dengan '*/'. Jika Anda tidak mengakhiri setiap blok komentar dengan benar, semua kode setelah komentar menjadi bagian dari komentar tersebut. Jika komentar hanya terdiri dari satu baris, Anda dapat memulainya dengan '//' dan tidak mengidentifikasi akhir komentar.</value>
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Tambahkan '*/' ke bagian akhir blok komentar Anda, atau ubah ke kumpulan komentar baris.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Karakter yang tidak terduga. Rumus berisi '{0}' ketika '{1}' diharapkan.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Kesalahan ini terjadi jika, misalnya, rumus berisi '{{Val@ 7}}', bukan '{{Val: 7}}'. Ketika Anda membuat variabel, sintaks memerlukan tanda titik dua, bukan simbol "at".</value>
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Hapus atau ganti karakter yang tidak diinginkan dengan karakter yang diharapkan.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
     <value>Nama tidak valid. '{0}' tidak dikenali.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Kesalahan ini paling sering muncul saat rumus mengacu pada sesuatu yang tidak ada lagi (misalnya, kontrol yang telah Anda hapus).</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Hapus atau perbaiki referensi untuk nama yang tidak valid.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Nama tidak valid. Pengidentifikasi ini tidak dikenali.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
     <value>Kesalahan ini paling sering muncul saat rumus mengacu pada sesuatu yang tidak ada lagi (misalnya, kontrol yang telah Anda hapus).</value>
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Hapus atau perbaiki referensi untuk nama yang tidak valid.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>Referensi properti tidak valid.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Kesalahan ini muncul saat rumus merujuk pada properti fungsi komponen dengan sintaksis yang tidak valid. (Misalnya, Component.CustomFunction alih-alih Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Gunakan sintaksis yang benar untuk merujuk pada properti fungsi komponen. Misalnya, Component.CustomFunction()</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk PowerApps</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Referensi 'Induk' tidak valid. Anda tidak dapat mereferensikan kontrol induk dalam konteks ini.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Anda tidak dapat menggunakan operator Induk dengan kontrol yang tidak memiliki kontrol induk. Operator ini mengacu ke kontrol yang menjadi host kontrol tertentu dan membuat semua propertinya tersedia.</value>
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Hapus operator 'Induk'.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Artikel: Menambahkan dan mengonfigurasi kontrol aplikasi kanvas di Power Apps</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
     <value>Tumpukan lingkup baris terlalu dalam. Lingkup baris rumus Anda melebihi 63 tingkat tumpukan.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Kerumitan meningkat dengan setiap tingkat tumpukan, sehingga Power Apps mendukung tumpukan lingkup baris hanya sampai 63 tingkat.</value>
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Tulis ulang rumus dengan lebih sedikit tingkat tumpukan.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
     <value>Penumpukan ekspresi terlalu dalam. Ekspresi dalam rumus Anda bertumpuk lebih dari 50 tingkat.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps mendukung penumpukan ekspresi hanya sampai 50 tingkat. Ekspresi sedalam ini sulit untuk dipahami dan dipertahankan.</value>
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Tulis ulang rumus dengan lebih sedikit tingkat tumpukan.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
     <value>Operator yang diharapkan. Kami mengharapkan operator seperti +, *, atau &amp; pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operator menggabungkan dua operand sekaligus. Kesalahan ini terjadi jika Anda memasukkan dua fungsi (operand) sekaligus tanpa operator di antara keduanya -- misalnya, Len("mytext")Len("mytext").</value>
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mencantumkan operator di antara operand.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_Link_1" xml:space="preserve">
     <value>Modul: Menggunakan rumus dasar</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Angka yang diharapkan. Kami mengharapkan angka pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Kesalahan ini akan terjadi jika Anda menggunakan fungsi yang memerlukan angka tetapi Anda memberikan, misalnya, gambar sebagai gantinya.</value>
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi angka pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
     <value>Boolean yang diharapkan. Kami mengharapkan boolean (true/false) pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Boolean juga dikenal sebagai nilai true/false di aplikasi seperti Microsoft Excel. Kesalahan ini akan terjadi jika Anda menggunakan fungsi yang memerlukan boolean tetapi Anda memberikan, misalnya, tanggal sebagai gantinya.</value>
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi boolean pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Titik dua yang diharapkan. Kami mengharapkan titik dua (:) pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Tanda titik dua memisahkan nama bidang, terkadang disebut juga nama kolom, dari nilai bidang dalam catatan (misalnya, {Month:"1"}, {Month:"2"} ...). Tanda titik dua juga memisahkan jam dari menit dan detik (misalnya, "3:04").</value>
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mencantumkan tanda titik dua.</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_Link_1" xml:space="preserve">
     <value>Artikel: Menampilkan teks, tanggal, dan waktu di Power Apps</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Fungsi perilaku dalam properti non-perilaku. Anda tidak dapat menggunakan properti ini untuk mengubah nilai di tempat lain dalam aplikasi.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Fungsi perilaku mengubah status aplikasi dengan mengubah nilai di tempat lain dalam aplikasi. 'Navigate', 'Patch', 'UpdateContext' dan 'Collect' adalah fungsi perilaku umum. 'OnSelect', 'OnVisible', dan properti 'On...' lainnya adalah properti berbasis perilaku umum.</value>
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Pindahkan fungsi perilaku ke properti berbasis perilaku.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Artikel: Memahami rumus perilaku untuk aplikasi kanvas di Power Apps</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Fungsi uji dalam properti non-uji. Anda tidak dapat menggunakan properti ini untuk menjalankan fungsi uji saja.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Fungsi uji adalah fungsi yang dapat digunakan untuk melakukan simulasi input pengguna saat menguji aplikasi. 'SetProperty', 'SelectRow', dan 'Assert' adalah fungsi pengujian umum. Ketiganya hanya dapat digunakan dalam kasus uji.</value>
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Gunakan fungsi dalam kasus uji, bukan di aplikasi itu sendiri.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
     <value>Tidak dapat mengonversi tipe data ini. Power Apps tidak dapat mengonversi {0} ini ke {1}.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps dapat mengonversi beberapa tipe data dalam rumus ke tipe lain untuk Anda. Misalnya, Power Apps dapat mengonversi "1" (string) ke 1 (angka), tetapi tidak dapat mengonversi semua tipe data ke semua tipe data lain. Misalnya, Power Apps tidak dapat mengonversi gambar ke angka.</value>
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Edit rumus sehingga Anda mengonversi data yang dimaksud ke tipe yang diharapkan.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_ShortMessage" xml:space="preserve">
     <value>Teks yang diharapkan. Kami mengharapkan teks pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Kesalahan ini terjadi jika Anda menggunakan fungsi yang memerlukan argumen teks (atau string) dan Anda memberikan, misalnya, tanggal sebagai gantinya.</value>
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi teks pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Teks atau angka yang diharapkan. Kami mengharapkan teks atau angka pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Kesalahan ini akan terjadi jika Anda menggunakan fungsi yang memerlukan teks atau angka tetapi Anda memberikan, misalnya, nilai boolean (true/false).</value>
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi teks atau angka pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Tanda kurung tutup yang diharapkan. Kami mengharapkan tanda kurung tutup (}) pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Tanda kurung tutup menunjukkan akhir catatan (misalnya, {Month:"1"}, {Month:"2"} …).</value>
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mencantumkan tanda kurung.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Pengidentifikasi tidak memiliki teks yang valid.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Pastikan Anda memiliki teks untuk pengidentifikasi Anda. Kesalahan ini terjadi jika semua pengidentifikasi kosong atau berisi spasi.</value>
-    
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
     <value>Tidak dapat membandingkan nilai dari tipe {0}.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Jenis perbandingan tidak kompatibel. Jenis ini tidak dapat dibandingkan: {0}, {1}.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Tidak dapat mengevaluasi rumus Anda karena nilai yang dibandingkan dalam rumus tidak berada dalam tipe yang sama.</value>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Anda mungkin perlu mengonversi nilai menjadi jenis yang sama, seperti mengonversi string tanggal (misalnya, "31/12/2018") ke nilai tanggal.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
     <value>Jika Anda membandingkan data atau tabel, tipe bidang atau kolom harus cocok dengan tepat.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
     <value>Modul: Menggunakan rumus dasar</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Modul: Rumus dasar penulis dengan tabel dan data</value>
-    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
     <value>Parameter tidak ada. Fungsi ini tidak memiliki parameter opsional dengan nama '{0}'.</value>
-    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
     <value>Cara memperbaiki: Hapus atau ganti nama parameter dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Tipe tidak kompatibel. Kolom '{0}' dalam sumber data yang Anda perbarui memperkirakan tipe '{1}' dan Anda menggunakan tipe '{2}'.</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
     <value>Anda mungkin perlu mengonversi nilai ke jenis yang sama, seperti mengonversi string tanggal (misalnya, "31/12/2018") ke nilai tanggal atau string ke angka.</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1" xml:space="preserve">
     <value>Modul: Menggunakan rumus dasar</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Modul: Rumus dasar penulis dengan tabel dan data</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
     <value>Kolom tidak ada. Rumus Anda tidak memiliki kolom '{0}' dengan tipe '{1}'.</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
     <value>Tambahkan kolom ke rumus Anda.</value>
-    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
-    
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Tipe tidak kompatibel. Item yang coba Anda masukkan ke dalam rekaman memiliki tipe yang tidak kompatibel dengan rekaman.</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Tipe tidak kompatibel. Item yang coba Anda masukkan ke dalam tabel memiliki tipe yang tidak kompatibel dengan tabel.</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
     <value>Pastikan bahwa jenis item yang ingin Anda masukkan ke dalam tabel kompatibel dengan tabel. Anda mungkin perlu mengonversi jenis item, misalnya, ke catatan.</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1" xml:space="preserve">
     <value>Modul: Menggunakan rumus dasar</value>
-    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Modul: Rumus dasar penulis dengan tabel dan data</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
     <value>Tipe tidak kompatibel. Tidak dapat mengevaluasi rumus Anda karena kesalahan tipe.</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Data mungkin tidak cocok dengan tipe yang diharapkan. (teks, angka, tanggal, tabel, catatan.)</value>
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Periksa jenis nilai yang termasuk dalam rumus dan pastikan tipe cocok.</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
     <value>Modul: Menggunakan rumus dasar</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Modul: Rumus dasar penulis dengan tabel dan data</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
     <value>Tanggal yang diharapkan. Kami mengharapkan tanggal pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Kesalahan ini akan terjadi jika Anda menggunakan fungsi yang memerlukan tanggal tetapi Anda memberikan, misalnya, teks sebagai gantinya.</value>
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi tanggal pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
     <value>Peringatan delegasi. Bagian "{0}" dalam rumus ini mungkin tidak berfungsi dengan benar pada himpunan data besar.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Jika himpunan data Anda melebihi batas rekaman 500 tetapi berisi kurang dari 2.000 rekaman, coba atur ulang batas.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
     <value>Coba sederhanakan rumus.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
     <value>Coba memindahkan data Anda ke sumber data yang berbeda.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
     <value>Artikel: Memahami delegasi dalam aplikasi kanvas</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blog: Batas baris data untuk delegasi</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
     <value>Peringatan delegasi. Bagian yang disorot dalam rumus ini mungkin tidak berfungsi dengan benar pada kolom "{0}" di himpunan data besar.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Jika himpunan data Anda melebihi batas rekaman 500 tetapi berisi kurang dari 2.000 rekaman, coba atur ulang batas.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
     <value>Coba sederhanakan rumus.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
     <value>Coba memindahkan data Anda ke sumber data yang berbeda.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
     <value>Artikel: Memahami delegasi dalam aplikasi kanvas</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blog: Batas baris data untuk delegasi</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
     <value>Peringatan delegasi. Bagian yang disorot dalam rumus ini mungkin tidak berfungsi dengan benar pada himpunan data besar.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Sisi kanan operator "in" harus berupa nama kolom dari sumber data yang benar. Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Ubah item di sisi kanan operator "in" menjadi kolom dari sumber data yang benar.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
     <value>Jika himpunan data Anda melebihi batas rekaman 500 tetapi berisi kurang dari 2.000 rekaman, coba atur ulang batas.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
     <value>Coba sederhanakan rumus.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
     <value>Coba memindahkan data Anda ke sumber data yang berbeda.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
     <value>Artikel: Memahami delegasi dalam aplikasi kanvas</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blog: Batas baris data untuk delegasi</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
     <value>Bagian yang disorot dalam rumus ini mungkin tidak berfungsi dengan benar pada himpunan data besar. </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Sisi kanan operator "in" bukan merupakan kolom dari sumber data yang benar. Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.
@@ -3582,185 +2916,142 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Ubah item di sisi kanan operator "in" menjadi kolom dari sumber data yang benar.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
     <value>Jika himpunan data Anda melebihi batas rekaman 500 tetapi berisi kurang dari 2.000 rekaman, coba atur ulang batas.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
     <value>Coba sederhanakan rumus.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
     <value>Coba memindahkan data Anda ke sumber data yang berbeda.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
     <value>Artikel: Memahami delegasi dalam aplikasi kanvas</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blog: Batas baris data untuk delegasi</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Peringatan delegasi. Bagian yang disorot pada rumus ini mungkin tidak berfungsi dengan benar pada himpunan data besar. Operasi "{0}" tidak didukung oleh konektor ini.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_LongMessage" xml:space="preserve">
     <value>Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
     <value>Jika himpunan data Anda melebihi batas rekaman 500 tetapi berisi kurang dari 2.000 rekaman, coba atur ulang batas.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
     <value>Coba sederhanakan rumus.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
     <value>Coba memindahkan data Anda ke sumber data yang berbeda.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
     <value>Artikel: Memahami delegasi dalam aplikasi kanvas</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blog: Batas baris data untuk delegasi</value>
-    
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
     <value>Mengharapkan hanya satu tampilan. Kami mengharapkan hanya satu tampilan pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar hanya memiliki satu tampilan pada titik ini dalam rumus.</value>
-    
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_ShortMessage" xml:space="preserve">
     <value>Mengharapkan tampilan dari sumber data {0}.</value>
-    
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda sehingga memiliki tampilan dari sumber data {0}.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
     <value>Referensi kontrol ini tidak dapat digunakan di properti ini</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
     <value>Properti ini hanya mendukung referensi ke variabel global, koleksi, dan beberapa properti kontrol dan layar. Lihat tautan untuk daftar properti kontrol yang didukung.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Referensi: ConfirmExit untuk Aplikasi Kanvas</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
     <value>Ekspresi yang muncul di dalam untai (karakter) yang diinterpolasi harus dievaluasi ke nilai Teks atau jenis yang kompatibel.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
     <value>Periksa jenis ekspresi di dalam untai (karakter) yang diinterpolasi.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
     <value>Ekspresi kosong tidak boleh muncul di dalam string yang diinterpolasi.</value>
-    
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
     <value>Periksa ekspresi kosong di dalam string yang diinterpolasi.</value>
-    
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>Karena tidak diizinkan dalam konteks ini</value>
-    
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
     <value>Objek tidak bertipe tidak dapat digunakan sebagai argumen pertama untuk fungsi yang mendukung cakupan rekaman.</value>
-    
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Rumus bernama harus diakhiri dengan titik koma.</value>
-    
   </data>
   <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
     <value>Rumus bernama harus merupakan ekspresi.</value>
-    
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Fungsi yang ditentukan pengguna harus memiliki isi.</value>
-    
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Fungsi {0} telah ditentukan.</value>
-    
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameter {0} adalah duplikat.</value>
-    
   </data>
   <data name="ErrUDF_UnknownType" xml:space="preserve">
     <value>Tipe {0} tidak diketahui.</value>
-    
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Tipe pengembalian fungsi yang dinyatakan tidak cocok dengan tipe pengembalian dari isi fungsi.</value>
-    
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
     <value>Jenis pengembalian fungsi tidak ada, misalnya ":Number" di "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
-    
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
     <value>Jenis argumen fungsi tidak ada, misalnya ":Text" di "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
-    
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' sudah ada.</value>
   </data>
   <data name="ErrorResource_NameConflict" xml:space="preserve">
     <value>Tidak dapat membuat {0} dengan nama '{1}' karena nama tersebut sudah digunakan untuk {2}.</value>
-    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Argumen pertama dari '{0}' harus berisi nama variabel yang valid, dan tidak boleh bertentangan dengan kontrol, layar, koleksi, atau nama sumber data yang ada. Jenis '{1}' ditemukan</value>
-    
   </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Membuat dan mengatur variabel global.</value>
-    
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>nilai</value>
-    
   </data>
   <data name="AboutDec2Hex" xml:space="preserve">
     <value>Mengonversi angka desimal ke heksadesimal</value>
-    
   </data>
   <data name="Dec2HexArg1" xml:space="preserve">
     <value>angka</value>
   </data>
   <data name="AboutDec2Hex_number" xml:space="preserve">
     <value>Nilai desimal numerik untuk dikonversi ke string heksadesimal.</value>
-    
   </data>
   <data name="Dec2HexArg2" xml:space="preserve">
     <value>tempat</value>
   </data>
   <data name="AboutDec2Hex_places" xml:space="preserve">
     <value>Nilai numerik untuk menambahkan padding ke string heksadesimal.</value>
-    
   </data>
   <data name="AboutDec2HexT" xml:space="preserve">
     <value>Mengonversi kolom angka desimal ke heksadesimal</value>
-    
   </data>
   <data name="Dec2HexTArg1" xml:space="preserve">
     <value>tabel</value>
@@ -3770,65 +3061,48 @@
   </data>
   <data name="AboutDec2HexT_places" xml:space="preserve">
     <value>Nilai numerik atau larik nilai untuk menambahkan padding ke string heksadesimal.</value>
-    
   </data>
   <data name="AboutDec2Hex_table" xml:space="preserve">
     <value>Kolom nilai desimal numerik untuk dikonversi ke heksadesimal.</value>
-    
   </data>
   <data name="AboutHex2Dec" xml:space="preserve">
     <value>Mengonversi angka heksadesimal ke desimal</value>
-    
   </data>
   <data name="Hex2DecArg1" xml:space="preserve">
     <value>angka</value>
   </data>
   <data name="AboutHex2Dec_number" xml:space="preserve">
     <value>String heksadesimal dikonversi ke desimal.</value>
-    
   </data>
   <data name="AboutHex2DecT" xml:space="preserve">
     <value>Mengonversi kolom angka heksadesimal ke desimal</value>
-    
   </data>
   <data name="Hex2DecTArg1" xml:space="preserve">
     <value>tabel</value>
   </data>
   <data name="AboutHex2Dec_table" xml:space="preserve">
     <value>Kolom string heksadesimal untuk dikonversi ke desimal.</value>
-    
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Fitur ini tidak digunakan lagi dan sudah tidak didukung.</value>
-    
-  </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>Di ruang nama {1}, fungsi {0} sudah tidak digunakan lagi.</value>
-    
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>Di ruang nama {1}, fungsi {0} tidak didukung.</value>
-    
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Peringatan: Tipe yang ditangguhkan diberikan.</value>
-    
   </data>
   <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
     <value>Nama pengidentifikasi yang diharapkan</value>
-    
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Fungsi ini ambigu karena berisi ekspresi lambda dan pengidentifikasi kolom untuk argumen yang sama.</value>
-    
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
     <value>Nilai opsi {0} bukanlah tipe {1} yang diharapkan.</value>
-    
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
     <value>Menghasilkan nama logis dari nilai rangkaian pilihan yang diberikan.</value>
-    
   </data>
   <data name="AboutOptionSetInfoArg1" xml:space="preserve">
     <value>opsi</value>
@@ -3838,54 +3112,42 @@
   </data>
   <data name="AboutLanguage" xml:space="preserve">
     <value>Dapatkan lokal default yang ditetapkan pada runtime.</value>
-    
   </data>
   <data name="AboutEncodeUrl" xml:space="preserve">
     <value>Mengodekan string URL, mengganti karakter non-alfanumerik tertentu dengan % dan angka heksadesimal.</value>
-    
   </data>
   <data name="EncodeUrlArg1" xml:space="preserve">
     <value>URL</value>
-    
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL untuk dikodekan.</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' adalah fungsi yang dikenali, tetapi tidak didukung.</value>
-    
   </data>
   <data name="InvalidCast" xml:space="preserve">
     <value>Konversi jenis gagal karena nilai yang diberikan adalah jenis '{0}', yang diharapkan adalah jenis '{1}'.</value>
-    
   </data>
   <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
     <value>Ekspresi '{0}' dapat mewakili kolom yang bukan bagian dari sumber data atau belum diunduh. Pertimbangkan untuk menggunakan nama kolom secara langsung sebagai gantinya.</value>
-    
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Operasi di tabel '{0}' ini mungkin tidak berfungsi jika memiliki lebih dari {1} baris.</value>
-    
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Predikat ini akan selalu benar. Apakah Anda bermaksud menggunakan ThisRecord atau [@]?</value>
-    
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Tidak dapat mendelegasikan {0}: hanya mendukung delegasi untuk pencarian di bidang kunci primer '{1}'.</value>
-    
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Tidak dapat mendelegasikan {0}: Ekspresi membandingkan beberapa bidang.</value>
-    
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Tidak dapat mendelegasikan {0}: berisi fungsi perilaku '{1}'.</value>
-    
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Menentukan apakah teks yang diberikan sesuai dengan format teks yang ada.</value>
-    
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">
     <value>Teks yang akan dibandingkan dengan format.</value>
@@ -3895,125 +3157,96 @@
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
     <value>Ini menentukan bagian teks mana yang ingin dicocokkan, yang dapat berupa nilai enum MatchOptions.</value>
-    
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
     <value>teks</value>
-    
   </data>
   <data name="IsMatchArg2" xml:space="preserve">
     <value>format</value>
-    
   </data>
   <data name="IsMatchArg3" xml:space="preserve">
     <value>ekstensi</value>
-    
   </data>
   <data name="AboutMatch" xml:space="preserve">
     <value>Mencari teks yang diberikan untuk ekspresi reguler yang ditentukan, menampilkan kecocokan pertama yang didapat.</value>
-    
   </data>
   <data name="AboutMatchAll" xml:space="preserve">
     <value>Mencari teks yang diberikan untuk ekspresi reguler yang ditentukan, menampilkan semua kecocokan yang didapat.</value>
-    
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
     <value>Teks yang akan dicari pada ekspresi regulernya.</value>
-    
   </data>
   <data name="AboutMatch_regular_expression" xml:space="preserve">
     <value>Ekspresi reguler untuk memeriksa teks. Ekspresi dapat berisi tangkapan (nilai dalam tanda kurung) yang akan dihasilkan jika pencocokan berhasil.</value>
-    
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
     <value>Ini menentukan bagian teks mana yang ingin dicocokkan, yang dapat berupa nilai enum MatchOptions.</value>
-    
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
     <value>Teks yang akan dicari pada ekspresi regulernya.</value>
-    
   </data>
   <data name="AboutMatchAll_regular_expression" xml:space="preserve">
     <value>Ekspresi reguler untuk memeriksa teks. Ekspresi dapat berisi tangkapan (nilai dalam tanda kurung) yang akan dihasilkan jika pencocokan berhasil.</value>
-    
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
     <value>Ini menentukan bagian teks mana yang ingin dicocokkan, yang dapat berupa nilai enum MatchOptions.</value>
-    
   </data>
   <data name="MatchArg1" xml:space="preserve">
     <value>teks</value>
-    
   </data>
   <data name="MatchArg2" xml:space="preserve">
     <value>ekspresi_reguler</value>
-    
   </data>
   <data name="MatchArg3" xml:space="preserve">
     <value>opsi</value>
-    
   </data>
   <data name="AboutRefresh" xml:space="preserve">
     <value>Me-refresh sumber data yang ditentukan.</value>
-    
   </data>
   <data name="RefreshArg1" xml:space="preserve">
     <value>sumber_data_terhubung</value>
-    
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
     <value>Diharapkan nilai rekaman atau tabel.</value>
-    
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
     <value>Sumber data terhubung yang akan di-refresh.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Hanya koneksi yang dikelola yang dapat di-refresh.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Ekspresi reguler tidak valid.</value>
-    
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Ekspresi biasa harus berupa nilai konstanta.</value>
-    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Nilai yang diteruskan ke fungsi '{0}' tidak dapat diubah.</value>
-    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Nama tangkapan '{0}' menyembunyikan properti standar yang menghasilkan kecocokan penuh pada ekspresi reguler. Pertimbangkan untuk mengganti namanya jika Anda ingin menggunakan properti bernama tersebut untuk mengekstrak kecocokan penuh pada teks yang ditentukan.</value>
-    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
     <value>Nama tangkapan '{0}' menyembunyikan properti standar yang menghasilkan kecocokan grup dalam ekspresi reguler. Pertimbangkan untuk mengganti namanya jika Anda ingin menggunakan properti bernama tersebut untuk mengekstrak semua sub-kecocokan pada teks yang ditentukan.</value>
-    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Nama tangkapan '{0}' menyembunyikan properti standar yang menghasilkan lokasi kecocokan pada ekspresi reguler. Pertimbangkan untuk mengganti namanya jika Anda ingin menggunakan properti bernama tersebut untuk mengekstrak posisi kecocokan penuh pada teks yang ditentukan.</value>
-    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Menghapus semua format dan menampilkan nilai teks biasa.</value>
-    
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
     <value>teks</value>
-    
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Teks yang akan dihapus tag HTML dan XML-nya.</value>
   </data>
   <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
     <value>Fungsi filter tidak mengizinkan fungsi perilaku sebagai predikat.</value>
-    
   </data>
   <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
     <value>Gunakan operator And untuk menggabungkan beberapa predikat ke dalam argumen kedua.</value>
-    
   </data>
   <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
     <value>Tabel ini tidak dapat disalin. Sebagai gantinya, buat tabel sebaris menggunakan fungsi ForAll dan notasi {...} untuk menyalin kolom terpisah yang diinginkan.</value>
@@ -4023,130 +3256,99 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Argumen kedua dari fungsi '{0}' hanya didukung untuk nilai numerik dan tanggal/waktu.</value>
-    
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Mengatur variabel dengan nilai sumber data online (tabel atau data) dapat menyebabkan banyak permintaan ke server. Hal ini akan segera diblokir.</value>
-    
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Deklarasi harfiah jenis tidak valid</value>
-    
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
     <value>Ketidakcocokan jenis antara jenis rekaman sumber dan target. Jenis yang diberikan memiliki bidang tambahan: {0}.</value>
-    
   </data>
   <data name="ErrExpectedRVMissingFields" xml:space="preserve">
     <value>Ketidakcocokan jenis antara jenis rekaman sumber dan target. Jenis yang diberikan tidak memiliki bidang: {0}.</value>
-    
   </data>
   <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
     <value>Ketidakcocokan jenis antara jenis rekaman sumber dan target. Nama bidang: {0} tidak ditemukan.</value>
-    
   </data>
   <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
     <value>Ketidakcocokan jenis antara jenis rekaman sumber dan target. Nama bidang: {0} Diharapkan {1}; Ditemukan {2}.</value>
-    
   </data>
   <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
     <value>Jenis {0} yang diberikan tidak dapat dipaksakan menjadi jenis sumber {1}.</value>
-    
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Ketidakcocokan jenis antara jenis sumber dan target. Diharapkan {0}; Ditemukan {1}.</value>
-    
   </data>
   <data name="AboutJSON" xml:space="preserve">
     <value>Menghasilkan string teks JSON untuk tabel, catatan, atau nilai.</value>
-    
   </data>
   <data name="JSONArg1" xml:space="preserve">
     <value>data</value>
-    
   </data>
   <data name="AboutJSON_data" xml:space="preserve">
     <value>Struktur data yang akan dikonversi ke JSON. Tabel, catatan, dan nilai primitif bertumpuk secara acak dan didukung.</value>
-    
   </data>
   <data name="JSONArg2" xml:space="preserve">
     <value>format</value>
-    
   </data>
   <data name="AboutJSON_format" xml:space="preserve">
     <value>Format yang akan digunakan dalam percakapan JSON. Nilai akan menjadi anggota enumerasi JSONFormat.</value>
-    
   </data>
   <data name="AboutTrace" xml:space="preserve">
     <value>Mencatat informasi ke Application Insights jika diaktifkan, dan mencatat dalam sesi test studio yang akan tersedia dalam hasil pengujian.</value>
-    
   </data>
   <data name="TraceArg1" xml:space="preserve">
     <value>pesan</value>
-    
   </data>
   <data name="TraceArg2" xml:space="preserve">
     <value>keparahan</value>
-    
   </data>
   <data name="TraceArg3" xml:space="preserve">
     <value>custom_record</value>
-    
   </data>
   <data name="TraceArg4" xml:space="preserve">
     <value>trace_options</value>
-    
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
     <value>Informasi yang akan dilacak.</value>
-    
   </data>
   <data name="AboutTrace_severity" xml:space="preserve">
     <value>Tingkat keparahan yang akan dilacak untuk Application Insights.</value>
-    
   </data>
   <data name="AboutTrace_custom_record" xml:space="preserve">
     <value>Catatan yang berisi data kustom yang akan dilacak ke Application Insights.</value>
-    
   </data>
   <data name="AboutTrace_trace_options" xml:space="preserve">
     <value>Opsi tambahan untuk fungsi Trace.</value>
-    
   </data>
   <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
     <value>Parameter '{1}' untuk fungsi {0} harus merupakan nilai konstan.</value>
-    
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Nilai JSONFormat ' {0} ' dan ' {1} ' tidak dapat digunakan bersamaan.</value>
-    
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Nilai yang diberikan ke fungsi JSON berisi media, dan hal ini tidak didukung secara default. Untuk memungkinkan serialisasi JSON dari nilai media, pastikan Anda menggunakan pilihan IncludeBinaryData dalam parameter 'format'.</value>
-    
   </data>
   <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
     <value>Fungsi JSON tidak dapat menserialisasi objek dari tipe '{0}'.</value>
-    
   </data>
   <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
     <value>Fungsi JSON tidak dapat melakukan serialisasi tabel/objek dengan properti bertumpuk bernama '{0}' dari jenis '{1}'.</value>
-    
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Fungsi JSON tidak dapat membuat serial data biner dalam ekspresi non-perilaku.</value>    
+    <value>Fungsi JSON tidak dapat membuat serial data biner dalam ekspresi non-perilaku.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parameter {0} berisi properti tipe {1} yang tidak didukung.</value>
-    
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Kolom yang ditentukan adalah kolom baca-saja dan tidak dapat diubah: {0}.</value>
-    
   </data>
   <data name="AboutSearch" xml:space="preserve">
     <value>Mencari teks di 'sumber'. Menampilkan baris teks ditemukan. Perbandingan dilakukan dengan cara nonpeka huruf.</value>
-    
   </data>
   <data name="AboutSearch_source" xml:space="preserve">
     <value>Tabel untuk dicari.</value>
@@ -4159,22 +3361,17 @@
   </data>
   <data name="SearchArg1" xml:space="preserve">
     <value>sumber</value>
-    
   </data>
   <data name="SearchArg2" xml:space="preserve">
     <value>teks</value>
-    
   </data>
   <data name="SearchArg3" xml:space="preserve">
     <value>kolom</value>
-    
   </data>
   <data name="ErrSearchWrongType" xml:space="preserve">
     <value>Jenis kolom salah. Menebak jenis teks.</value>
-    
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Tabel tidak berisi kolom jenis teks.</value>
-    
   </data>
 </root>
