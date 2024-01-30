@@ -607,27 +607,23 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Hello ${\"Word\"}", 0, 1, 5)]
-        [InlineData("Hello ${$\"World\"}", 0, 1, 7)]
-        public void TextFirstTokenFlagTest(string expression, params int[] textFirstTokenPositions)
+        [InlineData("Hello ${\"World\"}", "$\":True", "Hello :True", "World:False", "\":True")]
+        [InlineData("Hello ${$\"World\"}", "$\":True", "Hello :True", "$\":False", "World:False", "\":False", "\":True")]
+        [InlineData("=$\"Hello {\"World\"}\"", "$\":False", "Hello :False", "World:False", "\":False")]
+        public void TextFirstTokenFlagTest(string expression, params string[] textFirstToken)
         {
             var tokens = TexlLexer.InvariantLexer.LexSource(expression, TexlLexer.Flags.TextFirst);
+            var tokensWithTextFirstFlag = tokens.Where(t => t is ITextFirstFlag).ToArray();
 
-            for (int i = 0; i < tokens.Count; i++)
+            Assert.Equal(textFirstToken.Length, tokensWithTextFirstFlag.Count());
+
+            for (int i = 0; i < tokensWithTextFirstFlag.Count(); i++)
             {
-                var token = tokens[i];
+                var token = tokensWithTextFirstFlag[i];
+                var textFirstFlag = token as ITextFirstFlag;
+                var textFirstTokenString = token.ToString() + ":" + textFirstFlag.IsTextFirst;
 
-                if (token is ITextFirstFlag textFirstFlag)
-                {
-                    if (textFirstTokenPositions.Contains(i))
-                    {
-                        Assert.True(textFirstFlag.IsTextFirst);
-                    }
-                    else
-                    {
-                        Assert.False(textFirstFlag.IsTextFirst);
-                    }
-                }
+                Assert.Equal(textFirstToken[i], textFirstTokenString);
             }
         }
     }
