@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public async void DateTimeFunctionTest()
         {
-            var currentTimeZoneKind = TimeZoneInfo.Local.BaseUtcOffset == TimeSpan.Zero ?
+            var currentTimeZoneKind = TimeZoneInfo.Local.Equals(TimeZoneInfo.Utc) ?
                 DateTimeKind.Utc :
                 DateTimeKind.Unspecified;
 

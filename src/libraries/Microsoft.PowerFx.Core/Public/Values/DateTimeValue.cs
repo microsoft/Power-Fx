@@ -50,11 +50,11 @@ namespace Microsoft.PowerFx.Types
             }
             
             // Since we can't convert LocalKind time to UTC, if the time was of kind local just change kind.
-            if (value.Kind == DateTimeKind.Local && timeZoneInfo.BaseUtcOffset == TimeSpan.Zero)
+            if (value.Kind == DateTimeKind.Local && timeZoneInfo.Equals(TimeZoneInfo.Utc))
             {
                 return DateTime.SpecifyKind(value, DateTimeKind.Utc);
             }
-            else if (value.Kind == DateTimeKind.Local && timeZoneInfo.BaseUtcOffset != TimeSpan.Zero)
+            else if (value.Kind == DateTimeKind.Local && !timeZoneInfo.Equals(TimeZoneInfo.Utc))
             {
                 // This code should be modified as we don't return a UTC time here
                 // https://github.com/microsoft/Power-Fx/issues/1931
