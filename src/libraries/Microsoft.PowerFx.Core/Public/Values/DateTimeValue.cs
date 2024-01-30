@@ -60,11 +60,11 @@ namespace Microsoft.PowerFx.Types
                 // https://github.com/microsoft/Power-Fx/issues/1931
                 return DateTime.SpecifyKind(value, DateTimeKind.Unspecified);
             }
-            else if (value.Kind == DateTimeKind.Unspecified && timeZoneInfo.BaseUtcOffset == TimeSpan.Zero)
+            else if (value.Kind == DateTimeKind.Unspecified && timeZoneInfo.Equals(TimeZoneInfo.Utc))
             {
                 return TimeZoneInfo.ConvertTimeToUtc(value, timeZoneInfo);
             }
-            else if (value.Kind == DateTimeKind.Utc && timeZoneInfo.BaseUtcOffset != TimeSpan.Zero)
+            else if (value.Kind == DateTimeKind.Utc && !timeZoneInfo.Equals(TimeZoneInfo.Utc))
             {
                 return TimeZoneInfo.ConvertTime(value, timeZoneInfo);
             }
