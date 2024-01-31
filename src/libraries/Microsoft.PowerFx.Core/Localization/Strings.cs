@@ -562,6 +562,11 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter Component = (b) => StringResources.Get("Component", b);
         public static StringGetter UserDefined = (b) => StringResources.Get("UserDefined", b);
 
+        public static StringGetter AboutUniChar = (b) => StringResources.Get("AboutUniChar", b);
+        public static StringGetter UniCharArg1 = (b) => StringResources.Get("UniCharArg1", b);
+        public static StringGetter AboutUniCharT = (b) => StringResources.Get("AboutUniCharT", b);
+        public static StringGetter UniCharTArg1 = (b) => StringResources.Get("UniCharTArg1", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -599,6 +604,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrBadType_ExpectedType = new ErrorResourceKey("ErrBadType_ExpectedType");
         public static ErrorResourceKey ErrBadType_ExpectedTypesCSV = new ErrorResourceKey("ErrBadType_ExpectedTypesCSV");
         public static ErrorResourceKey ErrBadType_ExpectedType_ProvidedType = new ErrorResourceKey("ErrBadType_ExpectedType_ProvidedType");
+        public static ErrorResourceKey ErrBadType_VoidExpression = new ErrorResourceKey("ErrBadType_VoidExpression");
         public static ErrorResourceKey ErrBadSchema_ExpectedType = new ErrorResourceKey("ErrBadSchema_ExpectedType");
         public static ErrorResourceKey ErrInvalidArgs_Func = new ErrorResourceKey("ErrInvalidArgs_Func");
         public static ErrorResourceKey ErrNeedTable_Func = new ErrorResourceKey("ErrNeedTable_Func");
@@ -672,7 +678,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidStringInterpolation = new ErrorResourceKey("ErrInvalidStringInterpolation");
         public static ErrorResourceKey ErrEmptyIsland = new ErrorResourceKey("ErrEmptyIsland");
         public static ErrorResourceKey ErrDeprecated = new ErrorResourceKey("ErrDeprecated");
-        public static ErrorResourceKey WarnDeprecatedFunction = new ErrorResourceKey("WarnDeprecatedFunction");
         public static ErrorResourceKey ErrUnsupportedFunction = new ErrorResourceKey("ErrUnsupportedFunction");
         public static ErrorResourceKey ErrInvalidFunction = new ErrorResourceKey("ErrInvalidFunction");
         public static ErrorResourceKey ErrUntypedObjectScope = new ErrorResourceKey("ErrUntypedObjectScope");

@@ -69,6 +69,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Syntax.TokKind",
                 "Microsoft.PowerFx.Syntax.UnaryOp",
                 "Microsoft.PowerFx.Syntax.VariadicOp",
+                "Microsoft.PowerFx.Syntax.ITextFirstFlag",
 
                 // Parse nodes
                 "Microsoft.PowerFx.Syntax.AsNode",

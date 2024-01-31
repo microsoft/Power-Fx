@@ -402,8 +402,8 @@
     <value>Nový název sloupce</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Zadaný sloupec {0} se nedá přejmenovat dvakrát.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Vrátí řádky z tabulky, pro kterou jsou všechny zadané podmínky pravdivé.</value>
@@ -1076,7 +1076,7 @@
           
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Počet měsíců, o které se má datum změnit. Kladná hodnota znamená budoucí datum, záporná hodnota minulé datum a nula měsíc nezmění.</value>
+    <value>Počet měsíců, o které se má datum změnit. Kladná hodnota znamená budoucí datum, záporná hodnota minulé datum a nula měsíc nezmění.</value>
          
   </data>
   <data name="AboutInt" xml:space="preserve">
@@ -1704,6 +1704,38 @@
     <value>oddělovač</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Vytvoří výčet a vrátí názvy sloupců netypového záznamu.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>záznam</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Záznam, z jehož sloupců se má vytvořit výčet.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Vrátí hodnotu vlastnosti netypového záznamu na základě názvu sloupce.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>záznam</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>název_sloupce</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Záznam pro načtení hodnoty sloupce.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Název sloupce záznamu, který se má načíst.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Vrátí hodnotu true, pokud je zadaná hodnota daného typu.</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Neplatný typ argumentu ({1}). Očekává se hodnota {0}.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>Výraz anulování nelze v tomto kontextu použít.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>Pole s názvem „{0}“ se v tomto záznamu zadalo více než jednou.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Zadaný sloupec {0} se nedá přejmenovat dvakrát.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Sloupec s názvem {0} byl zadaný víc než jednou.</value>
     
@@ -2370,35 +2402,52 @@
     <value>Neplatný ukazatel JSON.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Žádný</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Text</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logické</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Tabulka</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Chování</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Datum a čas</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Matematické a statistické</value>
+    <value>Matematika a statistika</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Definováno uživatelem</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informace</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Barva</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Služby</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Komponenta</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3851,6 @@
     <value>Tato funkce je zastaralá a již není podporována.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>V oboru názvů {1} je funkce {0} zastaralá.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>V oboru názvů {1} není funkce {0} podporována.</value>
     
@@ -4176,5 +4221,35 @@
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Tabulka neobsahuje žádný sloupec typu text.</value>
     
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Zastaralé použití znaku „.“. Místo toho použijte funkci „ShowColumns“.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Odmítnutí odpovědnosti:** Obsah generovaný AI může obsahovat chyby. Před použitím se ujistěte, že je přesný a vhodný. [Přečtěte si podmínky](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Vrátí znak Unicode, na který odkazuje daná číselná hodnota.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Číselná hodnota, která má být převedena na znak Unicode.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>číslo</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Převede tabulku číselných hodnot na tabulku znaků Unicode.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>sloupec_čísel</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Sloupec tabulky s číselnými hodnotami, které mají být převedeny na znaky Unicode.</value>
   </data>
 </root>

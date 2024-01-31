@@ -402,8 +402,8 @@
     <value>Kolonnas jaunas nosaukums.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Norādīto kolonnu “{0}” nevar pārdēvēt divas reizes.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Atgriež rindas no tabulas, kurām visi norādītie nosacījumi ir patiesi.</value>
@@ -1076,7 +1076,7 @@
           
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Mēnešu skaits, pēc kura ir jāmaina datums. Pozitīva vērtība iegūst nākotnes datumu, negatīva vērtība — pagātnes datumu, bet nulle nemaina mēnesi.</value>
+    <value>Mēnešu skaits, pēc kura ir jāmaina datums. Pozitīva vērtība iegūst nākotnes datumu, negatīva vērtība — pagātnes datumu, bet nulle nemaina mēnesi.</value>
          
   </data>
   <data name="AboutInt" xml:space="preserve">
@@ -1704,6 +1704,38 @@
     <value>atdalītājs</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Izveidot uzskaitījumu un atgriezt netipizēta ieraksta kolonnu nosaukumus.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>ieraksts</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Ierakstam jābūt ar uzskaitītām kolonnām.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Ņemot vērā kolonnas nosaukumu, atgriež netipizēta ieraksta rekvizīta vērtību.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>ieraksts</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>kolonnas_nosaukums</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Ieraksts, lai izgūtu kolonnas vērtību.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Izgūstamā ieraksta kolonnas nosaukums.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Atgriež vērtību true (patiess), ja norādītajai vērtībai ir attiecīgais tips.</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Nederīgs argumenta tips ({1}). Tā vietā paredzēta {0} vērtība.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>Šajā kontekstā nevar izmantot anulētu izteiksmi.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>Lauks ar nosaukumu {0} tika norādīts vairākkārt šajā ierakstā.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Norādīto kolonnu “{0}” nevar pārdēvēt divas reizes.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Kolonna ar nosaukumu {0} tika norādīta vairākkārt.</value>
     
@@ -2370,35 +2402,52 @@
     <value>Nederīgs json rādītājs.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Nav</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Teksts</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Loģisks</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Tabula</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Izturēšanās</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Datums un laiks</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Matemātika un statistika</value>
+    <value>Izteiksmju un citu rezultātu analīze</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Definēja lietotājs</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informācija</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Krāsa</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Pakalpojumi</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Komponents</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3851,6 @@
     <value>Šis līdzeklis ir novecojis un vairs netiek atbalstīts.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>Funkcija {0} ir novecojusi nosaukumvietā {1}.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>Funkcija {0} netiek atbalstīta nosaukumvietā {1}.</value>
     
@@ -4176,5 +4221,35 @@
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Tabulā nav nevienas teksta tipa kolonnas.</value>
     
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Novecojis “.” lietojums. Tā vietā, lūdzu, izmantojiet funkciju “ShowColumns”.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Atruna.** Mākslīgā intelekta ģenerētam saturam var būt kļūdas. Pirms lietošanas pārliecinieties, vai tas ir pareizs un atbilstošs. [Skatīt noteikumus](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Atgriež unikoda rakstzīmi, uz kuru atsaucas norādītā skaitliskā vērtība.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Skaitliskā vērtība, kas jāpārvērš par unikoda rakstzīmi.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>skaitlis</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Skaitlisko vērtību tabulu pārvērš unikoda rakstzīmju tabulā.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>skaitļu_kolonna</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Skaitlisko vērtību tabulas kolonna, kas jāpārvērš par unikoda rakstzīmēm.</value>
   </data>
 </root>

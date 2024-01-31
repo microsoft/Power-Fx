@@ -250,20 +250,19 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                     currStringInterpNode = node;
                     foreach (var token in currStringInterpNode.SourceList.Tokens)
                     {
-                        var span = token.Span;
                         switch (token.Kind)
                         {
                             case TokKind.StrInterpStart:
-                                tokens.AddTokenIfPossible(new TokenTextSpan(TokenizerConstants.StringInterpolationStart, span.Min, span.Lim, TokenType.StrInterpStart, false), tokenTypesToSkip);
+                                tokens.AddTokenIfPossible(new TokenTextSpan(TokenizerConstants.StringInterpolationStart, token, TokenType.StrInterpStart), tokenTypesToSkip);
                                 break;
                             case TokKind.StrInterpEnd:
-                                tokens.AddTokenIfPossible(new TokenTextSpan(TokenizerConstants.StringInterpolationEnd, span.Min, span.Lim, TokenType.StrInterpEnd, false), tokenTypesToSkip);
+                                tokens.AddTokenIfPossible(new TokenTextSpan(TokenizerConstants.StringInterpolationEnd, token, TokenType.StrInterpEnd), tokenTypesToSkip);
                                 break;
                             case TokKind.IslandStart:
-                                tokens.AddTokenIfPossible(new TokenTextSpan(TokenizerConstants.IslandStart, span.Min, span.Lim, TokenType.IslandStart, false), tokenTypesToSkip);
+                                tokens.AddTokenIfPossible(new TokenTextSpan(TokenizerConstants.IslandStart, token, TokenType.IslandStart), tokenTypesToSkip);
                                 break;
                             case TokKind.IslandEnd:
-                                tokens.AddTokenIfPossible(new TokenTextSpan(TokenizerConstants.IslandEnd, span.Min, span.Lim, TokenType.IslandEnd, false), tokenTypesToSkip);
+                                tokens.AddTokenIfPossible(new TokenTextSpan(TokenizerConstants.IslandEnd, token, TokenType.IslandEnd), tokenTypesToSkip);
                                 break;
                             default:
                                 break;
@@ -300,7 +299,6 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <param name="tokenTypesToSkip">Optional: Token Types to be skipped.</param>
         private static void ExtractTokensFromNodesList(ICollection<ITokenTextSpan> tokens, IEnumerable<TexlNode> nodes, string name, IReadOnlyCollection<TokenType> tokenTypesToSkip = null)
         {
-            Span span;
             foreach (var node in nodes)
             {
                 var tokenType = MapNodeKindToTokenType(node.Kind);
@@ -313,8 +311,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                     return;
                 }
 
-                span = node.GetTextSpan();
-                tokens.Add(new TokenTextSpan(name, span.Min, span.Lim, tokenType, false));
+                tokens.Add(new TokenTextSpan(name, node.Token, tokenType));
             }
         }
 

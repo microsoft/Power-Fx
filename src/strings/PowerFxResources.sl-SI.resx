@@ -402,8 +402,8 @@
     <value>Novo ime stolpca.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Navedenega stolpca »{0}« ni mogoče preimenovati dvakrat.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Vrne tiste vrstice table, za katere so izpolnjeni vsi določeni pogoji.</value>
@@ -1076,7 +1076,7 @@
           
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Število mesecev za spremembo datuma. Pozitivna vrednost vrne datum v prihodnosti, negativna vrednost datum v preteklosti, število nič pa ne spremeni meseca.</value>
+    <value>Število mesecev za spremembo datuma. Pozitivna vrednost vrne datum v prihodnosti, negativna vrednost datum v preteklosti, število nič pa ne spremeni meseca.</value>
          
   </data>
   <data name="AboutInt" xml:space="preserve">
@@ -1704,6 +1704,38 @@
     <value>ločilo</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Oštevilči in vrne imena stolpcev za zapis brez vrste.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>zapis</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Zapis, za katerega želite oštevilčiti stolpce.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Vrne vrednost lastnosti zapisa brez vrste glede na ime stolpca.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>zapis</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>ime_stolpca</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Zapis, za katerega želite pridobiti vrednost stolpca.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Ime stolpca za zapis, ki ga želite pridobiti.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Vrne »true« , če je navedena vrednost navedene vrste.</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Neveljavna vrsta argumenta ({1}). Namesto tega je pričakovana vrednost {0}.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>V tem kontekstu ni mogoče uporabiti praznega izraza.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>Polje z imenom »{0}« je bilo navedeno več kot enkrat v tem zapisu.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Navedenega stolpca »{0}« ni mogoče preimenovati dvakrat.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Ime stolpca »{0}« je bilo navedeno več kot enkrat.</value>
     
@@ -2370,35 +2402,52 @@
     <value>Neveljaven kazalec json.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Brez</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Besedilo</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logično</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Tabela</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Delovanje</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Datum in ura</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Matematične in statistične</value>
+    <value>Matematika in statistika</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Določi uporabnik</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informacije</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Barva</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Storitve</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Komponenta</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3851,6 @@
     <value>Ta funkcija je opuščena in ni več podprta.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>Funkcija {0} je zastarela v imenskem prostoru {1}.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>Funkcija {0} ni podprta v imenskem prostoru {1}.</value>
     
@@ -4176,5 +4221,35 @@
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Tabela ne vsebuje besedilnih stolpcev.</value>
     
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Zastarela uporaba ».«. Namesto tega uporabite funkcijo »ShowColumns«.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Izjava o zavrnitvi odgovornosti:** Vsebina, ustvarjena z umetno inteligenco, ima lahko napake. Preden jo uporabite, se prepričajte, da je točna in primerna. [Preberite pogoje](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Vrne znak Unicode, na katerega se sklicuje dana številska vrednost.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Številska vrednost, ki jo želite pretvoriti v znak Unicode.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>število</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Pretvori tabelo številskih vrednosti v tabelo z znaki Unicode.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>stolpec_s_števili</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Stolpec tabele s številskimi vrednostmi, ki jih želite pretvoriti v znake Unicode.</value>
   </data>
 </root>
