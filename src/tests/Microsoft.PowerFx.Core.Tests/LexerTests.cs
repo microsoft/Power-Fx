@@ -628,7 +628,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var engine = new Engine();
             var check = engine.Check(expression, new ParserOptions() { TextFirst = true });
-            var actualCount = check.GetTokens().Where(t => t is ITextFirstFlag flag ? flag.IsTextFirst : false).Count();
+            var actualCount = check.GetTextTokens().Where(t => t is ITextFirstFlag flag ? flag.IsTextFirst : false).Count();
 
             Assert.Equal(expectedCount, actualCount);
         }

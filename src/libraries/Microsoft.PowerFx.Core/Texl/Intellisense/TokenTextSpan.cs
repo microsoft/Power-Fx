@@ -44,7 +44,6 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             EndIndex = endIndex;
             TokenType = type;
             CanBeHidden = canHide;
-            IsTextFirst = false;
         }
 
         public TokenTextSpan(string name, Token token, TokenType type, bool canHide = false)
@@ -84,6 +83,31 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             }
 
             return self.StartIndex.CompareTo(other.StartIndex);
+        }
+    }
+
+    /// <summary>
+    /// Wraps a TokenTextSpan to be accessible from the engine.
+    /// </summary>
+    public class TokenTextSpanWrap : ITokenTextSpan, ITextFirstFlag
+    {
+        private readonly TokenTextSpan _tokenTextSpan;
+
+        public string TokenName => _tokenTextSpan.TokenName;
+
+        public int StartIndex => _tokenTextSpan.StartIndex;
+
+        public int EndIndex => _tokenTextSpan.EndIndex;
+
+        public TokenType TokenType => _tokenTextSpan.TokenType;
+
+        public bool CanBeHidden => _tokenTextSpan.CanBeHidden;
+
+        public bool IsTextFirst => _tokenTextSpan.IsTextFirst;
+
+        internal TokenTextSpanWrap(TokenTextSpan tokenTextSpan)
+        {
+            _tokenTextSpan = tokenTextSpan;
         }
     }
 }
