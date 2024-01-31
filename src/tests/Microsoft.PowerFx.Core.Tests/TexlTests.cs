@@ -4092,6 +4092,7 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.AddEntity(new TestDataSource("DS", schema));
 
             TestBindingErrors("TableConcatenate(DS)", schema, symbol);
+            TestBindingErrors("TableConcatenate(Filter(DS, true))", schema, symbol);
         }
 
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)

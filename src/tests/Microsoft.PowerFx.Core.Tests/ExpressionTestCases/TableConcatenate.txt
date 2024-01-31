@@ -19,11 +19,11 @@ Table({a:0,b:Blank(),c:Blank(),d:Blank()},{a:Blank(),b:true,c:Blank(),d:Blank()}
 
 // Invalid input – record instead of table 
 >> TableConcatenate({c:"Hello", d: {x: "World"}}) 
-Error() 
+Error 17-45: Argument needs to be a table.
 
 // Invalid input – trying to coerce guid and datetime 
 >> TableConcatenate([{a:Date(2024,1,1)}], [{a:GUID("some-guid-value-1234")}]) 
-Error 
+Error 39-73: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
 
 >> TableConcatenate(Blank())
-""
+Table(Blank())

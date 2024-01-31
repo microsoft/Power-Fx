@@ -4448,4 +4448,7 @@
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>A table column of numeric values to be converted into Unicode characters.</value>
   </data>
+  <data name="ErrNeedTable" xml:space="preserve">
+    <value>Argument needs to be a table.</value>
+  </data>
 </root>
