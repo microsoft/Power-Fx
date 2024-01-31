@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("Boolean", "Text", "Texto")]
-        [InlineData("Sqrt", "Math and statistical", "Matemático e estatístico")]
+        [InlineData("Sqrt", "Math and statistical", "Matemática e estatística")]
         [InlineData("ConcatenateT", "Table", "Tabela", "Text", "Texto")]
         public void FunctionCategoriesLocaleTest(string functionName, params string[] localizedResources)
         {

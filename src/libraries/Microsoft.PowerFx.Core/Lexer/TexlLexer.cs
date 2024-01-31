@@ -1017,6 +1017,8 @@ namespace Microsoft.PowerFx.Syntax
             // If the mode stack is empty, fall back to the _intialLexerMode, which can be either Normal or TextFirst.
             private LexerMode CurrentMode => _modeStack.Count != 0 ? _modeStack.Peek() : _initialLexerMode;
 
+            private bool IsTextFirstActive => CurrentMode == LexerMode.TextFirst;
+
             private void EnterMode(LexerMode newMode)
             {
                 _modeStack.Push(newMode);
@@ -1118,10 +1120,10 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     if (Eof)
                     {
-                        if (CurrentMode == LexerMode.TextFirst && !_textFirstEndToken)
+                        if (IsTextFirstActive && !_textFirstEndToken)
                         {
                             _textFirstEndToken = true;
-                            return new StrInterpEndToken(GetTextEndSpan());
+                            return new StrInterpEndToken(GetTextEndSpan(), IsTextFirstActive);
                         }
                         else
                         {
@@ -1129,10 +1131,10 @@ namespace Microsoft.PowerFx.Syntax
                         }
                     }
 
-                    if (CurrentMode == LexerMode.TextFirst && !_textFirstStartToken)
+                    if (IsTextFirstActive && !_textFirstStartToken)
                     {
                         _textFirstStartToken = true;
-                        return new StrInterpStartToken(GetTextStartSpan());
+                        return new StrInterpStartToken(GetTextStartSpan(), IsTextFirstActive);
                     }
 
                     var tok = Dispatch(true, true);
@@ -1565,7 +1567,7 @@ namespace Microsoft.PowerFx.Syntax
                 }
 
                 NextChar();
-                return new StrLitToken(_sb.ToString(), GetTextSpan());
+                return new StrLitToken(_sb.ToString(), GetTextSpan(), IsTextFirstActive);
             }
 
             // Lex an interpolated string body start.
@@ -1577,7 +1579,7 @@ namespace Microsoft.PowerFx.Syntax
                 NextChar();
                 EnterMode(LexerMode.StringInterpolation);
 
-                return new StrInterpStartToken(GetTextSpan());
+                return new StrInterpStartToken(GetTextSpan(), IsTextFirstActive);
             }
 
             // Lex an interpolated string body end.
@@ -1588,7 +1590,7 @@ namespace Microsoft.PowerFx.Syntax
                 NextChar();
                 ExitMode();
 
-                return new StrInterpEndToken(GetTextSpan());
+                return new StrInterpEndToken(GetTextSpan(), IsTextFirstActive);
             }
 
             // Lex an interpolated string island start.
@@ -1633,7 +1635,7 @@ namespace Microsoft.PowerFx.Syntax
                                 return new ErrorToken(GetTextSpan());
                             }
 
-                            return new StrLitToken(_sb.ToString(), GetTextSpan());
+                            return new StrLitToken(_sb.ToString(), GetTextSpan(), IsTextFirstActive);
                         }
 
                         // If we are here, we are seeing a double quote followed immediately by another
@@ -1652,7 +1654,7 @@ namespace Microsoft.PowerFx.Syntax
                                 return new ErrorToken(GetTextSpan());
                             }
 
-                            return new StrLitToken(_sb.ToString(), GetTextSpan());
+                            return new StrLitToken(_sb.ToString(), GetTextSpan(), IsTextFirstActive);
                         }
 
                         // If we are here, we are seeing a open curly followed immediately by another
@@ -1705,7 +1707,7 @@ namespace Microsoft.PowerFx.Syntax
                     }
                     else if (ch == '$' && IsCurlyOpen(PeekChar(1)))
                     {
-                        return new StrLitToken(_sb.ToString(), GetTextSpan());
+                        return new StrLitToken(_sb.ToString(), GetTextSpan(), IsTextFirstActive);
                     }
                     else if (!CharacterUtils.IsFormatCh(ch))
                     {
@@ -1716,7 +1718,7 @@ namespace Microsoft.PowerFx.Syntax
                 }
                 while (!Eof);
 
-                return new StrLitToken(_sb.ToString(), GetTextSpan());
+                return new StrLitToken(_sb.ToString(), GetTextSpan(), IsTextFirstActive);
             }
 
             // Lex a sequence of spacing characters.

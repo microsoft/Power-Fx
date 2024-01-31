@@ -605,5 +605,32 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(lit.Span.Min == 1);
             Assert.True(lit.Span.Lim == str.Length);
         }
+
+        [Theory]
+        [InlineData("Hello ${\"World\"}", 3, "$\":True", "Hello :True", "World:False", "\":True")]
+        [InlineData("Hello ${$\"World\"}", 3, "$\":True", "Hello :True", "$\":False", "World:False", "\":False", "\":True")]
+        [InlineData("=$\"Hello {\"World\"}\"", 0, "$\":False", "Hello :False", "World:False", "\":False")]
+        public void TextFirstTokenFlagTest(string expression, int expectedCount, params string[] textFirstToken)
+        {
+            var tokens = TexlLexer.InvariantLexer.LexSource(expression, TexlLexer.Flags.TextFirst);
+            var tokensWithTextFirstFlag = tokens.Where(t => t is ITextFirstFlag).ToArray();
+
+            Assert.Equal(textFirstToken.Length, tokensWithTextFirstFlag.Count());
+
+            for (int i = 0; i < tokensWithTextFirstFlag.Count(); i++)
+            {
+                var token = tokensWithTextFirstFlag[i];
+                var textFirstFlag = token as ITextFirstFlag;
+                var textFirstTokenString = token.ToString() + ":" + textFirstFlag.IsTextFirst;
+
+                Assert.Equal(textFirstToken[i], textFirstTokenString);
+            }
+
+            var engine = new Engine();
+            var check = engine.Check(expression, new ParserOptions() { TextFirst = true });
+            var actualCount = check.GetTokens().Where(t => t is ITextFirstFlag flag ? flag.IsTextFirst : false).Count();
+
+            Assert.Equal(expectedCount, actualCount);
+        }
     }
 }
