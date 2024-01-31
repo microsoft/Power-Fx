@@ -4451,4 +4451,15 @@
   <data name="ErrNeedTable" xml:space="preserve">
     <value>Argument needs to be a table.</value>
   </data>
+  <data name="AboutTableConcatenate" xml:space="preserve">
+    <value>TBA</value>
+    <comment>TBA</comment>
+  </data>
+  <data name="TableConcatenateArg1" xml:space="preserve">
+    <value>table</value>
+    <comment>TBA</comment>
+  </data>
+  <data name="AboutTableConcatenate_table" xml:space="preserve">
+    <value>TBA</value>
+  </data>
 </root>
