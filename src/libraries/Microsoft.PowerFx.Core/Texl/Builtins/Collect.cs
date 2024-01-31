@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool RequiresDataSourceScope => true;
 
-        protected virtual bool IsScalar => false;
+        public virtual bool IsScalar => false;
 
         public override bool CanSuggestInputColumns => true;
 
@@ -362,9 +362,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Collect(collection:*[...], item1, ...)
     internal class CollectScalarFunction : CollectFunction
     {
-        protected override bool IsScalar => true;
+        public override bool IsScalar => true;
 
         public override bool SupportsParamCoercion => false;
+
+        // This method returns the name of the record to be used when a scalar is passed to Collect and converted.
+        // It is critical that these are *always* the invariant names.
+        public static string GetInvariantNameForRecord(PowerFx.Features features, DKind dKind)
+        {
+            return CreateInvariantFieldName(features, dKind);
+        }
 
         public override DType GetCollectedType(PowerFx.Features features, DType argType)
         {
