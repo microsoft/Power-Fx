@@ -274,7 +274,7 @@ namespace Microsoft.PowerFx.Types
         {
             var list = new List<NamedValue>() { new NamedValue(name, value) };
 
-            return UpdateFields(FormulaValue.NewRecordFromFields(list));
+            return UpdateFields(NewRecordFromFields(list));
         }
 
         public DValue<RecordValue> UpdateFields(RecordValue changeRecord)

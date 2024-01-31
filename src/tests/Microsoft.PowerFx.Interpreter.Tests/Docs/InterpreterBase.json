@@ -140,6 +140,7 @@
     "Trunc",
     "UniChar",
     "Upper",
+    "Update",
     "Value",
     "VarP",
     "Weekday",

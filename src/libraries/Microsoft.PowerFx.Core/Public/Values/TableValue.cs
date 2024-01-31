@@ -49,9 +49,9 @@ namespace Microsoft.PowerFx.Types
             }
 
             var error = new ErrorValue(IRContext, new ExpressionError()
-            {                
+            {
                 Span = IRContext.SourceContext,
-                Kind = ErrorKind.InvalidArgument,                
+                Kind = ErrorKind.InvalidArgument,
                 ResourceKey = TexlStrings.InvalidCast,
                 MessageArgs = new object[] { record.Type, Type.ToRecord() }
             });
@@ -149,6 +149,18 @@ namespace Microsoft.PowerFx.Types
         }
 
         /// <summary>
+        /// Update implementation for derived classes.
+        /// </summary>
+        /// <param name="baseRecord">A record to modify.</param>
+        /// <param name="changeRecord">A record that contains properties to modify the base record. All display names are resolved.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns></returns>
+        protected virtual async Task<DValue<RecordValue>> UpdateCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
+        {
+            return DValue<RecordValue>.Of(NotImplemented(IRContext));
+        }
+
+        /// <summary>
         /// Patch implementation for derived classes.
         /// </summary>
         /// <param name="baseRecord">A record to modify.</param>
@@ -175,6 +187,24 @@ namespace Microsoft.PowerFx.Types
             // IR has already resolved to logical names because of 
             // RequiresDataSourceScope, ArgMatchesDatasourceType on function.
             return await PatchCoreAsync(baseRecord, changeRecord, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// replace one record in a data source.
+        /// </summary>
+        /// <param name="baseRecord">A record to modify.</param>
+        /// <param name="changeRecord">A record that contains properties to modify the base record.</param>
+        /// <param name="all"></param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The updated record.</returns>
+        public async Task<DValue<RecordValue>> UpdateAsync(RecordValue baseRecord, RecordValue changeRecord, bool all, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var recordType = Type.ToRecord();
+
+            // IR has already resolved to logical names because of 
+            // RequiresDataSourceScope, ArgMatchesDatasourceType on function.
+            return await UpdateCoreAsync(baseRecord, changeRecord, cancellationToken).ConfigureAwait(false);
         }
 
         public override object ToObject()

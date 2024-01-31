@@ -1,0 +1,20 @@
+#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
+
+// Check MutationFunctionsTestSetup handler (PowerFxEvaluationTests.cs) for documentation.
+
+>> Update(t1, r1, r_empty);
+   t1
+Table({Field1:Blank(),Field2:Blank(),Field3:Blank(),Field4:Blank()})
+
+>> Update(t1, r1, {Field2:"mars"});
+   t1
+Table({Field1:Blank(),Field2:"mars",Field3:Blank(),Field4:Blank()})
+
+>> Update(t1,r1,{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Update(t1, r1, {Field2:"mars"});
+{Field1:Blank(),Field2:"mars",Field3:Blank(),Field4:Blank()}
+
+>> Update(t1, r1, r_empty, "All");
+{Field1:Blank(),Field2:Blank(),Field3:Blank(),Field4:Blank()}

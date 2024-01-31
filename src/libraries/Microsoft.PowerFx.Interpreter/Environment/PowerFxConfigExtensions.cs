@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Functions.Mutation;
 
 namespace Microsoft.PowerFx
 {
@@ -42,6 +43,7 @@ namespace Microsoft.PowerFx
             symbolTable.AddFunction(new RemoveFunction());
             symbolTable.AddFunction(new ClearFunction());
             symbolTable.AddFunction(new ClearCollectFunction());
+            symbolTable.AddFunction(new UpdateFunction());
         }
 
         [Obsolete("RegEx is still in preview. Grammar may change.")]
