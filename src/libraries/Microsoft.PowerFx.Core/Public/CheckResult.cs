@@ -631,7 +631,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="tokenTypesToSkip"></param>
         /// <returns>Enumerable of wrapped tokens.</returns>
-        public IEnumerable<TokenTextSpanWrap> GetTextTokens(IReadOnlyCollection<TokenType> tokenTypesToSkip = null) => GetTokens(tokenTypesToSkip).Select(t => new TokenTextSpanWrap(t as TokenTextSpan));
+        public IEnumerable<TokenTextSpan> GetTextTokens(IReadOnlyCollection<TokenType> tokenTypesToSkip = null) => GetTokens(tokenTypesToSkip).Select(t => t as TokenTextSpan);
 
         private string _expressionInvariant;
 
