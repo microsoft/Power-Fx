@@ -1,0 +1,116 @@
+#SETUP: Blob, EnableExpressionChaining
+
+// Blob handler creates variables
+// - blob as BlobValue
+// - str as StringValue
+
+// Cannot run a test like Blob("abc") as it would return a BlobValue
+// and we can't call ToExpression() of such an object (NotImplementedException)
+
+>> Text(Blob("abc"))
+"appres://blobmanager/0"
+
+>> Blob("abc"); Text(Blob("abc"))
+"appres://blobmanager/1"
+
+>> Text(Blob("ABC"))
+"appres://blobmanager/0"
+
+>> Text(Blob(Blank()))
+"appres://blobmanager/0"
+
+>> Text(Blob(""))
+"appres://blobmanager/0"
+
+>> Text(Blob("17"))
+"appres://blobmanager/0"
+
+>> Text(Blob(17))
+"appres://blobmanager/0"
+
+>> BlobGetString(Blob("abc"))
+"abc"
+
+>> BlobGetString(Blob(Blank()))
+Blank()
+
+>> BlobGetString(Blob(""))
+Blank()
+
+>> BlobGetString(Blob("17"))
+"17"
+
+>> BlobGetString(Blob(17))
+"17"
+
+>> BlobGetBase64String(Blob("abc"))
+"YWJj"
+
+>> BlobGetBase64String(Blob(Blank()))
+Blank()
+
+>> BlobGetBase64String(Blob(""))
+Blank()
+
+>> BlobGetBase64String(Blob("17"))
+"MTc="
+
+>> BlobGetBase64String(Blob(17))
+"MTc="
+
+>> BlobGetBase64String(Blob("Hello"))
+"SGVsbG8="
+
+>> Text(Blob("Hello"))
+"appres://blobmanager/0"
+
+>> Text(Blob("Hello", false))
+"appres://blobmanager/0"
+
+>> Text(Blob("SGVsbG8=", true))
+"appres://blobmanager/0"
+
+>> BlobGetString(Blob("Hello", false))
+"Hello"
+
+>> BlobGetString(Blob("SGVsbG8=", true))
+"Hello"
+
+>> Blob("Abc") = Blob("Abc")
+false
+
+>> Blob("Abc") <> Blob("Abc")
+true
+
+>> With({ file: Blob("Abc") }, file = file)
+true
+
+>> IsBlank(Blob(""))
+false
+
+>> IsBlank(Blob(Blank()))
+false
+
+>> Text(Blob("abc", false, "Image"))
+"appres://imagemanager/0"
+
+>> Text(Blob("abc", false, "Audio"))
+"appres://mediamanager/0"
+
+>> Text(Blob("abc", false, "Video"))
+"appres://mediamanager/0"
+
+>> Text(Blob("abc", false, "PDF"))
+"appres://blobmanager/0"
+
+>> Text(Blob("http://localhost/abc.jpg", false, "URI"))
+"http://localhost/abc.jpg"
+
+>> Text(Blob("http://localhost/abc.jpg", true, "URI"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Set(blob, Blob("abc")); BlobGetString(blob)
+"abc"
+
+>> Set(str, Text(Blob("abc"))); BlobGetString(Blob(str, false, "Uri"))
+"abc"

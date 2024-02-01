@@ -3,6 +3,7 @@
 
 using System;
 using System.Net.Http;
+using Microsoft.PowerFx.Core.Functions;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -24,5 +25,7 @@ namespace Microsoft.PowerFx.Connectors
         internal override bool ReturnRawResults => true;        
 
         public override ConnectorLogger ExecutionLogger => _baseRuntimeConnectorContext.ExecutionLogger;
+
+        public override ResourceManager ResourceManager => _baseRuntimeConnectorContext.ResourceManager;
     }
 }

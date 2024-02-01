@@ -269,6 +269,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     throw new ArgumentException($"Unable to serialize type {untypedObjectValue.GetType().FullName} to Json format.");
                 }
+
+                public void Visit(BlobValue value)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public void Visit(MediaValue value)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public void Visit(ImageValue value)
+                {
+                    throw new NotImplementedException();
+                }
             }
 
             internal static string GetColorString(Color color) => $"#{color.R:x2}{color.G:x2}{color.B:x2}{color.A:x2}";

@@ -34,5 +34,11 @@ namespace Microsoft.PowerFx.Types
         void Visit(ColorValue value);
 
         void Visit(GuidValue value);
+
+        void Visit(BlobValue value);
+
+        void Visit(MediaValue value);
+
+        void Visit(ImageValue value);
     }
 }

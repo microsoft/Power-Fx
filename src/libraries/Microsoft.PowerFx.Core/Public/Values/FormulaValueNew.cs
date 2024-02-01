@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -136,6 +137,31 @@ namespace Microsoft.PowerFx.Types
         public static VoidValue NewVoid()
         {
             return new VoidValue(IRContext.NotInSource(FormulaType.Void));
+        }
+
+        internal static BlobValue NewBlob(ResourceManager resourceManager, string str, bool isBase64Encoded, FileType fileType = FileType.Any)
+        {
+            return new BlobValue(resourceManager, str, isBase64Encoded, fileType);
+        }
+
+        internal static MediaValue NewAudio(ResourceManager resourceManager, string str, bool isBase64Encoded)
+        {
+            return new MediaValue(resourceManager, str, isBase64Encoded, FileType.Audio);
+        }
+
+        internal static MediaValue NewVideo(ResourceManager resourceManager, string str, bool isBase64Encoded)
+        {
+            return new MediaValue(resourceManager, str, isBase64Encoded, FileType.Video);
+        }
+
+        internal static ImageValue NewImage(ResourceManager resourceManager, string str, bool isBase64Encoded)
+        {
+            return new ImageValue(resourceManager, str, isBase64Encoded, FileType.Image);
+        }
+
+        internal static BlobValue NewPDF(ResourceManager resourceManager, string str, bool isBase64Encoded)
+        {
+            return new BlobValue(resourceManager, str, isBase64Encoded, FileType.PDF);
         }
     }
 }

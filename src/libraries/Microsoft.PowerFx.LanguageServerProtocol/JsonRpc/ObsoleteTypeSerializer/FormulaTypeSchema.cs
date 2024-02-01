@@ -36,6 +36,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             Deferred,
             Void,
             Unsupported,
+            Blob,
+            Image,
+            Media
         }
 
         /// <summary>

@@ -250,6 +250,18 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         WriteDateValue(dv.GetConvertedValue(null));
                     }
+                    else if (fv is BlobValue bv)
+                    {
+                        if (propertySchema.Format == "byte")
+                        {
+                            WriteStringValue(bv.Base64String);
+                        }
+                        else
+                        {
+                            // "binary"
+                            WriteStringValue(bv.String);
+                        }
+                    }
                     else
                     {
                         throw new PowerFxConnectorException($"Expected StringValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");

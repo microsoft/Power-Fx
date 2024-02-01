@@ -1103,6 +1103,13 @@ namespace Microsoft.PowerFx.Connectors
                             {
                                 schemaLessBody = true;
 
+                                if (bodySchema.Type == "string" && bodySchema.Format == "binary")
+                                {
+                                    // Blob - In Power Apps, when the body parameter is of type "binary", the name of the parameter becomes "file"
+                                    // ServiceConfigParser.cs, see DefaultBinaryRequestBodyParameterName reference
+                                    bodyName = "file";
+                                }
+
                                 OpenApiParameter bodyParameter2 = new OpenApiParameter() { Name = bodyName, Schema = bodySchema, Description = requestBody.Description, Required = requestBody.Required, Extensions = bodySchema.Extensions };
                                 ConnectorParameter bodyConnectorParameter3 = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter2, requestBody, ConnectorSettings.Compatibility));
                                 openApiBodyParameters.Add(bodyConnectorParameter3, OpenApiExtensions.TryGetOpenApiValue(bodyConnectorParameter3.Schema.Default, null, out FormulaValue defaultValue, errorsAndWarnings) ? defaultValue : null);

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text.Json;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
@@ -24,25 +25,17 @@ namespace Microsoft.PowerFx.Types
         /// <summary>
         /// Convenience method to create a value from a json representation. 
         /// </summary>
-        public static FormulaValue FromJson(string jsonString, FormulaType formulaType = null, bool numberIsFloat = false)
+        public static FormulaValue FromJson(string jsonString, FormulaType formulaType = null, bool numberIsFloat = false, ResourceManager resourceManager = null)
         {
-            return FromJson(jsonString, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType);
+            return FromJson(jsonString, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType, resourceManager: resourceManager);
         }
-        
-        public static FormulaValue FromJson(string jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
+      
+        public static FormulaValue FromJson(string jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null, ResourceManager resourceManager = null)
         {
-            try
-            {
-                using JsonDocument document = JsonDocument.Parse(jsonString);
-                JsonElement propBag = document.RootElement;
+            using JsonDocument document = JsonDocument.Parse(jsonString);
+            JsonElement propBag = document.RootElement;
 
-                return FromJson(propBag, settings, formulaType);
-            }
-            catch
-            {
-                // $$$ better error handling here?
-                throw;
-            }
+            return FromJson(propBag, settings, formulaType, resourceManager: resourceManager);
         }
 
         /// <summary>
@@ -50,13 +43,14 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         /// <param name="element"></param>
         /// <param name="formulaType">Expected formula type. We will check the Json element and formula type match if this parameter is provided.</param>
-        /// <param name="numberIsFloat">Treat JSON numbers as Floats.  By default, they are treated as Decimals.</param>        
-        public static FormulaValue FromJson(JsonElement element, FormulaType formulaType = null, bool numberIsFloat = false)
+        /// <param name="numberIsFloat">Treat JSON numbers as Floats.  By default, they are treated as Decimals.</param> 
+        /// <param name="resourceManager">Resource Manager used to store Blob/Media and Image values.</param>
+        public static FormulaValue FromJson(JsonElement element, FormulaType formulaType = null, bool numberIsFloat = false, ResourceManager resourceManager = null)
         {
-            return FromJson(element, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType);
+            return FromJson(element, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType, resourceManager: resourceManager);
         }
         
-        public static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
+        public static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null, ResourceManager resourceManager = null)
         {
             if (formulaType is UntypedObjectType uot)
             {
@@ -115,6 +109,19 @@ namespace Microsoft.PowerFx.Types
                         DateTime dt3 = element.GetDateTime();
                         return DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3));
                     }
+                    else if (formulaType is BlobType)
+                    {
+                        return BlobValue.NewBlob(resourceManager, element.GetString(), true);
+                    }
+                    else if (formulaType is ImageType)
+                    {
+                        return BlobValue.NewImage(resourceManager, element.GetString(), true);
+                    }
+                    else if (formulaType is MediaType)
+                    {
+                        // $$$ how to determine if that's a video?
+                        return BlobValue.NewAudio(resourceManager, element.GetString(), true);
+                    }
                     else
                     {
                         throw new NotImplementedException($"Expecting a StringType but got {formulaType._type.Kind}");
@@ -143,7 +150,7 @@ namespace Microsoft.PowerFx.Types
                 case JsonValueKind.Object:
                     if (skipTypeValidation || formulaType is RecordType)
                     {
-                        return RecordFromJsonObject(element, formulaType as RecordType, settings);
+                        return RecordFromJsonObject(element, formulaType as RecordType, settings, resourceManager);
                     }
                     else
                     {
@@ -153,7 +160,7 @@ namespace Microsoft.PowerFx.Types
                 case JsonValueKind.Array:
                     if (skipTypeValidation || formulaType is TableType)
                     {
-                        return TableFromJsonArray(element, formulaType as TableType, settings);
+                        return TableFromJsonArray(element, formulaType as TableType, settings, resourceManager);
                     }
                     else
                     {
@@ -166,7 +173,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         // Json objects parse to records. 
-        private static InMemoryRecordValue RecordFromJsonObject(JsonElement element, RecordType recordType, FormulaValueJsonSerializerSettings settings)
+        private static InMemoryRecordValue RecordFromJsonObject(JsonElement element, RecordType recordType, FormulaValueJsonSerializerSettings settings, ResourceManager resourceManager)
         {
             Contract.Assert(element.ValueKind == JsonValueKind.Object);
 
@@ -191,7 +198,7 @@ namespace Microsoft.PowerFx.Types
                     fieldType = FormulaType.UntypedObject;
                 }
 
-                var paValue = FromJson(value, settings, fieldType);
+                var paValue = FromJson(value, settings, fieldType, resourceManager: resourceManager);
                 fields.Add(new NamedValue(name, paValue));
                 type = type.Add(new NamedFormulaType(name, paValue.IRContext.ResultType));
             }
@@ -203,7 +210,7 @@ namespace Microsoft.PowerFx.Types
         // Parse json. 
         // [1,2,3]  is a single column table, actually equivalent to: 
         // [{Value : 1, Value: 2, Value :3 }]
-        internal static FormulaValue TableFromJsonArray(JsonElement array, TableType tableType, FormulaValueJsonSerializerSettings settings)
+        internal static FormulaValue TableFromJsonArray(JsonElement array, TableType tableType, FormulaValueJsonSerializerSettings settings, ResourceManager resourceManager)
         {
             Contract.Assert(array.ValueKind == JsonValueKind.Array);
 
@@ -218,7 +225,7 @@ namespace Microsoft.PowerFx.Types
             for (var i = 0; i < array.GetArrayLength(); ++i)
             {
                 JsonElement element = array[i];
-                var val = GuaranteeRecord(FromJson(element, settings, ft));
+                var val = GuaranteeRecord(FromJson(element, settings, ft, resourceManager: resourceManager));
 
                 records.Add(val);
             }

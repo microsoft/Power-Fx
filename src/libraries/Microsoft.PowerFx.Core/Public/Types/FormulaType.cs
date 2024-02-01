@@ -3,7 +3,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
@@ -58,6 +57,12 @@ namespace Microsoft.PowerFx.Types
         public static FormulaType BindingError { get; } = new BindingErrorType();
 
         public static FormulaType Void { get; } = new Void();
+
+        public static FormulaType Blob { get; } = new BlobType();
+
+        public static FormulaType Media { get; } = new MediaType();
+
+        public static FormulaType Image { get; } = new ImageType();
 
         /// <summary>
         /// Internal use only to represent an arbitrary (un-backed) option set value.
@@ -194,10 +199,22 @@ namespace Microsoft.PowerFx.Types
                     }
 
                     return new TableType(type);
+
                 case DKind.Deferred:
                     return Deferred;
+
                 case DKind.Void: 
                     return Void;
+
+                case DKind.Blob:
+                    return Blob;
+
+                case DKind.Image:
+                    return Image;
+
+                case DKind.Media:
+                    return Media;
+
                 default:
                     return new UnsupportedType(type);
             }

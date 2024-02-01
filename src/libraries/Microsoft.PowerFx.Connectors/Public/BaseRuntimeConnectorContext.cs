@@ -3,6 +3,7 @@
 
 using System;
 using System.Net.Http;
+using Microsoft.PowerFx.Core.Functions;
 using SharpYaml.Serialization.Logging;
 
 namespace Microsoft.PowerFx.Connectors
@@ -14,6 +15,8 @@ namespace Microsoft.PowerFx.Connectors
         public abstract TimeZoneInfo TimeZoneInfo { get; }
 
         public virtual bool ThrowOnError { get; } = false;
+
+        public virtual ResourceManager ResourceManager { get; }
 
         internal virtual bool ReturnRawResults { get; } = false;        
 

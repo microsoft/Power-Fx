@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Security.Cryptography;
 using System.Threading;
 
 namespace Microsoft.PowerFx.Core.Annotations

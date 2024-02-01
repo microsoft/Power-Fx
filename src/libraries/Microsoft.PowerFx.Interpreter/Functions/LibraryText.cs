@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -327,6 +328,51 @@ namespace Microsoft.PowerFx.Functions
             return Text(runner.GetFormattingInfo(), irContext, args, runner.CancellationToken);
         }
 
+        public static FormulaValue TextToBlob(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            runner.CancellationToken.ThrowIfCancellationRequested();
+
+            if (args[0].IsBlank())
+            {
+                return new BlobValue(irContext);
+            }
+
+            if (args[0] is StringValue sv)
+            {
+                ResourceManager resourceManager = runner.FunctionServices.GetService<ResourceManager>();
+                return new BlobValue(resourceManager, sv.Value, false);
+            }
+
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"Cannot convert {args[0].Type._type} to Blob",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
+
+        public static FormulaValue BlobToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            runner.CancellationToken.ThrowIfCancellationRequested();
+
+            if (args[0].IsBlank())
+            {
+                return FormulaValue.NewBlank(FormulaType.String);
+            }
+
+            if (args[0] is FileValue fv)
+            {
+                return FormulaValue.New(fv.ToString());
+            }
+
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"Cannot convert {args[0].Type._type} to Text",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
+
         public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -521,6 +567,14 @@ namespace Microsoft.PowerFx.Functions
                             TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, defaultFormat, dateTimeResult, timeZoneInfo, culture, cancellationToken, out result);
                     }
 
+                    break;
+
+                case BlobValue:
+                case ImageValue:
+                case MediaValue:
+
+                    // returns appsres:// reference
+                    result = new StringValue(irContext, value.ToString());
                     break;
             }
 

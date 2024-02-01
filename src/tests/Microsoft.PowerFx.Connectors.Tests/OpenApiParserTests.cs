@@ -575,6 +575,21 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 Result = value.Value.ToString();
             }
 
+            public void Visit(BlobValue value)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void Visit(MediaValue value)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void Visit(ImageValue value)
+            {
+                throw new System.NotImplementedException();
+            }
+
             private void Visit(IUntypedObject untypedObject)
             {
                 var type = untypedObject.Type;
@@ -718,7 +733,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("dataset", createFileV2.RequiredParameters[0].Name);
             Assert.Equal("folderPath", createFileV2.RequiredParameters[1].Name);
             Assert.Equal("name", createFileV2.RequiredParameters[2].Name);
-            Assert.Equal("body", createFileV2.RequiredParameters[3].Name);
+            Assert.Equal("file", createFileV2.RequiredParameters[3].Name);
+            Assert.Equal(FormulaType.Blob, createFileV2.RequiredParameters[3].FormulaType);
             (0..3).ForAll(i => Assert.Equal(Visibility.None, createFileV2.RequiredParameters[i].ConnectorType.Visibility));
 
             Assert.Equal("queryParametersSingleEncoded", createFileV2.OptionalParameters[0].Name);

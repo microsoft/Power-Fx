@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests;
@@ -84,7 +85,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext(GetNamespace(), client, console: _output, tzi: tzi));
             runtimeConfig.SetClock(new TestClockService());
-            runtimeConfig.SetTimeZone(tzi);
+            runtimeConfig.SetTimeZone(tzi);            
 
             return (testConnector, apiDoc, config, httpClient, client, connectorSettings, runtimeConfig);
         }
@@ -124,6 +125,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             else if (expectedResult.StartsWith("RECORD"))
             {
                 Assert.IsAssignableFrom<RecordValue>(fv);
+            }
+            else if (expectedResult.StartsWith("BLOB"))
+            {
+                Assert.IsAssignableFrom<BlobValue>(fv);
             }
             else if (expectedResult == "RAW")
             {

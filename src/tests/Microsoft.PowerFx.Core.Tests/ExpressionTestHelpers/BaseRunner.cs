@@ -95,10 +95,15 @@ namespace Microsoft.PowerFx.Core.Tests
         public Features Features = Features.None;
 
         /// <summary>
+        /// Logger action.
+        /// </summary>
+        public Action<string> Log = null;
+
+        /// <summary>
         /// Runs a PowerFx test case, with optional setup.
         /// </summary>
         /// <param name="expr">PowerFx expression.</param>
-        /// <param name="setupHandlerName">Optional name of a setup handler to run. Throws SetupHandlerNotImplemented if not found.</param>
+        /// <param name="setupHandlerName">Optional name of a setup handler to run. Throws SetupHandlerNotImplemented if not found.</param>        
         /// <returns>Result of evaluating Expr.</returns>
         protected abstract Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null);
 
@@ -236,9 +241,9 @@ namespace Microsoft.PowerFx.Core.Tests
                     }
                 }
             }
-            catch (SetupHandlerNotFoundException)
+            catch (SetupHandlerNotFoundException shnfe)
             {
-                return (TestResult.Skip, $"was skipped due to missing setup handler {testCase.SetupHandlerName}");
+                return (TestResult.Skip, $"was skipped due to error with setup handler {testCase.SetupHandlerName} - {shnfe.InnerException?.Message}");
             }
             catch (Exception e)
             {

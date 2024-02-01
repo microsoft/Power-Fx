@@ -415,6 +415,28 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: TimeParse)
             },
             {
+                UnaryOpKind.TextToBlob,
+                StandardErrorHandling<StringValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: TextToBlob)
+            },
+            {
+                UnaryOpKind.BlobToText,
+                StandardErrorHandling<FileValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<FileValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: BlobToText)
+            },
+            {
                 UnaryOpKind.OptionSetToText,
                 StandardErrorHandling<OptionSetValue>(
                     functionName: null, // internal function, no user-facing name

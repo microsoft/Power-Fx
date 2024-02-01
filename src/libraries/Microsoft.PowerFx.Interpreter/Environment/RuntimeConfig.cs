@@ -66,6 +66,12 @@ namespace Microsoft.PowerFx
             return this;
         }
 
+        public RuntimeConfig AddService(Type type, object service)
+        {
+            ServiceProvider.AddService(type, service);
+            return this;
+        }
+
         public T GetService<T>()
         {
             return (T)ServiceProvider.GetService(typeof(T));

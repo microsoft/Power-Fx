@@ -4083,6 +4083,58 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
+        [Theory]
+        [InlineData("Filter(T, c)")]
+        [InlineData("Filter(T, boolVar)")]
+        [InlineData("With({d:true},Filter(T, d))")]
+        public void TestFilterWithNamingConflicts(string expression)
+        {
+            var tableType = TestUtils.DT("*[a:n,b:s,c:b]");
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("c", FormulaType.Boolean);
+            symbolTable.AddVariable("boolVar", FormulaType.Boolean);
+            symbolTable.AddVariable("T", new TableType(tableType));
+
+            TestSimpleBindingSuccess(expression, tableType, symbolTable);
+        }
+
+        internal class BlobFunc : TexlFunction
+        {
+            public override bool IsSelfContained => false;
+
+            public BlobFunc()
+                : base(DPath.Root, "BlobFunc", "BlobFunc", (_) => "Returns a blob", FunctionCategories.Behavior, DType.Blob, 0, 0, 0)
+            {
+            }
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [Theory]
+        [InlineData("BlobFunc()", "o")]
+        [InlineData("blobVar", "o")]
+        public void TestBlobFunction(string expression, string expectedType)
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddFunction(new BlobFunc());
+            symbolTable.AddVariable("blobVar", FormulaType.Blob);
+
+            var config = new PowerFxConfig()
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var opts = new ParserOptions() { AllowsSideEffects = true };
+            var result = engine.Check(expression, opts);
+            var expectedDType = TestUtils.DT(expectedType);
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig
@@ -4093,8 +4145,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var result = engine.Check(script);
 
-            Assert.NotNull(result.Binding);
-        
+            Assert.NotNull(result.Binding);        
             Assert.Equal(isPure, result.Binding.IsPure(result.Parse.Root));
         }
 

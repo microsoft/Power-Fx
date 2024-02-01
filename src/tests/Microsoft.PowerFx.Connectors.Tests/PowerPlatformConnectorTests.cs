@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Connectors.Tests;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
@@ -242,9 +243,11 @@ namespace Microsoft.PowerFx.Tests
 
             // Now execute it...
             var engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("AzureBlobStorage", client));
+            var runtimeContext = new TestConnectorRuntimeContext("AzureBlobStorage", client);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(runtimeContext);
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response.json");
 
+            // As we pass "abc" string and expect a Blob for the 3rd param, we call internally TextToBlob coercion rule
             var result = await engine.EvalAsync(@"AzureBlobStorage.CreateFile(""container"", ""bora4.txt"", ""abc"").Size", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
 
             dynamic res = result.ToObject();

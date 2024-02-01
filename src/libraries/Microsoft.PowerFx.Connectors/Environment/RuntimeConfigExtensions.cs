@@ -8,6 +8,7 @@ namespace Microsoft.PowerFx.Connectors
         public static RuntimeConfig AddRuntimeContext(this RuntimeConfig runtimeConfig, BaseRuntimeConnectorContext context)
         {
             runtimeConfig.ServiceProvider.AddService(typeof(BaseRuntimeConnectorContext), context);
+            runtimeConfig.ServiceProvider.AddService(context.ResourceManager);
             return runtimeConfig;
         }
     }

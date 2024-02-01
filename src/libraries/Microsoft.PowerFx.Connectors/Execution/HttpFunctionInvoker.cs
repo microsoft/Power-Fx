@@ -13,6 +13,7 @@ using System.Web;
 using Microsoft.CodeAnalysis;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -27,6 +28,7 @@ namespace Microsoft.PowerFx.Connectors
         private readonly ConnectorFunction _function;
         private readonly bool _returnRawResults;        
         private readonly ConnectorLogger _logger;
+        private readonly ResourceManager _resourceManager;
 
         public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext)
         {
@@ -34,6 +36,7 @@ namespace Microsoft.PowerFx.Connectors
             _httpClient = runtimeContext.GetInvoker(function.Namespace);
             _returnRawResults = runtimeContext.ReturnRawResults;            
             _logger = runtimeContext.ExecutionLogger;
+            _resourceManager = runtimeContext.ResourceManager;
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
@@ -356,8 +359,8 @@ namespace Microsoft.PowerFx.Connectors
                 return string.IsNullOrWhiteSpace(text)
                     ? FormulaValue.NewBlank(_function.ReturnType)
                     : _returnRawResults
-                    ? FormulaValue.New(text)
-                    : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, _function.ReturnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
+                    ? FormulaValue.New(text)                    
+                    : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, _function.ReturnType, _resourceManager); 
             }
 
             string reasonPhrase = string.IsNullOrEmpty(response.ReasonPhrase) ? string.Empty : $" ({response.ReasonPhrase})";

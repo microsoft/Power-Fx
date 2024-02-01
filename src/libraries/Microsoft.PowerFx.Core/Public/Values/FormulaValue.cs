@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Types
                 }
             }
 
-            throw new InvalidOperationException($"Can't coerce to double from {this.Type._type.GetKindString()})");
+            throw new InvalidOperationException($"Can't coerce to boolean from {this.Type._type.GetKindString()}");
         }
 
         public double AsDouble()
@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx.Types
                 }
             }
 
-            throw new InvalidOperationException($"Can't coerce to double from {this.Type._type.GetKindString()})");
+            throw new InvalidOperationException($"Can't coerce to double from {this.Type._type.GetKindString()}");
         }
 
         public decimal AsDecimal()
@@ -150,7 +150,7 @@ namespace Microsoft.PowerFx.Types
                 }
             }
 
-            throw new InvalidOperationException($"Can't coerce to decimal from {this.Type._type.GetKindString()})");
+            throw new InvalidOperationException($"Can't coerce to decimal from {this.Type._type.GetKindString()}");
         }
     }
 }
