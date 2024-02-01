@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -119,48 +119,62 @@
   </resheader>
   <data name="ListItemSingleQuotedFormat" xml:space="preserve">
     <value>"{0}"</value>
+    
   </data>
   <data name="AboutIf" xml:space="preserve">
     <value>Көрсетілген шарттардың кез келген біреуінің орындалуын не орындалмауын тексереді және сәйкес мәнді қайтарады. Егер шарттардың ешқайсысы орындалмаса, функция көрсетілген әдепкі мәнді қайтарады.</value>
+    
   </data>
   <data name="IfArgCond" xml:space="preserve">
     <value>логикалық_тексеру</value>
+    
   </data>
   <data name="IfArgTrueValue" xml:space="preserve">
     <value>шын_мән</value>
+    
   </data>
   <data name="IfArgElseValue" xml:space="preserve">
     <value>кері_жағдайда_мәні</value>
+    
   </data>
   <data name="AboutIf_logical_test" xml:space="preserve">
     <value>Логикалық мәнге әкелетін шарт.</value>
   </data>
   <data name="AboutIf_true_value" xml:space="preserve">
     <value>Шарт "шын" мәніне ие болғанда "If" функциясының нәтижесін беретін өрнек.</value>
+    
   </data>
   <data name="AboutIf_else_value" xml:space="preserve">
     <value>Барлық көрсетілген шарттар "жалған" мәніне ие болғанда "If" функциясының нәтижесін беретін өрнек.</value>
+    
   </data>
   <data name="AboutSwitch" xml:space="preserve">
     <value>Формуланың нәтижесін мәндер қатарымен сәйкестендіреді. Сәйкестік табылғанда, тиісті формула есептеледі және қайтарылады. Сәйкестіктер табылмаса, соңғы әдепкі формула есептеледі және қайтарылады.</value>
+    
   </data>
   <data name="SwitchExpression" xml:space="preserve">
     <value>ауыстыру_мән</value>
+    
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
     <value>әдепкі_нәтиже</value>
+    
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
     <value>сәйкестік_мән</value>
+    
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
     <value>сәйкестік_нәтиже</value>
+    
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
     <value>Әр сәйкестік_мән үшін салыстырылатын мән.</value>
+    
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
     <value>Ауыстыру_мән үшін сәйкестендірілетін мән.</value>
+    
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
     <value>Сәйкестік табылғанда есептелетін және қайтарылатын формула.</value>
@@ -170,15 +184,19 @@
   </data>
   <data name="AboutAnd" xml:space="preserve">
     <value>Барлық аргументтерде "шын" мәнінің болуын тексереді және барлық аргументтерде "шын" мәні болса, "шын" мәнін қайтарады.</value>
+    
   </data>
   <data name="AboutOr" xml:space="preserve">
     <value>Аргументтердің "шын" мәніне ие болуын тексереді және "шын" немесе "жалған" мәнін қайтарады. Барлық аргументтер "жалған" мәніне ие болса ғана "жалған" мәнін қайтарады.</value>
+    
   </data>
   <data name="AboutNot" xml:space="preserve">
     <value>"Жалған" мәнін "шын" мәніне және керісінше өзгертеді.</value>
+    
   </data>
   <data name="LogicalFuncParam" xml:space="preserve">
     <value>логикалық</value>
+    
   </data>
   <data name="AboutAnd_logical" xml:space="preserve">
     <value>"Және" операциясына әсер ететін логикалық мән.</value>
@@ -191,15 +209,19 @@
   </data>
   <data name="AboutCount" xml:space="preserve">
     <value>Көрсетілген бағандағы сандық мәндерді есептейді.</value>
+    
   </data>
   <data name="AboutCountA" xml:space="preserve">
     <value>Бағандағы бос емес жолдардың санын есептейді.</value>
+    
   </data>
   <data name="AboutCountRows" xml:space="preserve">
     <value>Кіріс кестесіндегі немесе жиынтықтағы жолдар санын есептейді.</value>
+    
   </data>
   <data name="CountArg1" xml:space="preserve">
     <value>деректер­_көзі</value>
+    
   </data>
   <data name="AboutCount_source" xml:space="preserve">
     <value>Есептелетін мәндер бағаны.</value>
@@ -212,12 +234,15 @@
   </data>
   <data name="AboutCountIf" xml:space="preserve">
     <value>Берілген шартқа сәйкес келетін жолдар санын есептейді.</value>
+    
   </data>
   <data name="CountIfArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="CountIfArg2" xml:space="preserve">
     <value>шарт</value>
+    
   </data>
   <data name="AboutCountIf_source" xml:space="preserve">
     <value>Нақты шарттарға сәйкес келетін жолдары есептелетін кесте.</value>
@@ -227,21 +252,27 @@
   </data>
   <data name="AboutSumT" xml:space="preserve">
     <value>Кесте контекстінде өрнек есептейтін сандардың қосындысын қайтарады.</value>
+    
   </data>
   <data name="AboutMaxT" xml:space="preserve">
     <value>Кесте контекстінде өрнек есептейтін ең үлкен мәнді қайтарады.</value>
+    
   </data>
   <data name="AboutMinT" xml:space="preserve">
     <value>Кесте контекстінде өрнек есептейтін ең кіші мәнді қайтарады.</value>
+    
   </data>
   <data name="AboutAverageT" xml:space="preserve">
     <value>Кесте контекстінде өрнек есептейтін сандардың орташа (арифметикалық орташа) мәнін қайтарады.</value>
+    
   </data>
   <data name="StatisticalTArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="StatisticalTArg2" xml:space="preserve">
     <value>өрнек</value>
+    
   </data>
   <data name="AboutMin_source" xml:space="preserve">
     <value>Минималды мәнді анықтау операциясы есептелетін кесте.</value>
@@ -269,18 +300,23 @@
   </data>
   <data name="AboutSum" xml:space="preserve">
     <value>Аргументтер қосындысын қайтарады.</value>
+    
   </data>
   <data name="AboutMax" xml:space="preserve">
     <value>Мәндер жиынтығындағы ең үлкен мәнді қайтарады. Логикалық мәндер мен мәтінді ескермейді.</value>
+    
   </data>
   <data name="AboutMin" xml:space="preserve">
     <value>Мәндер жиынтығындағы ең кіші мәнді қайтарады. Логикалық мәндер мен мәтінді ескермейді.</value>
+    
   </data>
   <data name="AboutAverage" xml:space="preserve">
     <value>Аргументтердің орташа (арифметикалық орташа) мәнін қайтарады.</value>
+    
   </data>
   <data name="StatisticalArg" xml:space="preserve">
     <value>сан</value>
+    
   </data>
   <data name="AboutSum_number" xml:space="preserve">
     <value>Қосынды операциясына арналған сандық мән.</value>
@@ -296,33 +332,43 @@
   </data>
   <data name="AboutAddColumns" xml:space="preserve">
     <value>"source" үстінен барлық "'expression" мәндерін бағалау арқылы есептелген жаңа бағандары бар кестені қайтарады.</value>
+    
   </data>
   <data name="AddColumnsArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="AddColumnsArg2" xml:space="preserve">
     <value>баған</value>
+    
   </data>
   <data name="AddColumnsArg3" xml:space="preserve">
     <value>өрнек</value>
+    
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
     <value>Бағандар қосылатын кесте немесе жазба.</value>
+    
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
     <value>Бірегей баған атауы.</value>
+    
   </data>
   <data name="AboutAddColumns_expression" xml:space="preserve">
     <value>Жаңа баған үшін мәндерді беретін өрнек.</value>
+    
   </data>
   <data name="AboutDropColumns" xml:space="preserve">
     <value>Бастапқы кестеден жойылған бір немесе бірнеше көрсетілген бағандары бар кестені қайтарады.</value>
+    
   </data>
   <data name="DropColumnsArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="DropColumnsArg2" xml:space="preserve">
     <value>баған_атауы</value>
+    
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
     <value>Бағандары жойылатын кесте немесе жазба.</value>
@@ -332,15 +378,19 @@
   </data>
   <data name="AboutRenameColumns" xml:space="preserve">
     <value>Көрсетілген бастапқы кестенің көшірмесін қайтарады, мұнда "ескі_баған" атауы "жаңа_баған" етіп өзгертіледі.</value>
+    
   </data>
   <data name="RenameColumnsArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="RenameColumnsArg2" xml:space="preserve">
     <value>ескі_баған</value>
+    
   </data>
   <data name="RenameColumnsArg3" xml:space="preserve">
     <value>жаңа_баған</value>
+    
   </data>
   <data name="AboutRenameColumns_source" xml:space="preserve">
     <value>Өңделетін кестелік мән.</value>
@@ -353,15 +403,19 @@
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
     <value>Көрсетілген "{0}" бағанының атауын екі рет өзгерту мүмкін емес.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Барлық көрсетілген шарттар шын болатын кестеден жолдарды қайтарады.</value>
+    
   </data>
   <data name="FilterArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="FilterArg2" xml:space="preserve">
     <value>логикалық_тексеру</value>
+    
   </data>
   <data name="AboutFilter_source" xml:space="preserve">
     <value>Сүзілетін кесте.</value>
@@ -371,12 +425,15 @@
   </data>
   <data name="AboutFirst" xml:space="preserve">
     <value>Көздің бірінші жолын қайтарады.</value>
+    
   </data>
   <data name="AboutLast" xml:space="preserve">
     <value>Көздің соңғы жолын қайтарады.</value>
+    
   </data>
   <data name="FirstLastArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="AboutFirst_source" xml:space="preserve">
     <value>Бірінші жолы қайтарылатын кесте.</value>
@@ -386,15 +443,19 @@
   </data>
   <data name="AboutFirstN" xml:space="preserve">
     <value>Көздің бірінші есептелген жолдарын қайтарады.</value>
+    
   </data>
   <data name="AboutLastN" xml:space="preserve">
     <value>Көздің соңғы есептелген жолдарын қайтарады.</value>
+    
   </data>
   <data name="FirstLastNArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="FirstLastNArg2" xml:space="preserve">
     <value>саны</value>
+    
   </data>
   <data name="AboutFirstN_source" xml:space="preserve">
     <value>Жолдар қайтарылатын кесте.</value>
@@ -410,105 +471,130 @@
   </data>
   <data name="AboutText" xml:space="preserve">
     <value>"Мәнді" "пішімдік_мәтін" арқылы берілген нақты сандық пішімдегі мәтінге түрлендіреді.</value>
+    
   </data>
   <data name="TextArg1" xml:space="preserve">
     <value>мән</value>
+    
   </data>
   <data name="TextArg2" xml:space="preserve">
     <value>пішімдік_мәтін</value>
+    
   </data>
   <data name="TextArg3" xml:space="preserve">
     <value>тіл</value>
+    
   </data>
   <data name="AboutText_value" xml:space="preserve">
     <value>Мәтінге пішімделетін мән.</value>
   </data>
   <data name="AboutText_format_text" xml:space="preserve">
     <value>Мән пішімделетін әдісті көрсететін мәтіндік мән.</value>
+    
   </data>
   <data name="AboutText_language" xml:space="preserve">
     <value>Мәтінге түрлендіргенде пайдаланылатын тіл коды.</value>
+    
   </data>
   <data name="AboutValue" xml:space="preserve">
     <value>Санды көрсететін мәтінді сандық мәнге түрлендіреді.</value>
+    
   </data>
   <data name="ValueArg1" xml:space="preserve">
     <value>мәтін</value>
+    
   </data>
   <data name="ValueArg2" xml:space="preserve">
     <value>тіл</value>
+    
   </data>
   <data name="AboutValue_text" xml:space="preserve">
     <value>Сандық мәнге түрлендірілетін мәтіндік мән.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
     <value>Мәнді түрлендіргенде пайдаланылатын тіл коды.</value>
+    
   </data>
   <data name="AboutBoolean" xml:space="preserve">
     <value>Логикалық мәнді білдіретін "мәтінді" логикалық мәнге түрлендіреді.</value>
+    
   </data>
   <data name="BooleanArg1" xml:space="preserve">
     <value>мәтін</value>
+    
   </data>
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Логикалық мәнге түрлендірілетін мәтін мәні.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
     <value>Мәтіндік мәндер бағанын логикалық мәндер бағанына түрлендіреді.</value>
+    
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
     <value>кіріс</value>
+    
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
     <value>Өңделетін мәтіндік мәндер бағаны.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>"Санды" логикалық мәнге түрлендіреді.</value>
+    
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
     <value>сан</value>
+    
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
     <value>Логикалық мәнге түрлендірілетін сандық мән.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
     <value>Сандық мәндер бағанын логикалық мәндер бағанына түрлендіреді.</value>
+    
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
     <value>кіріс</value>
+    
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Өңделетін сандық мәндер бағаны.</value>
   </data>
   <data name="AboutBooleanB" xml:space="preserve">
     <value>"Логикалық" мәнді логикалық мәнге түрлендіреді.</value>
+    
   </data>
   <data name="BooleanBArg1" xml:space="preserve">
     <value>логикалық</value>
+    
   </data>
   <data name="AboutBooleanB_boolean" xml:space="preserve">
     <value>Логикалық мәнге түрлендірілетін логикалық мән.</value>
   </data>
   <data name="AboutBooleanBT" xml:space="preserve">
     <value>Логикалық мәндер бағанын логикалық мәндер бағанына түрлендіреді.</value>
+    
   </data>
   <data name="BooleanBTArg1" xml:space="preserve">
     <value>кіріс</value>
+    
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Өңделетін логикалық мәндер бағаны.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Бірінші бос емес аргументті қайтарады</value>
+    
   </data>
   <data name="CoalesceArg1" xml:space="preserve">
     <value>мән</value>
+    
   </data>
   <data name="AboutCoalesce_value" xml:space="preserve">
     <value>Бірінші бос емес аргумент болған жағдайда қайтарылатын аргумент.</value>
   </data>
   <data name="AboutConcatenate" xml:space="preserve">
     <value>Бірнеше мәтіндік мәндерді бір мәтіндік мәнге біріктіреді.</value>
+    
   </data>
   <data name="AboutDecimal" xml:space="preserve">
     <value>Санды білдіретін "мәтінді" ондық мәнге түрлендіреді.</value>
@@ -530,30 +616,37 @@
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>мәтін</value>
+    
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
     <value>Қалған аргументтермен біріктіруге келетін мәтін мәні.</value>
   </data>
   <data name="AboutConcatenateT" xml:space="preserve">
     <value>Бірнеше мәтін мәнін немесе кестені мәтін мәндерінің бір бағанына біріктіреді.</value>
+    
   </data>
   <data name="ConcatenateTArg1" xml:space="preserve">
     <value>мән</value>
+    
   </data>
   <data name="AboutConcatenate_value" xml:space="preserve">
     <value>Қалған аргументтермен біріктіруге келетін мәтін мәні немесе мәтін мәндерінің бағаны.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Берілген кесте бойынша берілген өрнекті есептеу арқылы алынған барлық мәтіндік мәндерді бір мәтіндік мәнге біріктіреді.</value>
+    
   </data>
   <data name="ConcatArg1" xml:space="preserve">
     <value>кесте</value>
+    
   </data>
   <data name="ConcatArg2" xml:space="preserve">
     <value>өрнек</value>
+    
   </data>
   <data name="ConcatArg3" xml:space="preserve">
     <value>бөлгіш</value>
+    
   </data>
   <data name="AboutConcat_table" xml:space="preserve">
     <value>Екінші параметр арқылы берілген өрнек есептелетін кестелік мән.</value>
@@ -563,30 +656,37 @@
   </data>
   <data name="AboutConcat_separator" xml:space="preserve">
     <value>Кестенің біріктірілетін жолдарының арасына кірістірілетін мәтіндік мән.</value>
+    
   </data>
   <data name="AboutLen" xml:space="preserve">
     <value>Мәтіндік мәнде таңбалар санын қайтарады.</value>
+    
   </data>
   <data name="AboutLen_text" xml:space="preserve">
     <value>Ұзындығы таңбалармен қайтарылатын мәтіндік мән.</value>
   </data>
   <data name="AboutLenT" xml:space="preserve">
     <value>Көрсетілген кестеде немесе жиынтықта әр жол үшін есептелген мәтіндік мәнде таңбалар санын қайтарады.</value>
+    
   </data>
   <data name="AboutLen_text_column" xml:space="preserve">
     <value>Ұзындықтары таңбалармен қайтарылатын (жаңа баған түрінде) мәтіндік мәндер бағаны.</value>
   </data>
   <data name="LenArg1" xml:space="preserve">
     <value>мәтін</value>
+    
   </data>
   <data name="LenTArg1" xml:space="preserve">
     <value>мәтін_бағаны</value>
+    
   </data>
   <data name="AboutUpper" xml:space="preserve">
     <value>Мәтіндік мәннің әріптерін бас әріптерге түрлендіреді.</value>
+    
   </data>
   <data name="AboutUpperT" xml:space="preserve">
     <value>Көрсетілген кестеде немесе жиынтықта әр жол үшін есептелетін мәтіндік мәндегі барлық әріптерді бас әріптерге түрлендіреді.</value>
+    
   </data>
   <data name="AboutUpper_text" xml:space="preserve">
     <value>Бас әріпке түрлендірілетін мәтіндік мән.</value>
@@ -596,9 +696,11 @@
   </data>
   <data name="AboutLower" xml:space="preserve">
     <value>Мәтіндік мәндегі барлық әріптерді кіші әріптерге түрлендіреді.</value>
+    
   </data>
   <data name="AboutLowerT" xml:space="preserve">
     <value>Көрсетілген кестеде немесе жиынтықта әр жол үшін есептелетін мәтіндік мәндегі барлық әріптерді кіші әріптерге түрлендіреді.</value>
+    
   </data>
   <data name="AboutLower_text" xml:space="preserve">
     <value>Кіші әріпке түрлендірілетін мәтіндік мән.</value>
@@ -608,9 +710,11 @@
   </data>
   <data name="AboutProper" xml:space="preserve">
     <value>Мәтіндік мәнді дұрыс регистрге, яғни әр сөздің бірінші әрпін бас әріпке және барлық басқа әріптерді кіші әріпке түрлендіреді.</value>
+    
   </data>
   <data name="AboutProperT" xml:space="preserve">
     <value>Көрсетілген кестедегі немесе жиынтықтағы жолда есептелетін мәтіндік мәнді дұрыс регистрге, яғни әр сөздің бірінші әрпін бас әріпке және барлық басқа әріптерді кіші әріпке түрлендіреді.</value>
+    
   </data>
   <data name="AboutProper_text" xml:space="preserve">
     <value>Дұрыс регистрге түрлендірілетін мәтіндік мән.</value>
@@ -620,6 +724,7 @@
   </data>
   <data name="AboutTrim" xml:space="preserve">
     <value>Мәтіндік мәннен сөздердің арасындағы жеке бос орындардан басқа барлық бос орындарды жояды.</value>
+    
   </data>
   <data name="AboutTrim_text" xml:space="preserve">
     <value>Қию үшін түрлендірілетін мәтіндік мән.</value>
@@ -629,6 +734,7 @@
   </data>
   <data name="AboutTrimEnds" xml:space="preserve">
     <value>Мәтіндік мәннен жолдың басындағы және соңындағы барлық бос орындарды жояды.</value>
+    
   </data>
   <data name="AboutTrimEnds_text" xml:space="preserve">
     <value>Соңындағы және басындағы бос орындар қиылатын мәтіндік мән.</value>
@@ -638,9 +744,11 @@
   </data>
   <data name="AboutMid" xml:space="preserve">
     <value>Бастапқы орын мен ұзындық берілсе, таңбаларды мәтіндік мәннің ортасынан қайтарады.</value>
+    
   </data>
   <data name="AboutMidT" xml:space="preserve">
     <value>Көрсетілген кестеде немесе жиынтықта әр жол үшін есептелетін, бастапқы орын мен ұзындық берілсе, таңбаларды мәтіндік мәннің ортасынан қайтарады.</value>
+    
   </data>
   <data name="AboutMid_text" xml:space="preserve">
     <value>Таңбалар алынатын мәтіндік мән.</value>
@@ -656,27 +764,35 @@
   </data>
   <data name="StringFuncArg1" xml:space="preserve">
     <value>мәтін</value>
+    
   </data>
   <data name="StringTFuncArg1" xml:space="preserve">
     <value>мәтін_бағаны</value>
+    
   </data>
   <data name="StringFuncArg2" xml:space="preserve">
     <value>бастапқы_орын</value>
+    
   </data>
   <data name="StringFuncArg3" xml:space="preserve">
     <value>таңбалар_саны</value>
+    
   </data>
   <data name="AboutReplace" xml:space="preserve">
     <value>Мәтіндік мәннің бөлігін басқа мәтіндік мәнмен ауыстырады.</value>
+    
   </data>
   <data name="AboutReplaceT" xml:space="preserve">
     <value>Мәтіндік мәннің бөлігін көрсетілген кестеде немесе жиынтықта жол бойынша есептелетін басқа мәтіндік мәнмен ауыстырады.</value>
+    
   </data>
   <data name="ReplaceFuncArg1" xml:space="preserve">
     <value>ескі_мәтін</value>
+    
   </data>
   <data name="ReplaceFuncArg4" xml:space="preserve">
     <value>жаңа_мәтін</value>
+    
   </data>
   <data name="AboutReplace_old_text" xml:space="preserve">
     <value>Өңделетін мәтіндік мән.</value>
@@ -695,51 +811,67 @@
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>Реттелетін мәндермен қате шығарады.</value>
+    
   </data>
   <data name="AboutError_error_information" xml:space="preserve">
     <value>Өндірістік қате үшін реттелетін мәндер бар жазба.</value>
+    
   </data>
   <data name="ErrorArg1" xml:space="preserve">
     <value>қате_ақпараты</value>
+    
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
     <value>Error функциясы тек "Kind", "Message", "Notify", "Control" және "Property" өрістерін пайдаланады.</value>
+    
   </data>
   <data name="AboutIfError" xml:space="preserve">
     <value>Бірінші қате емес аргументті есептейді және қайтарады.</value>
+    
   </data>
   <data name="IfErrorArg1" xml:space="preserve">
     <value>мән</value>
+    
   </data>
   <data name="AboutIfError_value" xml:space="preserve">
     <value>Қате емес болғанда қайтарылатын мән.</value>
+    
   </data>
   <data name="IfErrorArg2" xml:space="preserve">
     <value>резерв</value>
+    
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
     <value>Алдыңғы аргумент қате болмағанда қайтарылатын мән.</value>
+    
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
     <value>Бар мәтінді мәтіндік мәнде жаңа мәтінмен ауыстырады.</value>
+    
   </data>
   <data name="AboutSubstituteT" xml:space="preserve">
     <value>Бар мәтінді көрсетілген кестеде немесе жиынтықта жол бойынша есептелетін мәтіндік мәнде жаңа мәтінмен ауыстырады.</value>
+    
   </data>
   <data name="SubstituteFuncArg1" xml:space="preserve">
     <value>мәтін</value>
+    
   </data>
   <data name="SubstituteTFuncArg1" xml:space="preserve">
     <value>мәтін_бағаны</value>
+    
   </data>
   <data name="SubstituteFuncArg2" xml:space="preserve">
     <value>ескі_мәтін</value>
+    
   </data>
   <data name="SubstituteFuncArg3" xml:space="preserve">
     <value>жаңа_мәтін</value>
+    
   </data>
   <data name="SubstituteFuncArg4" xml:space="preserve">
     <value>нұсқа_нөмірі</value>
+    
   </data>
   <data name="AboutSubstitute_text" xml:space="preserve">
     <value>Өңделетін мәтіндік мән.</value>
@@ -758,15 +890,19 @@
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>Сұрыптау ретін қосымша көрсету арқылы, әр жол үшін есептелетін өрнектің нәтижелері негізінде көзді сұрыптайды.</value>
+    
   </data>
   <data name="SortArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="SortArg2" xml:space="preserve">
     <value>өрнек</value>
+    
   </data>
   <data name="SortArg3" xml:space="preserve">
     <value>реті</value>
+    
   </data>
   <data name="AboutSort_source" xml:space="preserve">
     <value>Сұрыпталатын кесте.</value>
@@ -776,18 +912,23 @@
   </data>
   <data name="AboutSort_order" xml:space="preserve">
     <value>SortOrder.Ascending немесе SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Сұрыптау ретін қосымша көрсету арқылы, көзді баған негізінде сұрыптайды.</value>
+    
   </data>
   <data name="SortByColumnsArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="SortByColumnsArg2" xml:space="preserve">
     <value>баған</value>
+    
   </data>
   <data name="SortByColumnsArg3" xml:space="preserve">
     <value>реті</value>
+    
   </data>
   <data name="AboutSortByColumns_source" xml:space="preserve">
     <value>Сұрыпталатын кесте.</value>
@@ -797,18 +938,22 @@
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
     <value>SortOrder.Ascending немесе SortOrder.Descending</value>
+    
   </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>мәндер</value>
+    
   </data>
   <data name="AboutSortByColumns_values" xml:space="preserve">
     <value>Сұрыптау үшін пайдаланылатын мәндер бағаны. Сұрыптау артуы немесе кемуі бойынша орындалмайды, ол бағандағы сәйкес мәндердің индексіне негізделіп орындалады. </value>
   </data>
   <data name="AboutRand" xml:space="preserve">
     <value>0 мәнінен үлкен немесе оған тең және 1 мәнінен кіші біркелкі үлестірілген кездейсоқ санды қайтарады.</value>
+    
   </data>
   <data name="AboutRandBetween" xml:space="preserve">
     <value>Төменгі және жоғарғы арасындағы, біркелкі үлестірілген санды қайтарады.</value>
+    
   </data>
   <data name="AboutRandBetween_bottom" xml:space="preserve">
     <value>Функция қайтара алатын ең кіші бүтін сан.</value>
@@ -818,99 +963,129 @@
   </data>
   <data name="RandBetweenArg1" xml:space="preserve">
     <value>төменгі жақ</value>
+    
   </data>
   <data name="RandBetweenArg2" xml:space="preserve">
     <value>жоғарғы жақ</value>
+    
   </data>
   <data name="AboutGUID" xml:space="preserve">
     <value>Жолдан GUID идентификаторын жасайды немесе аргумент берілмесе, кездейсоқ ретпен жасалған GUID идентификаторын қайтарады.</value>
+    
   </data>
   <data name="GUIDArg" xml:space="preserve">
     <value>GUID_жол</value>
+    
   </data>
   <data name="AboutGUID_GUID_string" xml:space="preserve">
     <value>GUID етіп түрлендіру жолы</value>
+    
   </data>
   <data name="AboutNow" xml:space="preserve">
     <value>Ағымдағы күн мен уақытты қайтарады.</value>
+    
   </data>
   <data name="AboutUTCNow" xml:space="preserve">
     <value>Ағымдағы күн мен уақытты UTC форматында береді.</value>
+    
   </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>UTC уақыты мен жергілікті уақыт арасындағы минутпен көрсетілген айырмашылықты қайтарады. Мысалы, егер уақыт белдеуіңіз UTC+2 болса, -120 қайтарылады.</value>
+    
   </data>
   <data name="TimeZoneOffsetArg1" xml:space="preserve">
     <value>күн</value>
+    
   </data>
   <data name="AboutTimeZoneOffset_date" xml:space="preserve">
     <value>"TimeZoneOffset" есептелетін күн.</value>
+    
   </data>
   <data name="AboutToday" xml:space="preserve">
     <value>Ағымдағы күнді қайтарады.</value>
+    
   </data>
   <data name="AboutUTCToday" xml:space="preserve">
     <value>Ағымдағы күнді UTC форматында береді.</value>
+    
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Берілген күннің апта нөмірін қайтарады.</value>
+    
   </data>
   <data name="WeekNumArg1" xml:space="preserve">
     <value>күн</value>
+    
   </data>
   <data name="WeekNumArg2" xml:space="preserve">
     <value>аптаның_басы</value>
+    
   </data>
   <data name="AboutWeekNum_date" xml:space="preserve">
     <value>Апта нөмірі есептелетін күн мәні.</value>
   </data>
   <data name="AboutWeekNum_start_of_week" xml:space="preserve">
     <value>Апта күндерінің қалай нөмірленетінін көрсететін StartOfWeek тізімінен алынған мән немесе тиісті Excel функциясынан алынған сан.</value>
+    
   </data>
   <data name="AboutISOWeekNum" xml:space="preserve">
     <value>Берілген күн үшін ISO ережелеріне сәйкес апта нөмірін қайтарады.</value>
+    
   </data>
   <data name="ISOWeekNumArg1" xml:space="preserve">
     <value>күн</value>
+    
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>ISO апта нөмірі есептелетін күн мәні.</value>
   </data>
   <data name="AboutEDate" xml:space="preserve">
     <value>Ай саны бойынша реттелген күнді қайтарады. Ай күні бірдей болып қалады, бірақ жаңа айдағы күн санымен жабылады.</value>
+    
   </data>
   <data name="EDateArg1" xml:space="preserve">
     <value>күн</value>
+    
   </data>
   <data name="EDateArg2" xml:space="preserve">
     <value>айлар</value>
+    
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Көрсетілген айлар саны бойынша реттелетін күн мәні.</value>
+          
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Күн өзгертілетін айлар саны. Оң мән болашақ күнді, теріс мән өткен күнді береді, ал нөл айды өзгертпейді.</value>
+        
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Көрсетілген күн үшін, ай саны бойынша реттелген соңғы ай күнін береді.</value>
+    
   </data>
   <data name="EOMonthArg1" xml:space="preserve">
     <value>күн</value>
+    
   </data>
   <data name="EOMonthArg2" xml:space="preserve">
     <value>айлар</value>
+    
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Көрсетілген айлар саны бойынша реттелетін күн мәні.</value>
+          
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Күн өзгертілетін айлар саны. Оң мән болашақ күнді, теріс мән өткен күнді береді, ал нөл айды өзгертпейді.</value>
+    <value>Күн өзгертілетін айлар саны. Оң мән болашақ күнді, теріс мән өткен күнді береді, ал нөл айды өзгертпейді.</value>
+         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Теріс шексіздікке қарай дөңгелектеу арқылы "санды" қысқартады.</value>
+    
   </data>
   <data name="AboutIntT" xml:space="preserve">
     <value>Теріс шексіздікке қарай дөңгелектеу арқылы сандар бағанындағы мәндерді қысқартады.</value>
+    
   </data>
   <data name="AboutInt_number" xml:space="preserve">
     <value>Өңделетін сандық мән.</value>
@@ -920,6 +1095,7 @@
   </data>
   <data name="AboutTrunc" xml:space="preserve">
     <value>Нөлге қарай дөңгелектеу арқылы «санды» қысқартады.</value>
+    
   </data>
   <data name="AboutTrunc_number" xml:space="preserve">
     <value>Санды қысқарту.</value>
@@ -932,33 +1108,43 @@
   </data>
   <data name="AboutTruncT" xml:space="preserve">
     <value>Нөлге қарай дөңгелектеу арқылы «көздегі» барлық сандарды қысқартады.</value>
+    
   </data>
   <data name="TruncArg1" xml:space="preserve">
     <value>сан</value>
+    
   </data>
   <data name="TruncArg2" xml:space="preserve">
     <value>цифрлар_саны</value>
+    
   </data>
   <data name="TruncTArg1" xml:space="preserve">
     <value>көз</value>
+    
   </data>
   <data name="TruncTArg2" xml:space="preserve">
     <value>цифрлар_саны</value>
+    
   </data>
   <data name="AboutRound" xml:space="preserve">
     <value>Санды цифрлардың көрсетілген санына дейін дөңгелектейді.</value>
+    
   </data>
   <data name="AboutRoundUp" xml:space="preserve">
     <value>Санды нөлден үлкен жаққа қарай дөңгелектейді.</value>
+    
   </data>
   <data name="AboutRoundDown" xml:space="preserve">
     <value>Санды кіші жаққа қарай нөлге дейін дөңгелектейді.</value>
+    
   </data>
   <data name="RoundArg1" xml:space="preserve">
     <value>сан</value>
+    
   </data>
   <data name="RoundArg2" xml:space="preserve">
     <value>цифрлар_саны</value>
+    
   </data>
   <data name="AboutRound_number" xml:space="preserve">
     <value>Дөңгелектенетін сан.</value>
@@ -989,33 +1175,43 @@
   </data>
   <data name="AboutRoundT" xml:space="preserve">
     <value>Көздегі барлық сандарды цифрлардың көрсетілген санына дейін дөңгелектейді.</value>
+    
   </data>
   <data name="AboutRoundUpT" xml:space="preserve">
     <value>Көздегі барлық сандарды нөлден үлкен жаққа қарай дөңгелектейді.</value>
+    
   </data>
   <data name="AboutRoundDownT" xml:space="preserve">
     <value>Көздегі барлық сандарды кіші жаққа қарай нөлге дейін дөңгелектейді.</value>
+    
   </data>
   <data name="RoundTArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="RoundTArg2" xml:space="preserve">
     <value>цифрлар_саны</value>
+    
   </data>
   <data name="AboutRGBA" xml:space="preserve">
     <value>Түстің Red, Green, Blue және Alpha компоненттерінің сандық мәндерінен нақты түс жасайды. R, G, B — 0 және 255 арасындағы сандық мәндер. Alpha — 0 және 1 арасындағы ондық сан.</value>
+    
   </data>
   <data name="RGBAArg1" xml:space="preserve">
     <value>қызыл_мәні</value>
+    
   </data>
   <data name="RGBAArg2" xml:space="preserve">
     <value>жасыл_мәні</value>
+    
   </data>
   <data name="RGBAArg3" xml:space="preserve">
     <value>көк_мәні</value>
+    
   </data>
   <data name="RGBAArg4" xml:space="preserve">
     <value>альфа_мәні</value>
+    
   </data>
   <data name="AboutRGBA_red_value" xml:space="preserve">
     <value>Red компоненті, 0 және 255 арасында.</value>
@@ -1031,12 +1227,15 @@
   </data>
   <data name="AboutColorFade" xml:space="preserve">
     <value>Мөлдірлік пайызына байланысты көрсетілген түстің жаңа реңкін жасайды.</value>
+    
   </data>
   <data name="ColorFadeArg1" xml:space="preserve">
     <value>түс</value>
+    
   </data>
   <data name="ColorFadeArg2" xml:space="preserve">
     <value>сөну</value>
+    
   </data>
   <data name="AboutColorFade_color" xml:space="preserve">
     <value>Мөлдірлік қолданылатын түс.</value>
@@ -1049,9 +1248,11 @@
   </data>
   <data name="ColorFadeTArg1" xml:space="preserve">
     <value>түс_немесе_баған</value>
+    
   </data>
   <data name="ColorFadeTArg2" xml:space="preserve">
     <value>сөну_немесе_баған</value>
+    
   </data>
   <data name="AboutColorFade_color_or_column" xml:space="preserve">
     <value>Мөлдірлік қолданылатын түс (немесе түс мәндерінің бағаны).</value>
@@ -1061,9 +1262,11 @@
   </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Санның абсолюттік мәнін, яғни таңбасыз мәнді қайтарады.</value>
+    
   </data>
   <data name="AboutAbsT" xml:space="preserve">
     <value>Сандар бағанының абсолюттік мәндерін (таңбасыз сандарды) қайтарады.</value>
+    
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
     <value>Өңделетін сандық мән.</value>
@@ -1079,9 +1282,11 @@
   </data>
   <data name="AboutSin" xml:space="preserve">
     <value>Санның синус мәнін қайтарады.</value>
+    
   </data>
   <data name="AboutSinT" xml:space="preserve">
     <value>Сандар бағанының синус мәндерін қайтарады.</value>
+    
   </data>
   <data name="AboutAsin_number" xml:space="preserve">
     <value>Өңделетін сандық мән.</value>
@@ -1091,15 +1296,19 @@
   </data>
   <data name="AboutAsin" xml:space="preserve">
     <value>Санның арксинусының мәнін (радианалармен берілген) қайтарады.</value>
+    
   </data>
   <data name="AboutAsinT" xml:space="preserve">
     <value>Сандар бағанының арксинусының мәндерін (радианалармен берілген) қайтарады.</value>
+    
   </data>
   <data name="AboutCos" xml:space="preserve">
     <value>Санның косинус мәнін қайтарады.</value>
+    
   </data>
   <data name="AboutCosT" xml:space="preserve">
     <value>Сандар бағанының косинус мәндерін қайтарады.</value>
+    
   </data>
   <data name="AboutCos_number" xml:space="preserve">
     <value>Өңделетін сандық мән (радианалармен берілген).</value>
@@ -1109,12 +1318,14 @@
   </data>
   <data name="AboutAcos" xml:space="preserve">
     <value>Санның арккосинусының мәнін (радианалармен берілген) қайтарады.</value>
+    
   </data>
   <data name="AboutAcos_number" xml:space="preserve">
     <value>Өңделетін сандық мән.</value>
   </data>
   <data name="AboutAcosT" xml:space="preserve">
     <value>Сандар бағанының арккосинусының мәндерін (радианалармен берілген) қайтарады.</value>
+    
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
     <value>Өңделетін сандық мәндер бағаны.</value>
@@ -1127,15 +1338,19 @@
   </data>
   <data name="AboutAcot" xml:space="preserve">
     <value>Санның арккотангенсінің мәнін (радианалармен берілген) қайтарады.</value>
+    
   </data>
   <data name="AboutAcotT" xml:space="preserve">
     <value>Сандар бағанының арккотангенсінің мәндерін (радианалармен берілген) қайтарады.</value>
+    
   </data>
   <data name="AboutTan" xml:space="preserve">
     <value>Санның тангенс мәнін қайтарады.</value>
+    
   </data>
   <data name="AboutTanT" xml:space="preserve">
     <value>Сандар бағанының тангенс мәндерін қайтарады.</value>
+    
   </data>
   <data name="AboutTan_number" xml:space="preserve">
     <value>Өңделетін сандық мән (радианалармен берілген).</value>
@@ -1145,9 +1360,11 @@
   </data>
   <data name="AboutAtan" xml:space="preserve">
     <value>Санның арктангенсінің мәнін (радианалармен берілген) қайтарады.</value>
+    
   </data>
   <data name="AboutAtanT" xml:space="preserve">
     <value>Сандар бағанының арктангенсінің мәндерін (радианалармен берілген) қайтарады.</value>
+    
   </data>
   <data name="AboutAtan_number" xml:space="preserve">
     <value>Өңделетін сандық мән.</value>
@@ -1157,9 +1374,11 @@
   </data>
   <data name="AboutCot" xml:space="preserve">
     <value>Санның котангенс мәнін қайтарады.</value>
+    
   </data>
   <data name="AboutCotT" xml:space="preserve">
     <value>Сандар бағанының котангенс мәндерін қайтарады.</value>
+    
   </data>
   <data name="AboutCot_number" xml:space="preserve">
     <value>Өңделетін сандық мән (радианалармен берілген).</value>
@@ -1169,9 +1388,11 @@
   </data>
   <data name="AboutLn" xml:space="preserve">
     <value>Санның натурал логарифмін (E негізі) қайтарады.</value>
+    
   </data>
   <data name="AboutLnT" xml:space="preserve">
     <value>Сандар бағаны натурал логарифм мәндерін (E негізі) қайтарады.</value>
+    
   </data>
   <data name="AboutLn_number" xml:space="preserve">
     <value>Өңделетін сандық мән.</value>
@@ -1181,9 +1402,11 @@
   </data>
   <data name="AboutLog" xml:space="preserve">
     <value>Берілген негіз үшін санның логарифмін қайтарады. Әдепкі негіз 10 болып табылады.</value>
+    
   </data>
   <data name="AboutLogT" xml:space="preserve">
     <value>Берілген негіз немесе негіздер бағаны үшін санның немесе сандар бағанының логарифм мәндерін қайтарады. Әдепкі негіз 10 болып табылады.</value>
+    
   </data>
   <data name="AboutLog_number" xml:space="preserve">
     <value>Өңделетін сандық мән.</value>
@@ -1193,15 +1416,18 @@
   </data>
   <data name="LogBase" xml:space="preserve">
     <value>негіз</value>
+    
   </data>
   <data name="AboutLog_base" xml:space="preserve">
     <value>Логарифм негізі.</value>
   </data>
   <data name="AboutExp" xml:space="preserve">
     <value>Санның дәрежеленген E мәнін қайтарады. Негіздердің дәрежелерін есептеу үшін дәрежеге шығару операторын (^) қолданыңыз.</value>
+    
   </data>
   <data name="AboutExpT" xml:space="preserve">
     <value>Сандар бағанында әрбір сәйкес санның дәрежеленген E мәні бар бағанын қайтарады. Басқа негіздердің дәрежелерін есептеу үшін дәрежеге шығару операторын (^) қолданыңыз.</value>
+    
   </data>
   <data name="AboutExp_number" xml:space="preserve">
     <value>Өңделетін сандық мән.</value>
@@ -1214,9 +1440,11 @@
   </data>
   <data name="AboutRadians" xml:space="preserve">
     <value>Санның радианалар мәнін қайтарады.</value>
+    
   </data>
   <data name="AboutRadiansT" xml:space="preserve">
     <value>Сандар бағанының радианалар мәндерін қайтарады.</value>
+    
   </data>
   <data name="AboutRadians_number" xml:space="preserve">
     <value>Өңделетін сандық мән (градуспен берілген).</value>
@@ -1226,9 +1454,11 @@
   </data>
   <data name="AboutDegrees" xml:space="preserve">
     <value>Санның градус мәнін қайтарады.</value>
+    
   </data>
   <data name="AboutDegreesT" xml:space="preserve">
     <value>Сандар бағанының градус мәндерін қайтарады.</value>
+    
   </data>
   <data name="AboutDegrees_number" xml:space="preserve">
     <value>Өңделетін сандық мән (радианалармен берілген).</value>
@@ -1241,9 +1471,11 @@
   </data>
   <data name="DistinctArg1" xml:space="preserve">
     <value>бастапқы</value>
+    
   </data>
   <data name="DistinctArg2" xml:space="preserve">
     <value>өрнек</value>
+    
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
     <value>Бөлек мәндер алынатын кесте.</value>
@@ -1256,9 +1488,11 @@
   </data>
   <data name="AboutAtan2Arg1" xml:space="preserve">
     <value>x_координатасы</value>
+    
   </data>
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>y_координатасы</value>
+    
   </data>
   <data name="AboutAtan2_x_coordinate" xml:space="preserve">
     <value>x координатасы.</value>
@@ -1268,9 +1502,11 @@
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Санның квадраттық түбірін қайтарады.</value>
+    
   </data>
   <data name="AboutSqrtT" xml:space="preserve">
     <value>Сандар бағанының квадраттық түбірлерін қайтарады.</value>
+    
   </data>
   <data name="AboutSqrt_number" xml:space="preserve">
     <value>Өңделетін сандық мән.</value>
@@ -1280,21 +1516,27 @@
   </data>
   <data name="MathFuncArg1" xml:space="preserve">
     <value>сан</value>
+    
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>кіріс</value>
+    
   </data>
   <data name="MathFuncArg2" xml:space="preserve">
     <value>түрлендіргіш</value>
+    
   </data>
   <data name="MathTFuncArg2" xml:space="preserve">
     <value>түрлендіргіш</value>
+    
   </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Мәтіндік мәннің басынан таңбалардың көрсетілген санын қайтарады.</value>
+    
   </data>
   <data name="AboutLeftT" xml:space="preserve">
     <value>Көрсетілген кесте немесе жиынтық ішінде әр жол үшін есептелген мәтіндік мәннің басынан таңбалардың көрсетілген саны бар бағанды қайтарады.</value>
+    
   </data>
   <data name="AboutLeft_text" xml:space="preserve">
     <value>Таңбалар алынатын мәтіндік мән.</value>
@@ -1307,9 +1549,11 @@
   </data>
   <data name="AboutRight" xml:space="preserve">
     <value>Мәтіндік мәннің соңынан таңбалардың көрсетілген санын қайтарады.</value>
+    
   </data>
   <data name="AboutRightT" xml:space="preserve">
     <value>Көрсетілген кесте немесе жиынтық ішінде әр жол үшін есептелген мәтіндік мәннің соңынан таңбалардың көрсетілген саны бар бағанды қайтарады.</value>
+    
   </data>
   <data name="AboutRight_text" xml:space="preserve">
     <value>Таңбалар алынатын мәтіндік мән.</value>
@@ -1322,60 +1566,76 @@
   </data>
   <data name="LeftRightArg1" xml:space="preserve">
     <value>мәтін</value>
+    
   </data>
   <data name="LeftRightTArg1" xml:space="preserve">
     <value>мәтін_бағаны</value>
+    
   </data>
   <data name="LeftRightArg2" xml:space="preserve">
     <value>таңбалар_саны</value>
+    
   </data>
   <data name="AboutIsBlank" xml:space="preserve">
     <value>Өрнек нәтижелерінің бос болуын не болмауын тексереді және "шын" немесе "жалған" мәнін қайтарады.</value>
+    
   </data>
   <data name="IsBlankArg1" xml:space="preserve">
     <value>өрнек</value>
+    
   </data>
   <data name="AboutIsBlank_expression" xml:space="preserve">
     <value>Тексерілетін өрнек.</value>
   </data>
   <data name="AboutIsBlankOrError" xml:space="preserve">
     <value>Өрнектің бос нәтиже немесе қате болуын не болмауын тексереді және "шын" немесе "жалған" мәнін қайтарады.</value>
+    
   </data>
   <data name="IsBlankOrErrorArg1" xml:space="preserve">
     <value>өрнек</value>
+    
   </data>
   <data name="AboutIsBlankOrError_expression" xml:space="preserve">
     <value>Тексерілетін өрнек.</value>
+    
   </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Жиынтықтың бос болуын не болмауын тексереді және "шын" немесе "жалған" мәнін қайтарады.</value>
+    
   </data>
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="AboutIsEmpty_source" xml:space="preserve">
     <value>Тексерілетін кесте.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Кіріс бастапқы кестенің кездейсоқ көшірмесін қайтарады.</value>
+    
   </data>
   <data name="ShuffleArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="AboutShuffle_source" xml:space="preserve">
     <value>Кездейсоқ ретпен араластырылатын кесте.</value>
   </data>
   <data name="AboutLookUp" xml:space="preserve">
     <value>Көрсетілген шарт "шын" ретінде есептелетін бірінші жолды іздейді және сол жолдың контекстінде есептелген өрнектің нәтижесін қайтарады.</value>
+    
   </data>
   <data name="LookUpArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="LookUpArg2" xml:space="preserve">
     <value>шарт</value>
+    
   </data>
   <data name="LookUpArg3" xml:space="preserve">
     <value>нәтиже</value>
+    
   </data>
   <data name="AboutLookUp_source" xml:space="preserve">
     <value>Мәндер ізделетін кесте.</value>
@@ -1388,6 +1648,7 @@
   </data>
   <data name="AboutStdevP" xml:space="preserve">
     <value>Аргументтер ретінде берілген бүкіл жиынтық негізінде стандартты ауытқуды есептейді (логикалық мәндер мен мәтін ескерілмейді).</value>
+    
   </data>
   <data name="AboutStdevP_number" xml:space="preserve">
     <value>Стандартты ауытқуды есептеуге әсер ететін сан.</value>
@@ -1400,9 +1661,11 @@
   </data>
   <data name="AboutStdevPT" xml:space="preserve">
     <value>Баған ретінде берілген бүкіл жиынтық негізінде стандартты ауытқуды есептейді (бағандағы логикалық мәндер мен мәтін ескерілмейді).</value>
+    
   </data>
   <data name="AboutVarP" xml:space="preserve">
     <value>Айырмашылықты бүкіл жиынтық негізінде есептейді (жиынтықтағы логикалық мәндер мен мәтін ескерілмейді).</value>
+    
   </data>
   <data name="AboutVarP_number" xml:space="preserve">
     <value>Айырмашылықты есептеуге әсер ететін сан.</value>
@@ -1415,42 +1678,87 @@
   </data>
   <data name="AboutVarPT" xml:space="preserve">
     <value>Айырмашылықты баған түрінде көрсетілген бүкіл жиынтық негізінде есептейді (бағандағы логикалық мәндер мен мәтін ескерілмейді).</value>
+    
   </data>
   <data name="SetArg1" xml:space="preserve">
     <value>айнымалы</value>
+    
   </data>
   <data name="AboutSplit" xml:space="preserve">
     <value>Бөлгіштің көмегімен жолды қосалқы жолдарға бөледі.</value>
+    
   </data>
   <data name="AboutSplit_text" xml:space="preserve">
     <value>Қосалқы жолдарға бөлінетін мәтін.</value>
+    
   </data>
   <data name="AboutSplit_separator" xml:space="preserve">
     <value>Кіріс мәтінін қосалқы жолдарға бөлу үшін пайдаланылатын бөлгіш мәтіні.</value>
+    
   </data>
   <data name="SplitArg1" xml:space="preserve">
     <value>мәтін</value>
+    
   </data>
   <data name="SplitArg2" xml:space="preserve">
     <value>бөлгіш</value>
+    
+  </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Терілмеген жазбаның баған атауларын санайды және береді.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>жазу</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Оның бағандары бар жазба саналды.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Баған атауы берілген жағдайда, терілмеген жазба сипатының мәнін береді.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>жазу</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>баған_атауы</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Баған мәнін шығарып алуға арналған жазба.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Шығарып алынатын жазба бағанының атауы.</value>
+    
   </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Көрсетілген мәнді көрсетілген түрге болса, шын мәнін қайтарады.</value>
+    
   </data>
   <data name="IsTypeArg1" xml:space="preserve">
     <value>мән</value>
+    
   </data>
   <data name="IsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
+    
   </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Көрсетілген мәнді берілген түр ретінде пайдаланады.</value>
+    
   </data>
   <data name="AsTypeArg1" xml:space="preserve">
     <value>мән</value>
+    
   </data>
   <data name="AsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
+    
   </data>
   <data name="AboutAsType_value" xml:space="preserve">
     <value>Жаңа түр ретінде трансляциялайтын полиморфты жазба.</value>
@@ -1460,249 +1768,335 @@
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Бірінші параметр берген ауқымның көмегімен екінші параметр ретінде берілген формуланы орындайды.</value>
+    
   </data>
   <data name="WithArg1" xml:space="preserve">
     <value>ауқым</value>
+    
   </data>
   <data name="WithArg2" xml:space="preserve">
     <value>формула</value>
+    
   </data>
   <data name="AboutWith_scope" xml:space="preserve">
     <value>Екінші параметр арқылы анықталған формула шақырылатын ауқым.</value>
+    
   </data>
   <data name="AboutWith_formula" xml:space="preserve">
     <value>Бірінші параметр берген ауқымның көмегімен шақырылатын формула.</value>
+    
   </data>
   <data name="AboutSequence" xml:space="preserve">
     <value>Реттік сандар кестесін жасайды</value>
+    
   </data>
   <data name="SequenceArg1" xml:space="preserve">
     <value>жазбалар</value>
+    
   </data>
   <data name="AboutSequence_records" xml:space="preserve">
     <value>"Мән" атауы бар бір бағандық кестедегі жазбалар саны. Көп дегенде 50000.</value>
+    
   </data>
   <data name="SequenceArg2" xml:space="preserve">
     <value>бастау</value>
+    
   </data>
   <data name="AboutSequence_start" xml:space="preserve">
     <value>Міндетті емес. Реттегі бірінші сан. Әдепкісі — 1.</value>
+    
   </data>
   <data name="SequenceArg3" xml:space="preserve">
     <value>қадам</value>
+    
   </data>
   <data name="AboutSequence_step" xml:space="preserve">
     <value>Міндетті емес. Кестедегі әрбір кейінгі мәнін арттыратын мөлшер. Әдепкісі — 1.</value>
+    
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
     <value>"." дұрыс емес пайдалану</value>
+    
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>"{0}" — белгісіз немесе қолдау көрсетілмейтін функция.</value>
+    
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>"{0}" — "{1}" атау кеңістігіндегі белгісіз немесе қолдау көрсетілмейтін функция.</value>
+    
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>Компонент тәртібін тек компонент ішінен шақыруға болады.</value>
+    
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
     <value>Компонент функциясы сипатына немесе параметріне компоненттен немесе компонент нәтижесі сипаттарынан ғана өтуге болады.</value>
+    
   </data>
   <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
     <value>Компонент функциясы сипаты немесе параметрі тек басқа функция сипаттарына білдіруі мүмкін.</value>
+    
   </data>
   <data name="ErrBadArity" xml:space="preserve">
     <value>Аргументтердің жарамсыз саны: {0} алынған, {1} күтілген.</value>
+    
   </data>
   <data name="ErrBadArityEven" xml:space="preserve">
     <value>Аргументтердің жарамсыз саны: {0} алынған, жұп сан күтілген.</value>
+    
   </data>
   <data name="ErrBadArityOdd" xml:space="preserve">
     <value>Аргументтердің жарамсыз саны: {0} алынған, тақ сан күтілген.</value>
+    
   </data>
   <data name="ErrBadType" xml:space="preserve">
     <value>Жарамсыз аргумент түрі.</value>
+    
   </data>
   <data name="ErrBadType_Type" xml:space="preserve">
     <value>Жарамсыз аргумент түрі. Бұл контексте {0} мәндерін пайдалану мүмкін емес.</value>
+    
   </data>
   <data name="ErrBadOperatorTypes" xml:space="preserve">
     <value>Бұл әрекет мына түрлер бойынша жарамды емес: {0}, {1}.</value>
+    
   </data>
   <data name="ErrGuidStrictComparison" xml:space="preserve">
     <value>GUID мәндерін басқа GUID мәндерімен ғана салыстыруға болады.</value>
+    
   </data>
   <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
     <value>"{0}" өрісінің түрі жарамсыз. Күтілген логикалық өріс түрі: “{1}”.</value>
+    
   </data>
   <data name="ErrBadType_ExpectedType" xml:space="preserve">
     <value>Жарамсыз аргумент түрі. {0} мәні күтіледі.</value>
+    
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Жарамсыз аргумент түрі ({1}). Оның орнына {0} мәні күтіледі.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>Бұл контексте бос өрнекті пайдалану мүмкін емес.</value>
+    
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
     <value>Жарамсыз аргумент түрі. {0} мәні күтіледі, бірақ басқа схеманың.</value>
+    
   </data>
   <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
     <value>Жарамсыз аргумент түрі. Келесілердің біреуі күтіледі: {0}.</value>
+    
   </data>
   <data name="ErrInvalidArgs_Func" xml:space="preserve">
     <value>"{0}" функциясында кейбір жарамсыз аргументтер бар.</value>
+    
   </data>
   <data name="ErrNeedTable_Func" xml:space="preserve">
     <value>"{0}" бірінші аргументі кесте болуы тиіс.</value>
+    
   </data>
   <data name="ErrInvalidPropertyAccess" xml:space="preserve">
     <value>Сипатта қажетті параметр күтіледі. Қажетті параметрді беру үшін жақшаларды пайдаланыңыз.</value>
+    
   </data>
   <data name="ErrNeedTableCol_Func" xml:space="preserve">
     <value>"{0}" бірінші аргументі бір бағанды кесте болуы тиіс.</value>
+    
   </data>
   <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
     <value>Жарамсыз схема, "{0}" үшін "{1}" мәндерінен тұратын баған күтілді.</value>
+    
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
     <value>Жарамсыз схема, бір бағанды кесте күтілді.</value>
+    
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>Бұл контекстте жазба емес мәнді пайдалану мүмкін емес.</value>
+    
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Бұл жазбаны пайдалану мүмкін емес. Онда үйлесімсіз түрдегі қайшы келетін өрістер болуы мүмкін.</value>
+    
   </data>
   <data name="ErrNeedRecord_Func" xml:space="preserve">
     <value>"{0}" бірінші аргументі жазба болуы тиіс.</value>
+    
   </data>
   <data name="ErrNeedEntity_EntityName" xml:space="preserve">
     <value>Осы параметрлер жиынтығын тізім мәні ретінде немесе Choices функциясында пайдалану "{0}" нысанын деректер көзі ретінде қосуды қажет етеді. Қосу үшін "Көрініс" мәзірін пайдаланып, "Деректер көздері" параметрін таңдаңыз.</value>
+    
   </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Көрсетілген сипат бұл контекстте қолжетімді емес.</value>
+    
   </data>
   <data name="ErrInternalControlInInputProperty" xml:space="preserve">
     <value>Компонент ішіндегі басқару элементтерін сол компоненттің кіріс сипаттарында сілтеме жасауға болмайды.</value>
+    
   </data>
   <data name="ErrColumnNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Көрсетілген баған бұл контекстте қолжетімді емес.</value>
+    
   </data>
   <data name="WrnRowScopeOneToNExpandNumberOfCalls" xml:space="preserve">
     <value>Бірден-көпке немесе көптен-көпке қарым-қатынасына осы функцияның жазба ауқымында сілтеме жасалып жатыр. Ол деректер көзіндегі қоңыраулар санының артуына себеп болып, жұмыс өнімділігіне ықпал жасауы мүмкін.</value>
+    
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Сандық мән тым үлкен.</value>
+    
   </data>
   <data name="ErrReservedKeyword" xml:space="preserve">
     <value>Қазір қолдау көрсетілмейтін резервтегі сөзді пайдалану.</value>
+    
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
     <value>Өрнек {0} таңбадан артық болмауы кере. Өрнек {1} таңбадан тұрады.</value>
+    
   </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Пішім жолының өлшемі {0} таңбадан артық болмауы керек.</value>
+    
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Пішім дұрыс емес.</value>
+    
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Аргумент жарамды күнді немесе уақыт мәнін білдірмейді.</value>
+    
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Бұл деректер көзі жарамсыз. "Деректер көздері" аумағында қатені жойыңыз: "Контент -&gt; Деректер көздері" немесе "Көрініс -&gt; Параметрлер"</value>
+    
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Кіріс жазбаны шектеу үшін деректер көзінің идентификаторы күтілді.</value>
+    
   </data>
   <data name="ErrIncompatibleTypes" xml:space="preserve">
     <value>Берілген түрлер үйлесімсіз.</value>
+    
   </data>
   <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
     <value>Бұл аргументтің "{2}" түрі күтілген "{0}" немесе "{1}" түрлерінің біреуіне сәйкес емес.</value>
+    
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Бұл аргументтің "{0}" түрі күтілген "{1}" түріне сәйкес емес. "{2}" түрі табылды.</value>
+    
   </data>
   <data name="ErrTypeError_WrongType" xml:space="preserve">
     <value>Бұл өрнек түрі күтілген "{0}" түріне сәйкес емес. "{1}" түрі табылды.</value>
+    
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
     <value>Жазбаның түрі көзбен үйлесімді емес.</value>
+    
   </data>
   <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
     <value>"{0}" аргументі жарамсыз, мәтіндік литерал күтілді.</value>
+    
   </data>
   <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
     <value>"{0}" аргументі жарамды идентификатор емес.</value>
+    
   </data>
   <data name="ErrColExists_Name" xml:space="preserve">
     <value>"{0}" атты баған бұрыннан бар.</value>
+    
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>"{0}" үшін баған атауы қайшылығы.</value>
+    
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Көрсетілген "{0}" бағаны жоқ.</value>
+    
   </data>
   <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
     <value>Көрсетілген “{0}” бағаны жоқ. Өте ұқсас атауы бар баған — “{1}”.</value>
+    
   </data>
   <data name="ErrSortIncorrectOrder" xml:space="preserve">
     <value>Өрнек түрі үшін сұрыптау реті дұрыс емес.</value>
+    
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Өрнек түрі бойынша сұрыптау мүмкін емес.</value>
+    
   </data>
   <data name="ErrDistinctWrongType" xml:space="preserve">
     <value>Өрнек түрінде айқын мәнді қолдану мүмкін емес.</value>
+    
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
     <value>Түр қатесі: {0} {1} немесе {1} түріндегі кесте бағанын күтеді.</value>
+    
   </data>
   <data name="ErrIncorrectFormat_Func" xml:space="preserve">
     <value>{0} үшін қате пішім спецификаторы.</value>
+    
   </data>
   <data name="ErrAsyncLambda" xml:space="preserve">
     <value>Асинхрондық шақыруларды шарттарда және мәндер функцияларында пайдалану мүмкін емес.</value>
+    
   </data>
   <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
     <value>Бұл — атау кеңістігі, оның мүшелеріне “.” амалы арқылы кіруге болады.</value>
+    
   </data>
   <data name="ErrScopeModificationLambda" xml:space="preserve">
     <value>Бұл функция {0} ішінде пайдаланылған бірдей деректер көзінде жұмыс істемейді.</value>
+    
   </data>
   <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
     <value>Бұл функция {0} ішінде қолданылмайды.</value>
+    
   </data>
   <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
     <value>Дұрыс емес аргумент. Бұл формула қосылған деректер көзінен кестені күтеді. AsType және IsType функциялары үшін қосылған деректер көздері қажет.</value>
+    
   </data>
   <data name="InfoMessage" xml:space="preserve">
     <value>Хабар: </value>
+    
   </data>
   <data name="InfoNode_Node" xml:space="preserve">
     <value>Түйін: {0}</value>
+    
   </data>
   <data name="InfoTok_Tok" xml:space="preserve">
     <value>Токен: {0}</value>
+    
   </data>
   <data name="FormatSpan_Min_Lim" xml:space="preserve">
     <value>"{0}"[{1}] </value>
+    
   </data>
   <data name="FormatErrorSeparator" xml:space="preserve">
     <value>, </value>
+    
   </data>
   <data name="AboutDate" xml:space="preserve">
     <value>Күнді Power Apps күн-уақыт кодында көрсететін санды қайтарады.</value>
+    
   </data>
   <data name="DateArg1" xml:space="preserve">
     <value>жыл</value>
+    
   </data>
   <data name="DateArg2" xml:space="preserve">
     <value>ай</value>
+    
   </data>
   <data name="DateArg3" xml:space="preserve">
     <value>күн</value>
+    
   </data>
   <data name="AboutDate_year" xml:space="preserve">
     <value>Жыл.</value>
@@ -1715,18 +2109,23 @@
   </data>
   <data name="AboutTime" xml:space="preserve">
     <value>Сағаттарды, минуттарды және секундтарды ондық санға түрлендіреді.</value>
+    
   </data>
   <data name="TimeArg1" xml:space="preserve">
     <value>сағат</value>
+    
   </data>
   <data name="TimeArg2" xml:space="preserve">
     <value>минут</value>
+    
   </data>
   <data name="TimeArg3" xml:space="preserve">
     <value>секунд</value>
+    
   </data>
   <data name="TimeArg4" xml:space="preserve">
     <value>миллисекунд</value>
+    
   </data>
   <data name="AboutTime_hour" xml:space="preserve">
     <value>Сағат компоненті.</value>
@@ -1742,126 +2141,160 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>Күн мен уақыт ретінде көрсетілген уақыт бойынша жылдамдықты білдіретін мәнді жасайды.</value>
+    
   </data>
   <data name="AboutDateTime_year" xml:space="preserve">
     <value>Жыл.</value>
+    
   </data>
   <data name="AboutDateTime_month" xml:space="preserve">
     <value>Ай.</value>
+    
   </data>
   <data name="AboutDateTime_day" xml:space="preserve">
     <value>Күн.</value>
+    
   </data>
   <data name="AboutDateTime_hour" xml:space="preserve">
     <value>Сағат.</value>
+    
   </data>
   <data name="AboutDateTime_minute" xml:space="preserve">
     <value>Минут.</value>
+    
   </data>
   <data name="AboutDateTime_second" xml:space="preserve">
     <value>Секунд.</value>
+    
   </data>
   <data name="AboutDateTime_millisecond" xml:space="preserve">
     <value>Миллисекунд.</value>
+    
   </data>
   <data name="AboutYear" xml:space="preserve">
     <value>Жыл берілген күннің жылын қайтарады.</value>
+    
   </data>
   <data name="YearArg1" xml:space="preserve">
     <value>күн_уақыт</value>
+    
   </data>
   <data name="AboutYear_date_time" xml:space="preserve">
     <value>Жыл компоненті алынатын күн мәні.</value>
   </data>
   <data name="AboutMonth" xml:space="preserve">
     <value>1 (қаңтар) және 12 (желтоқсан) арасындағы сан болатын айды қайтарады.</value>
+    
   </data>
   <data name="MonthArg1" xml:space="preserve">
     <value>күн_уақыт</value>
+    
   </data>
   <data name="AboutMonth_date_time" xml:space="preserve">
     <value>Ай компоненті алынатын күн мәні.</value>
   </data>
   <data name="AboutDay" xml:space="preserve">
     <value>Күн 1 және 31 аралығындағы сан болатын ай күнін қайтарады.</value>
+    
   </data>
   <data name="DayArg1" xml:space="preserve">
     <value>күн_уақыт</value>
+    
   </data>
   <data name="AboutDay_date_time" xml:space="preserve">
     <value>Күн компоненті алынатын күн мәні.</value>
   </data>
   <data name="AboutHour" xml:space="preserve">
     <value>Сағат 0 (12:00:00 түске дейін) және 23 (11:00:00 түстен кейін) арасындағы сан түріндегі сағатты қайтарады.</value>
+    
   </data>
   <data name="HourArg1" xml:space="preserve">
     <value>күн_уақыт</value>
+    
   </data>
   <data name="AboutHour_date_time" xml:space="preserve">
     <value>Компонент алынатын күн немесе уақыт мәні.</value>
   </data>
   <data name="AboutMinute" xml:space="preserve">
     <value>0 және 59 арасындағы сан болатын минутты қайтарады.</value>
+    
   </data>
   <data name="MinuteArg1" xml:space="preserve">
     <value>күн_уақыт</value>
+    
   </data>
   <data name="AboutMinute_date_time" xml:space="preserve">
     <value>Минут компоненті алынатын күн немесе уақыт мәні.</value>
   </data>
   <data name="AboutSecond" xml:space="preserve">
     <value>0 және 59 арасындағы сан болатын секундты қайтарады.</value>
+    
   </data>
   <data name="SecondArg1" xml:space="preserve">
     <value>күн_уақыт</value>
+    
   </data>
   <data name="AboutSecond_date_time" xml:space="preserve">
     <value>Секунд компоненті алынатын күн немесе уақыт мәні.</value>
   </data>
   <data name="AboutWeekday" xml:space="preserve">
     <value>Datetime мәнінің жұмыс күнін қайтарады. Әдепкіде, нәтиже 1 (жексенбі) және 7 (сенбі) арасында болады. StartOfWeek тізімінің мәні немесе Microsoft Excel жұмыс күні функциясының коды арқылы басқа ауқымды көрсетуге болады.</value>
+    
   </data>
   <data name="WeekdayArg1" xml:space="preserve">
     <value>күн</value>
+    
   </data>
   <data name="WeekdayArg2" xml:space="preserve">
     <value>аптаның_басы</value>
+    
   </data>
   <data name="AboutWeekday_date" xml:space="preserve">
     <value>Апта күні есептелетін күн мәні.</value>
   </data>
   <data name="AboutWeekday_start_of_week" xml:space="preserve">
     <value>Апта күндерінің қалай нөмірленетінін көрсететін StartOfWeek тізімінен алынған мән немесе тиісті Excel функциясынан алынған сан.</value>
+    
   </data>
   <data name="AboutCalendar__MonthsLong" xml:space="preserve">
     <value>Әр айдың толық атаулары бар бір бағанды кестені қайтарады.</value>
+    
   </data>
   <data name="AboutCalendar__MonthsShort" xml:space="preserve">
     <value>Әр айдың қысқаша шартты атаулары бар бір бағанды кестені қайтарады.</value>
+    
   </data>
   <data name="AboutCalendar__WeekdaysLong" xml:space="preserve">
     <value>Аптаның әр күнінің толық атаулары бар бір бағанды кестені қайтарады.</value>
+    
   </data>
   <data name="AboutCalendar__WeekdaysShort" xml:space="preserve">
     <value>Аптаның әр күнінің қысқаша шартты атаулары бар бір бағанды кестені қайтарады.</value>
+    
   </data>
   <data name="AboutClock__AmPm" xml:space="preserve">
     <value>Түске дейін және түстен кейін үшін жоғарғы регистрдегі белгілері бар бір бағанды кестені қайтарады.</value>
+    
   </data>
   <data name="AboutClock__AmPmShort" xml:space="preserve">
     <value>Түске дейін және түстен кейін үшін қысқартылған жоғарғы регистрдегі белгілері бар бір бағанды кестені қайтарады.</value>
+    
   </data>
   <data name="AboutClock__IsClock24" xml:space="preserve">
     <value>Сағаттың 24 сағаттық уақытты пайдаланатынын не пайдаланбайтынын көрсететін логикалық мән.</value>
+    
   </data>
   <data name="AboutDateValue" xml:space="preserve">
     <value>Мәтін түріндегі күнді Power Apps күн-уақыт кодындағы күнді көрсететін санға түрлендіреді.</value>
+    
   </data>
   <data name="DateValueArg1" xml:space="preserve">
     <value>күн_мәтіні</value>
+    
   </data>
   <data name="DateValueArg2" xml:space="preserve">
     <value>тіл_коды</value>
+    
   </data>
   <data name="AboutDateValue_date_text" xml:space="preserve">
     <value>Күн мен уақыт белгісінің платформа қолдау көрсететін пішімдегі мәтіндік көрінісі.</value>
@@ -1871,12 +2304,15 @@
   </data>
   <data name="AboutTimeValue" xml:space="preserve">
     <value>Мәтін түріндегі уақытты Microsoft Power Apps күн және уақыт кодында күнді күн бөлігін ескермей көрсететін санға түрлендіреді.</value>
+    
   </data>
   <data name="TimeValueArg1" xml:space="preserve">
     <value>уақыт_мәтіні</value>
+    
   </data>
   <data name="TimeValueArg2" xml:space="preserve">
     <value>тіл_коды</value>
+    
   </data>
   <data name="AboutTimeValue_time_text" xml:space="preserve">
     <value>Күн мен уақыт белгісінің платформа қолдау көрсететін пішімдегі мәтіндік көрінісі.</value>
@@ -1886,27 +2322,35 @@
   </data>
   <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
     <value>Қызмет функцияларын автоматты түрде жаңартуды әрекеттер ережелерінде пайдалану мүмкін емес.</value>
+    
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
     <value>"{0}" деп аталатын өріс осы жазбада бірнеше рет көрсетілген.</value>
+    
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>"{0}" деп аталатын баған бірнеше рет көрсетілді.</value>
+    
   </data>
   <data name="WarnLiteralPredicate" xml:space="preserve">
     <value>Ескерту: Бұл предикат литерал және енгізу кестесіне сілтемейді.</value>
+    
   </data>
   <data name="WarnDynamicMetadata" xml:space="preserve">
     <value>Ескерту: Осы әдістің нәтиже тәсімін орнатып, жаңалау үшін кеңейтілген формула жолағының астынғы жағында "Capture Схема" таңдаңыз. Әйтпесе бұл әдіс ешқандай нәтиже бермейді.</value>
+    
   </data>
   <data name="FindArg1" xml:space="preserve">
     <value>мәтін_табу</value>
+    
   </data>
   <data name="FindArg2" xml:space="preserve">
     <value>мәтін_ішінде</value>
+    
   </data>
   <data name="FindArg3" xml:space="preserve">
     <value>бастапқы_орын</value>
+    
   </data>
   <data name="AboutFind_find_text" xml:space="preserve">
     <value>Ізделетін мәтіндік мән.</value>
@@ -1919,18 +2363,23 @@
   </data>
   <data name="AboutFind" xml:space="preserve">
     <value>Басқа мәтіндік мәндегі бір мәтіндік мәннің бастапқы орнын қайтарады. Табу функциясы регистрді ескеріп орындалады.</value>
+    
   </data>
   <data name="AboutFindT" xml:space="preserve">
     <value>Басқа мәтіндік мәндегі (немесе жолдар бағанындағы) бір мәтіндік мәннің (немесе жолдар бағанының) бастапқы орындарының бағанын қайтарады. Табу функциясы регистрді ескеріп орындалады.</value>
+    
   </data>
   <data name="FindTArg1" xml:space="preserve">
     <value>мәтін_немесе_баған_табу</value>
+    
   </data>
   <data name="FindTArg2" xml:space="preserve">
     <value>мәтін_немесе_баған_ішінде</value>
+    
   </data>
   <data name="FindTArg3" xml:space="preserve">
     <value>бастапқы_орын</value>
+    
   </data>
   <data name="AboutFind_find_text_or_column" xml:space="preserve">
     <value>Ізделетін мәтіндік мән (немесе мәтіндік мәндер бағаны).</value>
@@ -1940,72 +2389,102 @@
   </data>
   <data name="AboutColorValue" xml:space="preserve">
     <value>Берілген түс жолына сәйкес түсті қайтарады.</value>
+    
   </data>
   <data name="ColorValueArg1" xml:space="preserve">
     <value>түс_мәтін</value>
+    
   </data>
   <data name="AboutColorValue_color_text" xml:space="preserve">
     <value>"Көк" сияқты атаумен көрсетілген түс немесе стандартты 6 цифрлық #rrggbb оналтылық нотациясын пайдалану.</value>
   </data>
   <data name="ErrInvalidJsonPointer" xml:space="preserve">
     <value>Жарамсыз json көрсеткіші.</value>
+    
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Ешқайсысы</value>
+    
   </data>
   <data name="Text" xml:space="preserve">
     <value>Мәтін</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Логикалық</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Кесте</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Жұмыс режимі</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
-    <value>Күн және уақыт</value>
+    <value>Күн мен уақыт</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Математикалық және статистикалық</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>Пайдаланушы анықтайтын</value>
+    <value>Пайдаланушы анықтаған</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Ақпарат</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Түс</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Қызметтер</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Компонент</value>
+    
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
     <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
+    
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>"{0}" элементінде "{1}" атрибуты жоқ.</value>
+    
   </data>
   <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
     <value>"{0}" атрибуты бос жол болмауы тиіс.</value>
+    
   </data>
   <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
     <value>"{0}" атрибутында жарамсыз "{1}" GUID мәні бар.</value>
+    
   </data>
   <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
     <value>"{0}" сипаты жоқ.</value>
+    
   </data>
   <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
     <value>"{0}" сипатында жарамсыз түрдегі мән бар: {2}. Күтілген түр мәні: {1}.</value>
+    
   </data>
   <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
     <value>"{0}" сипаты бос болмауы тиіс.</value>
+    
   </data>
   <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
     <value>"{0}" сипатында жарамды мәннің болуы күтіледі, бірақ оның {1} мәні ауқымнан тыс.</value>
+    
   </data>
   <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
     <value>"{0}" сипатында бүтін мәннің болуы күтіледі, бірақ оның {1} мәні ауқымнан тыс.</value>
+    
   </data>
   <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
     <value>{0} индексіндегі элементте жарамсыз түрдегі мән бар: {2}. Күтілген түр мәні: {1}.</value>
@@ -2015,18 +2494,23 @@
   </data>
   <data name="AboutDateAdd" xml:space="preserve">
     <value>Бірліктердің көрсетілген санын күнге қосады.</value>
+    
   </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Екі күн арасындағы аралықты есептеу.</value>
+    
   </data>
   <data name="DateAddArg1" xml:space="preserve">
     <value>күн</value>
+    
   </data>
   <data name="DateAddArg2" xml:space="preserve">
     <value>бірліктер_саны</value>
+    
   </data>
   <data name="DateAddArg3" xml:space="preserve">
     <value>бірлік</value>
+    
   </data>
   <data name="AboutDateAdd_date" xml:space="preserve">
     <value>Күннің сілтеме мәні.</value>
@@ -2036,15 +2520,19 @@
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
     <value>Пайдаланылатын бірлік, ол TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds бірі болуы мүмкін.</value>
+    
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
     <value>басталу_күні</value>
+    
   </data>
   <data name="DateDiffArg2" xml:space="preserve">
     <value>аяқталу_күні</value>
+    
   </data>
   <data name="DateDiffArg3" xml:space="preserve">
     <value>бірлік</value>
+    
   </data>
   <data name="AboutDateDiff_start_date" xml:space="preserve">
     <value>Айырма операциясы үшін басталу күні.</value>
@@ -2054,33 +2542,42 @@
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
     <value>Құрамында нәтиже берілетін бірлік, ол TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds бірі болуы мүмкін.</value>
+    
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
     <value>Бірліктердің көрсетілген санын күндер бағанына қосады.</value>
+    
   </data>
   <data name="AboutDateDiffT" xml:space="preserve">
     <value>Күндердің екі бағаны арасындағы айырманы есептейді.</value>
+    
   </data>
   <data name="DateAddTArg1" xml:space="preserve">
     <value>күн_бағаны</value>
+    
   </data>
   <data name="DateAddTArg2" xml:space="preserve">
     <value>бірліктер_саны</value>
+    
   </data>
   <data name="DateAddTArg3" xml:space="preserve">
     <value>бірлік</value>
+    
   </data>
   <data name="AboutDateAdd_date_column" xml:space="preserve">
     <value>Күн мәндерінің бағаны.</value>
   </data>
   <data name="DateDiffTArg1" xml:space="preserve">
     <value>басталу_күні_бағаны</value>
+    
   </data>
   <data name="DateDiffTArg2" xml:space="preserve">
     <value>аяқталу_күні_бағаны</value>
+    
   </data>
   <data name="DateDiffTArg3" xml:space="preserve">
     <value>бірлік</value>
+    
   </data>
   <data name="AboutDateDiff_start_date_column" xml:space="preserve">
     <value>Айырма операциясы үшін басталу күндерінің бағаны.</value>
@@ -2090,156 +2587,202 @@
   </data>
   <data name="AboutChar" xml:space="preserve">
     <value>Платформаңыздағы таңбалар жиынтығынан код нөмірінде көрсетілген таңбаны қайтарады.</value>
+    
   </data>
   <data name="CharArg1" xml:space="preserve">
     <value>сан</value>
+    
   </data>
   <data name="AboutChar_number" xml:space="preserve">
     <value>Платформаңыздағы таңбалар жиынтығынан код нөмірі.</value>
   </data>
   <data name="AboutCharT" xml:space="preserve">
     <value>Платформаңыздағы таңбалар жиынтығынан код нөмірлерінде көрсетілген таңбалар кестесін қайтарады.</value>
+    
   </data>
   <data name="CharTArg1" xml:space="preserve">
     <value>сандар_бағаны</value>
+    
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Платформаңыздағы таңбалар жиынтығынан код нөмірлерінің бағаны.</value>
   </data>
   <data name="AboutParseJSON" xml:space="preserve">
     <value>JSON жолын нысанға түрлендіреді.</value>
+    
   </data>
   <data name="ParseJSONArg1" xml:space="preserve">
     <value>кіріс</value>
+    
   </data>
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Өңдеуге арналған JSON жолы.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Берілген индексте кестедегі жазбаны қайтарады.</value>
+    
   </data>
   <data name="IndexArg1" xml:space="preserve">
     <value>кесте</value>
+    
   </data>
   <data name="IndexArg2" xml:space="preserve">
     <value>индекс</value>
+    
   </data>
   <data name="AboutIndex_table" xml:space="preserve">
     <value>Кесте.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Алынатын жазбаның индексі.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Аты</value>
+    
   </data>
   <data name="Screen_Printing_DisplayName" xml:space="preserve">
     <value>Басып шығару</value>
+    
   </data>
   <data name="Screen_ImagePosition_DisplayName" xml:space="preserve">
     <value>Сурет орны</value>
+    
   </data>
   <data name="Screen_Size_DisplayName" xml:space="preserve">
     <value>Өлшем</value>
+    
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Штрихкод түрі</value>
+    
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
     <value>Контраст</value>
+    
   </data>
   <data name="camera_Zoom_DisplayName" xml:space="preserve">
     <value>Ұлғайту</value>
+    
   </data>
   <data name="camera_Camera_DisplayName" xml:space="preserve">
     <value>Камера</value>
+    
   </data>
   <data name="export_Data_DisplayName" xml:space="preserve">
     <value>Деректер</value>
+    
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Өңдеу</value>
+    
   </data>
   <data name="Dust" xml:space="preserve">
     <value>Шаң</value>
+    
   </data>
   <data name="image_Image_DisplayName" xml:space="preserve">
     <value>Сурет</value>
+    
   </data>
   <data name="icon_Icon_DisplayName" xml:space="preserve">
     <value>Белгіше</value>
+    
   </data>
   <data name="icon_Rotation_DisplayName" xml:space="preserve">
     <value>Бұрылыс</value>
+    
   </data>
   <data name="image_ImagePosition_DisplayName" xml:space="preserve">
     <value>Сурет орны</value>
+    
   </data>
   <data name="image_ImageRotation_DisplayName" xml:space="preserve">
     <value>Бұру</value>
+    
   </data>
   <data name="label_Live_DisplayName" xml:space="preserve">
     <value>Тікелей</value>
+    
   </data>
   <data name="label_Overflow_DisplayName" xml:space="preserve">
     <value>Толып кету</value>
+    
   </data>
   <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
     <value>Күн Уақыт Белдеу</value>
+    
   </data>
   <data name="DatePicker_Format_DisplayName" xml:space="preserve">
     <value>Пішім</value>
+    
   </data>
   <data name="DatePicker_Language_DisplayName" xml:space="preserve">
     <value>Тіл</value>
+    
   </data>
   <data name="Calendar_Width_DisplayName" xml:space="preserve">
     <value>Күнтізбе ені</value>
+    
   </data>
   <data name="Hide_Calendar_DisplayName" xml:space="preserve">
     <value>Күнтізбені жасыру</value>
+    
   </data>
   <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
     <value>Аптаның басы</value>
+    
   </data>
   <data name="microphone_Mic_DisplayName" xml:space="preserve">
     <value>Микрофон</value>
+    
   </data>
   <data name="text_Default_DisplayName" xml:space="preserve">
     <value>Әдепкі</value>
+    
   </data>
   <data name="text_Mode_DisplayName" xml:space="preserve">
     <value>Режим</value>
+    
   </data>
   <data name="text_Format_DisplayName" xml:space="preserve">
     <value>Пішім</value>
+    
   </data>
   <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
     <value>Виртуал пернетақта режимі</value>
+    
   </data>
   <data name="text_TeamsTheme_DisplayName" xml:space="preserve">
     <value>Teams тақырыбы</value>
+    
   </data>
   <data name="text_Clear_DisplayName" xml:space="preserve">
     <value>Тазалау түймешігі</value>
+    
   </data>
   <data name="AboutIsNumeric" xml:space="preserve">
     <value>Мәннің сан екендігін тексереді және "шын" немесе "жалған" мәнін қайтарады.</value>
+    
   </data>
   <data name="IsNumericArg1" xml:space="preserve">
     <value>мән</value>
+    
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Тексерілетін мән.</value>
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Мәтін түріндегі күн мен уақытты Power Apps күн-уақыт кодындағы күнді көрсететін санға түрлендіреді.</value>
+    
   </data>
   <data name="DateTimeValueArg1" xml:space="preserve">
     <value>уақыт_мәтіні</value>
+    
   </data>
   <data name="DateTimeValueArg2" xml:space="preserve">
     <value>тіл_коды</value>
+    
   </data>
   <data name="AboutDateTimeValue_time_text" xml:space="preserve">
     <value>Күн мен уақыт белгісінің платформа қолдау көрсететін пішімдегі мәтіндік көрінісі.</value>
@@ -2249,21 +2792,26 @@
   </data>
   <data name="AboutTable" xml:space="preserve">
     <value>Барлық бірегей жазба өрістері сыятындай етіп көрсетілген жазбалардан кесте жасайды. Мысалы: Кесте({key1: val1, key2: val2, ...}, ...)</value>
+    
   </data>
   <data name="TableArg1" xml:space="preserve">
     <value>жазба</value>
+    
   </data>
   <data name="AboutTable_record" xml:space="preserve">
     <value>Алынатын кестедегі жол болатын жазба.</value>
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Бастапқы кестеден көрсетілген бағандардан басқа барлық бағандары жойылған кестені қайтарады.</value>
+    
   </data>
   <data name="ShowColumnsArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="ShowColumnsArg2" xml:space="preserve">
     <value>баған_атауы</value>
+    
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
     <value>Бағандары жойылатын кесте немесе жазба.</value>
@@ -2273,27 +2821,33 @@
   </data>
   <data name="AboutIsToday" xml:space="preserve">
     <value>Берілген күннің бүгін екендігін тексереді және "шын" немесе "жалған" мәнін қайтарады.</value>
+    
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
     <value>Тексерілетін күн мәні.</value>
   </data>
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>күн</value>
+    
   </data>
   <data name="AboutIsUTCToday" xml:space="preserve">
     <value>Берілген күннің бүгін UTC жүйесінде болуын тексеріп, шын немесе жалған мән қайтарады.</value>
+    
   </data>
   <data name="AboutIsUTCToday_date" xml:space="preserve">
     <value>Тексерілетін күн мәні.</value>
   </data>
   <data name="IsUTCTodayFuncArg1" xml:space="preserve">
     <value>күн</value>
+    
   </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Санды бөлуден кейінгі қалдықты қайтарады. Нәтиженің таңбасы бөлгіштің таңбасымен бірдей болады.</value>
+    
   </data>
   <data name="AboutModT" xml:space="preserve">
     <value>Санды (немесе сандар бағанын) бөлгішке (немесе бөлгіштер бағанына) бөлгеннен кейінгі қалдық болатын бағанды қайтарады.</value>
+    
   </data>
   <data name="AboutMod_divisor" xml:space="preserve">
     <value>Бөлу үшін қолданылатын сан.</value>
@@ -2309,27 +2863,35 @@
   </data>
   <data name="ModFuncArg1" xml:space="preserve">
     <value>сан</value>
+    
   </data>
   <data name="ModFuncArg2" xml:space="preserve">
     <value>бөлгіш</value>
+    
   </data>
   <data name="ModTFuncArg1" xml:space="preserve">
     <value>сан_немесе_баған</value>
+    
   </data>
   <data name="ModTFuncArg2" xml:space="preserve">
     <value>бөлгіш_немесе_баған</value>
+    
   </data>
   <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
     <value>Құжат</value>
+    
   </data>
   <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
     <value>Ұлғайту</value>
+    
   </data>
   <data name="pdfViewer_Password_DisplayName" xml:space="preserve">
     <value>Құпия сөз</value>
+    
   </data>
   <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
     <value>Құпия сөз күйі</value>
+    
   </data>
   <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
     <value>Деректер сипаттамасы жарамсыз: {0}</value>
@@ -2339,6 +2901,7 @@
   </data>
   <data name="AboutForAll" xml:space="preserve">
     <value>Деректер көзіндегі әр жолға берілген формуланы қолданады, содан кейін әрбір жолға нәтижелері бар жаңа кестені қайтарады.</value>
+    
   </data>
   <data name="AboutForAll_source" xml:space="preserve">
     <value>Қолданылатын деректер көзі мен кесте.</value>
@@ -2348,12 +2911,15 @@
   </data>
   <data name="ForAllArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="ForAllArg2" xml:space="preserve">
     <value>формула</value>
+    
   </data>
   <data name="AboutPower" xml:space="preserve">
     <value>x санын басқа y санының дәрежесіне арттырады. x^y сияқты.</value>
+    
   </data>
   <data name="AboutPower_base" xml:space="preserve">
     <value>Негізгі сан артады.</value>
@@ -2363,12 +2929,15 @@
   </data>
   <data name="PowerFuncArg1" xml:space="preserve">
     <value>негіз</value>
+    
   </data>
   <data name="PowerFuncArg2" xml:space="preserve">
     <value>экспонента</value>
+    
   </data>
   <data name="AboutStartsWith" xml:space="preserve">
     <value>Берілген мәтін берілген бастау жолымен басталса, "шын" мәнін қайтарады.</value>
+    
   </data>
   <data name="AboutStartsWith_text" xml:space="preserve">
     <value>Тексерілетін мәтін.</value>
@@ -2378,12 +2947,15 @@
   </data>
   <data name="StartsWithArg1" xml:space="preserve">
     <value>мәтін</value>
+    
   </data>
   <data name="StartsWithArg2" xml:space="preserve">
     <value>бастау</value>
+    
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
     <value>Берілген мәтін берілген аяқтау жолымен аяқталса, "шын" мәнін қайтарады.</value>
+    
   </data>
   <data name="AboutEndsWith_text" xml:space="preserve">
     <value>Тексерілетін мәтін.</value>
@@ -2393,15 +2965,18 @@
   </data>
   <data name="EndsWithArg1" xml:space="preserve">
     <value>мәтін</value>
+    
   </data>
   <data name="EndsWithArg2" xml:space="preserve">
     <value>аяқтау</value>
+    
   </data>
   <data name="AboutBlank" xml:space="preserve">
     <value>Null (бос) мәнін қайтарады</value>
   </data>
   <data name="AboutPowerT" xml:space="preserve">
     <value>x санын (немесе сандар бағанын) басқа y саны (немесе сандар бағаны) дәрежесіне шығарады. x^y сияқты.</value>
+    
   </data>
   <data name="AboutPower_base_or_column" xml:space="preserve">
     <value>Дәрежеге шығарылатын негіз саны (немесе негіз сандарының бағаны).</value>
@@ -2411,126 +2986,166 @@
   </data>
   <data name="PowerTFuncArg1" xml:space="preserve">
     <value>негіз_немесе_баған</value>
+    
   </data>
   <data name="PowerTFuncArg2" xml:space="preserve">
     <value>экспонента_немесе_баған</value>
+    
   </data>
   <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
     <value>Бұл формуланың бөлігін қашықтан есептеу мүмкін емес. Бұл контекст үшін қазір "{0}" әрекетіне қолдау көрсетілмейді.</value>
+    
   </data>
   <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
     <value>Бұл формуланың бөлігін қашықтан есептеу мүмкін емес. Өріс атауы екінші аргументте көрсетілсе, "{0}" функциясын беру мүмкін емес.</value>
+    
   </data>
   <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
     <value>Нысан формасы</value>
+    
   </data>
   <data name="TeamsTheme_Default_DisplayName" xml:space="preserve">
     <value>Әдепкі тақырып</value>
+    
   </data>
   <data name="TeamsTheme_Dark_DisplayName" xml:space="preserve">
     <value>Күңгірт тақырып</value>
+    
   </data>
   <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
     <value>Контраст тақырыбы</value>
+    
   </data>
   <data name="AboutCollect" xml:space="preserve">
     <value>Жазбаларды деректер көзіне қосады.</value>
+    
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>жазу</value>
+    
   </data>
   <data name="AboutClear" xml:space="preserve">
     <value>Жиынның барлық жазбасын жояды. Жиынның бағандары қалады.</value>
+    
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Жиыннан барлық жазбаны жояды. Одан кейін бір жиынға басқа жазбалар жиынын қосады.</value>
+    
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
     <value>жазу</value>
+    
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Жаңартуларды көрсетілген жолға қолданады және көрсетілген деректер көзіндегі жолды өзгертеді. Жаңартылған жолды қайтарады.</value>
+    
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="PatchBaseRecordArg" xml:space="preserve">
     <value>base_record</value>
+    
   </data>
   <data name="PatchChangeRecordsArg" xml:space="preserve">
     <value>change_record(s)</value>
+    
   </data>
   <data name="AboutRemove" xml:space="preserve">
     <value>Дереккөзден белгілі бір жазбаны немесе жазбаларды жояды</value>
+    
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
     <value>remove_record(s)</value>
+    
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
     <value>Егер берілсе, соңғы аргумент "RemoveFlags.All" болуы керек. Жазылу емлесінде қате бар ма?</value>
+    
   </data>
   <data name="NotificationType_Error_DisplayName" xml:space="preserve">
     <value>Қате</value>
+    
   </data>
   <data name="NotificationType_Warning_DisplayName" xml:space="preserve">
     <value>Ескерту</value>
+    
   </data>
   <data name="NotificationType_Success_DisplayName" xml:space="preserve">
     <value>Сәттілік</value>
+    
   </data>
   <data name="NotificationType_Information_DisplayName" xml:space="preserve">
     <value>Ақпарат</value>
+    
   </data>
   <data name="AboutIsError" xml:space="preserve">
     <value>Берілген аргументті бағалау кезінде қатенің пайда болуын не болмауын қайтарады.</value>
+    
   </data>
   <data name="IsErrorArg" xml:space="preserve">
     <value>мән</value>
+    
   </data>
   <data name="AboutIsError_value" xml:space="preserve">
     <value>Қателерді тексеру үшін мән.</value>
+    
   </data>
   <data name="ErrBadArityMinimum" xml:space="preserve">
     <value>Аргументтердің жарамсыз саны: {0} алынған, {1} не одан жоғары күтілген.</value>
+    
   </data>
   <data name="ErrBadArityRange" xml:space="preserve">
     <value>Аргументтердің жарамсыз саны: {0} алынған, {1}-{2} күтілген.</value>
+    
   </data>
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
+    
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Операнд күтілді. Формула немесе өрнек жарамды операнд күтеді. Мысалы, "2" операндын "1 +_" өрнегіне қосуға болады, сонда нәтижесі "3" болады. Немесе "Сәлем "&amp; _ " өрнегіне "бәріңізге" операндын қосуға болады, сонда нәтижесі "Сәлем бәріңізге" болады.</value>
+    
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
     <value>Өрнекті аяқтайтын операнд мәнін беріңіз. Операнд түрінің (мәтін, сан, күн немесе шын/жалған) өрнекке сәйкестігіне көз жеткізіңіз. Сандарды сандармен, мәтінді мәтінмен және т.б. сәйкестендіріңіз. Мысалы, "1 + "Hi"" жарамсыз, ал "1 + 2" жарамды.</value>
+    
   </data>
   <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
     <value>Күтпеген таңбалар. Таңбалар формулада күтпеген жолмен пайдаланылған.</value>
+    
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Мысалы, "\" таңбасы саннан кейін күтілмеген: "32\". Бос орын ("32") ол тек 32 саны болатындай күтілуі мүмкін немесе басқа сан ("323" санындағы сияқты) күтілуі мүмкін.</value>
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Күтілмеген таңбаларды жойыңыз немесе ауыстырыңыз.</value>
+    
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Формуланың “{1}” орнындағы күтілмеген “{0}” таңбасы.</value>
+    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Мысалы, "\" таңбасы саннан кейін күтілмеген: "32\". Бос орын ("32") ол тек 32 саны болатындай күтілуі мүмкін немесе басқа сан ("323" санындағы сияқты) күтілуі мүмкін.</value>
@@ -2540,375 +3155,475 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
     <value>Комментарийдің аяқталу идентификаторы жоқ. Блок комментарийінде комментарийдің аяқталу идентификаторы жоқ.</value>
+    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Әрбір блок комментарийі "/*" таңбасымен басталуы және "*/" таңбасымен аяқталуы тиіс. Әрбір блок комментарийін дұрыс аяқтамасаңыз, комментарийден кейінгі бүкіл код сол комментарийдің бөлігі болады. Егер комментарий тек бір жолдан тұрса, оны "//" таңбасымен бастауға және комментарийдің соңын анықтамауға болады.</value>
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Блок комментарийінің соңына "*/" таңбасын қосыңыз немесе оны жол комментарийлерінің жиынтығына өзгертіңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Күтпеген таңбалар. Формулада "{0}" бар, бірақ "{1}" күтілген.</value>
+    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Мысалы, формулада "{{Val: 7}}" орнына "{{Val@ 7}}" болса, осы қате пайда болады. Айнымалыны орнатқанда, синтаксис айқұлақ таңбасының орнына қос нүктені қажет етеді.</value>
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Күтілмеген таңбаларды жойыңыз немесе күтілген таңбамен ауыстырыңыз.</value>
+    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
     <value>Атау жарамсыз. "{0}" танылмады.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Формула бұдан былай жоқ элементке (мысалы, жойылған басқару элементіне) қатысты болған кезде, осы қате жиі пайда болады.</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Сілтемені жойыңыз немесе жарамды атқа түзетіңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Атау жарамсыз. Бұл идентификатор танылмады.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
     <value>Формула бұдан былай жоқ элементке (мысалы, жойылған басқару элементіне) қатысты болған кезде, осы қате жиі пайда болады.</value>
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Сілтемені жойыңыз немесе жарамды атқа түзетіңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>Сипатқа сілтеме жарамсыз.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Формула синтаксисі жарамсыз компоненттің функциялық сипаттарына қатысты болғанда, осы қате пайда болады. (Мысалы, Component.CustomFunction() орнына Component.CustomFunction)</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Компоненттің функциялық сипатына қатысты ету үшін дұрыс синтаксисті пайдаланыңыз. Мысалы, Component.CustomFunction()</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
     <value>Мақала: PowerApps үшін формула сілтемесі</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>"Негізгі" сілтеме жарамсыз. Бұл контексте негізгі басқару элементіне сілтеме жасай алмайсыз.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Негізгі операторды негізгі басқару элементі жоқ басқару элементімен пайдалану мүмкін емес. Бұл оператор берілген басқару элементін орналастыратын және оның барлық сипаттарын қолжетімді ететін басқару элементіне сілтеме жасайды.</value>
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>"Негізгі" операторды жойыңыз.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Мақала. Power Apps жүйесінде кенеп бағдарламасының басқару элементін қосу және конфигурациялау</value>
+    
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
     <value>Жол ауқымын енгізу тым терең. Формуланың жол ауқымы 63 енгізу деңгейінен асады.</value>
+    
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Күрделілік әрбір енгізу деңгейімен арта түседі, сондықтан Power Apps тек 63 деңгейге дейінгі жол ауқымын енгізуге қолдау көрсетеді.</value>
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Азырақ енгізу деңгейлерімен формуланы қайта жазыңыз.</value>
+    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
     <value>Өрнек тым терең енгізілген. Формуладағы өрнек 50 деңгейден асырып енгізілген.</value>
+    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps тек 50 деңгейге дейін өрнекті енгізуге қолдау көрсетеді. Бұл терең енгізілген өрнек түсіну және қолдау үшін қиын болады.</value>
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Азырақ енгізу деңгейлерімен формуланы қайта жазыңыз.</value>
+    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
     <value>Оператор күтілген. Формуладағы бұл жерде +, * немесе &amp; сияқты оператор күтіледі.</value>
+    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Операторлар екі операндты біріктіреді. Екі функцияны (операндты) ортасында операторсыз біріктірсеңіз, осы қате пайда болады, мысалы, Len("mytext")Len("mytext").</value>
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы ол операндтар арасындағы операторды қамтитын етіп өңдеңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_Link_1" xml:space="preserve">
     <value>Модуль: негізгі формулаларды пайдалану</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Сан күтілген. Формуладағы бұл жерде сан күтіледі.</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Санды қажет ететін функцияны пайдалансаңыз, бірақ оның орнына, мысалы, кескінді көрсетсеңіз, осы қате пайда болады.</value>
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы формуладағы осы жерде ол сан болатын етіп өңдеңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
     <value>Логикалық мән күтілген. Формуладағы бұл жерде логикалық мән (шын/жалған) күтіледі.</value>
+    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Логикалық мән Microsoft Excel сияқты бағдарламаларда шын/жалған мәні ретінде белгілі. Логикалық мәнді қажет ететін функцияны пайдалансаңыз, бірақ оның орнына, мысалы, күнді көрсетсеңіз, осы қате пайда болады.</value>
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы формуладағы осы жерде ол логикалық мән болатын етіп өңдеңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Қос нүкте күтілген. Формуладағы бұл жерде қос нүкте (:) күтіледі.</value>
+    
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Қос нүкте кейде баған атауы деп аталатын өріс атауын жазбадағы өріс мәнінен бөліп тұрады (мысалы, {Month:"1"}, {Month:"2"} …). Сондай-ақ қос нүкте сағатты минуттан және секундтан бөліп тұрады (мысалы, "3:04").</value>
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы ол қос нүктені қамтитын етіп өңдеңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrColonExpected_Link_1" xml:space="preserve">
     <value>Мақала. Power Apps жүйесінде мәтінді, күндерді және уақыттарды көрсету</value>
+    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Жұмыс режимі емес сипаттағы жұмыс режимі функциясы. Бұл сипатты бағдарламаның басқа жеріндегі мәндерді өзгерту үшін пайдалана алмайсыз.</value>
+    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Жұмыс режимі функциялары бағдарламаның күйін бағдарламадағы басқа жердегі мәндерді өзгерту арқылы өзгертеді. "Navigate", "Patch", "UpdateContext" және "Collect" жалпы жұмыс режимі функциялары болып табылады. "OnSelect", "OnVisible" және басқа "On …" сипаттары жалпы жұмыс режиміне негізделген сипаттар болып табылады.</value>
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Жұмыс режимі функциясын жұмыс режиміне негізделген сипатқа жылжытыңыз.</value>
+    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Мақала. Power Apps жүйесінде кенеп бағдарламалары үшін жұмыс режимі формулаларын түсіну</value>
+    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Тексеру функциясы – сынаққа жатпайтын сипат. Тек сынаққа жататын функцияларды шақыру үшін осы сипатты пайдалана алмайсыз.</value>
+    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Сынақ функцияларын бағдарламаны сынау кезінде пайдаланушы жазбасын үлгілеу үшін пайдалануға болады. "SetProperty", "SelectRow" және "Assert" – әдеттегі сынақ функциялары. Оларды сынақ жағдайларында ғана пайдалануға болады.</value>
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Функцияны бағдарламада емес, сынақ жағдайында пайдаланыңыз.</value>
+    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
     <value>Бұл деректер түрін түрлендіру мүмкін емес. Power Apps бұл {0} {1} етіп түрлендіре алмайды.</value>
+    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps формуладағы деректердің кейбір түрлерін басқа түрлерге түрлендіре алады. Мысалы, ол "1" (жол) мәнін 1 (сан) етіп түрлендіре алады, бірақ ол барлық деректер түрлерін барлық басқа деректер түріне түрлендіре алмайды. Мысалы, ол кескінді санға түрлендіре алмайды.</value>
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Формуланы тиісті деректерді күтілген түрге түрлендіретіндей етіп өзгертіңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrStringExpected_ShortMessage" xml:space="preserve">
     <value>Мәтін күтілген. Формуладағы бұл жерде мәтін күтіледі.</value>
+    
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Мәтін (немесе жол) аргументін қажет ететін функцияны пайдалансаңыз, бірақ оның орнына, мысалы, күнді көрсетсеңіз, осы қате пайда болады.</value>
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы формуладағы осы жерде ол мәтін болатын етіп өңдеңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Мәтін немесе сан күтілген. Формуладағы бұл жерде мәтін немесе сан күтіледі.</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Мәтінді немесе санды қажет ететін функцияны пайдалансаңыз, бірақ оның орнына, мысалы, логикалық (шын/жалған) мәнді көрсетсеңіз, осы қате пайда болады.</value>
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы формуладағы осы жерде ол мәтін немесе сан болатын етіп өңдеңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Жабатын жақша күтілген. Формуладағы бұл жерде жабатын жақша (}) күтіледі.</value>
+    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Жабатын жақша жазбаның соңын көрсетеді (мысалы, {Month:"1"}, {Month:"2"} …).</value>
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы ол жақшаны қамтитын етіп өзгертіңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Идентификаторда жарамды мәтін жоқ.</value>
+    
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Идентификатор үшін мәтіннің болуына көз жеткізіңіз. Идентификатор бос немесе бос орындар болса, осы қате пайда болады.</value>
+    
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
     <value>{0} түрінің мәндерін салыстыру мүмкін емес.</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Салыстыру үшін түрлер үйлеспейді. Бұл түрлерді салыстыру мүмкін емес: {0}, {1}.</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Формуланы бағалай алмаймыз, себебі формуладағы салыстырылатын мәндердің түрлері бірдей емес.</value>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Мәнді бірдей түрде болуы үшін түрлендіруіңіз қажет болуы мүмкін, мысалы, күн жолын (мысалы, "31/12/2018") күн мәніне түрлендіру.</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
     <value>Жазбаларды немесе кестелерді салыстырсаңыз, өріс немесе баған түрлері дәл сәйкес келуі тиіс.</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
     <value>Модуль: негізгі формулаларды пайдалану</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Модуль: кестелермен және жазбалармен негізгі формулаларды жасау</value>
+    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
     <value>Параметр жоқ. Бұл функцияда "{0}" деп аталатын міндетті емес параметр жоқ.</value>
+    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
     <value>Түзету әдісі: формулаңыздағы параметрді жойыңыз немесе оның атын өзгертіңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Үйлесімсіз түр. Сіз жаңартып жатқан деректер көзіндегі "{0}" бағаны "{1}" түрін күтеді, ал сіз "{2}" түрін пайдаланып жатырсыз.</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
     <value>Мәнді бірдей түрге түрлендіруіңіз қажет болуы мүмкін, мысалы, күн жолын (мысалы, "31/12/2018") күн мәніне немесе жолды санға түрлендіру.</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1" xml:space="preserve">
     <value>Модуль: негізгі формулаларды пайдалану</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Модуль: кестелермен және жазбалармен негізгі формулаларды жасау</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
     <value>Баған жоқ. Формулада "{1}" түріндегі "{0}" бағаны жоқ.</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
     <value>Формулаңызға баған қосыңыз.</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Түр үйлеспейді. Жазбаға қойылатын деп жатқан элементте жазбамен үйлеспейтін түрі бар.</value>
+    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Үйлесімсіз түр. Кестеге қосуға әрекет жасап жатқан элемент кестемен үйлесімді емес түрге ие.</value>
+    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
     <value>Кестеге жібергіңіз келген элемент түрінің кестемен үйлесімді екенін тексеріңіз. Элемент түрін түрлендіру қажет болуы мүмкін, мысалы, жазбаға.</value>
+    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1" xml:space="preserve">
     <value>Модуль: негізгі формулаларды пайдалану</value>
+    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Модуль: кестелермен және жазбалармен негізгі формулаларды жасау</value>
+    
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
     <value>Үйлесімсіз түр. Түр қатесіне байланысты формуланы есептеу мүмкін емес.</value>
+    
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Деректер күтілген түрге сәйкес болмауы мүмкін. (мәтін, сан, күн, кесте, жазба.)</value>
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Формулаға қатысты мәндердің түрлерін тексеріңіз және түрлердің сәйкестігіне көз жеткізіңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
     <value>Модуль: негізгі формулаларды пайдалану</value>
+    
   </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Модуль: кестелермен және жазбалармен негізгі формулаларды жасау</value>
+    
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
     <value>Күн күтілген. Формуладағы бұл жерде күн күтіледі.</value>
+    
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Күнді қажет ететін функцияны пайдалансаңыз, бірақ оның орнына, мысалы, мәтінді көрсетсеңіз, осы қате пайда болады.</value>
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы формуладағы осы жерде ол күн болатын етіп өңдеңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
     <value>Өкілеттік беру туралы ескерту. Бұл формуланың "{0}" бөлігі үлкен деректер жиынтықтарында дұрыс жұмыс істемеуі мүмкін.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Деректер көзі формуланы өңдей алмауы мүмкін және толық емес деректер жиынтығын қайтаруы мүмкін. Деректер жиынтығы толық болмаса, бағдарламаңыз дұрыс нәтижелерді қайтармауы немесе дұрыс жұмыс істемеуі мүмкін.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Егер деректер жиынтығы 500 жазба шегінен асатын болса, бірақ онда 2000 жазбадан азырақ болса, шекті қайта орнатып көріңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
     <value>Формуланы оңайлатып көріңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
     <value>Деректерді басқа деректер көзіне жылжытып көріңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
     <value>Мақала: кенеп бағдарламасындағы өкілеттік беруді түсіну</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Блог: өкілеттік беру үшін деректер жолы шектеулері</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
     <value>Өкілеттік беру туралы ескерту. Бұл формуланың белгіленген бөлігі үлкен деректер жиынтықтарында "{0}" бағанымен дұрыс жұмыс істемеуі мүмкін.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Деректер көзі формуланы өңдей алмауы мүмкін және толық емес деректер жиынтығын қайтаруы мүмкін. Деректер жиынтығы толық болмаса, бағдарламаңыз дұрыс нәтижелерді қайтармауы немесе дұрыс жұмыс істемеуі мүмкін.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Егер деректер жиынтығы 500 жазба шегінен асатын болса, бірақ онда 2000 жазбадан азырақ болса, шекті қайта орнатып көріңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
     <value>Формуланы оңайлатып көріңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
     <value>Деректерді басқа деректер көзіне жылжытып көріңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
     <value>Мақала: кенеп бағдарламасындағы өкілеттік беруді түсіну</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Блог: өкілеттік беру үшін деректер жолы шектеулері</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
     <value>Өкілеттік беру туралы ескерту. Бұл формуланың белгіленген бөлігі үлкен деректер жиынтықтарында дұрыс жұмыс істемеуі мүмкін.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value>"In" операторының оң жақ бөлігі дұрыс деректер көзінен алынған баған атауы болуы тиіс. Деректер көзі формуланы өңдей алмауы мүмкін және толық емес деректер жиынтығын қайтаруы мүмкін. Деректер жиынтығы толық болмаса, бағдарламаңыз дұрыс нәтижелерді қайтармауы немесе дұрыс жұмыс істемеуі мүмкін.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>"In" операторының оң жағындағы элементті дұрыс деректер көзінің бағаны етіп өзгертіңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
     <value>Егер деректер жиынтығы 500 жазба шегінен асатын болса, бірақ онда 2000 жазбадан азырақ болса, шекті қайта орнатып көріңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
     <value>Формуланы оңайлатып көріңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
     <value>Деректерді басқа деректер көзіне жылжытып көріңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
     <value>Мақала: кенеп бағдарламасындағы өкілеттік беруді түсіну</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Блог: өкілеттік беру үшін деректер жолы шектеулері</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
     <value>Бұл формуланың белгіленген бөлігі үлкен деректер жиынтықтарында дұрыс жұмыс істемеуі мүмкін. </value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> “Ішкі” амалдың оң жақ бөлігі дұрыс деректер көзінен алынған баған емес. Деректер көзі формуланы өңдей алмауы мүмкін және толық емес деректер жиынтығын қайтаруы мүмкін. Деректер жиынтығы толық болмаса, қолданбаңыз дұрыс нәтижелерді қайтармауы немесе дұрыс істемеуі мүмкін.
@@ -2916,142 +3631,185 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>"In" операторының оң жағындағы элементті дұрыс деректер көзінің бағаны етіп өзгертіңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
     <value>Егер деректер жиынтығы 500 жазба шегінен асатын болса, бірақ онда 2000 жазбадан азырақ болса, шекті қайта орнатып көріңіз.
       </value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
     <value>Формуланы оңайлатып көріңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
     <value>Деректерді басқа деректер көзіне жылжытып көріңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
     <value>Мақала: кенеп бағдарламасындағы өкілеттік беруді түсіну</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Блог: өкілеттік беру үшін деректер жолы шектеулері</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Өкілеттік беру туралы ескерту. Бұл формуланың белгіленген бөлігі үлкен деректер жиынтықтарында дұрыс жұмыс істемеуі мүмкін. Бұл қосқыш "{0}" әрекетіне қолдау көрсетпейді.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_LongMessage" xml:space="preserve">
     <value>Деректер көзі формуланы өңдей алмауы мүмкін және толық емес деректер жиынтығын қайтаруы мүмкін. Деректер жиынтығы толық болмаса, бағдарламаңыз дұрыс нәтижелерді қайтармауы немесе дұрыс жұмыс істемеуі мүмкін.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
     <value>Егер деректер жиынтығы 500 жазба шегінен асатын болса, бірақ онда 2000 жазбадан азырақ болса, шекті қайта орнатып көріңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
     <value>Формуланы оңайлатып көріңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
     <value>Деректерді басқа деректер көзіне жылжытып көріңіз.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
     <value>Мақала: кенеп бағдарламасындағы өкілеттік беруді түсіну</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Блог: өкілеттік беру үшін деректер жолы шектеулері</value>
+    
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
     <value>Тек бір көрініс күтілді. Формуланың бұл жерінде тек бір көрініс күтіледі.</value>
+    
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы формуланың осы жерінде тек бір көрініс болатын етіп өзгертіңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_ShortMessage" xml:space="preserve">
     <value>{0} деректер көзінен көрініс күтілді.</value>
+    
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы онда {0} деректер көзінен алынған көрініс болатын етіп өзгертіңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
     <value>Бұл басқару элементінің сілтемесін бұл сипатта пайдалану мүмкін емес</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
     <value>Бұл сипат тек глобалдық айнымалыларға, жиынтықтарға және кейбір басқару элементі мен экран сипаттарына сілтемелерге қолдау көрсетеді. Қолдау көрсетілетін басқару элементінің сипаттарының тізіміне сілтемені қараңыз.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Сілтеме: кенеп бағдарламалары үшін ConfirmExit</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
     <value>Интерполяцияланған жол ішінде пайда болатын өрнектер мәтін мәніне немесе үйлесімді түрге бағалануға тиіс.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
     <value>Интерполяцияланған жол ішіндегі өрнектердің түрлерін тексеріңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
     <value>Бос өрнектер интерполяцияланған жолдың ішінде көрінбейді.</value>
+    
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
     <value>Интерполяцияланған жолдағы бос өрнектерді тексеріңіз.</value>
+    
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>Бұл контекстте рұқсат етілмеген</value>
+    
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
     <value>Жіктелмеген нысандар жазба ауқымдарына қолдау көрсететін функцияларға бірінші аргумент ретінде пайдаланылмайды.</value>
+    
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Аталған формула үтір нүктемен аяқталуға тиіс.</value>
+    
   </data>
   <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
     <value>Аталған формула өрнек болуы керек.</value>
+    
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Пайдаланушы анықтайтын функцияның негізгі мәтіні болуы керек.</value>
+    
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>{0} функциясы анықталып қойған.</value>
+    
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>{0} параметрі көшірме болып табылады.</value>
+    
   </data>
   <data name="ErrUDF_UnknownType" xml:space="preserve">
     <value>{0} түрі белгісіз.</value>
+    
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Мәлімделген функцияны қайтару түрі функцияның негізгі мәтінінің қайтару түріне сәйкес келмейді.</value>
+    
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
     <value>Функциялық қайтару түрі, мысалы, "FindMonth( d:Text ):Number = Month( DateParse( d ));" ішінде ":Number" жоқ</value>
+    
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
     <value>Функциялық аргумент түрі, мысалы, "FindMonth( d:Text ):Number = Month( DateParse( d ))" ішінде ":Text" жоқ</value>
+    
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula "{0}" бұрыннан бар.</value>
   </data>
   <data name="ErrorResource_NameConflict" xml:space="preserve">
     <value>"{1}" атты {0} жасау мүмкін емес, себебі бұл атау {2} үшін пайдаланылған.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>"{0}" бірінші аргументі жарамды айнымалы атауы болуы тиіс және ол бар басқару элементі, экран, жиынтық немесе деректер көзі атауларына қайшы келмеуі тиіс. Табылған түрі: "{1}"</value>
+    
   </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Глобалдық айнымалы жасап орнатыңыз.</value>
+    
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>мән</value>
+    
   </data>
   <data name="AboutDec2Hex" xml:space="preserve">
     <value>Ондық бөлшекті он алтылық санға түрлендіреді</value>
+    
   </data>
   <data name="Dec2HexArg1" xml:space="preserve">
     <value>сан</value>
   </data>
   <data name="AboutDec2Hex_number" xml:space="preserve">
     <value>Он алтылық жолға түрлендірілетін сандық ондық мән.</value>
+    
   </data>
   <data name="Dec2HexArg2" xml:space="preserve">
     <value>орындар</value>
   </data>
   <data name="AboutDec2Hex_places" xml:space="preserve">
     <value>Он алтылық жолға қосылатын сандық мән.</value>
+    
   </data>
   <data name="AboutDec2HexT" xml:space="preserve">
     <value>Ондық бөлшектер бағанын он алтылық сандарға түрлендіреді</value>
+    
   </data>
   <data name="Dec2HexTArg1" xml:space="preserve">
     <value>кесте</value>
@@ -3061,48 +3819,61 @@
   </data>
   <data name="AboutDec2HexT_places" xml:space="preserve">
     <value>Он алтылық жолдарға қосылатын сандық мән немесе мәндер массиві.</value>
+    
   </data>
   <data name="AboutDec2Hex_table" xml:space="preserve">
     <value>Он алтылық мәндерге түрлендіру үшін сандық ондық мәндер бағаны.</value>
+    
   </data>
   <data name="AboutHex2Dec" xml:space="preserve">
     <value>Он алтылық санды ондық бөлшекке түрлендіреді</value>
+    
   </data>
   <data name="Hex2DecArg1" xml:space="preserve">
     <value>сан</value>
   </data>
   <data name="AboutHex2Dec_number" xml:space="preserve">
     <value>Он алтылық жол ондық бөлшекке түрлендіріледі.</value>
+    
   </data>
   <data name="AboutHex2DecT" xml:space="preserve">
     <value>Он алтылық сандар бағанын ондық бөлшектерге түрлендіреді</value>
+    
   </data>
   <data name="Hex2DecTArg1" xml:space="preserve">
     <value>кесте</value>
   </data>
   <data name="AboutHex2Dec_table" xml:space="preserve">
     <value>Ондық бөлшектерге түрлендірілетін он алтылық жолдар бағаны.</value>
+    
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Бұл мүмкіндік ұсынылмайды және бұдан былай қолдау көрсетілмейді.</value>
+    
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>{1} атау кеңістігінде {0} функциясына қолдау көрсетілмейді.</value>
+    
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Ескерте: кейінге қалдырылған түр берілген.</value>
+    
   </data>
   <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
     <value>Күтілген идентификатор атауы</value>
+    
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Бұл функция айқын емес, оның құрамында бірдей аргумент үшін Lambda өрнектері мен баған идентификаторлары бар.</value>
+    
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
     <value>{0} параметрінің мәні күтілген {1} түрінде емес.</value>
+    
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
     <value>Берілген параметрлер жиыны мәнінің логикалық атауын береді.</value>
+    
   </data>
   <data name="AboutOptionSetInfoArg1" xml:space="preserve">
     <value>опция</value>
@@ -3112,42 +3883,54 @@
   </data>
   <data name="AboutLanguage" xml:space="preserve">
     <value>Іске қосу уақытында әдепкі тілді алыңыз.</value>
+    
   </data>
   <data name="AboutEncodeUrl" xml:space="preserve">
     <value>Әріптерден басқа белгілі бір таңбаларды % және оналтылық санмен ауыстыра отырып, URL жолын кодтайды.</value>
+    
   </data>
   <data name="EncodeUrlArg1" xml:space="preserve">
     <value>URL</value>
+    
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Кодталатын URL.</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" — танылған, бірақ қолдау көрсетілмейтін функция.</value>
+    
   </data>
   <data name="InvalidCast" xml:space="preserve">
     <value>Түрі түрлендірілмеді, өйткені берілген мәннің түрі "{0}", күтілген түрі "{1}" болды.</value>
+    
   </data>
   <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
-    <value>"{0}" өрнегі дереккөздің бір бөлігі болып табылмайтын бағанды білдірмеуі мүмкін немесе жүктеп алынған жоқ. Оның орнына баған атауын тікелей пайдаланып көріңіз.</value>
+    <value>"{0}" өрнегі деректер көзінің бөлігі болып табылмайтын немесе жүктеліп алынбаған бағанды білдіруі мүмкін. Оның орнына баған атауын тікелей пайдалану ұсынылады.</value>
+    
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>"{0}" кестесінде {1} қатардан көп болса, ондағы бұл әрекет істемеуі мүмкін.</value>
+    
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Бұл әдіс барлық уақытта шын болады. ThishRecord немесе [@ ] пайдаланғыңыз келді ме?</value>
+    
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>{0} сенім білдіру мүмкін емес: тек негізгі "{1}" өрісінен іздеу үшін сенім білдіруді қолдау.</value>
+    
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>{0} беру мүмкін емес: өрнек бірнеше өрісті салыстырады.</value>
+    
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0} сенім білдіру мүмкін емес: құрамында "{1}" тәртіптік функциясы бар.</value>
+    
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Берілген мәтіннің берілген мәтін пішіміне сәйкестігін анықтайды.</value>
+    
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">
     <value>Пішім бойынша салыстырылатын мәтін.</value>
@@ -3157,96 +3940,125 @@
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
     <value>Мәтіннің қай бөлігін сәйкестендіру керектігін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
+    
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
     <value>мәтін</value>
+    
   </data>
   <data name="IsMatchArg2" xml:space="preserve">
     <value>пішім</value>
+    
   </data>
   <data name="IsMatchArg3" xml:space="preserve">
     <value>көлем</value>
+    
   </data>
   <data name="AboutMatch" xml:space="preserve">
     <value>Берілген мәтіннен көрсетілген тұрақты өрнекті іздеп, одан бірінші сәйкестікті қайтарады.</value>
+    
   </data>
   <data name="AboutMatchAll" xml:space="preserve">
     <value>Берілген мәтіннен көрсетілген тұрақты өрнекті іздеп, одан барлық сәйкестікті қайтарады.</value>
+    
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
     <value>Тұрақты өрнек бойынша ізделетін мәтін.</value>
+    
   </data>
   <data name="AboutMatch_regular_expression" xml:space="preserve">
     <value>Мәтін тексерілетін регуляр өрнек. Онда сәтті сәйкестік болған жағдайда қайтарылатын деректер (жақша ішіндегі мәндер) болуы мүмкін.</value>
+    
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
     <value>Мәтіннің қай бөлігін сәйкестендіру керектігін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
+    
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
     <value>Тұрақты өрнек бойынша ізделетін мәтін.</value>
+    
   </data>
   <data name="AboutMatchAll_regular_expression" xml:space="preserve">
     <value>Мәтін тексерілетін регуляр өрнек. Онда сәтті сәйкестік болған жағдайда қайтарылатын деректер (жақша ішіндегі мәндер) болуы мүмкін.</value>
+    
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
     <value>Мәтіннің қай бөлігін сәйкестендіру керектігін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
+    
   </data>
   <data name="MatchArg1" xml:space="preserve">
     <value>мәтін</value>
+    
   </data>
   <data name="MatchArg2" xml:space="preserve">
     <value>тұрақтыөрнек</value>
+    
   </data>
   <data name="MatchArg3" xml:space="preserve">
     <value>параметрлер</value>
+    
   </data>
   <data name="AboutRefresh" xml:space="preserve">
     <value>Көрсетілген деректер көзін жаңартады.</value>
+    
   </data>
   <data name="RefreshArg1" xml:space="preserve">
     <value>қосылған_дереккөз</value>
+    
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
     <value>Жазба немесе кесте мәні күтілген.</value>
+    
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
     <value>Жаңартылатын қосылған деректер көзі.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Тек басқарылатын қосылымдарды жаңартуға болады.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Жарамсыз тұрақты өрнек.</value>
+    
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Тұрақты өрнектердің мәндері тұрақты болуы керек.</value>
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>"{0}" функциясына өткен мән өзгертілмеуі керек.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>"{0}" алу атауы регуляр өрнектің толық сәйкестігін қайтаратын алдын ала анықталған сипатты жасырады. Көрсетілген мәтіндегі толық сәйкестікті шығарып алу үшін сол аталған сипатты пайдаланғыңыз келсе, оның атауын өзгертіп көріңіз.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
     <value>"{0}" алу атауы регуляр өрнектегі топтық сәйкестіктерді қайтаратын алдын ала анықталған сипатты жасырады. Көрсетілген мәтіндегі толық емес сәйкестіктерді шығарып алу үшін сол аталған сипатты пайдаланғыңыз келсе, оның атауын өзгертіп көріңіз.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>"{0}" алу атауы регуляр өрнектің сәйкестік орнын қайтаратын алдын ала анықталған сипатты жасырады. Көрсетілген мәтіндегі толық сәйкестіктің орнын шығарып алу үшін сол аталған сипатты пайдаланғыңыз келсе, оның атауын өзгертіп көріңіз.</value>
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Барлық пішімдеуді жояды және қарапайым мәтіндік мәнді қайтарады.</value>
+    
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
     <value>мәтін</value>
+    
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>HTML және XML тегтері бар мәтін жойылды.</value>
   </data>
   <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
     <value>Сүзгі функциялары логикалық өрнектер ретінде тәртіп функцияларына мүмкіндік бермейді.</value>
+    
   </data>
   <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
     <value>Бірнеше логикалық өрнекті екінші аргументке біріктіру үшін And амалын пайдаланыңыз.</value>
+    
   </data>
   <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
     <value>Бұл кестені көшіру мүмкін емес. Оның орнына қажетті жеке бағандарды көшіру үшін ForAll функциясы мен {...} жазбасы арқылы кірістірілген жазба жасаңыз.</value>
@@ -3256,99 +4068,130 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>"{0}" функциясының екінші аргументіне тек сандық және күн/уақыт мәндері үшін ғана қолдау көрсетіледі.</value>
+    
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Онлайн дереккөз мәні (кесте немесе жазба) бар айнымалыны орнату серверге бірнеше сұрау тудыруы мүмкін. Жақын арада ол бұғатталады.</value>
+    
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Түрдің тура декларациясы жарамсыз болды</value>
+    
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
     <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. Берілген түрдің қосымша өрістері бар: {0}.</value>
+    
   </data>
   <data name="ErrExpectedRVMissingFields" xml:space="preserve">
     <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. Берілген түрдің жетіспейтін өрістері бар: {0}.</value>
+    
   </data>
   <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
     <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. Өріс атауы: {0} табылмады.</value>
+    
   </data>
   <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
     <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. Өріс атауы: {0} {1} күтілді; {2} табылды.</value>
+    
   </data>
   <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
     <value>Берілген {0} түрін {1} бастапқы түріне келтіру мүмкін емес.</value>
+    
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Бастапқы және мақсатты жазба түрлерінің арасындағы түр сәйкестігі. {0} күтілді; {1} табылды.</value>
+    
   </data>
   <data name="AboutJSON" xml:space="preserve">
     <value>Кесте, жазба немесе мән үшін JSON мәтіндік жолын жасайды.</value>
+    
   </data>
   <data name="JSONArg1" xml:space="preserve">
     <value>деректер</value>
+    
   </data>
   <data name="AboutJSON_data" xml:space="preserve">
     <value>JSON пішіміне түрлендірілетін деректер құрылымы. Кестелерге, жазбаларға және қарапайым мәндерге қолдау көрсетіледі, еркін түрде енгізіледі.</value>
+    
   </data>
   <data name="JSONArg2" xml:space="preserve">
     <value>пішім</value>
+    
   </data>
   <data name="AboutJSON_format" xml:space="preserve">
     <value>JSON түрлендіруінде пайдаланылатын пішім. Мән JSONFormat тізімінің мүшесі болады.</value>
+    
   </data>
   <data name="AboutTrace" xml:space="preserve">
     <value>Іске қосылса, ақпаратты Application Insights қызметіне тіркейді және сынақ нәтижелерінде қолжетімді болатын Test Studio сеансына кіреді.</value>
+    
   </data>
   <data name="TraceArg1" xml:space="preserve">
     <value>хабар</value>
+    
   </data>
   <data name="TraceArg2" xml:space="preserve">
     <value>күрделілік</value>
+    
   </data>
   <data name="TraceArg3" xml:space="preserve">
     <value>реттелетін_жазба</value>
+    
   </data>
   <data name="TraceArg4" xml:space="preserve">
     <value>trace_options</value>
+    
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
     <value>Қадағаланатын ақпарат.</value>
+    
   </data>
   <data name="AboutTrace_severity" xml:space="preserve">
     <value>Application Insights қызметіне қадағаланатын қиындық деңгейі.</value>
+    
   </data>
   <data name="AboutTrace_custom_record" xml:space="preserve">
     <value>Application Insights қызметіне қадағаланатын реттелетін деректерді қамтитын жазба.</value>
+    
   </data>
   <data name="AboutTrace_trace_options" xml:space="preserve">
     <value>Trace функциясының қосымша опциялары.</value>
+    
   </data>
   <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
     <value>{0} функциясы үшін "{1}" параметрі тұрақты мән болуы тиіс.</value>
+    
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>"{0}" және "{1}" JSONFormat мәндерін бірге пайдалану мүмкін емес.</value>
+    
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>JSON функциясына берілген мәнде медиа бар және оған әдепкіде қолдау көрсетілмейді. JSON үшін медиа мәндерін сериализациялауға рұқсат ету үшін "пішім" параметрінде IncludeBinaryData опциясын пайдаланыңыз.</value>
+    
   </data>
   <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
     <value>JSON функциясы "{0}" түріндегі нысандарды сериализациялай алмайды.</value>
+    
   </data>
   <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
     <value>JSON функциясы "{1}" түріндегі "{0}" деп аталатын кірістірілген сипаты бар кестелерді/нысандарды сериализациялай алмайды.</value>
+    
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON функциясы тәртіптік емес өрнекте екілік деректерді қатарластыра алмайды.</value>
+    <value>JSON функциясы тәртіптік емес өрнекте екілік деректерді қатарластыра алмайды.</value>    
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>{0} параметрінде қолдау көрсетілмейтін {1} түріне жататын сипат бар.</value>
+    
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Көрсетілген баған тек оқуға арналған және оны өзгерту мүмкін емес: {0}.</value>
+    
   </data>
   <data name="AboutSearch" xml:space="preserve">
     <value>Көздегі мәтінді іздейді. Мәтін табылған жолдарды қайтарады. Салыстыру регистрді ескермей орындалады.</value>
+    
   </data>
   <data name="AboutSearch_source" xml:space="preserve">
     <value>Іздеу орындалатын кесте.</value>
@@ -3361,17 +4204,52 @@
   </data>
   <data name="SearchArg1" xml:space="preserve">
     <value>деректер_көзі</value>
+    
   </data>
   <data name="SearchArg2" xml:space="preserve">
     <value>мәтін</value>
+    
   </data>
   <data name="SearchArg3" xml:space="preserve">
     <value>баған</value>
+    
   </data>
   <data name="ErrSearchWrongType" xml:space="preserve">
     <value>Баған түрі дұрыс емес. Мәтін түрі күтіледі.</value>
+    
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Кестеде мәтін түріндегі баған жоқ.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>"." пайдалану ұсынылмаған. Оны орнына "ShowColumns" функциясын пайдаланыңыз.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>Жасанды интеллект арқылы жасалған мазмұнда қателер болуы мүмкін. Оны пайдаланбас бұрын, оның дұрыстығына және сәйкестігіне көз жеткізіңіз. [Шарттарды қараңыз](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Берілген сандық мәнге сілтеме жасайтын Unicode таңбасын береді.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Unicode таңбасына түрлендірілетін сандық мән.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>сан</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Сандық мәндер кестені Unicode таңбалары кестесіне түрлендіреді.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>сандар_бағаны</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Unicode таңбаларына түрлендірілетін сандық мәндердің кесте бағаны.</value>
   </data>
 </root>
