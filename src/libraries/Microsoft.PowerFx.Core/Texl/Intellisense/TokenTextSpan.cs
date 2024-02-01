@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Microsoft.AppMagic.Transport;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -12,14 +14,29 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     [TransportType(TransportKind.ByValue)]
     internal interface ITokenTextSpan
     {
+        /// <summary>
+        /// A predefined name for the token or a variable name.
+        /// </summary>
         string TokenName { get; }
 
+        /// <summary>
+        /// Based 0 index starting point of the token.
+        /// </summary>
         int StartIndex { get; }
 
+        /// <summary>
+        /// Based 0 index ending point of the token.
+        /// </summary>
         int EndIndex { get; }
 
+        /// <summary>
+        /// The type of the token.
+        /// </summary>
         TokenType TokenType { get; }
 
+        /// <summary>
+        /// Used by the intellisense to determine if the token can be hidden.
+        /// </summary>
         bool CanBeHidden { get; }
     }
 
@@ -33,9 +50,11 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         public TokenType TokenType { get; private set; }
 
-        public bool CanBeHidden { get; private set; }
-
         public bool IsTextFirst { get; private set; }
+
+        bool ITokenTextSpan.CanBeHidden { get; }
+
+        internal bool CanBeHidden { get; }
 
         public TokenTextSpan(string name, int startIndex, int endIndex, TokenType type, bool canHide)
         {
