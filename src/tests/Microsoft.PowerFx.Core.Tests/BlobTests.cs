@@ -56,6 +56,9 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(FileType.Any, blob.FileType);
             Assert.Equal("appres://blobmanager/0", blob.ToString());
             Assert.Same(blob, resourceManager.GetResource(0));
+
+            resourceManager.RemoveResource(0);
+            Assert.Null(resourceManager.GetResource(0));
         }
 
         [Fact]

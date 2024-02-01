@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
         }
 
-        internal bool RemoveResource(int i)
+        public bool RemoveResource(int i)
         {
             lock (_lock)
             {

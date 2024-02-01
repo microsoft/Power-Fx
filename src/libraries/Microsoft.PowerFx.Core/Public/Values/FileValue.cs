@@ -61,14 +61,6 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
-        ~FileValue()
-        {
-            if (FileType != FileType.Uri)
-            {
-                _resourceManager.RemoveResource(_id);
-            }
-        }
-
         public FileValue GetResource()
         {
             return FileType == FileType.Uri && String.StartsWith(ResourceManager.Prefix, StringComparison.Ordinal) 
