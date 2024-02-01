@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Functions
 
             var now = runner.SafeUtcNow();
 
-            if (timeZoneInfo.BaseUtcOffset != TimeSpan.Zero)
+            if (!timeZoneInfo.Equals(TimeZoneInfo.Utc))
             {
                 now = TimeZoneInfo.ConvertTimeFromUtc(now, timeZoneInfo);
             }

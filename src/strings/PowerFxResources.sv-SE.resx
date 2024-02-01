@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -119,48 +119,62 @@
   </resheader>
   <data name="ListItemSingleQuotedFormat" xml:space="preserve">
     <value>"{0}"</value>
+    
   </data>
   <data name="AboutIf" xml:space="preserve">
     <value>Kontrollerar om något av de angivna villkoren uppfyllts och returnerar det motsvarande värdet. Om inget av villkoren uppfyllts, returnerar funktionen det angivna standardvärdet.</value>
+    
   </data>
   <data name="IfArgCond" xml:space="preserve">
     <value>logisk_test</value>
+    
   </data>
   <data name="IfArgTrueValue" xml:space="preserve">
     <value>sant_värde</value>
+    
   </data>
   <data name="IfArgElseValue" xml:space="preserve">
     <value>annars_värde</value>
+    
   </data>
   <data name="AboutIf_logical_test" xml:space="preserve">
     <value>Ett villkor som resulterar i ett booleskt värde.</value>
   </data>
   <data name="AboutIf_true_value" xml:space="preserve">
     <value>Ett uttryck som ger resultatet för If när villkoret är sant.</value>
+    
   </data>
   <data name="AboutIf_else_value" xml:space="preserve">
     <value>Ett uttryck som ger resultatet för If när alla angivna villkor är falska.</value>
+    
   </data>
   <data name="AboutSwitch" xml:space="preserve">
     <value>Matchar en formels resultat med en serie värden. När en matchning påträffas utvärderas och returneras en motsvarande formel. Om inga matchningar påträffas utvärderas och returneras den sista standardformeln.</value>
+    
   </data>
   <data name="SwitchExpression" xml:space="preserve">
     <value>växla_värde</value>
+    
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
     <value>standard_resultat</value>
+    
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
     <value>matcha_värde</value>
+    
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
     <value>matcha_resultat</value>
+    
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
     <value>Värde att jämföra med varje matcha_värde.</value>
+    
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
     <value>Värde som matchar växla_värde.</value>
+    
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
     <value>Formel som ska utvärderas och returneras om matchningar påträffas.</value>
@@ -170,15 +184,19 @@
   </data>
   <data name="AboutAnd" xml:space="preserve">
     <value>Kontrollerar om alla argument är sanna och returnerar sant om så är fallet.</value>
+    
   </data>
   <data name="AboutOr" xml:space="preserve">
     <value>Kontrollerar om något av argumenten är sanna och returnerar sant eller falskt. Returnerar bara falskt om alla argumenten är falska.</value>
+    
   </data>
   <data name="AboutNot" xml:space="preserve">
     <value>Ändrar falskt till sant och sant till falskt.</value>
+    
   </data>
   <data name="LogicalFuncParam" xml:space="preserve">
     <value>logisk</value>
+    
   </data>
   <data name="AboutAnd_logical" xml:space="preserve">
     <value>Ett logiskt uttryck att ta med i And-operationen.</value>
@@ -191,15 +209,19 @@
   </data>
   <data name="AboutCount" xml:space="preserve">
     <value>Räknar de numeriska värdena i den angivna kolumnen.</value>
+    
   </data>
   <data name="AboutCountA" xml:space="preserve">
     <value>Räknar antalet rader i kolumnen som inte är tomma.</value>
+    
   </data>
   <data name="AboutCountRows" xml:space="preserve">
     <value>Räknar antalet rader i indata-tabellen eller -samlingen.</value>
+    
   </data>
   <data name="CountArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="AboutCount_source" xml:space="preserve">
     <value>En kolumn med värden att räkna.</value>
@@ -212,12 +234,15 @@
   </data>
   <data name="AboutCountIf" xml:space="preserve">
     <value>Räknar antalet rader som uppfyller det givna villkoret.</value>
+    
   </data>
   <data name="CountIfArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="CountIfArg2" xml:space="preserve">
     <value>villkor</value>
+    
   </data>
   <data name="AboutCountIf_source" xml:space="preserve">
     <value>En tabell där raderna som uppfyller ett visst kriterium ska räknas.</value>
@@ -227,21 +252,27 @@
   </data>
   <data name="AboutSumT" xml:space="preserve">
     <value>Returnerar summan av talen som uttrycket utvärderas till i tabellkontexten.</value>
+    
   </data>
   <data name="AboutMaxT" xml:space="preserve">
     <value>Returnerar det högsta värdet som uttrycket utvärderas till i tabellkontexten.</value>
+    
   </data>
   <data name="AboutMinT" xml:space="preserve">
     <value>Returnerar det minsta värdet som uttrycket utvärderas till i tabellkontexten.</value>
+    
   </data>
   <data name="AboutAverageT" xml:space="preserve">
     <value>Returnerar genomsnittet (aritmetiska medelvärdet) för talen som uttrycket utvärderar till i tabellens sammanhang.</value>
+    
   </data>
   <data name="StatisticalTArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="StatisticalTArg2" xml:space="preserve">
     <value>uttryck</value>
+    
   </data>
   <data name="AboutMin_source" xml:space="preserve">
     <value>En tabell för vilken den här min-åtgärden kommer att beräknas.</value>
@@ -269,18 +300,23 @@
   </data>
   <data name="AboutSum" xml:space="preserve">
     <value>Returnerar summan av argumenten.</value>
+    
   </data>
   <data name="AboutMax" xml:space="preserve">
     <value>Returnerar det högsta värdet i en uppsättning värden. Ignorerar logiska värden och text.</value>
+    
   </data>
   <data name="AboutMin" xml:space="preserve">
     <value>Returnerar det minsta värdet i en uppsättning värden. Ignorerar logiska värden och text.</value>
+    
   </data>
   <data name="AboutAverage" xml:space="preserve">
     <value>Returnerar genomsnittet (aritmetiska medelvärdet) för dess argument.</value>
+    
   </data>
   <data name="StatisticalArg" xml:space="preserve">
     <value>tal</value>
+    
   </data>
   <data name="AboutSum_number" xml:space="preserve">
     <value>Ett numeriskt värde för den här summeringsåtgärden.</value>
@@ -296,33 +332,43 @@
   </data>
   <data name="AboutAddColumns" xml:space="preserve">
     <value>Returnerar en tabell med nya kolumner som beräknats genom att utvärdera alla uttryck över källa.</value>
+    
   </data>
   <data name="AddColumnsArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="AddColumnsArg2" xml:space="preserve">
     <value>kolumn</value>
+    
   </data>
   <data name="AddColumnsArg3" xml:space="preserve">
     <value>uttryck</value>
+    
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
     <value>En tabell eller post att lägga till kolumner i.</value>
+    
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
     <value>Ett unikt kolumnnamn.</value>
+    
   </data>
   <data name="AboutAddColumns_expression" xml:space="preserve">
     <value>Ett uttryck som tillhandahåller värden för den nya kolumnen.</value>
+    
   </data>
   <data name="AboutDropColumns" xml:space="preserve">
     <value>Returnerar en tabell med en eller flera angivna kolumner borttagna från källtabellen.</value>
+    
   </data>
   <data name="DropColumnsArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="DropColumnsArg2" xml:space="preserve">
     <value>kolumn_namn</value>
+    
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
     <value>Ett tabell- eller postvärde att ta bort kolumner från.</value>
@@ -332,15 +378,19 @@
   </data>
   <data name="AboutRenameColumns" xml:space="preserve">
     <value>Returnerar en kopia av den angivna källtabellen, med kolumnen old_column omdöpt till new_column.</value>
+    
   </data>
   <data name="RenameColumnsArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="RenameColumnsArg2" xml:space="preserve">
     <value>gammal_kolumn</value>
+    
   </data>
   <data name="RenameColumnsArg3" xml:space="preserve">
     <value>ny_kolumn</value>
+    
   </data>
   <data name="AboutRenameColumns_source" xml:space="preserve">
     <value>Ett tabellvärde att bearbeta.</value>
@@ -353,15 +403,19 @@
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
     <value>Det går inte att byta namn på den angivna kolumnen {0} två gånger.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Returnerar raderna från tabellen där alla de angivna villkoren är sanna.</value>
+    
   </data>
   <data name="FilterArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="FilterArg2" xml:space="preserve">
     <value>logisk_test</value>
+    
   </data>
   <data name="AboutFilter_source" xml:space="preserve">
     <value>En tabell att filtrera.</value>
@@ -371,12 +425,15 @@
   </data>
   <data name="AboutFirst" xml:space="preserve">
     <value>Returnerar den första raden från källan.</value>
+    
   </data>
   <data name="AboutLast" xml:space="preserve">
     <value>Returnerar den senaste raden från källan.</value>
+    
   </data>
   <data name="FirstLastArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="AboutFirst_source" xml:space="preserve">
     <value>En tabell vars första rad kommer att returneras.</value>
@@ -386,15 +443,19 @@
   </data>
   <data name="AboutFirstN" xml:space="preserve">
     <value>Returnerar de första antalet rader från källan.</value>
+    
   </data>
   <data name="AboutLastN" xml:space="preserve">
     <value>Returnerar de senaste antal raderna från källan.</value>
+    
   </data>
   <data name="FirstLastNArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="FirstLastNArg2" xml:space="preserve">
     <value>antal</value>
+    
   </data>
   <data name="AboutFirstN_source" xml:space="preserve">
     <value>En tabell som rader kommer att returneras från.</value>
@@ -410,105 +471,130 @@
   </data>
   <data name="AboutText" xml:space="preserve">
     <value>Konverterar ett värde till text i ett specifikt textformat för tal.</value>
+    
   </data>
   <data name="TextArg1" xml:space="preserve">
     <value>värde</value>
+    
   </data>
   <data name="TextArg2" xml:space="preserve">
     <value>textformat</value>
+    
   </data>
   <data name="TextArg3" xml:space="preserve">
     <value>språk</value>
+    
   </data>
   <data name="AboutText_value" xml:space="preserve">
     <value>Ett värde att formatera till text.</value>
   </data>
   <data name="AboutText_format_text" xml:space="preserve">
     <value>Ett textvärde som anger hur värde kommer att formateras.</value>
+    
   </data>
   <data name="AboutText_language" xml:space="preserve">
     <value>Språkkoden som ska användas vid konvertering till text.</value>
+    
   </data>
   <data name="AboutValue" xml:space="preserve">
     <value>Konverterar en text som motsvarar ett tal till ett numeriskt värde.</value>
+    
   </data>
   <data name="ValueArg1" xml:space="preserve">
     <value>text</value>
+    
   </data>
   <data name="ValueArg2" xml:space="preserve">
     <value>språk</value>
+    
   </data>
   <data name="AboutValue_text" xml:space="preserve">
     <value>Textvärdet som ska konverteras till ett numeriskt värde.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
     <value>Språkkoden som ska användas vid konvertering av värdet.</value>
+    
   </data>
   <data name="AboutBoolean" xml:space="preserve">
     <value>Konverterar en "text" som representerar en boolesk till ett booleskt värde.</value>
+    
   </data>
   <data name="BooleanArg1" xml:space="preserve">
     <value>text</value>
+    
   </data>
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Textvärdet som ska konverteras till ett booleskt värde.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
     <value>Konverterar en kolumn med textvärden till en kolumn med booleska värden.</value>
+    
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
     <value>indata</value>
+    
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
     <value>En kolumn med textvärden att bearbeta.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>Konverterar ett "tal" till ett booleskt värde.</value>
+    
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
     <value>tal</value>
+    
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
     <value>Det numeriska värdet som ska konverteras till ett booleskt värde.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
     <value>Konverterar en kolumn med numeriska värden till en kolumn med booleska värden.</value>
+    
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
     <value>indata</value>
+    
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>En kolumn med numeriska värden att bearbeta.</value>
   </data>
   <data name="AboutBooleanB" xml:space="preserve">
     <value>Konverterar en "boolesk" till ett booleskt värde.</value>
+    
   </data>
   <data name="BooleanBArg1" xml:space="preserve">
     <value>boolesk</value>
+    
   </data>
   <data name="AboutBooleanB_boolean" xml:space="preserve">
     <value>Det booleska värdet som ska konverteras till ett booleskt värde.</value>
   </data>
   <data name="AboutBooleanBT" xml:space="preserve">
     <value>Konverterar en kolumn med booleska värden till en kolumn med booleska värden.</value>
+    
   </data>
   <data name="BooleanBTArg1" xml:space="preserve">
     <value>indata</value>
+    
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>En kolumn med booleska värden att bearbeta.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerar det första icke-tomma argumentet</value>
+    
   </data>
   <data name="CoalesceArg1" xml:space="preserve">
     <value>värde</value>
+    
   </data>
   <data name="AboutCoalesce_value" xml:space="preserve">
     <value>Ett argument som ska returneras om det är det första icke-tomma argumentet.</value>
   </data>
   <data name="AboutConcatenate" xml:space="preserve">
     <value>Kopplar flera textvärden till ett textvärde.</value>
+    
   </data>
   <data name="AboutDecimal" xml:space="preserve">
     <value>Konverterar en text som motsvarar ett tal till ett decimalvärde.</value>
@@ -530,30 +616,37 @@
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>text</value>
+    
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
     <value>Ett textvärde som ska sammanfogas med övriga argument.</value>
   </data>
   <data name="AboutConcatenateT" xml:space="preserve">
     <value>Sammanfogar flera textvärden eller tabeller i en kolumn med textvärden.</value>
+    
   </data>
   <data name="ConcatenateTArg1" xml:space="preserve">
     <value>värde</value>
+    
   </data>
   <data name="AboutConcatenate_value" xml:space="preserve">
     <value>Ett textvärde eller en kolumn med textvärden som ska sammanfogas med övriga argument.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Sammanfogar alla textvärden som skapats genom att utvärdera det givna uttrycket för den givna tabellen i ett textvärde.</value>
+    
   </data>
   <data name="ConcatArg1" xml:space="preserve">
     <value>tabell</value>
+    
   </data>
   <data name="ConcatArg2" xml:space="preserve">
     <value>uttryck</value>
+    
   </data>
   <data name="ConcatArg3" xml:space="preserve">
     <value>avgränsare</value>
+    
   </data>
   <data name="AboutConcat_table" xml:space="preserve">
     <value>Ett tabellvärde som uttrycket som ges av den andra parametern ska utvärderas mot.</value>
@@ -563,30 +656,37 @@
   </data>
   <data name="AboutConcat_separator" xml:space="preserve">
     <value>Ett textvärde som ska infogas mellan sammanfogade rader i tabellen.</value>
+    
   </data>
   <data name="AboutLen" xml:space="preserve">
     <value>Returnerar antalet tecken i ett textvärde.</value>
+    
   </data>
   <data name="AboutLen_text" xml:space="preserve">
     <value>Ett textvärde vars teckenlängd returneras.</value>
   </data>
   <data name="AboutLenT" xml:space="preserve">
     <value>Returnerar antalet tecken i ett textvärde, utvärderat per rad inom den angivna tabellen eller mängden.</value>
+    
   </data>
   <data name="AboutLen_text_column" xml:space="preserve">
     <value>En kolumn med textvärden vars teckenlängd returneras (som en ny kolumn).</value>
   </data>
   <data name="LenArg1" xml:space="preserve">
     <value>text</value>
+    
   </data>
   <data name="LenTArg1" xml:space="preserve">
     <value>text_kolumn</value>
+    
   </data>
   <data name="AboutUpper" xml:space="preserve">
     <value>Konverterar ett textvärde till enbart versaler.</value>
+    
   </data>
   <data name="AboutUpperT" xml:space="preserve">
     <value>Konverterar alla bokstäver i ett textvärde, utvärderat efter rad inom den angivna tabellen eller mängden, till versaler.</value>
+    
   </data>
   <data name="AboutUpper_text" xml:space="preserve">
     <value>Ett textvärde att konvertera till versaler.</value>
@@ -596,9 +696,11 @@
   </data>
   <data name="AboutLower" xml:space="preserve">
     <value>Konverterar alla bokstäver i ett textvärde till gemener.</value>
+    
   </data>
   <data name="AboutLowerT" xml:space="preserve">
     <value>Konverterar alla bokstäver i ett textvärde, utvärderade per rad inom den angivna tabellen eller mängden, till gemener.</value>
+    
   </data>
   <data name="AboutLower_text" xml:space="preserve">
     <value>Ett textvärde att konvertera till gemener.</value>
@@ -608,9 +710,11 @@
   </data>
   <data name="AboutProper" xml:space="preserve">
     <value>Skiftlägeskonverterar ett textvärde. Den första bokstaven i varje ord blir en versal och de andra bokstäverna blir gemener.</value>
+    
   </data>
   <data name="AboutProperT" xml:space="preserve">
     <value>Skiftlägeskonverterar ett textvärde, som utvärderas per rad inom den angivna tabellen eller samlingen. Den första bokstaven i varje ord blir en versal och alla andra bokstäver blir gemener.</value>
+    
   </data>
   <data name="AboutProper_text" xml:space="preserve">
     <value>Ett textvärde att skiftlägeskonvertera.</value>
@@ -620,6 +724,7 @@
   </data>
   <data name="AboutTrim" xml:space="preserve">
     <value>Tar bort alla blanksteg från ett textvärde, förutom enkla blanksteg mellan ord.</value>
+    
   </data>
   <data name="AboutTrim_text" xml:space="preserve">
     <value>Ett textvärde att konvertera för trimning.</value>
@@ -629,6 +734,7 @@
   </data>
   <data name="AboutTrimEnds" xml:space="preserve">
     <value>Tar bort alla inledande och avslutande blanksteg från ett textvärde.</value>
+    
   </data>
   <data name="AboutTrimEnds_text" xml:space="preserve">
     <value>Ett textvärde där inledande och avslutande blanksteg ska trimmas.</value>
@@ -638,9 +744,11 @@
   </data>
   <data name="AboutMid" xml:space="preserve">
     <value>Returnerar tecknen från mitten av ett textvärde, med en given startposition och längd.</value>
+    
   </data>
   <data name="AboutMidT" xml:space="preserve">
     <value>Returnerar tecknen från mitten av ett textvärde, med en given startposition och längd, som utvärderas per rad inom den angivna tabellen eller samlingen.</value>
+    
   </data>
   <data name="AboutMid_text" xml:space="preserve">
     <value>Textvärdet som tecknen ska extraheras från.</value>
@@ -656,27 +764,35 @@
   </data>
   <data name="StringFuncArg1" xml:space="preserve">
     <value>text</value>
+    
   </data>
   <data name="StringTFuncArg1" xml:space="preserve">
     <value>text_kolumn</value>
+    
   </data>
   <data name="StringFuncArg2" xml:space="preserve">
     <value>start_antal</value>
+    
   </data>
   <data name="StringFuncArg3" xml:space="preserve">
     <value>antal_tecken</value>
+    
   </data>
   <data name="AboutReplace" xml:space="preserve">
     <value>Ersätter en del av ett textvärde med ett annat textvärde.</value>
+    
   </data>
   <data name="AboutReplaceT" xml:space="preserve">
     <value>Ersätter en del av ett textvärde med ett annat textvärde, utvärderat per rad inom den angivna tabellen eller mängden.</value>
+    
   </data>
   <data name="ReplaceFuncArg1" xml:space="preserve">
     <value>gammal_text</value>
+    
   </data>
   <data name="ReplaceFuncArg4" xml:space="preserve">
     <value>ny_text</value>
+    
   </data>
   <data name="AboutReplace_old_text" xml:space="preserve">
     <value>Textvärdet att bearbeta.</value>
@@ -695,51 +811,67 @@
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>Skapar ett fel med anpassade värden.</value>
+    
   </data>
   <data name="AboutError_error_information" xml:space="preserve">
     <value>En post som innehåller anpassade värden för det fel som har inträffat.</value>
+    
   </data>
   <data name="ErrorArg1" xml:space="preserve">
     <value>felinformation</value>
+    
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
     <value>Error-funktionen använder bara fälten Kind, Message, Notify, Control och Property.</value>
+    
   </data>
   <data name="AboutIfError" xml:space="preserve">
     <value>Utvärderar och returnerar det första icke-felaktiga argumentet.</value>
+    
   </data>
   <data name="IfErrorArg1" xml:space="preserve">
     <value>värde</value>
+    
   </data>
   <data name="AboutIfError_value" xml:space="preserve">
     <value>Värde som returneras om det inte är ett fel.</value>
+    
   </data>
   <data name="IfErrorArg2" xml:space="preserve">
     <value>återställning</value>
+    
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
     <value>Värde som returneras om det föregående argumentet är ett fel.</value>
+    
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
     <value>Ersätter befintlig text med ny text i ett textvärde.</value>
+    
   </data>
   <data name="AboutSubstituteT" xml:space="preserve">
     <value>Ersätter befintlig text med ny text i ett textvärde som utvärderas per rad inom den angivna tabellen eller mängden.</value>
+    
   </data>
   <data name="SubstituteFuncArg1" xml:space="preserve">
     <value>text</value>
+    
   </data>
   <data name="SubstituteTFuncArg1" xml:space="preserve">
     <value>text_kolumn</value>
+    
   </data>
   <data name="SubstituteFuncArg2" xml:space="preserve">
     <value>gammal_text</value>
+    
   </data>
   <data name="SubstituteFuncArg3" xml:space="preserve">
     <value>ny_text</value>
+    
   </data>
   <data name="SubstituteFuncArg4" xml:space="preserve">
     <value>instans_antal</value>
+    
   </data>
   <data name="AboutSubstitute_text" xml:space="preserve">
     <value>Textvärdet att bearbeta.</value>
@@ -758,15 +890,19 @@
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>Sorterar källan baserat på resultaten från uttrycket som utvärderats för varje rad. Valfritt så att en sorteringsordning kan anges.</value>
+    
   </data>
   <data name="SortArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="SortArg2" xml:space="preserve">
     <value>uttryck</value>
+    
   </data>
   <data name="SortArg3" xml:space="preserve">
     <value>ordna</value>
+    
   </data>
   <data name="AboutSort_source" xml:space="preserve">
     <value>Tabellen att sortera.</value>
@@ -776,18 +912,23 @@
   </data>
   <data name="AboutSort_order" xml:space="preserve">
     <value>SortOrder.Ascending eller SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sorterar källan baserat på kolumnen. Valfritt så att en sorteringsordning kan anges.</value>
+    
   </data>
   <data name="SortByColumnsArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="SortByColumnsArg2" xml:space="preserve">
     <value>kolumn</value>
+    
   </data>
   <data name="SortByColumnsArg3" xml:space="preserve">
     <value>ordna</value>
+    
   </data>
   <data name="AboutSortByColumns_source" xml:space="preserve">
     <value>Tabellen att sortera.</value>
@@ -797,18 +938,22 @@
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
     <value>SortOrder.Ascending eller SortOrder.Descending</value>
+    
   </data>
   <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
     <value>värden</value>
+    
   </data>
   <data name="AboutSortByColumns_values" xml:space="preserve">
     <value>En kolumn med värden att användas i sorteringssyfte. Sortering görs inte stigande/fallande, utan baserat på indexet med matchande värden i kolumnen.</value>
   </data>
   <data name="AboutRand" xml:space="preserve">
     <value>Returnerar ett slumpmässigt tal som är större än eller lika med 0 och mindre än 1, jämnt fördelat.</value>
+    
   </data>
   <data name="AboutRandBetween" xml:space="preserve">
     <value>Returnerar ett slumpmässigt tal mellan lägsta och högsta, jämnt fördelat.</value>
+    
   </data>
   <data name="AboutRandBetween_bottom" xml:space="preserve">
     <value>Det minsta heltal som funktionen kan returnera.</value>
@@ -818,99 +963,129 @@
   </data>
   <data name="RandBetweenArg1" xml:space="preserve">
     <value>lägsta</value>
+    
   </data>
   <data name="RandBetweenArg2" xml:space="preserve">
     <value>högsta</value>
+    
   </data>
   <data name="AboutGUID" xml:space="preserve">
     <value>Skapar ett GUID från en sträng eller returnerar ett slumpmässigt genererat GUID om inga argument har angetts.</value>
+    
   </data>
   <data name="GUIDArg" xml:space="preserve">
     <value>GUID_sträng</value>
+    
   </data>
   <data name="AboutGUID_GUID_string" xml:space="preserve">
     <value>Sträng som ska konverteras till ett GUID</value>
+    
   </data>
   <data name="AboutNow" xml:space="preserve">
     <value>Returnerar aktuellt datum och aktuell tid.</value>
+    
   </data>
   <data name="AboutUTCNow" xml:space="preserve">
     <value>Returnerar aktuellt datum och aktuell tid i UTC-tid.</value>
+    
   </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Returnerar tidsskillnaden mellan UTC-tid och lokal tid i minuter. Om din tidszon t.ex. är UTC+2 så returneras -120.</value>
+    
   </data>
   <data name="TimeZoneOffsetArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="AboutTimeZoneOffset_date" xml:space="preserve">
     <value>Det datum för vilket TimeZoneOffset ska beräknas.</value>
+    
   </data>
   <data name="AboutToday" xml:space="preserve">
     <value>Returnerar aktuellt datum.</value>
+    
   </data>
   <data name="AboutUTCToday" xml:space="preserve">
     <value>Returnerar aktuellt datum i UTC-tid.</value>
+    
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Returnerar veckonumret för ett visst datum.</value>
+    
   </data>
   <data name="WeekNumArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="WeekNumArg2" xml:space="preserve">
     <value>början_av_vecka</value>
+    
   </data>
   <data name="AboutWeekNum_date" xml:space="preserve">
     <value>Ett datumvärde som veckonumret ska beräknas för.</value>
   </data>
   <data name="AboutWeekNum_start_of_week" xml:space="preserve">
     <value>Ett värde från StartOfWeek-uppräkningen eller ett tal från motsvarande Excel-funktion som anger hur veckodagarna ska numreras.</value>
+    
   </data>
   <data name="AboutISOWeekNum" xml:space="preserve">
     <value>Returnerar veckonumret enligt ISO-regler för ett visst datum.</value>
+    
   </data>
   <data name="ISOWeekNumArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="AboutISOWeekNum_date" xml:space="preserve">
     <value>Ett datumvärde som ISO-veckonumret ska beräknas för.</value>
   </data>
   <data name="AboutEDate" xml:space="preserve">
     <value>Returnerar ett datum justerat med ett antal månader. Dagen i månaden är densamma men justeras av antalet dagar i den nya månaden.</value>
+    
   </data>
   <data name="EDateArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="EDateArg2" xml:space="preserve">
     <value>månader</value>
+    
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Ett datumvärde som ska justeras med angivet antal månader.</value>
+          
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Antal månader som datumet ska ändras med. Ett positivt värde ger ett framtida datum, ett negativt ger ett tidigare datum och noll ändrar inte månaden.</value>
+        
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Returnerar den sista dagen i månaden för ett angivet datum, justerat med ett antal månader.</value>
+    
   </data>
   <data name="EOMonthArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="EOMonthArg2" xml:space="preserve">
     <value>månader</value>
+    
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Ett datumvärde som ska justeras med angivet antal månader.</value>
+          
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Antal månader som datumet ska ändras med. Ett positivt värde ger ett framtida datum, ett negativt ger ett tidigare datum och noll ändrar inte månaden.</value>
+    <value>Antal månader som datumet ska ändras med. Ett positivt värde ger ett framtida datum, ett negativt ger ett tidigare datum och noll ändrar inte månaden.</value>
+         
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Trunkerar "tal" genom att avrunda mot negativ oändlighet.</value>
+    
   </data>
   <data name="AboutIntT" xml:space="preserve">
     <value>Trunkerar värdena i en kolumn med tal genom att avrunda mot negativ oändlighet.</value>
+    
   </data>
   <data name="AboutInt_number" xml:space="preserve">
     <value>Ett numeriskt värde att bearbeta.</value>
@@ -920,6 +1095,7 @@
   </data>
   <data name="AboutTrunc" xml:space="preserve">
     <value>Trunkerar "tal" genom att avrunda mot noll.</value>
+    
   </data>
   <data name="AboutTrunc_number" xml:space="preserve">
     <value>Talet som ska trunkeras.</value>
@@ -932,33 +1108,43 @@
   </data>
   <data name="AboutTruncT" xml:space="preserve">
     <value>Trunkerar alla tal i "källa" genom att avrunda mot noll.</value>
+    
   </data>
   <data name="TruncArg1" xml:space="preserve">
     <value>tal</value>
+    
   </data>
   <data name="TruncArg2" xml:space="preserve">
     <value>antal_siffror</value>
+    
   </data>
   <data name="TruncTArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="TruncTArg2" xml:space="preserve">
     <value>antal_siffror</value>
+    
   </data>
   <data name="AboutRound" xml:space="preserve">
     <value>Rundar av tal till det angivna antalet siffror.</value>
+    
   </data>
   <data name="AboutRoundUp" xml:space="preserve">
     <value>Rundar av tal uppåt bort från noll.</value>
+    
   </data>
   <data name="AboutRoundDown" xml:space="preserve">
     <value>Rundar av tal nedåt mot noll.</value>
+    
   </data>
   <data name="RoundArg1" xml:space="preserve">
     <value>tal</value>
+    
   </data>
   <data name="RoundArg2" xml:space="preserve">
     <value>antal_siffror</value>
+    
   </data>
   <data name="AboutRound_number" xml:space="preserve">
     <value>Talet att runda.</value>
@@ -989,33 +1175,43 @@
   </data>
   <data name="AboutRoundT" xml:space="preserve">
     <value>Rundar av alla tal i källan till det angivna antalet decimaler.</value>
+    
   </data>
   <data name="AboutRoundUpT" xml:space="preserve">
     <value>Rundar av alla tal i källan uppåt bort från noll.</value>
+    
   </data>
   <data name="AboutRoundDownT" xml:space="preserve">
     <value>Rundar av alla tal i källan nedåt mot noll.</value>
+    
   </data>
   <data name="RoundTArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="RoundTArg2" xml:space="preserve">
     <value>antal_siffror</value>
+    
   </data>
   <data name="AboutRGBA" xml:space="preserve">
     <value>Tar in numeriska värden för röd-, grön-, blå- och alfakomponenter för färgen och genererar de specifika färgerna. R, G, B är numeriska mellan 0 till 255. Alfa är decimal mellan 0 till 1.</value>
+    
   </data>
   <data name="RGBAArg1" xml:space="preserve">
     <value>rött_värde</value>
+    
   </data>
   <data name="RGBAArg2" xml:space="preserve">
     <value>grönt_värde</value>
+    
   </data>
   <data name="RGBAArg3" xml:space="preserve">
     <value>blått_värde</value>
+    
   </data>
   <data name="RGBAArg4" xml:space="preserve">
     <value>alfa_värde</value>
+    
   </data>
   <data name="AboutRGBA_red_value" xml:space="preserve">
     <value>Rödkomponenten, 0 till 255.</value>
@@ -1031,12 +1227,15 @@
   </data>
   <data name="AboutColorFade" xml:space="preserve">
     <value>Skapar en ny nyans av den angivna färgen baserat på den angivna procentsatsen toning.</value>
+    
   </data>
   <data name="ColorFadeArg1" xml:space="preserve">
     <value>färg</value>
+    
   </data>
   <data name="ColorFadeArg2" xml:space="preserve">
     <value>toning</value>
+    
   </data>
   <data name="AboutColorFade_color" xml:space="preserve">
     <value>En färg att tona.</value>
@@ -1049,9 +1248,11 @@
   </data>
   <data name="ColorFadeTArg1" xml:space="preserve">
     <value>färg_eller_kolumn</value>
+    
   </data>
   <data name="ColorFadeTArg2" xml:space="preserve">
     <value>toning_eller_kolumn</value>
+    
   </data>
   <data name="AboutColorFade_color_or_column" xml:space="preserve">
     <value>En färg (eller kolumn med färgvärden) att tona.</value>
@@ -1061,9 +1262,11 @@
   </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Returnerar det absoluta värdet för ett tal, ett tal utan dess tecken.</value>
+    
   </data>
   <data name="AboutAbsT" xml:space="preserve">
     <value>Returnerar de absoluta värdena (talen utan sina tecken) för en kolumn med tal.</value>
+    
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
     <value>Ett numeriskt värde att bearbeta.</value>
@@ -1079,9 +1282,11 @@
   </data>
   <data name="AboutSin" xml:space="preserve">
     <value>Returnerar sinusvärdet för ett tal.</value>
+    
   </data>
   <data name="AboutSinT" xml:space="preserve">
     <value>Returnerar sinusvärden för tal i en kolumn.</value>
+    
   </data>
   <data name="AboutAsin_number" xml:space="preserve">
     <value>Ett numeriskt värde att bearbeta.</value>
@@ -1091,15 +1296,19 @@
   </data>
   <data name="AboutAsin" xml:space="preserve">
     <value>Returnerar arcus sinus-värdet (i radianer) av ett tal.</value>
+    
   </data>
   <data name="AboutAsinT" xml:space="preserve">
     <value>Returnerar arcus sinus-värden (i radianer) av tal i en kolumn.</value>
+    
   </data>
   <data name="AboutCos" xml:space="preserve">
     <value>Returnerar cosinus-värdet av ett tal.</value>
+    
   </data>
   <data name="AboutCosT" xml:space="preserve">
     <value>Returnerar cosinus-värden av tal i en kolumn.</value>
+    
   </data>
   <data name="AboutCos_number" xml:space="preserve">
     <value>Ett numeriskt värde (i radianer) att bearbeta.</value>
@@ -1109,12 +1318,14 @@
   </data>
   <data name="AboutAcos" xml:space="preserve">
     <value>Returnerar arcus cosinus-värdet (i radianer) av ett tal.</value>
+    
   </data>
   <data name="AboutAcos_number" xml:space="preserve">
     <value>Ett numeriskt värde att bearbeta.</value>
   </data>
   <data name="AboutAcosT" xml:space="preserve">
     <value>Returnerar arcus cosinus-värden (i radianer) av tal i en kolumn.</value>
+    
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
     <value>En kolumn med numeriska värden att bearbeta.</value>
@@ -1127,15 +1338,19 @@
   </data>
   <data name="AboutAcot" xml:space="preserve">
     <value>Returnerar arcus cotangens-värdet (i radianer) av ett tal.</value>
+    
   </data>
   <data name="AboutAcotT" xml:space="preserve">
     <value>Returnerar arcus cotangens-värden (i radianer) av tal i en kolumn.</value>
+    
   </data>
   <data name="AboutTan" xml:space="preserve">
     <value>Returnerar tangensvärdet för ett tal.</value>
+    
   </data>
   <data name="AboutTanT" xml:space="preserve">
     <value>Returnerar tangensvärden av tal i en kolumn.</value>
+    
   </data>
   <data name="AboutTan_number" xml:space="preserve">
     <value>Ett numeriskt värde (i radianer) att bearbeta.</value>
@@ -1145,9 +1360,11 @@
   </data>
   <data name="AboutAtan" xml:space="preserve">
     <value>Returnerar arcus tangens-värdet (i radianer) av ett tal.</value>
+    
   </data>
   <data name="AboutAtanT" xml:space="preserve">
     <value>Returnerar arctangens-värden (i radianer) av tal i en kolumn.</value>
+    
   </data>
   <data name="AboutAtan_number" xml:space="preserve">
     <value>Ett numeriskt värde att bearbeta.</value>
@@ -1157,9 +1374,11 @@
   </data>
   <data name="AboutCot" xml:space="preserve">
     <value>Returnerar cotangens-värdet för ett tal.</value>
+    
   </data>
   <data name="AboutCotT" xml:space="preserve">
     <value>Returnerar cotangens-värden av tal i en kolumn.</value>
+    
   </data>
   <data name="AboutCot_number" xml:space="preserve">
     <value>Ett numeriskt värde (i radianer) att bearbeta.</value>
@@ -1169,9 +1388,11 @@
   </data>
   <data name="AboutLn" xml:space="preserve">
     <value>Returnerar den naturliga logaritmen (basen E) av ett tal.</value>
+    
   </data>
   <data name="AboutLnT" xml:space="preserve">
     <value>Returnerar de naturliga logaritmvärdena (basen E) av tal i en kolumn.</value>
+    
   </data>
   <data name="AboutLn_number" xml:space="preserve">
     <value>Ett numeriskt värde att bearbeta.</value>
@@ -1181,9 +1402,11 @@
   </data>
   <data name="AboutLog" xml:space="preserve">
     <value>Returnerar logaritmen av ett tal för den givna basen. Standardbasen är 10.</value>
+    
   </data>
   <data name="AboutLogT" xml:space="preserve">
     <value>Returnerar logaritmvärdet för ett tal eller en kolumn av tal för den givna basen eller kolumnen med baser. Standardbasen är 10.</value>
+    
   </data>
   <data name="AboutLog_number" xml:space="preserve">
     <value>Ett numeriskt värde att bearbeta.</value>
@@ -1193,15 +1416,18 @@
   </data>
   <data name="LogBase" xml:space="preserve">
     <value>bas</value>
+    
   </data>
   <data name="AboutLog_base" xml:space="preserve">
     <value>Basen för logaritmen.</value>
   </data>
   <data name="AboutExp" xml:space="preserve">
     <value>Returnerar E upphöjt till ett tal. Om du vill beräkna potensen av andra baser använder du exponentoperatorn (^).</value>
+    
   </data>
   <data name="AboutExpT" xml:space="preserve">
     <value>Returnerar en kolumn som innehåller E upphöjt till potensen av varje motsvarande tal i en kolumn med tal. Om du vill beräkna potensen av andra baser använder du exponentoperatorn (^).</value>
+    
   </data>
   <data name="AboutExp_number" xml:space="preserve">
     <value>Ett numeriskt värde att bearbeta.</value>
@@ -1214,9 +1440,11 @@
   </data>
   <data name="AboutRadians" xml:space="preserve">
     <value>Returnerar radianervärdet för ett tal.</value>
+    
   </data>
   <data name="AboutRadiansT" xml:space="preserve">
     <value>Returnerar radianervärden av tal i en kolumn.</value>
+    
   </data>
   <data name="AboutRadians_number" xml:space="preserve">
     <value>Ett numeriskt värde (i grader) att bearbeta.</value>
@@ -1226,9 +1454,11 @@
   </data>
   <data name="AboutDegrees" xml:space="preserve">
     <value>Returnerar gradvärdet för ett tal.</value>
+    
   </data>
   <data name="AboutDegreesT" xml:space="preserve">
     <value>Returnerar gradvärden av tal i en kolumn.</value>
+    
   </data>
   <data name="AboutDegrees_number" xml:space="preserve">
     <value>Ett numeriskt värde (i radianer) att bearbeta.</value>
@@ -1241,9 +1471,11 @@
   </data>
   <data name="DistinctArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="DistinctArg2" xml:space="preserve">
     <value>uttryck</value>
+    
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
     <value>En tabell som distinkta värden kommer extraheras från.</value>
@@ -1256,9 +1488,11 @@
   </data>
   <data name="AboutAtan2Arg1" xml:space="preserve">
     <value>x_koordinat</value>
+    
   </data>
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>y_koordinat</value>
+    
   </data>
   <data name="AboutAtan2_x_coordinate" xml:space="preserve">
     <value>x-koordinat.</value>
@@ -1268,9 +1502,11 @@
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Returnerar roten av ett tal.</value>
+    
   </data>
   <data name="AboutSqrtT" xml:space="preserve">
     <value>Returnerar roten av en kolumn med tal.</value>
+    
   </data>
   <data name="AboutSqrt_number" xml:space="preserve">
     <value>Ett numeriskt värde att bearbeta.</value>
@@ -1280,21 +1516,27 @@
   </data>
   <data name="MathFuncArg1" xml:space="preserve">
     <value>tal</value>
+    
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>indata</value>
+    
   </data>
   <data name="MathFuncArg2" xml:space="preserve">
     <value>modifierare</value>
+    
   </data>
   <data name="MathTFuncArg2" xml:space="preserve">
     <value>modifierare</value>
+    
   </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Returnerar angivet antal tecken från början av ett textvärde.</value>
+    
   </data>
   <data name="AboutLeftT" xml:space="preserve">
     <value>Returnerar en kolumn som innehåller angivet antal tecken från början av textvärdet utvärderade efter rad inom den angivna tabellen eller samlingen.</value>
+    
   </data>
   <data name="AboutLeft_text" xml:space="preserve">
     <value>Ett textvärde att extrahera tecken från.</value>
@@ -1307,9 +1549,11 @@
   </data>
   <data name="AboutRight" xml:space="preserve">
     <value>Returnerar det angivna antalet tecken från slutet av ett textvärde.</value>
+    
   </data>
   <data name="AboutRightT" xml:space="preserve">
     <value>Returnerar en kolumn som innehåller det angivna antalet tecken från slutet av textvärdet, utvärderat per rad inom den angivna tabellen eller samlingen.</value>
+    
   </data>
   <data name="AboutRight_text" xml:space="preserve">
     <value>Ett textvärde att extrahera tecken från.</value>
@@ -1322,60 +1566,76 @@
   </data>
   <data name="LeftRightArg1" xml:space="preserve">
     <value>text</value>
+    
   </data>
   <data name="LeftRightTArg1" xml:space="preserve">
     <value>text_kolumn</value>
+    
   </data>
   <data name="LeftRightArg2" xml:space="preserve">
     <value>num_tecken</value>
+    
   </data>
   <data name="AboutIsBlank" xml:space="preserve">
     <value>Kontrollerar om uttrycket resulterar i tomt och returnerar sant eller falskt.</value>
+    
   </data>
   <data name="IsBlankArg1" xml:space="preserve">
     <value>uttryck</value>
+    
   </data>
   <data name="AboutIsBlank_expression" xml:space="preserve">
     <value>Ett uttryck som ska testas.</value>
   </data>
   <data name="AboutIsBlankOrError" xml:space="preserve">
     <value>Kontrollerar om uttrycket resulterar i ett tomt resultat eller i ett fel, och returnerar sant eller falskt.</value>
+    
   </data>
   <data name="IsBlankOrErrorArg1" xml:space="preserve">
     <value>uttryck</value>
+    
   </data>
   <data name="AboutIsBlankOrError_expression" xml:space="preserve">
     <value>Ett uttryck som ska testas.</value>
+    
   </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Kontrollerar om en mängd är tom och returnerar sant eller falskt.</value>
+    
   </data>
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="AboutIsEmpty_source" xml:space="preserve">
     <value>En tabell som ska testas.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Returnerar en slumpmässigt blandad kopia av indatakälltabellen.</value>
+    
   </data>
   <data name="ShuffleArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="AboutShuffle_source" xml:space="preserve">
     <value>En tabell att blandas.</value>
   </data>
   <data name="AboutLookUp" xml:space="preserve">
     <value>Hittar den första raden som det angivna villkoret utvärderar som sant och returnerar resultatet av uttrycket som utvärderats inom kontexten för den raden ifall att den givits ett uttryck, annars för hela raden.</value>
+    
   </data>
   <data name="LookUpArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="LookUpArg2" xml:space="preserve">
     <value>villkor</value>
+    
   </data>
   <data name="LookUpArg3" xml:space="preserve">
     <value>resultat</value>
+    
   </data>
   <data name="AboutLookUp_source" xml:space="preserve">
     <value>En tabell där värden ska hittas.</value>
@@ -1388,6 +1648,7 @@
   </data>
   <data name="AboutStdevP" xml:space="preserve">
     <value>Beräknar standardavvikelse baserat på hela populationen angiven som argument (ignorerar logiska värden och text).</value>
+    
   </data>
   <data name="AboutStdevP_number" xml:space="preserve">
     <value>Ett tal att ta med i standardavvikelseberäkningen.</value>
@@ -1400,9 +1661,11 @@
   </data>
   <data name="AboutStdevPT" xml:space="preserve">
     <value>Beräknar standardavvikelse baserat på hela populationen angiven som en kolumn (ignorerar logiska värden och text inom kolumnen).</value>
+    
   </data>
   <data name="AboutVarP" xml:space="preserve">
     <value>Beräknar varians baserat på hela populationen (ignorerar logiska värden och text i populationen).</value>
+    
   </data>
   <data name="AboutVarP_number" xml:space="preserve">
     <value>Ett tal att ta med i variansberäkningen.</value>
@@ -1415,42 +1678,87 @@
   </data>
   <data name="AboutVarPT" xml:space="preserve">
     <value>Beräknar varians baserat på hela populationen angiven som en kolumn (ignorerar logiska värden och text i kolumnen).</value>
+    
   </data>
   <data name="SetArg1" xml:space="preserve">
     <value>variabel</value>
+    
   </data>
   <data name="AboutSplit" xml:space="preserve">
     <value>Delar upp en sträng i delsträngar med hjälp av en avgränsare.</value>
+    
   </data>
   <data name="AboutSplit_text" xml:space="preserve">
     <value>Text som ska delas upp i delsträngar.</value>
+    
   </data>
   <data name="AboutSplit_separator" xml:space="preserve">
     <value>Avgränsningstext används för att dela upp indatatexten i olika delsträngar.</value>
+    
   </data>
   <data name="SplitArg1" xml:space="preserve">
     <value>text</value>
+    
   </data>
   <data name="SplitArg2" xml:space="preserve">
     <value>avgränsare</value>
+    
+  </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Räkna upp och returnera kolumnnamnen för en typlös post.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>post</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Post för att få kolumnerna uppräknade.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Returnerar värdet för en egenskap för en typlös post med kolumnnamnet.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>post</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>kolumn_namn</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Post för att hämta ett kolumnvärde.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Namn på kolumnen för den post som ska hämtas.</value>
+    
   </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Returnerar sant om det angivna värdet är av den givna typen.</value>
+    
   </data>
   <data name="IsTypeArg1" xml:space="preserve">
     <value>värde</value>
+    
   </data>
   <data name="IsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
+    
   </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Använder det angivna värdet som den givna typen.</value>
+    
   </data>
   <data name="AsTypeArg1" xml:space="preserve">
     <value>värde</value>
+    
   </data>
   <data name="AsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
+    
   </data>
   <data name="AboutAsType_value" xml:space="preserve">
     <value>Den polymorfiska posten som ska typkonverteras till en ny typ.</value>
@@ -1460,249 +1768,335 @@
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Kör den formel som angavs som andra parameter med hjälp av det omfång som tillhandahölls av den första.</value>
+    
   </data>
   <data name="WithArg1" xml:space="preserve">
     <value>omfattning</value>
+    
   </data>
   <data name="WithArg2" xml:space="preserve">
     <value>formel</value>
+    
   </data>
   <data name="AboutWith_scope" xml:space="preserve">
     <value>Det omfång som ska anropa den formel som definieras av den andra parametern.</value>
+    
   </data>
   <data name="AboutWith_formula" xml:space="preserve">
     <value>Den formel som ska anropas med det omfång som tillhandahålls av den första parametern.</value>
+    
   </data>
   <data name="AboutSequence" xml:space="preserve">
     <value>Genererar en tabell över sekventiella tal</value>
+    
   </data>
   <data name="SequenceArg1" xml:space="preserve">
     <value>poster</value>
+    
   </data>
   <data name="AboutSequence_records" xml:space="preserve">
     <value>Antalet poster i den enskilda kolumntabellen med namnet "Värde". Max 50 000.</value>
+    
   </data>
   <data name="SequenceArg2" xml:space="preserve">
     <value>första</value>
+    
   </data>
   <data name="AboutSequence_start" xml:space="preserve">
     <value>Valfritt. Det första talet i sekvensen. Standardvärdet är 1.</value>
+    
   </data>
   <data name="SequenceArg3" xml:space="preserve">
     <value>steg</value>
+    
   </data>
   <data name="AboutSequence_step" xml:space="preserve">
     <value>Valfritt. Hur mycket du vill öka varje efterföljande värde med i tabellen. Standardvärdet är 1.</value>
+    
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
     <value>Ogiltig användning av "."</value>
+    
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>{0} är en okänd funktion eller funktion som inte stöds.</value>
+    
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>{0} är en okänd funktion eller funktion som inte stöds i namnområdet {1}.</value>
+    
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>Komponentbeteende kan endast anropas från inuti en komponent.</value>
+    
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
     <value>Egenskap eller parameter för komponentfunktion kan endast nås inifrån en komponent eller från komponentens utdataegenskaper.</value>
+    
   </data>
   <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
     <value>Egenskap eller parameter för komponentfunktion kan endast referera till andra funktionsegenskaper.</value>
+    
   </data>
   <data name="ErrBadArity" xml:space="preserve">
     <value>Ogiltigt antal argument: mottagna {0}, förväntade {1}.</value>
+    
   </data>
   <data name="ErrBadArityEven" xml:space="preserve">
     <value>Ogiltigt antal argument: mottagna {0}, förväntade ett jämnt antal.</value>
+    
   </data>
   <data name="ErrBadArityOdd" xml:space="preserve">
     <value>Ogiltigt antal argument: mottagna {0}, förväntade ett udda antal.</value>
+    
   </data>
   <data name="ErrBadType" xml:space="preserve">
     <value>Ogiltig argumenttyp.</value>
+    
   </data>
   <data name="ErrBadType_Type" xml:space="preserve">
     <value>Ogiltig argumenttyp. Det går inte att använda {0}-värden i den här kontexten.</value>
+    
   </data>
   <data name="ErrBadOperatorTypes" xml:space="preserve">
     <value>Den här åtgärden är inte giltig för följande typer: {0}, {1}.</value>
+    
   </data>
   <data name="ErrGuidStrictComparison" xml:space="preserve">
     <value>GUID-värden kan bara jämföras med andra GUID-värden.</value>
+    
   </data>
   <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
     <value>Ogiltig typ för fältet "{0}". En fälttyp av "{1}" förväntades.</value>
+    
   </data>
   <data name="ErrBadType_ExpectedType" xml:space="preserve">
     <value>Ogiltig argumenttyp. Ett {0}-värde förväntades.</value>
+    
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Ogiltig argumenttyp ({1}). Ett {0}-värde förväntades i stället.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>Ett annullerat uttryck som inte kan användas i det här kontexten.</value>
+    
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
     <value>Ogiltig argumenttyp. Ett {0}-värde förväntades, men från ett annat schema.</value>
+    
   </data>
   <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
     <value>Ogiltig argumenttyp. En av följande förväntades: {0}.</value>
+    
   </data>
   <data name="ErrInvalidArgs_Func" xml:space="preserve">
     <value>Funktionen {0} har några ogiltiga argument.</value>
+    
   </data>
   <data name="ErrNeedTable_Func" xml:space="preserve">
     <value>Det första argumentet för {0} ska vara en tabell.</value>
+    
   </data>
   <data name="ErrInvalidPropertyAccess" xml:space="preserve">
     <value>Egenskapen förväntar sig en obligatorisk parameter. Använd parenteser för att skicka den obligatoriska parametern.</value>
+    
   </data>
   <data name="ErrNeedTableCol_Func" xml:space="preserve">
     <value>Det första argumentet för {0} ska vara en enkolumnstabell.</value>
+    
   </data>
   <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
     <value>Ogiltigt schema, en kolumn med {0} värden för "{1}" förväntades.</value>
+    
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
     <value>Ogiltigt schema, en enkolumnstabell förväntades.</value>
+    
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>Det går inte att använda icke-postvärden i den här kontexten.</value>
+    
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Det går inte att använda den här posten. Det är möjligt att den innehåller kolliderande fält av inkompatibla typer.</value>
+    
   </data>
   <data name="ErrNeedRecord_Func" xml:space="preserve">
     <value>Det första argumentet för {0} ska vara en post.</value>
+    
   </data>
   <data name="ErrNeedEntity_EntityName" xml:space="preserve">
     <value>Med det här alternativet som ett uppräkningsvärde eller i funktionen Choices så måste entiteten {0} läggas till som en datakälla. Lägg till med Visa-menyn och välj sedan Datakällor.</value>
+    
   </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Det angivna egenskapen är inte tillgänglig i den här kontexten.</value>
+    
   </data>
   <data name="ErrInternalControlInInputProperty" xml:space="preserve">
     <value>Kontroller i en komponent kan inte refereras till i samma komponents indataegenskaper.</value>
+    
   </data>
   <data name="ErrColumnNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Den angivna kolumnen är inte tillgänglig i den här kontexten.</value>
+    
   </data>
   <data name="WrnRowScopeOneToNExpandNumberOfCalls" xml:space="preserve">
     <value>Det finns en referens till en 1:n- eller n:n-relation i den här funktionens postomfattning. Detta kan resultera i ett stort antal anrop till din datakälla vilket kan påverka prestandan.</value>
+    
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Det numeriska värdet är för stort.</value>
+    
   </data>
   <data name="ErrReservedKeyword" xml:space="preserve">
     <value>Användning av ett reserverat ord som för närvarande inte stöds.</value>
+    
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
     <value>Uttrycket får inte vara längre än {0} tecken. Uttrycket är {1} tecken.</value>
+    
   </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Storlek på formatsträng får inte vara fler än {0} tecken.</value>
+    
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Ogiltigt format.</value>
+    
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argumentet representerar inte ett giltigt datum- eller tidsvärde.</value>
+    
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Den här datakällan är ogiltig. Åtgärda felet i panelen "Datakällor" genom att klicka på "Innehåll -&gt; Datakällor" eller "Visa -&gt; Alternativ"</value>
+    
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>En datakällsidentifierare förväntades begränsa den infogade posten.</value>
+    
   </data>
   <data name="ErrIncompatibleTypes" xml:space="preserve">
     <value>De angivna typerna är inkompatibla.</value>
+    
   </data>
   <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
     <value>Argumenttypen {2} matchar inte någon av de förväntade typerna {0} eller {1}.</value>
+    
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Argumenttypen {0} matchar inte den förväntade typen {1}. Hittade typen {2}.</value>
+    
   </data>
   <data name="ErrTypeError_WrongType" xml:space="preserve">
     <value>Denna uttryckstyp matchar inte den förväntade typen "{0}". Hittade typen "{1}".</value>
+    
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
     <value>Posttypen är inte kompatibel med källan.</value>
+    
   </data>
   <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
     <value>Argumentet {0} är ogiltigt, en textliteral förväntades.</value>
+    
   </data>
   <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
     <value>Argumentet {0} är inte en giltig identifierare.</value>
+    
   </data>
   <data name="ErrColExists_Name" xml:space="preserve">
     <value>Det finns redan en kolumn med namnet {0}.</value>
+    
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Kolumnnamnskonflikt för {0}.</value>
+    
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Den angivna kolumnen {0} finns inte.</value>
+    
   </data>
   <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
     <value>Den angivna kolumnen "{0}" finns inte. Kolumnen med det mest likartade namnet är "{1}".</value>
+    
   </data>
   <data name="ErrSortIncorrectOrder" xml:space="preserve">
     <value>Sorteringsordningen är felaktig för uttryckstypen.</value>
+    
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Det går inte att sortera efter uttryckstyp.</value>
+    
   </data>
   <data name="ErrDistinctWrongType" xml:space="preserve">
     <value>Det går inte att tillämpa distinkt på uttryckstypen.</value>
+    
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
     <value>Typfel: {0} förväntar sig antingen {1} eller en tabellkolumn av typen {1}.</value>
+    
   </data>
   <data name="ErrIncorrectFormat_Func" xml:space="preserve">
     <value>Ogiltig formatspecificerare för {0}.</value>
+    
   </data>
   <data name="ErrAsyncLambda" xml:space="preserve">
     <value>Asynkrona anrop får inte användas i villkors- och värdefunktioner.</value>
+    
   </data>
   <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
     <value>Detta är ett namnområde, du kan få åtkomst till dess medlemmar med operatorn '.'.</value>
+    
   </data>
   <data name="ErrScopeModificationLambda" xml:space="preserve">
     <value>Den här funktionen kan inte använda sig av samma datakälla som används i {0}.</value>
+    
   </data>
   <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
     <value>Den här funktionen kan inte anropas inom {0}.</value>
+    
   </data>
   <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
     <value>Felaktigt argument. Den här formeln förväntar sig en tabell från en ansluten datakälla. Funktionerna AsType och IsType kräver anslutna datakällor.</value>
+    
   </data>
   <data name="InfoMessage" xml:space="preserve">
     <value>Meddelande:</value>
+    
   </data>
   <data name="InfoNode_Node" xml:space="preserve">
     <value>Nod: {0}</value>
+    
   </data>
   <data name="InfoTok_Tok" xml:space="preserve">
     <value>Tok: {0}</value>
+    
   </data>
   <data name="FormatSpan_Min_Lim" xml:space="preserve">
     <value>({0},{1})</value>
+    
   </data>
   <data name="FormatErrorSeparator" xml:space="preserve">
     <value>, </value>
+    
   </data>
   <data name="AboutDate" xml:space="preserve">
     <value>Returnerar talet som motsvarar datumet i Power Apps datum/tid-kod.</value>
+    
   </data>
   <data name="DateArg1" xml:space="preserve">
     <value>år</value>
+    
   </data>
   <data name="DateArg2" xml:space="preserve">
     <value>månad</value>
+    
   </data>
   <data name="DateArg3" xml:space="preserve">
     <value>dag</value>
+    
   </data>
   <data name="AboutDate_year" xml:space="preserve">
     <value>Året.</value>
@@ -1715,18 +2109,23 @@
   </data>
   <data name="AboutTime" xml:space="preserve">
     <value>Konverterar timmar, minuter och sekunder till ett decimaltal.</value>
+    
   </data>
   <data name="TimeArg1" xml:space="preserve">
     <value>timma</value>
+    
   </data>
   <data name="TimeArg2" xml:space="preserve">
     <value>minut</value>
+    
   </data>
   <data name="TimeArg3" xml:space="preserve">
     <value>sekund</value>
+    
   </data>
   <data name="TimeArg4" xml:space="preserve">
     <value>millisekund</value>
+    
   </data>
   <data name="AboutTime_hour" xml:space="preserve">
     <value>Tim-komponenten.</value>
@@ -1742,126 +2141,160 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>Skapar ett värde som representerar ett ögonblick i tid, uttryckt som ett datum och en tid på dagen.</value>
+    
   </data>
   <data name="AboutDateTime_year" xml:space="preserve">
     <value>Året.</value>
+    
   </data>
   <data name="AboutDateTime_month" xml:space="preserve">
     <value>Månaden.</value>
+    
   </data>
   <data name="AboutDateTime_day" xml:space="preserve">
     <value>Dagen.</value>
+    
   </data>
   <data name="AboutDateTime_hour" xml:space="preserve">
     <value>Timmen.</value>
+    
   </data>
   <data name="AboutDateTime_minute" xml:space="preserve">
     <value>Minuten.</value>
+    
   </data>
   <data name="AboutDateTime_second" xml:space="preserve">
     <value>Sekunden.</value>
+    
   </data>
   <data name="AboutDateTime_millisecond" xml:space="preserve">
     <value>Millisekunderna.</value>
+    
   </data>
   <data name="AboutYear" xml:space="preserve">
     <value>År returnerar året för ett givet datum.</value>
+    
   </data>
   <data name="YearArg1" xml:space="preserve">
     <value>datum_tid</value>
+    
   </data>
   <data name="AboutYear_date_time" xml:space="preserve">
     <value>Ett datumvärde från vilket årskomponenten extraheras.</value>
   </data>
   <data name="AboutMonth" xml:space="preserve">
     <value>Returnerar månaden, ett tal från 1 (januari) till 12 (december).</value>
+    
   </data>
   <data name="MonthArg1" xml:space="preserve">
     <value>datum_tid</value>
+    
   </data>
   <data name="AboutMonth_date_time" xml:space="preserve">
     <value>Datumvärdet som månadskomponenten kommer att extraheras från.</value>
   </data>
   <data name="AboutDay" xml:space="preserve">
     <value>Dag returnerar dagen i månaden, ett tal från 1 till 31.</value>
+    
   </data>
   <data name="DayArg1" xml:space="preserve">
     <value>datum_tid</value>
+    
   </data>
   <data name="AboutDay_date_time" xml:space="preserve">
     <value>Datumvärdet som dagkomponenten extraheras från.</value>
   </data>
   <data name="AboutHour" xml:space="preserve">
     <value>Timme returnerar timmen som ett tal mellan 0 (0.00) och 23 (23.00).</value>
+    
   </data>
   <data name="HourArg1" xml:space="preserve">
     <value>datum_tid</value>
+    
   </data>
   <data name="AboutHour_date_time" xml:space="preserve">
     <value>Datum- eller tidsvärdet som komponenten kommer extraheras från.</value>
   </data>
   <data name="AboutMinute" xml:space="preserve">
     <value>Returnerar minuten, ett tal mellan 0 och 59.</value>
+    
   </data>
   <data name="MinuteArg1" xml:space="preserve">
     <value>datum_tid</value>
+    
   </data>
   <data name="AboutMinute_date_time" xml:space="preserve">
     <value>Datum eller tidsvärdet från vilket minutkomponenten kommer att extraheras.</value>
   </data>
   <data name="AboutSecond" xml:space="preserve">
     <value>Returnerar sekunden, ett tal från 0 till 59.</value>
+    
   </data>
   <data name="SecondArg1" xml:space="preserve">
     <value>datum_tid</value>
+    
   </data>
   <data name="AboutSecond_date_time" xml:space="preserve">
     <value>Datum- eller tidsvärdet från vilket sekundkomponenten kommer att extraheras.</value>
   </data>
   <data name="AboutWeekday" xml:space="preserve">
     <value>Returnerar veckodagen från ett datumtid-värde. Som standard går intervallet från 1 (söndag) till 7 (lördag). Du kan dock ange ett annat intervall med ett StartOfWeek-uppräkningsvärde eller en Microsoft Excel Weekday-funktionskod.</value>
+    
   </data>
   <data name="WeekdayArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="WeekdayArg2" xml:space="preserve">
     <value>början_av_vecka</value>
+    
   </data>
   <data name="AboutWeekday_date" xml:space="preserve">
     <value>Ett datumvärde som veckodagen ska beräknas för.</value>
   </data>
   <data name="AboutWeekday_start_of_week" xml:space="preserve">
     <value>Ett värde från StartOfWeek-uppräkningen eller ett tal från motsvarande Excel-funktion som anger hur veckodagarna ska numreras.</value>
+    
   </data>
   <data name="AboutCalendar__MonthsLong" xml:space="preserve">
     <value>Returnerar en enkolumnstabell med de fullständiga namnen för varje månad.</value>
+    
   </data>
   <data name="AboutCalendar__MonthsShort" xml:space="preserve">
     <value>Returnerar en enkolumnstabell med förkortningarna för varje månad.</value>
+    
   </data>
   <data name="AboutCalendar__WeekdaysLong" xml:space="preserve">
     <value>Returnerar en enkolumnstabell med de fullständiga namnen för varje veckodag.</value>
+    
   </data>
   <data name="AboutCalendar__WeekdaysShort" xml:space="preserve">
     <value>Returnerar en enkolumnstabell med förkortningarna för varje veckodag.</value>
+    
   </data>
   <data name="AboutClock__AmPm" xml:space="preserve">
     <value>Returnerar en enkolumnstabell som innehåller versalbeteckningarna för före och efter middagstid.</value>
+    
   </data>
   <data name="AboutClock__AmPmShort" xml:space="preserve">
     <value>Returnerar en enkolumnstabell som innehåller förkortade versalbeteckningarna för före och efter middagstid.</value>
+    
   </data>
   <data name="AboutClock__IsClock24" xml:space="preserve">
     <value>Returnerar ett booleskt värde som anger om klockan ska använda 24-timmars tid.</value>
+    
   </data>
   <data name="AboutDateValue" xml:space="preserve">
     <value>Konverterar ett datum i textformat till ett tal som motsvarar datumet i Power Apps datum/tid-kod.</value>
+    
   </data>
   <data name="DateValueArg1" xml:space="preserve">
     <value>datum_text</value>
+    
   </data>
   <data name="DateValueArg2" xml:space="preserve">
     <value>språk_kod</value>
+    
   </data>
   <data name="AboutDateValue_date_text" xml:space="preserve">
     <value>textmotsvarighet till en datum-/tidsstämpel i ett format som stöds av plattformen.</value>
@@ -1871,12 +2304,15 @@
   </data>
   <data name="AboutTimeValue" xml:space="preserve">
     <value>Konverterar en tid i textformat till ett tal som motsvarar datumet i Microsoft Power Apps datum/tid-kod och ignorerar eventuell datum-del.</value>
+    
   </data>
   <data name="TimeValueArg1" xml:space="preserve">
     <value>tid_text</value>
+    
   </data>
   <data name="TimeValueArg2" xml:space="preserve">
     <value>språk_kod</value>
+    
   </data>
   <data name="AboutTimeValue_time_text" xml:space="preserve">
     <value>En textmotsvarighet till en datum-/tidsstämpel i ett format som stöds av plattformen.</value>
@@ -1886,27 +2322,35 @@
   </data>
   <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
     <value>Automatiskt uppdaterande tjänstefunktioner kan inte användas i åtgärdsregler.</value>
+    
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
     <value>Ett fält med namnet {0} angavs mer än en gång i den här posten.</value>
+    
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>En kolumn med namnet {0} angavs mer än en gång.</value>
+    
   </data>
   <data name="WarnLiteralPredicate" xml:space="preserve">
     <value>Varning! Det här predikatet är ett exakt värde och refererar inte till indatatabellen.</value>
+    
   </data>
   <data name="WarnDynamicMetadata" xml:space="preserve">
     <value>Varning: Välj Spela in schema längst ned i det utökade formelfältet om du vill konfigurera och uppdatera den här metodens resultatschema. I annat fall returnerar den här metoden inget resultat.</value>
+    
   </data>
   <data name="FindArg1" xml:space="preserve">
     <value>sök_text</value>
+    
   </data>
   <data name="FindArg2" xml:space="preserve">
     <value>i_text</value>
+    
   </data>
   <data name="FindArg3" xml:space="preserve">
     <value>startnummer</value>
+    
   </data>
   <data name="AboutFind_find_text" xml:space="preserve">
     <value>Ett textvärde att leta efter.</value>
@@ -1919,18 +2363,23 @@
   </data>
   <data name="AboutFind" xml:space="preserve">
     <value>Returnerar startpositionen för ett textvärde inom ett annat textvärde. Find är skiftlägeskänsligt.</value>
+    
   </data>
   <data name="AboutFindT" xml:space="preserve">
     <value>Returnerar en kolumn med startpositioner för ett textvärde (eller en kolumn med strängar) inom ett annat textvärde (eller en kolumn med strängar). Find är skiftlägeskänsligt.</value>
+    
   </data>
   <data name="FindTArg1" xml:space="preserve">
     <value>sök_text_eller_kolumn</value>
+    
   </data>
   <data name="FindTArg2" xml:space="preserve">
     <value>i_text_eller_kolumn</value>
+    
   </data>
   <data name="FindTArg3" xml:space="preserve">
     <value>startnummer</value>
+    
   </data>
   <data name="AboutFind_find_text_or_column" xml:space="preserve">
     <value>Ett textvärde (eller kolumn med textvärden) att leta efter.</value>
@@ -1940,72 +2389,102 @@
   </data>
   <data name="AboutColorValue" xml:space="preserve">
     <value>Returnerar färgen som motsvarar den givna färgsträngen.</value>
+    
   </data>
   <data name="ColorValueArg1" xml:space="preserve">
     <value>färg_text</value>
+    
   </data>
   <data name="AboutColorValue_color_text" xml:space="preserve">
     <value>En färg som anges med namn, exempelvis "blå", eller med standard 6-siffrig hexnotering #rrggbb.</value>
   </data>
   <data name="ErrInvalidJsonPointer" xml:space="preserve">
     <value>Ogiltig JSON-pekare.</value>
+    
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Inga</value>
+    
   </data>
   <data name="Text" xml:space="preserve">
     <value>Text</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logiskt</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Tabell</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Beteende</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Datum och tid</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematik och statistik</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Definierad av användaren</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Information</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Färg</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Tjänster</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Komponent</value>
+    
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
     <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
+    
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Elementet {0} saknar attributet {1}.</value>
+    
   </data>
   <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
     <value>Attributet {0} kan inte vara en tom sträng.</value>
+    
   </data>
   <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
     <value>Attributet {0} har ett ogiltigt GUID-värde {1}.</value>
+    
   </data>
   <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
     <value>Egenskapen {0} saknas.</value>
+    
   </data>
   <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
     <value>Egenskapen {0} har ett ogiltigt typvärde: {2}. Förväntat typvärde: {1}.</value>
+    
   </data>
   <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
     <value>Egenskapen {0} får inte vara tom.</value>
+    
   </data>
   <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
     <value>Uppräknaren {0} förväntas ha ett giltigt heltalsvärde, men dess värde {1} ligger utanför uppräkningens område.</value>
+    
   </data>
   <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
     <value>Egenskapen {0} förväntas ha ett heltalsvärde men dess värde {1} är utanför intervallet.</value>
+    
   </data>
   <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
     <value>Objektet på index {0} har ett ogiltigt typvärde: {2}. Förväntat typvärde: {1}.</value>
@@ -2015,18 +2494,23 @@
   </data>
   <data name="AboutDateAdd" xml:space="preserve">
     <value>Lägg till det angivna antalet enheter till ett datum.</value>
+    
   </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Beräkna skillnaden mellan två datum.</value>
+    
   </data>
   <data name="DateAddArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="DateAddArg2" xml:space="preserve">
     <value>antal_enheter</value>
+    
   </data>
   <data name="DateAddArg3" xml:space="preserve">
     <value>enhet</value>
+    
   </data>
   <data name="AboutDateAdd_date" xml:space="preserve">
     <value>Ett referensdatumvärde.</value>
@@ -2036,15 +2520,19 @@
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
     <value>Enheten som ska användas, som kan vara en av TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
+    
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
     <value>start_datum</value>
+    
   </data>
   <data name="DateDiffArg2" xml:space="preserve">
     <value>slut_datum</value>
+    
   </data>
   <data name="DateDiffArg3" xml:space="preserve">
     <value>enhet</value>
+    
   </data>
   <data name="AboutDateDiff_start_date" xml:space="preserve">
     <value>Ett startdatum för differans-operationen.</value>
@@ -2054,33 +2542,42 @@
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
     <value>Enheten som resultatet ska uttryckas i, som kan vara en av TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
+    
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
     <value>Lägg till det angivna antalet enheter till en kolumn med datum.</value>
+    
   </data>
   <data name="AboutDateDiffT" xml:space="preserve">
     <value>Beräkna skillnaden mellan två kolumner med datum.</value>
+    
   </data>
   <data name="DateAddTArg1" xml:space="preserve">
     <value>datum_kolumn</value>
+    
   </data>
   <data name="DateAddTArg2" xml:space="preserve">
     <value>antal_enheter</value>
+    
   </data>
   <data name="DateAddTArg3" xml:space="preserve">
     <value>enhet</value>
+    
   </data>
   <data name="AboutDateAdd_date_column" xml:space="preserve">
     <value>En kolumn med datumvärden.</value>
   </data>
   <data name="DateDiffTArg1" xml:space="preserve">
     <value>start_datum_kolumn</value>
+    
   </data>
   <data name="DateDiffTArg2" xml:space="preserve">
     <value>slut_datum_kolumn</value>
+    
   </data>
   <data name="DateDiffTArg3" xml:space="preserve">
     <value>enhet</value>
+    
   </data>
   <data name="AboutDateDiff_start_date_column" xml:space="preserve">
     <value>En kolumn med startdatum för differans-operationen.</value>
@@ -2090,156 +2587,202 @@
   </data>
   <data name="AboutChar" xml:space="preserve">
     <value>Returnerar det tecken som specificerats av kodnumret från teckenuppsättningen på din plattform.</value>
+    
   </data>
   <data name="CharArg1" xml:space="preserve">
     <value>tal</value>
+    
   </data>
   <data name="AboutChar_number" xml:space="preserve">
     <value>Ett kodnummer från teckenuppsättningen på din plattform.</value>
   </data>
   <data name="AboutCharT" xml:space="preserve">
     <value>Returnerar en tabell med tecken som specificerats av kodnumren från teckenuppsättningen på din plattform.</value>
+    
   </data>
   <data name="CharTArg1" xml:space="preserve">
     <value>kolumn_med_siffror</value>
+    
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>En kolumn med kodnummer från teckenuppsättningen på din plattform.</value>
   </data>
   <data name="AboutParseJSON" xml:space="preserve">
     <value>Konverterar en JSON-sträng till ett objekt.</value>
+    
   </data>
   <data name="ParseJSONArg1" xml:space="preserve">
     <value>indata</value>
+    
   </data>
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>En JSON-sträng att bearbeta.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Returnerar posten i en tabell vid ett visst index.</value>
+    
   </data>
   <data name="IndexArg1" xml:space="preserve">
     <value>tabell</value>
+    
   </data>
   <data name="IndexArg2" xml:space="preserve">
     <value>index</value>
+    
   </data>
   <data name="AboutIndex_table" xml:space="preserve">
     <value>En tabell.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Index för den post som ska hämtas.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Namn</value>
+    
   </data>
   <data name="Screen_Printing_DisplayName" xml:space="preserve">
     <value>Utskrift</value>
+    
   </data>
   <data name="Screen_ImagePosition_DisplayName" xml:space="preserve">
     <value>Bildplacering</value>
+    
   </data>
   <data name="Screen_Size_DisplayName" xml:space="preserve">
     <value>Storlek</value>
+    
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Streckkodstyp</value>
+    
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
     <value>Kontrast</value>
+    
   </data>
   <data name="camera_Zoom_DisplayName" xml:space="preserve">
     <value>Zooma</value>
+    
   </data>
   <data name="camera_Camera_DisplayName" xml:space="preserve">
     <value>Kamera</value>
+    
   </data>
   <data name="export_Data_DisplayName" xml:space="preserve">
     <value>Data</value>
+    
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Redigera</value>
+    
   </data>
   <data name="Dust" xml:space="preserve">
     <value>Damm</value>
+    
   </data>
   <data name="image_Image_DisplayName" xml:space="preserve">
     <value>Bild</value>
+    
   </data>
   <data name="icon_Icon_DisplayName" xml:space="preserve">
     <value>Ikon</value>
+    
   </data>
   <data name="icon_Rotation_DisplayName" xml:space="preserve">
     <value>Rotation</value>
+    
   </data>
   <data name="image_ImagePosition_DisplayName" xml:space="preserve">
     <value>Bildplacering</value>
+    
   </data>
   <data name="image_ImageRotation_DisplayName" xml:space="preserve">
     <value>Rotera</value>
+    
   </data>
   <data name="label_Live_DisplayName" xml:space="preserve">
     <value>Live</value>
+    
   </data>
   <data name="label_Overflow_DisplayName" xml:space="preserve">
     <value>Spill</value>
+    
   </data>
   <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
     <value>Tidszon</value>
+    
   </data>
   <data name="DatePicker_Format_DisplayName" xml:space="preserve">
     <value>Format</value>
+    
   </data>
   <data name="DatePicker_Language_DisplayName" xml:space="preserve">
     <value>Språk</value>
+    
   </data>
   <data name="Calendar_Width_DisplayName" xml:space="preserve">
     <value>Kalenderbredd</value>
+    
   </data>
   <data name="Hide_Calendar_DisplayName" xml:space="preserve">
     <value>Dölj kalender</value>
+    
   </data>
   <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
     <value>Veckans början</value>
+    
   </data>
   <data name="microphone_Mic_DisplayName" xml:space="preserve">
     <value>Mikrofon</value>
+    
   </data>
   <data name="text_Default_DisplayName" xml:space="preserve">
     <value>Standard</value>
+    
   </data>
   <data name="text_Mode_DisplayName" xml:space="preserve">
     <value>Läge</value>
+    
   </data>
   <data name="text_Format_DisplayName" xml:space="preserve">
     <value>Format</value>
+    
   </data>
   <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
     <value>Virtuellt tangentbordsläge</value>
+    
   </data>
   <data name="text_TeamsTheme_DisplayName" xml:space="preserve">
     <value>Teams-tema</value>
+    
   </data>
   <data name="text_Clear_DisplayName" xml:space="preserve">
     <value>Rensa-knapp</value>
+    
   </data>
   <data name="AboutIsNumeric" xml:space="preserve">
     <value>Kontrollerar om ett värde är ett tal och returnerar sant eller falskt.</value>
+    
   </data>
   <data name="IsNumericArg1" xml:space="preserve">
     <value>värde</value>
+    
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Värdet att testa.</value>
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Konverterar ett datum och tid i textformat till ett tal som representerar datumet i Power Apps datum/tid-kod.</value>
+    
   </data>
   <data name="DateTimeValueArg1" xml:space="preserve">
     <value>tid_text</value>
+    
   </data>
   <data name="DateTimeValueArg2" xml:space="preserve">
     <value>språk_kod</value>
+    
   </data>
   <data name="AboutDateTimeValue_time_text" xml:space="preserve">
     <value>En textmotsvarighet till en datum-/tidsstämpel i ett format som stöds av plattformen.</value>
@@ -2249,21 +2792,26 @@
   </data>
   <data name="AboutTable" xml:space="preserve">
     <value>Skapar en tabell från de angivna posterna med så många kolumner som det finns unika postfält. Till exempel: Table({key1: val1, key2: val2, ...}, ...)</value>
+    
   </data>
   <data name="TableArg1" xml:space="preserve">
     <value>post</value>
+    
   </data>
   <data name="AboutTable_record" xml:space="preserve">
     <value>En post som blir en rad i den resulterande tabellen.</value>
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Returnerar en tabell med alla kolumner borttagna från källtabellen förutom de angivna kolumnerna.</value>
+    
   </data>
   <data name="ShowColumnsArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="ShowColumnsArg2" xml:space="preserve">
     <value>kolumn_namn</value>
+    
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
     <value>Ett tabell- eller postvärde att ta bort kolumner från.</value>
@@ -2273,27 +2821,33 @@
   </data>
   <data name="AboutIsToday" xml:space="preserve">
     <value>Kontrollerar om det angivna datumet är i dag och returenerar sant eller falskt.</value>
+    
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
     <value>Datumvärdet att testa.</value>
   </data>
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="AboutIsUTCToday" xml:space="preserve">
     <value>Kontrollerar om det angivna datumet är i dag i UTC och returnerar sant eller falskt.</value>
+    
   </data>
   <data name="AboutIsUTCToday_date" xml:space="preserve">
     <value>Datumvärdet att testa.</value>
   </data>
   <data name="IsUTCTodayFuncArg1" xml:space="preserve">
     <value>datum</value>
+    
   </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Returnerar återstoden efter att ett tal har delats med en nämnare. Resultatet har samma tecken som nämnaren.</value>
+    
   </data>
   <data name="AboutModT" xml:space="preserve">
     <value>Returnerar en kolumn som innehåller återstoden efter att ett tal (eller en kolumn med tal) har delats med en nämnare (eller en kolumn med nämnare).</value>
+    
   </data>
   <data name="AboutMod_divisor" xml:space="preserve">
     <value>Talet att dela med.</value>
@@ -2309,27 +2863,35 @@
   </data>
   <data name="ModFuncArg1" xml:space="preserve">
     <value>tal</value>
+    
   </data>
   <data name="ModFuncArg2" xml:space="preserve">
     <value>nämnare</value>
+    
   </data>
   <data name="ModTFuncArg1" xml:space="preserve">
     <value>antal_eller_kolumn</value>
+    
   </data>
   <data name="ModTFuncArg2" xml:space="preserve">
     <value>divisor_eller_kolumn</value>
+    
   </data>
   <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
     <value>Dokument</value>
+    
   </data>
   <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
     <value>Zooma</value>
+    
   </data>
   <data name="pdfViewer_Password_DisplayName" xml:space="preserve">
     <value>Lösenord</value>
+    
   </data>
   <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
     <value>Lösenordets tillstånd</value>
+    
   </data>
   <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
     <value>Databeskrivningen är ogiltig: {0}</value>
@@ -2339,6 +2901,7 @@
   </data>
   <data name="AboutForAll" xml:space="preserve">
     <value>Använder en given formel för varje rad i en datakälla och returnerar sedan en ny tabell med resultat per rad.</value>
+    
   </data>
   <data name="AboutForAll_source" xml:space="preserve">
     <value>Det datakälla eller tabell som ska bearbetas.</value>
@@ -2348,12 +2911,15 @@
   </data>
   <data name="ForAllArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="ForAllArg2" xml:space="preserve">
     <value>formel</value>
+    
   </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Upphöjer ett tal x till potensen av ett annat tal y. Samma som x^y.</value>
+    
   </data>
   <data name="AboutPower_base" xml:space="preserve">
     <value>Bastalet att upphöja.</value>
@@ -2363,12 +2929,15 @@
   </data>
   <data name="PowerFuncArg1" xml:space="preserve">
     <value>bas</value>
+    
   </data>
   <data name="PowerFuncArg2" xml:space="preserve">
     <value>exponent</value>
+    
   </data>
   <data name="AboutStartsWith" xml:space="preserve">
     <value>Returnerar sant om den angivna texten börjar med den angivna startsträngen.</value>
+    
   </data>
   <data name="AboutStartsWith_text" xml:space="preserve">
     <value>Texten att kontrollera.</value>
@@ -2378,12 +2947,15 @@
   </data>
   <data name="StartsWithArg1" xml:space="preserve">
     <value>text</value>
+    
   </data>
   <data name="StartsWithArg2" xml:space="preserve">
     <value>start</value>
+    
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
     <value>Returnerar sant om den angivna texten slutar med den angivna slutsträngen.</value>
+    
   </data>
   <data name="AboutEndsWith_text" xml:space="preserve">
     <value>Texten att kontrollera.</value>
@@ -2393,15 +2965,18 @@
   </data>
   <data name="EndsWithArg1" xml:space="preserve">
     <value>text</value>
+    
   </data>
   <data name="EndsWithArg2" xml:space="preserve">
     <value>slut</value>
+    
   </data>
   <data name="AboutBlank" xml:space="preserve">
     <value>Returnerar ett null (tomt) värde</value>
   </data>
   <data name="AboutPowerT" xml:space="preserve">
     <value>Upphöjer ett tal x (eller kolumn med tal) till potensen av ett annat tal y (eller kolumn med tal). Samma som x^y.</value>
+    
   </data>
   <data name="AboutPower_base_or_column" xml:space="preserve">
     <value>Bastalet (eller kolumnen av bastal) att upphöjas.</value>
@@ -2411,126 +2986,166 @@
   </data>
   <data name="PowerTFuncArg1" xml:space="preserve">
     <value>bas_eller_kolumn</value>
+    
   </data>
   <data name="PowerTFuncArg2" xml:space="preserve">
     <value>exponent_eller_kolumn</value>
+    
   </data>
   <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
     <value>Delar av den här formeln kan inte fjärrutvärderas. {0}-åtgärden stöds för tillfället inte i den här kontexten.</value>
+    
   </data>
   <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
     <value>Delar av den här formeln kan inte utvärderas på distans. Funktionen {0} kan inte delegeras om det finns ett fältnamn i det andra argumentet.</value>
+    
   </data>
   <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
     <value>Entitetsformulär</value>
+    
   </data>
   <data name="TeamsTheme_Default_DisplayName" xml:space="preserve">
     <value>Standardtema</value>
+    
   </data>
   <data name="TeamsTheme_Dark_DisplayName" xml:space="preserve">
     <value>Mörkt tema</value>
+    
   </data>
   <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
     <value>Kontrasttema</value>
+    
   </data>
   <data name="AboutCollect" xml:space="preserve">
     <value>Lägger till poster i en datakälla.</value>
+    
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>post</value>
+    
   </data>
   <data name="AboutClear" xml:space="preserve">
     <value>Tar bort alla poster i en samling. Kolumnerna i samlingen förblir kvar.</value>
+    
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Raderar alla poster från en samling. Och lägger sedan till en annan uppsättning poster i samma samling.</value>
+    
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
     <value>post</value>
+    
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Tillämpar uppdateringarna på den angivna raden och ändrar raden i den angivna datakällan. Returnerar den uppdaterade raden.</value>
+    
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="PatchBaseRecordArg" xml:space="preserve">
     <value>base_record</value>
+    
   </data>
   <data name="PatchChangeRecordsArg" xml:space="preserve">
     <value>change_record(s)</value>
+    
   </data>
   <data name="AboutRemove" xml:space="preserve">
     <value>Tar bort en viss post eller poster från en datakälla</value>
+    
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
     <value>data_source</value>
+    
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
     <value>remove_record(s)</value>
+    
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
     <value>Om detta anges måste det sista argumentet vara "RemoveFlags.All". Finns det något stavfel?</value>
+    
   </data>
   <data name="NotificationType_Error_DisplayName" xml:space="preserve">
     <value>Fel</value>
+    
   </data>
   <data name="NotificationType_Warning_DisplayName" xml:space="preserve">
     <value>Varning</value>
+    
   </data>
   <data name="NotificationType_Success_DisplayName" xml:space="preserve">
     <value>Lyckades</value>
+    
   </data>
   <data name="NotificationType_Information_DisplayName" xml:space="preserve">
     <value>Information</value>
+    
   </data>
   <data name="AboutIsError" xml:space="preserve">
     <value>Returnerar om ett fel inträffar under utvärderingen av det angivna argumentet.</value>
+    
   </data>
   <data name="IsErrorArg" xml:space="preserve">
     <value>värde</value>
+    
   </data>
   <data name="AboutIsError_value" xml:space="preserve">
     <value>Det värde som ska felsökas.</value>
+    
   </data>
   <data name="ErrBadArityMinimum" xml:space="preserve">
     <value>Ogiltigt antal argument: mottagna {0}, förväntade {1} eller fler.</value>
+    
   </data>
   <data name="ErrBadArityRange" xml:space="preserve">
     <value>Ogiltigt antal argument: mottagna {0}, förväntade {1}–{2}.</value>
+    
   </data>
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
+    
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>En operand förväntades. Formeln eller uttrycket förväntar sig en giltig operand. Du kan t.ex. lägga till operanden '2' till uttrycket ' 1 +_' så att resultatet blir '3'. Du kan lägga till operanden 'där' till uttrycket '"Hej "&amp; _ ' så att resultatet blir 'Hej där'.</value>
+    
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
     <value>Ange ett operandvärde som avslutar uttrycket. Se till att operandens typ (text, tal, datum eller true/false) passar uttrycket. Matcha tal med ett tal, text med text osv. ”1 + ”Hej”” är inte giltigt, men ”1 + 2” är giltigt.</value>
+    
   </data>
   <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
     <value>Oväntat tecken. Tecken används på ett oväntat sätt i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Tecknet "\" förväntas t.ex. inte efter ett tal, som exempelvis i: "32\". Ett blanksteg ("32") borde förväntas, så att det bara är talet 32, eller ett annat tal (som i "323") som förväntas.</value>
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Ta bort eller ersätt de oväntade tecknen.</value>
+    
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Oväntat tecken "{0}" på position "{1}" i formeln.</value>
+    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Tecknet "\" förväntas t.ex. inte efter ett tal, som exempelvis i: "32\". Ett blanksteg ("32") borde förväntas, så att det bara är talet 32, eller ett annat tal (som i "323") som förväntas.</value>
@@ -2540,375 +3155,475 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
     <value>Slutkommentarsidentifierare saknad. Blockkommentaren har ingen slutkommentarsidentifierare.</value>
+    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Varje blockkommentar måste börja med '/*' och sluta med '*/'. Om du inte avslutar varje blockkommentar korrekt blir all kod efter kommentaren en del av kommentaren. Om en kommentar består av en enda rad kan du inleda den med '//' och inte identifiera slutet av kommentaren.</value>
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Lägg till '*/' i slutet av blockkommentaren eller ändra den till en uppsättning radkommentarer.</value>
+    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Oväntat tecken. Formeln innehåller {0} där {1} förväntades.</value>
+    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår om en formel till exempel innehåller {{Val@ 7}} i stället för {{Val: 7}}. När du anger en variabel kräver syntaxen ett kolon i stället för en at-symbol.</value>
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Ta bort eller ersätt det oväntade tecknet med ett väntat tecken.</value>
+    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
     <value>Namnet är inte giltigt. "{0}" kan inte identifieras.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår vanligtvis när en formel refererar till något som inte längre finns (t.ex. en kontroll som har tagits bort).</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Ta bort eller korrigera referensen till det namn som inte är giltigt.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Namnet är inte giltigt. Den här identifieraren kan inte identifieras.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår vanligtvis när en formel refererar till något som inte längre finns (t.ex. en kontroll som har tagits bort).</value>
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Ta bort eller korrigera referensen till det namn som inte är giltigt.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>Egenskapsreferensen är inte giltig.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår när en formel refererar till egenskaper för komponentfunktioner med en ogiltig syntax. (Till exempel Component.CustomFunction i stället för Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Använd korrekt syntax för att referera till egenskapen för komponentfunktionen. Till exempel Component.CustomFunction()</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
     <value>Artikel: Formelreferens för PowerApps</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Överordnad referens är ogiltig. Du kan inte referera till en överordnad kontroll i den här kontexten.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Du kan inte använda den överordnade operatorn med en kontroll som inte har en överordnad kontroll. Den här operatorn refererar till kontrollen som är värd för den angivna kontrollen och som gör alla dess egenskaper tillgängliga.</value>
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Ta bort den överordnade operatorn.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Artikel: Lägg till och konfigurera en kontroll för en arbetsyteapp i Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
     <value>Radomfattningskapslingen är för djup. Formelns radomfattning överskrider 63 kapslingsnivåer.</value>
+    
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Komplexiteten ökar med varje kapslingsnivå, så Power Apps stöder bara kapsling av radomfång upp till 63 nivåer.</value>
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Skriv om formeln med färre kapslingsnivåer.</value>
+    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
     <value>Uttryckskapslingen är för djup. Ett uttryck i formeln har kapslats i mer än 50 nivåer.</value>
+    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps stöder enbart uttryckskapsling på upp till 50 nivåer. Ett uttryck som ligger så här djupt är svårt att förstå och hantera.</value>
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Skriv om formeln med färre kapslingsnivåer.</value>
+    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
     <value>En operator förväntades. Vi förväntar oss en operator som +, *, eller &amp; vid den här punkten i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operatorer kopplar ihop två operander. Det här felet uppstår om du placerar två funktioner (operander) tillsammans utan en operator mellan dem, till exempel Len("mytext")Len("mytext").</value>
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den innehåller en operator mellan operanderna.</value>
+    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_Link_1" xml:space="preserve">
     <value>Modul: Använda grundläggande formler</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Ett tal förväntades. Vi förväntar oss ett tal vid den här punkten i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår om du använder en funktion som kräver ett tal men du anger, låt oss säga, en bild istället.</value>
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den utvärderas till ett tal vid den här punkten i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
     <value>Ett booleskt värde förväntades. Vi förväntar oss nu ett booleskt värde (sant/falskt) i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Ett booleskt värde kallas även ett sant/falskt-värde i program som Microsoft Excel eller Ja/Nej-värde i SharePoint. Det här felet uppstår om du använder en funktion som kräver ett booleskt värde men du anger, till exempel ett datum istället.</value>
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den utvärderas till ett booleskt värde vid denna tidpunkt i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Ett kolon förväntades. Vi förväntar oss ett kolon (:) vid den här punkten i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Ett kolon avgränsar ett fältnamn vilket ibland kallas ett kolumnnamn från ett fältvärde i en post (till exempel {Month:"1"}, {Month:"2"}...). Ett kolon avgränsar även timmar från minuter och sekunder (till exempel 3:04).</value>
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den innehåller ett kolon.</value>
+    
   </data>
   <data name="ErrorResource_ErrColonExpected_Link_1" xml:space="preserve">
     <value>Artikel: Visa text, datum och tider i Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Beteendefunktion i en icke-beteende-egenskap. Du kan inte använda den här egenskapen för att ändra värden i appen.</value>
+    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Beteendefunktionerna förändrar appens tillstånd genom at ändra värden på andra ställen i appen. Navigate, Patch, UpdateContext och Collect är vanliga beteendefunktioner. OnSelect, OnVisible och andra "On"-egenskaper är vanliga beteendebaserade egenskaper.</value>
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Flytta beteendefunktionen till en beteendebaserad egenskap.</value>
+    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Artikel: Förstå beteendeformler för arbetsyteappar i Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Testfunktion i en icke-test-egenskap. Du kan inte använda den här egenskapen för att anropa enbart-testfunktioner.</value>
+    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Testfunktioner är sådana som kan användas för att simulera användarindata vid testning av en app. SetProperty, SelectRow och Assert är vanliga testfunktioner. De kan bara användas i testfall.</value>
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Använd funktionen i ett testfall, inte i själva appen.</value>
+    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
     <value>Det går inte att konvertera den här datatypen. Power Apps kan inte konvertera den här {0} till en {1}.</value>
+    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps kan konvertera vissa typer av data i din formel till andra typer åt dig. Det kan till exempel konvertera ”1” (en sträng) till 1 (ett tal), men det kan inte konvertera alla datatyper till alla andra datatyper. Det kan till exempel inte konvertera en bild till ett tal.</value>
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att du konverterar berörda data till den förväntade typen.</value>
+    
   </data>
   <data name="ErrorResource_ErrStringExpected_ShortMessage" xml:space="preserve">
     <value>Text förväntades. Vi förväntar oss text vid den här punkten i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår om du använder en funktion som kräver ett textargument (eller strängargument) och du anger, låt oss säga, ett datum istället.</value>
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den utvärderas till text vid den här punkten i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Text eller tal förväntades. Vi förväntar oss text eller tal vid den här punkten i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår om du använder en funktion som kräver antingen text eller ett tal men du anger, låt oss säga, ett booleskt värde (sant/falskt).</value>
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den utvärderas till en text eller ett tal vid den här punkten i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Avslutande klammerparantes förväntades. Vi förväntar oss en avslutande klammerparantes (}) vid denna punkt i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>En avslutande klammerparantes anger slutet av en post (till exempel {Month:"1"}, {Month:"2"}...).</value>
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den innehåller en klammerparantes.</value>
+    
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Identifieraren har inte någon giltig text.</value>
+    
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Se till att du har text för din identifierare. Felet uppstår när identifieraren är tom eller bara innehåller blanksteg.</value>
+    
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
     <value>Det gick inte att jämföra värden av typen {0}.</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Inkompatibla typer för jämförelse. Följande typer kan inte jämföras: {0}, {1}.</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Det går inte att utvärdera formeln eftersom värdena som jämförs i formeln inte är av samma typ.</value>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Du kan behöva konvertera värdet att vara av samma typ, till exempel konvertera en datumsträng (t.ex. ”12/31/2018”) till ett datumvärde.</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
     <value>Om du jämför poster eller tabeller, måste fält- eller kolumntyperna matcha exakt.</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
     <value>Modul: Använda grundläggande formler</value>
+    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Modul: Skapa grundläggande formler med tabeller och poster</value>
+    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
     <value>Ingen parameter. Den här funktionen har ingen valfri parameter med namnet {0}.</value>
+    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
     <value>Lösning: Ta bort eller byt namn på parametern i din formel.</value>
+    
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Inkompatibel typ. Kolumnen {0} i datakällan som du uppdaterar förväntar sig en {1}-typ och du använder en {2}-typ.</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
     <value>Du kan behöva konvertera värdet till samma typ, till exempel konvertera en datumsträng (t.ex. ”12/31/2018”) till ett datumvärde eller en sträng till ett tal.</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1" xml:space="preserve">
     <value>Modul: Använda grundläggande formler</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Modul: Skapa grundläggande formler med tabeller och poster</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
     <value>Kolumnen saknas. Din formel saknar en kolumn {0} med typen {1}.</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
     <value>Lägg till en kolumn i din formel.</value>
+    
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Inkompatibel typ. Objektet du försöker lägga till i en post har en typ som inte är kompatibel med posten.</value>
+    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Inkompatibel typ. Objektet du försöker lägga till i en tabell har en typ som inte är kompatibel med tabellen.</value>
+    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
     <value>Kontrollera att den objekttyp som du vill pusha till tabellen är kompatibel med tabellen. Du kan behöva konvertera objekttypen, t.ex. till en post.</value>
+    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1" xml:space="preserve">
     <value>Modul: Använda grundläggande formler</value>
+    
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Modul: Skapa grundläggande formler med tabeller och poster</value>
+    
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
     <value>Inkompatibel typ. Det går inte att utvärdera formeln på grund av ett typfel.</value>
+    
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Data matchar kanske inte den förväntade typen (text, siffra, datum, tabell, post).</value>
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Kontrollera vilka typer av värden som ingår i formeln och se till att typerna matchar.</value>
+    
   </data>
   <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
     <value>Modul: Använda grundläggande formler</value>
+    
   </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Modul: Skapa grundläggande formler med tabeller och poster</value>
+    
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
     <value>Ett datum förväntades. Vi förväntar oss ett datum vid den här punkten i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår om du använder en funktion som kräver ett datum men du anger, låt oss säga, text istället.</value>
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den utvärderas till ett datum vid denna tidpunkt i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
     <value>Delegeringsvarning. Delen {0} av den här formeln kanske inte fungerar korrekt på stora datauppsättningar.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Datakällan kanske inte kan bearbeta formeln och kan då returnera en ofullständig datauppsättning. Ditt program kanske inte kan returnera korrekta resultat eller uppvisa korrekt beteende om datauppsättningen är ofullständig.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller färre än 2 000 poster, kan du prova att återställa gränsen.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
     <value>Försök förenkla formeln.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
     <value>Försök flytta dina data till en annan datakälla.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
     <value>Artikel: Förstå delegering i en arbetsyteapp</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blogg: Dataradsbegränsningar för delegering</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
     <value>Delegeringsvarning. Den markerade delen av den här formeln kanske inte fungerar korrekt med kolumnen {0} i stora datauppsättningar.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Datakällan kanske inte kan bearbeta formeln och kan då returnera en ofullständig datauppsättning. Ditt program kanske inte kan returnera korrekta resultat eller uppvisa korrekt beteende om datauppsättningen är ofullständig.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller färre än 2 000 poster, kan du prova att återställa gränsen.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
     <value>Försök förenkla formeln.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
     <value>Försök flytta dina data till en annan datakälla.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
     <value>Artikel: Förstå delegering i en arbetsyteapp</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blogg: Dataradsbegränsningar för delegering</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
     <value>Delegeringsvarning. Den markerade delen av den här formeln fungerar kanske inte korrekt för stora datamängder.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value>Höger sida av in-operatorn bör varra ett kolumnnamn från korrekt datakälla. Datakällan kanske inte kan bearbeta formeln och kan returnera en ofullständig datauppsättning. Ditt program kanske inte kan returnera korrekta resultat eller uppföra sig korrekt om datauppsättningen är ofullständig.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Ändra objektet till höger om "in"-operatorn till att vara en kolumn från rätt datakälla.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
     <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller färre än 2 000 poster, kan du prova att återställa gränsen.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
     <value>Försök förenkla formeln.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
     <value>Försök flytta dina data till en annan datakälla.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
     <value>Artikel: Förstå delegering i en arbetsyteapp</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blogg: Dataradsbegränsningar för delegering</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
     <value>Den markerade delen av den här formeln kanske inte fungerar korrekt på stora datauppsättningar.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Höger sida av "in"-operatorn är inte en kolumn från rätt datakälla. Datakällan kanske inte kan bearbeta formeln och kan returnera en ofullständig datauppsättning. Ditt program kanske inte kan returnera korrekta resultat eller uppföra sig korrekt om datauppsättningen är ofullständig.
@@ -2916,142 +3631,185 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Ändra objektet till höger om "in"-operatorn till att vara en kolumn från rätt datakälla.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
     <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller färre än 2 000 poster, kan du prova att återställa gränsen.
       </value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
     <value>Försök förenkla formeln.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
     <value>Försök flytta dina data till en annan datakälla.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
     <value>Artikel: Förstå delegering i en arbetsyteapp</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blogg: Dataradsbegränsningar för delegering</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Delegeringsvarning. Den markerade delen av den här formeln kanske inte fungerar korrekt för stora datauppsättningar. Åtgärden {0} stöds inte av den här anslutningsappen.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_LongMessage" xml:space="preserve">
     <value>Datakällan kanske inte kan bearbeta formeln och kan då returnera en ofullständig datauppsättning. Ditt program kanske inte kan returnera korrekta resultat eller uppvisa korrekt beteende om datauppsättningen är ofullständig.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
     <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller färre än 2 000 poster, kan du prova att återställa gränsen.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
     <value>Försök förenkla formeln.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
     <value>Försök flytta dina data till en annan datakälla.</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
     <value>Artikel: Förstå delegering i en arbetsyteapp</value>
+    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blogg: Dataradsbegränsningar för delegering</value>
+    
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
     <value>Förväntade endast en vy. Vi förväntar oss endast en vy i formeln vid den här punkten.</value>
+    
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den bara har vy vid denna punkt i formeln.</value>
+    
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_ShortMessage" xml:space="preserve">
     <value>Förväntade en vy från datakällan {0}.</value>
+    
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den har vyn från datakällan {0}.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
     <value>Den här kontrollreferensen kan inte användas i den här egenskapen</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
     <value>Den här egenskapen stöder endast referenser till globala variabler, mängder och vissa kontroll- och skärmegenskaper. En lista över egenskaper som stöds hittar du via länken.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Referens: ConfirmExit för arbetsyteappar</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
     <value>Uttryck som visas inuti en interpolerad sträng måste utvärderas till ett textvärde eller till en kompatibel typ.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
     <value>Kontrollera typen av uttryck inuti den interpolerade strängen.</value>
+    
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
     <value>Tomma uttryck kan inte visas inuti en interpolerad sträng.</value>
+    
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
     <value>Kontrollera om det finns tomma uttryck i den interpolerade strängen.</value>
+    
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>As tillåts inte i den här kontexten</value>
+    
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
     <value>Typlöst objekt kan inte användas som första argument för funktioner som stöder postomfattningar.</value>
+    
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Den namngivna formeln måste sluta med ett semikolon.</value>
+    
   </data>
   <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
     <value>Den namngivna formeln måste vara ett uttryck.</value>
+    
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>En användardefinierad funktion måste ha en brödtext.</value>
+    
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Funktionen {0} är redan definierad.</value>
+    
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parametern {0} är en dubblett.</value>
+    
   </data>
   <data name="ErrUDF_UnknownType" xml:space="preserve">
     <value>Okänd typ {0}.</value>
+    
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Den angivna funktionens returtyp överensstämmer inte med funktionstextens returtyp.</value>
+    
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
     <value>Funktionsreturtypen saknas, till exempel ":Number" i "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
     <value>Funktionsargumenttypen saknas, till exempel ":Text" i "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' finns redan.</value>
   </data>
   <data name="ErrorResource_NameConflict" xml:space="preserve">
     <value>Det går inte att skapa en {0} med namnet '{1}' eftersom namnet redan används för en {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Det första argumentet för {0} ska vara ett giltigt variabelnamn och kan inte vara i konflikt med något befintligt namn på en kontroll, skärm, samling eller datakälla. Hittade typen {1}</value>
+    
   </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Skapa och ställ in en global variabel.</value>
+    
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>värde</value>
+    
   </data>
   <data name="AboutDec2Hex" xml:space="preserve">
     <value>Konverterar ett decimaltal till ett hexadecimalt värde</value>
+    
   </data>
   <data name="Dec2HexArg1" xml:space="preserve">
     <value>tal</value>
   </data>
   <data name="AboutDec2Hex_number" xml:space="preserve">
     <value>Ett numeriskt decimalvärde för att konvertera till en hexadecimal sträng.</value>
+    
   </data>
   <data name="Dec2HexArg2" xml:space="preserve">
     <value>platser</value>
   </data>
   <data name="AboutDec2Hex_places" xml:space="preserve">
     <value>Ett numeriskt värde för att lägga till utfyllnad i en hexadecimal sträng.</value>
+    
   </data>
   <data name="AboutDec2HexT" xml:space="preserve">
     <value>Konverterar en kolumn med decimaltal till hexadecimala värden</value>
+    
   </data>
   <data name="Dec2HexTArg1" xml:space="preserve">
     <value>tabell</value>
@@ -3061,48 +3819,61 @@
   </data>
   <data name="AboutDec2HexT_places" xml:space="preserve">
     <value>Ett numeriskt värde eller en matris med värden för att lägga till utfyllnad i hexadecimala strängar.</value>
+    
   </data>
   <data name="AboutDec2Hex_table" xml:space="preserve">
     <value>En kolumn med numeriska decimalvärden för att konvertera till hexadecimala värden.</value>
+    
   </data>
   <data name="AboutHex2Dec" xml:space="preserve">
     <value>Konverterar ett hexadecimalt tal till decimaltal</value>
+    
   </data>
   <data name="Hex2DecArg1" xml:space="preserve">
     <value>tal</value>
   </data>
   <data name="AboutHex2Dec_number" xml:space="preserve">
     <value>En hexadecimal sträng för att konvertera till decimaltal.</value>
+    
   </data>
   <data name="AboutHex2DecT" xml:space="preserve">
     <value>Konverterar en kolumn med hexadecimala tal till decimaltal</value>
+    
   </data>
   <data name="Hex2DecTArg1" xml:space="preserve">
     <value>tabell</value>
   </data>
   <data name="AboutHex2Dec_table" xml:space="preserve">
     <value>En kolumn med hexadecimala strängar för att konvertera till decimaltal.</value>
+    
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Den här funktionen är inaktuell och stöds inte längre.</value>
+    
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>I namnrymd {1} stöds inte funktionen {0}.</value>
+    
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Varning! En senarelagd typ har angetts.</value>
+    
   </data>
   <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
     <value>Förväntat namn på identifierare</value>
+    
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Denna funktion är tvetydig. Den innehåller lambda-uttryck och kolumnidentifierare för samma argument.</value>
+    
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
     <value>Värdet för alternativet {0} är inte av förväntad typ {1}.</value>
+    
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
     <value>Returnerar det logiska namnet på det angivna alternativuppsättningsvärdet.</value>
+    
   </data>
   <data name="AboutOptionSetInfoArg1" xml:space="preserve">
     <value>alternativ</value>
@@ -3112,42 +3883,54 @@
   </data>
   <data name="AboutLanguage" xml:space="preserve">
     <value>Hämta standardspråket som anges vid körningen.</value>
+    
   </data>
   <data name="AboutEncodeUrl" xml:space="preserve">
     <value>En URL-sträng kodas och vissa icke-alfanumeriska tecken ersätts med % och ett hexadecimalt tal.</value>
+    
   </data>
   <data name="EncodeUrlArg1" xml:space="preserve">
     <value>url</value>
+    
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>En url som ska kodas.</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" är en känd funktion som inte stöds.</value>
+    
   </data>
   <data name="InvalidCast" xml:space="preserve">
     <value>Typkonverteringen misslyckades eftersom det angivna värdet var av typen "{0}", förväntad typ: "{1}".</value>
+    
   </data>
   <data name="WrnSortByColumnsNonConstantColumnName" xml:space="preserve">
     <value>Uttrycket "{0}" kan representera en kolumn som inte är en del av datakällan eller som inte har hämtats. Överväg att använda kolumnnamnet direkt i stället.</value>
+    
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Den här åtgärden i tabellen "{0}" kanske inte fungerar om den har fler än {1} rader.</value>
+    
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Det här predikatet kommer alltid att vara sant. Ville du använda ThisRecord eller [@ ]?</value>
+    
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Det går inte att delegera {0}: stöder endast delegering för sökning i primärnyckelfältet {1}.</value>
+    
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Det går inte att delegera {0}: Uttrycket jämför flera fält.</value>
+    
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Det går inte att delegera {0}: innehåller en beteendefunktion {1}.</value>
+    
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Fastställer om den angivna texten har en matchning för det angivna textformatet.</value>
+    
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">
     <value>Texten att jämföra mot formatet.</value>
@@ -3157,96 +3940,125 @@
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
     <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
+    
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
     <value>text</value>
+    
   </data>
   <data name="IsMatchArg2" xml:space="preserve">
     <value>format</value>
+    
   </data>
   <data name="IsMatchArg3" xml:space="preserve">
     <value>omfattning</value>
+    
   </data>
   <data name="AboutMatch" xml:space="preserve">
     <value>Söker i den tillhandahållna texten efter det angivna reguljära uttrycket och returnerar den första matchningen.</value>
+    
   </data>
   <data name="AboutMatchAll" xml:space="preserve">
     <value>Söker i den tillhandahållna texten efter det angivna reguljära uttrycket och returnerar alla matchningar.</value>
+    
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
     <value>Texten att jämföra mot det reguljära uttrycket.</value>
+    
   </data>
   <data name="AboutMatch_regular_expression" xml:space="preserve">
     <value>Det reguljära uttrycket att kontrollera texten mot. Det kan innehålla insamlingar (värden inom parenteser) som returneras vid en lyckad matchning.</value>
+    
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
     <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
+    
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
     <value>Texten att jämföra mot det reguljära uttrycket.</value>
+    
   </data>
   <data name="AboutMatchAll_regular_expression" xml:space="preserve">
     <value>Det reguljära uttrycket att kontrollera texten mot. Det kan innehålla insamlingar (värden inom parenteser) som returneras vid en lyckad matchning.</value>
+    
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
     <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
+    
   </data>
   <data name="MatchArg1" xml:space="preserve">
     <value>text</value>
+    
   </data>
   <data name="MatchArg2" xml:space="preserve">
     <value>reguljärt_uttryck</value>
+    
   </data>
   <data name="MatchArg3" xml:space="preserve">
     <value>alternativ</value>
+    
   </data>
   <data name="AboutRefresh" xml:space="preserve">
     <value>Uppdaterar den angivna datakällan.</value>
+    
   </data>
   <data name="RefreshArg1" xml:space="preserve">
     <value>ansluten_data_källa</value>
+    
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
     <value>Ett post- eller tabellvärde förväntades.</value>
+    
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
     <value>En ansluten datakälla att uppdatera.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Bara hanterade anslutningar kan uppdateras.</value>
+    
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Ogiltigt reguljärt uttryck.</value>
+    
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Reguljära uttryck måste vara konstanta värden.</value>
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Det värde som skickas till funktionen "{0}" kan inte ändras.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar den fullständiga matchningen av det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera den fullständiga matchningen i den angivna texten.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
     <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar gruppmatchningarna i det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera alla underordnade matchningar i den angivna texten.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar platsen för matchningen av det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera positionen för den fullständiga matchningen i den angivna texten.</value>
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Tar bort all formatering och returnerar ett oformaterat textvärde.</value>
+    
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
     <value>text</value>
+    
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Texten för att ta bort HTML- och XML-taggar.</value>
   </data>
   <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
     <value>Filterfunktioner tillåter inte beteendefunktioner som predikat.</value>
+    
   </data>
   <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
     <value>Använd operatorn And för att kombinera flera predikat i det andra argumentet.</value>
+    
   </data>
   <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
     <value>Det går inte att kopiera den här tabellen. Skapa i stället en infogad tabell med ForAll-funktionen och {...}-format för att kopiera de enskilda kolumner som du vill använda.</value>
@@ -3256,99 +4068,130 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Det andra argumentet för funktionen "{0}" stöds endast för numeriska värden och datum/tid-värden.</value>
+    
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Om du anger en variabel med ett datakällavärde online (tabell eller post) kan det orsaka flera begäranden till servern. Detta kommer snart att blockeras.</value>
+    
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Typdeklarationen var ogiltig</value>
+    
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
     <value>Källans och målets posttyp stämmer inte överens med varandra. Den angivna typen har extra fält: {0}.</value>
+    
   </data>
   <data name="ErrExpectedRVMissingFields" xml:space="preserve">
     <value>Källans och målets posttyp stämmer inte överens med varandra. Den angivna typen saknar fält: {0}.</value>
+    
   </data>
   <data name="ErrExpectedRVFieldNotFound" xml:space="preserve">
     <value>Källans och målets posttyp stämmer inte överens med varandra. Fältets namn: {0} hittades inte.</value>
+    
   </data>
   <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
     <value>Källans och målets posttyp stämmer inte överens med varandra. Fältets namn: {0} {1} förväntades, {2} hittades.</value>
+    
   </data>
   <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
     <value>Den angivna {0}-typen kan inte tvingas till källtypen {1}.</value>
+    
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
     <value>Källans och målets typ stämmer inte överens med varandra. {0} förväntades, {1} hittades.</value>
+    
   </data>
   <data name="AboutJSON" xml:space="preserve">
     <value>Genererar en JSON-textsträng för en tabell, post eller ett värde.</value>
+    
   </data>
   <data name="JSONArg1" xml:space="preserve">
     <value>data</value>
+    
   </data>
   <data name="AboutJSON_data" xml:space="preserve">
     <value>Den datastruktur som ska konverteras till JSON. Tabeller, poster och primitiva värden stöds, godtyckligt kapslade.</value>
+    
   </data>
   <data name="JSONArg2" xml:space="preserve">
     <value>format</value>
+    
   </data>
   <data name="AboutJSON_format" xml:space="preserve">
     <value>Det format som ska användas i JSON-konverteringen. Värdet blir medlem i JSONFormat-uppräkningen.</value>
+    
   </data>
   <data name="AboutTrace" xml:space="preserve">
     <value>Loggar information till Application Insights när det är aktiverat och loggar i en Test Studio-session som kommer att vara tillgänglig i testresultaten.</value>
+    
   </data>
   <data name="TraceArg1" xml:space="preserve">
     <value>meddelande</value>
+    
   </data>
   <data name="TraceArg2" xml:space="preserve">
     <value>allvarlighetsgrad</value>
+    
   </data>
   <data name="TraceArg3" xml:space="preserve">
     <value>custom_record</value>
+    
   </data>
   <data name="TraceArg4" xml:space="preserve">
     <value>trace_options</value>
+    
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
     <value>Informationen som ska spåras.</value>
+    
   </data>
   <data name="AboutTrace_severity" xml:space="preserve">
     <value>Allvarlighetsgraden som ska spåras till Application Insights.</value>
+    
   </data>
   <data name="AboutTrace_custom_record" xml:space="preserve">
     <value>En post som innehåller anpassade data som ska spåras till Application Insights.</value>
+    
   </data>
   <data name="AboutTrace_trace_options" xml:space="preserve">
     <value>Ytterligare alternativ för funktionen Trace.</value>
+    
   </data>
   <data name="ErrFunctionArg2ParamMustBeConstant" xml:space="preserve">
     <value>Parametern {1} till {0}-funktionen måste vara ett konstantvärde.</value>
+    
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>JSONFormat-värdena {0} och {1} kan inte användas tillsammans.</value>
+    
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Det värde som skickas till JSON-funktionen innehåller media och stöds inte som standard. Om du vill tillåta JSON-serialisering av mediavärden måste du använda alternativet IncludeBinaryData i parametern format.</value>
+    
   </data>
   <data name="ErrJSONArg1UnsupportedType" xml:space="preserve">
     <value>JSON-funktionen kan inte serialisera objekt av typen {0}.</value>
+    
   </data>
   <data name="ErrJSONArg1UnsupportedNestedType" xml:space="preserve">
     <value>JSON-funktionen kan inte serialisera tabeller/objekt med en den kapslade egenskapen {0} av typen {1}.</value>
+    
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON-funktionen kan inte serialisera binära data i icke-beteendeuttryck.</value>
+    <value>JSON-funktionen kan inte serialisera binära data i icke-beteendeuttryck.</value>    
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parametern {0} innehåller en egenskap av typen {1} vilken inte stöds.</value>
+    
   </data>
   <data name="ErrRecordContainsInvalidFields_Arg" xml:space="preserve">
     <value>Den angivna kolumnen är skrivskyddad och kan inte ändras: {0}.</value>
+    
   </data>
   <data name="AboutSearch" xml:space="preserve">
     <value>Söker efter text i källan. Returnerar rader där texten hittas. Jämförelsen görs skiftlägesokänsligt.</value>
+    
   </data>
   <data name="AboutSearch_source" xml:space="preserve">
     <value>Tabell att genomsöka.</value>
@@ -3361,17 +4204,52 @@
   </data>
   <data name="SearchArg1" xml:space="preserve">
     <value>källa</value>
+    
   </data>
   <data name="SearchArg2" xml:space="preserve">
     <value>text</value>
+    
   </data>
   <data name="SearchArg3" xml:space="preserve">
     <value>kolumn</value>
+    
   </data>
   <data name="ErrSearchWrongType" xml:space="preserve">
     <value>Fel kolumntyp. En texttyp förväntades.</value>
+    
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Tabellen innehåller ingen kolumn av texttyp.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Inaktuell användning av ".". Använd funktionen "ShowColumns" i stället.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Ansvarsfriskrivning:** AI-genererat innehåll kan innehålla fel. Se till att det är korrekt och passande innan du använder det. [Se villkoren](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Returnerar det Unicode-tecken som det angivna numeriska värdet refererar till.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Numeriskt värde som ska konverteras till ett Unicode-tecken.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>tal</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Konverterar en tabell med numeriska värden till en tabell med Unicode-tecken.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>kolumn_med_siffror</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>En tabellkolumn med numeriska värden som ska konverteras till Unicode-tecken.</value>
   </data>
 </root>

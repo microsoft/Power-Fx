@@ -9,13 +9,14 @@ namespace Microsoft.PowerFx.Syntax
     /// <summary>
     /// Token for a string literal.
     /// </summary>
-    public class StrLitToken : Token
+    public class StrLitToken : Token, ITextFirstFlag
     {
-        internal StrLitToken(string val, Span span)
+        internal StrLitToken(string val, Span span, bool isTextFirst)
             : base(TokKind.StrLit, span)
         {
             Contracts.AssertValue(val);
             Value = val;
+            IsTextFirst = isTextFirst;
         }
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace Microsoft.PowerFx.Syntax
         /// <param name="tok">The token to be copied.</param>
         /// <param name="newSpan">The new span.</param>
         private StrLitToken(StrLitToken tok, Span newSpan)
-            : this(tok.Value, newSpan)
+            : this(tok.Value, newSpan, tok.IsTextFirst)
         {
         }
 
@@ -39,6 +40,8 @@ namespace Microsoft.PowerFx.Syntax
         /// Value of the string literal.
         /// </summary>
         public string Value { get; }
+
+        public bool IsTextFirst { get; }
 
         /// <summary>
         /// Escapes a string value.
