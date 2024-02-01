@@ -5,11 +5,9 @@ using System;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -631,6 +629,16 @@ namespace Microsoft.PowerFx.Core.Tests
             var actualCount = check.GetTextTokens().Where(t => t is ITextFirstFlag flag ? flag.IsTextFirst : false).Count();
 
             Assert.Equal(expectedCount, actualCount);
+        }
+
+        [Fact]
+        public void ITextFirstTokenTest()
+        {
+            TokenTextSpan token = new TokenTextSpan("Name", 0, 100, TokenType.BinaryOp, true);
+            Assert.True(token.CanBeHidden);
+
+            ITokenTextSpan tokenTextSpan = token;
+            Assert.True(tokenTextSpan.CanBeHidden);
         }
     }
 }

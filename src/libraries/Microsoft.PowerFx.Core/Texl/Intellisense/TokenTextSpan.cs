@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Microsoft.AppMagic.Transport;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -52,11 +50,11 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         public bool IsTextFirst { get; private set; }
 
-        bool ITokenTextSpan.CanBeHidden { get; }
+        bool ITokenTextSpan.CanBeHidden => this.CanBeHidden;
 
-        internal bool CanBeHidden { get; }
+        internal bool CanBeHidden { get; private set; }
 
-        public TokenTextSpan(string name, int startIndex, int endIndex, TokenType type, bool canHide)
+        internal TokenTextSpan(string name, int startIndex, int endIndex, TokenType type, bool canHide)
         {
             TokenName = name;
             StartIndex = startIndex;
@@ -65,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             CanBeHidden = canHide;
         }
 
-        public TokenTextSpan(string name, Token token, TokenType type, bool canHide = false)
+        internal TokenTextSpan(string name, Token token, TokenType type, bool canHide = false)
             : this(name, token.VerifyValue().Span.Min, token.VerifyValue().Span.Lim, type, canHide)
         {
             IsTextFirst = token is ITextFirstFlag flag ? flag.IsTextFirst : false;
