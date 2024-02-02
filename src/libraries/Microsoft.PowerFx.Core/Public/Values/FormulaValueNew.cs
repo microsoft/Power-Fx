@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -136,6 +137,16 @@ namespace Microsoft.PowerFx.Types
         public static VoidValue NewVoid()
         {
             return new VoidValue(IRContext.NotInSource(FormulaType.Void));
+        }
+
+        internal static BlobValue NewBlob(IResourceManager resourceManager, int id)
+        {
+            return new BlobValue(resourceManager, id);
+        }
+
+        internal static BlobValue NewPDF(IResourceManager resourceManager, int id)
+        {
+            return new BlobValue(resourceManager, id);
         }
     }
 }

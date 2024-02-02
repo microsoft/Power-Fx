@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 ConsistentOneColumnTableResult = true
             };
 
-            RunExpressionTestCase(testCase, features, numberIsFloat: true);
+            RunExpressionTestCase(testCase, features, numberIsFloat: true, Summary);
         }
 
         // Canvas currently does not support decimal, but since this interpreter does, we can run tests with decimal here.
@@ -64,14 +64,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 PowerFxV1CompatibilityRules = true,
             };
 
-            RunExpressionTestCase(testCase, features, numberIsFloat: true);
+            RunExpressionTestCase(testCase, features, numberIsFloat: true, Summary);
         }
 
         [InterpreterTheory]
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat,DecimalSupport")]
         public void V1_Decimal(ExpressionTestCase testCase)
         {
-            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: false);
+            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: false, Summary);
         }
 
         // Although we are using numbers as floats by default, since this interpreter supports decimal, we can run tests with decimal here.        
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InterpreterTheory]
         public void V1_Float(ExpressionTestCase testCase)
         {
-            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: true);
+            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: true, Summary);
         }
 
 #if false
@@ -93,13 +93,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 #endif
 
-        private void RunExpressionTestCase(ExpressionTestCase testCase, Features features, bool numberIsFloat)
+        private void RunExpressionTestCase(ExpressionTestCase testCase, Features features, bool numberIsFloat, ITestOutputHelper output)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
             // make sure they build is actually copying them over.
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
-            var runner = new InterpreterRunner() { NumberIsFloat = numberIsFloat, Features = features };
+            var runner = new InterpreterRunner() { NumberIsFloat = numberIsFloat, Features = features, Log = (msg) => output.WriteLine(msg) };
             var (result, msg) = runner.RunTestCase(testCase);
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";

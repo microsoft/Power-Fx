@@ -575,6 +575,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 Result = value.Value.ToString();
             }
 
+            public void Visit(BlobValue value)
+            {
+                Result = value.ResourceElement.Base64String;
+            }
+
             private void Visit(IUntypedObject untypedObject)
             {
                 var type = untypedObject.Type;
