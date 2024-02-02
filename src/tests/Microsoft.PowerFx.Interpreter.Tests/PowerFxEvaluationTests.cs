@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         private static void AddResourceManager(RuntimeConfig runtimeConfig)
         {
-            runtimeConfig.AddService<IResourceManager>(new TestResourceManager());
+            runtimeConfig.AddService<IResourceManager>(new DefaultResourceManager());
         }
 
         private static object BlobSetup(PowerFxConfig config, SymbolTable symbolTable)

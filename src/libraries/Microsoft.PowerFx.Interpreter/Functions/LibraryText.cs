@@ -332,56 +332,26 @@ namespace Microsoft.PowerFx.Functions
         {
             runner.CancellationToken.ThrowIfCancellationRequested();
 
-            if (args[0].IsBlank())
-            {
-                return new BlobValue(irContext);
-            }
+            StringValue sv = (StringValue)args[0];
+            IResourceManager resourceManager = runner.FunctionServices.GetService<IResourceManager>();
 
-            if (args[0] is StringValue sv)
+            if (resourceManager == null)
             {
-                IResourceManager resourceManager = runner.FunctionServices.GetService<IResourceManager>();
-
-                if (resourceManager == null)
+                return new ErrorValue(irContext, new ExpressionError()
                 {
-                    return new ErrorValue(irContext, new ExpressionError()
-                    {
-                        Message = $"Cannot convert {args[0].Type._type} to Blob, missing resource manager.",
-                        Span = irContext.SourceContext,
-                        Kind = ErrorKind.InvalidArgument
-                    });
-                }
-
-                return new BlobValue(resourceManager, resourceManager.NewElementFromString(sv.Value));
+                    Message = $"Cannot convert {args[0].Type._type} to Blob, missing resource manager.",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.InvalidArgument
+                });
             }
 
-            return new ErrorValue(irContext, new ExpressionError()
-            {
-                Message = $"Cannot convert {args[0].Type._type} to Blob",
-                Span = irContext.SourceContext,
-                Kind = ErrorKind.InvalidArgument
-            });
+            return new BlobValue(resourceManager, new StringResourceElement(resourceManager, sv.Value).Handle);
         }
 
         public static FormulaValue BlobToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             runner.CancellationToken.ThrowIfCancellationRequested();
-
-            if (args[0].IsBlank())
-            {
-                return FormulaValue.NewBlank(FormulaType.String);
-            }
-
-            if (args[0] is FileValue fv)
-            {
-                return FormulaValue.New(fv.ToString());
-            }
-
-            return new ErrorValue(irContext, new ExpressionError()
-            {
-                Message = $"Cannot convert {args[0].Type._type} to Text",
-                Span = irContext.SourceContext,
-                Kind = ErrorKind.InvalidArgument
-            });
+            return FormulaValue.New((args[0] as FileValue).ToString());
         }
 
         public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
@@ -1275,7 +1245,7 @@ namespace Microsoft.PowerFx.Functions
                     Kind = ErrorKind.InvalidArgument
                 });
             }
-            
+
             if (isPartialSurrogate)
             {
                 return new ErrorValue(irContext, new ExpressionError()
@@ -1285,7 +1255,7 @@ namespace Microsoft.PowerFx.Functions
                     Kind = ErrorKind.NotApplicable
                 });
             }
-            
+
             string unicode = char.ConvertFromUtf32((int)number);
             return new StringValue(irContext, unicode);
         }

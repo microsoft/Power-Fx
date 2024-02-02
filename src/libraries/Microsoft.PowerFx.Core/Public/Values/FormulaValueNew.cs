@@ -139,14 +139,9 @@ namespace Microsoft.PowerFx.Types
             return new VoidValue(IRContext.NotInSource(FormulaType.Void));
         }
 
-        internal static BlobValue NewBlob(IResourceManager resourceManager, int id)
+        internal static BlobValue NewBlob(IResourceManager resourceManager, ResourceHandle id)
         {
             return new BlobValue(resourceManager, id);
-        }
-
-        internal static BlobValue NewPDF(IResourceManager resourceManager, int id)
-        {
-            return new BlobValue(resourceManager, id);
-        }
+        }     
     }
 }

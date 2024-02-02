@@ -67,6 +67,7 @@ Blank()
 >> Text(Blob("Hello", false))
 "appres://blobmanager/0"
 
+// When 2nd param is true, we enter a base64 string
 >> Text(Blob("SGVsbG8=", true))
 "appres://blobmanager/0"
 
@@ -91,17 +92,12 @@ false
 >> IsBlank(Blob(Blank()))
 false
 
->> Text(Blob("abc", false, "PDF"))
-"appres://pdfmanager/0"
-
->> Text(Blob("http://localhost/abc.jpg", false, "URI"))
+// When 2nd param is a string "uri", we create a Blob Uri
+>> Text(Blob("http://localhost/abc.jpg", "URI"))
 "http://localhost/abc.jpg"
-
->> Text(Blob("http://localhost/abc.jpg", true, "URI"))
-Error({Kind:ErrorKind.InvalidArgument})
 
 >> Set(blob, Blob("abc")); BlobGetString(blob)
 "abc"
 
->> Set(str, Text(Blob("abc"))); BlobGetString(Blob(str, false, "Uri"))
+>> Set(str, Text(Blob("abc"))); BlobGetString(Blob(str, "Uri"))
 "abc"

@@ -9,14 +9,14 @@ namespace Microsoft.PowerFx.Types
 {
     public class BlobValue : FileValue
     {
-        public BlobValue(IResourceManager resourceManager, int id)
+        public BlobValue(IResourceManager resourceManager, ResourceHandle id)
             : base(resourceManager, id)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.Blob);
         }
 
         internal BlobValue(IRContext irContext)
-            : base(null, -2)
+            : base(null, default)
         {
         }
 

@@ -111,7 +111,8 @@ namespace Microsoft.PowerFx.Types
                     }
                     else if (formulaType is BlobType)
                     {
-                        return BlobValue.NewBlob(resourceManager, resourceManager.NewElementFromBase64String(element.GetString()));
+                        BaseResourceElement resElem = new Base64StringResourceElement(resourceManager, element.GetString());
+                        return BlobValue.NewBlob(resourceManager, resElem.Handle);
                     }                    
                     else
                     {
