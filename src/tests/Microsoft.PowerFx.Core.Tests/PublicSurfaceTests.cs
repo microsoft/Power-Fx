@@ -176,6 +176,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.TokenResultType",
                 "Microsoft.PowerFx.Intellisense.UIString",
                 "Microsoft.PowerFx.Intellisense.MarkdownString",
+                "Microsoft.PowerFx.Core.Texl.Intellisense.TokenTextSpan",
+                "Microsoft.PowerFx.Core.Texl.Intellisense.TokenType",
 
                 // TBD ...
                 "Microsoft.PowerFx.BasicUserInfo",
