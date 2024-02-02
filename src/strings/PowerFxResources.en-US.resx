@@ -4453,11 +4453,15 @@
     <comment>Error message when the user attempted to use the attribute syntax on a named formula definition, but we didn't recognize the attribute name they specified.</comment>
   </data>
   <data name="ErrOperationDoesntMatch" xml:space="preserve">
-    <value>All Partial operations on matching named formulas must be the same.</value>
-    <comment>{Locked=Partial} Error message when the user attempted to use a partial operator on multiple named formulas, but didn't specify the same operator on each one.</comment>
+    <value>All Partial operators on matching named formulas must be the same.</value>
+    <comment>{Locked=Partial} Error message when the user attempted to use a partial operator on multiple named formulas, but didn't specify the same operator on each one.
+      A partial operator is the 2nd part of a statement `[Partial Op]` and can be one of "And", "Or", "Table" or "Record".
+      It's used to determine how to combine multiple expressions with the same name and operator.</comment>
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
-    <value>Unknown Partial operation.</value>
-    <comment>{Locked=Partial}. Error message when the user attempted to use a Partial operator that we don't recognize.</comment>
+    <value>Unknown Partial operator.</value>
+    <comment>{Locked=Partial}. Error message when the user attempted to use a Partial operator that we don't recognize.
+      A partial operator is the 2nd part of a statement `[Partial Op]` and can be one of "And", "Or", "Table" or "Record".
+      It's used to determine how to combine multiple expressions with the same name and operator.</comment>
   </data>
 </root>
