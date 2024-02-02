@@ -60,5 +60,11 @@ namespace Microsoft.PowerFx
                 config.AdditionalFunctions.Add(func.Key, func.Value);
             }
         }
+
+        [Obsolete("OptionSetInfo function is deprecated. Use the Value function on a numeric option set value instead.")]
+        public static void EnableOptionSetInfo(this PowerFxConfig powerFxConfig)
+        {
+            powerFxConfig.AddFunction(new OptionSetInfoFunction());
+        }
     }
 }

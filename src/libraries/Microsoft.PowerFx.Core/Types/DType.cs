@@ -598,6 +598,8 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsOptionSet => Kind == DKind.OptionSet || Kind == DKind.OptionSetValue;
 
+        public bool IsOptionSetBackedByNumeric => IsOptionSet && (OptionSetInfo.BackingKind == DKind.Number || OptionSetInfo.BackingKind == DKind.Decimal);
+
         public bool IsView => Kind == DKind.View || Kind == DKind.ViewValue;
 
         public bool IsAggregate => IsRecord || IsTable;

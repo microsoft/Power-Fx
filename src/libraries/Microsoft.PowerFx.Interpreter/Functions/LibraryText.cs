@@ -189,7 +189,7 @@ namespace Microsoft.PowerFx.Functions
         {
             result = null;
 
-            Contract.Assert(NumberValue.AllowedListConvertToNumber.Contains(value.Type));
+            Contract.Assert(NumberValue.AllowedListConvertToNumber.Contains(value.Type) || value.Type._type.IsOptionSetBackedByNumeric);
 
             switch (value)
             {
@@ -216,6 +216,9 @@ namespace Microsoft.PowerFx.Functions
                         result = new NumberValue(irContext, val);
                     }
 
+                    break;
+                case OptionSetValue osv:
+                    result = new NumberValue(irContext, (double)osv.ExecutionValue);
                     break;
             }
 
@@ -262,7 +265,7 @@ namespace Microsoft.PowerFx.Functions
         {
             result = null;
 
-            Contract.Assert(DecimalValue.AllowedListConvertToDecimal.Contains(value.Type));
+            Contract.Assert(DecimalValue.AllowedListConvertToDecimal.Contains(value.Type) || value.Type._type.IsOptionSetBackedByNumeric);
 
             switch (value)
             {
@@ -292,6 +295,21 @@ namespace Microsoft.PowerFx.Functions
                     if (strErr == ConvertionStatus.Ok)
                     {
                         result = new DecimalValue(irContext, str);
+                    }
+
+                    break;
+                case OptionSetValue osv:
+                    if (osv.Type._type.OptionSetInfo.BackingKind == Core.Types.DKind.Number)
+                    {
+                        var (os, osErr) = ConvertNumberToDecimal((double)osv.ExecutionValue);
+                        if (osErr == ConvertionStatus.Ok)
+                        {
+                            result = new DecimalValue(irContext, os);
+                        }
+                    }
+                    else
+                    {
+                        result = new DecimalValue(irContext, (decimal)osv.ExecutionValue);
                     }
 
                     break;
@@ -1142,13 +1160,6 @@ namespace Microsoft.PowerFx.Functions
             {
                 return CommonErrors.GenericInvalidArgument(irContext);
             }
-        }
-
-        public static FormulaValue OptionSetValueToLogicalName(IRContext irContext, OptionSetValue[] args)
-        {
-            var optionSet = args[0];
-            var logicalName = optionSet.Option;
-            return new StringValue(irContext, logicalName);
         }
 
         public static FormulaValue PlainText(IRContext irContext, StringValue[] args)

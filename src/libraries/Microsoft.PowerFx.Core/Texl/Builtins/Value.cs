@@ -46,7 +46,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (!DType.Number.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
                 !DType.Decimal.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
                 !DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
-                !DType.Boolean.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                !DType.Boolean.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
+                !argType.IsOptionSetBackedByNumeric)
             {
                 if (argType.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, context.Features) && !argType.IsControl)
                 {
