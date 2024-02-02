@@ -39,6 +39,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             // Text first.  Implemented entirely in the Lexer.
             TextFirst = 1 << 5,
+
+            // Parse supports Attributes on Named Formulas/Udfs.
+            AllowAttributes = 1 << 6,
         }
 
         private bool _hasSemicolon = false;
@@ -88,7 +91,10 @@ namespace Microsoft.PowerFx.Core.Parser
         public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, ParserOptions parserOptions)
         {
             Contracts.AssertValue(parserOptions);
-            var flags = (Flags.NamedFormulas | (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0)) | (parserOptions.AllowParseAsTypeLiteral ? Flags.AllowTypeLiteral : 0);
+            var flags = Flags.NamedFormulas |
+                (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0) |
+                (parserOptions.AllowParseAsTypeLiteral ? Flags.AllowTypeLiteral : 0) | 
+                (parserOptions.AllowAttributes ? Flags.AllowAttributes : 0);
             var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
             var parser = new TexlParser(formulaTokens, flags);
 
@@ -208,6 +214,51 @@ namespace Microsoft.PowerFx.Core.Parser
             return new TypeLiteralNode(ref _idNext, parenOpen, expr, new SourceList(sourceList));
         }
 
+        private PartialAttribute MaybeParseAttribute()
+        {            
+            if (_curs.TidCur != TokKind.BracketOpen)
+            {
+                return null;
+            }
+
+            _curs.TokMove();
+            ParseTrivia();
+
+            var attributeName = TokEat(TokKind.Ident);
+            if (attributeName == null)
+            {
+                CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingValue);
+                _curs.TokMove();
+                return null;
+            }
+
+            ParseTrivia();
+
+            // For this prototype, the attribute op can be an ident, And or Or. 
+            // Definitely not the long term impl here, but works for now.
+            Token attributeOp;
+            if (_curs.TokCur.Kind == TokKind.Ident ||
+                _curs.TokCur.Kind == TokKind.KeyAnd ||
+                _curs.TokCur.Kind == TokKind.KeyOr)
+            {
+                attributeOp = _curs.TokCur;
+                _curs.TokMove();
+            }
+            else
+            {
+                // Use TokEat here to post an error that we expected an ident.
+                TokEat(TokKind.Ident, addError: true);
+                _curs.TokMove();
+                return null;
+            }
+
+            ParseTrivia();
+            TokEat(TokKind.BracketClose);
+            ParseTrivia();
+
+            return new PartialAttribute(attributeName.As<IdentToken>(), attributeOp);
+        }
+
         private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, ParserOptions parserOptions)
         {
             var udfs = new List<UDF>();
@@ -218,6 +269,12 @@ namespace Microsoft.PowerFx.Core.Parser
 
             while (_curs.TokCur.Kind != TokKind.Eof)
             {
+                PartialAttribute attribute = null;
+                if (_flagsMode.Peek().HasFlag(Flags.AllowAttributes))
+                {
+                    attribute = MaybeParseAttribute();
+                }
+
                 var thisIdentifier = TokEat(TokKind.Ident);
                 if (thisIdentifier == null)
                 {
@@ -264,7 +321,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             continue;
                         }
 
-                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex));
+                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, attribute));
 
                         // If the result was an error, keep moving cursor until end of named formula expression
                         if (result.Kind == NodeKind.Error)
@@ -365,7 +422,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     // = or ( expected here
                     ErrorTid(_curs.TokCur, TokKind.Equ);
-                    break;
+                    MoveToNextUserDefinition();
                 }
             }
 
