@@ -12,18 +12,33 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     [TransportType(TransportKind.ByValue)]
     internal interface ITokenTextSpan
     {
+        /// <summary>
+        /// A predefined name for the token or a variable name.
+        /// </summary>
         string TokenName { get; }
 
+        /// <summary>
+        /// Based 0 index starting point of the token.
+        /// </summary>
         int StartIndex { get; }
 
+        /// <summary>
+        /// Based 0 index ending point of the token.
+        /// </summary>
         int EndIndex { get; }
 
+        /// <summary>
+        /// The type of the token.
+        /// </summary>
         TokenType TokenType { get; }
 
+        /// <summary>
+        /// Used by the intellisense to determine if the token can be hidden.
+        /// </summary>
         bool CanBeHidden { get; }
     }
 
-    internal sealed class TokenTextSpan : ITokenTextSpan, ITextFirstFlag
+    public sealed class TokenTextSpan : ITokenTextSpan, ITextFirstFlag
     {
         public string TokenName { get; private set; }
 
@@ -33,21 +48,22 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         public TokenType TokenType { get; private set; }
 
-        public bool CanBeHidden { get; private set; }
-
         public bool IsTextFirst { get; private set; }
 
-        public TokenTextSpan(string name, int startIndex, int endIndex, TokenType type, bool canHide)
+        bool ITokenTextSpan.CanBeHidden => this.CanBeHidden;
+
+        internal bool CanBeHidden { get; private set; }
+
+        internal TokenTextSpan(string name, int startIndex, int endIndex, TokenType type, bool canHide)
         {
             TokenName = name;
             StartIndex = startIndex;
             EndIndex = endIndex;
             TokenType = type;
             CanBeHidden = canHide;
-            IsTextFirst = false;
         }
 
-        public TokenTextSpan(string name, Token token, TokenType type, bool canHide = false)
+        internal TokenTextSpan(string name, Token token, TokenType type, bool canHide = false)
             : this(name, token.VerifyValue().Span.Min, token.VerifyValue().Span.Lim, type, canHide)
         {
             IsTextFirst = token is ITextFirstFlag flag ? flag.IsTextFirst : false;
