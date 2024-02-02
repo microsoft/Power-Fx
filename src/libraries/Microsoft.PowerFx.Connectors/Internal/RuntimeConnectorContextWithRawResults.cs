@@ -26,6 +26,6 @@ namespace Microsoft.PowerFx.Connectors
 
         public override ConnectorLogger ExecutionLogger => _baseRuntimeConnectorContext.ExecutionLogger;
 
-        public override ResourceManager ResourceManager => _baseRuntimeConnectorContext.ResourceManager;
+        public override IResourceManager ResourceManager => _baseRuntimeConnectorContext.ResourceManager;
     }
 }

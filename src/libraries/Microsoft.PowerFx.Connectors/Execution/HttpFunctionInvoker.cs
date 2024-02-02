@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Connectors
         private readonly ConnectorFunction _function;
         private readonly bool _returnRawResults;        
         private readonly ConnectorLogger _logger;
-        private readonly ResourceManager _resourceManager;
+        private readonly IResourceManager _resourceManager;
 
         public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext)
         {

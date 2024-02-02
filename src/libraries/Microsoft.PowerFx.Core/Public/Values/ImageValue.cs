@@ -8,17 +8,15 @@ using Microsoft.PowerFx.Core.IR;
 namespace Microsoft.PowerFx.Types
 {
     public class ImageValue : FileValue
-    {
-        public ImageValue(ResourceManager resourceManager, string str, bool isBase64Encoded, FileType fileType = FileType.Image)
-            : base(resourceManager, str, isBase64Encoded, fileType)
+    {        
+        public ImageValue(IResourceManager resourceManager, IResourceElement element)
+            : base(resourceManager, element)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.Image);
         }
 
-        public override string ResourceIdentifier => "imagemanager";
-
         internal ImageValue(IRContext irContext)
-            : base(null, null, false, FileType.Unknown)
+            : base(null, null)
         {
         }
 

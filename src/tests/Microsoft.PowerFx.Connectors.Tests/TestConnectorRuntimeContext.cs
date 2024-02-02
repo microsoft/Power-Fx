@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Tests;
 using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
@@ -16,7 +17,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         private readonly bool _throwOnError;
         private readonly ConnectorLogger _logger;
         private readonly TimeZoneInfo _tzi;
-        private readonly ResourceManager _resourceManager = new ResourceManager();
+        private readonly IResourceManager _resourceManager = new TestResourceManager();
 
         public TestConnectorRuntimeContext(string @namespace, HttpMessageInvoker client, bool? throwOnError = null, ITestOutputHelper console = null, bool includeDebug = false, TimeZoneInfo tzi = null)
         {
@@ -28,7 +29,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         public override TimeZoneInfo TimeZoneInfo => _tzi;
 
-        public override ResourceManager ResourceManager => _resourceManager;
+        public override IResourceManager ResourceManager => _resourceManager;
 
         public TestConnectorRuntimeContext Add(string @namespace, HttpMessageInvoker client)
         {
@@ -49,7 +50,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public override bool ThrowOnError => _throwOnError;
 
         public override ConnectorLogger ExecutionLogger => _logger;
-    }
+    }   
 
     internal class ConsoleLogger : ConnectorLogger
     {

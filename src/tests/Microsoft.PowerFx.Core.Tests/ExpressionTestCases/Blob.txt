@@ -95,13 +95,13 @@ false
 "appres://imagemanager/0"
 
 >> Text(Blob("abc", false, "Audio"))
-"appres://mediamanager/0"
+"appres://audiomanager/0"
 
 >> Text(Blob("abc", false, "Video"))
-"appres://mediamanager/0"
+"appres://videomanager/0"
 
 >> Text(Blob("abc", false, "PDF"))
-"appres://blobmanager/0"
+"appres://pdfmanager/0"
 
 >> Text(Blob("http://localhost/abc.jpg", false, "URI"))
 "http://localhost/abc.jpg"

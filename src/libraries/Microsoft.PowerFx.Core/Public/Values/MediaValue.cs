@@ -9,16 +9,14 @@ namespace Microsoft.PowerFx.Types
 {
     public class MediaValue : FileValue
     {
-        public MediaValue(ResourceManager resourceManager, string str, bool isBase64Encoded, FileType fileType)
-            : base(resourceManager, str, isBase64Encoded, fileType)
+        public MediaValue(IResourceManager resourceManager, IResourceElement element)
+            : base(resourceManager, element)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.Media);
         }
 
-        public override string ResourceIdentifier => "mediamanager";
-
         internal MediaValue(IRContext irContext)
-            : base(null, null, false, FileType.Unknown)
+            : base(null, null)
         {
         }
 

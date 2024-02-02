@@ -3,8 +3,6 @@
 
 using System;
 using System.Linq;
-using System.Reflection.Metadata;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -22,16 +20,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Fact]
         public void BlobTest_ConstructorNullResourceManager()
-        {
-            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new BlobValue(null, "xxx", false));
+        {            
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new BlobValue(null, new TestResourceManager().GetElementFromString("abc")));
             Assert.Equal("ResourceManager is required. (Parameter 'resourceManager')", ex.Message);
+        }
+
+        [Fact]
+        public void BlobTest_ConstructorNullElement()
+        {
+            IResourceManager resourceManager = new TestResourceManager();
+            ArgumentException ex = Assert.Throws<ArgumentException>(() => new BlobValue(resourceManager, null));
+            Assert.Equal("Invalid fileType (Parameter 'fileType')", ex.Message);
         }
 
         [Fact]
         public void BlobTest_InvalidCoercions()
         {
-            ResourceManager resourceManager = new ResourceManager();
-            BlobValue blob = new BlobValue(resourceManager, null, false);
+            IResourceManager resourceManager = new TestResourceManager();
+            IResourceElement element = resourceManager.GetElementFromString(null);
+            BlobValue blob = new BlobValue(resourceManager, element);
 
             InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => blob.AsDouble());
             Assert.Equal("Can't coerce to double from Blob", ex.Message);
@@ -46,16 +53,17 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void BlobTest_NullValue()
         {
-            ResourceManager resourceManager = new ResourceManager();
-            BlobValue blob = new BlobValue(resourceManager, null, false);
+            IResourceManager resourceManager = new TestResourceManager();
+            IResourceElement element = resourceManager.GetElementFromString(null);
+            BlobValue blob = new BlobValue(resourceManager, element);
 
             Assert.NotNull(blob);
-            Assert.Null(blob.String);
-            Assert.Null(blob.Base64String);
+            Assert.Null(blob.ResourceElement.String);
+            Assert.Null(blob.ResourceElement.Base64String);
             Assert.Equal(0, blob.Id);
-            Assert.Equal(FileType.Any, blob.FileType);
+            Assert.Equal(FileType.Any, blob.ResourceElement.FileType);
             Assert.Equal("appres://blobmanager/0", blob.ToString());
-            Assert.Same(blob, resourceManager.GetResource(0));
+            Assert.Same(element, resourceManager.GetResource(0));
 
             resourceManager.RemoveResource(0);
             Assert.Null(resourceManager.GetResource(0));
@@ -64,61 +72,67 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void BlobTest_EmptyValue()
         {
-            ResourceManager resourceManager = new ResourceManager();
-            BlobValue blob = new BlobValue(resourceManager, string.Empty, false);
+            IResourceManager resourceManager = new TestResourceManager();
+            IResourceElement element = resourceManager.GetElementFromString(string.Empty);
+            BlobValue blob = new BlobValue(resourceManager, element);
 
             Assert.NotNull(blob);
-            Assert.Equal(string.Empty, blob.String);
-            Assert.Equal(string.Empty, blob.Base64String);
+            Assert.Equal(string.Empty, blob.ResourceElement.String);
+            Assert.Equal(string.Empty, blob.ResourceElement.Base64String);
             Assert.Equal("appres://blobmanager/0", blob.ToString());
-            Assert.Same(blob, resourceManager.GetResource(0));
+            Assert.Same(element, resourceManager.GetResource(0));
         }
 
         [Fact]
         public void BlobTest_SomeValue()
         {
-            ResourceManager resourceManager = new ResourceManager();
-            BlobValue blob = new BlobValue(resourceManager, "Hello world!", false);
+            IResourceManager resourceManager = new TestResourceManager();
+            IResourceElement element = resourceManager.GetElementFromString("Hello world!");
+            BlobValue blob = new BlobValue(resourceManager, element);
 
             Assert.NotNull(blob);
-            Assert.Equal("Hello world!", blob.String);
-            Assert.Equal("SGVsbG8gd29ybGQh", blob.Base64String);            
-            Assert.Same(blob, resourceManager.GetResource(0));
+            Assert.Equal("Hello world!", blob.ResourceElement.String);
+            Assert.Equal("SGVsbG8gd29ybGQh", blob.ResourceElement.Base64String);            
+            Assert.Same(element, resourceManager.GetResource(0));
         }
 
         [Fact]
         public void BlobTest_SomeBase64Value()
         {
-            ResourceManager resourceManager = new ResourceManager();
-            BlobValue blob = new BlobValue(resourceManager, "SGVsbG8gd29ybGQh", true);
+            IResourceManager resourceManager = new TestResourceManager();
+            IResourceElement element = resourceManager.GetElementFromBase64String("SGVsbG8gd29ybGQh");
+            BlobValue blob = new BlobValue(resourceManager, element);
 
             Assert.NotNull(blob);
-            Assert.Equal("Hello world!", blob.String);
-            Assert.Equal("SGVsbG8gd29ybGQh", blob.Base64String);                        
-            Assert.Same(blob, resourceManager.GetResource(0));
+            Assert.Equal("Hello world!", blob.ResourceElement.String);
+            Assert.Equal("SGVsbG8gd29ybGQh", blob.ResourceElement.Base64String);                        
+            Assert.Same(element, resourceManager.GetResource(0));
         }
 
         [Fact]
         public void BlobTest_InvalidBase64()
         {
-            ResourceManager resourceManager = new ResourceManager();
+            IResourceManager resourceManager = new TestResourceManager();            
 
-            ArgumentException ex = Assert.Throws<ArgumentException>(() => new BlobValue(resourceManager, "This_is_not_a_base64_string!", true));
+            ArgumentException ex = Assert.Throws<ArgumentException>(() => resourceManager.GetElementFromBase64String("This_is_not_a_base64_string!"));
             Assert.Equal("Invalid Base64 string (Parameter 'str')", ex.Message);
         }
 
         [Fact]
         public void BlobTest_MultipleObjects()
         {
-            ResourceManager resourceManager = new ResourceManager();
-            BlobValue[] blobs = Enumerable.Range(0, 10).Select(i => new BlobValue(resourceManager, $"Blob {i}", false)).ToArray();
+            IResourceManager resourceManager = new TestResourceManager();
+            BlobValue[] blobs = Enumerable.Range(0, 10).Select(i =>
+            {
+                IResourceElement element = resourceManager.GetElementFromString($"Blob {i}");
+                return new BlobValue(resourceManager, element);
+            }).ToArray();
 
             foreach (BlobValue blob in blobs)
             {
                 Assert.NotNull(blob);
-                Assert.Equal($"Blob {blob.Id}", blob.String);                
-                Assert.Equal($"appres://blobmanager/{blob.Id}", blob.ToString());
-                Assert.Same(blob, resourceManager.GetResource(blob.Id));
+                Assert.Equal($"Blob {blob.Id}", blob.ResourceElement.String);                
+                Assert.Equal($"appres://blobmanager/{blob.Id}", blob.ToString());                
             }
 
             Assert.Equal(45, blobs.Sum(b => b.Id));

@@ -38,11 +38,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
              Func<PowerFxConfig, SymbolTable, object> updatePfxConfig, 
              Func<object, RecordValue> parameters, 
              Action<RecalcEngine, bool> configureEngine,
-             Func<object[]> runtimeConfigTypes,
+             Action<RuntimeConfig> runtimeConfig,
              Action<ReadOnlySymbolValues, ISymbolSlot[]> setVariables)> SetupHandlers = new ()
         {
             { "AllEnumsSetup", (AllEnumsSetup, null, null, null, null, null) },
-            { "Blob", (null, BlobSetup, null, null, () => new[] { new ResourceManager() }, AddBlobVar) },
+            { "Blob", (null, BlobSetup, null, null, AddResourceManager, AddBlobVar) },
             { "DecimalSupport", (null, null, null, null, null, null) }, // Decimal is enabled in the C# interpreter
             { "EnableJsonFunctions", (null, EnableJsonFunctions, null, null, null, null) },
             { "MutationFunctionsTestSetup", (null, null, null, MutationFunctionsTestSetup, null, null) },
@@ -65,6 +65,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #pragma warning restore CS0618 // Type or member is obsolete
 
             return null;
+        }
+
+        private static void AddResourceManager(RuntimeConfig runtimeConfig)
+        {
+            runtimeConfig.AddService<IResourceManager>(new TestResourceManager());
         }
 
         private static object BlobSetup(PowerFxConfig config, SymbolTable symbolTable)
@@ -399,7 +404,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(await RunVerifyAsync(expr, config, iSetup).ConfigureAwait(false));
                 }
 
-                List<object> runtimeConfigObjects = new List<object>();
+                List<Action<RuntimeConfig>> runtimeConfiguration = new List<Action<RuntimeConfig>>();
                 List<Action<ReadOnlySymbolValues, ISymbolSlot[]>> setVariables = new ();
                 SymbolTable symbolTable = new SymbolTable();
                 List<ISymbolSlot> slots = new List<ISymbolSlot>();
@@ -438,9 +443,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                                 k.configureEngine(engine, NumberIsFloat);
                             }
 
-                            if (k.runtimeConfigTypes != null)
+                            if (k.runtimeConfig != null)
                             {
-                                runtimeConfigObjects.AddRange(k.runtimeConfigTypes());
+                                runtimeConfiguration.Add(k.runtimeConfig);
                             }
 
                             if (k.setVariables != null)
@@ -505,9 +510,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     }
                 }
 
-                foreach (object obj in runtimeConfigObjects)
+                foreach (Action<RuntimeConfig> rc in runtimeConfiguration)
                 {
-                    runtimeConfig.AddService(obj.GetType(), obj);
+                    rc(runtimeConfig);
                 }            
 
                 // Ensure tests can run with governor on. 

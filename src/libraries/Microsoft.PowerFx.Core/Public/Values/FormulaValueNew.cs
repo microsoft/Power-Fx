@@ -139,29 +139,29 @@ namespace Microsoft.PowerFx.Types
             return new VoidValue(IRContext.NotInSource(FormulaType.Void));
         }
 
-        internal static BlobValue NewBlob(ResourceManager resourceManager, string str, bool isBase64Encoded, FileType fileType = FileType.Any)
+        internal static BlobValue NewBlob(IResourceManager resourceManager, IResourceElement element)
         {
-            return new BlobValue(resourceManager, str, isBase64Encoded, fileType);
+            return new BlobValue(resourceManager, element);
         }
 
-        internal static MediaValue NewAudio(ResourceManager resourceManager, string str, bool isBase64Encoded)
+        internal static MediaValue NewAudio(IResourceManager resourceManager, IResourceElement element)
         {
-            return new MediaValue(resourceManager, str, isBase64Encoded, FileType.Audio);
+            return new MediaValue(resourceManager, element);
         }
 
-        internal static MediaValue NewVideo(ResourceManager resourceManager, string str, bool isBase64Encoded)
+        internal static MediaValue NewVideo(IResourceManager resourceManager, IResourceElement element)
         {
-            return new MediaValue(resourceManager, str, isBase64Encoded, FileType.Video);
+            return new MediaValue(resourceManager, element);
         }
 
-        internal static ImageValue NewImage(ResourceManager resourceManager, string str, bool isBase64Encoded)
+        internal static ImageValue NewImage(IResourceManager resourceManager, IResourceElement element)
         {
-            return new ImageValue(resourceManager, str, isBase64Encoded, FileType.Image);
+            return new ImageValue(resourceManager, element);
         }
 
-        internal static BlobValue NewPDF(ResourceManager resourceManager, string str, bool isBase64Encoded)
+        internal static BlobValue NewPDF(IResourceManager resourceManager, IResourceElement element)
         {
-            return new BlobValue(resourceManager, str, isBase64Encoded, FileType.PDF);
+            return new BlobValue(resourceManager, element);
         }
     }
 }

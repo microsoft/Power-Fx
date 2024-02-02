@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {        
         public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            ResourceManager resourceManager = runtimeServiceProvider.GetService<ResourceManager>();
+            IResourceManager resourceManager = runtimeServiceProvider.GetService<IResourceManager>();
 
             if (resourceManager == null)
             {
@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (args[0] is BlankValue)
             {
-                return Task.FromResult<FormulaValue>(BlobValue.NewBlob(resourceManager, null, false));
+                return Task.FromResult<FormulaValue>(BlobValue.NewBlob(resourceManager, resourceManager.GetElementFromString(null)));
             }            
 
             if (args[0] is FileValue)
@@ -76,16 +76,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return Task.FromResult<FormulaValue>(CommonErrors.GenericInvalidArgument(args[1].IRContext));
             }
 
+            IResourceElement element = !isBase64String ? resourceManager.GetElementFromString(sv.Value, fileType) : resourceManager.GetElementFromBase64String(sv.Value, fileType);            
+
             return fileType switch
             {
-                FileType.Image => Task.FromResult<FormulaValue>(BlobValue.NewImage(resourceManager, sv.Value, isBase64String)),
-                FileType.Audio => Task.FromResult<FormulaValue>(BlobValue.NewAudio(resourceManager, sv.Value, isBase64String)),
-                FileType.Video => Task.FromResult<FormulaValue>(BlobValue.NewVideo(resourceManager, sv.Value, isBase64String)),
-                FileType.PDF => Task.FromResult<FormulaValue>(BlobValue.NewPDF(resourceManager, sv.Value, isBase64String)),
+                FileType.Image => Task.FromResult<FormulaValue>(BlobValue.NewImage(resourceManager, element)),
+                FileType.Audio => Task.FromResult<FormulaValue>(BlobValue.NewAudio(resourceManager, element)),
+                FileType.Video => Task.FromResult<FormulaValue>(BlobValue.NewVideo(resourceManager, element)),
+                FileType.PDF => Task.FromResult<FormulaValue>(BlobValue.NewPDF(resourceManager, element)),
 
                 // includes Uri
-                _ => Task.FromResult<FormulaValue>(BlobValue.NewBlob(resourceManager, sv.Value, isBase64String, fileType))
-            };           
+                _ => Task.FromResult<FormulaValue>(BlobValue.NewBlob(resourceManager, element))
+            };
         }
     }
 
@@ -108,7 +110,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {        
         public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            ResourceManager resourceManager = runtimeServiceProvider.GetService<ResourceManager>();
+            IResourceManager resourceManager = runtimeServiceProvider.GetService<IResourceManager>();
 
             if (resourceManager == null)
             {
@@ -117,7 +119,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             FileValue fv = args[0] as FileValue;
 
-            if (args[0] is BlankValue || (fv != null && string.IsNullOrEmpty(fv.String)))
+            if (args[0] is BlankValue || (fv != null && string.IsNullOrEmpty(fv.ResourceElement.String)))
             {
                 return Task.FromResult<FormulaValue>(FormulaValue.NewBlank(FormulaType.String));
             }            
@@ -127,12 +129,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return Task.FromResult<FormulaValue>(CommonErrors.RuntimeTypeMismatch(args[0].IRContext));
             }
 
-            if (fv.FileType == FileType.Uri && fv.String.StartsWith(ResourceManager.Prefix))
-            {
-                fv = fv.GetResource();
-            }
-
-            return Task.FromResult<FormulaValue>(FormulaValue.New(fv.String));
+            return Task.FromResult<FormulaValue>(FormulaValue.New(fv.ResourceElement.String));
         }
 
         public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaValue[] args, CancellationToken cancellationToken)
@@ -160,7 +157,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            ResourceManager resourceManager = runtimeServiceProvider.GetService<ResourceManager>();
+            IResourceManager resourceManager = runtimeServiceProvider.GetService<IResourceManager>();
 
             if (resourceManager == null)
             {
@@ -169,7 +166,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             FileValue fv = args[0] as FileValue;
 
-            if (args[0] is BlankValue || (fv != null && string.IsNullOrEmpty(fv.Base64String)))
+            if (args[0] is BlankValue || (fv != null && string.IsNullOrEmpty(fv.ResourceElement.Base64String)))
             {
                 return Task.FromResult<FormulaValue>(FormulaValue.NewBlank(FormulaType.String));
             }
@@ -179,7 +176,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return Task.FromResult<FormulaValue>(CommonErrors.RuntimeTypeMismatch(args[0].IRContext));
             }
 
-            return Task.FromResult<FormulaValue>(FormulaValue.New(fv.Base64String));
+            return Task.FromResult<FormulaValue>(FormulaValue.New(fv.ResourceElement.Base64String));
         }
     }
 }

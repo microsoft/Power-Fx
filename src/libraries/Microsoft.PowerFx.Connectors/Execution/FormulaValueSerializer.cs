@@ -254,12 +254,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         if (propertySchema.Format == "byte")
                         {
-                            WriteStringValue(bv.Base64String);
+                            WriteStringValue(bv.ResourceElement.Base64String);
                         }
                         else
                         {
                             // "binary"
-                            WriteStringValue(bv.String);
+                            WriteStringValue(bv.ResourceElement.String);
                         }
                     }
                     else

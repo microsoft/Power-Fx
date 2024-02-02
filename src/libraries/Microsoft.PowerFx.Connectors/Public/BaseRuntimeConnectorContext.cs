@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public virtual bool ThrowOnError { get; } = false;
 
-        public virtual ResourceManager ResourceManager { get; }
+        public virtual IResourceManager ResourceManager { get; }
 
         internal virtual bool ReturnRawResults { get; } = false;        
 

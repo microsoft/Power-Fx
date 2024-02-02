@@ -339,8 +339,8 @@ namespace Microsoft.PowerFx.Functions
 
             if (args[0] is StringValue sv)
             {
-                ResourceManager resourceManager = runner.FunctionServices.GetService<ResourceManager>();
-                return new BlobValue(resourceManager, sv.Value, false);
+                IResourceManager resourceManager = runner.FunctionServices.GetService<IResourceManager>();
+                return new BlobValue(resourceManager, resourceManager.GetElementFromString(sv.Value));
             }
 
             return new ErrorValue(irContext, new ExpressionError()

@@ -129,6 +129,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             else if (expectedResult.StartsWith("BLOB"))
             {
                 Assert.IsAssignableFrom<BlobValue>(fv);
+
+                BlobValue bv = (BlobValue)fv;
+                Assert.StartsWith(expectedResult.Substring(5), bv.ResourceElement.Base64String);
             }
             else if (expectedResult == "RAW")
             {

@@ -8,20 +8,18 @@ using Microsoft.PowerFx.Core.IR;
 namespace Microsoft.PowerFx.Types
 {
     public class BlobValue : FileValue
-    {        
-        public BlobValue(ResourceManager resourceManager, string str, bool isBase64Encoded, FileType fileType = FileType.Any)
-            : base(resourceManager, str, isBase64Encoded, fileType)
+    {
+        public BlobValue(IResourceManager resourceManager, IResourceElement element)
+            : base(resourceManager, element)
         {
-            Contract.Assert(IRContext.ResultType == FormulaType.Blob);            
+            Contract.Assert(IRContext.ResultType == FormulaType.Blob);
         }
 
-        public override string ResourceIdentifier => "blobmanager";
+        internal BlobValue(IRContext irContext)
+            : base(null, null)
+        {
+        }
 
-        internal BlobValue(IRContext irContext) 
-            : base(null, null, false, FileType.Unknown)
-        {            
-        }      
-      
         public override void Visit(IValueVisitor visitor)
         {
             visitor.Visit(this);
