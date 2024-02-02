@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Functions
                 case ErrorValue errorValue:
                     return errorValue;
                 case BlankValue:
-                    return FormulaValue.NewBlank(FormulaType.String);
+                    return new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty);
                 case OptionSetValue osv:
                     return new StringValue(IRContext.NotInSource(FormulaType.String), osv.Option);
             }

@@ -1006,6 +1006,9 @@ namespace Microsoft.PowerFx.Tests
             symValues.Set(option1Solt, option1);
 
             var config = new PowerFxConfig() { SymbolTable = symbol };
+#pragma warning disable CS0618 // Type or member is obsolete
+            config.EnableOptionSetInfo();
+#pragma warning restore CS0618 // Type or member is obsolete
             config.AddOptionSet(optionSet);
             var recalcEngine = new RecalcEngine(config);
 
