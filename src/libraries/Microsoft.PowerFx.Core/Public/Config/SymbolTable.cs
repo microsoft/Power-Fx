@@ -200,10 +200,11 @@ namespace Microsoft.PowerFx
         /// Adds an user defined function.
         /// </summary>
         /// <param name="script">String representation of the user defined function.</param>
+        /// <param name="definedTypeSymbolTable">String representation of the user defined function.</param>
         /// <param name="parseCulture">CultureInfo to parse the script againts. Default is invariant.</param>
         /// <param name="symbolTable">Extra symbols to bind UDF. Commonly coming from Engine.</param>
         /// <param name="extraSymbolTable">Additional symbols to bind UDF.</param>
-        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null)
+        internal void AddUserDefinedFunction(string script, DefinedTypeSymbolTable definedTypeSymbolTable = null, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null)
         {
             // Phase 1: Side affects are not allowed.
             var options = new ParserOptions() 
@@ -213,7 +214,7 @@ namespace Microsoft.PowerFx
             };
             var sb = new StringBuilder();
 
-            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult);
+            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult, definedTypeSymbolTable);
 
             if (userDefinitionResult.HasErrors)
             {

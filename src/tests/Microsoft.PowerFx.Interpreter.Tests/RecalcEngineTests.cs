@@ -517,6 +517,24 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Fact]
+        public void DefTableType()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true
+            };
+#pragma warning disable CS0618
+            var errors = recalcEngine.DefineType("People = Type([{Age: Number}]);", parserOptions);
+#pragma warning restore CS0618
+            Assert.Empty(errors);
+            recalcEngine.AddUserDefinedFunction("countMinors(p: People): Number = CountRows(Filter(p, Age < 18));", CultureInfo.InvariantCulture);
+            Assert.Equal(1.0, recalcEngine.Eval("countMinors([{Age: 2}])").ToObject());
+        }
+
         [Theory]
         [InlineData("foo(x: Number, y:Number):Number = x + y;", "foo(1,2)", 3.0)]
         [InlineData("foo(x: Number, y:Number):Number = x - Abs(y);", "foo(myArg,1)", 9.0)]
@@ -527,7 +545,7 @@ namespace Microsoft.PowerFx.Tests
 
             engine.UpdateVariable("myArg", FormulaValue.New(10));
 
-            symbolTable.AddUserDefinedFunction(script, CultureInfo.InvariantCulture, engine.SupportedFunctions);
+            symbolTable.AddUserDefinedFunction(script, null, CultureInfo.InvariantCulture, engine.SupportedFunctions);
 
             var check = engine.Check(expression, symbolTable: symbolTable);
             var result = check.GetEvaluator().Eval();

@@ -10,10 +10,13 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -28,7 +31,6 @@ namespace Microsoft.PowerFx
 
         internal readonly SymbolTable _symbolTable;
         internal readonly SymbolValues _symbolValues;
-        internal readonly DefinedTypeSymbolTable _definedTypeSymbolTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
@@ -44,7 +46,6 @@ namespace Microsoft.PowerFx
         {
             _symbolTable = new SymbolTable { DebugName = "Globals" };
             _symbolValues = new SymbolValues(_symbolTable);
-            _definedTypeSymbolTable = new DefinedTypeSymbolTable();
             _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
 
             base.EngineSymbols = _symbolTable;
@@ -208,6 +209,30 @@ namespace Microsoft.PowerFx
 
             var result = await eval.EvalAsync(cancellationToken, runtimeConfig).ConfigureAwait(false);
             return result;
+        }
+
+        [Obsolete("preview")]
+        internal IEnumerable<TexlError> DefineType(string script, ParserOptions parserOptions)
+        {
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
+            var definedTypes = parsedNamedFormulasAndUDFs.DefinedTypes.ToList();
+
+            var errors = new List<TexlError>();
+
+            foreach (var defType in definedTypes)
+            {
+                var name = defType.Ident.Name.Value;
+                var res = DTypeVisitor.Run(defType.Type.TypeRoot, _definedTypeSymbolTable);
+                if (res == null)
+                {
+                    errors.Add(new TexlError(defType.Ident, DocumentErrorSeverity.Severe, Core.Localization.TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                    continue;
+                }
+
+                _definedTypeSymbolTable.RegisterType(name, FormulaType.Build(res));
+            }
+
+            return errors;
         }
 
         internal FormulaType GetFormulaTypeFromName(string name)
