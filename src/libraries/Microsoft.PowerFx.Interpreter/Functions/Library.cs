@@ -675,6 +675,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Error)
             },
             {
+                BuiltinFunctionsCore.EscapeHtml,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.EncodeUrl.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: EscapeHtml)
+            },
+            {
                 BuiltinFunctionsCore.Exp,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Exp.Name,

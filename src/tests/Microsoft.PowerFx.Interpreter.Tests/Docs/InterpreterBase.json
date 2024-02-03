@@ -50,6 +50,7 @@
     "EndsWith",
     "EOMonth",
     "Error",
+    "EscapeHtml",
     "Exp",
     "Filter",
     "Find",

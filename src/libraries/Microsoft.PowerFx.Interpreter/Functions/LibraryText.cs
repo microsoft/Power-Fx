@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -799,6 +800,12 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue EncodeUrl(IRContext irContext, StringValue[] args)
         {
             return new StringValue(irContext, Uri.EscapeDataString(args[0].Value));
+        }
+
+        public static FormulaValue EscapeHtml(IRContext irContext, StringValue[] args)
+        {
+            var encoded = HttpUtility.HtmlEncode(args[0].Value);
+            return new StringValue(irContext, encoded);
         }
 
         public static FormulaValue Proper(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)

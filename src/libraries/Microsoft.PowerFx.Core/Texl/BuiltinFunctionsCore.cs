@@ -97,6 +97,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction EncodeUrl = _library.Add(new EncodeUrlFunction());
         public static readonly TexlFunction EndsWith = _library.Add(new EndsWithFunction());
         public static readonly TexlFunction Error = _library.Add(new ErrorFunction());
+        public static readonly TexlFunction EscapeHtml = _library.Add(new EscapeHtmlFunction());
         public static readonly TexlFunction Exp = _library.Add(new ExpFunction());
         public static readonly TexlFunction ExpT = _library.Add(new ExpTableFunction());
         public static readonly TexlFunction Filter = _library.Add(new FilterFunction());
