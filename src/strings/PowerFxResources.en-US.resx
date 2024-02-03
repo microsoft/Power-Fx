@@ -2058,9 +2058,24 @@
     <value>This function cannot be invoked within {0}.</value>
     <comment>Error Message.</comment>
   </data>
-  <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
-    <value>Incorrect argument. This formula expects a table from a connected data source. The AsType and IsType functions require connected data sources.</value>
+  <data name="ErrorResource_ErrAsTypeAndIsTypeExpectConnectedDataSource_ShortMessage" xml:space="preserve">
+    <value>Incorrect argument. The AsType and IsType functions require a table from a connected data source.</value>
     <comment>{Locked=AsType}{Locked=IsType} Error message provided when the user attempts to use a non-Connected data source table as the second argument to AsType or IsType.</comment>
+  </data>
+  <data name="ErrorResource_ErrAsTypeAndIsTypeExpectConnectedDataSource_LongMessage" xml:space="preserve">
+    <value>Sometimes this is the result of name collisions with a table's fields, you may need the global disambiguation operator to ensure you're referencing the table.</value>
+  </data>
+  <data name="ErrorResource_ErrAsTypeAndIsTypeExpectConnectedDataSource_HowToFix_1" xml:space="preserve">
+    <value>As an example, you can use [@Users] instead of Users</value>
+    <comment>1 How to fix the error.</comment>
+  </data>
+  <data name="ErrorResource_ErrAsTypeAndIsTypeExpectConnectedDataSource_Link_1" xml:space="preserve">
+    <value>Article: Disambiguation Operator</value>
+    <comment>Article: Disambiguation Operator</comment>
+  </data>
+  <data name="ErrorResource_ErrAsTypeAndIsTypeExpectConnectedDataSource_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2259922</value>
+    <comment>{Locked}</comment>
   </data>
   <data name="InfoMessage" xml:space="preserve">
     <value>Message: </value>
