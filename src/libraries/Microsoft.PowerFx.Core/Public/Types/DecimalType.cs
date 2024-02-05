@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.Types
     public class DecimalType : FormulaType
     {
         internal DecimalType()
-            : base(new DType(DKind.Decimal))
+            : base(DType.Decimal)
         {
         }
 
