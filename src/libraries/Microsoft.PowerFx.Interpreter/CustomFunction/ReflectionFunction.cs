@@ -162,16 +162,6 @@ namespace Microsoft.PowerFx
                 return FormulaType.Blob;
             }
 
-            if (t == typeof(MediaValue))
-            {
-                return FormulaType.Media;
-            }
-
-            if (t == typeof(ImageValue))
-            {
-                return FormulaType.Image;
-            }
-
             // Handle any FormulaType deriving from Primitive<T>
             var tBase = t.BaseType;
 

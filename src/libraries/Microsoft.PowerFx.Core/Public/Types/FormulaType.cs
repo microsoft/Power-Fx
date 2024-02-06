@@ -60,10 +60,6 @@ namespace Microsoft.PowerFx.Types
 
         public static FormulaType Blob { get; } = new BlobType();
 
-        public static FormulaType Media { get; } = new MediaType();
-
-        public static FormulaType Image { get; } = new ImageType();
-
         /// <summary>
         /// Internal use only to represent an arbitrary (un-backed) option set value.
         /// Should be removed if possible.
@@ -208,12 +204,6 @@ namespace Microsoft.PowerFx.Types
 
                 case DKind.Blob:
                     return Blob;
-
-                case DKind.Image:
-                    return Image;
-
-                case DKind.Media:
-                    return Media;
 
                 default:
                     return new UnsupportedType(type);

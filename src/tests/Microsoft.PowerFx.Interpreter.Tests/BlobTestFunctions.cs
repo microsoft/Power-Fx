@@ -20,15 +20,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public static void AddBlobTestFunctions(this PowerFxConfig config)
         {
             config.AddFunction(new BlobFunctionImpl());
+            config.AddFunction(new BlobUriFunctionImpl());
             config.AddFunction(new BlobGetStringFunctionImpl());
             config.AddFunction(new BlobGetBase64StringFunctionImpl());
         }
     }
 
     internal class BlobFunction : BuiltinFunction
-    {        
+    {
         public BlobFunction()
-             : base("Blob", (loc) => "Converts a string to a Blob.", FunctionCategories.Text, DType.Blob, 0, 1, 3, DType.String, DType.Boolean, DType.String)
+             : base("Blob", (loc) => "Converts a string to a Blob.", FunctionCategories.Text, DType.Blob, 0, 1, 2, DType.String, DType.Boolean)
         {
         }
 
@@ -37,16 +38,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new TexlStrings.StringGetter[] { (loc) => "string" };
-            yield return new TexlStrings.StringGetter[] { (loc) => "string", (loc) => "isBase64String" };
+            yield return new TexlStrings.StringGetter[] { (loc) => "string", (loc) => "isBase64String" };            
             yield return new TexlStrings.StringGetter[] { (loc) => "string", (loc) => "isBase64String", (loc) => "blobType" };
-        }        
+        }
     }
 
     internal class BlobFunctionImpl : BlobFunction, IAsyncTexlFunction5
-    {        
+    {
         public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            IResourceManager resourceManager = runtimeServiceProvider.GetService<IResourceManager>();
+            cancellationToken.ThrowIfCancellationRequested();                       
 
             if (resourceManager == null)
             {
@@ -55,10 +56,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (args[0] is BlankValue)
             {
-                return Task.FromResult<FormulaValue>(BlobValue.NewBlob(resourceManager, resourceManager.GetElementFromString(null)));
-            }            
+                return Task.FromResult<FormulaValue>(BlobValue.NewBlob(new StringBlob(null)));
+            }
 
-            if (args[0] is FileValue)
+            if (args[0] is BlobValue)
             {
                 return Task.FromResult(args[0]);
             }
@@ -67,32 +68,57 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 return Task.FromResult<FormulaValue>(CommonErrors.RuntimeTypeMismatch(args[0].IRContext));
             }
+            
+            bool isBase64String = args.Length >= 2 && args[1] is BooleanValue bv && bv.Value;                        
+            BlobElementBase elem = isBase64String ? new Base64Blob(sv.Value) : new StringBlob(sv.Value);
 
-            bool isBase64String = args.Length >= 2 && args[1] is BooleanValue bv && bv.Value;
-            FileType fileType = args.Length == 3 && args[2] is StringValue fts && Enum.TryParse(fts.Value, true, out FileType ft) ? ft : FileType.Any;
+            return Task.FromResult<FormulaValue>(BlobValue.NewBlob(elem));
+        }
+    }
 
-            if (isBase64String && fileType == FileType.Uri)
+    internal class BlobUriFunction : BuiltinFunction
+    {
+        public BlobUriFunction()
+             : base("Blob", (loc) => "Converts a string to a Blob.", FunctionCategories.Text, DType.Blob, 0, 2, 2, DType.String, DType.String)
+        {
+        }
+
+        public override bool IsSelfContained => true;
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {            
+            yield return new TexlStrings.StringGetter[] { (loc) => "string", (loc) => "Uri" };
+        }
+    }
+
+    internal class BlobUriFunctionImpl : BlobUriFunction, IAsyncTexlFunction5
+    {
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();         
+
+            if (args[0] is BlankValue)
             {
-                return Task.FromResult<FormulaValue>(CommonErrors.GenericInvalidArgument(args[1].IRContext));
+                return BlobValue.NewBlank(FormulaType.Blob);
             }
 
-            IResourceElement element = !isBase64String ? resourceManager.GetElementFromString(sv.Value, fileType) : resourceManager.GetElementFromBase64String(sv.Value, fileType);            
-
-            return fileType switch
+            if (args[0] is BlobValue)
             {
-                FileType.Image => Task.FromResult<FormulaValue>(BlobValue.NewImage(resourceManager, element)),
-                FileType.Audio => Task.FromResult<FormulaValue>(BlobValue.NewAudio(resourceManager, element)),
-                FileType.Video => Task.FromResult<FormulaValue>(BlobValue.NewVideo(resourceManager, element)),
-                FileType.PDF => Task.FromResult<FormulaValue>(BlobValue.NewPDF(resourceManager, element)),
+                return args[0];
+            }
 
-                // includes Uri
-                _ => Task.FromResult<FormulaValue>(BlobValue.NewBlob(resourceManager, element))
-            };
+            if (args[0] is not StringValue sv)
+            {
+                return CommonErrors.RuntimeTypeMismatch(args[0].IRContext);
+            }
+
+            UriBlob handle = new UriBlob(new Uri(sv.Value));
+            return BlobValue.NewBlob(handle);
         }
     }
 
     internal class BlobGetStringFunction : BuiltinFunction
-    {        
+    {
         public BlobGetStringFunction()
              : base("BlobGetString", (loc) => "Reads Blob content as string.", FunctionCategories.Text, DType.String, 0, 1, 1, DType.Blob)
         {
@@ -107,29 +133,24 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     }
 
     internal class BlobGetStringFunctionImpl : BlobGetStringFunction, IAsyncTexlFunction5
-    {        
-        public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+    {
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            IResourceManager resourceManager = runtimeServiceProvider.GetService<IResourceManager>();
+            cancellationToken.ThrowIfCancellationRequested();            
 
-            if (resourceManager == null)
+            BlobValue blob = args[0] as BlobValue;
+
+            if (args[0] is BlankValue || (blob != null && string.IsNullOrEmpty(await blob.GetAsStringAsync(null, CancellationToken.None).ConfigureAwait(false))))
             {
-                return Task.FromResult<FormulaValue>(CommonErrors.CustomError(args[0].IRContext, "Missing ResourceManager in runtime service provider"));
+                return FormulaValue.NewBlank(FormulaType.String);
             }
 
-            FileValue fv = args[0] as FileValue;
-
-            if (args[0] is BlankValue || (fv != null && string.IsNullOrEmpty(fv.ResourceElement.String)))
+            if (blob == null)
             {
-                return Task.FromResult<FormulaValue>(FormulaValue.NewBlank(FormulaType.String));
-            }            
-
-            if (fv == null)
-            {
-                return Task.FromResult<FormulaValue>(CommonErrors.RuntimeTypeMismatch(args[0].IRContext));
+                return CommonErrors.RuntimeTypeMismatch(args[0].IRContext);
             }
 
-            return Task.FromResult<FormulaValue>(FormulaValue.New(fv.ResourceElement.String));
+            return FormulaValue.New(await blob.GetAsStringAsync(null, CancellationToken.None).ConfigureAwait(false));
         }
 
         public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaValue[] args, CancellationToken cancellationToken)
@@ -139,7 +160,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     }
 
     internal class BlobGetBase64StringFunction : BuiltinFunction
-    {        
+    {
         public BlobGetBase64StringFunction()
              : base("BlobGetBase64String", (loc) => "Reads Blob content as base64 string.", FunctionCategories.Text, DType.String, 0, 1, 1, DType.Blob)
         {
@@ -155,28 +176,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
     internal class BlobGetBase64StringFunctionImpl : BlobGetBase64StringFunction, IAsyncTexlFunction5
     {
-        public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            IResourceManager resourceManager = runtimeServiceProvider.GetService<IResourceManager>();
+            cancellationToken.ThrowIfCancellationRequested();           
 
-            if (resourceManager == null)
+            BlobValue blobValue = args[0] as BlobValue;
+
+            if (args[0] is BlankValue || (blobValue != null && string.IsNullOrEmpty(await blobValue.GetAsBase64Async(cancellationToken).ConfigureAwait(false))))
             {
-                return Task.FromResult(CommonErrors.CustomError(args[0].IRContext, "Missing ResourceManager in runtime service provider"));
+                return FormulaValue.NewBlank(FormulaType.String);
             }
 
-            FileValue fv = args[0] as FileValue;
-
-            if (args[0] is BlankValue || (fv != null && string.IsNullOrEmpty(fv.ResourceElement.Base64String)))
+            if (blobValue == null)
             {
-                return Task.FromResult<FormulaValue>(FormulaValue.NewBlank(FormulaType.String));
+                return CommonErrors.RuntimeTypeMismatch(args[0].IRContext);
             }
 
-            if (fv == null)
-            {
-                return Task.FromResult<FormulaValue>(CommonErrors.RuntimeTypeMismatch(args[0].IRContext));
-            }
-
-            return Task.FromResult<FormulaValue>(FormulaValue.New(fv.ResourceElement.Base64String));
+            return FormulaValue.New(await blobValue.ResourceElement.GetAsBase64Async(cancellationToken).ConfigureAwait(false));
         }
     }
 }

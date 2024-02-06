@@ -577,17 +577,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             public void Visit(BlobValue value)
             {
-                throw new System.NotImplementedException();
-            }
-
-            public void Visit(MediaValue value)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public void Visit(ImageValue value)
-            {
-                throw new System.NotImplementedException();
+                Result = value.ResourceElement.GetAsBase64Async(CancellationToken.None).Result;
             }
 
             private void Visit(IUntypedObject untypedObject)

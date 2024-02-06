@@ -188,9 +188,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static bool TryFloat(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, out NumberValue result)
         {
-            result = null;
-
-            Contract.Assert(NumberValue.AllowedListConvertToNumber.Contains(value.Type));
+            result = null;            
 
             switch (value)
             {
@@ -218,6 +216,9 @@ namespace Microsoft.PowerFx.Functions
                     }
 
                     break;
+
+                default:
+                    return false;
             }
 
             return result != null;
@@ -332,42 +333,20 @@ namespace Microsoft.PowerFx.Functions
         {
             runner.CancellationToken.ThrowIfCancellationRequested();
 
-            if (args[0].IsBlank())
-            {
-                return new BlobValue(irContext);
-            }
-
-            if (args[0] is StringValue sv)
-            {
-                IResourceManager resourceManager = runner.FunctionServices.GetService<IResourceManager>();
-                return new BlobValue(resourceManager, resourceManager.GetElementFromString(sv.Value));
-            }
-
-            return new ErrorValue(irContext, new ExpressionError()
-            {
-                Message = $"Cannot convert {args[0].Type._type} to Blob",
-                Span = irContext.SourceContext,
-                Kind = ErrorKind.InvalidArgument
-            });
+            StringValue sv = (StringValue)args[0];           
+            return new BlobValue(new StringBlob(sv.Value));
         }
 
         public static FormulaValue BlobToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            runner.CancellationToken.ThrowIfCancellationRequested();
-
-            if (args[0].IsBlank())
+            if (args[0] is BlobValue bv && bv?.ResourceElement is UriBlob uri)
             {
-                return FormulaValue.NewBlank(FormulaType.String);
-            }
-
-            if (args[0] is FileValue fv)
-            {
-                return FormulaValue.New(fv.ToString());
+                return FormulaValue.New(uri.Uri.ToString());
             }
 
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = $"Cannot convert {args[0].Type._type} to Text",
+                Message = $"Cannot convert Blob to Text",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument
             });
@@ -570,11 +549,8 @@ namespace Microsoft.PowerFx.Functions
                     break;
 
                 case BlobValue:
-                case ImageValue:
-                case MediaValue:
-
-                    // returns appsres:// reference
-                    result = new StringValue(irContext, value.ToString());
+                    
+                    result = BlobToText(null, default, irContext, new[] { value }) is StringValue sv2 ? sv2 : null;
                     break;
             }
 
@@ -1266,7 +1242,7 @@ namespace Microsoft.PowerFx.Functions
                     Kind = ErrorKind.InvalidArgument
                 });
             }
-            
+
             if (isPartialSurrogate)
             {
                 return new ErrorValue(irContext, new ExpressionError()
@@ -1276,7 +1252,7 @@ namespace Microsoft.PowerFx.Functions
                     Kind = ErrorKind.NotApplicable
                 });
             }
-            
+
             string unicode = char.ConvertFromUtf32((int)number);
             return new StringValue(irContext, unicode);
         }

@@ -8,22 +8,7 @@
 // and we can't call ToExpression() of such an object (NotImplementedException)
 
 >> Text(Blob("abc"))
-"appres://blobmanager/0"
-
->> Blob("abc"); Text(Blob("abc"))
-"appres://blobmanager/1"
-
->> Text(Blob("ABC"))
-"appres://blobmanager/0"
-
->> Text(Blob(Blank()))
-"appres://blobmanager/0"
-
->> Text(Blob(""))
-"appres://blobmanager/0"
-
->> Text(Blob("17"))
-"appres://blobmanager/0"
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(Blob(17))
 "appres://blobmanager/0"
@@ -91,19 +76,8 @@ false
 >> IsBlank(Blob(Blank()))
 false
 
->> Text(Blob("abc", false, "Image"))
-"appres://imagemanager/0"
-
->> Text(Blob("abc", false, "Audio"))
-"appres://audiomanager/0"
-
->> Text(Blob("abc", false, "Video"))
-"appres://videomanager/0"
-
->> Text(Blob("abc", false, "PDF"))
-"appres://pdfmanager/0"
-
->> Text(Blob("http://localhost/abc.jpg", false, "URI"))
+// When 2nd param is a string "uri", we create a Blob Uri
+>> Text(Blob("http://localhost/abc.jpg", "URI"))
 "http://localhost/abc.jpg"
 
 >> Text(Blob("http://localhost/abc.jpg", true, "URI"))

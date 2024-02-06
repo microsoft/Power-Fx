@@ -118,16 +118,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Blob };
             }
 
-            public void Visit(MediaType type)
-            {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Media };
-            }
-
-            public void Visit(ImageType type)
-            {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Image };
-            }
-
             #endregion
             #region Complex Types
 

@@ -271,19 +271,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 public void Visit(BlobValue value)
-                {
-                    throw new NotImplementedException();
-                }
-
-                public void Visit(MediaValue value)
-                {
-                    throw new NotImplementedException();
-                }
-
-                public void Visit(ImageValue value)
-                {
-                    throw new NotImplementedException();
-                }
+                {                    
+                    throw new NotImplementedException("This will be implemented later.");
+                }                
             }
 
             internal static string GetColorString(Color color) => $"#{color.R:x2}{color.G:x2}{color.B:x2}{color.A:x2}";

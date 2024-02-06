@@ -139,29 +139,9 @@ namespace Microsoft.PowerFx.Types
             return new VoidValue(IRContext.NotInSource(FormulaType.Void));
         }
 
-        internal static BlobValue NewBlob(IResourceManager resourceManager, IResourceElement element)
+        public static BlobValue NewBlob(BlobElementBase elem)
         {
-            return new BlobValue(resourceManager, element);
-        }
-
-        internal static MediaValue NewAudio(IResourceManager resourceManager, IResourceElement element)
-        {
-            return new MediaValue(resourceManager, element);
-        }
-
-        internal static MediaValue NewVideo(IResourceManager resourceManager, IResourceElement element)
-        {
-            return new MediaValue(resourceManager, element);
-        }
-
-        internal static ImageValue NewImage(IResourceManager resourceManager, IResourceElement element)
-        {
-            return new ImageValue(resourceManager, element);
-        }
-
-        internal static BlobValue NewPDF(IResourceManager resourceManager, IResourceElement element)
-        {
-            return new BlobValue(resourceManager, element);
-        }
+            return new BlobValue(elem);
+        }     
     }
 }

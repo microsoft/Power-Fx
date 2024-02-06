@@ -427,11 +427,11 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 UnaryOpKind.BlobToText,
-                StandardErrorHandling<FileValue>(
+                StandardErrorHandling<BlobValue>(
                     functionName: null, // internal function, no user-facing name
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<FileValue>,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<BlobValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: BlobToText)

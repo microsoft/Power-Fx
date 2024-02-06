@@ -53,9 +53,5 @@ namespace Microsoft.PowerFx.Types
         void Visit(Void type);
 
         void Visit(BlobType type);
-
-        void Visit(MediaType type);
-
-        void Visit(ImageType type);
     }
 }

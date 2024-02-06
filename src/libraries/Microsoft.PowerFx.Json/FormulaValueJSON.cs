@@ -30,12 +30,12 @@ namespace Microsoft.PowerFx.Types
             return FromJson(jsonString, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType, resourceManager: resourceManager);
         }
       
-        public static FormulaValue FromJson(string jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null, IResourceManager resourceManager = null)
+        public static FormulaValue FromJson(string jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
         {
             using JsonDocument document = JsonDocument.Parse(jsonString);
             JsonElement propBag = document.RootElement;
 
-            return FromJson(propBag, settings, formulaType, resourceManager: resourceManager);
+            return FromJson(propBag, settings, formulaType);
         }
 
         /// <summary>
@@ -43,9 +43,8 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         /// <param name="element"></param>
         /// <param name="formulaType">Expected formula type. We will check the Json element and formula type match if this parameter is provided.</param>
-        /// <param name="numberIsFloat">Treat JSON numbers as Floats.  By default, they are treated as Decimals.</param> 
-        /// <param name="resourceManager">Resource Manager used to store Blob/Media and Image values.</param>
-        public static FormulaValue FromJson(JsonElement element, FormulaType formulaType = null, bool numberIsFloat = false, IResourceManager resourceManager = null)
+        /// <param name="numberIsFloat">Treat JSON numbers as Floats.  By default, they are treated as Decimals.</param>         
+        public static FormulaValue FromJson(JsonElement element, FormulaType formulaType = null, bool numberIsFloat = false)
         {
             return FromJson(element, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType, resourceManager: resourceManager);
         }
@@ -111,17 +110,9 @@ namespace Microsoft.PowerFx.Types
                     }
                     else if (formulaType is BlobType)
                     {
-                        return BlobValue.NewBlob(resourceManager, resourceManager.GetElementFromBase64String(element.GetString()));
-                    }
-                    else if (formulaType is ImageType)
-                    {
-                        return BlobValue.NewBlob(resourceManager, resourceManager.GetElementFromBase64String(element.GetString(), FileType.Image));
-                    }
-                    else if (formulaType is MediaType)
-                    {
-                        // $$$ how to determine if that's a video?
-                        return BlobValue.NewBlob(resourceManager, resourceManager.GetElementFromBase64String(element.GetString(), FileType.Audio));
-                    }
+                        BlobElementBase resElem = new Base64Blob(element.GetString());
+                        return BlobValue.NewBlob(resElem);
+                    }                    
                     else
                     {
                         throw new NotImplementedException($"Expecting a StringType but got {formulaType._type.Kind}");
