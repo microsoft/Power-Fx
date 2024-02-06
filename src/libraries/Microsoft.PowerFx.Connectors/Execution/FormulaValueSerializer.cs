@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
@@ -254,12 +255,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         if (propertySchema.Format == "byte")
                         {
-                            WriteStringValue(bv.ResourceElement.Base64String);
+                            WriteStringValue(bv.GetAsBase64Async(CancellationToken.None).Result);
                         }
                         else
                         {
                             // "binary"
-                            WriteStringValue(bv.ResourceElement.String);
+                            WriteStringValue(bv.GetAsStringAsync(null, CancellationToken.None).Result);
                         }
                     }
                     else

@@ -27,16 +27,14 @@ namespace Microsoft.PowerFx.Connectors
         private readonly HttpMessageInvoker _httpClient;
         private readonly ConnectorFunction _function;
         private readonly bool _returnRawResults;        
-        private readonly ConnectorLogger _logger;
-        private readonly IResourceManager _resourceManager;
+        private readonly ConnectorLogger _logger;        
 
         public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext)
         {
             _function = function;
             _httpClient = runtimeContext.GetInvoker(function.Namespace);
             _returnRawResults = runtimeContext.ReturnRawResults;            
-            _logger = runtimeContext.ExecutionLogger;
-            _resourceManager = runtimeContext.ResourceManager;
+            _logger = runtimeContext.ExecutionLogger;            
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
@@ -360,7 +358,7 @@ namespace Microsoft.PowerFx.Connectors
                     ? FormulaValue.NewBlank(_function.ReturnType)
                     : _returnRawResults
                     ? FormulaValue.New(text)                    
-                    : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, _function.ReturnType, _resourceManager); 
+                    : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, _function.ReturnType); 
             }
 
             string reasonPhrase = string.IsNullOrEmpty(response.ReasonPhrase) ? string.Empty : $" ({response.ReasonPhrase})";

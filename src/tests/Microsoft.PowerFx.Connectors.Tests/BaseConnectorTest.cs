@@ -131,7 +131,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 Assert.IsAssignableFrom<BlobValue>(fv);
 
                 BlobValue bv = (BlobValue)fv;
-                Assert.StartsWith(expectedResult.Substring(5), bv.ResourceElement.Base64String);
+                string blobStr = await bv.GetAsStringAsync(null, CancellationToken.None).ConfigureAwait(false);
+                Assert.StartsWith(expectedResult.Substring(5), blobStr);
             }
             else if (expectedResult == "RAW")
             {

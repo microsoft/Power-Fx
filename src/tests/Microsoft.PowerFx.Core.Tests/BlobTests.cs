@@ -15,25 +15,10 @@ namespace Microsoft.PowerFx.Core.Tests
     public class BlobTests : PowerFxTest
     {
         [Fact]
-        public void BlobTest_IRConstructor()
-        {
-            ArgumentException ex = Assert.Throws<ArgumentException>(() => new BlobValue(IR.IRContext.NotInSource(FormulaType.String)));
-            Assert.Equal("Invalid fileType (Parameter 'fileType')", ex.Message);
-        }
-
-        [Fact]
         public void BlobTest_ConstructorNullResourceManager()
         {
             ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new BlobValue(null));
             Assert.Equal("Value cannot be null. (Parameter 'resourceElement')", ex.Message);
-        }
-
-        [Fact]
-        public void BlobTest_ConstructorNullElement()
-        {
-            IResourceManager resourceManager = new TestResourceManager();
-            ArgumentException ex = Assert.Throws<ArgumentException>(() => new BlobValue(resourceManager, null));
-            Assert.Equal("Invalid fileType (Parameter 'fileType')", ex.Message);
         }
 
         [Fact]
@@ -126,8 +111,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Fact]
         public void BlobTest_MultipleObjects()
-        {
-            IResourceManager resourceManager = new TestResourceManager();
+        {            
             BlobValue[] blobs = Enumerable.Range(0, 10).Select(i =>
             {
                 BlobElementBase sre = new StringBlob($"Blob {i}");

@@ -38,8 +38,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new TexlStrings.StringGetter[] { (loc) => "string" };
-            yield return new TexlStrings.StringGetter[] { (loc) => "string", (loc) => "isBase64String" };            
-            yield return new TexlStrings.StringGetter[] { (loc) => "string", (loc) => "isBase64String", (loc) => "blobType" };
+            yield return new TexlStrings.StringGetter[] { (loc) => "string", (loc) => "isBase64String" };
         }
     }
 
@@ -47,12 +46,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();                       
-
-            if (resourceManager == null)
-            {
-                return Task.FromResult<FormulaValue>(CommonErrors.CustomError(args[0].IRContext, "Missing ResourceManager in runtime service provider"));
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (args[0] is BlankValue)
             {
@@ -68,8 +62,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 return Task.FromResult<FormulaValue>(CommonErrors.RuntimeTypeMismatch(args[0].IRContext));
             }
-            
-            bool isBase64String = args.Length >= 2 && args[1] is BooleanValue bv && bv.Value;                        
+
+            bool isBase64String = args.Length >= 2 && args[1] is BooleanValue bv && bv.Value;
             BlobElementBase elem = isBase64String ? new Base64Blob(sv.Value) : new StringBlob(sv.Value);
 
             return Task.FromResult<FormulaValue>(BlobValue.NewBlob(elem));
@@ -86,7 +80,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public override bool IsSelfContained => true;
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
-        {            
+        {
             yield return new TexlStrings.StringGetter[] { (loc) => "string", (loc) => "Uri" };
         }
     }
@@ -95,7 +89,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();         
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (args[0] is BlankValue)
             {
@@ -136,7 +130,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();            
+            cancellationToken.ThrowIfCancellationRequested();
 
             BlobValue blob = args[0] as BlobValue;
 
@@ -178,7 +172,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();           
+            cancellationToken.ThrowIfCancellationRequested();
 
             BlobValue blobValue = args[0] as BlobValue;
 

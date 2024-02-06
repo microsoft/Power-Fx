@@ -10,8 +10,6 @@
 >> Text(Blob("abc"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text(Blob(17))
-"appres://blobmanager/0"
 
 >> BlobGetString(Blob("abc"))
 "abc"
@@ -46,15 +44,6 @@ Blank()
 >> BlobGetBase64String(Blob("Hello"))
 "SGVsbG8="
 
->> Text(Blob("Hello"))
-"appres://blobmanager/0"
-
->> Text(Blob("Hello", false))
-"appres://blobmanager/0"
-
->> Text(Blob("SGVsbG8=", true))
-"appres://blobmanager/0"
-
 >> BlobGetString(Blob("Hello", false))
 "Hello"
 
@@ -80,11 +69,6 @@ false
 >> Text(Blob("http://localhost/abc.jpg", "URI"))
 "http://localhost/abc.jpg"
 
->> Text(Blob("http://localhost/abc.jpg", true, "URI"))
-Error({Kind:ErrorKind.InvalidArgument})
-
 >> Set(blob, Blob("abc")); BlobGetString(blob)
 "abc"
 
->> Set(str, Text(Blob("abc"))); BlobGetString(Blob(str, false, "Uri"))
-"abc"

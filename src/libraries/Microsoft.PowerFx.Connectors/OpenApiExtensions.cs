@@ -410,17 +410,7 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         case "uri":
                             string mku = GetMediaKind(schema);
-                            
-                            if (mku == "image")
-                            {
-                                return new ConnectorType(schema, openApiParameter, FormulaType.Image);
-                            }
-                            
-                            if (mku == "audio" || mku == "video")
-                            {
-                                return new ConnectorType(schema, openApiParameter, FormulaType.Media);
-                            }
-                            
+
                             return new ConnectorType(schema, openApiParameter, FormulaType.String);
 
                         case "date": // full-date RFC3339
@@ -614,17 +604,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                 case "file":
-                    string mkf = GetMediaKind(schema);
-
-                    if (mkf == "image")
-                    {
-                        return new ConnectorType(schema, openApiParameter, FormulaType.Image);
-                    }
-
-                    if (mkf == "audio" || mkf == "video")
-                    {
-                        return new ConnectorType(schema, openApiParameter, FormulaType.Media);
-                    }
+                    string mkf = GetMediaKind(schema);                   
 
                     return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
 
