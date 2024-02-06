@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Datuma vērtība, kas jāpielāgo pēc norādītā mēnešu skaita.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Mēnešu skaits, pēc kura ir jāmaina datums. Pozitīva vērtība iegūst nākotnes datumu, negatīva vērtība — pagātnes datumu, bet nulle nemaina mēnesi.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Atgriež norādītā datuma mēneša pēdējo dienu, kas pielāgota pēc mēnešu skaita.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Datuma vērtība, kas jāpielāgo pēc norādītā mēnešu skaita.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Mēnešu skaits, pēc kura ir jāmaina datums. Pozitīva vērtība iegūst nākotnes datumu, negatīva vērtība — pagātnes datumu, bet nulle nemaina mēnesi.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Saīsina “number”, noapaļojot līdz negatīvai bezgalībai.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON funkcija nevar serializēt bināros datus izteiksmē, kas nav uzvedības izteiksme.</value>    
+    <value>JSON funkcija nevar serializēt bināros datus izteiksmē, kas nav uzvedības izteiksme.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parametrs {0} satur rekvizītu ar tipu {1}, kas netiek atbalstīts.</value>
@@ -4251,5 +4251,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Skaitlisko vērtību tabulas kolonna, kas jāpārvērš par unikoda rakstzīmēm.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Neatbalstīts atribūta veids</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Visiem operatoriem Partial atbilstošajās nosauktajās formulās ir jābūt vienādiem.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Nezināms operators Partial.</value>
+    
   </data>
 </root>
