@@ -24,8 +24,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private static readonly DKind[] _unsupportedTopLevelTypes = new[]
         {
             DKind.DataEntity,
-            DKind.LazyRecord,
-            DKind.LazyTable, 
             DKind.View, 
             DKind.ViewValue
         };
@@ -33,8 +31,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private static readonly DKind[] _unsupportedTypes = new[]
         {
             DKind.Control, 
-            DKind.LazyRecord, 
-            DKind.LazyTable, 
             DKind.Metadata,
             DKind.OptionSet, 
             DKind.PenImage, 
