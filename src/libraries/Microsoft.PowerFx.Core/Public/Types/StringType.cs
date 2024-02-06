@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Types
     public class StringType : FormulaType
     {
         public StringType()
-            : base(new DType(DKind.String))
+            : base(DType.String)
         {
         }
 
