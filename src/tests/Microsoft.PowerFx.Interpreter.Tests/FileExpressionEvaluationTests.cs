@@ -18,11 +18,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class FileExpressionEvaluationTests : PowerFxTest
     {
-        public readonly ITestOutputHelper Summary;
+        public readonly ITestOutputHelper Console;
 
         public FileExpressionEvaluationTests(ITestOutputHelper output)
         {
-            Summary = output;
+            Console = output;
         }
 
         // File expression tests are run multiple times for the different ways a host can use Power Fx.
@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 ConsistentOneColumnTableResult = true
             };
 
-            RunExpressionTestCase(testCase, features, numberIsFloat: true, Summary);
+            RunExpressionTestCase(testCase, features, numberIsFloat: true, Console);
         }
 
         // Canvas currently does not support decimal, but since this interpreter does, we can run tests with decimal here.
@@ -64,14 +64,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 PowerFxV1CompatibilityRules = true,
             };
 
-            RunExpressionTestCase(testCase, features, numberIsFloat: true, Summary);
+            RunExpressionTestCase(testCase, features, numberIsFloat: true, Console);
         }
 
         [InterpreterTheory]
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat,DecimalSupport")]
         public void V1_Decimal(ExpressionTestCase testCase)
         {
-            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: false, Summary);
+            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: false, Console);
         }
 
         // Although we are using numbers as floats by default, since this interpreter supports decimal, we can run tests with decimal here.        
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InterpreterTheory]
         public void V1_Float(ExpressionTestCase testCase)
         {
-            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: true, Summary);
+            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: true, Console);
         }
 
 #if false
@@ -199,7 +199,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
             else
             {
-                Summary.WriteLine(result.Output);
+                Console.WriteLine(result.Output);
             }
         }
 
