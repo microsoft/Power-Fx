@@ -44,6 +44,19 @@
           }
         }
       ]
+    },
+    "GlobalFormulas": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/formula"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/formula"
+          }
+        }
+      ]
     }
   },
   "patternProperties": {

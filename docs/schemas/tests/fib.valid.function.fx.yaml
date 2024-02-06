@@ -3,3 +3,4 @@ Parameters:
   - Name: x
     Type: Number
 Body: =If( x < 2, x, Fib(x-2) + Fib(x-1) )
+Scope: local

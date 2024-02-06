@@ -30,6 +30,12 @@
     "Type": {
       "$ref": "#/definitions/Type"
     },
+    "Scope": {
+      "enum": [
+        "global",
+        "local"
+      ]
+    },
     "Body": {
       "type": "string",
       "pattern": "^\\s*="

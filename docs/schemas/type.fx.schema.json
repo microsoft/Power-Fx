@@ -55,9 +55,9 @@
     }
   },
   "then": {
-    "properties": {
-      "Columns": true
-    }
+    "required": [
+      "Columns"
+    ]
   },
   "else": {
     "properties": {
