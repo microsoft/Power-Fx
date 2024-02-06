@@ -38,18 +38,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
              Func<PowerFxConfig, SymbolTable, object> updatePfxConfig, 
              Func<object, RecordValue> parameters, 
              Action<RecalcEngine, bool> configureEngine,
-             Action<RuntimeConfig> runtimeConfig,
-             Action<ReadOnlySymbolValues, ISymbolSlot[]> setVariables)> SetupHandlers = new ()
+             Action<RuntimeConfig> runtimeConfig)> SetupHandlers = new ()
         {
-            { "AllEnumsSetup", (AllEnumsSetup, null, null, null, null, null) },
-            { "Blob", (null, BlobSetup, null, null, AddResourceManager, AddBlobVar) },
-            { "DecimalSupport", (null, null, null, null, null, null) }, // Decimal is enabled in the C# interpreter
-            { "EnableJsonFunctions", (null, EnableJsonFunctions, null, null, null, null) },
-            { "MutationFunctionsTestSetup", (null, null, null, MutationFunctionsTestSetup, null, null) },
-            { "OptionSetSortTestSetup", (null, OptionSetSortTestSetup, null, null, null, null) },
-            { "OptionSetTestSetup", (null, OptionSetTestSetup1, OptionSetTestSetup2, null, null, null) },
-            { "RegEx", (null, RegExSetup, null, null, null, null) },
-            { "TraceSetup", (null, null, null, TraceSetup, null, null) }
+            { "AllEnumsSetup", (AllEnumsSetup, null, null, null, null) },
+            { "Blob", (null, BlobSetup, null, null, null) },
+            { "DecimalSupport", (null, null, null, null, null) }, // Decimal is enabled in the C# interpreter
+            { "EnableJsonFunctions", (null, EnableJsonFunctions, null, null, null) },
+            { "MutationFunctionsTestSetup", (null, null, null, MutationFunctionsTestSetup, null) },
+            { "OptionSetSortTestSetup", (null, OptionSetSortTestSetup, null, null, null) },
+            { "OptionSetTestSetup", (null, OptionSetTestSetup1, OptionSetTestSetup2, null, null) },
+            { "RegEx", (null, RegExSetup, null, null, null) },
+            { "TraceSetup", (null, null, null, TraceSetup, null) }
         };
 
         private static object EnableJsonFunctions(PowerFxConfig config, SymbolTable symbolTable)
@@ -65,29 +64,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #pragma warning restore CS0618 // Type or member is obsolete
 
             return null;
-        }
-
-        private static void AddResourceManager(RuntimeConfig runtimeConfig)
-        {
-            runtimeConfig.AddService<IResourceManager>(new DefaultResourceManager());
-        }
+        }       
 
         private static object BlobSetup(PowerFxConfig config, SymbolTable symbolTable)
         {
             config.AddBlobTestFunctions();
             config.EnableSetFunction();
 
-            return new List<ISymbolSlot>()
-            {
-                symbolTable.AddVariable("blob", FormulaType.Blob, true, "blob"),
-                symbolTable.AddVariable("str", FormulaType.String, true, "str")
+            return new List<(ISymbolSlot slot, FormulaValue value)>()
+            { 
+                AddBlankVar(symbolTable, FormulaType.Blob, "blob", true),
+                AddBlankVar(symbolTable, FormulaType.String, "str", true)
             };
         }
 
-        private static void AddBlobVar(ReadOnlySymbolValues symbolValues, ISymbolSlot[] slots)
+        private static (ISymbolSlot slot, FormulaValue value) AddBlankVar(SymbolTable symbolTable, FormulaType type, string varName, bool mutable)
         {
-            symbolValues.Set(slots[0], FormulaValue.NewBlank(FormulaType.Blob));
-            symbolValues.Set(slots[1], FormulaValue.NewBlank(FormulaType.String));
+            return (symbolTable.AddVariable(varName, type, mutable, varName), FormulaValue.NewBlank(type));
         }
 
         private static PowerFxConfig AllEnumsSetup(PowerFxConfig config)
@@ -404,10 +397,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(await RunVerifyAsync(expr, config, iSetup).ConfigureAwait(false));
                 }
 
-                List<Action<RuntimeConfig>> runtimeConfiguration = new List<Action<RuntimeConfig>>();
-                List<Action<ReadOnlySymbolValues, ISymbolSlot[]>> setVariables = new ();
+                List<Action<RuntimeConfig>> runtimeConfiguration = new List<Action<RuntimeConfig>>();                
                 SymbolTable symbolTable = new SymbolTable();
-                List<ISymbolSlot> slots = new List<ISymbolSlot>();
+                List<(ISymbolSlot slot, FormulaValue value)> slots = new ();
 
                 if (iSetup.HandlerNames != null && iSetup.HandlerNames.Any())
                 {
@@ -423,11 +415,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                             object o = k.updatePfxConfig?.Invoke(config, symbolTable);
 
-                            if (o is ISymbolSlot slot)
-                            {
-                                slots.Add(slot);
-                            }
-                            else if (o is List<ISymbolSlot> slotList)
+                            if (o is List<(ISymbolSlot slot, FormulaValue value)> slotList)
                             {
                                 slots.AddRange(slotList);
                             }
@@ -446,12 +434,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                             if (k.runtimeConfig != null)
                             {
                                 runtimeConfiguration.Add(k.runtimeConfig);
-                            }
-
-                            if (k.setVariables != null)
-                            {
-                                setVariables.Add(k.setVariables);
-                            }
+                            }                            
                         }
 
                         engine ??= new RecalcEngine(config);
@@ -486,14 +469,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Log?.Invoke($"IR: {check.PrintIR()}");
 
                 var symbolValuesFromParams = SymbolValues.NewFromRecord(symbolTableFromParams, parameters);
-                var symbolsValues = new SymbolValues(symbolTable);
+                var symbolValues = new SymbolValues(symbolTable);
                 
-                foreach (var set in setVariables)
+                foreach ((ISymbolSlot slot, FormulaValue value) in slots)
                 {
-                    set(symbolsValues, slots.ToArray());
+                    symbolValues.Set(slot, value);                    
                 }
 
-                var composedSymbolValues = SymbolValues.Compose(symbolValuesFromParams, symbolsValues);
+                var composedSymbolValues = SymbolValues.Compose(symbolValuesFromParams, symbolValues);
                 var runtimeConfig = new RuntimeConfig(composedSymbolValues);
 
                 if (iSetup.TimeZoneInfo != null)

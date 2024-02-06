@@ -8,25 +8,8 @@
 // and we can't call ToExpression() of such an object (NotImplementedException)
 
 >> Text(Blob("abc"))
-"appres://blobmanager/0"
+Error({Kind:ErrorKind.InvalidArgument})
 
->> Blob("abc"); Text(Blob("abc"))
-"appres://blobmanager/1"
-
->> Text(Blob("ABC"))
-"appres://blobmanager/0"
-
->> Text(Blob(Blank()))
-"appres://blobmanager/0"
-
->> Text(Blob(""))
-"appres://blobmanager/0"
-
->> Text(Blob("17"))
-"appres://blobmanager/0"
-
->> Text(Blob(17))
-"appres://blobmanager/0"
 
 >> BlobGetString(Blob("abc"))
 "abc"
@@ -61,16 +44,6 @@ Blank()
 >> BlobGetBase64String(Blob("Hello"))
 "SGVsbG8="
 
->> Text(Blob("Hello"))
-"appres://blobmanager/0"
-
->> Text(Blob("Hello", false))
-"appres://blobmanager/0"
-
-// When 2nd param is true, we enter a base64 string
->> Text(Blob("SGVsbG8=", true))
-"appres://blobmanager/0"
-
 >> BlobGetString(Blob("Hello", false))
 "Hello"
 
@@ -99,5 +72,3 @@ false
 >> Set(blob, Blob("abc")); BlobGetString(blob)
 "abc"
 
->> Set(str, Text(Blob("abc"))); BlobGetString(Blob(str, "Uri"))
-"abc"

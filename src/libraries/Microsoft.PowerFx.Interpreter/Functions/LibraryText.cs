@@ -188,9 +188,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static bool TryFloat(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, out NumberValue result)
         {
-            result = null;
-
-            Contract.Assert(NumberValue.AllowedListConvertToNumber.Contains(value.Type));
+            result = null;            
 
             switch (value)
             {
@@ -218,6 +216,9 @@ namespace Microsoft.PowerFx.Functions
                     }
 
                     break;
+
+                default:
+                    return false;
             }
 
             return result != null;
@@ -332,26 +333,23 @@ namespace Microsoft.PowerFx.Functions
         {
             runner.CancellationToken.ThrowIfCancellationRequested();
 
-            StringValue sv = (StringValue)args[0];
-            IResourceManager resourceManager = runner.FunctionServices.GetService<IResourceManager>();
-
-            if (resourceManager == null)
-            {
-                return new ErrorValue(irContext, new ExpressionError()
-                {
-                    Message = $"Cannot convert {args[0].Type._type} to Blob, missing resource manager.",
-                    Span = irContext.SourceContext,
-                    Kind = ErrorKind.InvalidArgument
-                });
-            }
-
-            return new BlobValue(resourceManager, new StringResourceElement(resourceManager, sv.Value).Handle);
+            StringValue sv = (StringValue)args[0];           
+            return new BlobValue(new StringBlob(sv.Value));
         }
 
         public static FormulaValue BlobToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            runner.CancellationToken.ThrowIfCancellationRequested();
-            return FormulaValue.New((args[0] as FileValue).ToString());
+            if (args[0] is BlobValue bv && bv?.ResourceElement is UriBlob uri)
+            {
+                return FormulaValue.New(uri.Uri.ToString());
+            }
+
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"Cannot convert Blob to Text",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
         }
 
         public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
@@ -551,9 +549,8 @@ namespace Microsoft.PowerFx.Functions
                     break;
 
                 case BlobValue:
-
-                    // returns appsres:// reference or URI specified by host
-                    result = new StringValue(irContext, value.ToString());
+                    
+                    result = BlobToText(null, default, irContext, new[] { value }) is StringValue sv2 ? sv2 : null;
                     break;
             }
 
