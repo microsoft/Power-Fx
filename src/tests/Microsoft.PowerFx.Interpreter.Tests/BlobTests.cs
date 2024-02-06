@@ -31,5 +31,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.Same(blob, result);
         }
+
+        [Fact]
+        public void BlobTest_CannotConvert()
+        {
+            PowerFxConfig config = new PowerFxConfig();
+            config.EnableSetFunction();
+
+            SymbolTable symbolTable = new SymbolTable();
+            ISymbolSlot var1Slot = symbolTable.AddVariable("var1", FormulaType.Blob, false, "var1");            
+
+            BlobValue blob = new BlobValue(new StringBlob("abc"));
+            SymbolValues symbolValues = new SymbolValues(symbolTable);
+            symbolValues.Set(var1Slot, blob);            
+
+            RuntimeConfig runtimeConfig = new RuntimeConfig(symbolValues);
+            RecalcEngine engine = new RecalcEngine(config);
+            FormulaValue result = engine.EvalAsync(@"If(false, var1, If(false, ""a"", var1))", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, symbolTable, runtimeConfig).Result;
+
+            ErrorValue ev = Assert.IsType<ErrorValue>(result);
+            Assert.Equal("Cannot convert Blob to Text", ev.Errors[0].Message);
+        }
     }
 }
