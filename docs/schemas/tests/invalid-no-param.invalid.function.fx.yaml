@@ -1,0 +1,6 @@
+Type: Number
+Parameters:
+  - Name: x
+  - Name: y
+    Type: Text
+Body: =If( x < Value(y), x, Fib(x-2) + Fib(x-1) )

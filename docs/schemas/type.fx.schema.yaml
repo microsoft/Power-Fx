@@ -1,0 +1,53 @@
+# Power Fx Type definition schema - type.schema.yaml (JSON Schema in YAML format)
+
+# Note that this schema does not name the type, that happens in whatever context embeds this schema
+
+$id: https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/type.fx.schema.yaml
+description: Power Fx type definition schema
+
+type: object
+required: [ Type ]
+additionalProperties: false                 
+properties:
+  Type:  
+    oneOf:      
+    - type: string                               # single type name (for example, Number)
+    - type: array                                # array with a single type name (for example, [Number] )
+      items: 
+          type: string
+      minItems: 1
+      maxItems: 1
+    description: base type, single name or a name wrapped in [ ]
+  Description:
+    type: string
+    description: description of this type
+  Help:        
+    type: string
+    description: help link for this type   
+  Columns:
+    type: object
+    additionalProperties:
+      $ref: "#"    
+if:
+  properties: 
+    Type:
+      oneOf:
+        - const: Record      
+        - const: [ Record ]
+then:
+    required: [ Columns ]
+else:
+    properties:
+      Columns: false
+
+   
+  
+         
+
+
+
+
+
+
+
+

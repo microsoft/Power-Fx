@@ -1,0 +1,45 @@
+# Power Fx module.fx.yaml file format - module.fx.schema.yaml (JSON Schema in YAML format)
+$id: https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/module.fx.schema.yaml
+description: Power Fx module.fx.yaml (or .json) file schema
+
+definitions: 
+    formula: 
+        type: string
+        pattern: ^\s*=
+    object-instance:
+        type: object
+        additionalProperties:
+            $ref: "#/definitions/formula"
+        patternProperties: 
+            \sAs\s:
+                $ref: "#/definitions/object-instance"
+
+type: object
+properties:
+    Types:
+        type: object
+        additionalProperties: 
+            $ref: ./type.fx.schema.yaml
+    Functions:
+        type: object
+        additionalProperties: 
+            $ref: ./function.fx.schema.yaml
+    Formulas:
+        oneOf:
+            - $ref: "#/definitions/formula"
+            - type: array
+              items: 
+                $ref: "#/definitions/formula" 
+    GlobalFormulas:
+        oneOf:
+            - $ref: "#/definitions/formula"
+            - type: array
+              items: 
+                $ref: "#/definitions/formula" 
+
+patternProperties:
+    \sAs\s:
+        $ref: "#/definitions/object-instance"
+        
+additionalProperties: false
+

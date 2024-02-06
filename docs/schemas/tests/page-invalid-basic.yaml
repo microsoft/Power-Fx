@@ -1,9 +1,0 @@
-Parameters:
-  MyBoolean:
-    EntityTable: Accounts
-  MyGuid:
-    Type: GUID
-  MyNumber:
-    Type: Number
-  MyString:
-    Type: Text

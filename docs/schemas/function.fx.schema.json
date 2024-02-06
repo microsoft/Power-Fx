@@ -1,0 +1,67 @@
+{
+  "$id": "https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/function.fx.schema.json",
+  "description": "Power Fx function definition schema",
+  "type": "object",
+  "required": [
+    "Body"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "Type": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "./type.fx.schema.json"
+        }
+      ]
+    }
+  },
+  "properties": {
+    "Description": {
+      "type": "string",
+      "description": "description of this function"
+    },
+    "Help": {
+      "type": "string",
+      "description": "help link for this function"
+    },
+    "Type": {
+      "$ref": "#/definitions/Type"
+    },
+    "Body": {
+      "type": "string",
+      "pattern": "^\\s*="
+    },
+    "Parameters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "Name",
+          "Type"
+        ],
+        "properties": {
+          "Name": {
+            "type": "string",
+            "description": "name of this parameter"
+          },
+          "Required": {
+            "type": "boolean",
+            "description": "parameter required?",
+            "default": false
+          },
+          "Description": {
+            "type": "string",
+            "description": "description of this parameter"
+          },
+          "Type": {
+            "$ref": "#/definitions/Type"
+          }
+        }
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema"
+}

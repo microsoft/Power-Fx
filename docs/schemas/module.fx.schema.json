@@ -1,0 +1,56 @@
+{
+  "$id": "https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/module.fx.schema.json",
+  "description": "Power Fx module.fx.yaml (or .json) file schema",
+  "definitions": {
+    "formula": {
+      "type": "string",
+      "pattern": "^\\s*="
+    },
+    "object-instance": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/formula"
+      },
+      "patternProperties": {
+        "\\sAs\\s": {
+          "$ref": "#/definitions/object-instance"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "Types": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "./type.fx.schema.json"
+      }
+    },
+    "Functions": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "./function.fx.schema.json"
+      }
+    },
+    "Formulas": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/formula"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/formula"
+          }
+        }
+      ]
+    }
+  },
+  "patternProperties": {
+    "\\sAs\\s": {
+      "$ref": "#/definitions/object-instance"
+    }
+  },
+  "additionalProperties": false,
+  "$schema": "http://json-schema.org/draft-07/schema"
+}

@@ -1,0 +1,68 @@
+{
+  "$id": "https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/type.fx.schema.json",
+  "description": "Power Fx type definition schema",
+  "type": "object",
+  "required": [
+    "Type"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Type": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "maxItems": 1
+        }
+      ],
+      "description": "base type, single name or a name wrapped in [ ]"
+    },
+    "Description": {
+      "type": "string",
+      "description": "description of this type"
+    },
+    "Help": {
+      "type": "string",
+      "description": "help link for this type"
+    },
+    "Columns": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#"
+      }
+    }
+  },
+  "if": {
+    "properties": {
+      "Type": {
+        "oneOf": [
+          {
+            "const": "Record"
+          },
+          {
+            "const": [
+              "Record"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "Columns": true
+    }
+  },
+  "else": {
+    "properties": {
+      "Columns": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema"
+}
