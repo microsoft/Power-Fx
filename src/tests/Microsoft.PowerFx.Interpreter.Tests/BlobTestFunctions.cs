@@ -62,11 +62,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 return Task.FromResult<FormulaValue>(CommonErrors.RuntimeTypeMismatch(args[0].IRContext));
             }
-
-            //bool isUri = args.Length >= 2 && args[1] is StringValue str && str.Value.Equals("uri", StringComparison.OrdinalIgnoreCase);
+            
             bool isBase64String = args.Length >= 2 && args[1] is BooleanValue bv && bv.Value;                        
-
             BlobElementBase elem = isBase64String ? new Base64Blob(sv.Value) : new StringBlob(sv.Value);
+
             return Task.FromResult<FormulaValue>(BlobValue.NewBlob(elem));
         }
     }
