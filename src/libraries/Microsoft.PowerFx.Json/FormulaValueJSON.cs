@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text.Json;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
@@ -28,21 +29,13 @@ namespace Microsoft.PowerFx.Types
         {
             return FromJson(jsonString, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType);
         }
-        
+      
         public static FormulaValue FromJson(string jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
         {
-            try
-            {
-                using JsonDocument document = JsonDocument.Parse(jsonString);
-                JsonElement propBag = document.RootElement;
+            using JsonDocument document = JsonDocument.Parse(jsonString);
+            JsonElement propBag = document.RootElement;
 
-                return FromJson(propBag, settings, formulaType);
-            }
-            catch
-            {
-                // $$$ better error handling here?
-                throw;
-            }
+            return FromJson(propBag, settings, formulaType);
         }
 
         /// <summary>
@@ -50,7 +43,7 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         /// <param name="element"></param>
         /// <param name="formulaType">Expected formula type. We will check the Json element and formula type match if this parameter is provided.</param>
-        /// <param name="numberIsFloat">Treat JSON numbers as Floats.  By default, they are treated as Decimals.</param>        
+        /// <param name="numberIsFloat">Treat JSON numbers as Floats.  By default, they are treated as Decimals.</param>         
         public static FormulaValue FromJson(JsonElement element, FormulaType formulaType = null, bool numberIsFloat = false)
         {
             return FromJson(element, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType);
@@ -114,7 +107,7 @@ namespace Microsoft.PowerFx.Types
                     {
                         DateTime dt3 = element.GetDateTime();
                         return DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3));
-                    }
+                    }                              
                     else
                     {
                         throw new NotImplementedException($"Expecting a StringType but got {formulaType._type.Kind}");

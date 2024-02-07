@@ -113,6 +113,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Void };
             }
 
+            public void Visit(BlobType type)
+            {
+                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Blob };
+            }
+
             #endregion
             #region Complex Types
 
