@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Fact]
         public void BlobTest_MultipleObjects()
-        {            
+        {
             BlobValue[] blobs = Enumerable.Range(0, 10).Select(i =>
             {
                 BlobContent sre = new StringBlob($"Blob {i}");

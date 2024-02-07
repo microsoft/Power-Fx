@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Types
         {
             return FromJson(jsonString, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType);
         }
-
+      
         public static FormulaValue FromJson(string jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
         {
             using JsonDocument document = JsonDocument.Parse(jsonString);
