@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected abstract void WriteStringValue(string stringValue);
 
-        protected abstract void WriteBytesValue(byte[] bytesValue);
+        protected abstract void WriteBlobValue(BlobValue blobValue);
 
         protected abstract void WriteBooleanValue(bool booleanValue);
 
@@ -255,7 +255,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     }
                     else if (fv is BlobValue bv)
                     {                        
-                        WriteBytesValue(bv.GetAsByteArrayAsync(CancellationToken.None).Result);                                                
+                        WriteBlobValue(bv);                                                
                     }
                     else
                     {

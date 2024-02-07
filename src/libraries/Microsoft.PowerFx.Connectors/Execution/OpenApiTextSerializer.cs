@@ -4,17 +4,21 @@
 using System;
 using System.Globalization;
 using System.Text;
+using System.Threading;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
     internal class OpenApiTextSerializer : FormulaValueSerializer
     {
         private readonly StringBuilder _writer;
+        private readonly CancellationToken _cancellationToken;
 
-        public OpenApiTextSerializer(IConvertToUTC utcConverter, bool schemaLessBody)
+        public OpenApiTextSerializer(IConvertToUTC utcConverter, bool schemaLessBody, CancellationToken cancellationToken)
             : base(utcConverter, schemaLessBody)
         {
             _writer = new StringBuilder(1024);
+            _cancellationToken = cancellationToken;
         }
 
         protected override void EndArray()
@@ -79,9 +83,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
         {
             _writer.Append(stringValue);
         }
-        protected override void WriteBytesValue(byte[] bytesValue)
+
+        protected override async void WriteBlobValue(BlobValue blobValue)
         {
-            throw new NotImplementedException();
+            _writer.Append(await blobValue.GetAsStringAsync(null, _cancellationToken).ConfigureAwait(false));
         }
 
         internal override string GetResult()

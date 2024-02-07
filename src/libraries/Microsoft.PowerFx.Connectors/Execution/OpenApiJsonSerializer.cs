@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
@@ -16,12 +17,14 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private readonly Utf8JsonWriter _writer;
         private bool _topPropertyWritten = false;
         private bool _wasDisposed;
+        private readonly CancellationToken _cancellationToken;
 
-        public OpenApiJsonSerializer(IConvertToUTC utcConverter, bool schemaLessBody)
+        public OpenApiJsonSerializer(IConvertToUTC utcConverter, bool schemaLessBody, CancellationToken cancellationToken)
             : base(utcConverter, schemaLessBody)
         {
             _stream = new MemoryStream();
             _writer = new Utf8JsonWriter(_stream, new JsonWriterOptions());
+            _cancellationToken = cancellationToken;
         }
 
         internal override string GetResult()
@@ -81,9 +84,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _writer.WriteStringValue(stringValue);
         }
 
-        protected override void WriteBytesValue(byte[] bytesValue)
+        protected override async void WriteBlobValue(BlobValue blobValue)
         {
-            _writer.WriteBase64StringValue(bytesValue);
+            _writer.WriteBase64StringValue(await blobValue.GetAsByteArrayAsync(_cancellationToken).ConfigureAwait(false));
         }
 
         protected override void StartObject(string name = null)

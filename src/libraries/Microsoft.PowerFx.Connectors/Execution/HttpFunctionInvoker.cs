@@ -275,9 +275,9 @@ namespace Microsoft.PowerFx.Connectors
             {
                 serializer = _function._internals.ContentType.ToLowerInvariant() switch
                 {
-                    OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(utcConverter, schemaLessBody),
-                    OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(utcConverter, schemaLessBody),
-                    _ => new OpenApiJsonSerializer(utcConverter, schemaLessBody)
+                    OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(utcConverter, schemaLessBody, cancellationToken),
+                    OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(utcConverter, schemaLessBody, cancellationToken),
+                    _ => new OpenApiJsonSerializer(utcConverter, schemaLessBody, cancellationToken)
                 };
 
                 serializer.StartSerialization(referenceId);
