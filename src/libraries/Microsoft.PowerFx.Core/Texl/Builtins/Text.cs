@@ -61,7 +61,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var matchedWithCoercion = false;
             DType arg0CoercedType = null;
 
-            if (!DType.Decimal.Accepts(arg0Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules) &&
+            if (
+                !DType.Decimal.Accepts(
+                    arg0Type,
+                    exact: true,
+                    useLegacyDateTimeAccepts: false,
+                    usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules) &&
                 (checkTypesContext.NumberIsFloat || DType.Number.Accepts(arg0Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules)))
             {
                 isValidNumber = CheckType(checkTypesContext, arg0, arg0Type, DType.Number, DefaultErrorContainer, out matchedWithCoercion);

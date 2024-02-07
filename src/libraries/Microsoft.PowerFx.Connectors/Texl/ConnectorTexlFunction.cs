@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Connectors
 
             try
             {
-                runtimeContext.ExecutionLogger?.LogInformation($"Entering in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(args)}");                
+                runtimeContext.ExecutionLogger?.LogInformation($"Entering in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(args)}");
                 FormulaValue formulaValue = await ConnectorFunction.InvokeInternalAsync(args, runtimeContext, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} returning from {nameof(ConnectorFunction.InvokeInternalAsync)} with {LogFormulaValue(formulaValue)}");
                 return formulaValue;
