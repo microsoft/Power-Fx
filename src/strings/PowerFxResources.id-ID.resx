@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Nilai tanggal yang akan disesuaikan dengan jumlah bulan yang ditentukan.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Jumlah bulan untuk mengubah tanggal. Nilai positif menghasilkan tanggal di masa mendatang, nilai negatif menghasilkan tanggal di masa lampau, dan nol tidak akan mengubah bulan.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Mengembalikan hari terakhir dalam sebulan untuk tanggal yang ditentukan, yang disesuaikan dengan jumlah bulan.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Nilai tanggal yang akan disesuaikan dengan jumlah bulan yang ditentukan.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Jumlah bulan untuk mengubah tanggal. Nilai positif menghasilkan tanggal di masa mendatang, nilai negatif menghasilkan tanggal di masa lampau, dan nol tidak akan mengubah bulan.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Memotong 'angka' dengan membulatkan ke arah negatif tak terhingga.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Fungsi JSON tidak dapat membuat serial data biner dalam ekspresi non-perilaku.</value>    
+    <value>Fungsi JSON tidak dapat membuat serial data biner dalam ekspresi non-perilaku.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parameter {0} berisi properti tipe {1} yang tidak didukung.</value>
@@ -4251,5 +4251,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Kolom tabel berisi nilai numerik yang akan dikonversikan ke karakter Unicode.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Jenis atribut tidak didukung</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Semua operator Partial pada rumus bernama yang cocok harus sama.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Operator Partial tidak diketahui.</value>
+    
   </data>
 </root>

@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Valor de data que s'ajustarà segons el nombre de mesos especificat.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Nombre de mesos segons el qual s'ha de canviar la data. Un valor positiu produeix una data futura, un valor negatiu, una data passada i zero no canviarà el mes.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Retorna l'últim dia del mes d'una data especificada, ajustada segons un nombre de mesos.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Valor de data que s'ajustarà segons el nombre de mesos especificat.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Nombre de mesos segons el qual s'ha de canviar la data. Un valor positiu produeix una data futura, un valor negatiu, una data passada i zero no canviarà el mes.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Trunca el "nombre" arrodonint-lo cap a l'infinit negatiu.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>La funció JSON no pot serialitzar dades binàries en una expressió que no sigui de comportament.</value>    
+    <value>La funció JSON no pot serialitzar dades binàries en una expressió que no sigui de comportament.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>El paràmetre {0} conté una propietat de tipus {1}, que no s'admet.</value>
@@ -4251,5 +4251,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Columna de la taula dels valors numèrics que es convertirà en caràcters Unicode.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Tipus d'atribut no admès</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Tots els operadors Partial en fórmules amb nom coincident han de ser iguals.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Operador Partial desconegut.</value>
+    
   </data>
 </root>
