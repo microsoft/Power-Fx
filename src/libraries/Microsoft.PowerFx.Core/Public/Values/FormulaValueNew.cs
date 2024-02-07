@@ -145,8 +145,9 @@ namespace Microsoft.PowerFx.Types
         /// Creates a new BlobValue from a string.
         /// </summary>
         /// <param name="str">String.</param>
-        /// <param name="isBase64Encoded">Is the string base64 encoded?</param>
-        /// <param name="encoding">When the string isn't bae64 encoded, defines the encoding. Defaults to UTF8 when null or not provided.</param>
+        /// <param name="isBase64Encoded">Is the string base64 encoded?.</param>
+        /// <param name="encoding">When the string isn't bae64 encoded, defines the encoding. Defaults to UTF8 when null or not provided.
+        /// If a base64 encoded string is provided (<paramref name="isBase64Encoded"/> is true), this parameter is unused.</param>
         /// <returns></returns>
         public static BlobValue NewBlob(string str, bool isBase64Encoded, Encoding encoding = null)
         {
