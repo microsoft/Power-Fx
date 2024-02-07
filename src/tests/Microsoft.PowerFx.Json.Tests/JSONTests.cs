@@ -38,6 +38,65 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.Equal("The JSON function cannot serialize binary data in non-behavioral expression.", result.Errors.First().Message);
         }
 
+        [Fact]
+        public void Json_IncludeBinaryData_WithLazyRecord()
+        {
+            var config = new PowerFxConfig();
+            config.EnableJsonFunctions();
+
+            var engine = new RecalcEngine(config);
+
+            var record = RecordType.Empty();
+            record = record.Add("Property", new LazyRecordType());
+
+            var formulaParams = RecordType.Empty();
+            formulaParams = formulaParams.Add("Var", record);
+
+            var result = engine.Check("JSON(Var)", formulaParams);
+
+            Assert.False(result.IsSuccess);
+            Assert.Equal("The JSON function cannot serialize tables / objects with a nested property called 'Property' of type 'Record'.", result.Errors.First().Message);
+        }
+
+        [Fact]
+        public void Json_IncludeBinaryData_WithLazyRecordAndFeature()
+        {
+            var config = new PowerFxConfig(Features.PowerFxV1_WithJsonFunctionAcceptsLazyTypes);
+            config.EnableJsonFunctions();
+
+            var engine = new RecalcEngine(config);
+
+            var record = RecordType.Empty();
+            record = record.Add("Property", new LazyRecordType());
+
+            var formulaParams = RecordType.Empty();
+            formulaParams = formulaParams.Add("Var", record);
+
+            var result = engine.Check("JSON(Var)", formulaParams);
+
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void Json_IncludeBinaryData_WithLazyRecordCircularRef()
+        {
+            var config = new PowerFxConfig(Features.PowerFxV1_WithJsonFunctionAcceptsLazyTypes);
+            config.EnableJsonFunctions();
+
+            var engine = new RecalcEngine(config);
+
+            var record = RecordType.Empty();
+            record = record.Add("Property", new LazyRecordTypeCircularRef());
+
+            var formulaParams = RecordType.Empty();
+            formulaParams = formulaParams.Add("Var", record);
+
+            var result = engine.Check("JSON(Var)", formulaParams);
+
+            Assert.False(result.IsSuccess);
+            Assert.Equal("The JSON function cannot serialize tables / objects with a nested property called 'Property' of type 'Record'.", result.Errors.First().Message);
+        }
+
         public class LazyRecordType : RecordType
         {
             public LazyRecordType()
@@ -66,23 +125,34 @@ namespace Microsoft.PowerFx.Json.Tests
             }
         }
 
-        [Fact]
-        public void Json_IncludeBinaryData_WithLazyRecord()
+        public class LazyRecordTypeCircularRef : RecordType
         {
-            var config = new PowerFxConfig();
-            config.EnableJsonFunctions();
+            public LazyRecordTypeCircularRef()
+            {
+            }
 
-            var engine = new RecalcEngine(config);
+            public override IEnumerable<string> FieldNames => new string[1] { "SubProperty" };
 
-            var record = RecordType.Empty();
-            record = record.Add("Property", new LazyRecordType());
+            public override bool TryGetFieldType(string name, out FormulaType type)
+            {
+                var subrecord = RecordType.Empty();
 
-            var formulaParams = RecordType.Empty();
-            formulaParams = formulaParams.Add("Var", record);
+                // Circular reference
+                subrecord = subrecord.Add("SubProperty2", this);
 
-            var result = engine.Check("JSON(Var)", formulaParams);
+                type = subrecord;
+                return true;
+            }
 
-            Assert.True(result.IsSuccess);
+            public override bool Equals(object other)
+            {
+                return true;
+            }
+
+            public override int GetHashCode()
+            {
+                return 1;
+            }
         }
     }
 }

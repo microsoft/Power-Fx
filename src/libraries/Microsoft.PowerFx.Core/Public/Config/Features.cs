@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
@@ -88,6 +89,11 @@ namespace Microsoft.PowerFx
         internal bool PrimaryOutputPropertyCoercionDeprecated { get; set; }
 
         /// <summary>
+        /// This is specific for PVA team and it is a temporary feature.
+        /// </summary>
+        internal bool JsonFunctionAcceptsLazyTypes { get; set; }
+
+        /// <summary>
         /// This is specific for Cards team and it is a temporary feature.
         /// It will be soon deleted.
         /// </summary>
@@ -119,6 +125,23 @@ namespace Microsoft.PowerFx
             CoalesceShortCircuit = true,
             PrimaryOutputPropertyCoercionDeprecated = true,
             AsTypeLegacyCheck = false,
+            JsonFunctionAcceptsLazyTypes = false
+        };
+
+        public static Features PowerFxV1_WithJsonFunctionAcceptsLazyTypes => new Features
+        {
+            TableSyntaxDoesntWrapRecords = true,
+            ConsistentOneColumnTableResult = true,
+            DisableRowScopeDisambiguationSyntax = true,
+            SupportColumnNamesAsIdentifiers = true,
+            StronglyTypedBuiltinEnums = true,
+            RestrictedIsEmptyArguments = true,
+            FirstLastNRequiresSecondArguments = true,
+            PowerFxV1CompatibilityRules = true,
+            CoalesceShortCircuit = true,
+            PrimaryOutputPropertyCoercionDeprecated = true,
+            AsTypeLegacyCheck = false,
+            JsonFunctionAcceptsLazyTypes = true
         };
 
         internal Features()
