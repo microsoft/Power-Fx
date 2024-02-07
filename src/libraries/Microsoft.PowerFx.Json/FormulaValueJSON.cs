@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Types
         {
             return FromJson(jsonString, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType);
         }
-      
+
         public static FormulaValue FromJson(string jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
         {
             using JsonDocument document = JsonDocument.Parse(jsonString);
@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Types
         {
             return FromJson(element, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType);
         }
-        
+
         public static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
         {
             if (formulaType is UntypedObjectType uot)
@@ -107,7 +107,11 @@ namespace Microsoft.PowerFx.Types
                     {
                         DateTime dt3 = element.GetDateTime();
                         return DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3));
-                    }                              
+                    }
+                    else if (formulaType is BlobType)
+                    {
+                        return FormulaValue.NewBlob(element.GetBytesFromBase64());
+                    }
                     else
                     {
                         throw new NotImplementedException($"Expecting a StringType but got {formulaType._type.Kind}");
