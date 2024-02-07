@@ -13,7 +13,9 @@ using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Connectors.Tests;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
@@ -213,6 +215,7 @@ namespace Microsoft.PowerFx.Tests
             using var testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
+            config.AddFunction(new AsBlobFunctionImpl());
             var token = @"eyJ0eX...";
 
             using var httpClient = new HttpClient(testConnector);
@@ -247,9 +250,18 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(runtimeContext);
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response.json");
 
-            // As we pass "abc" string and expect a Blob for the 3rd param, we call internally TextToBlob coercion rule
-            var result = await engine.EvalAsync(@"AzureBlobStorage.CreateFile(""container"", ""bora4.txt"", ""abc"").Size", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            // 3rd parameter here expects a blob.
+            CheckResult check = engine.Check(@"AzureBlobStorage.CreateFile(""container"", ""bora4.txt"", AsBlob(""abc"")).Size", new ParserOptions() { AllowsSideEffects = true });
+            Assert.True(check.IsSuccess);
+            _output.WriteLine($"\r\nIR: {check.PrintIR()}");
 
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+
+            if (result is ErrorValue ev)
+            {
+                Assert.True(false, $"Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}");
+            }
+            
             dynamic res = result.ToObject();
             var size = (double)res;
 
@@ -278,6 +290,48 @@ namespace Microsoft.PowerFx.Tests
 ";
 
             AssertEqual(expected, actual);
+        }
+
+        internal class AsBlobFunction : BuiltinFunction
+        {
+            public AsBlobFunction()
+                 : base("AsBlob", (loc) => "Converts a string to a Blob.", FunctionCategories.Text, DType.Blob, 0, 1, 2, DType.String, DType.Boolean)
+            {
+            }
+
+            public override bool IsSelfContained => true;
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield return new TexlStrings.StringGetter[] { (loc) => "string" };
+                yield return new TexlStrings.StringGetter[] { (loc) => "string", (loc) => "isBase64Encoded" };
+            }
+        }
+
+        internal class AsBlobFunctionImpl : AsBlobFunction, IAsyncTexlFunction5
+        {
+            public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                if (args[0] is BlankValue)
+                {
+                    return Task.FromResult<FormulaValue>(args[0]);
+                }
+
+                if (args[0] is BlobValue)
+                {
+                    return Task.FromResult(args[0]);
+                }
+
+                if (args[0] is not StringValue sv)
+                {
+                    return Task.FromResult<FormulaValue>(CommonErrors.RuntimeTypeMismatch(args[0].IRContext));
+                }
+
+                bool isBase64String = args.Length >= 2 && args[1] is BooleanValue bv && bv.Value;
+                return Task.FromResult<FormulaValue>(BlobValue.NewBlob(sv.Value, isBase64String));
+            }
         }
 
         [Fact]

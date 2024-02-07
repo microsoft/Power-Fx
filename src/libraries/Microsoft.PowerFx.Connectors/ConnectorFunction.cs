@@ -615,6 +615,12 @@ namespace Microsoft.PowerFx.Connectors
                 throw new InvalidOperationException($"In namespace {Namespace}, function {Name} is not supported.");
             }
 
+            FormulaValue ev = arguments.Where(arg => arg is ErrorValue).FirstOrDefault();
+            if (ev != null)
+            {
+                return ev;
+            }
+
             BaseRuntimeConnectorContext context = ReturnParameterType.Binary ? runtimeContext.WithRawResults() : runtimeContext;
             ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(this, context), context.ThrowOnError);
             FormulaValue result = await invoker.InvokeAsync(arguments, context, cancellationToken).ConfigureAwait(false);
