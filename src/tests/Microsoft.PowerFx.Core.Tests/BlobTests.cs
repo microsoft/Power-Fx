@@ -105,19 +105,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal("Hello World!", blob.Content.GetAsStringAsync(null, CancellationToken.None).Result);
             Assert.Equal("SGVsbG8gV29ybGQh", blob.Content.GetAsBase64Async(CancellationToken.None).Result);
             Assert.Equal(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 }, blob.GetAsByteArrayAsync(CancellationToken.None).Result);            
-        }
-
-        [Fact]
-        public void BlobTest_SomeStreamValue()
-        {
-            using Stream stream = new MemoryStream(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 });
-            BlobValue blob = FormulaValue.NewBlob(stream);
-
-            Assert.NotNull(blob);
-            Assert.Equal("Hello World!", blob.Content.GetAsStringAsync(null, CancellationToken.None).Result);
-            Assert.Equal("SGVsbG8gV29ybGQh", blob.Content.GetAsBase64Async(CancellationToken.None).Result);
-            Assert.Equal(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 }, blob.GetAsByteArrayAsync(CancellationToken.None).Result);            
-        }
+        }   
 
         [Fact]
         public void BlobTest_InvalidBase64()

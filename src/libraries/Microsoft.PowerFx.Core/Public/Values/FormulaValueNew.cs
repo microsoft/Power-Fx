@@ -158,17 +158,5 @@ namespace Microsoft.PowerFx.Types
         {
             return new BlobValue(new ByteArrayBlob(bytes));
         }
-
-        /// <summary>
-        /// Creates a new BlobValue from a stream.
-        /// All content of the stream will be copied to the Blob.
-        /// The stream will not be disposed.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        public static BlobValue NewBlob(Stream stream)
-        {
-            return new BlobValue(new StreamBlob(stream));
-        }
     }
 }
