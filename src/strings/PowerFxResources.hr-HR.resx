@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Vrijednost datuma koju treba prilagoditi za navedeni broj mjeseci.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Broj mjeseci za koji treba promijeniti datum. Pozitivna vrijednost daje datum u budućnosti, negativna vrijednost datum u prošlosti, a nula neće promijeniti mjesec.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Vraća zadnji dan u mjesecu za određeni datum, prilagođen za broj mjeseci.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Vrijednost datuma koju treba prilagoditi za navedeni broj mjeseci.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Broj mjeseci za koji treba promijeniti datum. Pozitivna vrijednost daje datum u budućnosti, negativna vrijednost datum u prošlosti, a nula neće promijeniti mjesec.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Skraćuje „broj” zaokruživanjem prema negativnoj beskonačnosti.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Funkcija JSON ne može serijalizirati binarne podatke u izrazu koji nije ponašanje.</value>    
+    <value>Funkcija JSON ne može serijalizirati binarne podatke u izrazu koji nije ponašanje.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parametar {0} sadrži svojstvo vrste {1} koje nije podržano.</value>
@@ -4251,5 +4251,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Stupac tablice numeričkih vrijednosti koje će se pretvoriti u Unicode znakove.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Nepodržana vrsta atributa</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Svi operatori Partial moraju biti isti prilikom podudaranja imenovanih formula.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Nepoznati operator Partial.</value>
+    
   </data>
 </root>

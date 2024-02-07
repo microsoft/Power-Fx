@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Μια τιμή ημερομηνίας που θα προσαρμοστεί έως τον καθορισμένο αριθμό μηνών.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Αριθμός μηνών με τον οποίο θα αλλάξετε την ημερομηνία. Μια θετική τιμή αποδίδει μια μελλοντική ημερομηνία, μια αρνητική τιμή μια προηγούμενη ημερομηνία και η τιμή μηδέν δεν θα αλλάξει το μήνα.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Επιστρέφει την τελευταία ημέρα του μήνα για μια καθορισμένη ημερομηνία, προσαρμοσμένη κατά σειρά μηνών.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Μια τιμή ημερομηνίας που θα προσαρμοστεί έως τον καθορισμένο αριθμό μηνών.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Αριθμός μηνών με τον οποίο θα αλλάξετε την ημερομηνία. Μια θετική τιμή αποδίδει μια μελλοντική ημερομηνία, μια αρνητική τιμή μια προηγούμενη ημερομηνία και η τιμή μηδέν δεν θα αλλάξει το μήνα.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Περικόπτει την τιμή 'number' στρογγυλοποιώντας προς το αρνητικό άπειρο.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Η συνάρτηση JSON δεν είναι δυνατό να σειριοποιήσει δυαδικά δεδομένα σε παράσταση που δεν αφορά τη συμπεριφορά.</value>    
+    <value>Η συνάρτηση JSON δεν είναι δυνατό να σειριοποιήσει δυαδικά δεδομένα σε παράσταση που δεν αφορά τη συμπεριφορά.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Η παράμετρος {0} περιέχει μια ιδιότητα τύπου {1} που δεν υποστηρίζεται.</value>
@@ -4251,5 +4251,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Μια στήλη πίνακα αριθμητικών τιμών για μετατροπή σε χαρακτήρες Unicode.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Μη υποστηριζόμενο είδος χαρακτηριστικού</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Όλοι οι τελεστές Partial σε κατονομαζόμενους τύπους που συμφωνούν πρέπει να είναι ίδιοι.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Άγνωστος τελεστής Partial.</value>
+    
   </data>
 </root>

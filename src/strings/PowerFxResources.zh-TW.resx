@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>要依指定月份數調整的日期值。</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>用以變更日期的月份數。正值會得出未來的日期，負值會得出過去的日期，零則不會變更月份。</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>傳回指定日期當月的最後一天 (依月份數調整)。</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>要依指定月份數調整的日期值。</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>用以變更日期的月份數。正值會得出未來的日期，負值會得出過去的日期，零則不會變更月份。</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>通過向負無限大捨入來截斷「數字」。</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON 函式無法序列化非行為運算式中的二進位資料。</value>    
+    <value>JSON 函式無法序列化非行為運算式中的二進位資料。</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>參數 {0} 包含不支援的 {1} 類型屬性。</value>
@@ -4251,5 +4251,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>要轉換為 Unicode 字元的數值資料表資料行。</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>不支援的屬性種類</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>相符具名公式的所有 Partial 運算子都必須相同。</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>未知的 Partial 運算子。</value>
+    
   </data>
 </root>
