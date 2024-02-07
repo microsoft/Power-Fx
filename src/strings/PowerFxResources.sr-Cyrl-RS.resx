@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Вредност датума коју треба прилагодити у складу са наведеним бројем месеци.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Број месеци у складу са којим треба променити датум. Позитивна вредност за резултат има будући датум, негативна вредност прошли датум, а нула неће променити месец.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Враћа последњи дан у месецу за наведени датум, коригован за одређени број месеци.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Вредност датума коју треба прилагодити у складу са наведеним бројем месеци.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Број месеци у складу са којим треба променити датум. Позитивна вредност за резултат има будући датум, негативна вредност прошли датум, а нула неће променити месец.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Скраћује „број“ заокруживањем према негативној бесконачности.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Функција JSON не може да серијализује бинарне податке у изразу који се не односи на понашање.</value>    
+    <value>Функција JSON не може да серијализује бинарне податке у изразу који се не односи на понашање.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Параметар {0} садржи својство типа {1}, што није подржано.</value>
@@ -4251,5 +4251,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Колона табеле нумеричких вредности која ће бити конвертована у Unicode знакове.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Неподржана врста атрибута</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Сви Partial оператери на формулама са подударним називима морају да буду исти.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Непознат Partial оператер.</value>
+    
   </data>
 </root>

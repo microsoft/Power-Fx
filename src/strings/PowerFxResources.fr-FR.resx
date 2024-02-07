@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Valeur de date à ajuster par le nombre de mois indiqué.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Nombre de mois par lequel modifier la date. Une valeur positive produit une date future, une valeur négative une date passée et zéro ne modifie pas le mois.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Retourne le dernier jour du mois pour une date indiquée, ajusté par un nombre de mois.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Valeur de date à ajuster par le nombre de mois indiqué.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Nombre de mois par lequel modifier la date. Une valeur positive produit une date future, une valeur négative une date passée, et zéro ne modifie pas le mois.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Tronque le « nombre » en arrondissant vers l’infini négatif.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>La fonction JSON ne peut pas sérialiser les données binaires dans une expression non comportementale.</value>    
+    <value>La fonction JSON ne peut pas sérialiser les données binaires dans une expression non comportementale.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Le paramètre {0} contient une propriété de type {1} qui n’est pas prise en charge.</value>
@@ -4251,5 +4251,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Colonne de table de valeurs numériques à convertir en caractères Unicode.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Type d’attribut non pris en charge</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Tous les opérateurs Partial dans les formules nommées correspondantes doivent être les mêmes.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Opérateur Partial inconnu.</value>
+    
   </data>
 </root>

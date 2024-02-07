@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Nilai tarikh untuk dilaraskan mengikut bilangan bulan yang ditentukan.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Bilangan bulan untuk mengubah tarikh. Nilai positif menunjukkan tarikh akan datang, nilai negatif menunjukkan tarikh lalu dan sifar tidak akan mengubah bulan tersebut.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Mengembalikan hari terakhir dalam bulan untuk tarikh yang ditentukan dengan dilaraskan mengikut bilangan bulan.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Nilai tarikh untuk dilaraskan mengikut bilangan bulan yang ditentukan.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Bilangan bulan untuk mengubah tarikh. Nilai positif menunjukkan tarikh akan datang, nilai negatif menunjukkan tarikh lalu dan sifar tidak akan mengubah bulan tersebut.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Memotong 'nombor' dengan membundarkan nombor kepada infiniti negatif.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Fungsi JSON tidak boleh menyirikan data perduaan dalam ungkapan bukan tingkah laku.</value>    
+    <value>Fungsi JSON tidak boleh menyirikan data perduaan dalam ungkapan bukan tingkah laku.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parameter {0} mengandungi sifat jenis {1} yang tidak disokong.</value>
@@ -4246,10 +4246,22 @@
     
   </data>
   <data name="UniCharTArg1" xml:space="preserve">
-    <value>column_of_numbers</value>
+    <value>lajur_nombor</value>
     
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Lajur jadual nilai angka untuk ditukar menjadi aksara Unikod.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Jenis atribut tidak disokong</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Semua operator Partial pada formula bernama yang dipadankan mestilah sama.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Operator Partial tidak diketahui.</value>
+    
   </data>
 </root>
