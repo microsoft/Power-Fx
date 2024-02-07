@@ -125,22 +125,6 @@ namespace Microsoft.PowerFx
             CoalesceShortCircuit = true,
             PrimaryOutputPropertyCoercionDeprecated = true,
             AsTypeLegacyCheck = false,
-            JsonFunctionAcceptsLazyTypes = false
-        };
-
-        public static Features PowerFxV1_WithJsonFunctionAcceptsLazyTypes => new Features
-        {
-            TableSyntaxDoesntWrapRecords = true,
-            ConsistentOneColumnTableResult = true,
-            DisableRowScopeDisambiguationSyntax = true,
-            SupportColumnNamesAsIdentifiers = true,
-            StronglyTypedBuiltinEnums = true,
-            RestrictedIsEmptyArguments = true,
-            FirstLastNRequiresSecondArguments = true,
-            PowerFxV1CompatibilityRules = true,
-            CoalesceShortCircuit = true,
-            PrimaryOutputPropertyCoercionDeprecated = true,
-            AsTypeLegacyCheck = false,
             JsonFunctionAcceptsLazyTypes = true
         };
 

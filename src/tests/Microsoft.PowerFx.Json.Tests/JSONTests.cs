@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Json.Tests
         [Fact]
         public void Json_IncludeBinaryData_WithLazyRecord()
         {
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig(Features.None);
             config.EnableJsonFunctions();
 
             var engine = new RecalcEngine(config);
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Json.Tests
         [Fact]
         public void Json_IncludeBinaryData_WithLazyRecordAndFeature()
         {
-            var config = new PowerFxConfig(Features.PowerFxV1_WithJsonFunctionAcceptsLazyTypes);
+            var config = new PowerFxConfig(Features.PowerFxV1);
             config.EnableJsonFunctions();
 
             var engine = new RecalcEngine(config);
@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Json.Tests
         [Fact]
         public void Json_IncludeBinaryData_WithLazyRecordCircularRef()
         {
-            var config = new PowerFxConfig(Features.PowerFxV1_WithJsonFunctionAcceptsLazyTypes);
+            var config = new PowerFxConfig(Features.PowerFxV1);
             config.EnableJsonFunctions();
 
             var engine = new RecalcEngine(config);
