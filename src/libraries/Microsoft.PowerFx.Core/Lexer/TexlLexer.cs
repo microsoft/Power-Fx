@@ -352,18 +352,25 @@ namespace Microsoft.PowerFx.Syntax
         {
             Contracts.AssertValue(text);
 
-            List<Token> tokens;
+            // In case of empty string script and TextFirst is active, returns a list of tokens representing an empty string.
+            if (text.Length == 0 && flags.HasFlag(Flags.TextFirst))
+            {
+                var span = new Span(0, 0);
+                return new List<Token>
+                {
+                    new StrInterpStartToken(span, true),
+                    new StrInterpEndToken(span, true),
+                    new EofToken(span)
+                };
+            }
+
+            var tokens = new List<Token>();
             StringBuilder sb = null;
 
             try
             {
                 // This StringBuilder is used by the Lexer as a temporary storage for tokenized characters.
                 sb = StringBuilderCache.Acquire(Math.Min(text.Length, DesiredStringBuilderSize));
-
-                if (TryParseTextFirstEmptyString(text, flags, out tokens))
-                {
-                    return tokens;
-                }
 
                 Token tok;
                 var impl = new LexerImpl(this, text, sb, flags);
@@ -399,32 +406,6 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             return tokens;
-        }
-
-        /// <summary>
-        /// In case of empty string scritp and TextFirst is active, returns a list of tokens representing an empty string.
-        /// </summary>
-        /// <param name="text">Script.</param>
-        /// <param name="flags">Parser flags.</param>
-        /// <param name="tokens">Tokens object initialized by the caller.</param>
-        /// <returns></returns>
-        public bool TryParseTextFirstEmptyString(string text, Flags flags, out List<Token> tokens)
-        {
-            if (text.Length == 0 && flags.HasFlag(TexlLexer.Flags.TextFirst))
-            {
-                var span = new Span(0, 0);
-                tokens = new List<Token>
-                {
-                    new StrInterpStartToken(span, true),
-                    new StrInterpEndToken(span, true),
-                    new EofToken(span)
-                };
-
-                return true;
-            }
-
-            tokens = new List<Token>();
-            return false;
         }
 
         public static bool RequiresWhiteSpace(Token tk)
