@@ -577,7 +577,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             public void Visit(BlobValue value)
             {
-                Result = value.ResourceElement.GetAsBase64Async(CancellationToken.None).Result;
+                Result = value.Content.GetAsBase64Async(CancellationToken.None).Result;
             }
 
             private void Visit(IUntypedObject untypedObject)

@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return CommonErrors.RuntimeTypeMismatch(args[0].IRContext);
             }
 
-            return FormulaValue.New(await blobValue.ResourceElement.GetAsBase64Async(cancellationToken).ConfigureAwait(false));
+            return FormulaValue.New(await blobValue.Content.GetAsBase64Async(cancellationToken).ConfigureAwait(false));
         }
     }
 }

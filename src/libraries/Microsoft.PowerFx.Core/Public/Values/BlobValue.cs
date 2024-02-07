@@ -12,12 +12,12 @@ namespace Microsoft.PowerFx.Types
 {
     public class BlobValue : ValidFormulaValue
     {
-        internal BlobContent ResourceElement { get; }
+        internal BlobContent Content { get; }
 
         internal BlobValue(BlobContent resourceElement)
              : base(IRContext.NotInSource(FormulaType.Blob))
         {
-            ResourceElement = resourceElement ?? throw new ArgumentNullException(nameof(resourceElement));
+            Content = resourceElement ?? throw new ArgumentNullException(nameof(resourceElement));
         }
 
         public override void Visit(IValueVisitor visitor)
@@ -32,19 +32,19 @@ namespace Microsoft.PowerFx.Types
         public async Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
-            return await ResourceElement.GetAsByteArrayAsync(token).ConfigureAwait(false);
+            return await Content.GetAsByteArrayAsync(token).ConfigureAwait(false);
         }
 
         public virtual async Task<string> GetAsStringAsync(Encoding encoding, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
-            return await ResourceElement.GetAsStringAsync(encoding, token).ConfigureAwait(false);
+            return await Content.GetAsStringAsync(encoding, token).ConfigureAwait(false);
         }
 
         public virtual async Task<string> GetAsBase64Async(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
-            return await ResourceElement.GetAsBase64Async(token).ConfigureAwait(false);
+            return await Content.GetAsBase64Async(token).ConfigureAwait(false);
         }
     }
 }

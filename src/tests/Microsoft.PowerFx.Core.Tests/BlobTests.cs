@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(string.Empty, blob.GetAsStringAsync(null, CancellationToken.None).Result);
             Assert.Equal(string.Empty, blob.GetAsBase64Async(CancellationToken.None).Result);
             Assert.Empty(blob.GetAsByteArrayAsync(CancellationToken.None).Result);
-            Assert.Same(blob.ResourceElement, beb);
+            Assert.Same(blob.Content, beb);
         }
 
         [Fact]
@@ -58,10 +58,10 @@ namespace Microsoft.PowerFx.Core.Tests
             BlobValue blob = new BlobValue(beb);
 
             Assert.NotNull(blob);
-            Assert.Equal(string.Empty, blob.ResourceElement.GetAsStringAsync(null, CancellationToken.None).Result);
-            Assert.Equal(string.Empty, blob.ResourceElement.GetAsBase64Async(CancellationToken.None).Result);
+            Assert.Equal(string.Empty, blob.Content.GetAsStringAsync(null, CancellationToken.None).Result);
+            Assert.Equal(string.Empty, blob.Content.GetAsBase64Async(CancellationToken.None).Result);
             Assert.Empty(blob.GetAsByteArrayAsync(CancellationToken.None).Result);
-            Assert.Same(blob.ResourceElement, beb);
+            Assert.Same(blob.Content, beb);
         }
 
         [Fact]
@@ -70,8 +70,8 @@ namespace Microsoft.PowerFx.Core.Tests
             BlobValue blob = FormulaValue.NewBlob("Hello World!", false);
 
             Assert.NotNull(blob);
-            Assert.Equal("Hello World!", blob.ResourceElement.GetAsStringAsync(null, CancellationToken.None).Result);
-            Assert.Equal("SGVsbG8gV29ybGQh", blob.ResourceElement.GetAsBase64Async(CancellationToken.None).Result);
+            Assert.Equal("Hello World!", blob.Content.GetAsStringAsync(null, CancellationToken.None).Result);
+            Assert.Equal("SGVsbG8gV29ybGQh", blob.Content.GetAsBase64Async(CancellationToken.None).Result);
             Assert.Equal(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 }, blob.GetAsByteArrayAsync(CancellationToken.None).Result);            
         }
 
@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Core.Tests
             BlobValue blob = FormulaValue.NewBlob("Hello World!", false, Encoding.UTF32);
 
             Assert.NotNull(blob);            
-            Assert.Equal("SAAAAGUAAABsAAAAbAAAAG8AAAAgAAAAVwAAAG8AAAByAAAAbAAAAGQAAAAhAAAA", blob.ResourceElement.GetAsBase64Async(CancellationToken.None).Result);
+            Assert.Equal("SAAAAGUAAABsAAAAbAAAAG8AAAAgAAAAVwAAAG8AAAByAAAAbAAAAGQAAAAhAAAA", blob.Content.GetAsBase64Async(CancellationToken.None).Result);
             Assert.Equal(new byte[] { 72, 0, 0, 0, 101, 0, 0, 0, 108, 0, 0, 0, 108, 0, 0, 0, 111, 0, 0, 0, 32, 0, 0, 0, 87, 0, 0, 0, 111, 0, 0, 0, 114, 0, 0, 0, 108, 0, 0, 0, 100, 0, 0, 0, 33, 0, 0, 0 }, blob.GetAsByteArrayAsync(CancellationToken.None).Result);
         }
 
@@ -91,8 +91,8 @@ namespace Microsoft.PowerFx.Core.Tests
             BlobValue blob = FormulaValue.NewBlob("SGVsbG8gV29ybGQh", true);
 
             Assert.NotNull(blob);
-            Assert.Equal("Hello World!", blob.ResourceElement.GetAsStringAsync(null, CancellationToken.None).Result);
-            Assert.Equal("SGVsbG8gV29ybGQh", blob.ResourceElement.GetAsBase64Async(CancellationToken.None).Result);
+            Assert.Equal("Hello World!", blob.Content.GetAsStringAsync(null, CancellationToken.None).Result);
+            Assert.Equal("SGVsbG8gV29ybGQh", blob.Content.GetAsBase64Async(CancellationToken.None).Result);
             Assert.Equal(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 }, blob.GetAsByteArrayAsync(CancellationToken.None).Result);            
         }
 
@@ -102,22 +102,10 @@ namespace Microsoft.PowerFx.Core.Tests
             BlobValue blob = FormulaValue.NewBlob(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 });
 
             Assert.NotNull(blob);
-            Assert.Equal("Hello World!", blob.ResourceElement.GetAsStringAsync(null, CancellationToken.None).Result);
-            Assert.Equal("SGVsbG8gV29ybGQh", blob.ResourceElement.GetAsBase64Async(CancellationToken.None).Result);
+            Assert.Equal("Hello World!", blob.Content.GetAsStringAsync(null, CancellationToken.None).Result);
+            Assert.Equal("SGVsbG8gV29ybGQh", blob.Content.GetAsBase64Async(CancellationToken.None).Result);
             Assert.Equal(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 }, blob.GetAsByteArrayAsync(CancellationToken.None).Result);            
-        }
-
-        [Fact]
-        public void BlobTest_SomeStreamValue()
-        {
-            using Stream stream = new MemoryStream(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 });
-            BlobValue blob = FormulaValue.NewBlob(stream);
-
-            Assert.NotNull(blob);
-            Assert.Equal("Hello World!", blob.ResourceElement.GetAsStringAsync(null, CancellationToken.None).Result);
-            Assert.Equal("SGVsbG8gV29ybGQh", blob.ResourceElement.GetAsBase64Async(CancellationToken.None).Result);
-            Assert.Equal(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 }, blob.GetAsByteArrayAsync(CancellationToken.None).Result);            
-        }
+        }   
 
         [Fact]
         public void BlobTest_InvalidBase64()
