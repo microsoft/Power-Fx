@@ -290,12 +290,12 @@ namespace Microsoft.PowerFx.Tests
 ";
 
             AssertEqual(expected, actual);
-        }
+        }        
 
-        internal class AsBlobFunction : BuiltinFunction
+        internal class AsBlobFunctionImpl : BuiltinFunction, IAsyncTexlFunction5
         {
-            public AsBlobFunction()
-                 : base("AsBlob", (loc) => "Converts a string to a Blob.", FunctionCategories.Text, DType.Blob, 0, 1, 2, DType.String, DType.Boolean)
+            public AsBlobFunctionImpl()
+                : base("AsBlob", (loc) => "Converts a string to a Blob.", FunctionCategories.Text, DType.Blob, 0, 1, 2, DType.String, DType.Boolean)
             {
             }
 
@@ -306,31 +306,17 @@ namespace Microsoft.PowerFx.Tests
                 yield return new TexlStrings.StringGetter[] { (loc) => "string" };
                 yield return new TexlStrings.StringGetter[] { (loc) => "string", (loc) => "isBase64Encoded" };
             }
-        }
-
-        internal class AsBlobFunctionImpl : AsBlobFunction, IAsyncTexlFunction5
-        {
+        
             public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (args[0] is BlankValue)
-                {
-                    return Task.FromResult<FormulaValue>(args[0]);
-                }
-
-                if (args[0] is BlobValue)
-                {
-                    return Task.FromResult(args[0]);
-                }
-
-                if (args[0] is not StringValue sv)
-                {
-                    return Task.FromResult<FormulaValue>(CommonErrors.RuntimeTypeMismatch(args[0].IRContext));
-                }
-
-                bool isBase64String = args.Length >= 2 && args[1] is BooleanValue bv && bv.Value;
-                return Task.FromResult<FormulaValue>(BlobValue.NewBlob(sv.Value, isBase64String));
+                return Task.FromResult<FormulaValue>(
+                    args[0] is BlankValue || args[0] is BlobValue                    
+                    ? args[0]
+                    : args[0] is not StringValue sv
+                    ? CommonErrors.RuntimeTypeMismatch(args[0].IRContext)
+                    : BlobValue.NewBlob(sv.Value, args.Length >= 2 && args[1] is BooleanValue bv && bv.Value));                
             }
         }
 
