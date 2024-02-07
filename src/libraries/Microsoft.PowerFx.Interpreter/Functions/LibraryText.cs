@@ -216,9 +216,6 @@ namespace Microsoft.PowerFx.Functions
                     }
 
                     break;
-
-                default:
-                    return false;
             }
 
             return result != null;
@@ -327,13 +324,6 @@ namespace Microsoft.PowerFx.Functions
 
             runner.CancellationToken.ThrowIfCancellationRequested();
             return Text(runner.GetFormattingInfo(), irContext, args, runner.CancellationToken);
-        }
-
-        // Converts a StringValue to a BlobValue (see CoercionMatrix.cs)
-        public static FormulaValue StringToBlob(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
-        {
-            runner.CancellationToken.ThrowIfCancellationRequested();            
-            return FormulaValue.NewBlob(((StringValue)args[0]).Value, false);
         }
 
         public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
@@ -530,9 +520,6 @@ namespace Microsoft.PowerFx.Functions
                             TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, defaultFormat, dateTimeResult, timeZoneInfo, culture, cancellationToken, out result);
                     }
 
-                    break;
-
-                case BlobValue:                                        
                     break;
             }
 

@@ -48,12 +48,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig(symbolValues);
             RecalcEngine engine = new RecalcEngine(config);
 
-            // IR: If:o(False:b, Lazy(ResolvedObject('var1:SymbolTable_5866477')), Lazy(TextToBlob:o(If:s(False:b, Lazy("a":s), Lazy(BlobToText:s(ResolvedObject('var1:SymbolTable_5866477')))))))
-            //                                                                                                                       ~~~~~~~~~~~~
+            // IR: If:o(False:b, Lazy(ResolvedObject('var1:SymbolTable_5866477')), Lazy(TextToBlob:o(If:s(False:b, Lazy("a":s), Lazy(BlobToText:s(ResolvedObject('var1:SymbolTable_5866477')))))))                        
             FormulaValue result = engine.EvalAsync(@"If(false, var1, If(false, ""a"", var1))", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, symbolTable, runtimeConfig).Result;
 
             ErrorValue ev = Assert.IsType<ErrorValue>(result);
-            Assert.Equal("Not implemented: Unary op BlobToText", ev.Errors[0].Message);
+            Assert.Equal("Not implemented: Unary op TextToBlob", ev.Errors[0].Message);
         }
     }
 }

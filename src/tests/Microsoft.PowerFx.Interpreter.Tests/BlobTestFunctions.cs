@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (args[0] is BlankValue)
             {
-                return Task.FromResult<FormulaValue>(BlobValue.NewBlob(bytes: null));
+                return Task.FromResult<FormulaValue>(args[0]);
             }
 
             if (args[0] is BlobValue)
