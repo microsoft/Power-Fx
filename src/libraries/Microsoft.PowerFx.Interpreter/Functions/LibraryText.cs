@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -187,9 +188,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static bool TryFloat(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, out NumberValue result)
         {
-            result = null;
-
-            Contract.Assert(NumberValue.AllowedListConvertToNumber.Contains(value.Type));
+            result = null;            
 
             switch (value)
             {
@@ -1212,7 +1211,7 @@ namespace Microsoft.PowerFx.Functions
                     Kind = ErrorKind.InvalidArgument
                 });
             }
-            
+
             if (isPartialSurrogate)
             {
                 return new ErrorValue(irContext, new ExpressionError()
@@ -1222,7 +1221,7 @@ namespace Microsoft.PowerFx.Functions
                     Kind = ErrorKind.NotApplicable
                 });
             }
-            
+
             string unicode = char.ConvertFromUtf32((int)number);
             return new StringValue(irContext, unicode);
         }

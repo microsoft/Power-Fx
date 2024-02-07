@@ -275,6 +275,10 @@ namespace Microsoft.PowerFx
             {                
                 result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
             }
+            else if (func is IAsyncTexlFunction5 asyncFunc5)
+            {                
+                result = await asyncFunc5.InvokeAsync(_services, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
+            }
             else if (func is IAsyncConnectorTexlFunction asyncConnectorTexlFunction)
             {                
                 return await asyncConnectorTexlFunction.InvokeAsync(args, _services, _cancellationToken).ConfigureAwait(false);

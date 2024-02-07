@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>A date value to be adjusted by the specified number of months.</value>
-    <comment>Description of the first argument to the 'EDate' function.</comment>      
+    <comment>Description of the first argument to the 'EDate' function.</comment>
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Number of months by which to change the date. A positive value yields a future date, a negative value a past date, and zero will not change the month.</value>
-    <comment>Description of the second argument to the 'EDate' function.</comment>    
+    <comment>Description of the second argument to the 'EDate' function.</comment>
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Returns the last day of the month for a specified date, adjusted by a number of months.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>A date value to be adjusted by the specified number of months.</value>
-    <comment>Description of the first argument to the 'EOMonth' function.</comment>      
+    <comment>Description of the first argument to the 'EOMonth' function.</comment>
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Number of months by which to change the date. A positive value yields a future date, a negative value a past date, and zero will not change the month.</value>
-    <comment>Description of the second argument to the 'EOMonth' function.</comment>     
+    <comment>Description of the second argument to the 'EOMonth' function.</comment>
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Truncates 'number' by rounding toward negative infinity.</value>
@@ -4375,7 +4375,7 @@
     <comment>{Locked=JSON}. Error message shown to the user if they try to serialize an object which contain a nested property of a type which is not supported in the JSON function. Both parameters are strings. E.g.: The JSON function cannot serialize tables / objects with a nested property called 'value' of type 'Polymorphic'.</comment>
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>The JSON function cannot serialize binary data in non-behavioral expression.</value>    
+    <value>The JSON function cannot serialize binary data in non-behavioral expression.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>The parameter {0} contains a property of type {1} which is not supported.</value>
@@ -4447,6 +4447,22 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>A table column of numeric values to be converted into Unicode characters.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Unsupported attribute kind</value>
+    <comment>Error message when the user attempted to use the attribute syntax on a named formula definition, but we didn't recognize the attribute name they specified.</comment>
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>All Partial operators on matching named formulas must be the same.</value>
+    <comment>{Locked=Partial} Error message when the user attempted to use a partial operator on multiple named formulas, but didn't specify the same operator on each one.
+      A partial operator is the 2nd part of a statement `[Partial Op]` and can be one of "And", "Or", "Table" or "Record".
+      It's used to determine how to combine multiple expressions with the same name and operator.</comment>
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Unknown Partial operator.</value>
+    <comment>{Locked=Partial}. Error message when the user attempted to use a Partial operator that we don't recognize.
+      A partial operator is the 2nd part of a statement `[Partial Op]` and can be one of "And", "Or", "Table" or "Record".
+      It's used to determine how to combine multiple expressions with the same name and operator.</comment>
   </data>
   <data name="ErrNeedTable" xml:space="preserve">
     <value>Argument needs to be a table.</value>
