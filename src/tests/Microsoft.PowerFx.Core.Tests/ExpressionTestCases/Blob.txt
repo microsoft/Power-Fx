@@ -59,7 +59,7 @@ true
 false
 
 >> IsBlank(Blob(Blank()))
-false
+true
 
 >> Set(blob, Blob("abc")); BlobGetString(blob)
 "abc"

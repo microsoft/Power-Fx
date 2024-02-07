@@ -413,18 +413,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: TimeParse)
-            },
-            {
-                UnaryOpKind.TextToBlob,
-                StandardErrorHandling<StringValue>(
-                    functionName: null, // internal function, no user-facing name
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StringToBlob)
-            },            
+            },                        
             {
                 UnaryOpKind.OptionSetToText,
                 StandardErrorHandling<OptionSetValue>(
