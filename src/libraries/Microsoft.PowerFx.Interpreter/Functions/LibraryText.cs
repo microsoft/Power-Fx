@@ -329,27 +329,11 @@ namespace Microsoft.PowerFx.Functions
             return Text(runner.GetFormattingInfo(), irContext, args, runner.CancellationToken);
         }
 
-        public static FormulaValue TextToBlob(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        // Converts a StringValue to a BlobValue (see CoercionMatrix.cs)
+        public static FormulaValue StringToBlob(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            runner.CancellationToken.ThrowIfCancellationRequested();
-
-            StringValue sv = (StringValue)args[0];           
-            return new BlobValue(new StringBlob(sv.Value));
-        }
-
-        public static FormulaValue BlobToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
-        {
-            if (args[0] is BlobValue bv && bv?.ResourceElement is UriBlob uri)
-            {
-                return FormulaValue.New(uri.Uri.ToString());
-            }
-
-            return new ErrorValue(irContext, new ExpressionError()
-            {
-                Message = $"Cannot convert Blob to Text",
-                Span = irContext.SourceContext,
-                Kind = ErrorKind.InvalidArgument
-            });
+            runner.CancellationToken.ThrowIfCancellationRequested();            
+            return FormulaValue.NewBlob(((StringValue)args[0]).Value, false);
         }
 
         public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
@@ -548,9 +532,7 @@ namespace Microsoft.PowerFx.Functions
 
                     break;
 
-                case BlobValue:
-                    
-                    result = BlobToText(null, default, irContext, new[] { value }) is StringValue sv2 ? sv2 : null;
+                case BlobValue:                                        
                     break;
             }
 

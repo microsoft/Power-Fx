@@ -29,26 +29,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         //                    if initPfxConfig is null, PowerFxConfig is created with default settings
         // - parameters: to define the parameters for the test case
         //               receives an 'object' if defined in updatePfxConfig
-        // - configureEngine: to configure the engine
-        // - runtimeConfigTypes: set of objects to add to RuntimeConfig
-        // - setVariables: set variables in the symbol values
+        // - configureEngine: to configure the engine               
         // Each of these actions are executed in order (init, update, param, configure)
         internal static Dictionary<string, 
             (Func<PowerFxConfig, PowerFxConfig> initPfxConfig, 
              Func<PowerFxConfig, SymbolTable, object> updatePfxConfig, 
              Func<object, RecordValue> parameters, 
-             Action<RecalcEngine, bool> configureEngine,
-             Action<RuntimeConfig> runtimeConfig)> SetupHandlers = new ()
+             Action<RecalcEngine, bool> configureEngine)> SetupHandlers = new ()
         {
-            { "AllEnumsSetup", (AllEnumsSetup, null, null, null, null) },
-            { "Blob", (null, BlobSetup, null, null, null) },
-            { "DecimalSupport", (null, null, null, null, null) }, // Decimal is enabled in the C# interpreter
-            { "EnableJsonFunctions", (null, EnableJsonFunctions, null, null, null) },
-            { "MutationFunctionsTestSetup", (null, null, null, MutationFunctionsTestSetup, null) },
-            { "OptionSetSortTestSetup", (null, OptionSetSortTestSetup, null, null, null) },
-            { "OptionSetTestSetup", (null, OptionSetTestSetup1, OptionSetTestSetup2, null, null) },
-            { "RegEx", (null, RegExSetup, null, null, null) },
-            { "TraceSetup", (null, null, null, TraceSetup, null) }
+            { "AllEnumsSetup", (AllEnumsSetup, null, null, null) },
+            { "Blob", (null, BlobSetup, null, null) },
+            { "DecimalSupport", (null, null, null, null) }, // Decimal is enabled in the C# interpreter
+            { "EnableJsonFunctions", (null, EnableJsonFunctions, null, null) },
+            { "MutationFunctionsTestSetup", (null, null, null, MutationFunctionsTestSetup) },
+            { "OptionSetSortTestSetup", (null, OptionSetSortTestSetup, null, null) },
+            { "OptionSetTestSetup", (null, OptionSetTestSetup1, OptionSetTestSetup2, null) },
+            { "RegEx", (null, RegExSetup, null, null) },
+            { "TraceSetup", (null, null, null, TraceSetup) }
         };
 
         private static object EnableJsonFunctions(PowerFxConfig config, SymbolTable symbolTable)
@@ -429,12 +426,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                             {
                                 engine ??= new RecalcEngine(config);
                                 k.configureEngine(engine, NumberIsFloat);
-                            }
-
-                            if (k.runtimeConfig != null)
-                            {
-                                runtimeConfiguration.Add(k.runtimeConfig);
-                            }                            
+                            }                                                     
                         }
 
                         engine ??= new RecalcEngine(config);

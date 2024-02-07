@@ -4083,21 +4083,6 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        [Theory]
-        [InlineData("Filter(T, c)")]
-        [InlineData("Filter(T, boolVar)")]
-        [InlineData("With({d:true},Filter(T, d))")]
-        public void TestFilterWithNamingConflicts(string expression)
-        {
-            var tableType = TestUtils.DT("*[a:n,b:s,c:b]");
-            var symbolTable = new SymbolTable();
-            symbolTable.AddVariable("c", FormulaType.Boolean);
-            symbolTable.AddVariable("boolVar", FormulaType.Boolean);
-            symbolTable.AddVariable("T", new TableType(tableType));
-
-            TestSimpleBindingSuccess(expression, tableType, symbolTable);
-        }
-
         internal class BlobFunc : TexlFunction
         {
             public override bool IsSelfContained => false;

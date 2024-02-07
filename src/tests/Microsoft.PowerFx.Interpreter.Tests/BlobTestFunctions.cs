@@ -19,8 +19,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         public static void AddBlobTestFunctions(this PowerFxConfig config)
         {
-            config.AddFunction(new BlobFunctionImpl());
-            config.AddFunction(new BlobUriFunctionImpl());
+            config.AddFunction(new BlobFunctionImpl());            
             config.AddFunction(new BlobGetStringFunctionImpl());
             config.AddFunction(new BlobGetBase64StringFunctionImpl());
         }
@@ -50,7 +49,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (args[0] is BlankValue)
             {
-                return Task.FromResult<FormulaValue>(BlobValue.NewBlob(new StringBlob(null)));
+                return Task.FromResult<FormulaValue>(BlobValue.NewBlob(bytes: null));
             }
 
             if (args[0] is BlobValue)
@@ -63,10 +62,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return Task.FromResult<FormulaValue>(CommonErrors.RuntimeTypeMismatch(args[0].IRContext));
             }
             
-            bool isBase64String = args.Length >= 2 && args[1] is BooleanValue bv && bv.Value;                        
-            BlobElementBase elem = isBase64String ? new Base64Blob(sv.Value) : new StringBlob(sv.Value);
+            bool isBase64String = args.Length >= 2 && args[1] is BooleanValue bv && bv.Value;                                    
 
-            return Task.FromResult<FormulaValue>(BlobValue.NewBlob(elem));
+            return Task.FromResult<FormulaValue>(BlobValue.NewBlob(sv.Value, isBase64String));
         }
     }
 
@@ -83,33 +81,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {            
             yield return new TexlStrings.StringGetter[] { (loc) => "string", (loc) => "Uri" };
         }
-    }
-
-    internal class BlobUriFunctionImpl : BlobUriFunction, IAsyncTexlFunction5
-    {
-        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();         
-
-            if (args[0] is BlankValue)
-            {
-                return BlobValue.NewBlank(FormulaType.Blob);
-            }
-
-            if (args[0] is BlobValue)
-            {
-                return args[0];
-            }
-
-            if (args[0] is not StringValue sv)
-            {
-                return CommonErrors.RuntimeTypeMismatch(args[0].IRContext);
-            }
-
-            UriBlob handle = new UriBlob(new Uri(sv.Value));
-            return BlobValue.NewBlob(handle);
-        }
-    }
+    }   
 
     internal class BlobGetStringFunction : BuiltinFunction
     {

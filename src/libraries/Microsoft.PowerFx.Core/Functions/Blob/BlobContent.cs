@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
-    public abstract class BlobElementBase
+    internal abstract class BlobContent
     {
-        public abstract Task<byte[]> GetAsByteArrayAsync(CancellationToken token);
+        internal abstract Task<byte[]> GetAsByteArrayAsync(CancellationToken token);
 
-        public virtual async Task<string> GetAsStringAsync(Encoding encoding, CancellationToken token)
+        internal virtual async Task<string> GetAsStringAsync(Encoding encoding, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             return FromBytesToString(await GetAsByteArrayAsync(token).ConfigureAwait(false), encoding);
         }
 
-        public virtual async Task<string> GetAsBase64Async(CancellationToken token)
+        internal virtual async Task<string> GetAsBase64Async(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             return FromBytesToBase64(await GetAsByteArrayAsync(token).ConfigureAwait(false));
@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         protected static string FromBytesToString(byte[] bytes, Encoding encoding)
         {
-            return (encoding ?? Encoding.UTF8).GetString(bytes);
+            return bytes == null ? null : (encoding ?? Encoding.UTF8).GetString(bytes);
         }
 
         protected static byte[] FromStringToBytes(string str, Encoding encoding)
@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         protected static string FromBytesToBase64(byte[] bytes)
         {
-            return Convert.ToBase64String(bytes);
+            return bytes == null ? null : Convert.ToBase64String(bytes);
         }
 
         protected static byte[] FromBase64ToBytes(string base64Str)

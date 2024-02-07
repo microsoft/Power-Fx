@@ -5,9 +5,14 @@ using System.IO;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
-    public class StreamBlob : ByteArrayBlob
+    internal class StreamBlob : ByteArrayBlob
     {
-        public StreamBlob(Stream stream)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StreamBlob"/> class.
+        /// Copies the stream to a byte array and creates a new StreamBlob.
+        /// </summary>
+        /// <param name="stream"></param>
+        internal StreamBlob(Stream stream)
             : base(FromStreamToBytes(stream))
         {
         }

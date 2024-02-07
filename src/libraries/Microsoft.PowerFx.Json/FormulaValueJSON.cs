@@ -107,12 +107,7 @@ namespace Microsoft.PowerFx.Types
                     {
                         DateTime dt3 = element.GetDateTime();
                         return DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3));
-                    }
-                    else if (formulaType is BlobType)
-                    {
-                        BlobElementBase resElem = new Base64Blob(element.GetString());
-                        return BlobValue.NewBlob(resElem);
-                    }                    
+                    }                              
                     else
                     {
                         throw new NotImplementedException($"Expecting a StringType but got {formulaType._type.Kind}");

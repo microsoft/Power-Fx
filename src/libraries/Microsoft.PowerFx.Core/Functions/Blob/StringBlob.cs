@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
-    public class StringBlob : BlobElementBase
+    internal class StringBlob : BlobContent
     {
         private readonly string _string;
 
-        public StringBlob(string str)
+        internal StringBlob(string str)
         {
             _string = str;
         }
 
-        public override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
+        internal override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 

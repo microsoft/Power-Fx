@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
@@ -139,9 +140,26 @@ namespace Microsoft.PowerFx.Types
             return new VoidValue(IRContext.NotInSource(FormulaType.Void));
         }
 
-        public static BlobValue NewBlob(BlobElementBase elem)
+        public static BlobValue NewBlob(string str, bool isBase64Encoded)
         {
-            return new BlobValue(elem);
-        }     
+            return new BlobValue(isBase64Encoded ? new Base64Blob(str) : new StringBlob(str));
+        }
+
+        public static BlobValue NewBlob(byte[] bytes)
+        {
+            return new BlobValue(new ByteArrayBlob(bytes));
+        }
+
+        /// <summary>
+        /// Creates a new BlobValue from a stream.
+        /// All content of the stream will be copied to the Blob.
+        /// The stream will not be disposed.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static BlobValue NewBlob(Stream stream)
+        {
+            return new BlobValue(new StreamBlob(stream));
+        }
     }
 }
