@@ -3,8 +3,6 @@
 
 using System;
 using System.Net.Http;
-using Microsoft.PowerFx.Core.Functions;
-using SharpYaml.Serialization.Logging;
 
 namespace Microsoft.PowerFx.Connectors
 {

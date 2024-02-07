@@ -408,9 +408,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     switch (schema.Format)
                     {
-                        case "uri":
-                            string mku = GetMediaKind(schema);
-
+                        case "uri":                            
                             return new ConnectorType(schema, openApiParameter, FormulaType.String);
 
                         case "date": // full-date RFC3339
@@ -420,13 +418,9 @@ namespace Microsoft.PowerFx.Connectors
                         case "date-no-tz":
                             return new ConnectorType(schema, openApiParameter, FormulaType.DateTime);
 
-                        case "byte": // Base64 string
-                            string mkby = GetMediaKind(schema);
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Blob, warning: ConnectorStringResources.WarnFunctionUseByte);
-
-                        case "binary": // octet stream
-                            string mkb = GetMediaKind(schema);
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Blob, warning: ConnectorStringResources.WarnFunctionUseBinary);
+                        case "byte": // Base64 string                            
+                        case "binary": // octet stream                            
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
 
                         case "enum":
                             if (schema.Enum.All(e => e is OpenApiString))
@@ -603,9 +597,7 @@ namespace Microsoft.PowerFx.Connectors
                         return new ConnectorType(schema, openApiParameter, recordType, hiddenRecordType, connectorTypes.ToArray(), hiddenConnectorTypes.ToArray());
                     }
 
-                case "file":
-                    string mkf = GetMediaKind(schema);                   
-
+                case "file":                   
                     return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
 
                 default:

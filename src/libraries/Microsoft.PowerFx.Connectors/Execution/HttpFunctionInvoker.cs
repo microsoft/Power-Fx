@@ -13,7 +13,6 @@ using System.Web;
 using Microsoft.CodeAnalysis;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;

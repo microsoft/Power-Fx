@@ -11,7 +11,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests;

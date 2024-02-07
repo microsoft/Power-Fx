@@ -3,7 +3,6 @@
 
 using System;
 using System.Net.Http;
-using Microsoft.PowerFx.Core.Functions;
 
 namespace Microsoft.PowerFx.Connectors
 {

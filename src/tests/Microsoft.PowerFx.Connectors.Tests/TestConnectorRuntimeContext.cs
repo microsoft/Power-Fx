@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Tests;
 using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -78,6 +79,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
         protected override void WriteStringValue(string stringValue)
         {
             _writer.WriteStringValue(stringValue);
+        }
+
+        protected override void WriteBytesValue(byte[] bytesValue)
+        {
+            _writer.WriteBase64StringValue(bytesValue);
         }
 
         protected override void StartObject(string name = null)

@@ -138,5 +138,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
         {
             // Do nothing
         }
+
+        protected override void WriteBytesValue(byte[] bytesValue)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

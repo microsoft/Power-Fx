@@ -44,6 +44,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected abstract void WriteStringValue(string stringValue);
 
+        protected abstract void WriteBytesValue(byte[] bytesValue);
+
         protected abstract void WriteBooleanValue(bool booleanValue);
 
         protected abstract void WriteDateTimeValue(DateTime dateTimeValue);
@@ -252,16 +254,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
                         WriteDateValue(dv.GetConvertedValue(null));
                     }
                     else if (fv is BlobValue bv)
-                    {
-                        if (propertySchema.Format == "byte")
-                        {
-                            WriteStringValue(bv.GetAsBase64Async(CancellationToken.None).Result);
-                        }
-                        else
-                        {
-                            // "binary"
-                            WriteStringValue(bv.GetAsStringAsync(null, CancellationToken.None).Result);
-                        }
+                    {                        
+                        WriteBytesValue(bv.GetAsByteArrayAsync(CancellationToken.None).Result);                                                
                     }
                     else
                     {
