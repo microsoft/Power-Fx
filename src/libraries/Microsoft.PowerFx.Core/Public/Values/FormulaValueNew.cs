@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 
@@ -140,9 +141,16 @@ namespace Microsoft.PowerFx.Types
             return new VoidValue(IRContext.NotInSource(FormulaType.Void));
         }
 
-        public static BlobValue NewBlob(string str, bool isBase64Encoded)
+        /// <summary>
+        /// Creates a new BlobValue from a string.
+        /// </summary>
+        /// <param name="str">String.</param>
+        /// <param name="isBase64Encoded">Is the string base64 encoded?</param>
+        /// <param name="encoding">When the string isn't bae64 encoded, defines the encoding. Defaults to UTF8 when null or not provided.</param>
+        /// <returns></returns>
+        public static BlobValue NewBlob(string str, bool isBase64Encoded, Encoding encoding = null)
         {
-            return new BlobValue(isBase64Encoded ? new Base64Blob(str) : new StringBlob(str));
+            return new BlobValue(isBase64Encoded ? new Base64Blob(str) : new StringBlob(str, encoding));
         }
 
         public static BlobValue NewBlob(byte[] bytes)

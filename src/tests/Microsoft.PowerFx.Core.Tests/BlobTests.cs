@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.Intrinsics.X86;
+using System.Text;
 using System.Threading;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Types;
@@ -72,6 +73,16 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal("Hello World!", blob.ResourceElement.GetAsStringAsync(null, CancellationToken.None).Result);
             Assert.Equal("SGVsbG8gV29ybGQh", blob.ResourceElement.GetAsBase64Async(CancellationToken.None).Result);
             Assert.Equal(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 }, blob.GetAsByteArrayAsync(CancellationToken.None).Result);            
+        }
+
+        [Fact]
+        public void BlobTest_SomeUTF32Value()
+        {
+            BlobValue blob = FormulaValue.NewBlob("Hello World!", false, Encoding.UTF32);
+
+            Assert.NotNull(blob);            
+            Assert.Equal("SAAAAGUAAABsAAAAbAAAAG8AAAAgAAAAVwAAAG8AAAByAAAAbAAAAGQAAAAhAAAA", blob.ResourceElement.GetAsBase64Async(CancellationToken.None).Result);
+            Assert.Equal(new byte[] { 72, 0, 0, 0, 101, 0, 0, 0, 108, 0, 0, 0, 108, 0, 0, 0, 111, 0, 0, 0, 32, 0, 0, 0, 87, 0, 0, 0, 111, 0, 0, 0, 114, 0, 0, 0, 108, 0, 0, 0, 100, 0, 0, 0, 33, 0, 0, 0 }, blob.GetAsByteArrayAsync(CancellationToken.None).Result);
         }
 
         [Fact]
