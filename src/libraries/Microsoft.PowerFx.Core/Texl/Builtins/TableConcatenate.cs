@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
@@ -106,12 +108,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 0; i < argTypes.Length; i++)
             {
-                if (argTypes[i].AssociatedDataSources.Count > 0)
+                var ads = argTypes[i].AssociatedDataSources?.FirstOrDefault();
+
+                if (IsExternalSource(ads))
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.WrnDelegationTableNotSupported);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.SuggestRemoteExecutionHint);
                     continue;
                 }
             }
+        }
+
+        private static bool IsExternalSource(object externalDataSource)
+        {
+            return externalDataSource is IExternalDataSource tDsInfo &&
+                tDsInfo is IExternalTabularDataSource;
         }
     }
 }
