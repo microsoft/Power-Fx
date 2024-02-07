@@ -4462,4 +4462,9 @@
   <data name="AboutTableConcatenate_table" xml:space="preserve">
     <value>A table whose rows will be appended to the resulting table.</value>
   </data>
+
+  <data name="ErrorDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation {0} on table '{1}' is not supported</value>
+    <comment>Delegation not supported error message.</comment>
+  </data>
 </root>

@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (IsExternalSource(ads))
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.SuggestRemoteExecutionHint);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrorDelegationTableNotSupported, Name, ads.EntityName);
                     continue;
                 }
             }

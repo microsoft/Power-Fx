@@ -779,5 +779,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey IntellisenseAiDisclaimer = new ErrorResourceKey("IntellisenseAiDisclaimer");
 
         public static ErrorResourceKey ErrNeedTable = new ErrorResourceKey("ErrNeedTable");
+        public static ErrorResourceKey ErrorDelegationTableNotSupported = new ErrorResourceKey("ErrorDelegationTableNotSupported");
     }
 }
