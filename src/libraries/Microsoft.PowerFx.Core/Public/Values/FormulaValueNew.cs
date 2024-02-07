@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         /// <summary>
-        /// Creates a new BlobValue from a string.
+        /// Creates a new BlobValue with a string content.
         /// </summary>
         /// <param name="str">String.</param>
         /// <param name="isBase64Encoded">Is the string base64 encoded?.</param>
