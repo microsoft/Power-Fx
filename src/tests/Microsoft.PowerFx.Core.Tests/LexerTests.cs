@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -639,6 +640,17 @@ namespace Microsoft.PowerFx.Core.Tests
 
             ITokenTextSpan tokenTextSpan = token;
             Assert.True(tokenTextSpan.CanBeHidden);
+        }
+
+        [Fact]
+        public void TextFirstEmptyExpressionTest()
+        {
+            var engine = new Engine();
+            var parserOptions = new ParserOptions(CultureInfo.InvariantCulture) { TextFirst = true };
+            var result = engine.Check(string.Empty, parserOptions);
+
+            Assert.Equal(FormulaType.String, result.ReturnType);
+            Assert.True(result.IsSuccess);
         }
     }
 }
