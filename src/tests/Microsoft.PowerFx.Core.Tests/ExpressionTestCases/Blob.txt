@@ -7,10 +7,6 @@
 // Cannot run a test like Blob("abc") as it would return a BlobValue
 // and we can't call ToExpression() of such an object (NotImplementedException)
 
->> Text(Blob("abc"))
-Error({Kind:ErrorKind.InvalidArgument})
-
-
 >> BlobGetString(Blob("abc"))
 "abc"
 
@@ -64,10 +60,6 @@ false
 
 >> IsBlank(Blob(Blank()))
 false
-
-// When 2nd param is a string "uri", we create a Blob Uri
->> Text(Blob("http://localhost/abc.jpg", "URI"))
-"http://localhost/abc.jpg"
 
 >> Set(blob, Blob("abc")); BlobGetString(blob)
 "abc"

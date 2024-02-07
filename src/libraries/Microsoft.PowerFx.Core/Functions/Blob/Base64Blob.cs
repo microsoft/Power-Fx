@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
-    public class Base64Blob : BlobElementBase
+    internal class Base64Blob : BlobContent
     {
         private readonly string _base64Str;
 
-        public Base64Blob(string base64Str)
+        internal Base64Blob(string base64Str)
         {
             _base64Str = base64Str;
 
@@ -25,10 +25,16 @@ namespace Microsoft.PowerFx.Core.Functions
             }
         }
 
-        public override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
+        internal override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             return Task.FromResult(FromBase64ToBytes(_base64Str));
+        }
+
+        internal override Task<string> GetAsBase64Async(CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+            return Task.FromResult(_base64Str);
         }
     }
 }

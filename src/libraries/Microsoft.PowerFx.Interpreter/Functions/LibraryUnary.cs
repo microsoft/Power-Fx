@@ -423,19 +423,8 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: TextToBlob)
-            },
-            {
-                UnaryOpKind.BlobToText,
-                StandardErrorHandling<BlobValue>(
-                    functionName: null, // internal function, no user-facing name
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<BlobValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: BlobToText)
-            },
+                    targetFunction: StringToBlob)
+            },            
             {
                 UnaryOpKind.OptionSetToText,
                 StandardErrorHandling<OptionSetValue>(

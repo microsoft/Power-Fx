@@ -4,7 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 
@@ -139,9 +141,34 @@ namespace Microsoft.PowerFx.Types
             return new VoidValue(IRContext.NotInSource(FormulaType.Void));
         }
 
-        public static BlobValue NewBlob(BlobElementBase elem)
+        /// <summary>
+        /// Creates a new BlobValue from a string.
+        /// </summary>
+        /// <param name="str">String.</param>
+        /// <param name="isBase64Encoded">Is the string base64 encoded?.</param>
+        /// <param name="encoding">When the string isn't bae64 encoded, defines the encoding. Defaults to UTF8 when null or not provided.
+        /// If a base64 encoded string is provided (<paramref name="isBase64Encoded"/> is true), this parameter is unused.</param>
+        /// <returns></returns>
+        public static BlobValue NewBlob(string str, bool isBase64Encoded, Encoding encoding = null)
         {
-            return new BlobValue(elem);
-        }     
+            return new BlobValue(isBase64Encoded ? new Base64Blob(str) : new StringBlob(str, encoding));
+        }
+
+        public static BlobValue NewBlob(byte[] bytes)
+        {
+            return new BlobValue(new ByteArrayBlob(bytes));
+        }
+
+        /// <summary>
+        /// Creates a new BlobValue from a stream.
+        /// All content of the stream will be copied to the Blob.
+        /// The stream will not be disposed.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static BlobValue NewBlob(Stream stream)
+        {
+            return new BlobValue(new StreamBlob(stream));
+        }
     }
 }

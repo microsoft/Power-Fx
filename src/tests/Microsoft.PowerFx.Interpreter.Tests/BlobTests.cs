@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             FormulaValue result = engine.EvalAsync(@"If(false, var1, If(false, ""a"", var1))", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, symbolTable, runtimeConfig).Result;
 
             ErrorValue ev = Assert.IsType<ErrorValue>(result);
-            Assert.Equal("Cannot convert Blob to Text", ev.Errors[0].Message);
+            Assert.Equal("Not implemented: Unary op BlobToText", ev.Errors[0].Message);
         }
     }
 }
