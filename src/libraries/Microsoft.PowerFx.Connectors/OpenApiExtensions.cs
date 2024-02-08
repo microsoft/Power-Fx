@@ -10,7 +10,6 @@ using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Connectors.Localization;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -605,7 +604,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        private static string GetUniqueIdentifier(this OpenApiSchema schema)
+        internal static string GetUniqueIdentifier(this OpenApiSchema schema)
         {
             return schema.Reference != null ? "R:" + schema.Reference.Id : "T:" + schema.Type;
         }

@@ -419,6 +419,21 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
         {
             throw new NotImplementedException();
         }
+
+        string IYamlFunction.GetOptionalParameterSchemas()
+        {
+            throw new NotImplementedException();
+        }
+
+        string IYamlFunction.GetRequiredParameterSchemas()
+        {
+            throw new NotImplementedException();
+        }
+
+        string IYamlFunction.GetReturnSchema()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     internal class YamlTexlSignature
@@ -430,7 +445,7 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
         {
             string paramNames = string.Join(", ", RequiredParameters?.Select(rp => rp.Name) ?? Enumerable.Empty<string>());
 
-            if (OptionalParameters?.Any() == true)
+            if (OptionalParameters?.Length > 0)
             {
                 if (!string.IsNullOrEmpty(paramNames))
                 {
