@@ -4120,15 +4120,69 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(result.IsSuccess);
         }
 
-        [Fact]
-        public void TexlFunctionTypeSemanticTableConcat()
+        [Theory]
+        [InlineData("TableConcatenate()", "*[]")]
+        [InlineData("TableConcatenate([])", "*[]")]
+        [InlineData("TableConcatenate(Blank())", "*[]")]
+        [InlineData("TableConcatenate([1, 2, 3, 4])", "*[Value:n]")]
+        [InlineData("TableConcatenate([{a:0, b:false, c:\"Hello\"}], [{a:1, b:true, c:\"World\"}])", "*[a:n, b:b, c:s]")]
+        [InlineData("TableConcatenate([{a:0}], [{b:true}], [{c:\"Hello\"}])", "*[a:n, b:b, c:s]")]
+        [InlineData("TableConcatenate(Blank(), T2, Blank(), T1)", "*[a:n, b:b, c:s]")]
+        [InlineData("TableConcatenate([{a:0}], [{b:true}], [{c:\"Hello\", d: {x: \"World\"}}])", "*[a:n, b:b, c:s, d:![x:s]]")]
+        [InlineData("TableConcatenate(T1, T2)", "*[a:n, b:n, c:n]")]
+        [InlineData("TableConcatenate(T2, T1)", "*[a:n, b:b, c:s]")]
+        [InlineData("TableConcatenate(T2, TableConcatenate(T1, T2))", "*[a:n, b:b, c:s]")]
+        [InlineData("TableConcatenate(T1, TableConcatenate(T2, T3))", "*[a:n, b:n, c:n, d:n]")]
+        [InlineData("TableConcatenate(TableConcatenate(T1, T2), T3)", "*[a:n, b:n, c:n, d:n]")]
+        [InlineData("TableConcatenate(T1, TableConcatenate(T2, T4))", "*[a:n, b:n, c:n]")]
+        [InlineData("TableConcatenate(TableConcatenate(T1, T2), T4)", "*[a:n, b:n, c:n]")]
+        [InlineData("TableConcatenate([1,2], If(1/0<2,[3,4]), [5,6])", "*[Value: n]")]
+        public void TexlFunctionTypeSemanticsTableConcatenate(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T1", new TableType(TestUtils.DT("*[a:n, b:n, c:n]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[a:n, b:b, c:s]")));
+            symbol.AddVariable("T3", new TableType(TestUtils.DT("*[d:n]")));
+            symbol.AddVariable("T4", new TableType(TestUtils.DT("*[a:s]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol,
+                Features.PowerFxV1);
+        }
+
+        [Theory]
+        [InlineData("TableConcatenate(T1, T2)", "*[V: n]")]
+        [InlineData("TableConcatenate([{a:Date(2024,1,1)}], [{a:GUID(\"some-guid-value-1234\")}])", "*[a: D]")]
+        public void TexlFunctionTypeSemanticsTableConcatenate_Negative(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T1", new TableType(TestUtils.DT("*[V:n]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[V:![a:n]]")));
+
+            TestBindingErrors(
+                script,
+                TestUtils.DT(expectedType),
+                symbol,
+                features: Features.PowerFxV1);
+        }
+
+        [Theory]
+        [InlineData("TableConcatenate(DS)")]
+        [InlineData("TableConcatenate(Filter(DS, \"Foo\" in Name))")]
+        public void TexlFunctionTypeSemanticsTableConcatenate_Delegation_Negative(string script)
         {
             var schema = DType.CreateTable(new TypedName(DType.CreateAttachmentType(TestUtils.DT("*[Value:o, Name:s, Link:s]")), new DName("Attach")), new TypedName(TestUtils.DT("b"), new DName("Value")));
 
             var symbol = new SymbolTable();
             symbol.AddEntity(new TestDataSource("DS", schema));
 
-            TestBindingErrors("TableConcatenate(DS)", schema, symbol);
+            TestBindingErrors(
+                script, 
+                schema, 
+                symbol,
+                features: Features.PowerFxV1);
         }
 
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
