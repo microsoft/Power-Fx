@@ -413,7 +413,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: TimeParse)
-            },
+            },                        
             {
                 UnaryOpKind.OptionSetToText,
                 StandardErrorHandling<OptionSetValue>(

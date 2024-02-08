@@ -376,5 +376,10 @@ namespace Microsoft.PowerFx
 
             return false;
         }
+
+        public void UpdateSupportedFunctions(SymbolTable s)
+        {
+            SupportedFunctions = s;
+        }
     } // end class RecalcEngine
 }

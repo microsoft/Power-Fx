@@ -51,5 +51,7 @@ namespace Microsoft.PowerFx.Types
         void Visit(BindingErrorType type);
 
         void Visit(Void type);
+
+        void Visit(BlobType type);
     }
 }
