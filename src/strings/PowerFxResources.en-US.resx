@@ -4474,7 +4474,7 @@
   </data>
   <data name="AboutTableConcatenate_table" xml:space="preserve">
     <value>A table whose rows will be appended to the resulting table.</value>
-    <comment>function_parameter to table concatenate function</comment>
+    <comment>Description of function parameter to TableConcatenate function</comment>
   </data>
 
   <data name="ErrorDelegationTableNotSupported" xml:space="preserve">
