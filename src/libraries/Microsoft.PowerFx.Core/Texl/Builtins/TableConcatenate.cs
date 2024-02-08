@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (!argType.IsTable)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedTable);
+                    errors.TypeMismatchError(args[i], tableType, argType);
                     isValid = false;
                 }
                 else
@@ -110,18 +110,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 var ads = argTypes[i].AssociatedDataSources?.FirstOrDefault();
 
-                if (IsExternalSource(ads))
+                if (ads is IExternalDataSource tDsInfo && tDsInfo is IExternalTabularDataSource)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrorDelegationTableNotSupported, Name, ads.EntityName);
                     continue;
                 }
             }
-        }
-
-        private static bool IsExternalSource(object externalDataSource)
-        {
-            return externalDataSource is IExternalDataSource tDsInfo &&
-                tDsInfo is IExternalTabularDataSource;
         }
     }
 }

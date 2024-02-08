@@ -4464,9 +4464,6 @@
       A partial operator is the 2nd part of a statement `[Partial Op]` and can be one of "And", "Or", "Table" or "Record".
       It's used to determine how to combine multiple expressions with the same name and operator.</comment>
   </data>
-  <data name="ErrNeedTable" xml:space="preserve">
-    <value>Argument needs to be a table.</value>
-  </data>
   <data name="AboutTableConcatenate" xml:space="preserve">
     <value>Creates a new table by combining the all the rows from the specified input tables.</value>
     <comment>Description of 'TableConcatenate' function.</comment>
@@ -4477,6 +4474,7 @@
   </data>
   <data name="AboutTableConcatenate_table" xml:space="preserve">
     <value>A table whose rows will be appended to the resulting table.</value>
+    <comment>function_parameter to table concatenate function</comment>
   </data>
 
   <data name="ErrorDelegationTableNotSupported" xml:space="preserve">

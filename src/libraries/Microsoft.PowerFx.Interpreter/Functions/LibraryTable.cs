@@ -684,7 +684,8 @@ namespace Microsoft.PowerFx.Functions
                 {
                     TableValue r => r.Rows,
                     BlankValue b => new List<DValue<RecordValue>> { DValue<RecordValue>.Of(b) },
-                    _ => new List<DValue<RecordValue>> { DValue<RecordValue>.Of((ErrorValue)arg) },
+                    ErrorValue e => new List<DValue<RecordValue>> { DValue<RecordValue>.Of(e) },
+                    _ => throw new ArgumentException($"Invalid argument type encountered {arg.GetType().Name}")
                 });
 
             return new InMemoryTableValue(irContext, tables.SelectMany(x => x));
