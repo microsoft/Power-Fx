@@ -683,8 +683,7 @@ namespace Microsoft.PowerFx.Functions
                 arg => arg switch
                 {
                     TableValue r => r.Rows,
-                    BlankValue b => new List<DValue<RecordValue>> { DValue<RecordValue>.Of(b) },
-                    ErrorValue e => new List<DValue<RecordValue>> { DValue<RecordValue>.Of(e) },
+                    BlankValue b => new List<DValue<RecordValue>>(),
                     _ => throw new ArgumentException($"Invalid argument type encountered {arg.GetType().Name}")
                 });
 

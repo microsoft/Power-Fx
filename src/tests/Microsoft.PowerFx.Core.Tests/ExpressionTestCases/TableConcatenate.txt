@@ -25,5 +25,18 @@ Errors: Error 17-45: Invalid argument type (Record). Expecting a Table value ins
 >> TableConcatenate([{a:Date(2024,1,1)}], [{a:GUID("some-guid-value-1234")}]) 
 Errors: Error 39-73: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.|Error 0-74: The function 'TableConcatenate' has some invalid arguments.
 
+>> TableConcatenate([1, 2], If(1<0, Table({Value:{a:2}})))
+Errors: Error 25-54: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.|Error 0-55: The function 'TableConcatenate' has some invalid arguments.
+
+// Blank inputs
 >> TableConcatenate(Blank())
-Table(Blank())
+Table()
+
+>> TableConcatenate([1, 2], Blank(), [4, 5], Blank(), [7, 8])
+Table({Value:1},{Value:2},{Value:4},{Value:5},{Value:7},{Value:8})
+
+// Runtime Error inputs
+>> TableConcatenate([1,2], If(1/0<2,[3,4]), [5,6])
+Error({Kind:ErrorKind.Div0})
+
+// TODO : Add more tests

@@ -1622,7 +1622,14 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.TableConcatenate,
-                NoErrorHandling(TableConcatenate)
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.TableConcatenate.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: TableConcatenate)
             },
             {
                 BuiltinFunctionsCore.Tan,
