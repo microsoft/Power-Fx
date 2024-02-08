@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <summary>
         /// This const represents the dummy formula that is used to create an infrastructure needed to get the symbols for Nl2Fx operation.
         /// </summary>
-        public static readonly string Nl2FxDummyFormula = "\"f7979178-07f0-424d-8f8b-00fee6fd19b8\"";
+        internal static readonly string Nl2FxDummyFormula = "\"f7979178-07f0-424d-8f8b-00fee6fd19b8\"";
 
         public delegate void SendToClient(string data);
 
