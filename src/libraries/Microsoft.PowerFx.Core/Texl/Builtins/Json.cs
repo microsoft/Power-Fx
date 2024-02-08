@@ -19,13 +19,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {        
         private const string _includeBinaryDataEnumValue = "B";
         private const string _ignoreBinaryDataEnumValue = "G";
-        private const string _ignoreUnsupportedTypesEnumValue = "I";        
+        private const string _ignoreUnsupportedTypesEnumValue = "I";
+
+        protected bool supportsLazyTypes = false;
 
         private static readonly DKind[] _unsupportedTopLevelTypes = new[]
         {
             DKind.DataEntity,
             DKind.LazyRecord,
-            DKind.LazyTable, 
+            DKind.LazyTable,
             DKind.View, 
             DKind.ViewValue
         };
@@ -33,8 +35,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private static readonly DKind[] _unsupportedTypes = new[]
         {
             DKind.Control, 
-            DKind.LazyRecord, 
-            DKind.LazyTable, 
+            DKind.LazyRecord,
+            DKind.LazyTable,
             DKind.Metadata,
             DKind.OptionSet, 
             DKind.PenImage, 
@@ -96,6 +98,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             DType dataArgType = argTypes[0];
             TexlNode dataNode = args[0];
 
+            supportsLazyTypes = binding.Features.JsonFunctionAcceptsLazyTypes;
+
             if (_unsupportedTopLevelTypes.Contains(dataArgType.Kind) || _unsupportedTypes.Contains(dataArgType.Kind))
             {
                 errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedType, dataArgType.GetKindString());
@@ -144,7 +148,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (!ignoreUnsupportedTypes)
             {
-                if (HasUnsupportedType(dataArgType, out DType unsupportedNestedType, out var unsupportedColumnName))
+                if (HasUnsupportedType(dataArgType, supportsLazyTypes, out DType unsupportedNestedType, out var unsupportedColumnName))
                 {
                     errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedNestedType, unsupportedColumnName, unsupportedNestedType.GetKindString());
                 }
@@ -168,24 +172,32 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         /// <summary>
         /// Checks whether the given DType contains a property of an unsupported type.
         /// </summary>
-        /// <param name="argType">Tye DType to check.</param>
+        /// <param name="argType">Type DType to check.</param>
+        /// <param name="supportsLazyTypes">Supports LazyRecord and LazyTable types.</param>
         /// <param name="unsupportedType">If the function returns. <code>true</code>, the unsupported type.</param>
         /// <param name="unsupportedColumnName">If the function returns <code>true</code>, the column name with the unsupported type.</param>
         /// <returns><code>true</code> if the given type contains a nested property of an unsupported type; <code>false</code> otherwise.</returns>
-        internal static bool HasUnsupportedType(DType argType, out DType unsupportedType, out string unsupportedColumnName)
+        internal static bool HasUnsupportedType(DType argType, bool supportsLazyTypes, out DType unsupportedType, out string unsupportedColumnName)
         {
-            if (_unsupportedTypes.Contains(argType.Kind))
+            return HasUnsupportedTypeInternal(argType, supportsLazyTypes, 0, out unsupportedType, out unsupportedColumnName);
+        }
+
+        private static bool HasUnsupportedTypeInternal(DType argType, bool supportsLazyTypes, int depth, out DType unsupportedType, out string unsupportedColumnName)
+        {
+            bool isLazyRecordOrTable = supportsLazyTypes && (argType.Kind == DKind.LazyRecord || argType.Kind == DKind.LazyTable);
+
+            if (depth > 40 || (!isLazyRecordOrTable && _unsupportedTypes.Contains(argType.Kind)))
             {
                 unsupportedType = argType;
                 unsupportedColumnName = null; // root
                 return true;
             }
 
-            if (argType.Kind == DKind.Record || argType.Kind == DKind.Table)
+            if (isLazyRecordOrTable || argType.Kind == DKind.Record || argType.Kind == DKind.Table)
             {
                 foreach (TypedName child in argType.GetAllNames(DPath.Root))
                 {
-                    if (HasUnsupportedType(child.Type, out unsupportedType, out unsupportedColumnName))
+                    if (HasUnsupportedTypeInternal(child.Type, supportsLazyTypes, depth + 1, out unsupportedType, out unsupportedColumnName))
                     {
                         unsupportedColumnName = child.Name.Value;
                         return true;
