@@ -13,29 +13,29 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    internal class CollectImpl : CollectFunction, IAsyncTexlFunction
+    internal class CollectImpl : CollectFunction, IAsyncTexlFunction3
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            return await new CollectProcess().Process(args, cancellationToken).ConfigureAwait(false);
+            return await new CollectProcess().Process(irContext, args, cancellationToken).ConfigureAwait(false);
         }
     }
 
-    internal class CollectScalarImpl : CollectScalarFunction, IAsyncTexlFunction
+    internal class CollectScalarImpl : CollectScalarFunction, IAsyncTexlFunction3
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            return await new CollectProcess().Process(args, cancellationToken).ConfigureAwait(false);
+            return await new CollectProcess().Process(irContext, args, cancellationToken).ConfigureAwait(false);
         }
     }
 
     internal class CollectProcess
     {
-        internal async Task<FormulaValue> Process(FormulaValue[] args, CancellationToken cancellationToken)
+        internal async Task<FormulaValue> Process(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
             FormulaValue arg0;
             var argc = args.Length;
-            var returnIsTable = args.Length > 2;
+            var returnIsTable = irContext._type.IsTable;
 
             // Need to check if the Lazy first argument has been evaluated since it may have already been
             // evaluated in the ClearCollect case.
@@ -75,8 +75,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (arg is TableValue argTableValue)
                 {
-                    returnIsTable = true;
-
                     foreach (DValue<RecordValue> row in argTableValue.Rows)
                     {
                         if (row.IsBlank)

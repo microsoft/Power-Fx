@@ -14,17 +14,11 @@ Blank()
 >> Collect(t1, If(1>0, r2));CountRows(t1)
 2
 
->> Collect(t_name, {name: "textInput1"})
-{name:"textInput1"}
-
 >> IsBlank(Collect(t1, Blank()))
 true
     
 >> IsError(Collect(t1, If(1/0, r2)))
 true
-
->> Collect(t1, {Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false})
-{Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false}
 
 >> Collect(t1)
 Errors: Error 0-11: Invalid number of arguments: received 1, expected 2 or more.
@@ -52,9 +46,6 @@ Errors: Error 12-15: Name isn't valid. 'Foo' isn't recognized.
 
 >> Collect(t1,{Price:200}).Price
 Errors: Error 11-22: The specified column 'Price' does not exist.|Error 0-23: The function 'Collect' has some invalid arguments.|Error 23-29: Name isn't valid. 'Price' isn't recognized.
-
->> Collect(t_empty,{Value:200}).Value
-200
 
 >> Collect(t1, Table(r2,r2))
 Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})

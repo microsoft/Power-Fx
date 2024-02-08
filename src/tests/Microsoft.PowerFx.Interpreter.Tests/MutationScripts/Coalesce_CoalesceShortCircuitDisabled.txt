@@ -5,13 +5,13 @@
 >> Set( t1, [1,2] )
 Table({Value:1},{Value:2})
 
->> Coalesce(1,Collect(t1,{Value:3}).Value)
+>> Coalesce(1,Last(Collect(t1,{Value:3})).Value)
 1
 
 >> 1;t1
 Table({Value:1},{Value:2},{Value:3})
 
->> Coalesce(1,Blank(),Collect(t1,{Value:3.1}).Value)
+>> Coalesce(1,Blank(),Last(Collect(t1,{Value:3.1})).Value)
 1
 
 >> 1.1;t1
@@ -20,25 +20,25 @@ Table({Value:1},{Value:2},{Value:3},{Value:3.1})
 >> Set( bn, If(1<0,1))
 Blank()
 
->> Coalesce( bn, Collect(t1,{Value:3.2}).Value )
+>> Coalesce( bn, Last(Collect(t1,{Value:3.2})).Value )
 3.2
 
 >> 2;t1
 Table({Value:1},{Value:2},{Value:3},{Value:3.1},{Value:3.2})
 
->> Coalesce( bn, Collect(t1,{Value:4}).Value, Collect(t1,{Value:5}).Value )
+>> Coalesce( bn, Last(Collect(t1,{Value:4})).Value, Last(Collect(t1,{Value:5})).Value )
 4
 
 >> 3;t1
 Table({Value:1},{Value:2},{Value:3},{Value:3.1},{Value:3.2},{Value:4},{Value:5})
 
->> Coalesce( bn, Blank(), Collect(t1,{Value:5.1}).Value )
+>> Coalesce( bn, Blank(), Last(Collect(t1,{Value:5.1})).Value )
 5.1
 
 >> 4;t1
 Table({Value:1},{Value:2},{Value:3},{Value:3.1},{Value:3.2},{Value:4},{Value:5},{Value:5.1})
 
->> Coalesce( bn, Blank(), Collect(t1,{Value:6}).Value, Collect(t1,{Value:7}).Value )
+>> Coalesce( bn, Blank(), Last(Collect(t1,{Value:6})).Value, Last(Collect(t1,{Value:7})).Value )
 6
 
 >> 5;t1

@@ -1,4 +1,4 @@
-﻿#SETUP: PowerFxV1CompatibilityRules
+﻿#SETUP: disable:PowerFxV1CompatibilityRules
 // Test mutations on a collection from ForAll() 
 
 // These are all verified in Power Apps 
@@ -77,7 +77,7 @@ Blank()
 Table({Value:1})
 
 >> Collect(t4,{Value:1})
-{Value:1}
+Table({Value:1})
 
 // ForAll should execute the collect, exactly once
 >> ForAll(t4,Collect(t5,{Value:8.1}))

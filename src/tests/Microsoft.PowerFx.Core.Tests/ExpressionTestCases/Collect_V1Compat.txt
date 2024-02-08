@@ -1,5 +1,14 @@
 ﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,PowerFxV1CompatibilityRules
 
+>> Collect(t_name, {name: "textInput1"})
+{name:"textInput1"}
+
+>> Collect(t1, {Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false})
+{Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false}
+
+>> Collect(t_empty,{Value:200}).Value
+200
+
 >> Collect(Table({name: "VC"}), {surname: "textInput1"})
 Errors: Error 29-52: The specified column 'surname' does not exist. The column with the most similar name is 'name'.|Error 8-27: The value passed to the 'Collect' function cannot be changed.|Error 0-53: The function 'Collect' has some invalid arguments.
 

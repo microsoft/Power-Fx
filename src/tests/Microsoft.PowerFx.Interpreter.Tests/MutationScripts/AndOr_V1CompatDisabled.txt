@@ -6,7 +6,7 @@
 Table({Value:false},{Value:true})
 
 // AND
->> false && Collect(t1, {Value:true}).Value;t1
+>> false && Last(Collect(t1, {Value:true})).Value;t1
 Table({Value:false},{Value:true})
 
 >> 0.00;t1
@@ -30,7 +30,7 @@ Table({Value:false},{Value:true})
 >> 0.03;t1
 Table({Value:false},{Value:true})
 
->> false And Collect(t1, {Value:true}).Value;t1
+>> false And Last(Collect(t1, {Value:true})).Value;t1
 Table({Value:false},{Value:true})
 
 >> 0.10;t1
@@ -54,7 +54,7 @@ Table({Value:false},{Value:true})
 >> 0.13;t1
 Table({Value:false},{Value:true})
 
->> And(false, Collect(t1, {Value:true}).Value);t1
+>> And(false, Last(Collect(t1, {Value:true})).Value);t1
 Table({Value:false},{Value:true})
 
 >> 0.14;t1
@@ -79,7 +79,7 @@ Table({Value:false},{Value:true})
 Table({Value:false},{Value:true})
 
 // OR with true, none of these should execute
->> true || Collect(t1, {Value:true}).Value
+>> true || Last(Collect(t1, {Value:true})).Value
 true
 
 >> -1;t1
@@ -105,7 +105,7 @@ Table({Value:false},{Value:true})
 Table({Value:false},{Value:true})
 
 // OR with false, these should all execute
->> false || Collect(t1, {Value:true}).Value
+>> false || Last(Collect(t1, {Value:true})).Value
 true
 
 >> 1;t1
@@ -129,7 +129,7 @@ Table({Value:false},{Value:true})
 >> 3.1;t1
 Table({Value:false},{Value:true})
 
->> Or(false, Collect(t1, {Value:true}).Value)
+>> Or(false, Last(Collect(t1, {Value:true})).Value)
 true
 
 >> 4;t1

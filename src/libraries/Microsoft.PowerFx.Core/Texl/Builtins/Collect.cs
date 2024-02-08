@@ -206,18 +206,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType, useLegacyDateTimeAccepts: false, context.Features, allowCoerce: true);
 
-                    if (argTypes.Length == 2)
-                    {
-                        if (argTypes[1].IsTable && argTypes[1].Kind != DKind.ObjNull)
-                        {
-                            returnType = returnType.ToTable();
-                        }
-                    }
-                    else
-                    {
-                        returnType = returnType.ToTable();
-                    }
-
                     if (fError)
                     {
                         fValid = false;
@@ -227,6 +215,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         }
                     }
                 }
+            }
+
+            if (context.Features.PowerFxV1CompatibilityRules && argTypes.Length == 2)
+            {
+                if (argTypes[1].IsTable && argTypes[1].Kind != DKind.ObjNull)
+                {
+                    returnType = returnType.ToTable();
+                }
+            }
+            else
+            {
+                returnType = returnType.ToTable();
             }
 
             return fValid;

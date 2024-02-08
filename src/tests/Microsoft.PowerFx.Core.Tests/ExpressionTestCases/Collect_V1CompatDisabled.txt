@@ -1,10 +1,16 @@
 ﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,disable:PowerFxV1CompatibilityRules
 
+>> Collect(FirstN(t_name, 0), {name: "textInput1"})
+Table({name:"textInput1"})
+
+>> Collect(t1, {Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false})
+Table({Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false})
+
+>> Last(Collect(t_empty,{Value:200})).Value
+200
+
 >> Collect(Table({name: "VC"}), {surname: "textInput1"})
 Errors: Error 29-52: The specified column 'surname' does not exist. The column with the most similar name is 'name'.|Error 0-53: The function 'Collect' has some invalid arguments.
-
->> Collect(FirstN(t_name, 0), {name: "textInput1"})
-{name:"textInput1"}
 
 >> Collect(Error({Kind:ErrorKind.Custom}), r2)
 Errors: Error 40-42: The specified column 'Field1' does not exist.|Error 0-43: The function 'Collect' has some invalid arguments.
