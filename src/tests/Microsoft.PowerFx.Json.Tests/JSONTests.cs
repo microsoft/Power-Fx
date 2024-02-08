@@ -1,11 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -39,7 +36,7 @@ namespace Microsoft.PowerFx.Json.Tests
         }
 
         [Fact]
-        public void Json_IncludeBinaryData_WithLazyRecord()
+        public void Json_IncludeBinaryData_WithLazyRecord_NoFeature()
         {
             var config = new PowerFxConfig(Features.None);
             config.EnableJsonFunctions();
@@ -59,22 +56,60 @@ namespace Microsoft.PowerFx.Json.Tests
         }
 
         [Fact]
-        public void Json_IncludeBinaryData_WithLazyRecordAndFeature()
+        public void Json_IncludeBinaryData_WithLazyRecord()
         {
             var config = new PowerFxConfig(Features.PowerFxV1);
             config.EnableJsonFunctions();
 
             var engine = new RecalcEngine(config);
 
-            var record = RecordType.Empty();
-            record = record.Add("Property", new LazyRecordType());
+            var recordType = RecordType.Empty();
+            var lazyRecordType = new LazyRecordType();
+            recordType = recordType.Add("Property", lazyRecordType);
 
-            var formulaParams = RecordType.Empty();
-            formulaParams = formulaParams.Add("Var", record);
+            var symbolTable = new SymbolTable();
+            var varSlot = symbolTable.AddVariable("Var", recordType);
 
-            var result = engine.Check("JSON(Var)", formulaParams);
-
+            var result = engine.Check("JSON(Var)", symbolTable: symbolTable);
             Assert.True(result.IsSuccess);
+
+            var symbolValues = new SymbolValues(symbolTable);
+            symbolValues.Set(varSlot, FormulaValue.NewRecordFromFields(new NamedValue[] { new NamedValue("Property", new LazyRecordValue(lazyRecordType, 2)) }));
+            var runtimeConfig = new RuntimeConfig(symbolValues);            
+
+            var formulaValue = result.GetEvaluator().Eval(runtimeConfig);
+            Assert.Equal(@"{""Property"":{""SubProperty"":{""x"":""test2""}}}", (formulaValue as StringValue).Value);
+        }
+
+        [Fact]
+        public void Json_IncludeBinaryData_WithLazyTable()
+        {
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            config.EnableJsonFunctions();
+
+            var engine = new RecalcEngine(config);
+
+            var recordType = RecordType.Empty();
+            var lazyRecordType = new LazyRecordType();
+            recordType = recordType.Add("Property", lazyRecordType);
+            var tableType = recordType.ToTable();
+
+            var symbolTable = new SymbolTable();
+            var varSlot = symbolTable.AddVariable("Var", tableType);
+
+            var result = engine.Check("JSON(Var)", symbolTable: symbolTable);
+            Assert.True(result.IsSuccess);
+
+            var symbolValues = new SymbolValues(symbolTable);
+            var tableValue = FormulaValue.NewTable(
+                recordType,
+                FormulaValue.NewRecordFromFields(new NamedValue[] { new ("Property", new LazyRecordValue(lazyRecordType, 1)) }),
+                FormulaValue.NewRecordFromFields(new NamedValue[] { new ("Property", new LazyRecordValue(lazyRecordType, 3)) }));
+            symbolValues.Set(varSlot, tableValue);
+            var runtimeConfig = new RuntimeConfig(symbolValues);
+
+            var formulaValue = result.GetEvaluator().Eval(runtimeConfig);
+            Assert.Equal(@"[{""Property"":{""SubProperty"":{""x"":""test1""}}},{""Property"":{""SubProperty"":{""x"":""test3""}}}]", (formulaValue as StringValue).Value);
         }
 
         [Fact]
@@ -97,6 +132,25 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.Equal("The JSON function cannot serialize tables / objects with a nested property called 'Property' of type 'Record'.", result.Errors.First().Message);
         }
 
+        public class LazyRecordValue : RecordValue
+        {
+            private readonly int _i;
+
+            public LazyRecordValue(RecordType type, int i) 
+                : base(type)
+            {
+                _i = i;
+            }
+
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            {
+                Assert.Equal("SubProperty", fieldName);
+                Assert.Equal("![x:s]", fieldType._type.ToString());
+                result = FormulaValue.NewRecordFromFields(new NamedValue[] { new NamedValue("x", FormulaValue.New($"test{_i}")) });
+                return true;
+            }
+        }
+        
         public class LazyRecordType : RecordType
         {
             public LazyRecordType()
@@ -112,16 +166,21 @@ namespace Microsoft.PowerFx.Json.Tests
 
                 type = subrecord;
                 return true;
-            }
-
-            public override bool Equals(object other)
-            {
-                return true;
-            }
+            }           
 
             public override int GetHashCode()
             {
                 return 1;
+            }
+
+            public override bool Equals(object other)
+            {
+                if (other == null)
+                {
+                    return false;
+                }
+
+                return true;
             }
         }
 
