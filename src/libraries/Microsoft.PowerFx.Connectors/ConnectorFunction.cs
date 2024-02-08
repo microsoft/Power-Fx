@@ -10,9 +10,11 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.PowerFx.Connectors.Localization;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
@@ -766,17 +768,15 @@ namespace Microsoft.PowerFx.Connectors
             return connectorType;
         }
 
+        private static ValidationRuleSet _defaultRuleSet = null;
+
         internal static ValidationRuleSet DefaultValidationRuleSet
         {
             get
             {
-                IList<ValidationRule> rules = ValidationRuleSet.GetDefaultRuleSet().Rules;
-
-                // OpenApiComponentsRules.KeyMustBeRegularExpression is the only rule with this type
-                var keyMustBeRegularExpression = rules.First(r => r.GetType() == typeof(ValidationRule<OpenApiComponents>));
-                rules.Remove(keyMustBeRegularExpression);
-
-                return new ValidationRuleSet(rules);
+                // Exclude the OpenApiComponentsRules.KeyMustBeRegularExpression rule from the default rule set as some parameters don't necessarily observe ^[a-zA-Z0-9\.\-_]+$
+                _defaultRuleSet ??= new ValidationRuleSet(ValidationRuleSet.GetDefaultRuleSet().Rules.Where(r => r.Name != OpenApiComponentsRules.KeyMustBeRegularExpression.Name));
+                return _defaultRuleSet;
             }
         }
 

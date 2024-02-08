@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Validations;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
@@ -197,6 +198,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
 
             return doc;
+        }
+
+        [Fact]
+        public void Swagger_ValidateRuleSet()
+        {
+            ValidationRuleSet defaultRuleSet = ValidationRuleSet.GetDefaultRuleSet();
+            ValidationRuleSet connectorRuleSet = ConnectorFunction.DefaultValidationRuleSet;
+
+            Assert.NotEqual(defaultRuleSet.Rules.Count, connectorRuleSet.Rules.Count);
         }
     }        
 }
