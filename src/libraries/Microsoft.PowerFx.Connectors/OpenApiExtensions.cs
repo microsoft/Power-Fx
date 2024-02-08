@@ -408,7 +408,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     switch (schema.Format)
                     {
-                        case "uri":                            
+                        case "uri":
                             return new ConnectorType(schema, openApiParameter, FormulaType.String);
 
                         case "date": // full-date RFC3339
@@ -597,7 +597,7 @@ namespace Microsoft.PowerFx.Connectors
                         return new ConnectorType(schema, openApiParameter, recordType, hiddenRecordType, connectorTypes.ToArray(), hiddenConnectorTypes.ToArray());
                     }
 
-                case "file":                   
+                case "file":
                     return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
 
                 default:

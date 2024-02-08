@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         private readonly Dictionary<string, HttpMessageInvoker> _clients = new ();
         private readonly bool _throwOnError;
         private readonly ConnectorLogger _logger;
-        private readonly TimeZoneInfo _tzi;        
+        private readonly TimeZoneInfo _tzi;
 
         public TestConnectorRuntimeContext(string @namespace, HttpMessageInvoker client, bool? throwOnError = null, ITestOutputHelper console = null, bool includeDebug = false, TimeZoneInfo tzi = null)
         {
@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _tzi = tzi ?? TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
         }
 
-        public override TimeZoneInfo TimeZoneInfo => _tzi;        
+        public override TimeZoneInfo TimeZoneInfo => _tzi;
 
         public TestConnectorRuntimeContext Add(string @namespace, HttpMessageInvoker client)
         {
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public override bool ThrowOnError => _throwOnError;
 
         public override ConnectorLogger ExecutionLogger => _logger;
-    }   
+    }
 
     internal class ConsoleLogger : ConnectorLogger
     {
