@@ -62,8 +62,8 @@ namespace Microsoft.PowerFx.Connectors
                     return null;
 
                 case 1:
-                    // This is a full URL that will pull in 'basePath' property from connectors. 
-                    // Extract BasePath back out from this. 
+                    // This is a full URL that will pull in 'basePath' property from connectors.
+                    // Extract BasePath back out from this.
                     var fullPath = openApiDocument.Servers[0].Url;
                     var uri = new Uri(fullPath);
                     return getElement(uri);
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Connectors
             return requestBody.Extensions.TryGetValue(XMsBodyName, out IOpenApiExtension value) && value is OpenApiString oas ? oas.Value : "body";
         }
 
-        // Get suggested options values.  Returns null if none. 
+        // Get suggested options values.  Returns null if none.
         internal static (string[] options, ConnectorErrors errors) GetOptions(this OpenApiParameter openApiParameter)
         {
             ConnectorErrors errors = new ConnectorErrors();
@@ -324,7 +324,7 @@ namespace Microsoft.PowerFx.Connectors
             return true;
         }
 
-        // Internal parameters are not showen to the user. 
+        // Internal parameters are not showen to the user.
         // They can have a default value or be special cased by the infrastructure (like "connectionId").
         public static bool IsInternal(this IOpenApiExtensible schema) => string.Equals(schema.GetVisibility(), "internal", StringComparison.OrdinalIgnoreCase);
 
@@ -381,7 +381,7 @@ namespace Microsoft.PowerFx.Connectors
             return openApiParameter.GetConnectorType(new ConnectorTypeGetterSettings(compatibility));
         }
 
-        // See https://swagger.io/docs/specification/data-models/data-types/        
+        // See https://swagger.io/docs/specification/data-models/data-types/
         internal static ConnectorType GetConnectorType(this OpenApiParameter openApiParameter, ConnectorTypeGetterSettings settings)
         {
             if (openApiParameter == null)
@@ -417,8 +417,8 @@ namespace Microsoft.PowerFx.Connectors
                         case "date-no-tz":
                             return new ConnectorType(schema, openApiParameter, FormulaType.DateTime);
 
-                        case "byte": // Base64 string                            
-                        case "binary": // octet stream                            
+                        case "byte": // Base64 string
+                        case "binary": // octet stream
                             return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
 
                         case "enum":
@@ -459,7 +459,7 @@ namespace Microsoft.PowerFx.Connectors
                             return new ConnectorType(error: $"Unsupported type of number: {schema.Format}");
                     }
 
-                // Always a boolean (Format not used)                
+                // Always a boolean (Format not used)
                 case "boolean": return new ConnectorType(schema, openApiParameter, FormulaType.Boolean);
 
                 // OpenAPI spec: Format could be <null>, int32, int64
@@ -510,14 +510,14 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else if (arrayType.FormulaType is TableType tableType)
                     {
-                        // Array of array 
+                        // Array of array
                         TableType newTableType = new TableType(TableType.Empty().Add(TableValue.ValueName, tableType)._type);
                         return new ConnectorType(schema, openApiParameter, newTableType, arrayType);
                     }
                     else if (arrayType.FormulaType is not AggregateType)
                     {
                         // Primitives get marshalled as a SingleColumn table.
-                        // Make sure this is consistent with invoker. 
+                        // Make sure this is consistent with invoker.
                         var recordType3 = RecordType.Empty().Add(TableValue.ValueName, arrayType.FormulaType);
                         return new ConnectorType(schema, openApiParameter, recordType3.ToTable(), arrayType);
                     }
@@ -527,7 +527,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                 case "object":
-                case null: // xml                   
+                case null: // xml
 
                     // Dictionary - https://swagger.io/docs/specification/data-models/dictionaries/
                     // Key is always a string, Value is in AdditionalProperties
@@ -568,7 +568,7 @@ namespace Microsoft.PowerFx.Connectors
 
                             if (schemaIdentifier.StartsWith("R:", StringComparison.Ordinal) && settings.Chain.Contains(schemaIdentifier))
                             {
-                                // Here, we have a circular reference and default to a string                                
+                                // Here, we have a circular reference and default to a string
                                 return new ConnectorType(schema, openApiParameter, FormulaType.String, hiddenRecordType);
                             }
 
@@ -643,7 +643,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (response == null)
             {
-                // If no 200, but "default", use that. 
+                // If no 200, but "default", use that.
                 if (!responses.TryGetValue("default", out response))
                 {
                     // If no default, use the first one we find
@@ -678,7 +678,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     if (openApiMediaType.Schema == null)
                     {
-                        // Treat as void.                         
+                        // Treat as void.
                         OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "no_format" };
                         return new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.GetConnectorType(compatibility);
                     }
@@ -872,7 +872,7 @@ namespace Microsoft.PowerFx.Connectors
                     else
                     {
                         // A string like "2022-11-18" is interpreted as a DateTimeOffset
-                        // https://github.com/microsoft/OpenAPI.NET/issues/533                        
+                        // https://github.com/microsoft/OpenAPI.NET/issues/533
                         errors.AddError($"Unsupported OpenApiDateTime {oadt.Value}");
                         continue;
                     }
