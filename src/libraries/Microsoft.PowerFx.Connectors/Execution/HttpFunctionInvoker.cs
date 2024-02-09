@@ -25,19 +25,19 @@ namespace Microsoft.PowerFx.Connectors
     {
         private readonly HttpMessageInvoker _httpClient;
         private readonly ConnectorFunction _function;
-        private readonly bool _returnRawResults;        
-        private readonly ConnectorLogger _logger;        
+        private readonly bool _returnRawResults;
+        private readonly ConnectorLogger _logger;
 
         public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext)
         {
             _function = function;
             _httpClient = runtimeContext.GetInvoker(function.Namespace);
-            _returnRawResults = runtimeContext.ReturnRawResults;            
-            _logger = runtimeContext.ExecutionLogger;            
+            _returnRawResults = runtimeContext.ReturnRawResults;
+            _logger = runtimeContext.ExecutionLogger;
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        public HttpRequestMessage BuildRequest(FormulaValue[] args, IConvertToUTC utcConverter, CancellationToken cancellationToken)
+        public async Task<HttpRequestMessage> BuildRequest(FormulaValue[] args, IConvertToUTC utcConverter, CancellationToken cancellationToken)
         {
             HttpContent body = null;
             var path = _function.OperationPath;
@@ -66,14 +66,14 @@ namespace Microsoft.PowerFx.Connectors
                     bodyParts.Add(param.Key.Name, (param.Key.Schema, paramValue));
                 }
                 else if (param.Key.Schema.Default != null && param.Value != null)
-                {                    
-                    bodyParts.Add(param.Key.Name, (param.Key.Schema, param.Value));                    
+                {
+                    bodyParts.Add(param.Key.Name, (param.Key.Schema, param.Value));
                 }
             }
 
             if (bodyParts.Count != 0)
             {
-                body = GetBody(_function._internals.BodySchemaReferenceId, _function._internals.SchemaLessBody, bodyParts, utcConverter, cancellationToken);                
+                body = await GetBodyAsync(_function._internals.BodySchemaReferenceId, _function._internals.SchemaLessBody, bodyParts, utcConverter, cancellationToken).ConfigureAwait(false);
             }
 
             foreach (OpenApiParameter param in _function.Operation.Parameters)
@@ -265,11 +265,10 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        private StringContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, CancellationToken cancellationToken)
+        private async Task<StringContent> GetBodyAsync(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, CancellationToken cancellationToken)
         {
-            FormulaValueSerializer serializer = null;
-
             cancellationToken.ThrowIfCancellationRequested();
+            FormulaValueSerializer serializer = null;
 
             try
             {
@@ -283,7 +282,7 @@ namespace Microsoft.PowerFx.Connectors
                 serializer.StartSerialization(referenceId);
                 foreach (KeyValuePair<string, (OpenApiSchema Schema, FormulaValue Value)> kv in map)
                 {
-                    serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
+                    await serializer.SerializeValueAsync(kv.Key, kv.Value.Schema, kv.Value.Value).ConfigureAwait(false);
                 }
 
                 serializer.EndSerialization();
@@ -313,7 +312,7 @@ namespace Microsoft.PowerFx.Connectors
 
             var statusCode = (int)response.StatusCode;
 
-#if RECORD_RESULTS
+            #if RECORD_RESULTS
             if (response.RequestMessage.Headers.TryGetValues("x-ms-request-url", out IEnumerable<string> urlHeader) &&
                 response.RequestMessage.Headers.TryGetValues("x-ms-request-method", out IEnumerable<string> verbHeader))
             {
@@ -346,7 +345,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
                 }
             }
-#endif
+            #endif
 
             if (statusCode < 300)
             {
@@ -356,8 +355,8 @@ namespace Microsoft.PowerFx.Connectors
                 return string.IsNullOrWhiteSpace(text)
                     ? FormulaValue.NewBlank(_function.ReturnType)
                     : _returnRawResults
-                    ? FormulaValue.New(text)                    
-                    : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, _function.ReturnType); 
+                    ? FormulaValue.New(text)
+                    : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, _function.ReturnType);
             }
 
             string reasonPhrase = string.IsNullOrEmpty(response.ReasonPhrase) ? string.Empty : $" ({response.ReasonPhrase})";
@@ -379,21 +378,41 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<FormulaValue> InvokeAsync(IConvertToUTC utcConverter, string cacheScope, FormulaValue[] args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            using HttpRequestMessage request = BuildRequest(args, utcConverter, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();            
 
-            if (request == null)
+            try
             {
-                _logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)} request is null");
+                using HttpRequestMessage request = await BuildRequest(args, utcConverter, cancellationToken).ConfigureAwait(false);
+
+                if (request == null)
+                {
+                    _logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)} request is null");
+                    return new ErrorValue(IRContext.NotInSource(_function.ReturnType), new ExpressionError()
+                    {
+                        Kind = ErrorKind.Internal,
+                        Severity = ErrorSeverity.Critical,
+                        Message = $"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)} request is null"
+                    });
+                }
+
+                return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogException(ex, $"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)}");
+
+                if (throwOnError)
+                {
+                    throw;
+                }
+
                 return new ErrorValue(IRContext.NotInSource(_function.ReturnType), new ExpressionError()
                 {
                     Kind = ErrorKind.Internal,
                     Severity = ErrorSeverity.Critical,
-                    Message = $"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)} request is null"
+                    Message = $"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)}, Exception {ex.GetType().FullName}, Message {ex.Message}, Callstack {ex.StackTrace}"
                 });
-            }
-
-            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
+            }            
         }
 
         public async Task<FormulaValue> InvokeAsync(string url, string cacheScope, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
@@ -444,20 +463,20 @@ namespace Microsoft.PowerFx.Connectors
 
         internal HttpFunctionInvoker Invoker => _invoker;
 
-        public Task<FormulaValue> InvokeAsync(FormulaValue[] args, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
-            return _invoker.InvokeAsync(new ConvertToUTC(runtimeContext.TimeZoneInfo), _cacheScope, args, localInvoker, cancellationToken, _throwOnError);
+            return await _invoker.InvokeAsync(new ConvertToUTC(runtimeContext.TimeZoneInfo), _cacheScope, args, localInvoker, cancellationToken, _throwOnError).ConfigureAwait(false);
         }
 
-        public Task<FormulaValue> InvokeAsync(string url, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(string url, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
-            return _invoker.InvokeAsync(url, _cacheScope, localInvoker, cancellationToken, _throwOnError);
+            return await _invoker.InvokeAsync(url, _cacheScope, localInvoker, cancellationToken, _throwOnError).ConfigureAwait(false);
         }
     }
 
@@ -476,7 +495,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public DateTime ToUTC(DateTimeValue dtv)
-        {            
+        {
             DateTime dt = ((PrimitiveValue<DateTime>)dtv).Value;
 
             return dt.Kind switch
@@ -484,7 +503,7 @@ namespace Microsoft.PowerFx.Connectors
                 DateTimeKind.Utc => dt,
                 DateTimeKind.Unspecified => TimeZoneInfo.ConvertTimeToUtc(dt, _tzi),
                 _ => TimeZoneInfo.ConvertTimeToUtc(new DateTime(dt.Ticks, DateTimeKind.Unspecified), _tzi)
-            };            
+            };
         }
     }
 }

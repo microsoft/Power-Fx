@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.PowerFx.Types;
 
@@ -143,9 +144,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
             // Do nothing
         }
 
-        protected override void WriteBlobValue(BlobValue blobValue)
+        protected override Task WriteBlobValueAsync(BlobValue blobValue)
         {
-            throw new NotImplementedException();
+            return Task.FromException(new NotImplementedException());
         }
     }
 }

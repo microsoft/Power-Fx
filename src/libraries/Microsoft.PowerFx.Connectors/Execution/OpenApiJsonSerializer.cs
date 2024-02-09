@@ -7,6 +7,8 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
@@ -84,9 +86,16 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _writer.WriteStringValue(stringValue);
         }
 
-        protected override async void WriteBlobValue(BlobValue blobValue)
+        protected override async Task WriteBlobValueAsync(BlobValue blobValue)
         {
-            _writer.WriteBase64StringValue(await blobValue.GetAsByteArrayAsync(_cancellationToken).ConfigureAwait(false));
+            if (blobValue.Content is Base64Blob)
+            {
+                _writer.WriteStringValue(await blobValue.GetAsBase64Async(_cancellationToken).ConfigureAwait(false));
+            }
+            else
+            {
+                _writer.WriteBase64StringValue(await blobValue.GetAsByteArrayAsync(_cancellationToken).ConfigureAwait(false));
+            }
         }
 
         protected override void StartObject(string name = null)

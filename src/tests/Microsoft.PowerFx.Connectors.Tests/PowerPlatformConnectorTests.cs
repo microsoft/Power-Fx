@@ -35,13 +35,13 @@ namespace Microsoft.PowerFx.Tests
             _output = output;
         }
 
-        // Compare strings, ignoring \r differences that can happen across Operating systems. 
+        // Compare strings, ignoring \r differences that can happen across Operating systems.
         private static void AssertEqual(string expected, string actual)
         {
             Assert.Equal(expected.Replace("\r", string.Empty), actual.Replace("\r", string.Empty));
         }
 
-        // Exercise calling the MSNWeather connector against mocked Swagger and Response.json. 
+        // Exercise calling the MSNWeather connector against mocked Swagger and Response.json.
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -89,9 +89,9 @@ namespace Microsoft.PowerFx.Tests
             var result = await engine.EvalAsync("MSNWeather.CurrentWeather(\"Redmond\", \"Imperial\").responses.weather.current.temp", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             Assert.Equal(53.0m, result.ToObject()); // from response
 
-            // PowerPlatform Connectors transform the request significantly from what was in the swagger. 
-            // Some of this information comes from setting passed into connector client. 
-            // Other information is from swagger. 
+            // PowerPlatform Connectors transform the request significantly from what was in the swagger.
+            // Some of this information comes from setting passed into connector client.
+            // Other information is from swagger.
             var actual = testConnector._log.ToString();
 
             var version = PowerPlatformConnectorClient.Version;
@@ -216,14 +216,14 @@ namespace Microsoft.PowerFx.Tests
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
             config.AddFunction(new AsBlobFunctionImpl());
-            var token = @"eyJ0eX...";
+            var token = @"eyJ0eXAiO...";
 
             using var httpClient = new HttpClient(testConnector);
             using var client = useSwaggerParameter ?
                 new PowerPlatformConnectorClient(
                     apiDoc,                                 // Swagger file
-                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46", // environment
-                    "3a3239ba9a2648788a83f5172d3d4ec5",     // connectionId
+                    "0a1a8d62-0453-e710-b774-446dc6634a89", // environment
+                    "1f18a56da7574c1f8b66a1ea42c23805",     // connectionId
                     () => $"{token}",
                     httpClient)
                 {
@@ -231,9 +231,9 @@ namespace Microsoft.PowerFx.Tests
                 }
                 : new PowerPlatformConnectorClient(
                     (useHttpsPrefix ? "https://" : string.Empty) +
-                        "tip1-shared-002.azure-apim.net",  // endpoint
-                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46", // environment
-                    "3a3239ba9a2648788a83f5172d3d4ec5",     // connectionId
+                    "tip2-001.azure-apihub.net",  // endpoint
+                    "0a1a8d62-0453-e710-b774-446dc6634a89", // environment
+                    "1f18a56da7574c1f8b66a1ea42c23805",     // connectionId
                     () => $"{token}",
                     httpClient)
                 {
@@ -250,8 +250,8 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(runtimeContext);
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response.json");
 
-            // 3rd parameter here expects a blob.
-            CheckResult check = engine.Check(@"AzureBlobStorage.CreateFile(""container"", ""bora4.txt"", AsBlob(""abc"")).Size", new ParserOptions() { AllowsSideEffects = true });
+            // 3rd parameter here expects a blob. It's Base64 value is "YWJj8J+Yig==" and is equivalent to byte[] { 0x61, 0x62, 0x63, 0xF0, 0x9F, 0x98, 0x8A }.
+            CheckResult check = engine.Check(@"AzureBlobStorage.CreateFile(""container"", ""01.txt"", AsBlob(""abc😊"")).Size", new ParserOptions() { AllowsSideEffects = true });
             Assert.True(check.IsSuccess);
             _output.WriteLine($"\r\nIR: {check.PrintIR()}");
 
@@ -261,36 +261,36 @@ namespace Microsoft.PowerFx.Tests
             {
                 Assert.True(false, $"Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}");
             }
-            
+
             dynamic res = result.ToObject();
             var size = (double)res;
 
-            Assert.Equal(3.0, size);
+            Assert.Equal(7.0, size);
 
-            // PowerPlatform Connectors transform the request significantly from what was in the swagger. 
-            // Some of this information comes from setting passed into connector client. 
-            // Other information is from swagger. 
+            // PowerPlatform Connectors transform the request significantly from what was in the swagger.
+            // Some of this information comes from setting passed into connector client.
+            // Other information is from swagger.
             var actual = testConnector._log.ToString();
 
             var version = PowerPlatformConnectorClient.Version;
-            var host = useSwaggerParameter ? "localhost:23340" : "tip1-shared-002.azure-apim.net";
+            var host = useSwaggerParameter ? "localhost:23340" : "tip2-001.azure-apihub.net";
             var expected = @$"POST https://{host}/invoke
  authority: {host}
- Authorization: Bearer eyJ0eX...
+ Authorization: Bearer {token}
  path: /invoke
  ReadFileMetadataFromServer: True
  scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/0a1a8d62-0453-e710-b774-446dc6634a89
  x-ms-client-session-id: ccccbff3-9d2c-44b2-bee6-cf24aab10b7e
  x-ms-request-method: POST
- x-ms-request-url: /apim/azureblob/3a3239ba9a2648788a83f5172d3d4ec5/datasets/default/files?folderPath=container&name=bora4.txt&queryParametersSingleEncoded=True
+ x-ms-request-url: /apim/azureblob/1f18a56da7574c1f8b66a1ea42c23805/datasets/default/files?folderPath=container&name=01.txt&queryParametersSingleEncoded=True
  x-ms-user-agent: PowerFx/{version}
  [content-header] Content-Type: text/plain; charset=utf-8
- [body] abc
+ [body] abc😊
 ";
 
             AssertEqual(expected, actual);
-        }        
+        }
 
         internal class AsBlobFunctionImpl : BuiltinFunction, IAsyncTexlFunction5
         {
@@ -306,17 +306,17 @@ namespace Microsoft.PowerFx.Tests
                 yield return new TexlStrings.StringGetter[] { (loc) => "string" };
                 yield return new TexlStrings.StringGetter[] { (loc) => "string", (loc) => "isBase64Encoded" };
             }
-        
+
             public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
                 return Task.FromResult<FormulaValue>(
-                    args[0] is BlankValue || args[0] is BlobValue                    
+                    args[0] is BlankValue || args[0] is BlobValue
                     ? args[0]
                     : args[0] is not StringValue sv
                     ? CommonErrors.RuntimeTypeMismatch(args[0].IRContext)
-                    : BlobValue.NewBlob(sv.Value, args.Length >= 2 && args[1] is BooleanValue bv && bv.Value));                
+                    : BlobValue.NewBlob(sv.Value, args.Length >= 2 && args[1] is BooleanValue bv && bv.Value));
             }
         }
 
@@ -1043,7 +1043,7 @@ namespace Microsoft.PowerFx.Tests
 
             ConnectorFunction cf = functions.First(cf => cf.Name == "ContactPatchItemV2");
 
-            // Validate required parameter name 
+            // Validate required parameter name
             Assert.Equal("id", cf.RequiredParameters[1].Name);
 
             // Validate optional parameter rectified name
@@ -1059,7 +1059,7 @@ namespace Microsoft.PowerFx.Tests
 
             using var httpClient = new HttpClient(testConnector);
             using var client = new PowerPlatformConnectorClient(
-                    "firstrelease-001.azure-apim.net",          // endpoint 
+                    "firstrelease-001.azure-apim.net",          // endpoint
                     "839eace6-59ab-4243-97ec-a5b8fcc104e4",     // environment
                     "c112a9268f2a419bb0ced71f5e48ece9",         // connectionId
                     () => "eyJ0eXAiOiJK....",
@@ -1158,7 +1158,7 @@ namespace Microsoft.PowerFx.Tests
             using var httpClient = new HttpClient(testConnector);
 
             using var client = new PowerPlatformConnectorClient(
-                    "tip1-shared-002.azure-apim.net",           // endpoint 
+                    "tip1-shared-002.azure-apim.net",           // endpoint
                     "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
                     "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
                     () => "ey...",
@@ -1207,7 +1207,7 @@ namespace Microsoft.PowerFx.Tests
             using var httpClient = new HttpClient(testConnector);
 
             using var client = new PowerPlatformConnectorClient(
-                    "tip1-shared-002.azure-apim.net",           // endpoint 
+                    "tip1-shared-002.azure-apim.net",           // endpoint
                     "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
                     "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
                     () => "eyJ0eX...",
@@ -1256,7 +1256,7 @@ namespace Microsoft.PowerFx.Tests
             using var httpClient = new HttpClient(testConnector);
 
             using var client = new PowerPlatformConnectorClient(
-                    "tip1-shared-002.azure-apim.net",           // endpoint 
+                    "tip1-shared-002.azure-apim.net",           // endpoint
                     "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
                     "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
                     () => "eyJ0eX...",
@@ -1420,7 +1420,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
             ConnectorSettings connectorSettings = new ConnectorSettings("exob")
             {
-                // This shouldn't be used with expressions but this is OK here as this is a tabular connector                
+                // This shouldn't be used with expressions but this is OK here as this is a tabular connector
                 Compatibility = ConnectorCompatibility.SwaggerCompatibility,
                 AllowUnsupportedFunctions = true,
                 IncludeInternalFunctions = true,

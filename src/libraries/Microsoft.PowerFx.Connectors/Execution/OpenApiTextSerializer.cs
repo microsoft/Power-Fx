@@ -5,6 +5,7 @@ using System;
 using System.Globalization;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
@@ -84,8 +85,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _writer.Append(stringValue);
         }
 
-        protected override async void WriteBlobValue(BlobValue blobValue)
-        {
+        protected override async Task WriteBlobValueAsync(BlobValue blobValue)
+        {            
             _writer.Append(await blobValue.GetAsStringAsync(null, _cancellationToken).ConfigureAwait(false));
         }
 
