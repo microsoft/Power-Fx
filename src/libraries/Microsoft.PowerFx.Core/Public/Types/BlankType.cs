@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Types
     public class BlankType : FormulaType
     {
         internal BlankType()
-            : base(new DType(DKind.ObjNull))
+            : base(DType.ObjNull)
         {
         }
 

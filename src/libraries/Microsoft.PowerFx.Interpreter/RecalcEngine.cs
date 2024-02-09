@@ -376,7 +376,12 @@ namespace Microsoft.PowerFx
 
             return false;
         }
-
+        
+        public void UpdateSupportedFunctions(SymbolTable s)
+        {
+            SupportedFunctions = s;
+        }
+        
         public void AddNamedFormulas(string script, CultureInfo parseCulture = null)
         {
             (_, var namedFormulas) = UserDefinitions.Process(script, parseCulture);

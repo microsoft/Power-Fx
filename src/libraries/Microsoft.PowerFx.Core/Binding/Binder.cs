@@ -2246,7 +2246,7 @@ namespace Microsoft.PowerFx.Core.Binding
         {
             // We generate a transient CallNode (with no arguments) to the Concatenate function
             var func = BuiltinFunctionsCore.Concatenate;
-            var ident = new IdentToken(func.Name, node.Token.Span);
+            var ident = new IdentToken(func.Name, node.Token.Span, isNonSourceIdentToken: true);
             var id = node.Id;
             var listNodeId = 0;
             var minChildId = node.MinChildID;

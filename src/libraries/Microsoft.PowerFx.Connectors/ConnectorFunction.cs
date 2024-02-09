@@ -615,6 +615,12 @@ namespace Microsoft.PowerFx.Connectors
                 throw new InvalidOperationException($"In namespace {Namespace}, function {Name} is not supported.");
             }
 
+            FormulaValue ev = arguments.Where(arg => arg is ErrorValue).FirstOrDefault();
+            if (ev != null)
+            {
+                return ev;
+            }
+
             BaseRuntimeConnectorContext context = ReturnParameterType.Binary ? runtimeContext.WithRawResults() : runtimeContext;
             ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(this, context), context.ThrowOnError);
             FormulaValue result = await invoker.InvokeAsync(arguments, context, cancellationToken).ConfigureAwait(false);
@@ -1102,6 +1108,13 @@ namespace Microsoft.PowerFx.Connectors
                             else
                             {
                                 schemaLessBody = true;
+
+                                if (bodySchema.Type == "string" && bodySchema.Format == "binary")
+                                {
+                                    // Blob - In Power Apps, when the body parameter is of type "binary", the name of the parameter becomes "file"
+                                    // ServiceConfigParser.cs, see DefaultBinaryRequestBodyParameterName reference
+                                    bodyName = "file";
+                                }
 
                                 OpenApiParameter bodyParameter2 = new OpenApiParameter() { Name = bodyName, Schema = bodySchema, Description = requestBody.Description, Required = requestBody.Required, Extensions = bodySchema.Extensions };
                                 ConnectorParameter bodyConnectorParameter3 = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter2, requestBody, ConnectorSettings.Compatibility));

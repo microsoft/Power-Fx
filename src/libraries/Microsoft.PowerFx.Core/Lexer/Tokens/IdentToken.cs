@@ -17,6 +17,7 @@ namespace Microsoft.PowerFx.Syntax
         internal readonly bool HasDelimiterStart;
         internal readonly bool HasDelimiterEnd;
         internal readonly bool IsModified;
+        internal readonly bool IsNonSourceIdentToken = false;
 
         // Unescaped, unmodified value.
         internal readonly string _value;
@@ -26,18 +27,25 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         public DName Name { get; }
 
-        internal const string StrInterpIdent = "Concatenate";
-
-        internal IdentToken(string val, Span span)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IdentToken"/> class.
+        /// </summary>
+        /// <param name="val">The identifier.</param>
+        /// <param name="span">Source location the identifier is associated with.</param>
+        /// <param name="isNonSourceIdentToken">The compiler sometimes generates identifier tokens that don't map
+        /// 1-1 with specific source locations. This is done for cases like string interpolation, where a fake
+        /// Concatenate call node is added, using a Concatenate ident token that doesn't appear in the actual source.</param>
+        internal IdentToken(string val, Span span, bool isNonSourceIdentToken = false)
             : this(val, span, false, false)
         {
             Contracts.AssertValue(val);
 
             // String interpolation sometimes creates tokens that do not exist in the source code
             // so we skip validating the span length for the Ident that the parser generates
-            Contracts.Assert(val.Length == span.Lim - span.Min || val == StrInterpIdent);
+            Contracts.Assert(val.Length == span.Lim - span.Min || isNonSourceIdentToken);
             _value = val;
             Name = DName.MakeValid(val, out IsModified);
+            IsNonSourceIdentToken = isNonSourceIdentToken;
         }
 
         internal IdentToken(string val, Span spanTok, bool fDelimiterStart, bool fDelimiterEnd)
@@ -62,6 +70,7 @@ namespace Microsoft.PowerFx.Syntax
         private IdentToken(IdentToken tok, Span newSpan)
             : this(tok._value, newSpan, tok.HasDelimiterStart, tok.HasDelimiterEnd)
         {
+            IsNonSourceIdentToken = tok.IsNonSourceIdentToken;
         }
 
         internal override Token Clone(Span ts)

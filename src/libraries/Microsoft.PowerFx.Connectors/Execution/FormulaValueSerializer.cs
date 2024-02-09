@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
@@ -43,6 +44,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected abstract void WriteStringValue(string stringValue);
 
+        protected abstract Task WriteBlobValueAsync(BlobValue blobValue);
+
         protected abstract void WriteBooleanValue(bool booleanValue);
 
         protected abstract void WriteDateTimeValue(DateTime dateTimeValue);
@@ -60,12 +63,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _utcConverter = utcConverter;
         }
 
-        internal void SerializeValue(string paramName, OpenApiSchema schema, FormulaValue value)
+        internal async Task SerializeValueAsync(string paramName, OpenApiSchema schema, FormulaValue value)
         {
-            WriteProperty(paramName, schema, value);
+            await WritePropertyAsync(paramName, schema, value).ConfigureAwait(false);
         }
 
-        private void WriteObject(string objectName, OpenApiSchema schema, IEnumerable<NamedValue> fields)
+        private async Task WriteObjectAsync(string objectName, OpenApiSchema schema, IEnumerable<NamedValue> fields)
         {
             StartObject(objectName);
 
@@ -88,14 +91,14 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     continue;
                 }
 
-                WriteProperty(property.Key, property.Value, namedValue.Value);
+                await WritePropertyAsync(property.Key, property.Value, namedValue.Value).ConfigureAwait(false);
             }
 
             if (!schema.Properties.Any() && fields.Any())
             {
                 foreach (NamedValue nv in fields)
                 {
-                    WriteProperty(
+                    await WritePropertyAsync(
                         nv.Name,
                         new OpenApiSchema()
                         {
@@ -111,14 +114,14 @@ namespace Microsoft.PowerFx.Connectors.Execution
                                 _ => "unknown_dkind"
                             }
                         },
-                        nv.Value);
+                        nv.Value).ConfigureAwait(false);
                 }
             }
 
             EndObject(objectName);
         }
 
-        private void WriteProperty(string propertyName, OpenApiSchema propertySchema, FormulaValue fv)
+        private async Task WritePropertyAsync(string propertyName, OpenApiSchema propertySchema, FormulaValue fv)
         {
             if (fv is BlankValue || fv is ErrorValue)
             {
@@ -143,7 +146,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     // If we have an object schema, we will try to follow it
                     if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
                     {
-                        WriteProperty(null, propertySchema.Items, rva);
+                        await WritePropertyAsync(null, propertySchema.Items, rva).ConfigureAwait(false);
                         continue;
                     }
 
@@ -250,6 +253,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         WriteDateValue(dv.GetConvertedValue(null));
                     }
+                    else if (fv is BlobValue bv)
+                    {                        
+                        await WriteBlobValueAsync(bv).ConfigureAwait(false);                                                
+                    }
                     else
                     {
                         throw new PowerFxConnectorException($"Expected StringValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
@@ -263,7 +270,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 case "object":
                     if (fv is RecordValue recordValue)
                     {
-                        WriteObject(propertyName, propertySchema, recordValue.Fields);
+                        await WriteObjectAsync(propertyName, propertySchema, recordValue.Fields).ConfigureAwait(false);
                     }
                     else
                     {
