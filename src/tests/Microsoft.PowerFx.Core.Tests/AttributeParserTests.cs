@@ -75,6 +75,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var genNf = result.NamedFormulas.Last();
             Assert.StartsWith(combinedFunctionName, genNf.Formula.Script);
+
+            // Check that the call in the generated merged expression is tagged as non-source
+            var call = genNf.Formula.ParseTree.AsCall();
+            Assert.NotNull(call);
+            Assert.True(call.Head.Token.IsNonSourceIdentToken);
         }
 
         [Fact]
