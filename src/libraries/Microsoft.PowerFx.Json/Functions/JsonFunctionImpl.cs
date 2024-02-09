@@ -273,8 +273,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 public void Visit(BlobValue value)
-                {                    
-                    throw new NotImplementedException("This will be implemented later.");
+                {
+                    if (value.Content is Base64Blob)
+                    {
+                        _writer.WriteStringValue(value.GetAsBase64Async(CancellationToken.None).Result);
+                    }
+                    else
+                    {
+                        _writer.WriteBase64StringValue(value.GetAsByteArrayAsync(CancellationToken.None).Result);
+                    }
                 }                
             }
 

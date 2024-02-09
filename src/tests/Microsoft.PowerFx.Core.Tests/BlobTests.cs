@@ -2,9 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using System.IO;
 using System.Linq;
-using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading;
 using Microsoft.PowerFx.Core.Functions;
@@ -19,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void BlobTest_ConstructorNullResourceManager()
         {
             ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new BlobValue(null));
-            Assert.Equal("Value cannot be null. (Parameter 'resourceElement')", ex.Message);
+            Assert.Equal("Value cannot be null. (Parameter 'content')", ex.Message);
         }
 
         [Fact]
@@ -129,6 +127,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 Assert.NotNull(blob);
                 Assert.Equal($"Blob {i++}", blob.GetAsStringAsync(null, CancellationToken.None).Result);                
             }          
-        }     
+        }
     }
 }
