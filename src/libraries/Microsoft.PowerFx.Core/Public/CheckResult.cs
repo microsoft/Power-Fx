@@ -693,7 +693,7 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                this._allSymbols.EnumerateNames(symbolEntries, new ReadOnlySymbolTable.EnumerateNamesOptions());
+                this._allSymbols?.EnumerateNames(symbolEntries, new ReadOnlySymbolTable.EnumerateNamesOptions());
             }
 
             var summary = new CheckContextSummary
