@@ -4121,10 +4121,8 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("TableConcatenate()", "*[]")]
-        [InlineData("TableConcatenate([])", "*[]")]
-        [InlineData("TableConcatenate(Blank())", "*[]")]
-        [InlineData("TableConcatenate([1, 2, 3, 4])", "*[Value:n]")]
+        [InlineData("TableConcatenate(Blank(), Blank())", "*[]")]
+        [InlineData("TableConcatenate([1, 2, 3, 4], Blank())", "*[Value:n]")]
         [InlineData("TableConcatenate([{a:0, b:false, c:\"Hello\"}], [{a:1, b:true, c:\"World\"}])", "*[a:n, b:b, c:s]")]
         [InlineData("TableConcatenate([{a:0}], [{b:true}], [{c:\"Hello\"}])", "*[a:n, b:b, c:s]")]
         [InlineData("TableConcatenate(Blank(), T2, Blank(), T1)", "*[a:n, b:b, c:s]")]
@@ -4169,8 +4167,10 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("TableConcatenate(DS)")]
-        [InlineData("TableConcatenate(Filter(DS, \"Foo\" in Name))")]
+        [InlineData("TableConcatenate(DS, Blank())")]
+        [InlineData("TableConcatenate(Blank(), Filter(DS, \"Foo\" in Name))")]
+        [InlineData("TableConcatenate([], Blank(), DS)")]
+        [InlineData("TableConcatenate([{Value: true}], If(1 > 0, DS))")]
         public void TexlFunctionTypeSemanticsTableConcatenate_Delegation_Negative(string script)
         {
             var schema = DType.CreateTable(new TypedName(DType.CreateAttachmentType(TestUtils.DT("*[Value:o, Name:s, Link:s]")), new DName("Attach")), new TypedName(TestUtils.DT("b"), new DName("Value")));

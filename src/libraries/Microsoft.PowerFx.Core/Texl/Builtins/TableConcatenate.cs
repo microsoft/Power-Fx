@@ -25,13 +25,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public TableConcatenateFunction()
-            : base("TableConcatenate", TexlStrings.AboutTableConcatenate, FunctionCategories.Table, DType.EmptyTable, 0, 0, int.MaxValue)
+            : base("TableConcatenate", TexlStrings.AboutTableConcatenate, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.TableConcatenateArg1 };
             yield return new[] { TexlStrings.TableConcatenateArg1, TexlStrings.TableConcatenateArg1 };
             yield return new[] { TexlStrings.TableConcatenateArg1, TexlStrings.TableConcatenateArg1, TexlStrings.TableConcatenateArg1 };
         }
@@ -40,7 +39,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             if (arity > 2)
             {
-                return GetGenericSignatures(arity, TexlStrings.TableConcatenateArg1);
+                return GetGenericSignatures(arity, TexlStrings.TableConcatenateArg1, TexlStrings.TableConcatenateArg1);
             }
 
             return base.GetSignatures(arity);
