@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Zehaztutako hilabete kopuruaren arabera doituko den data-balioa.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Hilabete kopurua data aldatzeko. Balio positibo batek etorkizuneko data bat adierazten du, balio negatiboa iraganeko data eta zero balioak ez du hilabetea aldatuko.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Zehaztutako data baten hileko azken eguna itzultzen du, hilabete kopuruaren arabera.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Zehaztutako hilabete kopuruaren arabera doituko den data-balioa.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Hilabete kopurua data aldatzeko. Balio positibo batek etorkizuneko data bat adierazten du, balio negatiboa iraganeko data eta zero balioak ez du hilabetea aldatuko.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>"Zenbakia" laburtzen du infinitu negatiborantz borobilduz.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON funtzioak ezin ditu serializatu datu bitarrak portaerarekin zerikusirik ez duten espresioetan.</value>    
+    <value>JSON funtzioak ezin ditu serializatu datu bitarrak portaerarekin zerikusirik ez duten espresioetan.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>{0} parametroak onartzen ez den {1} motako propietate bat dauka.</value>
@@ -4251,5 +4251,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Zenbakizko balioen taula-zutabea, Unicode karaktere bihurtuko direnak.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Onartu gabeko atributu mota</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>All Partial operators on matching named formulas must be the same.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Unknown Partial operator.</value>
+    
   </data>
 </root>

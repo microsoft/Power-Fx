@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Datos reikšmė, kuri turi būti pakoreguota pagal nurodytą mėnesių skaičių.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Mėnesių skaičius, pagal kurį reikia pakeisti datą. Teigiama reikšmė pateiks datą ateityje, neigiama reikšmė – datą praeityje, o nulis mėnesio nepakeis.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Pateikia paskutinę nurodytos datos mėnesio dieną, pakoreguotą pagal mėnesių skaičių.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Datos reikšmė, kuri turi būti pakoreguota pagal nurodytą mėnesių skaičių.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Mėnesių skaičius, pagal kurį reikia pakeisti datą. Teigiama reikšmė pateiks datą ateityje, neigiama reikšmė – datą praeityje, o nulis mėnesio nepakeis.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Skaičius trumpinamas suapvalinant iki neigiamos begalybės.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Funkcija JSON negali išdėstyti dvejetainių duomenų eilutėmis ne veikimo būdo išraiškoje.</value>    
+    <value>Funkcija JSON negali išdėstyti dvejetainių duomenų eilutėmis ne veikimo būdo išraiškoje.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parametras {0} turi {1} tipo tapatybę, kuri nėra palaikoma.</value>
@@ -4251,5 +4251,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Skaitinių reikšmių lentelė, kuri turi būti konvertuojama į „Unicode“ simbolius.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Nepalaikomo atributo rūšis</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Visi Partial operatoriai formulėse su sutampančiais pavadinimais turi būti vienodi.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Nežinomas Partial operatorius.</value>
+    
   </data>
 </root>

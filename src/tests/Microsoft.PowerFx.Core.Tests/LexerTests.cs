@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -602,6 +603,23 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.True(lit.Span.Min == 1);
             Assert.True(lit.Span.Lim == str.Length);
+        }
+
+        [Fact]
+        public void TextFirstEmptyStringLit()
+        {
+            string str = string.Empty;
+
+            var lit = AssertTokensAndReturnOne(
+                TexlLexer.Flags.TextFirst,
+                str,
+                2,
+                TokKind.StrInterpStart,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
+
+            Assert.True(lit.Span.Min == 0);
+            Assert.True(lit.Span.Lim == 0);
         }
 
         [Theory]

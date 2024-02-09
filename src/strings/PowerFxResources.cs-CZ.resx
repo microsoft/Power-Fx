@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Hodnota data, která se upraví o zadaný počet měsíců.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Počet měsíců, o které se má datum změnit. Kladná hodnota znamená budoucí datum, záporná hodnota minulé datum a nula měsíc nezmění.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Vrátí poslední den měsíce pro zadané datum, upravený o počet měsíců.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Hodnota data, která se upraví o zadaný počet měsíců.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Počet měsíců, o které se má datum změnit. Kladná hodnota znamená budoucí datum, záporná hodnota minulé datum a nula měsíc nezmění.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Zkrátí „číslo“ zaokrouhlením směrem k zápornému nekonečnu.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Funkce JSON nemůže serializovat binární data ve výrazu, který není behaviorální.</value>    
+    <value>Funkce JSON nemůže serializovat binární data ve výrazu, který není behaviorální.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parametr {0} obsahuje vlastnost typu {1}, který není podporovaný.</value>
@@ -4251,5 +4251,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Sloupec tabulky s číselnými hodnotami, které mají být převedeny na znaky Unicode.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Nepodporovaný druh atributu</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Všechny operátory Partial na odpovídajících pojmenovaných vzorcích musí být stejné.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Neznámý operátor Partial.</value>
+    
   </data>
 </root>

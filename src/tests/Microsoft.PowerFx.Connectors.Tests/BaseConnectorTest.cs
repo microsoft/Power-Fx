@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext(GetNamespace(), client, console: _output, tzi: tzi));
             runtimeConfig.SetClock(new TestClockService());
-            runtimeConfig.SetTimeZone(tzi);
+            runtimeConfig.SetTimeZone(tzi);            
 
             return (testConnector, apiDoc, config, httpClient, client, connectorSettings, runtimeConfig);
         }
@@ -124,6 +124,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             else if (expectedResult.StartsWith("RECORD"))
             {
                 Assert.IsAssignableFrom<RecordValue>(fv);
+            }
+            else if (expectedResult.StartsWith("BLOB"))
+            {
+                Assert.IsAssignableFrom<BlobValue>(fv);
+
+                BlobValue bv = (BlobValue)fv;
+                string blobStr = await bv.GetAsBase64Async(CancellationToken.None).ConfigureAwait(false);
+                Assert.StartsWith(expectedResult.Substring(5), blobStr);
             }
             else if (expectedResult == "RAW")
             {

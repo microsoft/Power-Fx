@@ -1,13 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -29,13 +24,14 @@ namespace Microsoft.PowerFx.Types
         public static RecordValue NewRecordFromFields(IEnumerable<NamedValue> fields)
         {
             var type = RecordType.Empty();
-            var fieldArrary = fields.ToArray();
-            foreach (var field in fieldArrary)
+            var fieldArray = fields.ToArray();
+
+            foreach (var field in fieldArray)
             {
                 type = type.Add(new NamedFormulaType(field.Name, field.Value.IRContext.ResultType));
             }
 
-            return NewRecordFromFields(type, fieldArrary);
+            return NewRecordFromFields(type, fieldArray);
         }
 
         public static RecordValue NewRecordFromFields(RecordType recordType, params NamedValue[] fields)
