@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
@@ -14,6 +13,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -375,6 +375,16 @@ namespace Microsoft.PowerFx
             }
 
             return false;
+        }
+
+        public void AddNamedFormulas(string script, CultureInfo parseCulture = null)
+        {
+            (_, var namedFormulas) = UserDefinitions.Process(script, parseCulture);
+
+            foreach (var namedFormula in namedFormulas)
+            {
+                SetFormula(namedFormula.Ident.Name, namedFormula.Formula.ToString(), null);
+            }
         }
     } // end class RecalcEngine
 }

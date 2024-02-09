@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
@@ -379,6 +380,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 copy = new FileObjectRecordValue(SomeProperty, IRContext, Fields);
                 return true;
             }
+        }
+
+        [Theory]
+        [InlineData("x=1;y=2;z=x+y;", "Abs(-z)", 3)]
+        public void NameFormulasTest(string namedFormulas, string expression, decimal expected)
+        {
+            var engine = new RecalcEngine();
+
+            engine.AddNamedFormulas(namedFormulas);
+            var check = engine.Check(expression);
+
+            Assert.True(check.IsSuccess);
+
+            var result = (DecimalValue)check.GetEvaluator().Eval();
+
+            Assert.Equal(expected, result.Value);
         }
     }
 }
