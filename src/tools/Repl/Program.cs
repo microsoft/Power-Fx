@@ -472,6 +472,8 @@ Records and Tables can be arbitrarily nested.
 Use Option( Options.FormatTable, false ) to disable table formatting.
 Use Option() to see the list of all options with their current value.
 Use Help( ""Options"" ) for more information.
+Use SetFormulas( <script> ) to define multiple named formulas at once.
+    Example: SetFormulas( ""x=1;y=2;z=x+y;"" )
 
 Once a formula is defined or a variable's type is defined, it cannot be changed.
 Use Reset() to clear all formulas and variables.

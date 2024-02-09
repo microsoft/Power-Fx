@@ -118,6 +118,7 @@ namespace Microsoft.PowerFx
             // Hook through the HelpProvider, don't override these Help functions
             this.MetaFunctions.AddFunction(new Help0Function(this));
             this.MetaFunctions.AddFunction(new Help1Function(this));
+            this.MetaFunctions.AddFunction(new SetFormulasFunction(this));
         }
 
         private bool _userEnabled = false;
