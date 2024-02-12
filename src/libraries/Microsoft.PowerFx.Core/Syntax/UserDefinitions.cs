@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -92,6 +93,23 @@ namespace Microsoft.PowerFx.Syntax
             if (_parserOptions.AllowAttributes)
             {
                 parseResult = ProcessPartialAttributes(parseResult);
+            }
+
+            var definedTypes = parseResult.DefinedTypes.ToList();
+
+            var err = new List<TexlError>();
+
+            foreach (var defType in definedTypes)
+            {
+                var name = defType.Ident.Name.Value;
+                var res = DTypeVisitor.Run(defType.Type.TypeRoot, definedTypeSymbolTable);
+                if (res == null)
+                {
+                    err.Add(new TexlError(defType.Ident, DocumentErrorSeverity.Severe, Core.Localization.TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                    continue;
+                }
+
+                definedTypeSymbolTable.RegisterType(name, FormulaType.Build(res));
             }
 
             //var d = definedTypeSymbolTable;

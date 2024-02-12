@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using Microsoft.CodeAnalysis;
@@ -60,7 +61,6 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             this._args = args;
             this._isImperative = isImperative;
-
             this.UdfBody = body;
         }
 
@@ -235,11 +235,18 @@ namespace Microsoft.PowerFx.Core.Functions
             public bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
             {
                 // lookup in the local scope i.e., function params & body and then look in global scope.
-                if (_args.TryGetValue(name, out var value))
+                if (_argsAndTypes != null && _args.TryGetValue(name, out var value))
                 {
                     _argsAndTypes.TryGetValue(name, out var dtype);
                     var type = dtype ?? value.TypeIdent.GetFormulaType()._type;
                     nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, value.ArgIndex, value.NameIdent.Name));
+
+                    return true;
+                } 
+                else if (_args.TryGetValue(name, out var v))
+                {
+                    var type = v.TypeIdent.GetFormulaType()._type;
+                    nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, v.ArgIndex, v.NameIdent.Name));
 
                     return true;
                 }

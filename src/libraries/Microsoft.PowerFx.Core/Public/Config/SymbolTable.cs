@@ -209,7 +209,8 @@ namespace Microsoft.PowerFx
             // Phase 1: Side affects are not allowed.
             var options = new ParserOptions() 
             { 
-                AllowsSideEffects = false, 
+                AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true,
                 Culture = parseCulture ?? CultureInfo.InvariantCulture 
             };
             var sb = new StringBuilder();
