@@ -70,19 +70,19 @@ namespace Microsoft.PowerFx.Syntax
             return userDefinitions.ProcessUserDefinitions(definedTypeSymbolTable, out userDefinitionResult);
         }
 
-        internal FormulaType GetFormulaTypeFromName(string name, DefinedTypeSymbolTable dt)
+        internal FormulaType GetFormulaTypeFromName(UDFArg arg, DefinedTypeSymbolTable dt)
         {
-            return FormulaType.Build(GetTypeFromName(name, dt));
+            return FormulaType.Build(GetTypeFromName(arg, dt));
         }
 
-        internal DType GetTypeFromName(string name, DefinedTypeSymbolTable dt)
+        internal DType GetTypeFromName(UDFArg arg, DefinedTypeSymbolTable dt)
         {
-            if (dt != null && dt.TryLookup(new DName(name), out NameLookupInfo nameInfo))
+            if (dt != null && dt.TryLookup(new DName(arg.TypeIdent._value), out NameLookupInfo nameInfo))
             {
                 return nameInfo.Type;
             }
 
-            return FormulaType.GetFromStringOrNull(name)._type;
+            return arg.TypeIdent.GetFormulaType()._type;
         }
 
         private bool ProcessUserDefinitions(DefinedTypeSymbolTable definedTypeSymbolTable, out UserDefinitionResult userDefinitionResult)
@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Syntax
                     continue;
                 }
 
-                var argTypes = udf.Args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => GetFormulaTypeFromName(arg.TypeIdent._value, definedTypeSymbolTable)._type);
+                var argTypes = udf.Args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => GetFormulaTypeFromName(arg, definedTypeSymbolTable)._type);
 
                 var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args, argTypes);
 
