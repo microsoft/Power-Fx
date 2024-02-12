@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Syntax
 
         internal DType GetTypeFromName(string name, DefinedTypeSymbolTable dt)
         {
-            if (dt.TryLookup(new DName(name), out NameLookupInfo nameInfo))
+            if (dt != null && dt.TryLookup(new DName(name), out NameLookupInfo nameInfo))
             {
                 return nameInfo.Type;
             }
