@@ -92,9 +92,10 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         /// <param name="script">User script containing UDFs and/or named formulas.</param>
         /// <param name="parseCulture">CultureInfo to parse the script.</param>
+        /// <param name="features">Features.</param>
         /// <returns>Tuple.</returns>
         /// <exception cref="InvalidOperationException">Throw if the user script contains errors.</exception>
-        public static UserDefinitionResult Process(string script, CultureInfo parseCulture)
+        public static UserDefinitionResult Process(string script, CultureInfo parseCulture, Features features = null)
         {
             var options = new ParserOptions()
             {
@@ -104,11 +105,11 @@ namespace Microsoft.PowerFx.Syntax
 
             var sb = new StringBuilder();
 
-            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult);
+            ProcessUserDefinitions(script, options, out var userDefinitionResult, features);
 
             if (userDefinitionResult.HasErrors)
             {
-                sb.AppendLine("Something went wrong when parsing user defined functions.");
+                sb.AppendLine("Something went wrong when parsing named formulas and/or user defined functions.");
 
                 foreach (var error in userDefinitionResult.Errors)
                 {

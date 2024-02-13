@@ -389,13 +389,13 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Add a set of user-defined formulas and functions to the engine.
         /// </summary>
-        /// <param name="script"></param>
-        /// <param name="parseCulture"></param>
-        /// <param name="symbolTable"></param>
-        /// <param name="onUpdate"></param>
-        public void AddUserDefined(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, Action<string, FormulaValue> onUpdate = null)
+        /// <param name="script">Script containing user defined functions and/or named formulas.</param>
+        /// <param name="parseCulture">Locale to parse user defined script.</param>
+        /// <param name="symbolTable">Extra SymbolTable if needed.</param>
+        /// <param name="onUpdate">Function to be called when update is triggered.</param>
+        public void AddUserDefinitions(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, Action<string, FormulaValue> onUpdate = null)
         {
-            var userDefinitionResult = UserDefinitions.Process(script, parseCulture);
+            var userDefinitionResult = UserDefinitions.Process(script, parseCulture, features: Config.Features);
 
             // Compose will handle null symbols
             var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, symbolTable);

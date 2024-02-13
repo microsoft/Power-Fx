@@ -750,7 +750,6 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("a = 10")]
         [InlineData("a = ;")]
         [InlineData("b=10;a = ;c=3;")]
         [InlineData("/*b=10*/;a = ;c=3;")]
@@ -892,7 +891,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, false)]
         [InlineData("Add(x: Number, y:Number): Number = x + y;;; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, true)]
         [InlineData(@"F2(b: Text): Text  = ""Test"";", 1, 0, false)]
-        [InlineData(@"F2(b: Text): Text  = ""Test;", 0, 0, true)]
+        [InlineData(@"F2(b: Text): Text  = ""Test;", 1, 0, true)]
         [InlineData("Add(x: Number, y:Number): Number = (x + y;;; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, true)]
         public void TestUDFNamedFormulaCountsRestart(string script, int udfCount, int namedFormulaCount, bool expectErrors)
         {

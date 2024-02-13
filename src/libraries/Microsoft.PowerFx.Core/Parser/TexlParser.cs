@@ -286,7 +286,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 ParseTrivia();
                 _startingIndex = thisIdentifier.Span.Min;
 
-                if (_curs.TidCur == TokKind.Semicolon)
+                if (_curs.TidCur == TokKind.Semicolon || _curs.TidCur == TokKind.Eof)
                 {
                     CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
                     _curs.TokMove();
@@ -298,21 +298,14 @@ namespace Microsoft.PowerFx.Core.Parser
                     _curs.TokMove();
                     ParseTrivia();
 
-                    if (_curs.TidCur == TokKind.Semicolon)
+                    if (_curs.TidCur == TokKind.Semicolon || _curs.TidCur == TokKind.Eof)
                     {
                         CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
                     }
 
                     // Extract expression
-                    while (_curs.TidCur != TokKind.Semicolon)
+                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
                     {
-                        // Check if we're at EOF before a semicolon is found
-                        if (_curs.TidCur == TokKind.Eof)
-                        {
-                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
-                            break;
-                        }
-
                         // Parse expression
                         var result = ParseExpr(Precedence.None);
                         if (result is TypeLiteralNode typeLiteralNode)
@@ -390,17 +383,23 @@ namespace Microsoft.PowerFx.Core.Parser
                     {
                         _curs.TokMove();
                         ParseTrivia();
+
+                        if (_curs.TidCur == TokKind.Eof)
+                        {
+                            CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingFunctionBody);
+                            break;
+                        }
+
                         var result = ParseExpr(Precedence.None);
                         ParseTrivia();
+
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, parserOptions.NumberIsFloat, isValid: true));
 
                         // Check if we're at EOF before a semicolon is found
                         if (_curs.TidCur == TokKind.Eof)
                         {
-                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
                             break;
                         }
-
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, parserOptions.NumberIsFloat, isValid: true));
                     }
                     else
                     {

@@ -376,7 +376,7 @@ namespace Microsoft.PowerFx
                 // Checking for named formulas and/or udfs.
                 try
                 {
-                    this.Engine.AddUserDefined(expression, parseCulture: this.ParserOptions.Culture, symbolTable: currentSymbolTable, onUpdate: OnFormulaUpdate);
+                    this.Engine.AddUserDefinitions(expression, parseCulture: this.ParserOptions.Culture, symbolTable: currentSymbolTable, onUpdate: OnFormulaUpdate);
 
                     return new ReplResult();
                 }

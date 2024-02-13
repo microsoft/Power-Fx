@@ -12,11 +12,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("x=1;y=2;z=x+y;", "Float(Abs(-(x+y+z)))", 6d)]
         [InlineData("x=1;y=2;Foo(x: Number): Number = Abs(x);", "Foo(-(y*y)+x)", 3d)]
         [InlineData("myvar=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Bar(1) + myvar", 2d)]
+
+        // Loosing syntax restrictions
+        [InlineData("x=1;y=2;z=x+y", "Float(Abs(-(x+y+z)))", 6d)]
+        [InlineData("x=1;y=2;Foo(x: Number): Number = Abs(x)", "Foo(-(y*y)+x)", 3d)]
         public void NamedFormulaEntryTest(string script, string expression, double expected)
         {
             var engine = new RecalcEngine();
 
-            engine.AddUserDefined(script);
+            engine.AddUserDefinitions(script);
 
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
