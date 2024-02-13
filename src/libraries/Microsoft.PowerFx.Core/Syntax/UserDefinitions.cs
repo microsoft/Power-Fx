@@ -66,9 +66,11 @@ namespace Microsoft.PowerFx.Syntax
         /// <returns>True if there are no parser errors.</returns>
         public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, DefinedTypeSymbolTable definedTypeSymbolTable = null, Features features = null)
         {
+            parserOptions.AllowParseAsTypeLiteral = true;
             var userDefinitions = new UserDefinitions(script, parserOptions, features);
+            var dts = new DefinedTypeSymbolTable();
 
-            return userDefinitions.ProcessUserDefinitions(definedTypeSymbolTable, out userDefinitionResult);
+            return userDefinitions.ProcessUserDefinitions(dts, out userDefinitionResult);
         }
 
         internal FormulaType GetFormulaTypeFromName(UDFArg arg, DefinedTypeSymbolTable dt)
