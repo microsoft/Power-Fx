@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,6 +59,7 @@ namespace Microsoft.PowerFx.Connectors
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
             Dictionary<string, FormulaValue> incomingParameters = ConvertToNamedParameters(args);
+            string contentType = null;
 
             foreach (KeyValuePair<ConnectorParameter, FormulaValue> param in _function._internals.OpenApiBodyParameters)
             {
@@ -69,11 +71,6 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     bodyParts.Add(param.Key.Name, (param.Key.Schema, param.Value));
                 }
-            }
-
-            if (bodyParts.Count != 0)
-            {
-                body = await GetBodyAsync(_function._internals.BodySchemaReferenceId, _function._internals.SchemaLessBody, bodyParts, utcConverter, cancellationToken).ConfigureAwait(false);
             }
 
             foreach (OpenApiParameter param in _function.Operation.Parameters)
@@ -101,7 +98,15 @@ namespace Microsoft.PowerFx.Connectors
                             break;
 
                         case ParameterLocation.Header:
-                            headers.Add(param.Name, valueStr);
+                            if (param.Name == "Content-Type")
+                            {
+                                contentType = valueStr;
+                            }
+                            else
+                            {
+                                headers.Add(param.Name, valueStr);
+                            }
+
                             break;
 
                         case ParameterLocation.Cookie:
@@ -110,6 +115,11 @@ namespace Microsoft.PowerFx.Connectors
                             return null;
                     }
                 }
+            }
+
+            if (bodyParts.Count != 0)
+            {
+                body = await GetBodyAsync(_function._internals.BodySchemaReferenceId, _function._internals.SchemaLessBody, bodyParts, utcConverter, contentType, cancellationToken).ConfigureAwait(false);
             }
 
             var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();
@@ -165,9 +175,13 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     map.Add(parameterName, paramValue);
                 }
-                else if (paramValue is RecordValue r)
+                else if (paramValue is RecordValue recordValue)
                 {
-                    map[parameterName] = MergeRecords(existingParamValue as RecordValue, r);
+                    map[parameterName] = MergeRecords(existingParamValue as RecordValue, recordValue);
+                }
+                else
+                {
+                    map[parameterName] = paramValue;
                 }
             }
 
@@ -265,14 +279,23 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        private async Task<StringContent> GetBodyAsync(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, CancellationToken cancellationToken)
+        private async Task<HttpContent> GetBodyAsync(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, string contentType, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             FormulaValueSerializer serializer = null;
 
             try
             {
-                serializer = _function._internals.ContentType.ToLowerInvariant() switch
+                var ct = (contentType ?? _function._internals.ContentType).ToLowerInvariant();
+
+                if (map.Count == 1 && map.First().Value.Value is BlobValue bv)
+                {
+                    var bac = new ByteArrayContent(await bv.GetAsByteArrayAsync(cancellationToken).ConfigureAwait(false));
+                    bac.Headers.ContentType = new MediaTypeHeaderValue(ct);
+                    return bac;
+                }
+
+                serializer = ct switch
                 {
                     OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(utcConverter, schemaLessBody, cancellationToken),
                     OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(utcConverter, schemaLessBody, cancellationToken),
@@ -286,9 +309,8 @@ namespace Microsoft.PowerFx.Connectors
                 }
 
                 serializer.EndSerialization();
-
                 string body = serializer.GetResult();
-                return new StringContent(body, Encoding.Default, _function._internals.ContentType);
+                return new StringContent(body, Encoding.Default, ct);
             }
             finally
             {

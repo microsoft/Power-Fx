@@ -1,0 +1,68 @@
+﻿{
+    "responses": {
+        "weather": {
+            "current": {
+                "baro": 1019.0,
+                "cap": "Mostly cloudy",
+                "capAbbr": "Mostly cloudy",
+                "daytime": "d",
+                "dewPt": 4.0,
+                "feels": 6.0,
+                "rh": 68.0,
+                "icon": 4,
+                "symbol": "d3000",
+                "pvdrIcon": "4",
+                "urlIcon": "http://img-s-msn-com.akamaized.net/tenant/amp/entityid/AAehLNN.img",
+                "wx": "",
+                "sky": "OVC",
+                "temp": 9.0,
+                "tempDesc": 5,
+                "utci": 6.0,
+                "uv": 1.0,
+                "uvDesc": "Low",
+                "vis": 10.0,
+                "windDir": 210,
+                "windSpd": 24.0,
+                "windTh": 31.3,
+                "windGust": 37.0,
+                "created": "2024-02-13T13:06:40+00:00",
+                "pvdrCap": "Mostly cloudy",
+                "aqi": 36.0,
+                "aqiSeverity": "Good air quality",
+                "aqLevel": 10,
+                "primaryPollutant": "PM2.5 8.3 μg/m³",
+                "aqiValidTime": "2024-02-13T20:00:00+00:00",
+                "richCaps": [],
+                "cloudCover": 75.0,
+                "alertCount": 0
+            },
+            "provider": {
+                "name": "Foreca",
+                "url": "http://www.foreca.com"
+            },
+            "aqiProvider": {
+                "name": "AirNow"
+            }
+        },
+        "source": {
+            "id": "102989317",
+            "coordinates": {
+                "lat": 47.902889251708984,
+                "lon": 1.9038900136947632
+            },
+            "location": "Orléans, Loiret, France",
+            "utcOffset": "01:00:00",
+            "countryCode": "FR"
+        }
+    },
+    "units": {
+        "system": "Metric",
+        "pressure": "mb",
+        "temperature": "‎°C",
+        "speed": "km/h",
+        "height": "cm",
+        "distance": "km",
+        "time": "s"
+    },
+    "copyright": "Copyright © 2024 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation."
+}
