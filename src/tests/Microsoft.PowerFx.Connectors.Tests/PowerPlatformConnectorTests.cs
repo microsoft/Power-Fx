@@ -104,7 +104,56 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/839eace6-59ab-4243-97ec-a5b8fcc104e4
  x-ms-client-session-id: MySessionId
  x-ms-request-method: GET
- x-ms-request-url: /apim/msnweather/shared-msnweather-8d08e763-937a-45bf-a2ea-c5ed-ecc70ca4/current/Redmond?units=I
+ x-ms-request-url: /apim/msnweather/shared-msnweather-8d08e763-937a-45bf-a2ea-c5ed-ecc70ca4/current/Redmond?units=Imperial
+ x-ms-user-agent: PowerFx/{version}
+";
+            AssertEqual(expected, actual);
+        }
+
+        [Fact]
+        public async Task MSNWeatherConnector_CurrentWeatherOrleans()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\MSNWeather.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "firstrelease-003.azure-apihub.net",                          // endpoint
+                    "49970107-0806-e5a7-be5e-7c60e2750f01",                     // environment
+                    "480a676ab6e64b168cfa41506014e45d",  // connectionId
+                    () => "eyJ0eXAiOiJKV...",
+                    httpClient)
+                {
+                    SessionId = "MySessionId"
+                };
+
+            var funcs = config.AddActionConnector("MSNWeather", apiDoc, new ConsoleLogger(_output));
+
+            var engine = new RecalcEngine(config);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("MSNWeather", client, console: _output));
+            testConnector.SetResponseFromFile(@"Responses\MSNWeather_Response2.json");
+
+            var result = await engine.EvalAsync(@"MSNWeather.CurrentWeather(""Orléans"", ""C"").responses.weather.current.temp", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            Assert.Equal(9m, result.ToObject()); // from response
+
+            // PowerPlatform Connectors transform the request significantly from what was in the swagger.
+            // Some of this information comes from setting passed into connector client.
+            // Other information is from swagger.
+            var actual = testConnector._log.ToString();
+
+            var version = PowerPlatformConnectorClient.Version;
+            var expected =
+@$"POST https://firstrelease-003.azure-apihub.net/invoke
+ authority: firstrelease-003.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJKV...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/49970107-0806-e5a7-be5e-7c60e2750f01
+ x-ms-client-session-id: MySessionId
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/msnweather/480a676ab6e64b168cfa41506014e45d/current/Orl%c3%a9ans?units=C
  x-ms-user-agent: PowerFx/{version}
 ";
             AssertEqual(expected, actual);
@@ -285,9 +334,86 @@ namespace Microsoft.PowerFx.Tests
  x-ms-request-method: POST
  x-ms-request-url: /apim/azureblob/1f18a56da7574c1f8b66a1ea42c23805/datasets/default/files?folderPath=container&name=01.txt&queryParametersSingleEncoded=True
  x-ms-user-agent: PowerFx/{version}
- [content-header] Content-Type: text/plain; charset=utf-8
+ [content-header] Content-Type: text/plain
  [body] abc😊
 ";
+
+            AssertEqual(expected, actual);
+        }
+
+        [Fact]       
+        public async Task AzureBlobConnector_UploadFileV2()
+        {
+            string yellowPixel = "/9j/4AAQSkZJRgABAQEAeAB4AAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAABAAEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9aKKKK/wTP2g//9k=";
+
+            using var testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+            config.AddFunction(new AsBlobFunctionImpl());
+            var token = @"eyJ0eXAiOiJ...";
+
+            using var httpClient = new HttpClient(testConnector);
+            using var client = new PowerPlatformConnectorClient(
+                    "https://tip2-001.azure-apihub.net",  // endpoint
+                    "0a1a8d62-0453-e710-b774-446dc6634a89", // environment
+                    "6d228109794849049ce8116e5d4ffaf8",     // connectionId
+                    () => $"{token}",
+                    httpClient)
+                {
+                    SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
+                };
+
+            config.AddActionConnector("AzureBlobStorage", apiDoc, new ConsoleLogger(_output));
+            
+            var engine = new RecalcEngine(config);
+            var runtimeContext = new TestConnectorRuntimeContext("AzureBlobStorage", client);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(runtimeContext);
+
+            testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response2.json");
+            
+            CheckResult check = engine.Check($@"AzureBlobStorage.CreateFileV2(""pfxdevstgaccount1"", ""container"", ""001.jpg"", AsBlob(""{yellowPixel}"", true), {{'Content-Type': ""image/jpeg"" }}).Size", new ParserOptions() { AllowsSideEffects = true });
+            Assert.True(check.IsSuccess);
+            _output.WriteLine($"\r\nIR: {check.PrintIR()}");
+
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+
+            if (result is ErrorValue ev)
+            {
+                Assert.True(false, $"Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}");
+            }
+
+            dynamic res = result.ToObject();
+            var size = (double)res;
+
+            Assert.Equal(635, size);
+
+            // PowerPlatform Connectors transform the request significantly from what was in the swagger.
+            // Some of this information comes from setting passed into connector client.
+            // Other information is from swagger.
+            var actual = testConnector._log.ToString();
+
+            int idx = actual.IndexOf("[body] ") + 7;
+            actual = string.Concat(actual.AsSpan(0, idx), string.Join(string.Empty, testConnector._log.ToString().Substring(idx, 30).Select((char c) => 
+            { 
+                int d = c; 
+                return (c < 32 || c > 128) ? $"\\u{d:X4}" : c.ToString(); 
+            })));
+                        
+            var version = PowerPlatformConnectorClient.Version;            
+            var host = "tip2-001.azure-apihub.net";
+            var expected = @$"POST https://{host}/invoke
+ authority: {host}
+ Authorization: Bearer {token}
+ path: /invoke
+ ReadFileMetadataFromServer: True
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/0a1a8d62-0453-e710-b774-446dc6634a89
+ x-ms-client-session-id: ccccbff3-9d2c-44b2-bee6-cf24aab10b7e
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/azureblob/6d228109794849049ce8116e5d4ffaf8/v2/datasets/pfxdevstgaccount1/files?folderPath=container&name=001.jpg&queryParametersSingleEncoded=True
+ x-ms-user-agent: PowerFx/{version}
+ [content-header] Content-Type: image/jpeg
+ [body] \uFFFD\uFFFD\uFFFD\uFFFD\u0000\u0010JFIF\u0000\u0001\u0001\u0001\u0000x\u0000x\u0000\u0000\uFFFD\uFFFD\u0000C\u0000\u0002\u0001\u0001\u0002\u0001";
 
             AssertEqual(expected, actual);
         }
