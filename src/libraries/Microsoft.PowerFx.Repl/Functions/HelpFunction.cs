@@ -57,27 +57,6 @@ namespace Microsoft.PowerFx.Repl.Functions
         }
     }
 
-    /// <summary>
-    /// Help() function - "0" for no arguments - prints a list of functions and general help. 
-    /// </summary>
-    internal class SetFormulasFunction : ReflectionFunction
-    {
-        private readonly PowerFxREPL _repl;
-
-        public SetFormulasFunction(PowerFxREPL repl)
-                : base("SetFormulas", FormulaType.Void, new[] { FormulaType.String })
-        {
-            _repl = repl;
-        }
-
-        public async Task<VoidValue> Execute(StringValue script, CancellationToken cancel)
-        {
-            _repl.Engine.AddNamedFormulas(script.Value);
-
-            return FormulaValue.NewVoid();
-        }
-    }
-
     public class HelpProvider
     {
         public const string FormulaRefURL = "https://aka.ms/Power-Fx-Formula-Reference";

@@ -206,13 +206,13 @@ namespace Microsoft.PowerFx
         internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null)
         {
             // Phase 1: Side affects are not allowed.
-            (var userDefinedFunctions, _) = UserDefinitions.Process(script, parseCulture);
+            var userDefinitionResult = UserDefinitions.Process(script, parseCulture);
 
             // Compose will handle null symbols
             var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
             var sb = new StringBuilder();
 
-            foreach (var udf in userDefinedFunctions)
+            foreach (var udf in userDefinitionResult.UDFs)
             {
                 AddFunction(udf);
                 var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);

@@ -118,7 +118,6 @@ namespace Microsoft.PowerFx
             // Hook through the HelpProvider, don't override these Help functions
             this.MetaFunctions.AddFunction(new Help0Function(this));
             this.MetaFunctions.AddFunction(new Help1Function(this));
-            this.MetaFunctions.AddFunction(new SetFormulasFunction(this));
         }
 
         private bool _userEnabled = false;
@@ -264,7 +263,7 @@ namespace Microsoft.PowerFx
 
             runtimeConfig.AddService<IReplOutput>(this.Output);
 
-            var currentSymbolTable = ReadOnlySymbolTable.Compose(this.MetaFunctions, extraSymbolTable);
+            var currentSymbolTable = ReadOnlySymbolTable.Compose(this.MetaFunctions, extraSymbolTable);            
 
             var check = new CheckResult(this.Engine)
                 .SetText(expression, ParserOptions)
@@ -305,39 +304,6 @@ namespace Microsoft.PowerFx
                     }
 
                     return new ReplResult();
-                }
-
-                // named formula assignment
-                if (check.Parse.Root is BinaryOpNode bo && bo.Op == BinaryOp.Equal && bo.Left.Kind == NodeKind.FirstName)
-                {
-                    var formula = bo.Right.ToString();
-                    CheckResult formulaCheck = this.Engine.Check(formula, options: this.ParserOptions, symbolTable: extraSymbolTable);
-
-                    if (formulaCheck.IsSuccess)
-                    {
-                        try
-                        {
-                            Engine.SetFormula(bo.Left.ToString(), formula, OnFormulaUpdate);
-                        }
-                        catch (Exception ex)
-                        {
-                            await this.Output.WriteLineAsync(lineError + "Error: " + ex.Message, OutputKind.Error, cancel)
-                                .ConfigureAwait(false);
-                        }
-
-                        return new ReplResult();
-                    }
-                    else
-                    {
-                        foreach (var error in formulaCheck.Errors)
-                        {
-                            var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
-                            await this.Output.WriteLineAsync(lineError + error.ToString(), kind, cancel)
-                                .ConfigureAwait(false);
-                        }
-
-                        return new ReplResult { CheckResult = formulaCheck };
-                    }
                 }
             }
 
@@ -404,6 +370,23 @@ namespace Microsoft.PowerFx
 
             // Show parse/bind errors 
             var errors = check.ApplyErrors();
+
+            if (!check.IsSuccess)
+            {
+                // Checking for named formulas and/or udfs.
+                try
+                {
+                    this.Engine.AddUserDefined(expression, parseCulture: this.ParserOptions.Culture, symbolTable: currentSymbolTable, onUpdate: OnFormulaUpdate);
+
+                    return new ReplResult();
+                }
+                catch (InvalidOperationException ex)
+                {
+                    await this.Output.WriteLineAsync(lineError + ex.Message, OutputKind.Error, cancel)
+                        .ConfigureAwait(false);
+                }                
+            }
+
             if (!check.IsSuccess)
             {
                 foreach (var error in check.Errors)

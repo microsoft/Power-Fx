@@ -4,11 +4,15 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -381,14 +385,43 @@ namespace Microsoft.PowerFx
         {
             SupportedFunctions = s;
         }
-        
-        public void AddNamedFormulas(string script, CultureInfo parseCulture = null)
-        {
-            (_, var namedFormulas) = UserDefinitions.Process(script, parseCulture);
 
-            foreach (var namedFormula in namedFormulas)
+        /// <summary>
+        /// Add a set of user-defined formulas and functions to the engine.
+        /// </summary>
+        /// <param name="script"></param>
+        /// <param name="parseCulture"></param>
+        /// <param name="symbolTable"></param>
+        /// <param name="onUpdate"></param>
+        public void AddUserDefined(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, Action<string, FormulaValue> onUpdate = null)
+        {
+            var userDefinitionResult = UserDefinitions.Process(script, parseCulture);
+
+            // Compose will handle null symbols
+            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, symbolTable);
+            var sb = new StringBuilder();
+
+            foreach (var udf in userDefinitionResult.UDFs)
             {
-                SetFormula(namedFormula.Ident.Name, namedFormula.Formula.ToString(), null);
+                Config.SymbolTable.AddFunction(udf);
+                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
+
+                List<TexlError> errors = new List<TexlError>();
+
+                if (binding.ErrorContainer.GetErrors(ref errors))
+                {
+                    sb.AppendLine(string.Join(", ", errors.Select(err => err.ToString())));
+                }
+            }
+
+            if (sb.Length > 0)
+            {
+                throw new InvalidOperationException(sb.ToString());
+            }
+
+            foreach (var namedFormula in userDefinitionResult.NamedFormulas)
+            {
+                SetFormula(namedFormula.Ident.Name, namedFormula.Formula.ToString(), onUpdate);
             }
         }
     } // end class RecalcEngine

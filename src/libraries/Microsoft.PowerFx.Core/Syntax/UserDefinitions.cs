@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Syntax
         /// <param name="parseCulture">CultureInfo to parse the script.</param>
         /// <returns>Tuple.</returns>
         /// <exception cref="InvalidOperationException">Throw if the user script contains errors.</exception>
-        public static (IEnumerable<UserDefinedFunction>, IEnumerable<NamedFormula>) Process(string script, CultureInfo parseCulture)
+        public static UserDefinitionResult Process(string script, CultureInfo parseCulture)
         {
             var options = new ParserOptions()
             {
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Syntax
                 throw new InvalidOperationException(sb.ToString());
             }
 
-            return (userDefinitionResult.UDFs, userDefinitionResult.NamedFormulas);
+            return userDefinitionResult;
         }
 
         private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, out List<TexlError> errors)

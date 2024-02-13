@@ -236,7 +236,7 @@ Notify(z)
         {
             _repl.HandleLine(
 "Set(x,1)",
-"NamedFormula1 = x*10",
+"NamedFormula1 = x*10;",
 "Notify(NamedFormula1)",
 "Set(x,2);Notify(NamedFormula1)");
 
@@ -487,7 +487,7 @@ Notify(z)
 
             // compare but ignore trailing whitespace at the end of each line
             _repl.HandleCommandAsync(
-"MyTable = Table({a:1},{b:2})").Wait();
+"MyTable = Table({a:1},{b:2});").Wait();
             var log2 = _output.Get(OutputKind.Repl, trim: false);
             var expected2 = @"MyTable:
   a   b  
@@ -516,7 +516,7 @@ Notify(z)
 >> ");
 
             _repl.HandleCommandAsync(
-"MyTable = Table({a:1},{b:2})").Wait();
+"MyTable = Table({a:1},{b:2});").Wait();
             var log2 = _output.Get(OutputKind.Repl, trim: false);
             var expected2 = @"MyTable:
   a   b  
