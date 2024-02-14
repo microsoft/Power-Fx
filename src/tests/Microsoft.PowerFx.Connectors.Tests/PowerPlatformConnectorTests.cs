@@ -1678,5 +1678,19 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
             Assert.Equal(expected, overload.DisplayText.Text);
         }
+
+        [Fact]
+        public void Connector_UnsupportedDate()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\AzureAppService.json", _output);
+            List<ConnectorFunction> funcs = OpenApiParser.GetFunctions(new ConnectorSettings("AAS") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true }, testConnector._apiDocument, new ConsoleLogger(_output)).ToList();
+            ConnectorFunction resourceGroupsList = funcs.First(f => f.Name == "ResourceGroupsList");
+
+            Assert.True(resourceGroupsList.IsSupported);
+            Assert.Single(resourceGroupsList.HiddenRequiredParameters);
+            Assert.Equal("x-ms-api-version", resourceGroupsList.HiddenRequiredParameters[0].Name);
+            StringValue sv = Assert.IsType<StringValue>(resourceGroupsList.HiddenRequiredParameters[0].DefaultValue);
+            Assert.Equal("2020-01-01", sv.Value);
+        }
     }
 }

@@ -402,39 +402,20 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();            
 
-            try
+            using HttpRequestMessage request = await BuildRequest(args, utcConverter, cancellationToken).ConfigureAwait(false);
+
+            if (request == null)
             {
-                using HttpRequestMessage request = await BuildRequest(args, utcConverter, cancellationToken).ConfigureAwait(false);
-
-                if (request == null)
-                {
-                    _logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)} request is null");
-                    return new ErrorValue(IRContext.NotInSource(_function.ReturnType), new ExpressionError()
-                    {
-                        Kind = ErrorKind.Internal,
-                        Severity = ErrorSeverity.Critical,
-                        Message = $"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)} request is null"
-                    });
-                }
-
-                return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogException(ex, $"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)}");
-
-                if (throwOnError)
-                {
-                    throw;
-                }
-
+                _logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)} request is null");
                 return new ErrorValue(IRContext.NotInSource(_function.ReturnType), new ExpressionError()
                 {
                     Kind = ErrorKind.Internal,
                     Severity = ErrorSeverity.Critical,
-                    Message = $"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)}, Exception {ex.GetType().FullName}, Message {ex.Message}, Callstack {ex.StackTrace}"
+                    Message = $"In {nameof(HttpFunctionInvoker)}.{nameof(InvokeAsync)} request is null"
                 });
-            }            
+            }
+
+            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);                  
         }
 
         public async Task<FormulaValue> InvokeAsync(string url, string cacheScope, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
