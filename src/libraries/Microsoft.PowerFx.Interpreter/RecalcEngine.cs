@@ -5,15 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -380,6 +384,45 @@ namespace Microsoft.PowerFx
         public void UpdateSupportedFunctions(SymbolTable s)
         {
             SupportedFunctions = s;
+        }
+
+        /// <summary>
+        /// Add a set of user-defined formulas and functions to the engine.
+        /// </summary>
+        /// <param name="script">Script containing user defined functions and/or named formulas.</param>
+        /// <param name="parseCulture">Locale to parse user defined script.</param>
+        /// <param name="symbolTable">Extra SymbolTable if needed.</param>
+        /// <param name="onUpdate">Function to be called when update is triggered.</param>
+        public void AddUserDefinitions(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, Action<string, FormulaValue> onUpdate = null)
+        {
+            var userDefinitionResult = UserDefinitions.Process(script, parseCulture, features: Config.Features);
+
+            // Compose will handle null symbols
+            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, symbolTable);
+            var sb = new StringBuilder();
+
+            foreach (var udf in userDefinitionResult.UDFs)
+            {
+                Config.SymbolTable.AddFunction(udf);
+                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
+
+                List<TexlError> errors = new List<TexlError>();
+
+                if (binding.ErrorContainer.GetErrors(ref errors))
+                {
+                    sb.AppendLine(string.Join(", ", errors.Select(err => err.ToString())));
+                }
+            }
+
+            if (sb.Length > 0)
+            {
+                throw new InvalidOperationException(sb.ToString());
+            }
+
+            foreach (var namedFormula in userDefinitionResult.NamedFormulas)
+            {
+                SetFormula(namedFormula.Ident.Name, namedFormula.Formula.ToString(), onUpdate);
+            }
         }
     } // end class RecalcEngine
 }
