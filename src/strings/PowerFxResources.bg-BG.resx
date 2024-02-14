@@ -4253,15 +4253,15 @@
     <value>Колона от таблица с числови стойности, които да се преобразуват в Unicode знаци.</value>
   </data>
   <data name="ErrOnlyPartialAttribute" xml:space="preserve">
-    <value>Unsupported attribute kind</value>
+    <value>Неподдържан атрибут</value>
     
   </data>
   <data name="ErrOperationDoesntMatch" xml:space="preserve">
-    <value>All Partial operators on matching named formulas must be the same.</value>
+    <value>Всички оператори Partial в съответстващите наименувани формули трябва да са еднакви.</value>
     
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
-    <value>Unknown Partial operator.</value>
+    <value>Неизвестен оператор Partial.</value>
     
   </data>
 </root>
