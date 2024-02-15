@@ -4253,15 +4253,15 @@
     <value>Uma coluna de tabela de valores numéricos a serem convertidos em caracteres Unicode.</value>
   </data>
   <data name="ErrOnlyPartialAttribute" xml:space="preserve">
-    <value>Unsupported attribute kind</value>
+    <value>Tipo de atributo sem suporte</value>
     
   </data>
   <data name="ErrOperationDoesntMatch" xml:space="preserve">
-    <value>All Partial operators on matching named formulas must be the same.</value>
+    <value>Todos os operadores Partial com fórmulas nomeadas correspondentes devem ser iguais.</value>
     
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
-    <value>Unknown Partial operator.</value>
+    <value>Operador Partial desconhecido.</value>
     
   </data>
 </root>
