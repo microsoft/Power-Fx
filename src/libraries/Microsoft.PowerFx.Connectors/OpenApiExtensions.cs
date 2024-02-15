@@ -262,6 +262,10 @@ namespace Microsoft.PowerFx.Connectors
             {
                 formulaValue = FormulaValue.New(new DateTime(dt.Value.Ticks, DateTimeKind.Utc));
             }
+            else if (openApiAny is OpenApiDate dte && allowOpenApiDateTime)
+            {
+                formulaValue = FormulaValue.NewDateOnly(new DateTime(dte.Value.Ticks, DateTimeKind.Utc));
+            }
             else if (openApiAny is OpenApiPassword pw)
             {
                 formulaValue = FormulaValue.New(pw.Value);
@@ -874,6 +878,24 @@ namespace Microsoft.PowerFx.Connectors
                         // A string like "2022-11-18" is interpreted as a DateTimeOffset
                         // https://github.com/microsoft/OpenAPI.NET/issues/533
                         errors.AddError($"Unsupported OpenApiDateTime {oadt.Value}");
+                        continue;
+                    }
+                }
+
+                if (prm.Value is OpenApiDate oad && fv is DateValue dv)
+                {
+                    // https://github.com/microsoft/OpenAPI.NET/issues/533
+                    // https://github.com/microsoft/Power-Fx/pull/1987 - https://github.com/microsoft/Power-Fx/issues/1982
+                    // api-version, x-ms-api-version, X-GitHub-Api-Version...
+                    if (forceString && prm.Key.EndsWith("api-version", StringComparison.OrdinalIgnoreCase))
+                    {
+                        fv = FormulaValue.New(dv.GetConvertedValue(TimeZoneInfo.Utc).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+                    }
+                    else
+                    {
+                        // A string like "2022-11-18" is interpreted as a DateTimeOffset
+                        // https://github.com/microsoft/OpenAPI.NET/issues/533
+                        errors.AddError($"Unsupported OpenApiDateTime {oad.Value}");
                         continue;
                     }
                 }
