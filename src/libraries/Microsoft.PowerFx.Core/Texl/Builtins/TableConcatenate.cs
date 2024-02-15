@@ -33,6 +33,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.TableConcatenateArg1, TexlStrings.TableConcatenateArg1 };
             yield return new[] { TexlStrings.TableConcatenateArg1, TexlStrings.TableConcatenateArg1, TexlStrings.TableConcatenateArg1 };
+            yield return new[] { TexlStrings.TableConcatenateArg1, TexlStrings.TableConcatenateArg1, TexlStrings.TableConcatenateArg1, TexlStrings.TableConcatenateArg1 };
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
@@ -111,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (ads is IExternalDataSource tDsInfo && tDsInfo is IExternalTabularDataSource)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrorDelegationTableNotSupported, Name, ads.EntityName);
+                    errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.SuggestRemoteExecutionHint, args[i].ToString());
                     continue;
                 }
             }

@@ -4170,17 +4170,17 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("TableConcatenate(DS, Blank())")]
         [InlineData("TableConcatenate(Blank(), Filter(DS, \"Foo\" in Name))")]
         [InlineData("TableConcatenate([], Blank(), DS)")]
-        [InlineData("TableConcatenate([{Value: true}], If(1 > 0, DS))")]
         public void TexlFunctionTypeSemanticsTableConcatenate_Delegation_Negative(string script)
         {
-            var schema = DType.CreateTable(new TypedName(DType.CreateAttachmentType(TestUtils.DT("*[Value:o, Name:s, Link:s]")), new DName("Attach")), new TypedName(TestUtils.DT("b"), new DName("Value")));
+            var schema = TestUtils.DT("*[Id:n, Name:s, Age:n]");
 
             var symbol = new SymbolTable();
             symbol.AddEntity(new TestDataSource("DS", schema));
 
-            TestBindingErrors(
+            TestBindingWarning(
                 script, 
-                schema, 
+                schema,
+                1,
                 symbol,
                 features: Features.PowerFxV1);
         }
@@ -4199,9 +4199,9 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(isPure, result.Binding.IsPure(result.Parse.Root));
         }
 
-        private void TestBindingWarning(string script, DType expectedType, int? expectedErrorCount, SymbolTable symbolTable = null, bool numberIsFloat = false)
+        private void TestBindingWarning(string script, DType expectedType, int? expectedErrorCount, SymbolTable symbolTable = null, bool numberIsFloat = false, Features features = null)
         {
-            var config = new PowerFxConfig(Features.None);
+            var config = features != null ? new PowerFxConfig(features) : new PowerFxConfig(Features.None);
             var parserOptions = new ParserOptions()
             {
                 NumberIsFloat = numberIsFloat
