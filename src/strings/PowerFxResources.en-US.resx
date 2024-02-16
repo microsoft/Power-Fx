@@ -2014,8 +2014,12 @@
     <value>Column name conflict for '{0}'.</value>
     <comment>Error Message.</comment>
   </data>
-  <data name="ErrSealed" xml:space="preserve">
-    <value>Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.</value>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">

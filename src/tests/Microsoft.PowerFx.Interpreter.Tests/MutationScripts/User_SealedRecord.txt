@@ -11,10 +11,10 @@ Table({DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),Email:"susan
 // AddColumns and RenameColumns are blocked
 
 >> AddColumns( User, Foo, 1 )
-Errors: Error 12-16: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-26: The function 'AddColumns' has some invalid arguments.
+Errors: Error 12-16: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-26: The function 'AddColumns' has some invalid arguments.
 
 >> RenameColumns( User, FullName, Name )
-Errors: Error 15-19: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-37: The function 'RenameColumns' has some invalid arguments.
+Errors: Error 15-19: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-37: The function 'RenameColumns' has some invalid arguments.
 
 // DropColumns and ShowColumns work as normal, as they are removing without adding
 
@@ -45,10 +45,13 @@ If(true, {test:1}, "Void value (result of the expression can't be used).")
 // And then there are the combinations...
 
 >> AddColumns( DropColumns( User, FullName ), Foo, 1 )
-Errors: Error 12-41: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-51: The function 'AddColumns' has some invalid arguments.
+Errors: Error 12-41: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-51: The function 'AddColumns' has some invalid arguments.
+
+>> AddColumns( ShowColumns( User, FullName, Email ), Foo, 1 )
+{Email:"susan@contoso.com",Foo:1,FullName:"Susan Burk"}
 
 >> AddColumns( [User], Foo, 1 )
-Errors: Error 12-18: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-28: The function 'AddColumns' has some invalid arguments.
+Errors: Error 12-18: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-28: The function 'AddColumns' has some invalid arguments.
 
 >> DropColumns( [User], FullName )
 Table({DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),Email:"susan@contoso.com",TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"})
@@ -57,43 +60,46 @@ Table({DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),Email:"susan
 Table({Email:"susan@contoso.com"})
 
 >> AddColumns( DropColumns( [User], FullName ), Foo, 1 )
-Errors: Error 12-43: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-53: The function 'AddColumns' has some invalid arguments.
+Errors: Error 12-43: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-53: The function 'AddColumns' has some invalid arguments.
+
+>> AddColumns( ShowColumns( [User], FullName, Email ), Foo, 1 )
+Table({Email:"susan@contoso.com",Foo:1,FullName:"Susan Burk"})
 
 >> RenameColumns( [User], FullName, Name )
-Errors: Error 15-21: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-39: The function 'RenameColumns' has some invalid arguments.
+Errors: Error 15-21: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-39: The function 'RenameColumns' has some invalid arguments.
 
 >> AddColumns( First( LastN( Table( User ), 4 ) ), Bar, false )
-Errors: Error 12-46: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-60: The function 'AddColumns' has some invalid arguments.
+Errors: Error 12-46: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-60: The function 'AddColumns' has some invalid arguments.
 
 >> RenameColumns( First( LastN( Table( User ), 4 ) ), FullName, Name )
-Errors: Error 15-49: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-67: The function 'RenameColumns' has some invalid arguments.
+Errors: Error 15-49: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-67: The function 'RenameColumns' has some invalid arguments.
 
 >> AddColumns( Index( LastN( Table( User ), 4 ), 1 ), Bar, false )
-Errors: Error 12-49: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-63: The function 'AddColumns' has some invalid arguments.
+Errors: Error 12-49: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-63: The function 'AddColumns' has some invalid arguments.
 
 >> AddColumns( With( User, ThisRecord ), Goo, "Hi" )
-Errors: Error 12-36: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-49: The function 'AddColumns' has some invalid arguments.
+Errors: Error 12-36: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-49: The function 'AddColumns' has some invalid arguments.
 
 >> RenameColumns( With( User, ThisRecord ), FullName, Name )
-Errors: Error 15-39: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-57: The function 'RenameColumns' has some invalid arguments.
+Errors: Error 15-39: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-57: The function 'RenameColumns' has some invalid arguments.
 
 >> AddColumns( With( { a: User }, ThisRecord ).a, Goo, "Hi" )
-Errors: Error 43-45: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-58: The function 'AddColumns' has some invalid arguments.
+Errors: Error 43-45: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-58: The function 'AddColumns' has some invalid arguments.
 
 >> RenameColumns( With( { a: User }, ThisRecord ).a, Email, ElectronicMail )
-Errors: Error 46-48: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-73: The function 'RenameColumns' has some invalid arguments.
+Errors: Error 46-48: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-73: The function 'RenameColumns' has some invalid arguments.
 
 >> AddColumns( ForAll( [ User ], ThisRecord ), Goo, "Hi" )
-Errors: Error 12-42: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-55: The function 'AddColumns' has some invalid arguments.
+Errors: Error 12-42: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-55: The function 'AddColumns' has some invalid arguments.
 
 >> RenameColumns( ForAll( [ User ], ThisRecord ), Email, ElectronicMail )
-Errors: Error 15-45: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-70: The function 'RenameColumns' has some invalid arguments.
+Errors: Error 15-45: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-70: The function 'RenameColumns' has some invalid arguments.
 
 >> AddColumns( Last( ForAll( Table( { b: {c: User} } ), ThisRecord )).b.c, Goo, "Hi" )
-Errors: Error 68-70: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-83: The function 'AddColumns' has some invalid arguments.
+Errors: Error 68-70: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-83: The function 'AddColumns' has some invalid arguments.
 
 >> RenameColumns( Last( ForAll( Table( { b: {c: User} } ), ThisRecord )).b.c, Email, ElectronicMail )
-Errors: Error 71-73: Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.|Error 0-98: The function 'RenameColumns' has some invalid arguments.
+Errors: Error 71-73: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-98: The function 'RenameColumns' has some invalid arguments.
 
 // A sealed record shouldn't taint the rest of the data structure
 

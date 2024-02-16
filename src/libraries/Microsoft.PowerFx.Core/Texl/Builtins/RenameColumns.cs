@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (argTypes[0].IsSealed)
             {
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrSealed);
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrRenameOfSealed);
                 return false;
             }
 
