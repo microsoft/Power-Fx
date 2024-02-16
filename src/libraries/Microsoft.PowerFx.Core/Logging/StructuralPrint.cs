@@ -5,6 +5,7 @@ using System;
 using System.Globalization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -326,9 +327,10 @@ namespace Microsoft.PowerFx.Core.Logging
             }
             else
             {
+                var callNodeStr = BuiltinFunctionsCore.IsKnownPublicFunction(node.Head.Token.ToString()) ? node.Head.Token.ToString() : "#$function$#";
                 result = result
                     .With(
-                        node.Head.Token.ToString(),
+                        callNodeStr,
                         TexlLexer.PunctuatorParenOpen)
                     .With(node.Args.Accept(this, Precedence.Primary))
                     .With(TexlLexer.PunctuatorParenClose);
