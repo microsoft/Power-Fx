@@ -64,6 +64,9 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
             OptionalParameterTypes = func.GetOptionalParameterTypes();
             ReturnType = func.GetReturnType();
             Parameters = func.GetParameterNames();
+            RequiredParameterSchemas = func.HasDetailedProperties() ? func.GetRequiredParameterSchemas() : null;
+            OptionalParameterSchemas = func.HasDetailedProperties() ? func.GetOptionalParameterSchemas() : null;
+            ReturnSchema = func.HasDetailedProperties() ? func.GetReturnSchema() : null;
 
             DifferFromBaseline = differences?.Any() == true;
             Differences = differences;
@@ -71,7 +74,9 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
 
         public override string ToString()
         {
-            return $"{Category}|{ConnectorName}|{FunctionName}|{IsSupported}|{NotSupportedReason}|{Warnings}|{IsDeprecated}|{IsInternal}|{IsPageable}|{ArityMin}|{ArityMax}|{RequiredParameterTypes}|{OptionalParameterTypes}|{ReturnType}|{Parameters}|{DifferFromBaseline}|{(Differences != null ? string.Join(", ", Differences) : "None")}";
+            return $"{Category}|{ConnectorName}|{FunctionName}|{IsSupported}|{NotSupportedReason}|{Warnings}|{IsDeprecated}|{IsInternal}|{IsPageable}|{ArityMin}|{ArityMax}|" +
+                   $"{RequiredParameterTypes}|{OptionalParameterTypes}|{ReturnType}|{Parameters}|{DifferFromBaseline}|{(Differences != null ? string.Join(", ", Differences) : "None")}|" +
+                   $"{RequiredParameterSchemas}|{OptionalParameterSchemas}|{ReturnSchema}";
         }
 
         internal string Category;
@@ -91,5 +96,8 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
         internal string Parameters;
         internal bool DifferFromBaseline;
         internal IReadOnlyList<string> Differences;
+        internal string RequiredParameterSchemas;
+        internal string OptionalParameterSchemas;
+        internal string ReturnSchema;
     }
 }

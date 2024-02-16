@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public Task<FormulaValue> InvokeAsync(TimeZoneInfo timezoneInfo, FormulaType type, FormulaValue[] args, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return Task.FromResult(new JsonProcessing(timezoneInfo, type, args).Process());
+            return Task.FromResult(new JsonProcessing(timezoneInfo, type, args, supportsLazyTypes).Process());
         }
 
         internal class JsonProcessing
@@ -35,19 +35,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             private readonly FormulaValue[] _arguments;
             private readonly FormulaType _type;
             private readonly TimeZoneInfo _timeZoneInfo;
+            private readonly bool _supportsLazyTypes;
 
-            internal JsonProcessing(TimeZoneInfo timezoneInfo, FormulaType type, FormulaValue[] args)
+            internal JsonProcessing(TimeZoneInfo timezoneInfo, FormulaType type, FormulaValue[] args, bool supportsLazyTypes)
             {
                 _arguments = args;
                 _timeZoneInfo = timezoneInfo;
                 _type = type;
+                _supportsLazyTypes = supportsLazyTypes;
             }
 
             internal FormulaValue Process()
             {
                 JsonFlags flags = GetFlags();
 
-                if (flags == null || JsonFunction.HasUnsupportedType(_arguments[0].Type._type, out _, out _))
+                if (flags == null || JsonFunction.HasUnsupportedType(_arguments[0].Type._type, _supportsLazyTypes, out _, out _))
                 {
                     return CommonErrors.GenericInvalidArgument(IRContext.NotInSource(_type));
                 }
@@ -99,7 +101,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if ((flags.IncludeBinaryData && flags.IgnoreBinaryData) ||
                     (flags.HasMedia && !flags.IncludeBinaryData && !flags.IgnoreBinaryData) ||
-                    (!flags.IgnoreUnsupportedTypes && JsonFunction.HasUnsupportedType(_arguments[0].Type._type, out var _, out var _)))
+                    (!flags.IgnoreUnsupportedTypes && JsonFunction.HasUnsupportedType(_arguments[0].Type._type, _supportsLazyTypes, out var _, out var _)))
                 {
                     return null;
                 }
@@ -271,8 +273,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 public void Visit(BlobValue value)
-                {                    
-                    throw new NotImplementedException("This will be implemented later.");
+                {
+                    if (value.Content is Base64Blob)
+                    {
+                        _writer.WriteStringValue(value.GetAsBase64Async(CancellationToken.None).Result);
+                    }
+                    else
+                    {
+                        _writer.WriteBase64StringValue(value.GetAsByteArrayAsync(CancellationToken.None).Result);
+                    }
                 }                
             }
 

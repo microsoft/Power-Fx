@@ -194,6 +194,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             "",
             "Response_O365Outlook_GetAttachmentV2.json")]
 
+        [InlineData(
+            @"Office365Outlook.GetAttachmentV2(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA="", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAABEgAQAAaOrCiujABLpFlM9d390HE="").contentBytes",
+            "BLOB:iVBORw0KGgoAAAANSUhEUgAA", /* Base64 */ 
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA%3d/attachments/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAABEgAQAAaOrCiujABLpFlM9d390HE%3d",
+            "",
+            "Response_O365Outlook_GetAttachmentV2.json")]
+
         // This function is not available in Power Apps as it is internal
         [InlineData(
             @"First(Office365Outlook.GetDataSets().value).DisplayName",

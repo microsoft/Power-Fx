@@ -4257,11 +4257,11 @@
     
   </data>
   <data name="ErrOperationDoesntMatch" xml:space="preserve">
-    <value>All Partial operators on matching named formulas must be the same.</value>
+    <value>Izen bat duten formulen Partial motako eragile guztiek berdinak izan behar dute.</value>
     
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
-    <value>Unknown Partial operator.</value>
+    <value>Partial eragile ezezaguna.</value>
     
   </data>
 </root>

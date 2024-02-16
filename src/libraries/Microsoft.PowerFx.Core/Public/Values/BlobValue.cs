@@ -14,10 +14,10 @@ namespace Microsoft.PowerFx.Types
     {
         internal BlobContent Content { get; }
 
-        internal BlobValue(BlobContent resourceElement)
+        internal BlobValue(BlobContent content)
              : base(IRContext.NotInSource(FormulaType.Blob))
         {
-            Content = resourceElement ?? throw new ArgumentNullException(nameof(resourceElement));
+            Content = content ?? throw new ArgumentNullException(nameof(content));
         }
 
         public override void Visit(IValueVisitor visitor)
