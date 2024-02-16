@@ -4167,20 +4167,26 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("TableConcatenate(DS, Blank())")]
-        [InlineData("TableConcatenate(Blank(), Filter(DS, \"Foo\" in Name))")]
-        [InlineData("TableConcatenate([], Blank(), DS)")]
-        public void TexlFunctionTypeSemanticsTableConcatenate_Delegation_Negative(string script)
+        [InlineData("TableConcatenate(DS, Blank())", "*[Id:n, Name:s, Age:n]", 1)]
+        [InlineData("TableConcatenate(DS, T1)", "*[Id:n, Name:s, Age:n, a:n, b:s]", 1)]
+        [InlineData("TableConcatenate(DS, Filter(DS, \"Foo\" in Name))", "*[Id:n, Name:s, Age:n]", 2)]
+        [InlineData("TableConcatenate([], TableConcatenate(DS, []))", "*[Id:n, Name:s, Age:n]", 2)]
+        [InlineData("TableConcatenate([], TableConcatenate([], Search(DS, \"Foo\", Name)))", "*[Id:n, Name:s, Age:n]", 2)]
+        [InlineData("TableConcatenate([], FirstN(DS, 5))", "*[Id:n, Name:s, Age:n]", 1)]
+        [InlineData("TableConcatenate(Search(DS, \"Foo\", Name), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 2)]
+        [InlineData("TableConcatenate(Filter(DS, Sqrt(Age) > 5), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 2)]
+        public void TexlFunctionTypeSemanticsTableConcatenate_Delegation_Negative(string script, string expectedSchema, int errorCount)
         {
-            var schema = TestUtils.DT("*[Id:n, Name:s, Age:n]");
+            var dataSourceSchema = TestUtils.DT("*[Id:n, Name:s, Age:n]");
 
             var symbol = new SymbolTable();
-            symbol.AddEntity(new TestDataSource("DS", schema));
+            symbol.AddEntity(new TestDataSource("DS", dataSourceSchema));
+            symbol.AddVariable("T1", new TableType(TestUtils.DT("*[a:n, b:s]")));
 
             TestBindingWarning(
-                script, 
-                schema,
-                1,
+                script,
+                TestUtils.DT(expectedSchema),
+                errorCount,
                 symbol,
                 features: Features.PowerFxV1);
         }
