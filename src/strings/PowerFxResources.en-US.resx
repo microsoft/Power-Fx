@@ -2015,7 +2015,7 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrSealed" xml:space="preserve">
-    <value>System table or record is sealed. Columns cannot be added or renamed.</value>
+    <value>Can't add columns to, or rename columns of, a system record or table of system records. Use With or ForAll to extract the specific columns you need first.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
