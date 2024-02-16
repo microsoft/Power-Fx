@@ -154,6 +154,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
+            colsToKeep.IsSealed = argTypes[0].IsSealed;
+
             returnType = colsToKeep;
 
             return fArgsValid;

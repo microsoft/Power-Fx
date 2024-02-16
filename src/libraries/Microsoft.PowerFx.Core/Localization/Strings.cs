@@ -661,6 +661,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrArgNotAValidIdentifier_Name = new ErrorResourceKey("ErrArgNotAValidIdentifier_Name");
         public static ErrorResourceKey ErrColExists_Name = new ErrorResourceKey("ErrColExists_Name");
         public static ErrorResourceKey ErrColConflict_Name = new ErrorResourceKey("ErrColConflict_Name");
+        public static ErrorResourceKey ErrSealed = new ErrorResourceKey("ErrSealed");
         public static ErrorResourceKey ErrColDNE_Name = new ErrorResourceKey("ErrColDNE_Name");
         public static ErrorResourceKey ErrColumnDoesNotExist_Name_Similar = new ErrorResourceKey("ErrColumnDoesNotExist_Name_Similar");
         public static ErrorResourceKey ErrSortIncorrectOrder = new ErrorResourceKey("ErrSortIncorrectOrder");

@@ -2014,6 +2014,10 @@
     <value>Column name conflict for '{0}'.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrSealed" xml:space="preserve">
+    <value>System table or record is sealed. Columns cannot be added or renamed.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>The specified column '{0}' does not exist.</value>
     <comment>Error Message.</comment>

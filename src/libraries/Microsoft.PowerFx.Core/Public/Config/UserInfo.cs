@@ -123,6 +123,8 @@ namespace Microsoft.PowerFx
                 }
             }
 
+            type._type.IsSealed = true;
+
             return type;
         }
     }
