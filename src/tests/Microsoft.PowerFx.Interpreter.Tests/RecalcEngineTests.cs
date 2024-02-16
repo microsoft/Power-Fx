@@ -369,6 +369,32 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void UserDefinitionOnUpdateTest()
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            engine.UpdateVariable("A", 1m);
+            engine.AddUserDefinitions("B=A*2;C=A*B;", onUpdate: OnUpdate);
+            AssertUpdate("B-->2;C-->2;");
+
+            // Can't set formulas, they're read only 
+            var check = engine.Check("Set(B, 12)");
+            Assert.False(check.IsSuccess);
+
+            // Set() function triggers recalc chain. 
+            engine.Eval("Set(A,10)", options: _opts);
+            AssertUpdate("B-->20;C-->200;");
+
+            // Compare Before/After set within an expression.
+            // Before (A,B) = 10,20 
+            // After  (A,B) = 3,6
+            var result = engine.Eval("With({x:A, y:B}, Set(A,3); x & y & A & B)", options: _opts);
+            Assert.Equal("102036", result.ToObject());
+        }
+
+        [Fact]
         public void BasicEval()
         {
             var engine = new RecalcEngine();
