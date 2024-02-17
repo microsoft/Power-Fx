@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading;
@@ -172,7 +171,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<HttpRequestMessage> Transform(HttpRequestMessage request)
         {
-            var url = request.RequestUri.ToString();
+            var url = request.RequestUri.OriginalString;
             if (request.RequestUri.IsAbsoluteUri)
             {
                 // Client has Basepath set. 

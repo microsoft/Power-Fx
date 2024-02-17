@@ -1,0 +1,353 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "DadJokesIO (Independent Publisher)",
+    "description": "DadJokes.IO provides an \u0022unlimited\u0022 supply of Dad jokes. Jokes can be retrieve by random, by ID, by type, or by search term.",
+    "version": "1.0",
+    "contact": {
+      "name": "Troy Taylor",
+      "url": "https://www.hitachisolutions.com",
+      "email": "ttaylor@hitachisolutions.com"
+    },
+    "x-ms-api-annotation": {
+      "status": "Production"
+    }
+  },
+  "host": "tip1002-002.azure-apihub.net",
+  "basePath": "/apim/dadjokesioip",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/{connectionId}/random/joke": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Whether successful.",
+                  "title": "Success"
+                },
+                "body": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "description": "The unique identifier.",
+                        "title": "ID"
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "The type.",
+                        "title": "Type"
+                      },
+                      "setup": {
+                        "type": "string",
+                        "description": "The joke setup.",
+                        "title": "Setup"
+                      },
+                      "punchline": {
+                        "type": "string",
+                        "description": "The punchline.",
+                        "title": "Punchline"
+                      }
+                    }
+                  },
+                  "title": "Body"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get a random joke",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "x-ms-summary": "Count",
+            "description": "The count.",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "description": "Retrieves a random Dad joke.",
+        "operationId": "Random",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/dadjokesioip/#get-a-random-joke"
+        }
+      }
+    },
+    "/{connectionId}/joke/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Whether successful.",
+                  "title": "Success"
+                },
+                "body": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "description": "The unique identifier.",
+                      "title": "ID"
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "The type.",
+                      "title": "Type"
+                    },
+                    "setup": {
+                      "type": "string",
+                      "description": "The joke setup.",
+                      "title": "Setup"
+                    },
+                    "punchline": {
+                      "type": "string",
+                      "description": "The punchline.",
+                      "title": "Punchline"
+                    }
+                  },
+                  "title": "Body"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get a joke by ID",
+        "description": "Retrieves a Dad joke by ID.",
+        "operationId": "JokeID",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "x-ms-summary": "ID",
+            "x-ms-url-encoding": "single",
+            "description": "The unique identifier.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/dadjokesioip/#get-a-joke-by-id"
+        }
+      }
+    },
+    "/{connectionId}/joke/type/{type}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Whether successful.",
+                  "title": "Success"
+                },
+                "body": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "description": "The unique identifier.",
+                        "title": "ID"
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "The type.",
+                        "title": "Type"
+                      },
+                      "setup": {
+                        "type": "string",
+                        "description": "The joke setup.",
+                        "title": "Setup"
+                      },
+                      "punchline": {
+                        "type": "string",
+                        "description": "The punchline.",
+                        "title": "Punchline"
+                      }
+                    }
+                  },
+                  "title": "Body"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get joke(s) by type",
+        "description": "Retrieves joke(s) by a specific type.",
+        "operationId": "JokeType",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "x-ms-summary": "Type",
+            "x-ms-url-encoding": "single",
+            "description": "The type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "x-ms-summary": "Count",
+            "description": "The count.",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/dadjokesioip/#get-joke(s)-by-type"
+        }
+      }
+    },
+    "/{connectionId}/joke/search": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Whether successful.",
+                  "title": "Success"
+                },
+                "body": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "description": "The unique identifier.",
+                        "title": "ID"
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "The type.",
+                        "title": "Type"
+                      },
+                      "setup": {
+                        "type": "string",
+                        "description": "The joke setup.",
+                        "title": "Setup"
+                      },
+                      "punchline": {
+                        "type": "string",
+                        "description": "The punchline.",
+                        "title": "Punchline"
+                      }
+                    }
+                  },
+                  "title": "Body"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Search jokes",
+        "description": "Search for jokes contacting the search term.",
+        "operationId": "JokeSearch",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "term",
+            "in": "query",
+            "x-ms-summary": "Count",
+            "description": "The count.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/dadjokesioip/#search-jokes"
+        }
+      }
+    }
+  },
+  "definitions": {},
+  "parameters": {},
+  "responses": {},
+  "securityDefinitions": {
+    "API Key": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "X-RapidAPI-Key"
+    }
+  },
+  "security": [
+    {
+      "API Key": []
+    }
+  ],
+  "tags": [],
+  "x-ms-connector-metadata": [
+    {
+      "propertyName": "Website",
+      "propertyValue": "https://dadjokes.io/"
+    },
+    {
+      "propertyName": "Privacy policy",
+      "propertyValue": "https://dadjokes.io/"
+    },
+    {
+      "propertyName": "Categories",
+      "propertyValue": "Lifestyle and Entertainment"
+    }
+  ],
+  "externalDocs": {
+    "url": "https://docs.microsoft.com/connectors/dadjokesioip"
+  }
+}

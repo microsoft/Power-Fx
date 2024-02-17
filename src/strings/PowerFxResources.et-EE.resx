@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Kuupäevaväärtus, mida korrigeeritakse määratud kuude arvuga.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Kuude arv, mille võrra kuupäeva muudetakse. Positiivne väärtus annab tulevase kuupäeva, negatiivne väärtus annab möödunud kuupäeva ja null ei muuda kuud.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Tagastab määratud kuupäeva jaoks päeva kuus, mida korrigeeritakse kuude arvuga.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Kuupäevaväärtus, mida korrigeeritakse määratud kuude arvuga.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Kuude arv, mille võrra kuupäeva muudetakse. Positiivne väärtus annab tulevase kuupäeva, negatiivne väärtus annab möödunud kuupäeva ja null ei muuda kuud.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Lühendab „numbri“, ümardades negatiivse lõpmatuse suunas.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON-i funktsioon ei saa kahendandmeid mittekäitumuslikus avaldises serialiseerida.</value>    
+    <value>JSON-i funktsioon ei saa kahendandmeid mittekäitumuslikus avaldises serialiseerida.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parameeter {0} sisaldab atribuudi tüüpi {1}, mida ei toetata.</value>
@@ -4251,5 +4251,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Arvväärtuste tabeliveerg, mis teisendatakse Unicode’i märkideks.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Toetuseta atribuudi tüüp</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Kõik nimega valemitele vastavad tehtemärgid Partial peavad olema samad.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Tundmatu tehtemärk Partial.</value>
+    
   </data>
 </root>

@@ -12,6 +12,7 @@ namespace Microsoft.PowerFx.Connectors.Localization
         internal static ErrorResourceKey New(string key) => new (key, ConnectorResources);
 
         internal static readonly ErrorResourceKey WarnDeprecatedFunction = ConnectorStringResources.New("WarnDeprecatedFunction");
-        internal static readonly ErrorResourceKey WarnFunctionUseBinary = ConnectorStringResources.New("WarnFunctionUseBinary");        
+        internal static readonly ErrorResourceKey WarnFunctionUseBinary = ConnectorStringResources.New("WarnFunctionUseBinary");
+        internal static readonly ErrorResourceKey WarnFunctionUseByte = ConnectorStringResources.New("WarnFunctionUseByte");
     }
 }

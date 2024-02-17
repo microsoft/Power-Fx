@@ -12,7 +12,18 @@ namespace Microsoft.PowerFx.Types
     public class StringValue : PrimitiveValue<string>
     {
         // List of types that allowed to convert to StringValue
-        internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToString = new FormulaType[] { FormulaType.String, FormulaType.Number, FormulaType.Decimal, FormulaType.DateTime, FormulaType.Date, FormulaType.Time, FormulaType.Boolean, FormulaType.Guid };
+        internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToString = new FormulaType[]
+        {
+            FormulaType.Blob,
+            FormulaType.Boolean,
+            FormulaType.Date,
+            FormulaType.DateTime,
+            FormulaType.Decimal,
+            FormulaType.Guid,
+            FormulaType.Number,
+            FormulaType.String,
+            FormulaType.Time
+        };
 
         internal StringValue(IRContext irContext, string value)
             : base(irContext, value)

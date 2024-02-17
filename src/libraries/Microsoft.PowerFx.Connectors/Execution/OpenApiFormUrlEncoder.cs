@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -15,13 +18,15 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private readonly StringBuilder _writer;
         private readonly Stack<string> _stack;
         private readonly Stack<int> _arrayIndex;
+        private readonly CancellationToken _cancellationToken;
 
-        public OpenApiFormUrlEncoder(IConvertToUTC utcConverter, bool schemaLessBody)
+        public OpenApiFormUrlEncoder(IConvertToUTC utcConverter, bool schemaLessBody, CancellationToken cancellationToken)
             : base(utcConverter, schemaLessBody)
         {
             _writer = new StringBuilder(1024);
             _stack = new Stack<string>();
             _arrayIndex = new Stack<int>();
+            _cancellationToken = cancellationToken;
         }
 
         protected override void StartArray(string name = null)
@@ -137,6 +142,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
         internal override void EndSerialization()
         {
             // Do nothing
+        }
+
+        protected override Task WriteBlobValueAsync(BlobValue blobValue)
+        {
+            return Task.FromException(new NotImplementedException());
         }
     }
 }

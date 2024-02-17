@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
+using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
@@ -223,6 +224,14 @@ Boy: I wonder where I'll float next?
             ConnectorFunction info0json2 = funcsXkcd2.First(f => f.Name == "info0json");
             Assert.True(info0json2.IsSupported);
             Assert.Equal(string.Empty, info0json2.NotSupportedReason);
+        }
+
+        [Fact]
+        public void DadJokesDirectTest()
+        {
+            var config = new PowerFxConfig();
+            using var testConnector = new LoggingTestServer(@"Swagger\DadJokes.json", _output);
+            var apiDoc = testConnector._apiDocument;
         }
 
         // Get a swagger file from the embedded resources. 

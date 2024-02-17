@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Значення дати, яке потрібно скоригувати на задану кількість місяців.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Кількість місяців, на яку потрібно скоригувати дату. Додатне значення означає дату в майбутньому, від’ємне значення — дату в минулому, а нуль не змінює місяць.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Повертає останній день місяця для заданої дати, скоригованої на кількість місяців.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Значення дати, яке потрібно скоригувати на задану кількість місяців.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Кількість місяців, на яку потрібно скоригувати дату. Додатне значення означає дату в майбутньому, від’ємне значення – дату в минулому, а нуль не змінює місяць.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Скорочує "число" за допомогою округлення до від’ємної нескінченності.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Функція JSON не може серіалізувати двійкові дані у неповедінковому виразі.</value>    
+    <value>Функція JSON не може серіалізувати двійкові дані у неповедінковому виразі.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Параметр {0} містить непідтримувану властивість типу "{1}".</value>
@@ -4246,10 +4246,22 @@
     
   </data>
   <data name="UniCharTArg1" xml:space="preserve">
-    <value>column_of_numbers</value>
+    <value>кількість_стовпців</value>
     
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Стовпець таблиці з числовими значеннями, які потрібно перетворити на символи Юнікоду.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Непідтримуваний тип атрибута</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Усі оператори Partial у відповідних іменованих формулах мають бути однаковими.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Невідомий оператор Partial.</value>
+    
   </data>
 </root>

@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Ezt a dátumot kell módosítani a megadott számú hónappal.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Azon hónapok száma, amelyekkel a dátumot módosítani kell. A pozitív érték jövőbeli dátumot, a negatív érték múltbeli dátumot eredményez, a nulla pedig nem módosítja a hónapot.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>A hónap utolsó napját adja vissza egy adott dátumra vonatkozóan, amelyet több hónappal módosított.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Ezt a dátumot kell módosítani a megadott számú hónappal.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Azon hónapok száma, amelyekkel a dátumot módosítani kell. A pozitív érték jövőbeli dátumot, a negatív érték múltbeli dátumot eredményez, a nulla pedig nem módosítja a hónapot.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>A szám csonkolása a negatív végtelen felé kerekítéssel.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>A JSON függvény nem tudja szerializálni a bináris adatokat nem viselkedési kifejezésben.</value>    
+    <value>A JSON függvény nem tudja szerializálni a bináris adatokat nem viselkedési kifejezésben.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>A(z) {0} paraméter nem támogatott, {1} típusú tulajdonságot tartalmaz.</value>
@@ -4251,5 +4251,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Unicode-karakterekké alakítandó numerikus értékek táblaoszlopa.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Nem támogatott attribútumtípus</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Az összes Partial operátornak az egyező megnevezett képletekben azonosnak kell lennie.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Ismeretlen Partial operátor.</value>
+    
   </data>
 </root>

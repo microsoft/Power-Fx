@@ -21,6 +21,7 @@ using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.TexlFunctionExporter;
 using Xunit;
 using Xunit.Abstractions;
+using static Microsoft.PowerFx.Connectors.OpenApiExtensions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
@@ -440,9 +441,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     writer.WriteLine($"{title}: Exception {key}");
                     j++;
 
-                    if (exceptionMessages.ContainsKey(key))
+                    if (exceptionMessages.TryGetValue(key, out var value))
                     {
-                        exceptionMessages[key]++;
+                        exceptionMessages[key] = ++value;
                     }
                     else
                     {
@@ -511,9 +512,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             foreach (var unsupportedFunction in allFunctions.SelectMany(kvp => kvp.Value.Where(f => !f.IsSupported).Select(f => new { SwaggerFile = kvp.Key, Function = f })))
             {
                 string nsr = unsupportedFunction.Function.NotSupportedReason;
-                if (notSupportedReasons.ContainsKey(nsr))
+                if (notSupportedReasons.TryGetValue(nsr, out var value))
                 {
-                    notSupportedReasons[nsr]++;
+                    notSupportedReasons[nsr] = ++value;
                 }
                 else
                 {
@@ -626,7 +627,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                 // Step 3: Export TexlFunctions to Yaml
                 ExportConnectorFunctionsToYaml(reference, outFolderPath, connector.Key, connectorFunctions);
-            }
+            }            
         }
 
 #if GENERATE_CONNECTOR_STATS
@@ -730,9 +731,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Upload to SQL 
             string connectionString = Environment.GetEnvironmentVariable("PFXDEV_CONNECTORANALYSIS");
             string buildId = Environment.GetEnvironmentVariable("BUILD_ID"); // int
-            string buildNumber = Environment.GetEnvironmentVariable("BUILD_NUMBER"); // string
+            string buildNumber = Environment.GetEnvironmentVariable("BUILD_NUMBER"); // string            
 
-            using SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnectionStringBuilder csb = new (connectionString)
+            {
+                CommandTimeout = 300,
+                ConnectTimeout = 30
+            };
+
+            using SqlConnection connection = new SqlConnection(csb.ConnectionString);
+
             connection.Open();
 
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection) { DestinationTableName = "dbo.Connectors" })
@@ -760,6 +768,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     connectorsTable.Rows.Add(row);
                 }
 
+                bulkCopy.BatchSize = 1000;
+                bulkCopy.BulkCopyTimeout = 0;
                 bulkCopy.WriteToServer(connectorsTable);
 
                 _output.WriteLine(string.Empty);
@@ -793,10 +803,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     row[16] = functionStat.Parameters ?? (object)DBNull.Value;
                     row[17] = functionStat.DifferFromBaseline;
                     row[18] = functionStat.Differences == null ? (object)DBNull.Value : string.Join(", ", functionStat.Differences);
-
+                    row[19] = functionStat.RequiredParameterSchemas ?? (object)DBNull.Value;
+                    row[20] = functionStat.OptionalParameterSchemas ?? (object)DBNull.Value;
+                    row[21] = functionStat.ReturnSchema ?? (object)DBNull.Value;
+                    
                     functionsTable.Rows.Add(row);
                 }
 
+                bulkCopy.BatchSize = 1000;
+                bulkCopy.BulkCopyTimeout = 0;
                 bulkCopy.WriteToServer(functionsTable);
 
                 _output.WriteLine($"Copied {bulkCopy.RowsCopied} rows in Functions table");
@@ -863,6 +878,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             DataColumn parameters = new DataColumn("Parameters", typeof(string));
             DataColumn differFromBaseline = new DataColumn("DifferFromBaseline", typeof(bool));
             DataColumn differences = new DataColumn("Differences", typeof(string));
+            DataColumn requiredParameterSchemas = new DataColumn("RequiredParameterSchemas", typeof(string));
+            DataColumn optionalParameterSchemas = new DataColumn("OptionalParameterSchemas", typeof(string));
+            DataColumn returnSchema = new DataColumn("ReturnSchema", typeof(string));
 
             functions.Columns.Add(buildId);
             functions.Columns.Add(buildNumber);
@@ -883,6 +901,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             functions.Columns.Add(parameters);
             functions.Columns.Add(differFromBaseline);
             functions.Columns.Add(differences);
+            functions.Columns.Add(requiredParameterSchemas);
+            functions.Columns.Add(optionalParameterSchemas);
+            functions.Columns.Add(returnSchema);
 
             return functions;
         }
@@ -976,7 +997,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IsBehavior = connectorFunction.IsBehavior;
             IsSupported = connectorFunction.IsSupported;
             NotSupportedReason = connectorFunction.NotSupportedReason;
-            Warnings = connectorFunction.Warnings.Any() ? string.Join(", ", connectorFunction.Warnings.Select(erk => ErrorUtils.FormatMessage(StringResources.Get(erk), null, Name, connectorFunction.Namespace))) : null;
+            Warnings = connectorFunction.Warnings.Count > 0 ? string.Join(", ", connectorFunction.Warnings.Select(erk => ErrorUtils.FormatMessage(StringResources.Get(erk), null, Name, connectorFunction.Namespace))) : null;
             IsDeprecated = connectorFunction.IsDeprecated;
             IsInternal = connectorFunction.IsInternal;
             IsPageable = connectorFunction.IsPageable;
@@ -1011,7 +1032,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public int ArityMin;
         public int ArityMax;
         public YamlConnectorParameter[] RequiredParameters;
-        public YamlConnectorParameter[] OptionalParameters;
+        public YamlConnectorParameter[] OptionalParameters;        
 
         string IYamlFunction.GetName()
         {
@@ -1087,7 +1108,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             string paramNames = string.Join(", ", RequiredParameters?.Select(rp => rp.Name) ?? Enumerable.Empty<string>());
 
-            if (OptionalParameters?.Any() == true)
+            if (OptionalParameters?.Length > 0)
             {
                 if (!string.IsNullOrEmpty(paramNames))
                 {
@@ -1103,6 +1124,21 @@ namespace Microsoft.PowerFx.Connectors.Tests
         string IYamlFunction.GetWarnings()
         {
             return Warnings;
+        }
+
+        string IYamlFunction.GetOptionalParameterSchemas()
+        {
+            return OptionalParameters == null ? null : string.Join("|", OptionalParameters.Select(op => op.Type.Schema));
+        }
+
+        string IYamlFunction.GetRequiredParameterSchemas()
+        {
+            return RequiredParameters == null ? null : string.Join("|", RequiredParameters.Select(op => op.Type.Schema));
+        }
+
+        string IYamlFunction.GetReturnSchema()
+        {
+            return ReturnType_Detailed.Schema;
         }
     }
 
@@ -1128,7 +1164,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
 
             Title = connectorParam.Title;
-            ExplicitInput = connectorParam.ConnectorExtensions.ExplicitInput;
+            ExplicitInput = connectorParam.ConnectorExtensions.ExplicitInput;            
         }
 
         public string Name;
@@ -1138,7 +1174,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public YamlConnectorType Type;
         public string DefaultValue;
         public string Title;
-        public bool ExplicitInput;
+        public bool ExplicitInput;        
     }
 
     public class YamlConnectorType
@@ -1223,6 +1259,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     Map = GetMap(connectorType.DynamicValues.ParameterMap)
                 };
             }
+
+            Schema = connectorType.Schema?.GetString();
         }
 
         public string Name;
@@ -1239,6 +1277,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public YamlDynamicProperty DynamicProperty;
         public YamlDynamicSchema DynamicSchema;
         public YamlDynamicValues DynamicValues;
+        public string Schema;
 
         private Dictionary<string, YamlMapping> GetMap(Dictionary<string, IConnectorExtensionValue> dic)
         {
@@ -1323,6 +1362,108 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
     public static class Exts
     {
+        public static string GetString(this OpenApiSchema schema)
+        {
+            StringBuilder sb = new StringBuilder();            
+            schema.GetStringInternal(new ConnectorTypeGetterSettings(0), sb);            
+            return sb.ToString();
+        }        
+
+        private static void GetStringInternal(this OpenApiSchema schema, ConnectorTypeGetterSettings ctgs, StringBuilder sb)
+        {
+            if (ctgs.Level > 32)
+            {
+                sb.Append("<TooManyLevels>");
+                return;
+            }                      
+
+            sb.Append(schema.Type);
+            
+            if (!string.IsNullOrEmpty(schema.Format))
+            {
+                sb.Append('.');
+                sb.Append(schema.Format);
+            }
+                                 
+            if (schema.Enum != null && schema.Enum.Any())
+            {
+                sb.Append($"[en:{schema.Enum.First().GetType().Name}]");
+            }
+
+            if (schema.Items != null)
+            {
+                sb.Append($"[it:");
+                
+                var itemIdentifier = OpenApiExtensions.GetUniqueIdentifier(schema.Items);
+                if (itemIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(itemIdentifier))
+                {
+                    sb.Append($"<circularRef:{itemIdentifier.Substring(2)}>]");
+                    return;
+                }
+
+                GetStringInternal(schema.Items, ctgs.Stack(itemIdentifier), sb);
+                ctgs.UnStack();
+                sb.Append(']');
+            }
+
+            string discriminator = schema.Items?.Discriminator?.PropertyName;
+            if (discriminator != null)
+            {                
+                sb.Append($"[di:{discriminator}]");
+            }
+            
+            if (schema.AdditionalProperties != null)
+            {
+                sb.Append($"[ad:");
+                var additionalPropIdentifier = OpenApiExtensions.GetUniqueIdentifier(schema.AdditionalProperties);
+                if (additionalPropIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(additionalPropIdentifier))
+                {
+                    sb.Append($"<circularRef:{additionalPropIdentifier.Substring(2)}>]");
+                    return;
+                }
+
+                GetStringInternal(schema.AdditionalProperties, ctgs.Stack(additionalPropIdentifier), sb);
+                ctgs.UnStack();
+                sb.Append(']');
+            }                       
+
+            if (schema.Properties != null && schema.Properties.Any())
+            {
+                sb.Append($"[pr:");
+                int i = 0;
+
+                foreach (var prop in schema.Properties)
+                {
+                    if (i > 0)
+                    {
+                        sb.Append(", ");
+                    }
+
+                    sb.Append(prop.Key);
+                    sb.Append(':');
+
+                    var propIdentifier = OpenApiExtensions.GetUniqueIdentifier(prop.Value);
+                    if (propIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(propIdentifier))
+                    {
+                        sb.Append($"<circularRef:{propIdentifier.Substring(2)}>]");
+                        return;
+                    }
+
+                    GetStringInternal(prop.Value, ctgs.Stack(propIdentifier), sb);
+                    ctgs.UnStack();
+
+                    i++;
+                }
+
+                sb.Append(']');
+            }
+
+            if (schema.Extensions != null && schema.Extensions.Any())
+            {
+                sb.Append($"[ex:{string.Join(", ", schema.Extensions.Keys)}]");
+            }            
+        }
+
         public static void Dump(this object obj, ITestOutputHelper console)
         {
             if (obj is IEnumerable e && e.GetType().GetGenericArguments().Count() > 0)

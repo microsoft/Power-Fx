@@ -463,7 +463,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("x = $\"{\"1$\"}.{\"}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1)]
         [InlineData("x = $\"{$\"{$\"{$\"{.12e4}\"}}\"}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1)]
         [InlineData("x = $\"{$\"{$\"{$\"{.12e4}\"}\"}\"}{$\"Another nested}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1)]
-        public void TestUserDefinitionStringInterpolationWithUnterminatedIsland(string formula, int nfCount, int udfCount)
+        public void TestUDF(string formula, int nfCount, int udfCount)
         {
             var parserOptions = new ParserOptions()
             {
