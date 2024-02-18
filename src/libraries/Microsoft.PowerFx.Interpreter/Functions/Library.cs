@@ -215,6 +215,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: NumberToBoolean)
             },
             {
+                BuiltinFunctionsCore.BooleanL,
+                StandardErrorHandling<OptionSetValue>(
+                    BuiltinFunctionsCore.BooleanL.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: BooleanOptionSetToBoolean)
+            },
+            {
                 BuiltinFunctionsCore.BooleanW,
                 StandardErrorHandling<DecimalValue>(
                     BuiltinFunctionsCore.BooleanW.Name,
@@ -1897,6 +1908,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.BooleanW_T,
                 StandardErrorHandlingTabularOverload<DecimalValue>(BuiltinFunctionsCore.BooleanW_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanW], DoNotReplaceBlank)
+            },
+            {
+                BuiltinFunctionsCore.BooleanL_T,
+                StandardErrorHandlingTabularOverload<OptionSetValue>(BuiltinFunctionsCore.BooleanL_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanL], DoNotReplaceBlank)
             },
 
             // This implementation is not actually used for this as this is handled at IR level. 

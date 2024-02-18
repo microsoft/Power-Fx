@@ -600,6 +600,10 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsOptionSetBackedByNumeric => IsOptionSet && (OptionSetInfo.BackingKind == DKind.Number || OptionSetInfo.BackingKind == DKind.Decimal);
 
+        public bool IsOptionSetBackedByBoolean => IsOptionSet && OptionSetInfo.BackingKind == DKind.Boolean;
+
+        public bool IsOptionSetBackedByColor => IsOptionSet && OptionSetInfo.BackingKind == DKind.Color;
+
         public bool IsView => Kind == DKind.View || Kind == DKind.ViewValue;
 
         public bool IsAggregate => IsRecord || IsTable;
@@ -879,7 +883,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static DType CreateOptionSetType(IExternalOptionSet info)
         {
             Contracts.AssertValue(info);
-            Contracts.Assert(info.BackingKind is DKind.String or DKind.Number or DKind.Boolean or DKind.Color);
+            Contracts.Assert(info.BackingKind is DKind.String or DKind.Number or DKind.Decimal or DKind.Boolean or DKind.Color);
 
             // This is a hotpath. Some scenarios have 10k option sets
             return new DType(DKind.OptionSet, TypeTree.Create(info.OptionNames.Select(on => new KeyValuePair<string, DType>(on, new DType(DKind.OptionSetValue, info)))), info);

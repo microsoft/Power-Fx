@@ -641,6 +641,12 @@ namespace Microsoft.PowerFx.Functions
             return new BooleanValue(irContext, n != 0m);
         }
 
+        public static BooleanValue BooleanOptionSetToBoolean(IRContext irContext, OptionSetValue[] args)
+        {
+            var n = args[0].ExecutionValue;
+            return new BooleanValue(irContext, (bool)n);
+        }
+
         public static FormulaValue DateToDecimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             return DateToDecimal(runner.GetFormattingInfo(), irContext, args[0]);

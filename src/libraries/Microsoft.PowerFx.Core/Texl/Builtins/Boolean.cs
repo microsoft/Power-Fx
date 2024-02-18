@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Syntax;
 
 #pragma warning disable SA1402 // File may only contain a single type
@@ -158,21 +159,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         // Reusing BooleanN strings as they are generic for numbers
         public BooleanWFunction()
-            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanN, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.Decimal)
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanW, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.Decimal)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             // Reusing BooleanN strings as they are generic for numbers
-            yield return new[] { TexlStrings.BooleanNArg1 };
+            yield return new[] { TexlStrings.BooleanWArg1 };
         }
 
         public override bool TryGetParamDescription(string paramName, out string paramDescription)
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return StringResources.TryGet("AboutBooleanN_" + paramName, out paramDescription);
+            return StringResources.TryGet("AboutBooleanW_" + paramName, out paramDescription);
         }
     }
 
@@ -186,14 +187,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         // Reusing BooleanN strings as they are generic for numbers
         public BooleanWFunction_T()
-            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanNT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanWT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             // Reusing BooleanN strings as they are generic for numbers
-            yield return new[] { TexlStrings.BooleanNTArg1 };
+            yield return new[] { TexlStrings.BooleanWTArg1 };
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -216,7 +217,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertNonEmpty(paramName);
 
             // Reusing BooleanN strings as they are generic for numbers
-            return StringResources.TryGet("AboutBooleanNT_" + paramName, out paramDescription);
+            return StringResources.TryGet("AboutBooleanWT_" + paramName, out paramDescription);
         }
     }
 
@@ -229,13 +230,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public BooleanBFunction()
-            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanN, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.Boolean)
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanB, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.Boolean)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.BooleanArg1 };
+            yield return new[] { TexlStrings.BooleanBArg1 };
+        }
+
+        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        {
+            Contracts.AssertNonEmpty(paramName);
+
+            // Reusing BooleanN strings as they are generic for numbers
+            return StringResources.TryGet("AboutBooleanB_" + paramName, out paramDescription);
         }
 
         /// <summary>
@@ -269,7 +278,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.BooleanNTArg1 };
+            yield return new[] { TexlStrings.BooleanBTArg1 };
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -311,6 +320,92 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 return base.CreateIRCallNode(node, context, args, scope);
             }
+        }
+    }
+
+    // Boolean(arg:L)
+    // Corresponding Excel and DAX function: Boolean
+    internal sealed class BooleanLFunction : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public BooleanLFunction()
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanL, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.OptionSetValue)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.BooleanLArg1 };
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+
+            var arg = args[0];
+            var argType = argTypes[0];
+
+            returnType = DType.Boolean;
+
+            return argType.IsOptionSetBackedByBoolean;
+        }
+
+        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        {
+            Contracts.AssertNonEmpty(paramName);
+
+            return StringResources.TryGet("AboutBooleanL_" + paramName, out paramDescription);
+        }
+    }
+
+    // Boolean(E:*[L])
+    // Corresponding Excel and DAX function: Boolean
+    internal sealed class BooleanLFunction_T : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public BooleanLFunction_T()
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanLT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.BooleanLTArg1 };
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            Contracts.Assert(returnType.IsTable);
+
+            var arg = args[0];
+            var argType = argTypes[0];
+
+            // Check first that it is a single column table of option set values.
+            // Next check that the column is not only option sets, but also backed by Booleans.
+            if (CheckColumnType(context, arg, argType, DType.OptionSetValue, errors, ref nodeToCoercedTypeMap) &&
+                argType.TypeTree.GetPairs().First().Value.IsOptionSetBackedByBoolean)
+            {
+                var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
+                returnType = rowType.ToTable();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        {
+            Contracts.AssertNonEmpty(paramName);
+
+            return StringResources.TryGet("AboutBooleanLT_" + paramName, out paramDescription);
         }
     }
 
