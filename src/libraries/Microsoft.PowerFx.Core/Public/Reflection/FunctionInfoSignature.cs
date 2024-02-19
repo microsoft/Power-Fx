@@ -29,21 +29,25 @@ namespace Microsoft.PowerFx
 
         public string[] GetParameterNames(CultureInfo culture = null)
         {
-            culture ??= CultureInfo.InvariantCulture;
-            var localeName = culture.Name;
-
-            List<string> result = new List<string>();
-
-            foreach (var param in _paramNames)
-            {
-                var name = param(localeName);
-                result.Add(name);
-            }
-
-            return result.ToArray();
+            var parameters = GetParameters(culture);
+            return Array.ConvertAll(parameters, p => p.Name);
         }
 
-        internal ParameterInfoSignature[] GetParameters(CultureInfo culture = null)
+        // The invariant parameter name is used to lookup the parameter help in the resource. 
+        // TexlFunction will point to a Resource for the parameter name:
+        //  <data name="SequenceArg1"><value>records</></>
+        //
+        // And then that name (in en-us) is used as another resource key to get parameter help description:
+        //  <data name="AboutSequence_records" >
+        //     <value>Number of records in the single column table with name "Value". Maximum 50,000.</value>
+        //  </data>
+        internal static string GetInvariantParameterName(TexlStrings.StringGetter p)
+        {
+            string invariantParamName = p("en-US");
+            return invariantParamName;
+        }
+
+        public ParameterInfoSignature[] GetParameters(CultureInfo culture = null)
         {
             culture ??= CultureInfo.InvariantCulture;
             var localeName = culture.Name;
@@ -54,7 +58,7 @@ namespace Microsoft.PowerFx
             {
                 string unalterableName = p(localeName);
 
-                string invariantParamName = p("en-US");
+                string invariantParamName = GetInvariantParameterName(p);
 
                 // We should allow passing in culture to get the help text. 
                 // https://github.com/microsoft/Power-Fx/issues/2216
