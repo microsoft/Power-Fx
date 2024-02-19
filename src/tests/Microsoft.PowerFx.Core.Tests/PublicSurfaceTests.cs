@@ -39,6 +39,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.FormulaWithParameters",
                 "Microsoft.PowerFx.FunctionInfo",
                 "Microsoft.PowerFx.FunctionInfoSignature",
+                "Microsoft.PowerFx.ParameterInfoSignature",
                 "Microsoft.PowerFx.NameCollisionException",
                 "Microsoft.PowerFx.OptionSet",
                 "Microsoft.PowerFx.ParseResult",

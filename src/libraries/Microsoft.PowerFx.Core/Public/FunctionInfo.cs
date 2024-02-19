@@ -93,6 +93,18 @@ namespace Microsoft.PowerFx
         }
     }
 
+    // ParameterInfo may have been a better name, but that conflicts with a type
+    // in Microsoft.PowerFx.Core.Functions.TransportSchemas. 
+    [DebuggerDisplay("{Name}: {Description}")]
+    public class ParameterInfoSignature
+    {
+        public string Name { get; init;  }
+
+        public string Description { get; init; }
+
+        // More fields, like optional? default value?, etc.
+    }
+
     /// <summary>
     /// Represent a possible signature for a <see cref="FunctionInfo"/>.
     /// </summary>
@@ -119,6 +131,33 @@ namespace Microsoft.PowerFx
             {
                 var name = param(localeName);
                 result.Add(name);
+            }
+
+            return result.ToArray();
+        }
+
+        internal ParameterInfoSignature[] GetParameters(CultureInfo culture = null)
+        {
+            culture ??= CultureInfo.InvariantCulture;
+            var localeName = culture.Name;
+
+            List<ParameterInfoSignature> result = new List<ParameterInfoSignature>();
+
+            foreach (var p in _paramNames)
+            {
+                string unalterableName = p(localeName);
+                
+                string invariantParamName = p("en-US");
+
+                // We should allow passing in culture to get the help text. 
+                // https://github.com/microsoft/Power-Fx/issues/2216
+                _parent._fnc.TryGetParamDescription(invariantParamName, out var description);
+                
+                result.Add(new ParameterInfoSignature
+                {
+                    Name = unalterableName,
+                    Description = description
+                });
             }
 
             return result.ToArray();
