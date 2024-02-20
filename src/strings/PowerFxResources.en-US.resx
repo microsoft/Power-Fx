@@ -4476,9 +4476,4 @@
     <value>A table whose rows will be appended to the resulting table.</value>
     <comment>Description of function parameter to TableConcatenate function</comment>
   </data>
-
-  <data name="ErrorDelegationTableNotSupported" xml:space="preserve">
-    <value>This operation {0} on table '{1}' is not supported</value>
-    <comment>Delegation not supported error message.</comment>
-  </data>
 </root>
