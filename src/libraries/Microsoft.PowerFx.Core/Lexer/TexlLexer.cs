@@ -352,6 +352,18 @@ namespace Microsoft.PowerFx.Syntax
         {
             Contracts.AssertValue(text);
 
+            // In case of empty string script and TextFirst is active, returns a list of tokens representing an empty string.
+            if (text.Length == 0 && flags.HasFlag(Flags.TextFirst))
+            {
+                var span = new Span(0, 0);
+                return new List<Token>
+                {
+                    new StrInterpStartToken(span, true),
+                    new StrInterpEndToken(span, true),
+                    new EofToken(span)
+                };
+            }
+
             var tokens = new List<Token>();
             StringBuilder sb = null;
 

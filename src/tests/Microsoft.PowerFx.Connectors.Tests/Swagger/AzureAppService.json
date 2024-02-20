@@ -1,0 +1,477 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2019-12-01",
+    "title": "Azure App Service",
+    "description": "Azure App Service connector allows you to manage app services and server farms in your subscription.",
+    "x-ms-api-annotation": {
+      "status": "Production"
+    },
+    "contact": {
+      "name": "Microsoft",
+      "url": "https://azure.microsoft.com/support/"
+    }
+  },
+  "host": "management.azure.com",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/subscriptions": {
+      "get": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "List subscriptions",
+        "description": "Gets a list of all the subscriptions to which the principal has access.",
+        "operationId": "Subscriptions_List",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ARMApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SubscriptionListResult"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups": {
+      "get": {
+        "tags": [
+          "ResourceGroups"
+        ],
+        "summary": "List resource groups",
+        "description": "Lists all the resource groups within the subscription.",
+        "operationId": "ResourceGroups_List",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ARMApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResourceGroupListResult"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-no-generic-test": true,
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Web/sites": {
+      "get": {
+        "tags": [
+          "WebApps"
+        ],
+        "summary": "List web apps",
+        "description": "Lists all the web apps within the resource group.",
+        "operationId": "WebApps_List",
+        "parameters": [
+          {
+            "$ref": "#/parameters/AppServiceInternalApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/WebAppListResult"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-no-generic-test": true,
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Web/sites/{webAppName}/start": {
+      "post": {
+        "tags": [
+          "WebApps"
+        ],
+        "summary": "Start web app",
+        "description": "Starts a web app.",
+        "operationId": "WebApp_Start",
+        "parameters": [
+          {
+            "$ref": "#/parameters/AppServiceApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/WebAppNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "deprecated": false,
+        "x-ms-no-generic-test": true,
+        "x-ms-visibility": "important"
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Web/sites/{webAppName}/stop": {
+      "post": {
+        "tags": [
+          "WebApps"
+        ],
+        "summary": "Stop web app",
+        "description": "Stops a web app.",
+        "operationId": "WebApp_Stop",
+        "parameters": [
+          {
+            "$ref": "#/parameters/AppServiceApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/WebAppNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "deprecated": false,
+        "x-ms-no-generic-test": true,
+        "x-ms-visibility": "important"
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Web/sites/{webAppName}/restart": {
+      "post": {
+        "tags": [
+          "WebApps"
+        ],
+        "summary": "Restart web app",
+        "description": "Restarts a web app.",
+        "operationId": "WebApp_Restart",
+        "parameters": [
+          {
+            "$ref": "#/parameters/AppServiceApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/parameters/WebAppNameParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "deprecated": false,
+        "x-ms-no-generic-test": true,
+        "x-ms-visibility": "important"
+      }
+    }
+  },
+  "definitions": {
+    "SubscriptionListResult": {
+      "description": "Subscription list operation response.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "The subscriptions.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subscription"
+          }
+        },
+        "nextLink": {
+          "description": "The URL to get the next set of results.",
+          "type": "string",
+          "x-ms-visibility": "advanced",
+          "x-ms-summary": "Next Link"
+        }
+      }
+    },
+    "Subscription": {
+      "description": "Subscription information.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The fully qualified Id.",
+          "type": "string",
+          "readOnly": true,
+          "x-ms-summary": "Id"
+        },
+        "subscriptionId": {
+          "description": "The subscription Id.",
+          "type": "string",
+          "readOnly": true,
+          "x-ms-summary": "Subscription Id"
+        },
+        "tenantId": {
+          "description": "The tenant Id.",
+          "type": "string",
+          "readOnly": true,
+          "x-ms-summary": "Tenant Id"
+        },
+        "displayName": {
+          "description": "The subscription display name.",
+          "type": "string",
+          "readOnly": true,
+          "x-ms-summary": "Display Name"
+        },
+        "state": {
+          "description": "The subscription state.",
+          "enum": [
+            "Enabled",
+            "Warned",
+            "PastDue",
+            "Disabled",
+            "Deleted"
+          ],
+          "type": "string",
+          "readOnly": true,
+          "x-ms-summary": "State",
+          "x-ms-enum": {
+            "name": "SubscriptionState",
+            "modelAsString": false
+          }
+        },
+        "authorizationSource": {
+          "description": "The authorization source of the request. Valid values are one or more combinations of Legacy, RoleBased, Bypassed, Direct and Management. For example, 'Legacy, RoleBased'.",
+          "type": "string",
+          "x-ms-summary": "Authorization Source",
+          "x-ms-visibility": "advanced"
+        }
+      }
+    },
+    "ResourceGroupListResult": {
+      "description": "List of resource groups.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "The list of resource groups.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceGroup"
+          }
+        },
+        "nextLink": {
+          "description": "The URL to get the next set of results.",
+          "type": "string",
+          "readOnly": true,
+          "x-ms-visibility": "advanced",
+          "x-ms-summary": "Next Link"
+        }
+      }
+    },
+    "ResourceGroup": {
+      "description": "Resource group information.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The ID of the resource group.",
+          "type": "string",
+          "readOnly": true,
+          "x-ms-visibility": "advanced",
+          "x-ms-summary": "Id"
+        },
+        "name": {
+          "description": "The Name of the resource group.",
+          "type": "string",
+          "readOnly": true,
+          "x-ms-summary": "Name"
+        },
+        "managedBy": {
+          "description": "Id of the resource that manages this resource group.",
+          "type": "string",
+          "readOnly": true,
+          "x-ms-visibility": "advanced",
+          "x-ms-summary": "Managed By"
+        }
+      }
+    },
+    "WebAppListResult": {
+      "description": "List of web apps.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "The list of web apps.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WebApp"
+          }
+        },
+        "nextLink": {
+          "description": "The URL to get the next set of results.",
+          "type": "string",
+          "readOnly": true,
+          "x-ms-visibility": "advanced",
+          "x-ms-summary": "Next Link"
+        }
+      }
+    },
+    "WebApp": {
+      "description": "Web app information.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The ID of the web app.",
+          "type": "string",
+          "readOnly": true,
+          "x-ms-visibility": "advanced",
+          "x-ms-summary": "Id"
+        },
+        "name": {
+          "description": "The Name of the web app.",
+          "type": "string",
+          "readOnly": true,
+          "x-ms-summary": "Name"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "SubscriptionIdParameter": {
+      "name": "subscriptionId",
+      "in": "path",
+      "description": "Microsoft Azure subscription.",
+      "required": true,
+      "x-ms-summary": "Subscription Id",
+      "x-ms-test-value": "ae43b1e3-c35d-4c8c-bc0d-f148b4c52b78",
+      "x-ms-url-encoding": "single",
+      "x-ms-dynamic-values": {
+        "operationId": "Subscriptions_List",
+        "value-collection": "value",
+        "value-path": "subscriptionId",
+        "value-title": "displayName",
+        "parameters": {
+          "x-ms-api-version": "2020-01-01"
+        }
+      },
+      "type": "string"
+    },
+    "ARMApiVersionParameter": {
+      "name": "x-ms-api-version",
+      "in": "query",
+      "description": "ARM API version",
+      "required": true,
+      "x-ms-test-value": "2020-01-01",
+      "x-ms-visibility": "internal",
+      "x-ms-summary": "API Version",
+      "type": "string",
+      "default": "2020-01-01"
+    },
+    "AppServiceInternalApiVersionParameter": {
+      "name": "x-ms-api-version",
+      "in": "query",
+      "description": "Azure app service API version",
+      "required": true,
+      "x-ms-test-value": "2019-08-01",
+      "x-ms-visibility": "internal",
+      "x-ms-summary": "API Version",
+      "type": "string",
+      "default": "2019-08-01"
+    },
+    "AppServiceApiVersionParameter": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Azure app service API version",
+      "required": true,
+      "x-ms-test-value": "2019-08-01",
+      "x-ms-visibility": "internal",
+      "x-ms-summary": "API Version",
+      "type": "string",
+      "default": "2019-08-01"
+    },
+    "ResourceGroupNameParameter": {
+      "name": "resourceGroupName",
+      "in": "path",
+      "description": "The name of the resource group.",
+      "required": true,
+      "x-ms-test-value": "test-resource-group",
+      "x-ms-url-encoding": "single",
+      "x-ms-dynamic-values": {
+        "operationId": "ResourceGroups_List",
+        "value-collection": "value",
+        "value-path": "name",
+        "value-title": "name",
+        "parameters": {
+          "x-ms-api-version": "2020-01-01",
+          "subscriptionId": {
+            "parameter": "subscriptionId"
+          }
+        }
+      },
+      "x-ms-summary": "Resource Group",
+      "type": "string"
+    },
+    "WebAppNameParameter": {
+      "name": "webAppName",
+      "in": "path",
+      "description": "The name of the web app.",
+      "required": true,
+      "x-ms-test-value": "test-web-app",
+      "x-ms-url-encoding": "single",
+      "x-ms-dynamic-values": {
+        "operationId": "WebApps_List",
+        "value-collection": "value",
+        "value-path": "name",
+        "value-title": "name",
+        "parameters": {
+          "x-ms-api-version": "2019-08-01",
+          "subscriptionId": {
+            "parameter": "subscriptionId"
+          },
+          "resourceGroupName": {
+            "parameter": "resourceGroupName"
+          }
+        }
+      },
+      "x-ms-summary": "Web App",
+      "type": "string"
+    }
+  },
+  "x-ms-connector-metadata": [
+    {
+      "propertyName": "Website",
+      "propertyValue": "https://azure.microsoft.com/en-us/services/app-service/"
+    },
+    {
+      "propertyName": "Privacy policy",
+      "propertyValue": "https://privacy.microsoft.com/"
+    },
+    {
+      "propertyName": "Categories",
+      "propertyValue": "Productivity"
+    }
+  ]
+}

@@ -4,9 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
-using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Tests
@@ -53,21 +54,23 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         internal static TableValue GetTable(RecordValue recordValue) => FormulaValue.NewTable(recordValue.Type, recordValue);
 
-        internal static string SerializeJson(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, IConvertToUTC utcConverter = null) => Serialize<OpenApiJsonSerializer>(parameters, false, utcConverter);
+        internal static async Task<string> SerializeJsonAsync(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, IConvertToUTC utcConverter = null, CancellationToken cancellationToken = default)
+            => await SerializeAsync<OpenApiJsonSerializer>(parameters, false, utcConverter, cancellationToken).ConfigureAwait(false);
 
-        internal static string SerializeUrlEncoder(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, IConvertToUTC utcConverter = null) => Serialize<OpenApiFormUrlEncoder>(parameters, false, utcConverter);
+        internal static async Task<string> SerializeUrlEncoderAsync(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, IConvertToUTC utcConverter = null, CancellationToken cancellationToken = default)
+            => await SerializeAsync<OpenApiFormUrlEncoder>(parameters, false, utcConverter, cancellationToken).ConfigureAwait(false);
 
-        internal static string Serialize<T>(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, bool schemaLessBody, IConvertToUTC utcConverter = null)
+        internal static async Task<string> SerializeAsync<T>(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, bool schemaLessBody, IConvertToUTC utcConverter = null, CancellationToken cancellationToken = default)
             where T : FormulaValueSerializer
         {
-            var jsonSerializer = (FormulaValueSerializer)Activator.CreateInstance(typeof(T), new object[] { utcConverter, schemaLessBody });
+            var jsonSerializer = (FormulaValueSerializer)Activator.CreateInstance(typeof(T), new object[] { utcConverter, schemaLessBody, cancellationToken });
             jsonSerializer.StartSerialization(null);
 
             if (parameters != null)
             {
                 foreach (var parameter in parameters)
                 {
-                    jsonSerializer.SerializeValue(parameter.Key, parameter.Value.Schema, parameter.Value.Value);
+                    await jsonSerializer.SerializeValueAsync(parameter.Key, parameter.Value.Schema, parameter.Value.Value).ConfigureAwait(false);
                 }
             }
 

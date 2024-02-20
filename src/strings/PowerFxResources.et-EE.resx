@@ -4253,15 +4253,15 @@
     <value>Arvväärtuste tabeliveerg, mis teisendatakse Unicode’i märkideks.</value>
   </data>
   <data name="ErrOnlyPartialAttribute" xml:space="preserve">
-    <value>Unsupported attribute kind</value>
+    <value>Toetuseta atribuudi tüüp</value>
     
   </data>
   <data name="ErrOperationDoesntMatch" xml:space="preserve">
-    <value>All Partial operators on matching named formulas must be the same.</value>
+    <value>Kõik nimega valemitele vastavad tehtemärgid Partial peavad olema samad.</value>
     
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
-    <value>Unknown Partial operator.</value>
+    <value>Tundmatu tehtemärk Partial.</value>
     
   </data>
 </root>

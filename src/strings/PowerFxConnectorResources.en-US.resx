@@ -124,4 +124,8 @@
     <value>This function uses 'binary' format and might not work as expected.</value>
     <comment>A warning message when a function is using binary type.</comment>
   </data>
+  <data name="WarnFunctionUseByte" xml:space="preserve">
+    <value>This function uses 'byte' format and might not work as expected.</value>
+    <comment>A warning message when a function is using byte type.</comment>
+  </data>
 </root>
