@@ -25,10 +25,26 @@ namespace Microsoft.PowerFx.Core.Functions
             }
         }
 
+        internal override bool IsString => false;
+
+        internal override bool IsBase64 => true;
+
+        internal override bool IsByteArray => false;
+
+        internal override byte[] GetAsByteArray()
+        {
+            return FromBase64ToBytes(_base64Str);
+        }        
+
         internal override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
-            return Task.FromResult(FromBase64ToBytes(_base64Str));
+            return Task.FromResult(GetAsByteArray());
+        }
+
+        internal override string GetAsBase64()
+        {
+            return _base64Str;
         }
 
         internal override Task<string> GetAsBase64Async(CancellationToken token)

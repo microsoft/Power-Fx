@@ -29,10 +29,26 @@ namespace Microsoft.PowerFx.Types
 
         public override object ToObject() => this;
 
+        public bool IsString => Content.IsString;
+
+        public bool IsBase64 => Content.IsBase64;
+
+        public bool IsByteArray => Content.IsByteArray;
+
+        public byte[] GetAsByteArray()
+        {
+            return Content.GetAsByteArray();
+        }
+
         public async Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             return await Content.GetAsByteArrayAsync(token).ConfigureAwait(false);
+        }
+
+        public virtual string GetAsString(Encoding encoding)
+        {
+            return Content.GetAsString(encoding);
         }
 
         public virtual async Task<string> GetAsStringAsync(Encoding encoding, CancellationToken token)
@@ -41,10 +57,18 @@ namespace Microsoft.PowerFx.Types
             return await Content.GetAsStringAsync(encoding, token).ConfigureAwait(false);
         }
 
+        public virtual string GetAsBase64()
+        {
+            return Content.GetAsBase64();
+        }
+
         public virtual async Task<string> GetAsBase64Async(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             return await Content.GetAsBase64Async(token).ConfigureAwait(false);
         }
+
+        // Sync apis
+        // IsString, IsBase64, IsByteArray
     }
 }

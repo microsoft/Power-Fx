@@ -18,10 +18,21 @@ namespace Microsoft.PowerFx.Core.Functions
             _encoding = encoding ?? Encoding.UTF8;
         }
 
+        internal override bool IsBase64 => false;
+
+        internal override bool IsByteArray => false;
+
+        internal override bool IsString => true;
+
+        internal override byte[] GetAsByteArray()
+        {
+            return FromStringToBytes(_string, _encoding);
+        }
+
         internal override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();            
-            return Task.FromResult(FromStringToBytes(_string, _encoding));
+            return Task.FromResult(GetAsByteArray());
         }
     }
 }

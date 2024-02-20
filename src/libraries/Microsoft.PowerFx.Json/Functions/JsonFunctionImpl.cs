@@ -274,7 +274,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 public void Visit(BlobValue value)
                 {
-                    if (value.Content is Base64Blob)
+                    if (value.IsBase64)
                     {
                         _writer.WriteStringValue(value.GetAsBase64Async(CancellationToken.None).Result);
                     }

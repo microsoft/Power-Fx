@@ -10,12 +10,30 @@ namespace Microsoft.PowerFx.Core.Functions
 {
     internal abstract class BlobContent
     {
+        internal abstract bool IsString { get; }
+
+        internal abstract bool IsBase64 { get; }
+
+        internal abstract bool IsByteArray { get; }
+
+        internal abstract byte[] GetAsByteArray();
+
         internal abstract Task<byte[]> GetAsByteArrayAsync(CancellationToken token);
+
+        internal virtual string GetAsString(Encoding encoding)
+        {            
+            return FromBytesToString(GetAsByteArray(), encoding);
+        }
 
         internal virtual async Task<string> GetAsStringAsync(Encoding encoding, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             return FromBytesToString(await GetAsByteArrayAsync(token).ConfigureAwait(false), encoding);
+        }
+
+        internal virtual string GetAsBase64()
+        {
+            return FromBytesToBase64(GetAsByteArray());
         }
 
         internal virtual async Task<string> GetAsBase64Async(CancellationToken token)

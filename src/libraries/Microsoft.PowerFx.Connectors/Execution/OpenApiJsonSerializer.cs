@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override async Task WriteBlobValueAsync(BlobValue blobValue)
         {
-            if (blobValue.Content is Base64Blob)
+            if (blobValue.IsBase64)
             {
                 _writer.WriteStringValue(await blobValue.GetAsBase64Async(_cancellationToken).ConfigureAwait(false));
             }
