@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.PowerFx.Core.Functions
+namespace Microsoft.PowerFx.Types
 {
     public abstract class BlobContent
     {
