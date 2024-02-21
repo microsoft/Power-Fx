@@ -115,3 +115,11 @@ Error({Kind:ErrorKind.Numeric})
 
 >> JSON([{a:1,b:[2]},{a:3,b:[4,5]},{a:6,b:[7,1/0,9]}])
 Error({Kind:ErrorKind.Div0})
+
+// Blank records
+>> JSON([{a:1},Blank(),{a:3}])
+"[{""a"":1},null,{""a"":3}]"
+
+// Error records
+>> JSON(Filter([-2,-1,0,1,2], 1/Value>0))
+Error({Kind:ErrorKind.Div0})
