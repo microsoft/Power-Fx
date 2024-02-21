@@ -117,7 +117,7 @@ Error({Kind:ErrorKind.Numeric})
 Error({Kind:ErrorKind.Div0})
 
 // Blank records
->> JSON([{a:1},Blank(),{a:3}])
+>> JSON(Table({a:1},Blank(),{a:3}))
 "[{""a"":1},null,{""a"":3}]"
 
 // Error records
