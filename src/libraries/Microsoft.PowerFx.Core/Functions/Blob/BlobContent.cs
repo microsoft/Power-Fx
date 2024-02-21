@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
-    internal abstract class BlobContent
+    public abstract class BlobContent
     {
-        internal abstract Task<byte[]> GetAsByteArrayAsync(CancellationToken token);
+        public abstract Task<byte[]> GetAsByteArrayAsync(CancellationToken token);
 
-        internal virtual async Task<string> GetAsStringAsync(Encoding encoding, CancellationToken token)
+        public virtual async Task<string> GetAsStringAsync(Encoding encoding, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             return FromBytesToString(await GetAsByteArrayAsync(token).ConfigureAwait(false), encoding);
         }
 
-        internal virtual async Task<string> GetAsBase64Async(CancellationToken token)
+        public virtual async Task<string> GetAsBase64Async(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             return FromBytesToBase64(await GetAsByteArrayAsync(token).ConfigureAwait(false));

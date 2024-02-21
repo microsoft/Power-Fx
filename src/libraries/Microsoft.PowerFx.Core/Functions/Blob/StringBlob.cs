@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Functions
             _encoding = encoding ?? Encoding.UTF8;
         }
 
-        internal override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
+        public override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();            
             return Task.FromResult(FromStringToBytes(_string, _encoding));
