@@ -161,7 +161,7 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.True(checkResult.IsSuccess);
 
             var evalResult = checkResult.GetEvaluator().Eval();
-            Assert.True(evalResult is ErrorValue);
+            Assert.IsType<ErrorValue>(evalResult);
             Assert.Equal(ErrorKind.Div0, (evalResult as ErrorValue).Errors.First().Kind);
         }
 
