@@ -158,5 +158,10 @@ namespace Microsoft.PowerFx.Types
         {
             return new BlobValue(new ByteArrayBlob(bytes));
         }
+
+        public static BlobValue NewBlob(BlobContent content)
+        {
+            return new BlobValue(content);
+        }
     }
 }

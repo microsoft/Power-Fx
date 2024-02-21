@@ -4,6 +4,7 @@
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
@@ -18,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Functions
             _encoding = encoding ?? Encoding.UTF8;
         }
 
-        internal override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
+        public override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();            
             return Task.FromResult(FromStringToBytes(_string, _encoding));
