@@ -4465,7 +4465,7 @@
       It's used to determine how to combine multiple expressions with the same name and operator.</comment>
   </data>
   <data name="AboutTableConcatenate" xml:space="preserve">
-    <value>Creates a new table by combining the all the rows from the specified input tables.</value>
+    <value>Creates a new table by combining all the rows from the specified input tables.</value>
     <comment>Description of 'TableConcatenate' function.</comment>
   </data>
   <data name="TableConcatenateArg1" xml:space="preserve">
