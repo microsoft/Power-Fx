@@ -5,6 +5,7 @@ using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
@@ -19,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Functions
             _data = data;
         }
 
-        internal override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
+        public override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -28,13 +29,13 @@ namespace Microsoft.PowerFx.Core.Functions
             return Task.FromResult(copy);
         }
 
-        internal override Task<string> GetAsStringAsync(Encoding encoding, CancellationToken token)
+        public override Task<string> GetAsStringAsync(Encoding encoding, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             return Task.FromResult(FromBytesToString(_data, encoding));
         }
 
-        internal override Task<string> GetAsBase64Async(CancellationToken token)
+        public override Task<string> GetAsBase64Async(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             return Task.FromResult(FromBytesToBase64(_data));
