@@ -355,12 +355,35 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("RenameColumns([{A:\"hello\",B:1}], \"A\", \"B\")")]
         [InlineData("RenameColumns([{A:\"hello\",B:1}], A, A1, A, A2)")]
         [InlineData("RenameColumns(true, A, A1)")]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], '', X)")]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], ' ' X)")]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], '\r\n', X)")]
+        [InlineData("RenameColumns([{A:\"hello\",B:1}], A, '')")]
         public void TexlFunctionTypeSemanticsRenameColumns_Negative(string expression)
         {
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(expression);
 
             Assert.False(result.IsSuccess);
+        }
+
+        [Fact]
+        public void CheckParseSuccess()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+
+            // var parse = engine.Parse("If(Len(x) = 0, y, x)");
+            var parse = engine.Parse("If(Len(x) = 0, x, y)");
+
+            var r = RecordType.Empty()
+                .Add(new NamedFormulaType("x", FormulaType.String))
+                .Add(new NamedFormulaType("y", FormulaType.UntypedObject));
+
+            var check = engine.Check(parse, r);
+            Assert.True(check.IsSuccess);
+
+            Assert.IsType<StringType>(check.ReturnType);
         }
 
         [Theory]

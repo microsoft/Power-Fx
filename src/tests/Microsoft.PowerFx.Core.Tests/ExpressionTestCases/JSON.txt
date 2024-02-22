@@ -123,3 +123,25 @@ Error({Kind:ErrorKind.Div0})
 // Error records
 >> JSON(Filter([-2,-1,0,1,2], 1/Value>0))
 Error({Kind:ErrorKind.Div0})
+
+// Unwrapped tables
+>> JSON([1, 2, 3], JSONFormat.UnwrapValueTables)
+"[1,2,3]"
+
+>> JSON({a:["one", "two"]}, JSONFormat.UnwrapValueTables)
+"{""a"":[""one"",""two""]}"
+
+>> JSON([true, false, true], JSONFormat.UnwrapValueTables)
+"[true,false,true]"
+
+// Only unwrap single-column tables where the column name is 'Value'
+>> JSON([{a:1}, {a:2}], JSONFormat.UnwrapValueTables)
+"[{""a"":1},{""a"":2}]"
+
+// No difference between blank records and blank values
+>> JSON([{Value:1},Blank(),{Value:3},{Value:Blank()},{Value:5}], JSONFormat.UnwrapValueTables)
+"[1,null,3,null,5]"
+
+// Unwrapping nested tables
+>> JSON([[1,2,3],[4,5],[6]], JSONFormat.UnwrapValueTables)
+"[[1,2,3],[4,5],[6]]"
