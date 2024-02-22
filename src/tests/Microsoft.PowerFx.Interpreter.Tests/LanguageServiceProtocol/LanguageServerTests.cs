@@ -1624,6 +1624,26 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             }
         }
 
+        // Test the overload with Fx2NLParameters
+        private class TestNLHandler2 : TestNLHandler
+        {
+            public override async Task<CustomFx2NLResult> Fx2NLAsync(CheckResult check, Fx2NLParameters hints, CancellationToken cancel)
+            {
+                var sb = new StringBuilder();
+                sb.Append(hints?.UsageHints?.ControlName);
+                sb.Append("; ");
+                sb.Append(hints?.UsageHints?.ControlKind);
+
+                sb.Append("; ");
+                sb.Append(hints?.UsageHints?.PropertyName);
+
+                return new CustomFx2NLResult
+                {
+                    Explanation = sb.ToString()
+                }; 
+            }
+        }
+
         private static string NL2FxMessageJson(string documentUri)
         {
             return JsonSerializer.Serialize(new
@@ -1879,6 +1899,46 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             // result has expected concat with symbols. 
             Assert.Equal("Score > 3: True: sentence", response.Result.Explanation);
+        }
+
+        [Fact]
+        public void TestFx2NLUsageHints()
+        {
+            var documentUri = "powerfx://app?context=1";
+            var expectedExpr = "sentence";
+
+            var engine = new Engine();
+            var symbols = new SymbolTable();
+            symbols.AddVariable("Score", FormulaType.Number);
+            var editor = new EditorContextScope(engine, null, symbols)
+            {
+                UsageHints = new UsageHints
+                {
+                     ControlKind = "Button",
+                     ControlName = "MyButton",
+                     PropertyName = "Select"
+                }
+            };
+
+            var dict = new Dictionary<string, EditorContextScope>
+            {
+                { documentUri, editor }
+            };
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => dict[documentUri]);
+
+            var testNLHandler = new TestNLHandler2 { Expected = expectedExpr };
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory, new TestNlHandlerFactory(testNLHandler));
+
+            List<Exception> exList = new List<Exception>();
+            testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
+
+            testServer.OnDataReceived(FX2NlMessageJson(documentUri));
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcFx2NLResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("123", response.Id);
+
+            // result has expected concat with symbols. 
+            Assert.Equal("MyButton; Button; Select", response.Result.Explanation);
         }
 
         [Fact]
