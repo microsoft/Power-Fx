@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using static Microsoft.PowerFx.LanguageServerProtocol.LanguageServer;
 
@@ -30,11 +31,19 @@ namespace Microsoft.PowerFx
     }
 
     /// <summary>
+    /// Additional methods to get Fx2NL context.
+    /// </summary>
+    public interface IPowerFxScopeFx2NL : IPowerFxScope
+    {
+        Fx2NLParameters GetFx2NLParameters();
+    }
+
+    /// <summary>
     /// Implement a<see cref="IPowerFxScope"/> for intellisense on top of an<see cref="Engine"/> instance.
     ///  A scope is the context for a specific formula bar. 
     ///  This includes helpers to aide in customizing the editing experience. 
     /// </summary>
-    public sealed class EditorContextScope : IPowerFxScope
+    public sealed class EditorContextScope : IPowerFxScope, IPowerFxScopeFx2NL
     {        
         // List of handlers to get code-fix suggestions. 
         // Key is CodeFixHandler.HandlerName
@@ -44,6 +53,10 @@ namespace Microsoft.PowerFx
         // The checkResult has all other context (parser options, symbols, engine, etc)
         // This captures the critical invariant: EditorContextScope corresponds to a formula bar where the user just types text, all other context is provided; 
         private readonly Func<string, CheckResult> _getCheckResult;
+
+        // Host can set optional hints about where this expression is used. 
+        // This can feed into Fx2NL and other help services. 
+        public UsageHints UsageHints { get; init; }
 
         internal EditorContextScope(
             Engine engine,
@@ -198,6 +211,14 @@ namespace Microsoft.PowerFx
 
                 handler.OnCodeActionApplied(codeAction.ActionResultContext.ActionIdentifier);
             }            
+        }
+
+        public Fx2NLParameters GetFx2NLParameters()
+        {
+            return new Fx2NLParameters
+            {
+                 UsageHints = this.UsageHints
+            };
         }
     }
 }
