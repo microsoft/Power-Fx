@@ -3,11 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using Microsoft.PowerFx.Core.Binding;
+using System.Text;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Texl;
@@ -85,6 +85,41 @@ namespace Microsoft.PowerFx.Syntax
                 parseResult.NamedFormulas);
 
             return true;
+        }
+
+        /// <summary>
+        /// Process user script and returns user defined functions and named formulas.
+        /// </summary>
+        /// <param name="script">User script containing UDFs and/or named formulas.</param>
+        /// <param name="parseCulture">CultureInfo to parse the script.</param>
+        /// <param name="features">Features.</param>
+        /// <returns>Tuple.</returns>
+        /// <exception cref="InvalidOperationException">Throw if the user script contains errors.</exception>
+        public static UserDefinitionResult Process(string script, CultureInfo parseCulture, Features features = null)
+        {
+            var options = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                Culture = parseCulture ?? CultureInfo.InvariantCulture
+            };
+
+            var sb = new StringBuilder();
+
+            ProcessUserDefinitions(script, options, out var userDefinitionResult, features);
+
+            if (userDefinitionResult.HasErrors)
+            {
+                sb.AppendLine("Something went wrong when parsing named formulas and/or user defined functions.");
+
+                foreach (var error in userDefinitionResult.Errors)
+                {
+                    error.FormatCore(sb);
+                }
+
+                throw new InvalidOperationException(sb.ToString());
+            }
+
+            return userDefinitionResult;
         }
 
         private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, out List<TexlError> errors)

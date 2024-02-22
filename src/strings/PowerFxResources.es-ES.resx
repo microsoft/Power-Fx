@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Valor de fecha que se ajustará por el número de meses especificado.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Número de meses durante los cuales se cambiará la fecha. Un valor positivo genera una fecha futura; un valor negativo, una fecha pasada; y el cero no cambiará el mes.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Devuelve el último día del mes para una fecha especificada, ajustado por varios meses.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Valor de fecha que se ajustará por el número de meses especificado.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Número de meses por los cuales se cambiará la fecha. Un valor positivo genera una fecha futura; un valor negativo, una fecha pasada; y el cero no cambiará el mes.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Trunca el "número" redondeando hacia el infinito negativo.</value>
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>La función JSON no puede serializar los datos binarios en una expresión que no es de comportamiento.</value>    
+    <value>La función JSON no puede serializar los datos binarios en una expresión que no es de comportamiento.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>El parámetro {0} contiene una propiedad de tipo {1} que no se admite.</value>
@@ -4251,5 +4251,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Columna de tabla de valores numéricos que se convertirán en caracteres Unicode.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Tipo de atributo no admitido</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Todos los operadores Partial en fórmulas con nombre coincidentes deben ser iguales.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Operador Partial desconocido.</value>
+    
   </data>
 </root>

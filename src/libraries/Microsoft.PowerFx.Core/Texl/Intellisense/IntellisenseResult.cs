@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Intellisense
                             // We need to change the highlight information if the argument should be highlighted, but
                             // otherwise we still want to collect parameter information
                             var unalteredParamName = signature[signatureIndex]();
-                            var invariantParamName = signature[signatureIndex]("en-US");
+                            var invariantParamName = FunctionInfoSignature.GetInvariantParameterName(signature[signatureIndex]);
                             (var paramName, var parameterHighlightStart, var parameterHighlightEnd, var funcParamDescription) = GetParameterHighlightAndDescription(data, unalteredParamName, invariantParamName, funcDisplayString);
                             parameters.Add(new ParameterInformation()
                             {
