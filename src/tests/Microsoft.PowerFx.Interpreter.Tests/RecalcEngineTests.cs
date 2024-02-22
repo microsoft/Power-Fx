@@ -1100,7 +1100,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("Text(TestEnum.Choice1)", true)]
         [InlineData("\"Label: \" & TestEnum.Choice1", true)]
         [InlineData("Value(TestEnum.Choice1)", true)]
-        [InlineData("TestEnum.Choice1 + 1", true)]
+        [InlineData("TestEnum.Choice1 + 1", false)] // see https://github.com/microsoft/Power-Fx/issues/2229
         [InlineData("Decimal(TestEnum.Choice1)", true)]
         [InlineData("Float(TestEnum.Choice1)", true)]
         [InlineData("Boolean(TestEnum.Choice1)", false)]
