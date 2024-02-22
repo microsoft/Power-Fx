@@ -26,9 +26,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             throw new NotImplementedException();
         }
 
-        public virtual Task<CustomFx2NLResult> Fx2NLAsync(CheckResult check, Fx2NLParameters hints, CancellationToken cancel)
+        [Obsolete("Call overload with Fx2NLParameters")]
+        public virtual Task<CustomFx2NLResult> Fx2NLAsync(CheckResult check, CancellationToken cancel)
         {
             throw new NotImplementedException();
+        }
+        
+        public virtual async Task<CustomFx2NLResult> Fx2NLAsync(CheckResult check, Fx2NLParameters hints, CancellationToken cancel)
+        {
+#pragma warning disable CS0618 // Type or member is obsolete
+            return await Fx2NLAsync(check, cancel).ConfigureAwait(false);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
     }
 

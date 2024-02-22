@@ -31,14 +31,6 @@ namespace Microsoft.PowerFx
     }
 
     /// <summary>
-    /// Additional methods to get Fx2NL context.
-    /// </summary>
-    public interface IPowerFxScopeFx2NL : IPowerFxScope
-    {
-        Fx2NLParameters GetFx2NLParameters();
-    }
-
-    /// <summary>
     /// Implement a<see cref="IPowerFxScope"/> for intellisense on top of an<see cref="Engine"/> instance.
     ///  A scope is the context for a specific formula bar. 
     ///  This includes helpers to aide in customizing the editing experience. 

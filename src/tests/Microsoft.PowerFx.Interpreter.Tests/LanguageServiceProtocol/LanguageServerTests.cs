@@ -1601,7 +1601,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 };
             }
 
+#pragma warning disable CS0672 // Member overrides obsolete member
             public override async Task<CustomFx2NLResult> Fx2NLAsync(CheckResult check, CancellationToken cancel)
+#pragma warning restore CS0672 // Member overrides obsolete member
             {
                 if (this.Throw)
                 {
@@ -1705,10 +1707,12 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => dict[documentUri]);
 
             var testNLHandler = new TestNLHandler { Expected = expectedExpr };
+#pragma warning disable CS0618 // Type or member is obsolete
             var testServer = useFactory ? new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory, new TestNlHandlerFactory(testNLHandler)) : new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory)
             {
                 NL2FxImplementation = testNLHandler
             };
+#pragma warning restore CS0618 // Type or member is obsolete
 
             List<Exception> exList = new List<Exception>();
             testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
@@ -1754,7 +1758,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
 
             // No handler registered
+#pragma warning disable CS0618 // Type or member is obsolete
             Assert.Null(testServer.NL2FxImplementation);
+#pragma warning restore CS0618 // Type or member is obsolete
 
             List<Exception> exList = new List<Exception>();
             testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
