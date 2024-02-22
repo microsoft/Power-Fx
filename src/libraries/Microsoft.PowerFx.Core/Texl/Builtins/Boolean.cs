@@ -343,14 +343,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-
-            var arg = args[0];
             var argType = argTypes[0];
+
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap) &&
+                         argType.IsOptionSetBackedByBoolean;
 
             returnType = DType.Boolean;
 
-            return argType.IsOptionSetBackedByBoolean;
+            return fValid;
         }
 
         public override bool TryGetParamDescription(string paramName, out string paramDescription)

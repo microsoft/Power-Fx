@@ -56,8 +56,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction BooleanN_T = _library.Add(new BooleanNFunction_T());
         public static readonly TexlFunction BooleanW = _library.Add(new BooleanWFunction());
         public static readonly TexlFunction BooleanW_T = _library.Add(new BooleanWFunction_T());
-        public static readonly TexlFunction BooleanL = _library.Add(new BooleanLFunction());
-        public static readonly TexlFunction BooleanL_T = _library.Add(new BooleanLFunction_T());
         public static readonly TexlFunction Char = _library.Add(new CharFunction());
         public static readonly TexlFunction CharT = _library.Add(new CharTFunction());
         public static readonly TexlFunction Clock24 = _library.Add(new IsClock24Function());
@@ -258,6 +256,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction OptionsSetInfo = _featureGateFunctions.Add(new OptionSetInfoFunction());
         public static readonly TexlFunction UTCNow = _featureGateFunctions.Add(new UTCNowFunction());
         public static readonly TexlFunction UTCToday = _featureGateFunctions.Add(new UTCTodayFunction());
+        public static readonly TexlFunction BooleanL = _featureGateFunctions.Add(new BooleanLFunction());
+        public static readonly TexlFunction BooleanL_T = _featureGateFunctions.Add(new BooleanLFunction_T());
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        

@@ -79,26 +79,6 @@
           "Documentation": ""
         }
       ]
-    },
-    {
-      "Label": "Boolean(choice)",
-      "Documentation": "Converts a choice value backed by a boolean to a boolean value.",
-      "Parameters": [
-        {
-          "Label": "choice",
-          "Documentation": ""
-        }
-      ]
-    },
-    {
-      "Label": "Boolean(input)",
-      "Documentation": "Converts a column of choice values backed by booleans to a column of boolean values.",
-      "Parameters": [
-        {
-          "Label": "input",
-          "Documentation": ""
-        }
-      ]
     }
   ],
   "ActiveSignature": 0,
