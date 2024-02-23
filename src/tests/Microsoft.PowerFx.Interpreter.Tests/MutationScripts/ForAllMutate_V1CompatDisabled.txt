@@ -81,11 +81,11 @@ Table({Value:1})
 
 // ForAll should execute the collect, exactly once
 >> ForAll(t4,Collect(t5,{Value:8.1}))
-Table({Value:8.1})
+Table({Value:Table({Value:1},{Value:8.1})})
 
 // With shouldn execute the collect, exactly once
 >> With(First(t4),Collect(t5,{Value:8.2}))
-{Value:8.2}
+Table({Value:1},{Value:8.1},{Value:8.2})
 
 >> 2;t5
 Table({Value:1},{Value:8.1},{Value:8.2})

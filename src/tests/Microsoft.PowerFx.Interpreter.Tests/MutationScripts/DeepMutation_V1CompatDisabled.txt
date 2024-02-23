@@ -58,7 +58,7 @@ Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value
 {Value:Table({Value:1},{Value:2},{Value:3})}
 
 >> Collect( cb.Value, {Value:9})
-Table({Value:9})
+Table({Value:1},{Value:2},{Value:3},{Value:9})
 
 >> cb
 {Value:Table({Value:1},{Value:2},{Value:3},{Value:9})}
@@ -67,7 +67,7 @@ Table({Value:9})
 {Value:Table({Value:4},{Value:5},{Value:6})}
 
 >> Collect( cc.Value, {Value:8} )
-Table({Value:8})
+Table({Value:4},{Value:5},{Value:6},{Value:8})
 
 >> cc
 {Value:Table({Value:4},{Value:5},{Value:6},{Value:8})}
@@ -79,10 +79,10 @@ Table({Value:8})
 {Value:Table({Value:4},{Value:5},{Value:6})}
 
 >> Collect( cd.Value, {Value:10})
-Table({Value:10})
+Table({Value:1},{Value:2},{Value:3},{Value:10})
 
 >> Collect( ce.Value, {Value:16})
-Table({Value:16})
+Table({Value:4},{Value:5},{Value:6},{Value:16})
 
 >> cd
 {Value:Table({Value:1},{Value:2},{Value:3},{Value:10})}
@@ -352,7 +352,7 @@ Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value
 {d:Table({Value:1},{Value:2},{Value:3})}
 
 >> Collect( dba.a.b.c.d, {Value:9} )
-Table({Value:9})
+Table({Value:1},{Value:2},{Value:3},{Value:9})
 
 >> dba
 {a:{b:{c:{d:Table({Value:1},{Value:2},{Value:3},{Value:9})}}}}
@@ -367,7 +367,7 @@ Table({Value:9})
 {d:Table({Value:1},{Value:2},{Value:3})}
 
 >> Collect( dbb.c.d, {Value:8} )
-Table({Value:8})
+Table({Value:1},{Value:2},{Value:3},{Value:8})
 
 >> dba // after dbb
 {a:{b:{c:{d:Table({Value:1},{Value:2},{Value:3},{Value:9})}}}}
@@ -382,7 +382,7 @@ Table({Value:8})
 {d:Table({Value:1},{Value:2},{Value:3})}
 
 >> Collect( dbc.d, {Value:7})
-Table({Value:7})
+Table({Value:1},{Value:2},{Value:3},{Value:7})
 
 >> dba // after dbc
 {a:{b:{c:{d:Table({Value:1},{Value:2},{Value:3},{Value:9})}}}}
@@ -397,7 +397,7 @@ Table({Value:7})
 {d:Table({Value:1},{Value:2},{Value:3})}
 
 >> Collect( dbd.d, {Value: 11})
-Table({Value:11})
+Table({Value:1},{Value:2},{Value:3},{Value:11})
 
 >> dba // after dbd
 {a:{b:{c:{d:Table({Value:1},{Value:2},{Value:3},{Value:9})}}}}

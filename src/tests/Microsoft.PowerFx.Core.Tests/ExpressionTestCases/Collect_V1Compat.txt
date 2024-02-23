@@ -29,3 +29,18 @@ Errors: Error 8-15: The value passed to the 'Collect' function cannot be changed
 
 >> Collect("", "")
 Errors: Error 0-15: The function 'Collect' has some invalid arguments.|Error 8-10: Invalid argument type (Text). Expecting a Table value instead.|Error 12-14: Invalid argument type. Cannot use Text values in this context.|Error 8-10: The value passed to the 'Collect' function cannot be changed.
+
+>> IsBlank(Collect(t1, Blank()))
+true
+
+>> Collect(t1, r2, r2)
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Collect(t1, r2, 1; 2; r2)
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Collect(t1, Table(r2,r2))
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Collect(t1, Table(r2,r2), {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})

@@ -1,0 +1,47 @@
+#SETUP: disable:PowerFxV1CompatibilityRules
+// Cases to test how shortcut verification work along with behavior functions
+
+>> Set( t1, [1,2] )
+Table({Value:1},{Value:2})
+
+>> IfError(1,Last(Collect(t1,{Value:3})).Value)
+1
+
+>> 1;t1
+Table({Value:1},{Value:2})
+
+>> IfError(1/0,Last(Collect(t1,{Value:3})).Value)
+3
+
+>> 2;t1
+Table({Value:1},{Value:2},{Value:3})
+
+>> IfError(1/0,Last(Collect(t1,{Value:4})).Value,1/0,Last(Collect(t1,{Value:5})).Value)
+4
+
+>> 3;t1
+Table({Value:1},{Value:2},{Value:3},{Value:4})
+
+>> IfError(1/0,Last(Collect(t1,{Value:5})).Value,1/0,Last(Collect(t1,{Value:6})).Value,Last(Collect(t1,{Value:7})).Value)
+5
+
+>> 4;t1
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5})
+
+>> IfError(1,Last(Collect(t1,{Value:5})).Value,1/0,Last(Collect(t1,{Value:6})).Value,Last(Collect(t1,{Value:7})).Value)
+6
+
+>> 5;t1
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5},{Value:6})
+
+>> IfError(1,Last(Collect(t1,{Value:5})).Value,2,Last(Collect(t1,{Value:6})).Value,Last(Collect(t1,{Value:7})).Value)
+7
+
+>> 6;t1
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5},{Value:6},{Value:7})
+
+>> IfError(1,Last(Collect(t1,{Value:5})).Value,2,Last(Collect(t1,{Value:6})).Value)
+2
+
+>> 7;t1
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5},{Value:6},{Value:7})

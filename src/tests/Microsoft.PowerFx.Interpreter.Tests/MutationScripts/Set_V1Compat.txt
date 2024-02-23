@@ -1,3 +1,4 @@
+#SETUP: PowerFxV1CompatibilityRules
 
 // Tests for Set/Clear/Patch/Remove with Copy-on-Write semantics
 

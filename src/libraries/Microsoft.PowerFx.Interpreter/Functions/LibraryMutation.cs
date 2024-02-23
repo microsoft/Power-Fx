@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -13,29 +14,30 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    internal class CollectImpl : CollectFunction, IAsyncTexlFunction3
+    internal class CollectImpl : CollectFunction, IAsyncTexlFunction5
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            return await new CollectProcess().Process(irContext, args, cancellationToken).ConfigureAwait(false);
+            return await new CollectProcess().Process(runtimeServiceProvider, irContext, args, cancellationToken).ConfigureAwait(false);
         }
     }
 
-    internal class CollectScalarImpl : CollectScalarFunction, IAsyncTexlFunction3
+    internal class CollectScalarImpl : CollectScalarFunction, IAsyncTexlFunction5
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            return await new CollectProcess().Process(irContext, args, cancellationToken).ConfigureAwait(false);
+            return await new CollectProcess().Process(runtimeServiceProvider, irContext, args, cancellationToken).ConfigureAwait(false);
         }
     }
 
     internal class CollectProcess
     {
-        internal async Task<FormulaValue> Process(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        internal async Task<FormulaValue> Process(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
             FormulaValue arg0;
             var argc = args.Length;
             var returnIsTable = irContext._type.IsTable;
+            var features = runtimeServiceProvider.GetService<Features>();
 
             // Need to check if the Lazy first argument has been evaluated since it may have already been
             // evaluated in the ClearCollect case.
@@ -113,6 +115,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     resultRows.Add(await tableValue.AppendAsync(singleColumnRecord, cancellationToken).ConfigureAwait(false));
                 }
+            }
+
+            if (!features.PowerFxV1CompatibilityRules)
+            {
+                return tableValue;
             }
 
             if (resultRows.Count == 0)
