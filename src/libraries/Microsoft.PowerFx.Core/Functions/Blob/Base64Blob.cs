@@ -4,6 +4,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
@@ -25,13 +26,13 @@ namespace Microsoft.PowerFx.Core.Functions
             }
         }
 
-        internal override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
+        public override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             return Task.FromResult(FromBase64ToBytes(_base64Str));
         }
 
-        internal override Task<string> GetAsBase64Async(CancellationToken token)
+        public override Task<string> GetAsBase64Async(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             return Task.FromResult(_base64Str);
