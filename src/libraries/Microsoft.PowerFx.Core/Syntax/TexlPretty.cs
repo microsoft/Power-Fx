@@ -400,7 +400,7 @@ namespace Microsoft.PowerFx.Syntax
                 .With(result)
                 .With(" ", TexlLexer.PunctuatorBracketClose);
 
-            return ApplyPrecedence(parentPrecedence, Precedence.SingleExpr, result);
+            return result;            
         }
 
         public virtual string GetRightToken(TexlNode leftNode, Identifier right)
