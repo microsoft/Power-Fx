@@ -132,6 +132,39 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.Equal("The JSON function cannot serialize tables / objects with a nested property called 'Property' of type 'Record'.", result.Errors.First().Message);
         }
 
+        [Fact]
+        public void Json_Handles_Null_Records()
+        {
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            config.EnableJsonFunctions();
+
+            var engine = new RecalcEngine(config);
+
+            var checkResult = engine.Check("JSON([{a:1},Blank(),{a:3}])");
+
+            Assert.True(checkResult.IsSuccess);
+
+            var evalResult = checkResult.GetEvaluator().Eval();
+            Assert.Equal("[{\"a\":1},null,{\"a\":3}]", (evalResult as StringValue).Value);
+        }
+
+        [Fact]
+        public void Json_Handles_Error_Records()
+        {
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            config.EnableJsonFunctions();
+
+            var engine = new RecalcEngine(config);
+
+            var checkResult = engine.Check("JSON(Filter(Sequence(5,-2), 1/Value > 0))");
+
+            Assert.True(checkResult.IsSuccess);
+
+            var evalResult = checkResult.GetEvaluator().Eval();
+            Assert.IsType<ErrorValue>(evalResult);
+            Assert.Equal(ErrorKind.Div0, (evalResult as ErrorValue).Errors.First().Kind);
+        }
+
         public class LazyRecordValue : RecordValue
         {
             private readonly int _i;
