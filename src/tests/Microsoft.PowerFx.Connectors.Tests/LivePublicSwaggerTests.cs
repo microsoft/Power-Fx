@@ -11,13 +11,23 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Validations;
+using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
     public class LivePublicSwaggerTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public LivePublicSwaggerTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact(Skip = "These APIs are rate limited and HTTP error 429 is possible")]
         public async Task RealTest()
         {
@@ -30,7 +40,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // "https://api.apis.guru/v2/specs/weatherbit.io/2.0.0/swagger.json"
             // "https://www.weatherbit.io/static/swagger.json"
 
-            OpenApiDocument doc = await ReadSwaggerFromUrl(swaggerUrl).ConfigureAwait(false);
+            OpenApiDocument doc = await ReadSwaggerFromUrl(swaggerUrl, _output).ConfigureAwait(false);
 
             // No BaseAdress specified, we'll use the 1st HTTPS one found in the swagger file
             using var client = new HttpClient(); // public auth             
@@ -72,13 +82,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Note that these APIs are rate limited and HTTP error 429 is possible
             var swaggerUrl = "https://api.apis.guru/v2/specs/math.tools/1.5/openapi.json";
 
-            OpenApiDocument doc = await ReadSwaggerFromUrl(swaggerUrl).ConfigureAwait(false);
+            OpenApiDocument doc = await ReadSwaggerFromUrl(swaggerUrl, _output).ConfigureAwait(false);
 
             // Here we specify the BaseAddress
             using var client = new HttpClient() { BaseAddress = new Uri("https://api.math.tools") };
 
             // FailOnUnknownExtension in connectorsettings is set to false (default) as this swagger uses some extensions we don't honnor like x-apisguru-categories, x-origin, x-providerName
-            var funcs = config.AddActionConnector(new ConnectorSettings("Math"), doc); 
+            var funcs = config.AddActionConnector(new ConnectorSettings("Math"), doc);
 
             var engine = new RecalcEngine(config);
             var expr = "Math.numbersbasebinary(632506623)";
@@ -129,7 +139,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // https://date.nager.at/       
             var swaggerUrl = "https://date.nager.at/swagger/v3/swagger.json";
 
-            OpenApiDocument doc = await ReadSwaggerFromUrl(swaggerUrl).ConfigureAwait(false);
+            OpenApiDocument doc = await ReadSwaggerFromUrl(swaggerUrl, _output).ConfigureAwait(false);
             using var client = new HttpClient() { BaseAddress = new Uri("https://date.nager.at") };
             var funcs = config.AddActionConnector("Holiday", doc);
 
@@ -143,7 +153,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(ok, string.Join(", ", check.Errors.Select(er => er.Message)));
 
             var runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Holiday", client));
-            FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);            
+            FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
 
             if (result is ErrorValue ev)
             {
@@ -173,8 +183,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public async Task RealTest4()
         {
             var config = new PowerFxConfig();
-            OpenApiDocument docXkcd = await ReadSwaggerFromUrl(@"https://api.apis.guru/v2/specs/xkcd.com/1.0.0/openapi.json").ConfigureAwait(false);
-            OpenApiDocument docWorldTime = await ReadSwaggerFromUrl(@"https://api.apis.guru/v2/specs/worldtimeapi.org/20210108/openapi.json").ConfigureAwait(false);
+            OpenApiDocument docXkcd = await ReadSwaggerFromUrl(@"https://api.apis.guru/v2/specs/xkcd.com/1.0.0/openapi.json", _output).ConfigureAwait(false);
+            OpenApiDocument docWorldTime = await ReadSwaggerFromUrl(@"https://api.apis.guru/v2/specs/worldtimeapi.org/20210108/openapi.json", _output).ConfigureAwait(false);
 
             using var clientXkcd = new HttpClient() { BaseAddress = new Uri(@"http://xkcd.com/") };
             using var clientWorldTime = new HttpClient() { BaseAddress = new Uri(@"http://worldtimeapi.org/api/") };
@@ -182,7 +192,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var funcsWorldTime = config.AddActionConnector(new ConnectorSettings("WorldTime"), docWorldTime);
 
             var engine = new RecalcEngine(config);
-            var runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Xkcd", clientXkcd).Add("WorldTime", clientWorldTime));                                                   
+            var runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Xkcd", clientXkcd).Add("WorldTime", clientWorldTime));
 
             FormulaValue fv1 = await engine.EvalAsync(@"Xkcd.comicIdinfo0json(1).transcript", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             string transcript = ((StringValue)fv1).Value.Replace("\n", "\r\n");
@@ -201,7 +211,7 @@ Boy: I wonder where I'll float next?
         public async Task FailOnUnknownExtensionTest()
         {
             var config = new PowerFxConfig();
-            OpenApiDocument docXkcd = await ReadSwaggerFromUrl(@"https://api.apis.guru/v2/specs/xkcd.com/1.0.0/openapi.json").ConfigureAwait(false);
+            OpenApiDocument docXkcd = await ReadSwaggerFromUrl(@"https://api.apis.guru/v2/specs/xkcd.com/1.0.0/openapi.json", _output).ConfigureAwait(false);
 
             IReadOnlyList<ConnectorFunction> funcsXkcd = config.AddActionConnector(new ConnectorSettings("Xkcd") { FailOnUnknownExtension = true }, docXkcd);
 
@@ -216,21 +226,41 @@ Boy: I wonder where I'll float next?
             Assert.Equal(string.Empty, info0json2.NotSupportedReason);
         }
 
-        // Get a swagger file from the embedded resources. 
-        private static async Task<OpenApiDocument> ReadSwaggerFromUrl(string url)
+        [Fact]
+        public void DadJokesDirectTest()
         {
-            using var http = new HttpClient();
-            using (var stream = await http.GetStreamAsync(new Uri(url)).ConfigureAwait(false))
+            var config = new PowerFxConfig();
+            using var testConnector = new LoggingTestServer(@"Swagger\DadJokes.json", _output);
+            var apiDoc = testConnector._apiDocument;
+        }
+
+        // Get a swagger file from the embedded resources. 
+        private static async Task<OpenApiDocument> ReadSwaggerFromUrl(string url, ITestOutputHelper output)
+        {
+            using HttpClient http = new HttpClient();
+            using Stream stream = await http.GetStreamAsync(new Uri(url)).ConfigureAwait(false);         
+            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = ConnectorFunction.DefaultValidationRuleSet };
+            ReadResult rr = await new OpenApiStreamReader(oars).ReadAsync(stream, CancellationToken.None).ConfigureAwait(false);
+            OpenApiDiagnostic diag = rr.OpenApiDiagnostic;
+            OpenApiDocument doc = rr.OpenApiDocument;
+
+            if (diag != null && diag.Errors.Count > 0)
             {
-                var doc = new OpenApiStreamReader().Read(stream, out OpenApiDiagnostic diag);
-
-                if ((doc == null || doc.Paths == null || doc.Paths.Count == 0) && diag != null && diag.Errors.Count > 0)
+                foreach (OpenApiError error in diag.Errors)
                 {
-                    throw new InvalidDataException($"Unable to parse Swagger file: {string.Join(", ", diag.Errors.Select(err => err.Message))}");
+                    if (error is OpenApiValidatorError vError)
+                    {
+                        output.WriteLine($"[OpenApi Error] {vError.RuleName} {vError.Pointer} {vError.Message}");
+                    }
+                    else
+                    {
+                        // Could be OpenApiError or OpenApiReferenceError
+                        output.WriteLine($"[OpenApi Error] {error.Pointer} {error.Message}");
+                    }
                 }
-
-                return doc;
             }
+
+            return doc;
         }
     }
 }

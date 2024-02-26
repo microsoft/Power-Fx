@@ -298,11 +298,10 @@ namespace Microsoft.PowerFx.Interpreter
             }
 
             var tableValue = arg0 as TableValue;
-            var recordValue = arg1 as RecordValue;
-            var recordValueCopy = FormulaValue.NewRecordFromFields(recordValue.Fields);
+            var recordValueToAppend = (RecordValue)arg1.MaybeShallowCopy();
 
             cancellationToken.ThrowIfCancellationRequested();
-            var result = await tableValue.AppendAsync(recordValueCopy, cancellationToken).ConfigureAwait(false);
+            var result = await tableValue.AppendAsync(recordValueToAppend, cancellationToken).ConfigureAwait(false);
 
             return result.ToFormulaValue();
         }

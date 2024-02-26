@@ -6,13 +6,13 @@
 // b) it's verified nobody is actually using the return value.
 
 >> If(1<0, "abc1", {x:3})
-If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+If(true, {test:1}, "Void value (result of the expression can't be used).")
 
 >> If(1>0, 100; 30, {x:3}; 60) + 1
 31
 
 >> If(1<0, "abc2", {x:3}; {x:2})
-If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+If(true, {test:1}, "Void value (result of the expression can't be used).")
 
 >> If(false, "abc3", {x:3}; If(true, Value(10); {x:3})); Value(101)
 101
@@ -64,7 +64,7 @@ Errors: Error 0-41: The function 'IsBlankOrError' has some invalid arguments.|Er
 Errors: Error 11-34: Invalid argument type.|Error 0-36: The function 'IsNumeric' has some invalid arguments.
 
 >> If( true, With({a:1},Switch(a, 1, { prop:"complex" }, "scalar")) )
-If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+If(true, {test:1}, "Void value (result of the expression can't be used).")
 
 >> If( true, With({a:1},Switch(a, 1, 1/0, { prop:"complex" })) )
 Error({Kind:ErrorKind.Div0})

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
@@ -43,6 +44,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected abstract void WriteStringValue(string stringValue);
 
+        protected abstract Task WriteBlobValueAsync(BlobValue blobValue);
+
         protected abstract void WriteBooleanValue(bool booleanValue);
 
         protected abstract void WriteDateTimeValue(DateTime dateTimeValue);
@@ -60,12 +63,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _utcConverter = utcConverter;
         }
 
-        internal void SerializeValue(string paramName, OpenApiSchema schema, FormulaValue value)
+        internal async Task SerializeValueAsync(string paramName, OpenApiSchema schema, FormulaValue value)
         {
-            WriteProperty(paramName, schema, value);
+            await WritePropertyAsync(paramName, schema, value).ConfigureAwait(false);
         }
 
-        private void WriteObject(string objectName, OpenApiSchema schema, IEnumerable<NamedValue> fields)
+        private async Task WriteObjectAsync(string objectName, OpenApiSchema schema, IEnumerable<NamedValue> fields)
         {
             StartObject(objectName);
 
@@ -82,20 +85,20 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
                     if (schema.Required.Contains(property.Key))
                     {
-                        throw new NotImplementedException($"Missing property {property.Key}, object is too complex or not supported");
+                        throw new PowerFxConnectorException($"Missing property {property.Key}, object is too complex or not supported");
                     }
 
                     continue;
                 }
 
-                WriteProperty(property.Key, property.Value, namedValue.Value);
+                await WritePropertyAsync(property.Key, property.Value, namedValue.Value).ConfigureAwait(false);
             }
 
             if (!schema.Properties.Any() && fields.Any())
             {
                 foreach (NamedValue nv in fields)
                 {
-                    WriteProperty(
+                    await WritePropertyAsync(
                         nv.Name,
                         new OpenApiSchema()
                         {
@@ -111,14 +114,14 @@ namespace Microsoft.PowerFx.Connectors.Execution
                                 _ => "unknown_dkind"
                             }
                         },
-                        nv.Value);
+                        nv.Value).ConfigureAwait(false);
                 }
             }
 
             EndObject(objectName);
         }
 
-        private void WriteProperty(string propertyName, OpenApiSchema propertySchema, FormulaValue fv)
+        private async Task WritePropertyAsync(string propertyName, OpenApiSchema propertySchema, FormulaValue fv)
         {
             if (fv is BlankValue || fv is ErrorValue)
             {
@@ -127,7 +130,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
             if (propertySchema == null)
             {
-                throw new ArgumentException($"Missing schema for property {propertyName}");
+                throw new PowerFxConnectorException($"Missing schema for property {propertyName}");
             }
 
             // if connector has null as a type but "array" is provided, let's write it down. this is possible in case of x-ms-dynamic-properties
@@ -143,19 +146,19 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     // If we have an object schema, we will try to follow it
                     if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
                     {
-                        WriteProperty(null, propertySchema.Items, rva);
+                        await WritePropertyAsync(null, propertySchema.Items, rva).ConfigureAwait(false);
                         continue;
                     }
 
                     // Else, we write primitive types only
                     if (rva.Fields.Count() != 1)
                     {
-                        throw new ArgumentException($"Incompatible Table for supporting array, RecordValue has more than one column - propertyName {propertyName}, number of fields {rva.Fields.Count()}");
+                        throw new PowerFxConnectorException($"Incompatible Table for supporting array, RecordValue has more than one column - propertyName {propertyName}, number of fields {rva.Fields.Count()}");
                     }
 
                     if (rva.Fields.First().Name != "Value")
                     {
-                        throw new ArgumentException($"Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName {propertyName}");
+                        throw new PowerFxConnectorException($"Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName {propertyName}");
                     }
 
                     WriteValue(rva.Fields.First().Value);
@@ -169,7 +172,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 case "null":
                     // nullable
-                    throw new NotImplementedException($"null schema type not supported yet for property {propertyName}");
+                    throw new PowerFxConnectorException($"null schema type not supported yet for property {propertyName}");
 
                 case "number":
                     // float, double                    
@@ -185,7 +188,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     }
                     else
                     {
-                        throw new ArgumentException($"Expected NumberValue (number) and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
+                        throw new PowerFxConnectorException($"Expected NumberValue (number) and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
                     }
 
                     break;
@@ -199,7 +202,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     }
                     else
                     {
-                        throw new ArgumentException($"Expected BooleanValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
+                        throw new PowerFxConnectorException($"Expected BooleanValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
                     }
 
                     break;
@@ -218,7 +221,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     }
                     else
                     {
-                        throw new ArgumentException($"Expected NumberValue (integer) and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
+                        throw new PowerFxConnectorException($"Expected NumberValue (integer) and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
                     }
 
                     break;
@@ -243,16 +246,20 @@ namespace Microsoft.PowerFx.Connectors.Execution
                         }
                         else
                         {
-                            throw new NotImplementedException($"Unknown {propertySchema.Format} format");
+                            throw new PowerFxConnectorException($"Unknown {propertySchema.Format} format");
                         }
                     }
                     else if (fv is DateValue dv)
                     {
                         WriteDateValue(dv.GetConvertedValue(null));
                     }
+                    else if (fv is BlobValue bv)
+                    {                        
+                        await WriteBlobValueAsync(bv).ConfigureAwait(false);                                                
+                    }
                     else
                     {
-                        throw new ArgumentException($"Expected StringValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
+                        throw new PowerFxConnectorException($"Expected StringValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
                     }
 
                     break;
@@ -263,17 +270,17 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 case "object":
                     if (fv is RecordValue recordValue)
                     {
-                        WriteObject(propertyName, propertySchema, recordValue.Fields);
+                        await WriteObjectAsync(propertyName, propertySchema, recordValue.Fields).ConfigureAwait(false);
                     }
                     else
                     {
-                        throw new NotImplementedException($"Expected to get {propertySchema?.Type ?? "record"} for property {propertyName} but got {fv?.GetType().Name}");
+                        throw new PowerFxConnectorException($"Expected to get {propertySchema?.Type ?? "record"} for property {propertyName} but got {fv?.GetType().Name}");
                     }
 
                     break;
 
                 default:
-                    throw new NotImplementedException($"Not supported property type {propertySchema?.Type ?? "<null>"} for property {propertyName}");
+                    throw new PowerFxConnectorException($"Not supported property type {propertySchema?.Type ?? "<null>"} for property {propertyName}");
             }
         }
 
@@ -311,7 +318,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 }
                 else
                 {
-                    throw new NotImplementedException($"Unknown {dtv.Type._type.Kind} kind");
+                    throw new PowerFxConnectorException($"Unknown {dtv.Type._type.Kind} kind");
                 }
             }
             else if (value is DateValue dv)
@@ -320,7 +327,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             }
             else
             {
-                throw new NotImplementedException($"Not supported type {value.GetType().FullName} for value");
+                throw new PowerFxConnectorException($"Not supported type {value.GetType().FullName} for value");
             }
         }
     }

@@ -133,6 +133,16 @@ namespace Microsoft.PowerFx.Core.Utils
                     }
                 }
 
+                // !!! This is a tactical fix for the case where we have a boolean option set and a boolean value.
+                // PA allows this but we don't. We should remove this once we have a better way to handle this.
+                if (dsNameType.IsOptionSet && 
+                    DType.Boolean.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) &&
+                    type.CoercesTo(dsNameType, out _, aggregateCoercion: false, isTopLevelCoercion: false, features))
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
+                    isValid = false;
+                }
+
                 if ((!dsNameType.Accepts(type, out var schemaDifference, out var schemaDifferenceType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) &&
                      !DType.Number.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) &&
                      !DType.Decimal.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)) &&                    

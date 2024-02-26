@@ -402,8 +402,8 @@
     <value>열의 새 이름입니다.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>지정된 열 '{0}'의 이름을 두 번 바꿀 수 없습니다.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>테이블에서 지정된 모든 조건이 true인 행을 반환합니다.</value>
@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>지정된 개월 수만큼 조정할 날짜 값입니다.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>날짜를 변경할 개월 수입니다. 양수 값은 미래 날짜, 음수 값은 과거 날짜가 되며 0은 월을 그대로 유지합니다.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>지정된 날짜의 월 마지막 날을 월 단위로 조정하여 반환합니다.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>지정된 개월 수만큼 조정할 날짜 값입니다.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;날짜를 변경할 개월 수입니다. 양수 값은 미래 날짜, 음수 값은 과거 날짜가 되며 0은 월을 그대로 유지합니다.</value>
-         
+    <value>날짜를 변경할 개월 수입니다. 양수 값은 미래 날짜, 음수 값은 과거 날짜가 되며 0은 월을 그대로 유지합니다.</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>음의 무한대로 반올림하여 '숫자'를 자릅니다.</value>
@@ -1704,6 +1704,38 @@
     <value>구분 기호</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>입력되지 않은 레코드의 열 이름을 열거하고 반환합니다.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>레코드</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>레코드를 클릭하여 열을 열거합니다.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>열 이름이 주어지면 유형이 지정되지 않은 레코드의 속성 값을 반환합니다.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>레코드</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>열_이름</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>열 값을 검색할 레코드입니다.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>검색할 레코드의 열 이름입니다.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>제공된 값이 지정된 형식인 경우 true를 반환합니다.</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>잘못된 인수 형식({1})입니다. 대신 {0} 값이 필요합니다.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>이 컨텍스트에서는 무효 표현식을 사용할 수 없습니다.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>이름이 '{0}'인 필드가 이 레코드에서 두 번 이상 지정되었습니다.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>지정된 열 '{0}'의 이름을 두 번 바꿀 수 없습니다.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>이름이 '{0}'인 열이 두 번 이상 지정되었습니다.</value>
     
@@ -2370,35 +2402,52 @@
     <value>잘못된 json 포인터입니다.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>없음</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>텍스트</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>논리</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>테이블</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>동작</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>날짜 및 시간</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>수학 및 통계</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>사용자가 정의함</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>정보</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>색</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>서비스</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>구성 요소</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -2765,7 +2814,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>열을 제거할 테이블 값입니다.</value>
+    <value>열을 제거할 테이블 또는 레코드 값입니다.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>유지할 열의 이름입니다.</value>
@@ -3802,10 +3851,6 @@
     <value>이 기능은 사용되지 않으며 더 이상 지원되지 않습니다.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>네임스페이스 {1}에서 {0} 함수가 더 이상 사용되지 않습니다.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>네임스페이스 {1}에서 {0} 함수가 지원되지 않습니다.</value>
     
@@ -4134,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON 함수는 비동작 표현식으로 바이너리 데이터를 직렬화할 수 없습니다.</value>    
+    <value>JSON 함수는 비동작 표현식으로 바이너리 데이터를 직렬화할 수 없습니다.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>매개 변수 {0}에 지원되지 않는 {1} 유형의 속성이 포함되어 있습니다.</value>
@@ -4175,6 +4220,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>테이블에 텍스트 형식의 열이 없습니다.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>'.' 기호는 더 이상 사용되지 않습니다. 대신 'ShowColumns' 함수를 사용하세요.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**통지: **AI가 생성한 콘텐츠에는 실수가 있을 수 있습니다. 사용하기 전에 정확하고 적절한지 확인하세요. [약관 참조](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>주어진 숫자 값이 참조하는 유니코드 문자를 반환합니다.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>유니코드 문자로 변환할 숫자 값입니다.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>숫자</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>숫자 값 테이블을 유니코드 문자 테이블로 변환합니다.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>열_수</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>유니코드 문자로 변환할 숫자 값의 테이블 열입니다.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>지원되지 않는 특성 종류</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>일치하는 명명된 수식의 모든 Partial 연산자는 동일해야 합니다.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>알 수 Partial 연산자.</value>
     
   </data>
 </root>

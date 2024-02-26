@@ -1,4 +1,6 @@
-﻿>> Set(x, { v :1 , t: [1,2,3]})
+﻿#SETUP: PowerFxV1CompatibilityRules
+
+>> Set(x, { v :1 , t: [1,2,3]})
 {t:Table({Value:1},{Value:2},{Value:3}),v:1}
 
 >> 0;x.t
@@ -69,3 +71,18 @@ Table({a:1,b:1},{a:2,b:2})
 
 >> Collect(partialT1, {a:3});Last(partialT1).b
 Blank()
+
+>> Set(r, {Value:5})
+{Value:5}
+
+>> 0;Set(t, [1,2,3,4])
+Table({Value:1},{Value:2},{Value:3},{Value:4})
+
+>> Collect(t, r); Patch(t, Last(t), {Value:-1}); r
+{Value:5}
+
+>> 1;Set(t, [1,2,3,4])
+Table({Value:1},{Value:2},{Value:3},{Value:4})
+
+>> With({r:{Value:5}}, Collect(t, r); Patch(t, Last(t), {Value:-1}); r)
+{Value:5}

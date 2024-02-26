@@ -2246,7 +2246,7 @@ namespace Microsoft.PowerFx.Core.Binding
         {
             // We generate a transient CallNode (with no arguments) to the Concatenate function
             var func = BuiltinFunctionsCore.Concatenate;
-            var ident = new IdentToken(func.Name, node.Token.Span);
+            var ident = new IdentToken(func.Name, node.Token.Span, isNonSourceIdentToken: true);
             var id = node.Id;
             var listNodeId = 0;
             var minChildId = node.MinChildID;
@@ -3465,13 +3465,6 @@ namespace Microsoft.PowerFx.Core.Binding
                         currentControl != null && currentControl != lhsControlInfo)
                     {
                         SetDottedNameError(node, TexlStrings.ErrInvalidPropertyReference);
-                        return;
-                    }
-
-                    // Explicitly block access to design properties referenced via Selected/AllItems.
-                    if (leftControl.IsDataLimitedControl && property.PropertyCategory != PropertyRuleCategory.Data)
-                    {
-                        SetDottedNameError(node, TexlStrings.ErrNotAccessibleInCurrentContext);
                         return;
                     }
 
@@ -5163,15 +5156,19 @@ namespace Microsoft.PowerFx.Core.Binding
 
             private void ValidateSupportedFunction(CallNode node, TexlFunction func)
             {
-                if (func is IHasUnsupportedFunctions sdf && sdf.IsNotSupported)
+                if (func is IHasUnsupportedFunctions sdf)
                 {
-                    if (sdf.IsDeprecated)
-                    {
-                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDeprecatedFunction, func.Name, func.Namespace);
-                    }
-                    else
+                    if (sdf.IsNotSupported)
                     {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Critical, node, TexlStrings.ErrUnsupportedFunction, func.Name, func.Namespace);
+                    }
+
+                    if (sdf.Warnings != null)
+                    {
+                        foreach (ErrorResourceKey erk in sdf.Warnings)
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, erk, func.Name, func.Namespace);
+                        }
                     }
                 }
             }

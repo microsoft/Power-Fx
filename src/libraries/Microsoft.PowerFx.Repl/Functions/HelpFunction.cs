@@ -21,17 +21,17 @@ namespace Microsoft.PowerFx.Repl.Functions
         private readonly PowerFxREPL _repl;
 
         public Help0Function(PowerFxREPL repl)
-                : base("Help", FormulaType.Boolean)
+                : base("Help", FormulaType.Void)
         {
             _repl = repl;
         }
 
-        public async Task<BooleanValue> Execute(CancellationToken cancel)
+        public async Task<VoidValue> Execute(CancellationToken cancel)
         {
             await _repl.HelpProvider.Execute(_repl, cancel)
                 .ConfigureAwait(false);
 
-            return FormulaValue.New(true);
+            return FormulaValue.NewVoid();
         }
     }
 
@@ -43,17 +43,17 @@ namespace Microsoft.PowerFx.Repl.Functions
         private readonly PowerFxREPL _repl;
 
         public Help1Function(PowerFxREPL repl)
-                : base("Help", FormulaType.Boolean, new[] { FormulaType.String })
+                : base("Help", FormulaType.Void, new[] { FormulaType.String })
         {
             _repl = repl;
         }
 
-        public async Task<BooleanValue> Execute(StringValue context, CancellationToken cancel)
+        public async Task<VoidValue> Execute(StringValue context, CancellationToken cancel)
         {
             await _repl.HelpProvider.Execute(_repl, cancel, context.Value)
                 .ConfigureAwait(false);
 
-            return FormulaValue.New(true);
+            return FormulaValue.NewVoid();
         }
     }
 

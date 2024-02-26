@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.OpenApi.Any;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -10,7 +11,7 @@ namespace Microsoft.PowerFx.Connectors
     /// <summary>
     /// Base class for all dynamic classes.
     /// </summary>
-    internal class ConnectionDynamicApi
+    internal class ConnectorDynamicApi : SupportsConnectorErrors
     {
         /// <summary>
         /// Normalized operation id.
@@ -26,7 +27,17 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Mapping table for parameters, between parameters of current function and the dynamic one being called.
         /// </summary>
-        public Dictionary<string, IConnectorExtensionValue> ParameterMap;        
+        public Dictionary<string, IConnectorExtensionValue> ParameterMap;
+
+        internal ConnectorDynamicApi(OpenApiObject openApiObject)
+        {
+            ParameterMap = OpenApiExtensions.GetParameterMap(openApiObject, this, true);            
+        }
+
+        internal ConnectorDynamicApi(string error)
+            : base(error)
+        {
+        }
     }
 
     /// <summary>

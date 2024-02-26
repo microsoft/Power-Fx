@@ -402,8 +402,8 @@
     <value>Novi naziv stupca.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Navedeni stupac "{0}" nije moguće dvaput preimenovati.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Vraća retke iz tablice za koje su svi navedeni uvjeti true.</value>
@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Vrijednost datuma koju treba prilagoditi za navedeni broj mjeseci.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Broj mjeseci za koji treba promijeniti datum. Pozitivna vrijednost daje datum u budućnosti, negativna vrijednost datum u prošlosti, a nula neće promijeniti mjesec.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Vraća zadnji dan u mjesecu za određeni datum, prilagođen za broj mjeseci.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Vrijednost datuma koju treba prilagoditi za navedeni broj mjeseci.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Broj mjeseci za koji treba promijeniti datum. Pozitivna vrijednost daje datum u budućnosti, negativna vrijednost datum u prošlosti, a nula neće promijeniti mjesec.</value>
-         
+    <value>Broj mjeseci za koji treba promijeniti datum. Pozitivna vrijednost daje datum u budućnosti, negativna vrijednost datum u prošlosti, a nula neće promijeniti mjesec.</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Skraćuje „broj” zaokruživanjem prema negativnoj beskonačnosti.</value>
@@ -1704,6 +1704,38 @@
     <value>razdjelnik</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Enumerira i vraća nazive stupaca netipiziranog zapisa.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>zapis</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Zapis čiji se stupci trebaju enumerirati.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Vraća vrijednost svojstva netipiziranog zapisa s obzirom na naziv stupca.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>zapis</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>naziv_stupca</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Zapis za dohvaćanje vrijednosti stupca.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Naziv stupca zapisa koji treba dohvatiti.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Vraća true ako je navedena vrijednost odabrane vrste.</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Vrsta argumenta ({1}) nije valjana. Očekuje se vrijednost {0}.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>U tom se kontekstu ne može se upotrijebiti ništetni izraz.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>Polje naziva "{0}" u zapisu je navedeno više puta.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Navedeni stupac "{0}" nije moguće dvaput preimenovati.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Stupac naziva "{0}" naveden je više puta.</value>
     
@@ -2370,35 +2402,52 @@
     <value>JSON pokazivač nije valjan.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Ništa</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Tekst</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logička</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Tablica</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Ponašanje</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Datum i vrijeme</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Matematičke i statističke</value>
+    <value>Matematika i statistika</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Definirao korisnik</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informacije</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Boja</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Servisi</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Komponenta</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3851,6 @@
     <value>Ta je značajka zastarjela i više nije podržana.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>U prostoru naziva {1} funkcija {0} je zastarjela.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>U prostoru naziva {1} funkcija {0} nije podržana.</value>
     
@@ -4134,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Funkcija JSON ne može serijalizirati binarne podatke u izrazu koji nije ponašanje.</value>    
+    <value>Funkcija JSON ne može serijalizirati binarne podatke u izrazu koji nije ponašanje.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parametar {0} sadrži svojstvo vrste {1} koje nije podržano.</value>
@@ -4175,6 +4220,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Tablica ne sadrži nijedan stupac tekstne vrste.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Zastarjela uporaba „.”. Umjesto toga upotrijebite funkciju „ShowColumns”.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Odricanje od odgovornosti:** sadržaj generiran umjetnom inteligencijom može sadržavati pogreške. Prije upotrebe provjerite je li točan i prikladan. [Pogledajte uvjete](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Vraća Unicode znak na koji upućuje zadana numerička vrijednost.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Numerička vrijednost koja će se pretvoriti u Unicode znak.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>broj</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Pretvara tablicu numeričkih vrijednosti u tablicu Unicode znakova.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>stupac_brojeva</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Stupac tablice numeričkih vrijednosti koje će se pretvoriti u Unicode znakove.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Nepodržana vrsta atributa</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Svi operatori Partial moraju biti isti prilikom podudaranja imenovanih formula.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Nepoznati operator Partial.</value>
     
   </data>
 </root>

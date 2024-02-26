@@ -1,0 +1,11 @@
+﻿// (UTC+0:00) London
+#SETUP: TimeZoneInfo("GMT Standard Time")
+
+>> DateValue("2024-10-26")
+Date(2024,10,26)
+
+>> DateValue("2024-10-27")
+Date(2024,10,27)
+
+>> DateValue("2024-03-31")
+Date(2024,3,31)

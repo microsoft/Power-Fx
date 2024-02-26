@@ -5,12 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -263,6 +261,46 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Throws<InvalidOperationException>(() => check.ApplyBinding());
         }
 
+        [Fact]
+        public void GetFunctionInfoTest()
+        {
+            var check = new CheckResult(new Engine())
+                .SetText("Power(3,2)")
+                .SetBindingInfo();
+
+            var node = (CallNode)check.ApplyParse().Root;
+
+            var info = check.GetFunctionInfo(node);
+            
+            Assert.Equal("Power", info.Name);
+            var sigs = info.Signatures.Single();
+            Assert.Equal("Power(base, exponent)", sigs.DebugToString());
+        }
+
+        [Fact]
+        public void GetFunctionInfoTestNull()
+        {
+            var check = new CheckResult(new Engine())
+                .SetText("Power(3,2)")
+                .SetBindingInfo();
+
+            Assert.Throws<ArgumentNullException>(() => check.GetFunctionInfo(null));
+        }
+
+        [Fact]
+        public void GetFunctionMissingTest()
+        {
+            var check = new CheckResult(new Engine())
+                .SetText("Missing(3,2)")
+                .SetBindingInfo();
+
+            var node = (CallNode)check.ApplyParse().Root;
+
+            // No function Info.
+            var info = check.GetFunctionInfo(node);
+            Assert.Null(info);
+        }
+
         [Theory]
         
         // ****When Coercion is not allowed.****
@@ -453,6 +491,11 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("123+", "#$decimal$# + #$error$#", false)] // error 
         [InlineData("123,456", "#$decimal$#", true)] // locales 
         [InlineData("Power(2,3)", "Power(#$decimal$#)", true)] // functions aren't Pii
+
+        // Unkown public function are PII
+        [InlineData("MadeUpFunction(1)", "#$function$#(#$decimal$#)", true)]
+        [InlineData("Power(MadeUpFunction(1))", "Power(#$function$#(#$decimal$#))", true)]
+        [InlineData("Power(Clear(1))", "Power(Clear(#$decimal$#))", true)]
         public void TestApplyGetLogging(string expr, string execptedLog, bool success)
         {
             var check = new CheckResult(new Engine());

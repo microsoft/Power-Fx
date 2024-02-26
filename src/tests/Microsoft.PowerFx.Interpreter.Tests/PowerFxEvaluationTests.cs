@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
@@ -30,11 +29,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         //                    if initPfxConfig is null, PowerFxConfig is created with default settings
         // - parameters: to define the parameters for the test case
         //               receives an 'object' if defined in updatePfxConfig
-        // - configureEngine: to configure the engine
+        // - configureEngine: to configure the engine               
         // Each of these actions are executed in order (init, update, param, configure)
-        internal static Dictionary<string, (Func<PowerFxConfig, PowerFxConfig> initPfxConfig, Func<PowerFxConfig, object> updatePfxConfig, Func<object, RecordValue> parameters, Action<RecalcEngine, bool> configureEngine)> SetupHandlers = new ()
+        internal static Dictionary<string, 
+            (Func<PowerFxConfig, PowerFxConfig> initPfxConfig, 
+             Func<PowerFxConfig, SymbolTable, object> updatePfxConfig, 
+             Func<object, RecordValue> parameters, 
+             Action<RecalcEngine, bool> configureEngine)> SetupHandlers = new ()
         {
             { "AllEnumsSetup", (AllEnumsSetup, null, null, null) },
+            { "Blob", (null, BlobSetup, null, null) },
             { "DecimalSupport", (null, null, null, null) }, // Decimal is enabled in the C# interpreter
             { "EnableJsonFunctions", (null, EnableJsonFunctions, null, null) },
             { "MutationFunctionsTestSetup", (null, null, null, MutationFunctionsTestSetup) },
@@ -44,27 +48,44 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             { "TraceSetup", (null, null, null, TraceSetup) }
         };
 
-        private static object EnableJsonFunctions(PowerFxConfig config)
+        private static object EnableJsonFunctions(PowerFxConfig config, SymbolTable symbolTable)
         {
             config.EnableJsonFunctions();
             return null;
         }
 
-        private static object RegExSetup(PowerFxConfig config)
+        private static object RegExSetup(PowerFxConfig config, SymbolTable symbolTable)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
             config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
 #pragma warning restore CS0618 // Type or member is obsolete
 
             return null;
+        }       
+
+        private static object BlobSetup(PowerFxConfig config, SymbolTable symbolTable)
+        {
+            config.AddBlobTestFunctions();
+            config.EnableSetFunction();
+
+            return new List<(ISymbolSlot slot, FormulaValue value)>()
+            { 
+                AddBlankVar(symbolTable, FormulaType.Blob, "blob", true),
+                AddBlankVar(symbolTable, FormulaType.String, "str", true)
+            };
+        }
+
+        private static (ISymbolSlot slot, FormulaValue value) AddBlankVar(SymbolTable symbolTable, FormulaType type, string varName, bool mutable)
+        {
+            return (symbolTable.AddVariable(varName, type, mutable, varName), FormulaValue.NewBlank(type));
         }
 
         private static PowerFxConfig AllEnumsSetup(PowerFxConfig config)
         {
             return PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet(), config.Features);
         }
-
-        private static object OptionSetTestSetup1(PowerFxConfig config)
+       
+        private static object OptionSetTestSetup1(PowerFxConfig config, SymbolTable symbolTable)
         {
             OptionSet optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -76,7 +97,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     { "is", "Option is low case" }, // Not a reserved word
                     { "self", "Option self low case" }, // Not a keyword
             }));
-            
+
             OptionSet otherOptionSet = new OptionSet("OtherOptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
                     { "99", "OptionA" },
@@ -84,7 +105,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     { "35694", "OptionC" },
                     { "123412983", "OptionD" },
             }));
-            
+
             config.AddOptionSet(optionSet);
             config.AddOptionSet(otherOptionSet);
 
@@ -106,7 +127,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return parameters;
         }
 
-        private static object OptionSetSortTestSetup(PowerFxConfig config)
+        private static object OptionSetSortTestSetup(PowerFxConfig config, SymbolTable symbolTable)
         {
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -373,6 +394,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(await RunVerifyAsync(expr, config, iSetup).ConfigureAwait(false));
                 }
 
+                List<Action<RuntimeConfig>> runtimeConfiguration = new List<Action<RuntimeConfig>>();                
+                SymbolTable symbolTable = new SymbolTable();
+                List<(ISymbolSlot slot, FormulaValue value)> slots = new ();
+
                 if (iSetup.HandlerNames != null && iSetup.HandlerNames.Any())
                 {
                     try
@@ -385,7 +410,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                                 config = k.initPfxConfig(config);
                             }
 
-                            object o = k.updatePfxConfig?.Invoke(config);
+                            object o = k.updatePfxConfig?.Invoke(config, symbolTable);
+
+                            if (o is List<(ISymbolSlot slot, FormulaValue value)> slotList)
+                            {
+                                slots.AddRange(slotList);
+                            }
 
                             if (k.parameters != null)
                             {
@@ -396,14 +426,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                             {
                                 engine ??= new RecalcEngine(config);
                                 k.configureEngine(engine, NumberIsFloat);
-                            }
+                            }                                                     
                         }
 
                         engine ??= new RecalcEngine(config);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        throw new SetupHandlerNotFoundException();
+                        throw new SetupHandlerNotFoundException("Failed in setup handler", ex);
                     }
                 }
                 else
@@ -417,18 +447,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     parameters = RecordValue.Empty();
                 }
 
-                var symbolTable = ReadOnlySymbolTable.NewFromRecord(parameters.Type);
+                var symbolTableFromParams = ReadOnlySymbolTable.NewFromRecord(parameters.Type);
+                var combinedSymbolTable = new ComposedReadOnlySymbolTable(symbolTableFromParams, symbolTable);
 
                 // These tests are only run in en-US locale for now
                 var options = iSetup.Flags.ToParserOptions(new CultureInfo("en-US"));
-                var check = engine.Check(expr, options: options, symbolTable: symbolTable);
+                var check = engine.Check(expr, options: options, symbolTable: combinedSymbolTable);                
                 if (!check.IsSuccess)
                 {
                     return new RunResult(check);
                 }
 
-                var symbolValues = SymbolValues.NewFromRecord(symbolTable, parameters);
-                var runtimeConfig = new RuntimeConfig(symbolValues);
+                Log?.Invoke($"IR: {check.PrintIR()}");
+
+                var symbolValuesFromParams = SymbolValues.NewFromRecord(symbolTableFromParams, parameters);
+                var symbolValues = new SymbolValues(symbolTable);
+                
+                foreach ((ISymbolSlot slot, FormulaValue value) in slots)
+                {
+                    symbolValues.Set(slot, value);                    
+                }
+
+                var composedSymbolValues = SymbolValues.Compose(symbolValuesFromParams, symbolValues);
+                var runtimeConfig = new RuntimeConfig(composedSymbolValues);
 
                 if (iSetup.TimeZoneInfo != null)
                 {
@@ -443,6 +484,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         runtimeConfig.AddService<ITracer>(new Tracer((RecordValue)traceRecord));
                     }
                 }
+
+                foreach (Action<RuntimeConfig> rc in runtimeConfiguration)
+                {
+                    rc(runtimeConfig);
+                }            
 
                 // Ensure tests can run with governor on. 
                 // Some tests that use large memory can disable via:

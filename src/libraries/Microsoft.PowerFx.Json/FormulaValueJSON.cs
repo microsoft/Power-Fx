@@ -6,12 +6,20 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text.Json;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx.Types
 {
+    public class FormulaValueJsonSerializerSettings
+    {
+        public bool NumberIsFloat { get; init; } = false;
+
+        public bool ReturnUnknownRecordFieldsAsUntypedObjects { get; init; } = false;
+    }
+
     public class FormulaValueJSON
     {
         /// <summary>
@@ -19,18 +27,15 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         public static FormulaValue FromJson(string jsonString, FormulaType formulaType = null, bool numberIsFloat = false)
         {
-            try
-            {
-                using JsonDocument document = JsonDocument.Parse(jsonString);
-                JsonElement propBag = document.RootElement;
+            return FromJson(jsonString, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType);
+        }
+      
+        public static FormulaValue FromJson(string jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
+        {
+            using JsonDocument document = JsonDocument.Parse(jsonString);
+            JsonElement propBag = document.RootElement;
 
-                return FromJson(propBag, formulaType, numberIsFloat);
-            }
-            catch
-            {
-                // $$$ better error handling here?
-                throw;
-            }
+            return FromJson(propBag, settings, formulaType);
         }
 
         /// <summary>
@@ -38,9 +43,14 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         /// <param name="element"></param>
         /// <param name="formulaType">Expected formula type. We will check the Json element and formula type match if this parameter is provided.</param>
-        /// <param name="numberIsFloat">Treat JSON numbers as Floats.  By default, they are treated as Decimals.</param>
+        /// <param name="numberIsFloat">Treat JSON numbers as Floats.  By default, they are treated as Decimals.</param>         
         public static FormulaValue FromJson(JsonElement element, FormulaType formulaType = null, bool numberIsFloat = false)
-        {            
+        {
+            return FromJson(element, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType);
+        }
+
+        public static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
+        {
             if (formulaType is UntypedObjectType uot)
             {
                 return UntypedObjectValue.New(new JsonUntypedObject(element.Clone()));
@@ -54,11 +64,11 @@ namespace Microsoft.PowerFx.Types
                     return FormulaValue.NewBlank(formulaType);
 
                 case JsonValueKind.Number:
-                    if ((skipTypeValidation && numberIsFloat) || formulaType is NumberType)
+                    if ((skipTypeValidation && settings.NumberIsFloat) || formulaType is NumberType)
                     {
                         return NumberValue.New(element.GetDouble());
                     }
-                    else if ((skipTypeValidation && !numberIsFloat) || formulaType is DecimalType)
+                    else if ((skipTypeValidation && !settings.NumberIsFloat) || formulaType is DecimalType)
                     {
                         return DecimalValue.New(element.GetDecimal());
                     }
@@ -81,22 +91,26 @@ namespace Microsoft.PowerFx.Types
                     {
                         DateTime dt2 = element.GetDateTime();
 
-                        if (dt2.Kind == DateTimeKind.Local) 
-                        { 
-                            dt2 = dt2.ToUniversalTime(); 
+                        if (dt2.Kind == DateTimeKind.Local)
+                        {
+                            dt2 = dt2.ToUniversalTime();
                         }
 
-                        if (dt2.Kind == DateTimeKind.Unspecified) 
-                        { 
-                            dt2 = new DateTime(dt2.Ticks, DateTimeKind.Utc); 
+                        if (dt2.Kind == DateTimeKind.Unspecified)
+                        {
+                            dt2 = new DateTime(dt2.Ticks, DateTimeKind.Utc);
                         }
 
                         return DateTimeValue.New(dt2);
                     }
                     else if (formulaType is DateTimeNoTimeZoneType)
                     {
-                        DateTime dt3 = element.GetDateTime(); 
+                        DateTime dt3 = element.GetDateTime();
                         return DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3));
+                    }
+                    else if (formulaType is BlobType)
+                    {
+                        return FormulaValue.NewBlob(element.GetBytesFromBase64());
                     }
                     else
                     {
@@ -126,7 +140,7 @@ namespace Microsoft.PowerFx.Types
                 case JsonValueKind.Object:
                     if (skipTypeValidation || formulaType is RecordType)
                     {
-                        return RecordFromJsonObject(element, formulaType as RecordType, numberIsFloat);
+                        return RecordFromJsonObject(element, formulaType as RecordType, settings);
                     }
                     else
                     {
@@ -136,8 +150,8 @@ namespace Microsoft.PowerFx.Types
                 case JsonValueKind.Array:
                     if (skipTypeValidation || formulaType is TableType)
                     {
-                        return TableFromJsonArray(element, formulaType as TableType, numberIsFloat);
-                    }                    
+                        return TableFromJsonArray(element, formulaType as TableType, settings);
+                    }
                     else
                     {
                         throw new NotImplementedException($"Expecting a TableType Json Array but got {formulaType._type.Kind}");
@@ -149,7 +163,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         // Json objects parse to records. 
-        private static RecordValue RecordFromJsonObject(JsonElement element, RecordType recordType, bool numberIsFloat = false)
+        private static InMemoryRecordValue RecordFromJsonObject(JsonElement element, RecordType recordType, FormulaValueJsonSerializerSettings settings)
         {
             Contract.Assert(element.ValueKind == JsonValueKind.Object);
 
@@ -160,14 +174,21 @@ namespace Microsoft.PowerFx.Types
             {
                 var name = pair.Name;
                 var value = pair.Value;
+                FormulaType fieldType = null;
 
-                // if TryGetFieldType fails, fieldType is set to Blank
-                if (recordType?.TryGetFieldType(name, out FormulaType fieldType) != true)
+                if (recordType?.TryGetFieldType(name, out fieldType) == false)
                 {
-                    fieldType = null;
+                    // if we expect a record type and the field is unknown, let's ignore it like in Power Apps
+                    if (!settings.ReturnUnknownRecordFieldsAsUntypedObjects)
+                    {
+                        continue;
+                    }
+
+                    // otherwise return the field as an Untyped Object (as it's not described in the swagger file)
+                    fieldType = FormulaType.UntypedObject;
                 }
 
-                var paValue = FromJson(value, fieldType, numberIsFloat);
+                var paValue = FromJson(value, settings, fieldType);
                 fields.Add(new NamedValue(name, paValue));
                 type = type.Add(new NamedFormulaType(name, paValue.IRContext.ResultType));
             }
@@ -179,7 +200,7 @@ namespace Microsoft.PowerFx.Types
         // Parse json. 
         // [1,2,3]  is a single column table, actually equivalent to: 
         // [{Value : 1, Value: 2, Value :3 }]
-        internal static FormulaValue TableFromJsonArray(JsonElement array, TableType tableType, bool numberIsFloat = false)
+        internal static FormulaValue TableFromJsonArray(JsonElement array, TableType tableType, FormulaValueJsonSerializerSettings settings)
         {
             Contract.Assert(array.ValueKind == JsonValueKind.Array);
 
@@ -194,7 +215,7 @@ namespace Microsoft.PowerFx.Types
             for (var i = 0; i < array.GetArrayLength(); ++i)
             {
                 JsonElement element = array[i];
-                var val = GuaranteeRecord(FromJson(element, ft, numberIsFloat));
+                var val = GuaranteeRecord(FromJson(element, settings, ft));
 
                 records.Add(val);
             }
@@ -213,9 +234,9 @@ namespace Microsoft.PowerFx.Types
                 foreach (var record in records)
                 {
                     typeUnion = DType.Union(
-                        GuaranteeRecord(record).IRContext.ResultType._type, 
-                        typeUnion, 
-                        useLegacyDateTimeAccepts: false, 
+                        GuaranteeRecord(record).IRContext.ResultType._type,
+                        typeUnion,
+                        useLegacyDateTimeAccepts: false,
                         features: Features.None /* Use more strict union rules */);
                 }
 

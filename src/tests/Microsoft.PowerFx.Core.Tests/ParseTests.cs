@@ -500,6 +500,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     Assert.NotNull(node.AsCall().Head);
                     Assert.True(node.AsCall().Head is Identifier);
                     Assert.True((node.AsCall().Head as Identifier).Namespace.IsRoot);
+                    Assert.False(node.AsCall().Head.Token.IsNonSourceIdentToken);
                 });
 
             TestRoundtrip(
@@ -512,6 +513,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     Assert.NotNull(node.AsCall().Head);
                     Assert.True(node.AsCall().Head is Identifier);
                     Assert.False((node.AsCall().Head as Identifier).Namespace.IsRoot);
+                    Assert.False(node.AsCall().Head.Token.IsNonSourceIdentToken);
                     Assert.Equal("Netflix.Services", (node.AsCall().Head as Identifier).Namespace.ToDottedSyntax());
 
                     Assert.NotNull(node.AsCall().HeadNode);

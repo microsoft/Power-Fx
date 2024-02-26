@@ -18,11 +18,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class FileExpressionEvaluationTests : PowerFxTest
     {
-        public readonly ITestOutputHelper Summary;
+        public readonly ITestOutputHelper Console;
 
         public FileExpressionEvaluationTests(ITestOutputHelper output)
         {
-            Summary = output;
+            Console = output;
         }
 
         // File expression tests are run multiple times for the different ways a host can use Power Fx.
@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 ConsistentOneColumnTableResult = true
             };
 
-            RunExpressionTestCase(testCase, features, numberIsFloat: true);
+            RunExpressionTestCase(testCase, features, numberIsFloat: true, Console);
         }
 
         // Canvas currently does not support decimal, but since this interpreter does, we can run tests with decimal here.
@@ -64,14 +64,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 PowerFxV1CompatibilityRules = true,
             };
 
-            RunExpressionTestCase(testCase, features, numberIsFloat: true);
+            RunExpressionTestCase(testCase, features, numberIsFloat: true, Console);
         }
 
         [InterpreterTheory]
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat,DecimalSupport")]
         public void V1_Decimal(ExpressionTestCase testCase)
         {
-            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: false);
+            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: false, Console);
         }
 
         // Although we are using numbers as floats by default, since this interpreter supports decimal, we can run tests with decimal here.        
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InterpreterTheory]
         public void V1_Float(ExpressionTestCase testCase)
         {
-            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: true);
+            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: true, Console);
         }
 
 #if false
@@ -93,13 +93,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 #endif
 
-        private void RunExpressionTestCase(ExpressionTestCase testCase, Features features, bool numberIsFloat)
+        private void RunExpressionTestCase(ExpressionTestCase testCase, Features features, bool numberIsFloat, ITestOutputHelper output)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
             // make sure they build is actually copying them over.
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
-            var runner = new InterpreterRunner() { NumberIsFloat = numberIsFloat, Features = features };
+            var runner = new InterpreterRunner() { NumberIsFloat = numberIsFloat, Features = features, Log = (msg) => output.WriteLine(msg) };
             var (result, msg) = runner.RunTestCase(testCase);
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
@@ -163,12 +163,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 TableSyntaxDoesntWrapRecords = true,
                 ConsistentOneColumnTableResult = true,
-                PowerFxV1CompatibilityRules = true,    // although not in Canvas today, mutation tests assume this semantic, which doesn't conflict with what is being tested
             };
 
-            // disable:CoalesceShortCircuit will force the tests specifically for that behavior to be excluded from this run
+            // disable:CoalesceShortCircuit and disable:PowerFxV1CompatibilityRules will force the tests specifically for those behaviors to be excluded from this run.
             // DecimalSupport allows tests that are written with Float and Decimal functions to operate; it is not itself a feature
-            RunMutationTestFile(file, features, "disable:CoalesceShortCircuit,TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,PowerFxV1CompatibilityRules,DecimalSupport");
+            RunMutationTestFile(file, features, "disable:CoalesceShortCircuit,disable:PowerFxV1CompatibilityRules,TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,DecimalSupport");
         }
 
         private void RunMutationTestFile(string file, Features features, string setup)
@@ -200,7 +199,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
             else
             {
-                Summary.WriteLine(result.Output);
+                Console.WriteLine(result.Output);
             }
         }
 

@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void ACSL_GetFunctionNames()
         {
-            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json", _output);
 
             // OpenAPI spec: Info.Title is required
             Assert.Equal("Azure Cognitive Service for Language", doc.Info.Title);
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void ACSL_GetFunctionNames22()
         {
-            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language v2.2.json");
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language v2.2.json", _output);
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions("ACSL", doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
             ConnectorFunction detectSentimentV3 = functions.First(cf => cf.Name == "DetectSentimentV3");
 
@@ -62,20 +62,20 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void ACSL_Load()
         {
-            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json", _output);
             (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("ACSL"), doc, new ConsoleLogger(_output));
             Assert.Contains(connectorFunctions, func => func.Namespace == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
 
-            ConnectorFunction func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");            
-            Assert.Equal("analysisInput:![documents:*[id:s, language:s, text:s]]|task:![parameters:![deploymentName:s, projectName:s, stringIndexType:s]]", string.Join("|", func1.RequiredParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));            
-            Assert.Equal("displayName:s", string.Join("|", func1.OptionalParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type.ToString()}")));
+            ConnectorFunction func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");
+            Assert.Equal("analysisInput:![documents:*[id:s, language:s, text:s]]|task:![parameters:![deploymentName:s, projectName:s, stringIndexType:s]]", string.Join("|", func1.RequiredParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));
+            Assert.Equal("displayName:s", string.Join("|", func1.OptionalParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));
 
             (connectorFunctions, texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc, new ConsoleLogger(_output));
             Assert.Contains(connectorFunctions, func => func.Namespace == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
 
-            func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");            
+            func1 = connectorFunctions.First(f => f.Name == "AnalyzeTextSubmitJobCustomEntityRecognition");
             Assert.Equal("analysisInput:![documents:*[id:s, language:s, text:s]]|task:![parameters:![deploymentName:s, projectName:s]]", string.Join("|", func1.RequiredParameters.Select(rp => $"{rp.Name}:{rp.FormulaType._type}")));
             Assert.Empty(func1.OptionalParameters);
         }
@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void SF_TextCsv()
         {
-            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SalesForce.json");
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SalesForce.json", _output);
             (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("SF") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc, new ConsoleLogger(_output));
 
             // function returns text/csv
@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void ACSL_GetFunctionParameters_PowerAppsCompatibility()
         {
-            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json", _output);
             ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.PowerAppsCompatibility }, doc).OrderBy(cf => cf.Name).ToList()[14];
 
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
@@ -202,7 +202,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(rt3Name, returnTypeName);
             Assert.True((FormulaType)expectedReturnType == returnType);
 
-            ConnectorType connectorReturnType = function.ConnectorReturnType;
+            ConnectorType connectorReturnType = function.ReturnParameterType;
             Assert.NotNull(connectorReturnType);
             Assert.Equal((FormulaType)expectedReturnType, connectorReturnType.FormulaType);
             Assert.Equal(2, connectorReturnType.Fields.Length);
@@ -212,7 +212,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void ACSL_GetFunctionParameters_SwaggerCompatibility()
         {
-            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json", _output);
             ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, doc).OrderBy(cf => cf.Name).ToList()[14];
 
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
@@ -221,11 +221,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             RecordType analysisInputRecordType = Extensions.MakeRecordType(
                                                                ("conversationItem", Extensions.MakeRecordType(
-                                                                   ("language", FormulaType.String),                                                                   
+                                                                   ("language", FormulaType.String),
                                                                    ("text", FormulaType.String))));
             RecordType parametersRecordType = Extensions.MakeRecordType(
-                                                    ("deploymentName", FormulaType.String),                                                    
-                                                    ("projectName", FormulaType.String),                                                    
+                                                    ("deploymentName", FormulaType.String),
+                                                    ("projectName", FormulaType.String),
                                                     ("verbose", FormulaType.Boolean));
 
             Assert.Equal(2, function.RequiredParameters.Length);
@@ -310,7 +310,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(rt3Name, returnTypeName);
             Assert.True((FormulaType)expectedReturnType == returnType);
 
-            ConnectorType connectorReturnType = function.ConnectorReturnType;
+            ConnectorType connectorReturnType = function.ReturnParameterType;
             Assert.NotNull(connectorReturnType);
             Assert.Equal((FormulaType)expectedReturnType, connectorReturnType.FormulaType);
             Assert.Equal(2, connectorReturnType.Fields.Length);
@@ -320,11 +320,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public async Task ACSL_InvokeFunction()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
             ConsoleLogger logger = new ConsoleLogger(_output);
 
-            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);            
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
             ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, apiDoc).OrderBy(cf => cf.Name).ToList()[14];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:w, offset:w, resolutions:O, text:s], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
@@ -351,7 +351,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             client.Dispose();
             testConnector.Dispose();
 
-            using var testConnector2 = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language.json");
+            using var testConnector2 = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language.json", _output);
             using var httpClient2 = new HttpClient(testConnector2);
             testConnector2.SetResponseFromFile(@"Responses\Azure Cognitive Service for Language_Response.json");
             using PowerPlatformConnectorClient client2 = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient2)
@@ -407,7 +407,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public async Task AzureOpenAiGetFunctions()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Azure Open AI.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Azure Open AI.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
 
             PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
@@ -426,7 +426,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public async Task ACSL_InvokeFunction_v21()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.1.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.1.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
             ConsoleLogger logger = new ConsoleLogger(_output);
 
@@ -575,6 +575,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 Result = value.Value.ToString();
             }
 
+            public void Visit(BlobValue value)
+            {
+                Result = value.Content.GetAsBase64Async(CancellationToken.None).Result;
+            }
+
             private void Visit(IUntypedObject untypedObject)
             {
                 var type = untypedObject.Type;
@@ -636,7 +641,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void LQA_Load()
         {
-            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Language - Question Answering.json");
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Language - Question Answering.json", _output);
             (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("LQA"), doc, new ConsoleLogger(_output));
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "LQA" && func.Name == "GetAnswersFromText");
         }
@@ -644,7 +649,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void SQL_Load()
         {
-            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json", _output);
             (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(new ConnectorSettings("SQL") { IncludeInternalFunctions = true }, doc, new ConsoleLogger(_output));
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "SQL" && func.Name == "GetProcedureV2");
         }
@@ -652,7 +657,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void Dataverse_Sample()
         {
-            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\DataverseSample.json");
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\DataverseSample.json", _output);
             ConnectorFunction[] functions = OpenApiParser.GetFunctions("DV", doc, new ConsoleLogger(_output)).ToArray();
 
             Assert.NotNull(functions);
@@ -704,7 +709,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public void VisibilityTest()
         {
-            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\AzureBlobStorage.json");
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\AzureBlobStorage.json", _output);
             ConnectorFunction[] functions = OpenApiParser.GetFunctions("AzBlob", doc, new ConsoleLogger(_output)).ToArray();
 
             ConnectorFunction createFileV2 = functions.First(f => f.Name == "CreateFileV2");
@@ -718,7 +723,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("dataset", createFileV2.RequiredParameters[0].Name);
             Assert.Equal("folderPath", createFileV2.RequiredParameters[1].Name);
             Assert.Equal("name", createFileV2.RequiredParameters[2].Name);
-            Assert.Equal("body", createFileV2.RequiredParameters[3].Name);
+            Assert.Equal("file", createFileV2.RequiredParameters[3].Name);
+            Assert.Equal(FormulaType.Blob, createFileV2.RequiredParameters[3].FormulaType);
             (0..3).ForAll(i => Assert.Equal(Visibility.None, createFileV2.RequiredParameters[i].ConnectorType.Visibility));
 
             Assert.Equal("queryParametersSingleEncoded", createFileV2.OptionalParameters[0].Name);
@@ -728,21 +734,21 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(Visibility.Advanced, createFileV2.OptionalParameters[1].ConnectorType.Visibility);
             Assert.Equal(Visibility.Internal, createFileV2.OptionalParameters[2].ConnectorType.Visibility);
 
-            Assert.Equal(Visibility.None, createFileV2.ConnectorReturnType.Visibility);
+            Assert.Equal(Visibility.None, createFileV2.ReturnParameterType.Visibility);
 
             ConnectorFunction listFolderV4 = functions.First(f => f.Name == "ListFolderV4");
 
-            Assert.Equal(Visibility.None, listFolderV4.ConnectorReturnType.Visibility);
-            Assert.Equal(Visibility.None, listFolderV4.ConnectorReturnType.Fields[0].Visibility);
-            Assert.Equal(Visibility.Advanced, listFolderV4.ConnectorReturnType.Fields[1].Visibility);
-            Assert.Equal(Visibility.Advanced, listFolderV4.ConnectorReturnType.Fields[2].Visibility);
+            Assert.Equal(Visibility.None, listFolderV4.ReturnParameterType.Visibility);
+            Assert.Equal(Visibility.None, listFolderV4.ReturnParameterType.Fields[0].Visibility);
+            Assert.Equal(Visibility.Advanced, listFolderV4.ReturnParameterType.Fields[1].Visibility);
+            Assert.Equal(Visibility.Advanced, listFolderV4.ReturnParameterType.Fields[2].Visibility);
         }
 
         [Fact]
         public void DynamicReturnValueTest()
         {
             using HttpClient httpClient = new ();
-            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json", _output);
             ConnectorFunction[] functions = OpenApiParser.GetFunctions("SQL", doc, new ConsoleLogger(_output)).ToArray();
 
             ConnectorFunction createFileV2 = functions.First(f => f.Name == "ExecuteProcedureV2");
@@ -797,7 +803,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public async Task DirectIntellisenseTest()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             using var httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4" /* environment Id */, "4bf9a87fc9054b6db3a4d07a1c1f5a5b" /* connectionId */, () => "eyJ0eXAi...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
 
@@ -909,7 +915,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
         [Fact]
         public async Task DataverseTest()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Dataverse.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Dataverse.json", _output);
             using var httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1-shared.azure-apim.net", "Default-9f6be790-4a16-4dd6-9850-44a0d2649aef" /* environment Id */, "461a30624723445c9ba87313d8bbefa3" /* connectionId */, () => "eyJ0eXAiO...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
 
@@ -986,22 +992,28 @@ POST https://tip1-shared.azure-apim.net/invoke
         public async Task DataverseTest2(string swaggerFile)
         {
             PowerFxConfig powerFxConfig = new PowerFxConfig();
-            OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile);
+            OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile, _output);
 
-            OpenApiParser.GetFunctions("namespace", doc);
+            OpenApiParser.GetFunctions("namespace", doc); // missing logger
             powerFxConfig.AddActionConnector("namespace", doc);
         }
 
         [Fact]
         public async Task CardsForPowerApps_Invoke()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\CardsForPowerApps.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\CardsForPowerApps.json", _output);
             using var httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "7592282b-e371-e3f6-8e04-e8f23e64227c" /* environment Id */, "shared-cardsforpower-eafc4fa0-c560-4eba-a5b2-3e1ebc63193a" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
 
             BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
 
-            ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(
+                new ConnectorSettings("DV")
+                {
+                    Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                    ReturnUnknownRecordFieldsAsUntypedObjects = true
+                },
+                testConnector._apiDocument).ToArray();
             ConnectorFunction createCardInstance = functions.First(f => f.Name == "CreateCardInstance");
 
             testConnector.SetResponseFromFile(@"Responses\CardsForPowerApps_CreateCardInstance.json");
@@ -1018,7 +1030,7 @@ POST https://tip1-shared.azure-apim.net/invoke
                 CancellationToken.None).ConfigureAwait(false);
 
             string input = testConnector._log.ToString();
-            Assert.Equal("AdaptiveCard", (((RecordValue)result).GetField("type") as StringValue).Value);
+            Assert.Equal("AdaptiveCard", (((RecordValue)result).GetField("type") as UntypedObjectValue).Impl.GetString());
             Assert.Equal(
                 $@"POST https://tip1002-002.azure-apihub.net/invoke
  authority: tip1002-002.azure-apihub.net
@@ -1038,7 +1050,7 @@ POST https://tip1-shared.azure-apim.net/invoke
         [Fact]
         public async Task CardsForPowerApps_Suggestion()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\CardsForPowerApps.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\CardsForPowerApps.json", _output);
             using var httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "7592282b-e371-e3f6-8e04-e8f23e64227c" /* environment Id */, "shared-cardsforpower-eafc4fa0-c560-4eba-a5b2-3e1ebc63193a" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
 
@@ -1065,7 +1077,7 @@ POST https://tip1-shared.azure-apim.net/invoke
         [Fact]
         public async Task Teams_GetMessageDetails_WithComplexParameterReference()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Teams.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Teams.json", _output);
             using var httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "7592282b-e371-e3f6-8e04-e8f23e64227c" /* environment Id */, "shared-cardsforpower-eafc4fa0-c560-4eba-a5b2-3e1ebc63193a" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
 
@@ -1086,7 +1098,7 @@ POST https://tip1-shared.azure-apim.net/invoke
                 CancellationToken.None).ConfigureAwait(false);
 
             var bodyConnectorType = parameters.ParametersWithSuggestions[2].ConnectorType;
-            
+
             ConnectorParameterWithSuggestions suggestions = parameters.ParametersWithSuggestions[2];
             testConnector.SetResponseFromFile(@"Responses\Teams_GetMessageDetails_GetSuggestionsForChannel.json");
 

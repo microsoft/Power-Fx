@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.Types
     public class BooleanType : FormulaType
     {
         internal BooleanType()
-            : base(new DType(DKind.Boolean))
+            : base(DType.Boolean)
         {
         }
 

@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
@@ -40,7 +41,7 @@ namespace Microsoft.PowerFx
 
         public TimeZoneInfo TimeZoneInfo { get; private set; }
 
-        public DateTimeKind DateTimeKind => TimeZoneInfo.BaseUtcOffset == TimeSpan.Zero ? DateTimeKind.Utc : DateTimeKind.Unspecified;
+        public DateTimeKind DateTimeKind => TimeZoneInfo.Equals(TimeZoneInfo.Utc) ? DateTimeKind.Utc : DateTimeKind.Unspecified;
 
         public Governor Governor { get; private set; }
 
@@ -174,7 +175,7 @@ namespace Microsoft.PowerFx
                     if (_symbolValues != null)
                     {
                         _symbolValues.Set(sym, newValue);
-                        return FormulaValue.New(true);
+                        return node.IRContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
                     }
 
                     // This may happen if the runtime symbols are missing a value and we failed to update. 
@@ -266,9 +267,17 @@ namespace Microsoft.PowerFx
             {
                 result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, _cancellationToken).ConfigureAwait(false);
             }
+            else if (func is IAsyncTexlFunction3 asyncFunc3)
+            {
+                result = await asyncFunc3.InvokeAsync(node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
+            }
             else if (func is IAsyncTexlFunction4 asyncFunc4)
             {                
                 result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
+            }
+            else if (func is IAsyncTexlFunction5 asyncFunc5)
+            {                
+                result = await asyncFunc5.InvokeAsync(_services, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
             }
             else if (func is IAsyncConnectorTexlFunction asyncConnectorTexlFunction)
             {                

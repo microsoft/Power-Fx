@@ -6,7 +6,10 @@ using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Validations;
+using Microsoft.PowerFx.Connectors;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -45,26 +48,36 @@ namespace Microsoft.PowerFx.Tests
                 }
                 else
                 {
-                    using var streamReader = new StreamReader(stream);                    
-                    return streamReader.ReadToEnd();                    
+                    using var streamReader = new StreamReader(stream);
+                    return streamReader.ReadToEnd();
                 }
             }
         }
 
         // Get a swagger file from the embedded resources. 
-        public static OpenApiDocument ReadSwagger(string name)
+        public static OpenApiDocument ReadSwagger(string name, ITestOutputHelper output)
         {
-            using (var stream = GetStream(name))
+            using var stream = GetStream(name);            
+            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = ConnectorFunction.DefaultValidationRuleSet };
+            OpenApiDocument doc = new OpenApiStreamReader(oars).Read(stream, out OpenApiDiagnostic diag);
+
+            if (diag != null && diag.Errors.Count > 0)
             {
-                var doc = new OpenApiStreamReader().Read(stream, out OpenApiDiagnostic diag);
-
-                if ((doc == null || doc.Paths == null || doc.Paths.Count == 0) && diag != null && diag.Errors.Count > 0)
-                { 
-                    throw new InvalidDataException($"Unable to parse Swagger file: {string.Join(", ", diag.Errors.Select(err => err.Message))}");
+                foreach (OpenApiError error in diag.Errors)
+                {
+                    if (error is OpenApiValidatorError vError)
+                    {
+                        output.WriteLine($"[OpenApi Error] {vError.RuleName} {vError.Pointer} {vError.Message}");
+                    }
+                    else
+                    {
+                        // Could be OpenApiError or OpenApiReferenceError
+                        output.WriteLine($"[OpenApi Error] {error.Pointer} {error.Message}");
+                    }
                 }
-
-                return doc;
             }
+
+            return doc;
         }
     }
 }

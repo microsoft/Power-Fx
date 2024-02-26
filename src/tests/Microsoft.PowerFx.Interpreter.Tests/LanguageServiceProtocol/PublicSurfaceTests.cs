@@ -34,8 +34,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
                 "Microsoft.PowerFx.LanguageServerProtocol.LanguageServer",
 
+                // NL features. 
                 "Microsoft.PowerFx.LanguageServerProtocol.NLHandler",
                 "Microsoft.PowerFx.LanguageServerProtocol.NL2FxParameters",
+                "Microsoft.PowerFx.LanguageServerProtocol.INLHandlerFactory",
+                "Microsoft.PowerFx.LanguageServerProtocol.IPowerFxScopeFx2NL",
+                "Microsoft.PowerFx.LanguageServerProtocol.Fx2NLParameters",
+                "Microsoft.PowerFx.LanguageServerProtocol.UsageHints",
 
                 // Internal
                 "Microsoft.PowerFx.LanguageServerProtocol.JsonRpcHelper",
@@ -59,6 +64,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomProtocolNames",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomGetCapabilitiesParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomGetCapabilitiesResult",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.BaseNLParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomFx2NLParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomFx2NLResult",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomNL2FxParams",

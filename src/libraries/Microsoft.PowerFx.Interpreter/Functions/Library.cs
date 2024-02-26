@@ -225,6 +225,17 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: DecimalToBoolean)
             },
+            {
+                BuiltinFunctionsCore.BooleanL,
+                StandardErrorHandling<OptionSetValue>(
+                    BuiltinFunctionsCore.BooleanL.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: BooleanOptionSetToBoolean)
+            },
 
             // This implementation is not actually used for this as this is handled at IR level. 
             // This is a placeholder, so that RecalcEngine._interpreterSupportedFunctions can add it for txt tests.
@@ -315,6 +326,30 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: ColorFade)
+            },
+            {
+                BuiltinFunctionsCore.Column_UO,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.CountRows_UO.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<UntypedObjectValue>,
+                        ExactValueTypeOrBlank<StringValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Column_UO)
+            },
+            {
+                BuiltinFunctionsCore.ColumnNames_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    BuiltinFunctionsCore.CountRows_UO.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: ColumnNames_UO)
             },
             {
                 BuiltinFunctionsCore.Concatenate,
@@ -1729,6 +1764,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: RoundDown)
             },
             {
+                BuiltinFunctionsCore.UniChar,
+                StandardErrorHandling<NumberValue>(
+                    BuiltinFunctionsCore.UniChar.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: UniChar)
+            },
+            {
                 BuiltinFunctionsCore.Upper,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Upper.Name,
@@ -1874,6 +1920,10 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.BooleanW_T,
                 StandardErrorHandlingTabularOverload<DecimalValue>(BuiltinFunctionsCore.BooleanW_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanW], DoNotReplaceBlank)
             },
+            {
+                BuiltinFunctionsCore.BooleanL_T,
+                StandardErrorHandlingTabularOverload<OptionSetValue>(BuiltinFunctionsCore.BooleanL_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanL], DoNotReplaceBlank)
+            },
 
             // This implementation is not actually used for this as this is handled at IR level. 
             // This is a placeholder, so that RecalcEngine._interpreterSupportedFunctions can add it for txt tests.
@@ -1932,6 +1982,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.TanT,
                 StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.TanT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Tan], ReplaceBlankWithFloatZero)
+            },
+            {
+                BuiltinFunctionsCore.UniCharT,
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.UniCharT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.UniChar], ReplaceBlankWithFloatZero)
             },
         };
 
@@ -2226,8 +2280,8 @@ namespace Microsoft.PowerFx.Functions
                 // It's another condition. Loop around
             }
 
-            // If there's no value here, then use blank. 
-            return new BlankValue(irContext);
+            // If there's no value here, then use blank or void (for example, "If(false,Set(x,5))")
+            return irContext.ResultType == FormulaType.Void ? new VoidValue(irContext) : new BlankValue(irContext);
         }
 
         private static FormulaValue MaybeAdjustToCompileTimeType(FormulaValue result, IRContext irContext)
@@ -2558,7 +2612,8 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return new BlankValue(irContext);
+                // If there's no value here, then use blank or void (for example, "Switch(4,5,Set(x,6))")
+                return irContext.ResultType == FormulaType.Void ? new VoidValue(irContext) : new BlankValue(irContext);
             }
         }
 

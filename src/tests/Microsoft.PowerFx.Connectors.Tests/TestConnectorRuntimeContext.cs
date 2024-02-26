@@ -87,5 +87,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 _logs.Add(log);
             }
         }
+
+        internal void WriteLine(string str)
+        {
+            _console.WriteLine(str);
+        }
     }
 }

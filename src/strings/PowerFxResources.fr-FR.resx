@@ -402,8 +402,8 @@
     <value>Nouveau nom de la colonne.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>La colonne « {0} » spécifiée ne peut pas être renommée à deux reprises.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Retourne les lignes de la table pour lesquelles toutes les conditions spécifiées sont vraies.</value>
@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Valeur de date à ajuster par le nombre de mois indiqué.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Nombre de mois par lequel modifier la date. Une valeur positive produit une date future, une valeur négative une date passée et zéro ne modifie pas le mois.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Retourne le dernier jour du mois pour une date indiquée, ajusté par un nombre de mois.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Valeur de date à ajuster par le nombre de mois indiqué.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Nombre de mois par lequel modifier la date. Une valeur positive produit une date future, une valeur négative une date passée et zéro ne modifie pas le mois.</value>
-         
+    <value>Nombre de mois par lequel modifier la date. Une valeur positive produit une date future, une valeur négative une date passée, et zéro ne modifie pas le mois.</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Tronque le « nombre » en arrondissant vers l’infini négatif.</value>
@@ -1704,6 +1704,38 @@
     <value>séparateur</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Énumère et retourne les noms de colonnes d’un enregistrement sans type.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>enregistrement</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Enregistrement pour que ses colonnes soient énumérées.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Retourne la valeur d’une propriété d’un enregistrement sans type, étant donné le nom de colonne.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>enregistrement</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>nom_colonne</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Enregistrement pour récupérer une valeur de colonne.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Nom de la colonne de l’enregistrement à récupérer.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Retourne la valeur true si la valeur fournie est du type donné.</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Type d’argument non valide ({1}). Valeur {0} attendue.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>Impossible d’utiliser une expression vide dans ce contexte.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>Un champ nommé '{0}' a été spécifié plusieurs fois dans cet enregistrement.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>La colonne « {0} » spécifiée ne peut pas être renommée à deux reprises.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Une colonne nommée '{0}' a été spécifiée plusieurs fois.</value>
     
@@ -2370,35 +2402,52 @@
     <value>Pointeur JSON non valide.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Aucun</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Texte</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logique</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Table</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Comportement</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Date et heure</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Mathématiques et statistiques</value>
+    <value>Mathématiques et statistique</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Défini par l’utilisateur</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informations</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Couleur</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Services</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Composant</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3851,6 @@
     <value>Cette fonctionnalité est déconseillée et n’est plus prise en charge.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>Dans l’espace de noms {1}, la fonction {0} est déconseillée.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>Dans l’espace de noms {1}, la fonction {0} n’est pas prise en charge.</value>
     
@@ -4134,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>La fonction JSON ne peut pas sérialiser les données binaires dans une expression non comportementale.</value>    
+    <value>La fonction JSON ne peut pas sérialiser les données binaires dans une expression non comportementale.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Le paramètre {0} contient une propriété de type {1} qui n’est pas prise en charge.</value>
@@ -4175,6 +4220,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>La table ne contient aucune colonne de type de texte.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Utilisation de '.' déconseillée. Utilisez plutôt la fonction 'ShowColumns'.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Exclusion :** Le contenu généré par l’IA peut comporter des erreurs. Assurez-vous qu’il est exact et approprié avant de l’utiliser. [Consulter les conditions dֺ’utilisation](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Retourne le caractère Unicode référencé par la valeur numérique donnée.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Valeur numérique à convertir en caractère Unicode.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>nombre</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Convertit une table de valeurs numériques en table de caractères Unicode.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>colonne_de_nombres</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Colonne de table de valeurs numériques à convertir en caractères Unicode.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Type d’attribut non pris en charge</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Tous les opérateurs Partial dans les formules nommées correspondantes doivent être les mêmes.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Opérateur Partial inconnu.</value>
     
   </data>
 </root>

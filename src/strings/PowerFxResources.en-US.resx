@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>A column of boolean values to process.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Converts a decimal number to a boolean value.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>number</value>
+    <comment>function_parameter - First argument to the Boolean function - the decimal number that will be converted to a boolean.</comment>
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>The decimal number value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Converts a column of decimal numeric values to a column of boolean values.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>input</value>
+    <comment>function_parameter - First argument to the Boolean function - a column of decimal number values.</comment>
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>A column of number values to process.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Converts a choice value backed by a boolean to a boolean value.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>choice</value>
+    <comment>function_parameter - First argument to the Boolean function - the choice value that will be converted to a boolean.</comment>
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>The choice to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Converts a column of choice values backed by booleans to a column of boolean values.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>input</value>
+    <comment>function_parameter - First argument to the Boolean function - a column of choice values.</comment>
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>A column of choice values to process.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returns the first non blank argument</value>
     <comment>Description of 'Coalesce' function.</comment>
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>A date value to be adjusted by the specified number of months.</value>
-    <comment>Description of the first argument to the 'EDate' function.</comment>      
+    <comment>Description of the first argument to the 'EDate' function.</comment>
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Number of months by which to change the date. A positive value yields a future date, a negative value a past date, and zero will not change the month.</value>
-    <comment>Description of the second argument to the 'EDate' function.</comment>    
+    <comment>Description of the second argument to the 'EDate' function.</comment>
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Returns the last day of the month for a specified date, adjusted by a number of months.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>A date value to be adjusted by the specified number of months.</value>
-    <comment>Description of the first argument to the 'EOMonth' function.</comment>      
+    <comment>Description of the first argument to the 'EOMonth' function.</comment>
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Number of months by which to change the date. A positive value yields a future date, a negative value a past date, and zero will not change the month.</value>
-    <comment>Description of the second argument to the 'EOMonth' function.</comment>     
+    <comment>Description of the second argument to the 'EOMonth' function.</comment>
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Truncates 'number' by rounding toward negative infinity.</value>
@@ -1704,6 +1748,38 @@
     <value>separator</value>
     <comment>function_parameter - Second argument to the Split function - the delimiter text that is used to split SplitArg1 into substrings.</comment>
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Enumerate and returns the column names of an untyped record.</value>
+    <comment>Description of 'ColumnNames' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>record</value>
+    <comment>function_parameter - First argument to the ColumnNames function - the record whose inputs will be returned. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Record to have its columns enumerated.</value>
+    <comment>Description of first argument of the 'ColumnNames' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Returns the value of a property of an untyped record, given the column name.</value>
+    <comment>Description of 'Column' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>record</value>
+    <comment>function_parameter - First argument to the Column function - the record to retrieve a column value. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>column_name</value>
+    <comment>function_parameter - Second argument to the Column function - name of the column to retrieve from the given record. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Record to retrieve a column value.</value>
+    <comment>Description of first argument of the 'Column' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Name of the column of the record to be retrieved.</value>
+    <comment>Description of second argument of the 'Column' function. The term 'record' is used in the context of an object / property bag / set of name/value pairs.</comment>
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Returns true if the provided value is of the given type.</value>
     <comment>Description of the 'IsType' function.</comment>
@@ -1845,6 +1921,10 @@
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Invalid argument type ({1}). Expecting a {0} value instead.</value>
     <comment>Error Message.</comment>
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>A void expression cannot be used in this context.</value>
+    <comment>Error message shown to the user when they try to use a void expression in a function argument that requires a value.</comment>
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
     <value>Invalid argument type. Expecting a {0} value, but of a different schema.</value>
@@ -2366,36 +2446,53 @@
     <value>Invalid json pointer.</value>
     <comment>Generic json pointer parsing error.</comment>
   </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+    <comment>Function category name - function without pre-defined categories.</comment>
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Text</value>
+    <comment>Function category name - function that works on text values.</comment>
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logical</value>
+    <comment>Function category name - function that works on Boolean values.</comment>
   </data>
   <data name="Table" xml:space="preserve">
     <value>Table</value>
+    <comment>Function category name - function that works on tabular data.</comment>
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Behavior</value>
+    <comment>Function category name - function that needs to be executed in behavior contexts (i.e., not purely functional, with side effects).</comment>
   </data>
   <data name="DateTime" xml:space="preserve">
-    <value>Date &amp; Time</value>
+    <value>Date and time</value>
+    <comment>Function category name - function that works on date/time values.</comment>
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Math &amp; Statistical</value>
+    <value>Math and statistical</value>
+    <comment>Function category name - functions for mathematical and/or statistical operations.</comment>
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Defined by the user</value>
+    <comment>Function category name - function that is defined by the user, not a built-in function.</comment>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Information</value>
+    <comment>Function category name - function that returns information about the environment where it is running.</comment>
   </data>
   <data name="Color" xml:space="preserve">
     <value>Color</value>
+    <comment>Function category name - function that works on or returns color values.</comment>
   </data>
   <data name="REST" xml:space="preserve">
     <value>Services</value>
-    <comment>REST is an acronym for REpresentational State Transfer, a category of web services.</comment>
+    <comment>Function category name - function that comes from a web service, typically using REST (REpresentational State Transfer) communication.</comment>
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Component</value>
+    <comment>Function category name - function defined in components within the environment where it is running.</comment>
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
     <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
@@ -3994,10 +4091,6 @@
     <value>This feature is deprecated and is no longer supported.</value>
     <comment>An error message for deprecated features.</comment>
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is deprecated.</value>
-    <comment>A warning message when a function is deprecated.</comment>
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>In namespace {1}, function {0} is not supported.</value>
     <comment>An error message when a function is not supported.</comment>
@@ -4326,7 +4419,7 @@
     <comment>{Locked=JSON}. Error message shown to the user if they try to serialize an object which contain a nested property of a type which is not supported in the JSON function. Both parameters are strings. E.g.: The JSON function cannot serialize tables / objects with a nested property called 'value' of type 'Polymorphic'.</comment>
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>The JSON function cannot serialize binary data in non-behavioral expression.</value>    
+    <value>The JSON function cannot serialize binary data in non-behavioral expression.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>The parameter {0} contains a property of type {1} which is not supported.</value>
@@ -4376,5 +4469,43 @@
   <data name="IntellisenseAiDisclaimer" xml:space="preserve">
     <value>**Disclaimer:** AI-generated content can have mistakes. Make sure it's accurate and appropriate before using it. [See terms](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
     <comment>The disclaimer we show on AI functions. This is github flavored markdown. So ** marks text in bold. </comment>
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Returns the Unicode character that is referenced by the given numeric value.</value>
+    <comment>Description of 'UniChar' function.</comment>
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Numeric value to be converted into a Unicode character.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>number</value>
+    <comment>function_parameter - First argument to the UniChar function - numberic value to be converted into a Unicode character.</comment>
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Converts a table of numeric values to a table of Unicode characters.</value>
+    <comment>Description of 'UniChar' function (table overload).</comment>
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>column_of_numbers</value>
+    <comment>function_parameter - First argument to the UniChar function - a table column of numeric values to be converted into Unicode characters.</comment>
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>A table column of numeric values to be converted into Unicode characters.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Unsupported attribute kind</value>
+    <comment>Error message when the user attempted to use the attribute syntax on a named formula definition, but we didn't recognize the attribute name they specified.</comment>
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>All Partial operators on matching named formulas must be the same.</value>
+    <comment>{Locked=Partial} Error message when the user attempted to use a partial operator on multiple named formulas, but didn't specify the same operator on each one.
+      A partial operator is the 2nd part of a statement `[Partial Op]` and can be one of "And", "Or", "Table" or "Record".
+      It's used to determine how to combine multiple expressions with the same name and operator.</comment>
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Unknown Partial operator.</value>
+    <comment>{Locked=Partial}. Error message when the user attempted to use a Partial operator that we don't recognize.
+      A partial operator is the 2nd part of a statement `[Partial Op]` and can be one of "And", "Or", "Table" or "Record".
+      It's used to determine how to combine multiple expressions with the same name and operator.</comment>
   </data>
 </root>

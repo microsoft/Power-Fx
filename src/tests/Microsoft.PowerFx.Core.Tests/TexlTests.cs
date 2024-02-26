@@ -424,6 +424,49 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("Switch(1, 2, true, 3, {}, 4, [])", "-")] // Mismatched return types: Void result
+        [InlineData("Switch(11;If(true, 123, {}); 1, 2, true, 3, false)", "b")] // Void inside a chain - ok
+        [InlineData("Switch(1, 2, If(1<2, true, 1<3, []), 3, Color.Blue)", "-")] // Void as one of return types: Void result
+        public void TexlFunctionTypeSemanticsSwitch_VoidExpressions(string expression, string expectedType)
+        {
+            foreach (var usePowerFxV1Rules in new[] { false, true })
+            {
+                var features = new Features(Features.PowerFxV1)
+                {
+                    PowerFxV1CompatibilityRules = usePowerFxV1Rules
+                };
+
+                var engine = new Engine(new PowerFxConfig(features));
+                var parserOptions = new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true };
+                var result = engine.Check(expression, parserOptions);
+
+                Assert.True(result.IsSuccess, $"For PFxV1={usePowerFxV1Rules}, expression {expression} should succeed");
+                Assert.Equal(TestUtils.DT(expectedType), result.Binding.ResultType);
+            }
+        }
+
+        [Theory]
+        [InlineData("Switch(If(true, true, {}), true, 1, 2)")]
+        [InlineData("Switch(11;22;If(true, 10;20;If(true, 33, 123;{}), false), true, 1, false, 2)")]
+        [InlineData("Switch(If(1<2, true, 1<3, [], 1<4, {},1<5, Color.Blue), true, true, 1, false, 2)")]
+        public void TexlFunctionTypeSemanticsSwitch_MismatchedTypes_Negative(string expression)
+        {
+            foreach (var usePowerFxV1Rules in new[] { false, true })
+            {
+                var features = new Features(Features.PowerFxV1)
+                {
+                    PowerFxV1CompatibilityRules = usePowerFxV1Rules
+                };
+
+                var engine = new Engine(new PowerFxConfig(features));
+                var parserOptions = new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true };
+                var result = engine.Check(expression, parserOptions);
+
+                Assert.False(result.IsSuccess, $"For PFxV1={usePowerFxV1Rules}, expression {expression} should fail");
+            }
+        }
+
+        [Theory]
         [InlineData("Average(\"3\")")]
         [InlineData("Average(\"3\", 4)")]
         [InlineData("Average(true, 4)")]
@@ -3981,6 +4024,117 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
+        [Theory]
+        [InlineData("ColumnNames(ParseJSON('Hello'))")]
+        [InlineData("ColumnNames(ParseJSON('[]'))")]
+        [InlineData("ColumnNames(ParseJSON('Hello').a)")]
+        [InlineData("ColumnNames(ParseJSON('{''a'':1}').a)")]
+        [InlineData("ColumnNames(Blank())")]
+        [InlineData("ColumnNames(ParseJSON('{''a'':{''b'':1}}').a)")]
+        public void TexlFunctionTypeSemanticsColumnNames(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression.Replace('\'', '\"'));
+
+            Assert.True(DType.TryParse("*[Value:s]", out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("ColumnNames({a:1,b:true})")] // Does not work with records
+        [InlineData("ColumnNames([1,2,3])")] // Does not work with arrays
+        [InlineData("ColumnNames(1)")]
+        public void TexlFunctionTypeSemanticsColumnNames_Negative(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression);
+
+            Assert.False(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("Column(ParseJSON('Hello'), 'a')")] // Compiles, would fail at runtime
+        [InlineData("Column(ParseJSON('[]'), 'Value')")] // Compiles, would fail at runtime
+        [InlineData("Column(ParseJSON('Hello').a, 'a')")] // Compiles, would fail at runtime
+        [InlineData("Column(ParseJSON('{''a'':1}'), 'a')")]
+        [InlineData("Column(ParseJSON('{''a'':1}').a, 'a')")] // Compiles, would fail at runtime
+        [InlineData("Column(Blank(), 'a')")]
+        [InlineData("Column(ParseJSON('{''a'':{''b'':1}}'), 'a')")]
+        public void TexlFunctionTypeSemanticsColumn(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression.Replace('\'', '\"'));
+
+            Assert.Equal(DType.UntypedObject, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("Column({a:1,b:true}, 'a')")] // Does not work with records
+        [InlineData("Column([1,2,3], 'Value')")] // Does not work with arrays
+        [InlineData("Column(1)")]
+        [InlineData("Column(1, 'Value')")]
+        public void TexlFunctionTypeSemanticColumn_Negative(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression.Replace('\'', '\"'));
+
+            Assert.False(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("in")]
+        [InlineData("exactin")]
+        public void PrettyPrintTest(string op)
+        {
+            string expr = $"1 {op} [0]";
+            
+            CheckResult check = new CheckResult(new Engine()).SetText(expr);
+            ParseResult parse = check.ApplyParse();
+
+            string str = parse.Root.ToString();
+
+            Assert.Equal($"1 {op} [ 0 ]", str);
+        }
+
+        internal class BlobFunc : TexlFunction
+        {
+            public override bool IsSelfContained => false;
+
+            public BlobFunc()
+                : base(DPath.Root, "BlobFunc", "BlobFunc", (_) => "Returns a blob", FunctionCategories.Behavior, DType.Blob, 0, 0, 0)
+            {
+            }
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [Theory]
+        [InlineData("BlobFunc()", "o")]
+        [InlineData("blobVar", "o")]
+        public void TestBlobFunction(string expression, string expectedType)
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddFunction(new BlobFunc());
+            symbolTable.AddVariable("blobVar", FormulaType.Blob);
+
+            var config = new PowerFxConfig()
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var opts = new ParserOptions() { AllowsSideEffects = true };
+            var result = engine.Check(expression, opts);
+            var expectedDType = TestUtils.DT(expectedType);
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig
@@ -3991,8 +4145,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var result = engine.Check(script);
 
-            Assert.NotNull(result.Binding);
-        
+            Assert.NotNull(result.Binding);        
             Assert.Equal(isPure, result.Binding.IsPure(result.Parse.Root));
         }
 

@@ -13,7 +13,6 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 
@@ -23,8 +22,8 @@ namespace Microsoft.PowerFx.Connectors
     {
         public ConnectorFunction ConnectorFunction { get; }
 
-        internal ConnectorTexlFunction(ConnectorFunction function)
-            : base(DPath.Root.Append(new DName(function.Namespace)), function.Name, function.Name, (locale) => function.Description, FunctionCategories.REST, function.ReturnType._type, BigInteger.Zero, function.ArityMin, function.ArityMax, function.ParameterTypes)
+        internal ConnectorTexlFunction(ConnectorFunction function, bool withReturnType = true)
+            : base(DPath.Root.Append(new DName(function.Namespace)), function.Name, function.Name, (locale) => function.Description, FunctionCategories.REST, withReturnType ? function.ReturnType._type : FormulaType.UntypedObject._type, BigInteger.Zero, function.ArityMin, function.ArityMax, function.ParameterTypes)
         {
             ConnectorFunction = function;
         }
@@ -36,6 +35,8 @@ namespace Microsoft.PowerFx.Connectors
         public bool IsNotSupported => !ConnectorFunction.IsSupported;
 
         public string NotSupportedReason => ConnectorFunction.NotSupportedReason;
+
+        public IReadOnlyCollection<ErrorResourceKey> Warnings => ConnectorFunction.Warnings;
 
         public override bool IsBehaviorOnly => ConnectorFunction.IsBehavior;
 
@@ -56,12 +57,23 @@ namespace Microsoft.PowerFx.Connectors
         // Used by Intellisense, otherwise unused for InvokeAsync.
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return ConnectorFunction.RequiredParameters.Select<ConnectorParameter, TexlStrings.StringGetter>(p => (locale) => p.Name).ToArray();
+            List<TexlStrings.StringGetter> parameters = new ();
 
-            // when any, optional parameters are in a record
-            if (ConnectorFunction.OptionalParameters.Any())
+            bool hasInvalidRequiredParameters = ConnectorFunction.RequiredParameters != null && ConnectorFunction.RequiredParameters.Any(p => p.HasErrors);
+            bool hasInvalidOptionalParameters = ConnectorFunction.OptionalParameters != null && ConnectorFunction.OptionalParameters.Any(p => p.HasErrors);
+
+            // If any of the required parameters had an error, we'll return no signature
+            if (ConnectorFunction.RequiredParameters != null && !hasInvalidRequiredParameters)
             {
-                yield return new TexlStrings.StringGetter[] { (loc) => $"{{ {string.Join(",", ConnectorFunction.OptionalParameters.Select(parm => $"{parm.Name}:{parm.FormulaType}"))} }}" };
+                parameters = ConnectorFunction.RequiredParameters.Select<ConnectorParameter, TexlStrings.StringGetter>(p => (locale) => p.Name).ToList();
+                yield return parameters.ToArray();
+            }
+
+            // when any, optional parameters are in a record and this is a second signature            
+            if (ConnectorFunction.OptionalParameters != null && ConnectorFunction.OptionalParameters.Length != 0 && !hasInvalidOptionalParameters)
+            {
+                parameters.Add((locale) => $"{{ {string.Join(",", ConnectorFunction.OptionalParameters.Select(p => $"{p.Name}:{p.FormulaType}"))} }}");
+                yield return parameters.ToArray();
             }
         }
 

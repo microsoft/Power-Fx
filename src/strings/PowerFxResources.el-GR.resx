@@ -402,8 +402,8 @@
     <value>Το νέο όνομα για τη στήλη.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Δεν είναι δυνατή η μετονομασία της καθορισμένης στήλης "{0}" δύο φορές.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Επιστρέφει τις σειρές από τον πίνακα για τον οποίο όλες οι καθορισμένες συνθήκες έχουν τιμή true.</value>
@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Μια τιμή ημερομηνίας που θα προσαρμοστεί έως τον καθορισμένο αριθμό μηνών.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Αριθμός μηνών με τον οποίο θα αλλάξετε την ημερομηνία. Μια θετική τιμή αποδίδει μια μελλοντική ημερομηνία, μια αρνητική τιμή μια προηγούμενη ημερομηνία και η τιμή μηδέν δεν θα αλλάξει το μήνα.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Επιστρέφει την τελευταία ημέρα του μήνα για μια καθορισμένη ημερομηνία, προσαρμοσμένη κατά σειρά μηνών.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Μια τιμή ημερομηνίας που θα προσαρμοστεί έως τον καθορισμένο αριθμό μηνών.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Αριθμός μηνών με τον οποίο θα αλλάξετε την ημερομηνία. Μια θετική τιμή αποδίδει μια μελλοντική ημερομηνία, μια αρνητική τιμή μια προηγούμενη ημερομηνία και η τιμή μηδέν δεν θα αλλάξει το μήνα.</value>
-         
+    <value>Αριθμός μηνών με τον οποίο θα αλλάξετε την ημερομηνία. Μια θετική τιμή αποδίδει μια μελλοντική ημερομηνία, μια αρνητική τιμή μια προηγούμενη ημερομηνία και η τιμή μηδέν δεν θα αλλάξει το μήνα.</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Περικόπτει την τιμή 'number' στρογγυλοποιώντας προς το αρνητικό άπειρο.</value>
@@ -1704,6 +1704,38 @@
     <value>διαχωριστικό</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Απαριθμεί και επιστρέφει τα ονόματα στηλών μιας μη πληκτρολογημένης καρτέλας.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>καρτέλα</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Καρτέλα για την απαρίθμηση των στηλών της.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Επιστρέφει την τιμή μιας ιδιότητας μιας μη πληκτρολογημένης καρτέλας, δεδομένου του ονόματος της στήλης.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>καρτέλα</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>όνομα_στήλης</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Καρτέλα για ανάκτηση τιμής στήλης.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Όνομα της στήλης της καρτέλας προς ανάκτηση.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Επιστρέφει την τιμή true, αν η καταχωρημένη τιμή είναι του παρεχόμενου τύπου.</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Μη έγκυρος τύπος ορίσματος ({1}). Αναμένεται τιμή {0}.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>Δεν είναι δυνατή η χρήση μιας κενής έκφρασης σε αυτό το περιβάλλον.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>Ένα πεδίο με όνομα "{0}" καθορίστηκε περισσότερες από μία φορά σε αυτή την εγγραφή.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Δεν είναι δυνατή η μετονομασία της καθορισμένης στήλης "{0}" δύο φορές.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Μια στήλη με όνομα '{0}' καθορίστηκε περισσότερες φορές.</value>
     
@@ -2370,35 +2402,52 @@
     <value>Μη έγκυρος δείκτης json.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Κανένα</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Κείμενο</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Λογική</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Πίνακας</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Συμπεριφορά</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Ημερομηνία και ώρα</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Μαθηματική και στατιστική</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
     <value>Ορισμός από τον χρήστη</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Πληροφορίες</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Χρώμα</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Υπηρεσίες</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Στοιχείο</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3851,6 @@
     <value>Αυτή η δυνατότητα δεν χρησιμοποιείται και δεν υποστηρίζεται πλέον.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>Στον χώρο ονομάτων {1}, η συνάρτηση {0} δεν χρησιμοποιείται.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>Στο χώρο ονομάτων {1}, η συνάρτηση {0} δεν υποστηρίζεται.</value>
     
@@ -4134,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Η συνάρτηση JSON δεν είναι δυνατό να σειριοποιήσει δυαδικά δεδομένα σε παράσταση που δεν αφορά τη συμπεριφορά.</value>    
+    <value>Η συνάρτηση JSON δεν είναι δυνατό να σειριοποιήσει δυαδικά δεδομένα σε παράσταση που δεν αφορά τη συμπεριφορά.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Η παράμετρος {0} περιέχει μια ιδιότητα τύπου {1} που δεν υποστηρίζεται.</value>
@@ -4175,6 +4220,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Ο πίνακας δεν περιέχει καμία στήλη τύπου κειμένου.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Δεν χρησιμοποιείται το ".". Χρησιμοποιήστε τη συνάρτηση 'ShowColumns' αντ' αυτού.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Αποποίηση ευθύνης:** Το περιεχόμενο που δημιουργείται από AI μπορεί να έχει σφάλματα. Προτού το χρησιμοποιήσετε, βεβαιωθείτε ότι είναι ακριβές και κατάλληλο. [Δείτε τους όρους](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Επιστρέφει τον χαρακτήρα Unicode στον οποίο αναφέρεται η δεδομένη αριθμητική τιμή.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Αριθμητική τιμή που θα μετατραπεί σε χαρακτήρα Unicode.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>αριθμός</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Μετατρέπει έναν πίνακα αριθμητικών τιμών σε πίνακα με χαρακτήρες Unicode.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>στήλη_αριθμών</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Μια στήλη πίνακα αριθμητικών τιμών για μετατροπή σε χαρακτήρες Unicode.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Μη υποστηριζόμενο είδος χαρακτηριστικού</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Όλοι οι τελεστές Partial σε κατονομαζόμενους τύπους που συμφωνούν πρέπει να είναι ίδιοι.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Άγνωστος τελεστής Partial.</value>
     
   </data>
 </root>

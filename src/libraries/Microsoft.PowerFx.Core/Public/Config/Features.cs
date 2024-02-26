@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
@@ -88,6 +89,11 @@ namespace Microsoft.PowerFx
         internal bool PrimaryOutputPropertyCoercionDeprecated { get; set; }
 
         /// <summary>
+        /// This is specific for PVA team and it is a temporary feature.
+        /// </summary>
+        internal bool JsonFunctionAcceptsLazyTypes { get; set; }
+
+        /// <summary>
         /// Enables enhanced lookup delegation, to properly support delegation of reduction formulas. 
         /// </summary>
         internal bool IsEnhancedLookUpDelegationEnabled { get; set; }
@@ -124,6 +130,7 @@ namespace Microsoft.PowerFx
             CoalesceShortCircuit = true,
             PrimaryOutputPropertyCoercionDeprecated = true,
             AsTypeLegacyCheck = false,
+            JsonFunctionAcceptsLazyTypes = true
         };
 
         internal Features()

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 
@@ -20,7 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl
             "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Defaults", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit", "GUID",
             "GroupBy", "HashTags", "IsMatch", "IsType", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "Print", "ReadNFC",
             "RecordInfo", "Relate", "RemoveAll", "RemoveIf", "RequestHide", "Reset", "ResetForm", "Revert", "SaveData", "ScanBarcode", "Select", "SetFocus",
-            "SetProperty", "ShowColumns", "State", "SubmitForm", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm"
+            "SetProperty", "ShowColumns", "State", "SubmitForm", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm",
+            "Collect", "Clear", "Patch", "Remove", "ClearCollect", "Set"
         };
 
         // Functions in this list are shared and may show up in other hosts by default.
@@ -62,6 +64,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction ColorFadeT = _library.Add(new ColorFadeTFunction());
         public static readonly TexlFunction ColorValue = _library.Add(new ColorValueFunction());
         public static readonly TexlFunction ColorValue_UO = _library.Add(new ColorValueFunction_UO());
+        public static readonly TexlFunction Column_UO = _library.Add(new ColumnFunction_UO());
+        public static readonly TexlFunction ColumnNames_UO = _library.Add(new ColumnNamesFunction_UO());
         public static readonly TexlFunction Concat = _library.Add(new ConcatFunction());
         public static readonly TexlFunction Concatenate = _library.Add(new ConcatenateFunction());
         public static readonly TexlFunction ConcatenateT = _library.Add(new ConcatenateTableFunction());
@@ -224,6 +228,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction TrimT = _library.Add(new TrimTFunction());
         public static readonly TexlFunction Trunc = _library.Add(new TruncFunction());
         public static readonly TexlFunction TruncT = _library.Add(new TruncTableFunction());
+        public static readonly TexlFunction UniChar = _library.Add(new UniCharFunction());
+        public static readonly TexlFunction UniCharT = _library.Add(new UniCharTFunction());
         public static readonly TexlFunction Upper = _library.Add(new LowerUpperFunction(isLower: false));
         public static readonly TexlFunction UpperT = _library.Add(new LowerUpperTFunction(isLower: false));
         public static readonly TexlFunction Value = _library.Add(new ValueFunction());
@@ -250,6 +256,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction OptionsSetInfo = _featureGateFunctions.Add(new OptionSetInfoFunction());
         public static readonly TexlFunction UTCNow = _featureGateFunctions.Add(new UTCNowFunction());
         public static readonly TexlFunction UTCToday = _featureGateFunctions.Add(new UTCTodayFunction());
+        public static readonly TexlFunction BooleanL = _featureGateFunctions.Add(new BooleanLFunction());
+        public static readonly TexlFunction BooleanL_T = _featureGateFunctions.Add(new BooleanLFunction_T());
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        
@@ -260,5 +268,15 @@ namespace Microsoft.PowerFx.Core.Texl
         // Slow API, only use for backward compatibility
         internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _testOnlyLibrary.Functions;
 #pragma warning restore CS0618 // Type or member is obsolete
+
+        public static bool IsKnownPublicFunction(string functionName)
+        {
+            if (_library.AnyWithName(functionName) || OtherKnownFunctions.Contains(functionName) || _featureGateFunctions.AnyWithName(functionName))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

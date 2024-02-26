@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -838,6 +839,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
+        [InlineData("Abs", "Abs(-1)")]
+        [InlineData("Abs", "If(true,Abs(-1))")]
+        [InlineData("Abs", "If(false,Abs(-1))")]
+        public void RecalcEngineMutableSupportedFunctionsTest(string functionName, string expression)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var symbolTable = engine.SupportedFunctions.GetMutableCopyOfFunctions();
+
+            symbolTable.RemoveFunction(functionName);
+
+            engine.UpdateSupportedFunctions(symbolTable);
+
+            var checkFalse = engine.Check(expression);
+            var checkTrue = engine.Check("Value(\"1\")");
+
+            Assert.True(checkTrue.IsSuccess);
+            Assert.False(checkFalse.IsSuccess);
+            Assert.Contains(checkFalse.Errors, e => e.MessageKey == "ErrUnknownFunction" && e.Message.Contains($"'{functionName}' is an unknown or unsupported function."));
+        }
+
+        [Theory]
         [InlineData(300, "Text(DateTimeValue(\"2023-12-21T12:34:56.789Z\"), DateTimeFormat.UTC)", true)]
         [InlineData(10, "Text(DateTimeValue(\"2023-12-21T12:34:56.789Z\"), DateTimeFormat.UTC)", false)]
         [InlineData(200, "Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3)))", false)]
@@ -886,27 +908,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Useful for testing per-thread properties
         internal static void RunOnIsolatedThread(CultureInfo culture, Action<CultureInfo> worker)
         {
-            Exception exception = null;
-
-            var t = new Thread(() =>
-            {
-                try
-                {                    
-                    worker(culture);
-                }
-                catch (Exception ex)
-                {
-                    exception = ex;
-                }
-            });
-
-            t.Start();
-            t.Join();
-
-            if (exception != null)
-            {
-                throw exception;
-            }
+            culture.RunOnIsolatedThread(worker);
         }
     }
 

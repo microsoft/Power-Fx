@@ -1,0 +1,4414 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Power Apps for Makers",
+    "description": "Power Apps Management Connector for Makers",
+    "version": "1.0",
+    "x-ms-api-annotation": {
+      "status": "Production"
+    },
+    "contact": {
+      "name": "Microsoft"
+    }
+  },
+  "host": "api.powerapps.com",
+  "basePath": "/apim/powerappsforappmakers",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [],
+  "produces": [],
+  "paths": {
+    "/{connectionId}/providers/Microsoft.PowerApps/apps/{app}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK.",
+            "schema": {
+              "$ref": "#/definitions/PowerApp"
+            }
+          }
+        },
+        "summary": "Get App",
+        "description": "Returns a PowerApp.",
+        "operationId": "Get-App",
+        "parameters": [
+          {
+            "name": "app",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Name field of the PowerApp.",
+            "x-ms-summary": "PowerApp Name"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2016-11-01",
+            "x-ms-summary": "API Version",
+            "description": "The date value of the API version."
+          }
+        ]
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "No Content."
+          }
+        },
+        "summary": "Remove App",
+        "description": "Deletes a PowerApp.",
+        "operationId": "Remove-App",
+        "parameters": [
+          {
+            "name": "app",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Name field of the PowerApp.",
+            "x-ms-summary": "PowerApp Name"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2017-06-01",
+            "description": "The date value of the API version.",
+            "x-ms-summary": "API Version"
+          }
+        ]
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/apps/{app}/publish": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "No Content."
+          }
+        },
+        "summary": "Publish App",
+        "description": "Publishes the latest saved version of a PowerApp to all users with view access.",
+        "operationId": "Publish-App",
+        "parameters": [
+          {
+            "name": "app",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "PowerApp Name",
+            "description": "Name field of the PowerApp."
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2017-06-01",
+            "description": "The date value of the API version.",
+            "x-ms-summary": "API Version"
+          }
+        ]
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/apps/{app}/displayName": {
+      "put": {
+        "responses": {
+          "200": {
+            "description": "No Content."
+          }
+        },
+        "summary": "Set App Display Name",
+        "description": "Updates the display name of a PowerApp.",
+        "operationId": "Set-AppDisplayName",
+        "parameters": [
+          {
+            "name": "app",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Name field of the PowerApp.",
+            "x-ms-summary": "PowerApp Name"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2017-06-01",
+            "x-ms-summary": "API Version",
+            "description": "The date value of the API version."
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "default": "application/json",
+            "x-ms-summary": "Content Type",
+            "description": "The content type of the API request."
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": "string",
+                  "description": "Display Name of App."
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/apps/{app}/versions": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "The field name."
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "The field id."
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "The field type."
+                      },
+                      "tags": {
+                        "type": "object",
+                        "properties": {
+                          "primaryDeviceWidth": {
+                            "type": "string",
+                            "description": "The field primaryDeviceWidth."
+                          },
+                          "primaryDeviceHeight": {
+                            "type": "string",
+                            "description": "The field primaryDeviceHeight."
+                          },
+                          "sienaVersion": {
+                            "type": "string",
+                            "description": "The field sienaVersion."
+                          },
+                          "deviceCapabilities": {
+                            "type": "string",
+                            "description": "The field deviceCapabilities."
+                          },
+                          "supportsPortrait": {
+                            "type": "string",
+                            "description": "The field supportsPortrait."
+                          },
+                          "supportsLandscape": {
+                            "type": "string",
+                            "description": "The field supportsLandscape."
+                          },
+                          "primaryFormFactor": {
+                            "type": "string",
+                            "description": "The field primaryFormFactor."
+                          },
+                          "publisherVersion": {
+                            "type": "string",
+                            "description": "The field publisherVersion."
+                          },
+                          "minimumRequiredApiVersion": {
+                            "type": "string",
+                            "description": "The field minimumRequiredApiVersion."
+                          }
+                        },
+                        "description": "The field tags."
+                      },
+                      "properties": {
+                        "type": "object",
+                        "properties": {
+                          "ownerTenantId": {
+                            "type": "string",
+                            "description": "The field ownerTenantId."
+                          },
+                          "app": {
+                            "type": "string",
+                            "description": "The field app."
+                          },
+                          "appVersion": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The field appVersion."
+                          },
+                          "lifeCycleId": {
+                            "type": "string",
+                            "description": "The field lifeCycleId."
+                          },
+                          "createdByClientVersion": {
+                            "type": "object",
+                            "properties": {
+                              "major": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "The field major."
+                              },
+                              "minor": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "The field minor."
+                              },
+                              "build": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "The field build."
+                              },
+                              "revision": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "The field revision."
+                              },
+                              "majorRevision": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "The field majorRevision."
+                              },
+                              "minorRevision": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "The field minorRevision."
+                              }
+                            },
+                            "description": "The field createdByClientVersion."
+                          },
+                          "minClientVersion": {
+                            "type": "object",
+                            "properties": {
+                              "major": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "The field major."
+                              },
+                              "minor": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "The field minor."
+                              },
+                              "build": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "The field build."
+                              },
+                              "revision": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "The field revision."
+                              },
+                              "majorRevision": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "The field majorRevision."
+                              },
+                              "minorRevision": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "The field minorRevision."
+                              }
+                            },
+                            "description": "The field minClientVersion."
+                          },
+                          "appDefinition": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "description": "The field name."
+                              },
+                              "id": {
+                                "type": "string",
+                                "description": "The field id."
+                              },
+                              "type": {
+                                "type": "string",
+                                "description": "The field type."
+                              },
+                              "tags": {
+                                "type": "object",
+                                "properties": {
+                                  "primaryDeviceWidth": {
+                                    "type": "string",
+                                    "description": "The field primaryDeviceWidth."
+                                  },
+                                  "primaryDeviceHeight": {
+                                    "type": "string",
+                                    "description": "The field primaryDeviceHeight."
+                                  },
+                                  "sienaVersion": {
+                                    "type": "string",
+                                    "description": "The field sienaVersion."
+                                  },
+                                  "deviceCapabilities": {
+                                    "type": "string",
+                                    "description": "The field deviceCapabilities."
+                                  },
+                                  "supportsPortrait": {
+                                    "type": "string",
+                                    "description": "The field supportsPortrait."
+                                  },
+                                  "supportsLandscape": {
+                                    "type": "string",
+                                    "description": "The field supportsLandscape."
+                                  },
+                                  "primaryFormFactor": {
+                                    "type": "string",
+                                    "description": "The field primaryFormFactor."
+                                  },
+                                  "publisherVersion": {
+                                    "type": "string",
+                                    "description": "The field publisherVersion."
+                                  },
+                                  "minimumRequiredApiVersion": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "description": "The field minimumRequiredApiVersion."
+                                  }
+                                },
+                                "description": "The field tags."
+                              },
+                              "properties": {
+                                "type": "object",
+                                "properties": {
+                                  "appVersion": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "description": "The field appVersion."
+                                  },
+                                  "lastDraftVersion": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "description": "The field lastDraftVersion."
+                                  },
+                                  "lifeCycleId": {
+                                    "type": "string",
+                                    "description": "The field lifeCycleId."
+                                  },
+                                  "status": {
+                                    "type": "string",
+                                    "description": "The field status."
+                                  },
+                                  "createdByClientVersion": {
+                                    "type": "object",
+                                    "properties": {
+                                      "major": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "description": "The field major."
+                                      },
+                                      "minor": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "description": "The field minor."
+                                      },
+                                      "build": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "description": "The field build."
+                                      },
+                                      "revision": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "description": "The field revision."
+                                      },
+                                      "majorRevision": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "description": "The field majorRevision."
+                                      },
+                                      "minorRevision": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "description": "The field minorRevision."
+                                      }
+                                    },
+                                    "description": "The field createdByClientVersion."
+                                  },
+                                  "minClientVersion": {
+                                    "type": "object",
+                                    "properties": {
+                                      "major": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "description": "The field major."
+                                      },
+                                      "minor": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "description": "The field minor."
+                                      },
+                                      "build": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "description": "The field build."
+                                      },
+                                      "revision": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "description": "The field revision."
+                                      },
+                                      "majorRevision": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "description": "The field majorRevision."
+                                      },
+                                      "minorRevision": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "description": "The field minorRevision."
+                                      }
+                                    },
+                                    "description": "The field minClientVersion."
+                                  },
+                                  "owner": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "description": "The field id."
+                                      },
+                                      "displayName": {
+                                        "type": "string",
+                                        "description": "The field displayName."
+                                      },
+                                      "email": {
+                                        "type": "string",
+                                        "description": "The field email."
+                                      },
+                                      "type": {
+                                        "type": "string",
+                                        "description": "The field type."
+                                      },
+                                      "tenantId": {
+                                        "type": "string",
+                                        "description": "The field tenantId."
+                                      },
+                                      "userPrincipalName": {
+                                        "type": "string",
+                                        "description": "The field userPrincipalName."
+                                      }
+                                    },
+                                    "description": "The field owner."
+                                  },
+                                  "createdBy": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "description": "The field id."
+                                      },
+                                      "displayName": {
+                                        "type": "string",
+                                        "description": "The field displayName."
+                                      },
+                                      "email": {
+                                        "type": "string",
+                                        "description": "The field email."
+                                      },
+                                      "type": {
+                                        "type": "string",
+                                        "description": "The field type."
+                                      },
+                                      "tenantId": {
+                                        "type": "string",
+                                        "description": "The field tenantId."
+                                      },
+                                      "userPrincipalName": {
+                                        "type": "string",
+                                        "description": "The field userPrincipalName."
+                                      }
+                                    },
+                                    "description": "The field createdBy."
+                                  },
+                                  "lastModifiedBy": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "description": "The field id."
+                                      },
+                                      "displayName": {
+                                        "type": "string",
+                                        "description": "The field displayName."
+                                      },
+                                      "email": {
+                                        "type": "string",
+                                        "description": "The field email."
+                                      },
+                                      "type": {
+                                        "type": "string",
+                                        "description": "The field type."
+                                      },
+                                      "tenantId": {
+                                        "type": "string",
+                                        "description": "The field tenantId."
+                                      },
+                                      "userPrincipalName": {
+                                        "type": "string",
+                                        "description": "The field userPrincipalName."
+                                      }
+                                    },
+                                    "description": "The field lastModifiedBy."
+                                  },
+                                  "lastPublishedBy": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "description": "The field id."
+                                      },
+                                      "displayName": {
+                                        "type": "string",
+                                        "description": "The field displayName."
+                                      },
+                                      "email": {
+                                        "type": "string",
+                                        "description": "The field email."
+                                      },
+                                      "type": {
+                                        "type": "string",
+                                        "description": "The field type."
+                                      },
+                                      "tenantId": {
+                                        "type": "string",
+                                        "description": "The field tenantId."
+                                      },
+                                      "userPrincipalName": {
+                                        "type": "string",
+                                        "description": "The field userPrincipalName."
+                                      }
+                                    },
+                                    "description": "The field lastPublishedBy."
+                                  },
+                                  "backgroundColor": {
+                                    "type": "string",
+                                    "description": "The field backgroundColor."
+                                  },
+                                  "backgroundImageUri": {
+                                    "type": "string",
+                                    "description": "The field backgroundImageUri."
+                                  },
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  },
+                                  "description": {
+                                    "type": "string",
+                                    "description": "The field description."
+                                  },
+                                  "appUris": {
+                                    "type": "object",
+                                    "properties": {
+                                      "documentUri": {
+                                        "type": "object",
+                                        "properties": {
+                                          "value": {
+                                            "type": "string",
+                                            "description": "The field value."
+                                          },
+                                          "readonlyValue": {
+                                            "type": "string",
+                                            "description": "The field readonlyValue."
+                                          }
+                                        },
+                                        "description": "The field documentUri."
+                                      },
+                                      "imageUris": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string"
+                                        },
+                                        "description": "The field imageUris."
+                                      }
+                                    },
+                                    "description": "The field appUris."
+                                  },
+                                  "createdTime": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "description": "The field createdTime."
+                                  },
+                                  "lastModifiedTime": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "description": "The field lastModifiedTime."
+                                  },
+                                  "lastPublishTime": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "description": "The field lastPublishTime."
+                                  },
+                                  "sharedGroupsCount": {
+                                    "type": "integer",
+                                    "format": "int32",
+                                    "description": "The field sharedGroupsCount."
+                                  },
+                                  "sharedUsersCount": {
+                                    "type": "integer",
+                                    "format": "int32",
+                                    "description": "The field sharedUsersCount."
+                                  },
+                                  "appOpenProtocolUri": {
+                                    "type": "string",
+                                    "description": "The field appOpenProtocolUri."
+                                  },
+                                  "appOpenUri": {
+                                    "type": "string",
+                                    "description": "The field appOpenUri."
+                                  },
+                                  "userAppMetadata": {
+                                    "type": "object",
+                                    "properties": {
+                                      "favorite": {
+                                        "type": "string",
+                                        "description": "The field favorite."
+                                      },
+                                      "includeInAppsList": {
+                                        "type": "boolean",
+                                        "description": "The field includeInAppsList."
+                                      }
+                                    },
+                                    "description": "The field userAppMetadata."
+                                  },
+                                  "isFeaturedApp": {
+                                    "type": "boolean",
+                                    "description": "The field isFeaturedApp."
+                                  },
+                                  "bypassConsent": {
+                                    "type": "boolean",
+                                    "description": "The field bypassConsent."
+                                  },
+                                  "isHeroApp": {
+                                    "type": "boolean",
+                                    "description": "The field isHeroApp."
+                                  },
+                                  "environment": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "description": "The field id."
+                                      },
+                                      "name": {
+                                        "type": "string",
+                                        "description": "The field name."
+                                      }
+                                    },
+                                    "description": "The field environment."
+                                  }
+                                },
+                                "description": "The field properties."
+                              }
+                            },
+                            "description": "The field appDefinition."
+                          }
+                        },
+                        "description": "The field properties."
+                      }
+                    }
+                  },
+                  "description": "The field value."
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get App Versions",
+        "description": "Returns a list of versions for a given PowerApp.",
+        "operationId": "Get-AppVersions",
+        "parameters": [
+          {
+            "name": "app",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Name field of the PowerApp.",
+            "x-ms-summary": "PowerApp Name"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2017-06-01",
+            "x-ms-summary": "API Version",
+            "description": "The date value of the API version."
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 250,
+            "description": "Number of Apps versions to return.",
+            "x-ms-summary": "Page size",
+            "x-ms-visibility": "advanced"
+          }
+        ],
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/apps/{app}/versions/{appVersionName}/promote": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The field name."
+                },
+                "id": {
+                  "type": "string",
+                  "description": "The field id."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "The field type."
+                },
+                "tags": {
+                  "type": "object",
+                  "properties": {
+                    "primaryDeviceWidth": {
+                      "type": "string",
+                      "description": "The field primaryDeviceWidth."
+                    },
+                    "primaryDeviceHeight": {
+                      "type": "string",
+                      "description": "The field primaryDeviceHeight."
+                    },
+                    "sienaVersion": {
+                      "type": "string",
+                      "description": "The field sienaVersion."
+                    },
+                    "deviceCapabilities": {
+                      "type": "string",
+                      "description": "The field deviceCapabilities."
+                    },
+                    "supportsPortrait": {
+                      "type": "string",
+                      "description": "The field supportsPortrait."
+                    },
+                    "supportsLandscape": {
+                      "type": "string",
+                      "description": "The field supportsLandscape."
+                    },
+                    "primaryFormFactor": {
+                      "type": "string",
+                      "description": "The field primaryFormFactor."
+                    },
+                    "publisherVersion": {
+                      "type": "string",
+                      "description": "The field publisherVersion."
+                    },
+                    "minimumRequiredApiVersion": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The field minimumRequiredApiVersion."
+                    }
+                  },
+                  "description": "The field tags."
+                },
+                "properties": {
+                  "type": "object",
+                  "properties": {
+                    "appVersion": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The field appVersion."
+                    },
+                    "lastDraftVersion": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The field lastDraftVersion."
+                    },
+                    "lifeCycleId": {
+                      "type": "string",
+                      "description": "The field lifeCycleId."
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "The field status."
+                    },
+                    "createdByClientVersion": {
+                      "type": "object",
+                      "properties": {
+                        "major": {
+                          "type": "integer",
+                          "format": "int32",
+                          "description": "The field major."
+                        },
+                        "minor": {
+                          "type": "integer",
+                          "format": "int32",
+                          "description": "The field minor."
+                        },
+                        "build": {
+                          "type": "integer",
+                          "format": "int32",
+                          "description": "The field build."
+                        },
+                        "revision": {
+                          "type": "integer",
+                          "format": "int32",
+                          "description": "The field revision."
+                        },
+                        "majorRevision": {
+                          "type": "integer",
+                          "format": "int32",
+                          "description": "The field majorRevision."
+                        },
+                        "minorRevision": {
+                          "type": "integer",
+                          "format": "int32",
+                          "description": "The field minorRevision."
+                        }
+                      },
+                      "description": "The field createdByClientVersion."
+                    },
+                    "minClientVersion": {
+                      "type": "object",
+                      "properties": {
+                        "major": {
+                          "type": "integer",
+                          "format": "int32",
+                          "description": "The field major."
+                        },
+                        "minor": {
+                          "type": "integer",
+                          "format": "int32",
+                          "description": "The field minor."
+                        },
+                        "build": {
+                          "type": "integer",
+                          "format": "int32",
+                          "description": "The field build."
+                        },
+                        "revision": {
+                          "type": "integer",
+                          "format": "int32",
+                          "description": "The field revision."
+                        },
+                        "majorRevision": {
+                          "type": "integer",
+                          "format": "int32",
+                          "description": "The field majorRevision."
+                        },
+                        "minorRevision": {
+                          "type": "integer",
+                          "format": "int32",
+                          "description": "The field minorRevision."
+                        }
+                      },
+                      "description": "The field minClientVersion."
+                    },
+                    "owner": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The field id."
+                        },
+                        "displayName": {
+                          "type": "string",
+                          "description": "The field displayName."
+                        },
+                        "email": {
+                          "type": "string",
+                          "description": "The field email."
+                        },
+                        "type": {
+                          "type": "string",
+                          "description": "The field type."
+                        },
+                        "tenantId": {
+                          "type": "string",
+                          "description": "The field tenantId."
+                        },
+                        "userPrincipalName": {
+                          "type": "string",
+                          "description": "The field userPrincipalName."
+                        }
+                      },
+                      "description": "The field owner."
+                    },
+                    "createdBy": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The field id."
+                        },
+                        "displayName": {
+                          "type": "string",
+                          "description": "The field displayName."
+                        },
+                        "email": {
+                          "type": "string",
+                          "description": "The field email."
+                        },
+                        "type": {
+                          "type": "string",
+                          "description": "The field type."
+                        },
+                        "tenantId": {
+                          "type": "string",
+                          "description": "The field tenantId."
+                        },
+                        "userPrincipalName": {
+                          "type": "string",
+                          "description": "The field userPrincipalName."
+                        }
+                      },
+                      "description": "The field createdBy."
+                    },
+                    "lastModifiedBy": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The field id."
+                        },
+                        "displayName": {
+                          "type": "string",
+                          "description": "The field displayName."
+                        },
+                        "email": {
+                          "type": "string",
+                          "description": "The field email."
+                        },
+                        "type": {
+                          "type": "string",
+                          "description": "The field type."
+                        },
+                        "tenantId": {
+                          "type": "string",
+                          "description": "The field tenantId."
+                        },
+                        "userPrincipalName": {
+                          "type": "string",
+                          "description": "The field userPrincipalName."
+                        }
+                      },
+                      "description": "The field lastModifiedBy."
+                    },
+                    "lastPublishedBy": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The field id."
+                        },
+                        "displayName": {
+                          "type": "string",
+                          "description": "The field displayName."
+                        },
+                        "email": {
+                          "type": "string",
+                          "description": "The field email."
+                        },
+                        "type": {
+                          "type": "string",
+                          "description": "The field type."
+                        },
+                        "tenantId": {
+                          "type": "string",
+                          "description": "The field tenantId."
+                        },
+                        "userPrincipalName": {
+                          "type": "string",
+                          "description": "The field userPrincipalName."
+                        }
+                      },
+                      "description": "The field lastPublishedBy."
+                    },
+                    "backgroundColor": {
+                      "type": "string",
+                      "description": "The field backgroundColor."
+                    },
+                    "backgroundImageUri": {
+                      "type": "string",
+                      "description": "The field backgroundImageUri."
+                    },
+                    "displayName": {
+                      "type": "string",
+                      "description": "The field displayName."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The field description."
+                    },
+                    "appUris": {
+                      "type": "object",
+                      "properties": {
+                        "documentUri": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "string",
+                              "description": "The field value."
+                            },
+                            "readonlyValue": {
+                              "type": "string",
+                              "description": "The field readonlyValue."
+                            }
+                          },
+                          "description": "The field documentUri."
+                        },
+                        "imageUris": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "The field imageUris."
+                        }
+                      },
+                      "description": "The field appUris."
+                    },
+                    "createdTime": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The field createdTime."
+                    },
+                    "lastModifiedTime": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The field lastModifiedTime."
+                    },
+                    "lastPublishTime": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The field lastPublishTime."
+                    },
+                    "sharedGroupsCount": {
+                      "type": "integer",
+                      "format": "int32",
+                      "description": "The field sharedGroupsCount."
+                    },
+                    "sharedUsersCount": {
+                      "type": "integer",
+                      "format": "int32",
+                      "description": "The field sharedUsersCount."
+                    },
+                    "appOpenProtocolUri": {
+                      "type": "string",
+                      "description": "The field appOpenProtocolUri."
+                    },
+                    "appOpenUri": {
+                      "type": "string",
+                      "description": "The field appOpenUri."
+                    },
+                    "userAppMetadata": {
+                      "type": "object",
+                      "properties": {
+                        "favorite": {
+                          "type": "string",
+                          "description": "The field favorite."
+                        },
+                        "includeInAppsList": {
+                          "type": "boolean",
+                          "description": "The field includeInAppsList."
+                        }
+                      },
+                      "description": "The field userAppMetadata."
+                    },
+                    "isFeaturedApp": {
+                      "type": "boolean",
+                      "description": "The field isFeaturedApp."
+                    },
+                    "bypassConsent": {
+                      "type": "boolean",
+                      "description": "The field bypassConsent."
+                    },
+                    "isHeroApp": {
+                      "type": "boolean",
+                      "description": "The field isHeroApp."
+                    },
+                    "environment": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The field id."
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "The field name."
+                        }
+                      },
+                      "description": "The field environment."
+                    }
+                  },
+                  "description": "The field properties."
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "app",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Name field of the PowerApp.",
+            "x-ms-summary": "PowerApp Name"
+          },
+          {
+            "name": "appVersionName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Version field of the PowerApp.",
+            "x-ms-summary": "PowerApp Version"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2017-06-01",
+            "x-ms-summary": "API Version",
+            "description": "The date value of the API version."
+          }
+        ],
+        "summary": "Restore App Version",
+        "description": "Restores the specified App Version as the current version.",
+        "operationId": "Restore-AppVersion"
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/apps/{app}/permissions": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "The field name."
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "The field id."
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "The field type."
+                      },
+                      "properties": {
+                        "type": "object",
+                        "properties": {
+                          "roleName": {
+                            "type": "string",
+                            "description": "The field roleName."
+                          },
+                          "principal": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "The field id."
+                              },
+                              "displayName": {
+                                "type": "string",
+                                "description": "The field displayName."
+                              },
+                              "email": {
+                                "type": "string",
+                                "description": "The field email."
+                              },
+                              "type": {
+                                "type": "string",
+                                "description": "The field type."
+                              }
+                            },
+                            "description": "The field principal."
+                          },
+                          "scope": {
+                            "type": "string",
+                            "description": "The field scope."
+                          },
+                          "notifyShareTargetOption": {
+                            "type": "string",
+                            "description": "The field notifyShareTargetOption."
+                          }
+                        },
+                        "description": "The field properties."
+                      }
+                    }
+                  },
+                  "description": "The field value."
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get App Role Assignments",
+        "description": "Returns a list of permissions for the specified PowerApp name.",
+        "operationId": "Get-AppRoleAssignment",
+        "parameters": [
+          {
+            "name": "app",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "PowerApp Name",
+            "description": "Name field of the PowerApp."
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2017-06-01",
+            "x-ms-summary": "API Version",
+            "description": "The date value of the API version."
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 250,
+            "description": "Number of App Role Assignments.",
+            "x-ms-summary": "Page size",
+            "x-ms-visibility": "advanced"
+          }
+        ],
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/apps/{app}/modifyPermissions": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "put": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The field id."
+                      },
+                      "properties": {
+                        "type": "object",
+                        "properties": {
+                          "roleName": {
+                            "type": "string",
+                            "description": "The field roleName."
+                          },
+                          "scope": {
+                            "type": "string",
+                            "description": "The field scope."
+                          },
+                          "principal": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "The field id."
+                              },
+                              "email": {
+                                "type": "string",
+                                "description": "The field email."
+                              },
+                              "type": {
+                                "type": "string",
+                                "description": "The field type."
+                              }
+                            },
+                            "description": "The field principal."
+                          },
+                          "resourceResponses": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "description": "The field id."
+                                },
+                                "statusCode": {
+                                  "type": "string",
+                                  "description": "The field statusCode."
+                                },
+                                "responseCode": {
+                                  "type": "string",
+                                  "description": "The field responseCode."
+                                },
+                                "message": {
+                                  "type": "string",
+                                  "description": "The field message."
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "description": "The field type."
+                                }
+                              }
+                            },
+                            "description": "The field resourceResponses."
+                          }
+                        },
+                        "description": "The field properties."
+                      }
+                    }
+                  },
+                  "description": "The field put."
+                }
+              }
+            }
+          }
+        },
+        "summary": "Edit App Role Assignment",
+        "description": "Sets permissions to a PowerApp.",
+        "operationId": "Edit-AppRoleAssignment",
+        "parameters": [
+          {
+            "name": "app",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "PowerApp Name",
+            "description": "Name field of the PowerApp."
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2016-11-01",
+            "x-ms-summary": "API Version",
+            "description": "The date value of the API version."
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "environment eq ''",
+            "x-ms-summary": "Filter Query",
+            "description": "A filter query parameter."
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "default": "application/json",
+            "x-ms-summary": "Content Type",
+            "description": "The content type of the API request."
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "delete": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Role Id of User."
+                      }
+                    }
+                  },
+                  "description": "delete"
+                },
+                "put": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "properties": {
+                        "type": "object",
+                        "properties": {
+                          "principal": {
+                            "type": "object",
+                            "properties": {
+                              "email": {
+                                "type": "string",
+                                "description": "Email of the User."
+                              },
+                              "tenantId": {
+                                "type": "string",
+                                "description": "Tenant Id of the User."
+                              },
+                              "id": {
+                                "type": "string",
+                                "description": "ID of the user."
+                              },
+                              "type": {
+                                "type": "string",
+                                "description": "Type of User."
+                              }
+                            },
+                            "description": "principal"
+                          },
+                          "NotifyShareTargetOption": {
+                            "type": "string",
+                            "description": "Notify ShareTarget Option."
+                          },
+                          "roleName": {
+                            "type": "string",
+                            "description": "Role Name of User."
+                          }
+                        },
+                        "description": "properties"
+                      }
+                    }
+                  },
+                  "description": "put"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/connections": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "The field name."
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "The field id."
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "The field type."
+                      },
+                      "properties": {
+                        "type": "object",
+                        "properties": {
+                          "apiId": {
+                            "type": "string",
+                            "description": "The field apiId."
+                          },
+                          "displayName": {
+                            "type": "string",
+                            "description": "The field displayName."
+                          },
+                          "iconUri": {
+                            "type": "string",
+                            "description": "The field iconUri."
+                          },
+                          "statuses": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "status": {
+                                  "type": "string",
+                                  "description": "The field status."
+                                },
+                                "target": {
+                                  "type": "string",
+                                  "description": "The field target."
+                                },
+                                "error": {
+                                  "type": "object",
+                                  "properties": {
+                                    "code": {
+                                      "type": "string",
+                                      "description": "The field code."
+                                    },
+                                    "message": {
+                                      "type": "string",
+                                      "description": "The field message."
+                                    }
+                                  },
+                                  "description": "The field error."
+                                }
+                              }
+                            },
+                            "description": "The field statuses."
+                          },
+                          "connectionParameters": {
+                            "type": "object",
+                            "properties": {
+                              "sku": {
+                                "type": "string",
+                                "description": "The field sku."
+                              },
+                              "workflowName": {
+                                "type": "string",
+                                "description": "The field workflowName."
+                              },
+                              "workflowPath": {
+                                "type": "string",
+                                "description": "The field workflowPath."
+                              },
+                              "workflowEndpoint": {
+                                "type": "string",
+                                "description": "The field workflowEndpoint."
+                              },
+                              "workFlowCallbackUri": {
+                                "type": "string",
+                                "description": "The field workFlowCallbackUri."
+                              },
+                              "$connections": {
+                                "type": "object",
+                                "properties": {
+                                  "shared_msnweather": {
+                                    "type": "object",
+                                    "properties": {
+                                      "apiId": {
+                                        "type": "string",
+                                        "description": "The field apiId."
+                                      },
+                                      "connectionId": {
+                                        "type": "string",
+                                        "description": "The field connectionId."
+                                      },
+                                      "source": {
+                                        "type": "string",
+                                        "description": "The field source."
+                                      }
+                                    },
+                                    "description": "The field shared_msnweather."
+                                  },
+                                  "shared_flowpush": {
+                                    "type": "object",
+                                    "properties": {
+                                      "apiId": {
+                                        "type": "string",
+                                        "description": "The field apiId."
+                                      },
+                                      "connectionId": {
+                                        "type": "string",
+                                        "description": "The field connectionId."
+                                      },
+                                      "source": {
+                                        "type": "string",
+                                        "description": "The field source."
+                                      }
+                                    },
+                                    "description": "The field shared_flowpush."
+                                  }
+                                },
+                                "description": "The field $connections."
+                              },
+                              "server": {
+                                "type": "string",
+                                "description": "The field server."
+                              },
+                              "database": {
+                                "type": "string",
+                                "description": "The field database."
+                              }
+                            },
+                            "description": "The field connectionParameters."
+                          },
+                          "keywordsRemaining": {
+                            "type": "integer",
+                            "format": "int32",
+                            "description": "The field keywordsRemaining."
+                          },
+                          "createdBy": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "The field id."
+                              },
+                              "displayName": {
+                                "type": "string",
+                                "description": "The field displayName."
+                              },
+                              "email": {
+                                "type": "string",
+                                "description": "The field email."
+                              },
+                              "type": {
+                                "type": "string",
+                                "description": "The field type."
+                              },
+                              "tenantId": {
+                                "type": "string",
+                                "description": "The field tenantId."
+                              },
+                              "userPrincipalName": {
+                                "type": "string",
+                                "description": "The field userPrincipalName."
+                              }
+                            },
+                            "description": "The field createdBy."
+                          },
+                          "createdTime": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The field createdTime."
+                          },
+                          "lastModifiedTime": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The field lastModifiedTime."
+                          },
+                          "environment": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "The field id."
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "The field name."
+                              }
+                            },
+                            "description": "The field environment."
+                          },
+                          "metadata": {
+                            "type": "object",
+                            "properties": {
+                              "shared_msnweather": {
+                                "type": "string",
+                                "description": "The field shared_msnweather."
+                              },
+                              "shared_flowpush": {
+                                "type": "string",
+                                "description": "The field shared_flowpush."
+                              }
+                            },
+                            "description": "The field metadata."
+                          },
+                          "expirationTime": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The field expirationTime."
+                          },
+                          "testLinks": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "requestUri": {
+                                  "type": "string",
+                                  "description": "The field requestUri."
+                                },
+                                "method": {
+                                  "type": "string",
+                                  "description": "The field method."
+                                }
+                              }
+                            },
+                            "description": "The field testLinks."
+                          }
+                        },
+                        "description": "The field properties."
+                      }
+                    }
+                  },
+                  "description": "The field value."
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2016-11-01",
+            "x-ms-summary": "API Version",
+            "description": "The date value of the API version."
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "environment eq ''",
+            "x-ms-summary": "Filter Query",
+            "description": "A filter query parameter."
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 250,
+            "description": "Number of Connections.",
+            "x-ms-summary": "Page size",
+            "x-ms-visibility": "advanced"
+          }
+        ],
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "summary": "Get Connections",
+        "description": "Returns a list of Connections.",
+        "operationId": "Get-Connections"
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/apis/{connectorName}/connections/{connectionName}": {
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "No Content."
+          }
+        },
+        "parameters": [
+          {
+            "name": "connectorName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Connector Name",
+            "description": "Name field of the Connector."
+          },
+          {
+            "name": "connectionName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Connection Name",
+            "description": "Name field of the Connection."
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2017-06-01",
+            "x-ms-summary": "API Version",
+            "description": "The date value of the API version."
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "environment eq ''",
+            "x-ms-summary": "Filter Query",
+            "description": "A filter query parameter."
+          }
+        ],
+        "summary": "Remove Connection",
+        "description": "Deletes a Connection.",
+        "operationId": "Remove-Connection"
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/apis/{connectorName}/connections/{connectionName}/permissions": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "The field name."
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "The field id."
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "The field type."
+                      },
+                      "properties": {
+                        "type": "object",
+                        "properties": {
+                          "roleName": {
+                            "type": "string",
+                            "description": "The field roleName."
+                          },
+                          "principal": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "The field id."
+                              },
+                              "displayName": {
+                                "type": "string",
+                                "description": "The field displayName."
+                              },
+                              "email": {
+                                "type": "string",
+                                "description": "The field email."
+                              },
+                              "type": {
+                                "type": "string",
+                                "description": "The field type."
+                              }
+                            },
+                            "description": "The field principal."
+                          },
+                          "notifyShareTargetOption": {
+                            "type": "string",
+                            "description": "The field notifyShareTargetOption."
+                          }
+                        },
+                        "description": "The field properties."
+                      }
+                    }
+                  },
+                  "description": "The field value."
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Connection Role Assignment",
+        "description": "Returns a list of permissions to a Connection.",
+        "operationId": "Get-ConnectionRoleAssignment",
+        "parameters": [
+          {
+            "name": "connectorName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Connector Name",
+            "description": "Name field of the Connector."
+          },
+          {
+            "name": "connectionName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Name field of the Connection.",
+            "x-ms-summary": "Connection Name"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2017-06-01",
+            "x-ms-summary": "API Version",
+            "description": "The date value of the API version."
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "environment eq ''",
+            "x-ms-summary": "Filter Query",
+            "description": "A filter query parameter."
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 250,
+            "description": "Number of Connection Role Assignments.",
+            "x-ms-summary": "Page size",
+            "x-ms-visibility": "advanced"
+          }
+        ],
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/apis/{connectorName}/connections/{connectionName}/modifyPermissions": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "No Content."
+          }
+        },
+        "parameters": [
+          {
+            "name": "connectorName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Connector Name",
+            "description": "Name field of the Connector."
+          },
+          {
+            "name": "connectionName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Connection Name",
+            "description": "Name field of the Connection."
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2016-11-01",
+            "x-ms-summary": "API Version",
+            "description": "The date value of the API version."
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "environment eq ''",
+            "x-ms-summary": "Filter Query",
+            "description": "A filter query parameter."
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "default": "application/json",
+            "x-ms-summary": "Content Type",
+            "description": "The content type of the API request."
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "delete": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Role Id of User."
+                      }
+                    }
+                  },
+                  "description": "delete"
+                },
+                "put": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "properties": {
+                        "type": "object",
+                        "properties": {
+                          "principal": {
+                            "type": "object",
+                            "properties": {
+                              "email": {
+                                "type": "string",
+                                "description": "Email of User."
+                              },
+                              "tenantId": {
+                                "type": "string",
+                                "description": "TenantId of User."
+                              },
+                              "id": {
+                                "type": "string",
+                                "description": "Id of User."
+                              },
+                              "type": {
+                                "type": "string",
+                                "description": "Type of User."
+                              }
+                            },
+                            "description": "principal"
+                          },
+                          "NotifyShareTargetOption": {
+                            "type": "string",
+                            "description": "NotifyShareTargetOption of User."
+                          },
+                          "roleName": {
+                            "type": "string",
+                            "description": "RoleName of User."
+                          }
+                        },
+                        "description": "properties"
+                      }
+                    }
+                  },
+                  "description": "put"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Edit Connection Role Assignment",
+        "description": "Sets permissions to a Connection.",
+        "operationId": "Edit-ConnectionRoleAssignment"
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/apis/{connectorName}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The field name."
+                },
+                "id": {
+                  "type": "string",
+                  "description": "The field id."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "The field type."
+                },
+                "properties": {
+                  "type": "object",
+                  "properties": {
+                    "displayName": {
+                      "type": "string",
+                      "description": "The field displayName."
+                    },
+                    "iconUri": {
+                      "type": "string",
+                      "description": "The field iconUri."
+                    },
+                    "iconBrandColor": {
+                      "type": "string",
+                      "description": "The field iconBrandColor."
+                    },
+                    "apiEnvironment": {
+                      "type": "string",
+                      "description": "The field apiEnvironment."
+                    },
+                    "isCustomApi": {
+                      "type": "boolean",
+                      "description": "The field isCustomApi."
+                    },
+                    "connectionParameters": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "description": "The field type."
+                            },
+                            "oAuthSettings": {
+                              "type": "object",
+                              "properties": {
+                                "identityProvider": {
+                                  "type": "string",
+                                  "description": "The field identityProvider."
+                                },
+                                "clientId": {
+                                  "type": "string",
+                                  "description": "The field clientId."
+                                },
+                                "scopes": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  },
+                                  "description": "The field scopes."
+                                },
+                                "redirectUrl": {
+                                  "type": "string",
+                                  "description": "The field redirectUrl."
+                                },
+                                "properties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "IsFirstParty": {
+                                      "type": "string",
+                                      "description": "The field IsFirstParty."
+                                    }
+                                  },
+                                  "description": "The field properties."
+                                },
+                                "customParameters": {
+                                  "type": "object",
+                                  "properties": {
+                                    "capability": {
+                                      "type": "object",
+                                      "properties": {
+                                        "value": {
+                                          "type": "string",
+                                          "description": "The field value."
+                                        }
+                                      },
+                                      "description": "The field capability."
+                                    }
+                                  },
+                                  "description": "The field customParameters."
+                                }
+                              },
+                              "description": "The field oAuthSettings."
+                            },
+                            "uiDefinition": {
+                              "type": "object",
+                              "properties": {
+                                "displayName": {
+                                  "type": "string",
+                                  "description": "The field displayName."
+                                },
+                                "description": {
+                                  "type": "string",
+                                  "description": "The field description."
+                                },
+                                "tooltip": {
+                                  "type": "string",
+                                  "description": "The field tooltip."
+                                },
+                                "constraints": {
+                                  "type": "object",
+                                  "properties": {
+                                    "required": {
+                                      "type": "string",
+                                      "description": "The field required."
+                                    }
+                                  },
+                                  "description": "The field constraints."
+                                }
+                              },
+                              "description": "The field uiDefinition."
+                            }
+                          },
+                          "description": "The field token."
+                        }
+                      },
+                      "description": "The field connectionParameters."
+                    },
+                    "runtimeUrls": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The field runtimeUrls."
+                    },
+                    "primaryRuntimeUrl": {
+                      "type": "string",
+                      "description": "The field primaryRuntimeUrl."
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "source": {
+                          "type": "string",
+                          "description": "The field source."
+                        },
+                        "brandColor": {
+                          "type": "string",
+                          "description": "The field brandColor."
+                        }
+                      },
+                      "description": "The field metadata."
+                    },
+                    "capabilities": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The field capabilities."
+                    },
+                    "interfaces": {
+                      "type": "object",
+                      "properties": {
+                        "CDPBlob0": {
+                          "type": "object",
+                          "properties": {
+                            "revisions": {
+                              "type": "object",
+                              "properties": {
+                                "1": {
+                                  "type": "object",
+                                  "properties": {
+                                    "baseUrl": {
+                                      "type": "string",
+                                      "description": "The field baseUrl."
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "description": "The field status."
+                                    },
+                                    "deprecated": {
+                                      "type": "boolean",
+                                      "description": "The field deprecated."
+                                    }
+                                  },
+                                  "description": "The field 1."
+                                }
+                              },
+                              "description": "The field revisions."
+                            }
+                          },
+                          "description": "The field CDPBlob0."
+                        },
+                        "CDPBlob1": {
+                          "type": "object",
+                          "properties": {
+                            "revisions": {
+                              "type": "object",
+                              "properties": {
+                                "1": {
+                                  "type": "object",
+                                  "properties": {
+                                    "baseUrl": {
+                                      "type": "string",
+                                      "description": "The field baseUrl."
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "description": "The field status."
+                                    }
+                                  },
+                                  "description": "The field 1."
+                                }
+                              },
+                              "description": "The field revisions."
+                            }
+                          },
+                          "description": "The field CDPBlob1."
+                        }
+                      },
+                      "description": "The field interfaces."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The field description."
+                    },
+                    "createdTime": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The field createdTime."
+                    },
+                    "changedTime": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The field changedTime."
+                    },
+                    "releaseTag": {
+                      "type": "string",
+                      "description": "The field releaseTag."
+                    },
+                    "tier": {
+                      "type": "string",
+                      "description": "The field tier."
+                    },
+                    "publisher": {
+                      "type": "string",
+                      "description": "The field publisher."
+                    },
+                    "scopes": {
+                      "type": "object",
+                      "properties": {
+                        "will": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "The field will."
+                        },
+                        "wont": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "The field wont."
+                        }
+                      },
+                      "description": "The field scopes."
+                    }
+                  },
+                  "description": "The field properties."
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Connector",
+        "description": "Returns a Connector.",
+        "operationId": "Get-Connector",
+        "parameters": [
+          {
+            "name": "connectorName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Name field of the Connector.",
+            "x-ms-summary": "Connector Name"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "x-ms-summary": "Filter Query",
+            "description": "A filter query parameter."
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2016-11-01",
+            "description": "The date value of the API version.",
+            "x-ms-summary": "API Version"
+          }
+        ]
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "No Content."
+          }
+        },
+        "summary": "Remove Connector",
+        "description": "Deletes a Connector.",
+        "operationId": "Remove-Connector",
+        "parameters": [
+          {
+            "name": "connectorName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Connector Name",
+            "description": "Name field of the Connector."
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2017-06-01",
+            "x-ms-summary": "API Version",
+            "description": "The date value of the API version."
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "environment eq ''",
+            "x-ms-summary": "Filter Query",
+            "description": "A filter query parameter."
+          }
+        ]
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/apis/{connectorName}/permissions": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "The field name."
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "The field id."
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "The field type."
+                      },
+                      "properties": {
+                        "type": "object",
+                        "properties": {
+                          "roleName": {
+                            "type": "string",
+                            "description": "The field roleName."
+                          },
+                          "principal": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "The field id."
+                              },
+                              "displayName": {
+                                "type": "string",
+                                "description": "The field displayName."
+                              },
+                              "email": {
+                                "type": "string",
+                                "description": "The field email."
+                              },
+                              "type": {
+                                "type": "string",
+                                "description": "The field type."
+                              }
+                            },
+                            "description": "The field principal."
+                          },
+                          "notifyShareTargetOption": {
+                            "type": "string",
+                            "description": "The field notifyShareTargetOption."
+                          }
+                        },
+                        "description": "The field properties."
+                      }
+                    }
+                  },
+                  "description": "The field value."
+                }
+              }
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "summary": "Get Connector Role Assignment",
+        "description": "Returns a list of permissions for the specified Connector.",
+        "operationId": "Get-ConnectorRoleAssignment",
+        "parameters": [
+          {
+            "name": "connectorName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Connector Name",
+            "description": "Name field of the Connector."
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2017-06-01",
+            "x-ms-summary": "API Version",
+            "description": "The date value of the API version."
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "environment eq ''",
+            "x-ms-summary": "Filter Query",
+            "description": "A filter query parameter."
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 250,
+            "description": "Number of Connector Role Assignments.",
+            "x-ms-summary": "Page size",
+            "x-ms-visibility": "advanced"
+          }
+        ]
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/apis/{connectorName}/modifyPermissions": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "No Content."
+          }
+        },
+        "summary": "Edit Connector Role Assignment",
+        "description": "Sets permissions to a Connector.",
+        "operationId": "Edit-ConnectorRoleAssignment",
+        "parameters": [
+          {
+            "name": "connectorName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-summary": "Connector Name",
+            "description": "Name field of the Connector."
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2017-06-01",
+            "x-ms-summary": "API Version",
+            "description": "The date value of the API version."
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "environment eq ''",
+            "description": "A filter query parameter.",
+            "x-ms-summary": "Filter Query"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "default": "application/json",
+            "x-ms-summary": "Content Type",
+            "description": "The content type of the API request."
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "delete": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Role id of User."
+                      }
+                    }
+                  },
+                  "description": "delete"
+                },
+                "put": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "properties": {
+                        "type": "object",
+                        "properties": {
+                          "principal": {
+                            "type": "object",
+                            "properties": {
+                              "email": {
+                                "type": "string",
+                                "description": "Email of User."
+                              },
+                              "tenantId": {
+                                "type": "string",
+                                "description": "TenantId of User."
+                              },
+                              "id": {
+                                "type": "string",
+                                "description": "Id of User."
+                              },
+                              "type": {
+                                "type": "string",
+                                "description": "Type of User."
+                              }
+                            },
+                            "description": "principal"
+                          },
+                          "NotifyShareTargetOption": {
+                            "type": "string",
+                            "description": "NotifyShareTargetOption of User."
+                          },
+                          "roleName": {
+                            "type": "string",
+                            "description": "RoleName of User."
+                          }
+                        },
+                        "description": "properties"
+                      }
+                    }
+                  },
+                  "description": "put"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/apis": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "The field name."
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "The field id."
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "The field type."
+                      },
+                      "properties": {
+                        "type": "object",
+                        "properties": {
+                          "displayName": {
+                            "type": "string",
+                            "description": "The field displayName."
+                          },
+                          "iconUri": {
+                            "type": "string",
+                            "description": "The field iconUri."
+                          },
+                          "iconBrandColor": {
+                            "type": "string",
+                            "description": "The field iconBrandColor."
+                          },
+                          "apiEnvironment": {
+                            "type": "string",
+                            "description": "The field apiEnvironment."
+                          },
+                          "isCustomApi": {
+                            "type": "boolean",
+                            "description": "The field isCustomApi."
+                          },
+                          "connectionParameters": {
+                            "type": "object",
+                            "properties": {
+                              "token": {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "description": "The field type."
+                                  },
+                                  "oAuthSettings": {
+                                    "type": "object",
+                                    "properties": {
+                                      "identityProvider": {
+                                        "type": "string",
+                                        "description": "The field identityProvider."
+                                      },
+                                      "clientId": {
+                                        "type": "string",
+                                        "description": "The field clientId."
+                                      },
+                                      "scopes": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string"
+                                        },
+                                        "description": "The field scopes."
+                                      },
+                                      "redirectUrl": {
+                                        "type": "string",
+                                        "description": "The field redirectUrl."
+                                      },
+                                      "properties": {
+                                        "type": "object",
+                                        "properties": {
+                                          "IsFirstParty": {
+                                            "type": "string",
+                                            "description": "The field IsFirstParty."
+                                          }
+                                        },
+                                        "description": "The field properties."
+                                      },
+                                      "customParameters": {
+                                        "type": "object",
+                                        "properties": {
+                                          "capability": {
+                                            "type": "object",
+                                            "properties": {
+                                              "value": {
+                                                "type": "string",
+                                                "description": "The field value."
+                                              }
+                                            },
+                                            "description": "The field capability."
+                                          }
+                                        },
+                                        "description": "The field customParameters."
+                                      }
+                                    },
+                                    "description": "The field oAuthSettings."
+                                  },
+                                  "uiDefinition": {
+                                    "type": "object",
+                                    "properties": {
+                                      "displayName": {
+                                        "type": "string",
+                                        "description": "The field displayName."
+                                      },
+                                      "description": {
+                                        "type": "string",
+                                        "description": "The field description."
+                                      },
+                                      "tooltip": {
+                                        "type": "string",
+                                        "description": "The field tooltip."
+                                      },
+                                      "constraints": {
+                                        "type": "object",
+                                        "properties": {
+                                          "required": {
+                                            "type": "string",
+                                            "description": "The field required."
+                                          },
+                                          "capability": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string"
+                                            },
+                                            "description": "The field capability."
+                                          }
+                                        },
+                                        "description": "The field constraints."
+                                      }
+                                    },
+                                    "description": "The field uiDefinition."
+                                  }
+                                },
+                                "description": "The field token."
+                              },
+                              "gateway": {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "description": "The field type."
+                                  },
+                                  "gatewaySettings": {
+                                    "type": "object",
+                                    "properties": {
+                                      "dataSourceType": {
+                                        "type": "string",
+                                        "description": "The field dataSourceType."
+                                      },
+                                      "connectionDetails": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string"
+                                        },
+                                        "description": "The field connectionDetails."
+                                      }
+                                    },
+                                    "description": "The field gatewaySettings."
+                                  },
+                                  "uiDefinition": {
+                                    "type": "object",
+                                    "properties": {
+                                      "tabIndex": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "description": "The field tabIndex."
+                                      },
+                                      "constraints": {
+                                        "type": "object",
+                                        "properties": {
+                                          "hidden": {
+                                            "type": "string",
+                                            "description": "The field hidden."
+                                          },
+                                          "capability": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string"
+                                            },
+                                            "description": "The field capability."
+                                          }
+                                        },
+                                        "description": "The field constraints."
+                                      }
+                                    },
+                                    "description": "The field uiDefinition."
+                                  }
+                                },
+                                "description": "The field gateway."
+                              },
+                              "authType": {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "description": "The field type."
+                                  },
+                                  "allowedValues": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "value": {
+                                          "type": "string",
+                                          "description": "The field value."
+                                        }
+                                      }
+                                    },
+                                    "description": "The field allowedValues."
+                                  },
+                                  "uiDefinition": {
+                                    "type": "object",
+                                    "properties": {
+                                      "displayName": {
+                                        "type": "string",
+                                        "description": "The field displayName."
+                                      },
+                                      "description": {
+                                        "type": "string",
+                                        "description": "The field description."
+                                      },
+                                      "tooltip": {
+                                        "type": "string",
+                                        "description": "The field tooltip."
+                                      },
+                                      "constraints": {
+                                        "type": "object",
+                                        "properties": {
+                                          "tabIndex": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "The field tabIndex."
+                                          },
+                                          "required": {
+                                            "type": "string",
+                                            "description": "The field required."
+                                          },
+                                          "allowedValues": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "object",
+                                              "properties": {
+                                                "text": {
+                                                  "type": "string",
+                                                  "description": "The field text."
+                                                },
+                                                "value": {
+                                                  "type": "string",
+                                                  "description": "The field value."
+                                                }
+                                              }
+                                            },
+                                            "description": "The field allowedValues."
+                                          },
+                                          "capability": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string"
+                                            },
+                                            "description": "The field capability."
+                                          }
+                                        },
+                                        "description": "The field constraints."
+                                      }
+                                    },
+                                    "description": "The field uiDefinition."
+                                  }
+                                },
+                                "description": "The field authType."
+                              },
+                              "username": {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "description": "The field type."
+                                  },
+                                  "uiDefinition": {
+                                    "type": "object",
+                                    "properties": {
+                                      "displayName": {
+                                        "type": "string",
+                                        "description": "The field displayName."
+                                      },
+                                      "description": {
+                                        "type": "string",
+                                        "description": "The field description."
+                                      },
+                                      "tooltip": {
+                                        "type": "string",
+                                        "description": "The field tooltip."
+                                      },
+                                      "constraints": {
+                                        "type": "object",
+                                        "properties": {
+                                          "tabIndex": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "The field tabIndex."
+                                          },
+                                          "clearText": {
+                                            "type": "boolean",
+                                            "description": "The field clearText."
+                                          },
+                                          "required": {
+                                            "type": "string",
+                                            "description": "The field required."
+                                          },
+                                          "capability": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string"
+                                            },
+                                            "description": "The field capability."
+                                          }
+                                        },
+                                        "description": "The field constraints."
+                                      }
+                                    },
+                                    "description": "The field uiDefinition."
+                                  }
+                                },
+                                "description": "The field username."
+                              },
+                              "password": {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "description": "The field type."
+                                  },
+                                  "uiDefinition": {
+                                    "type": "object",
+                                    "properties": {
+                                      "displayName": {
+                                        "type": "string",
+                                        "description": "The field displayName."
+                                      },
+                                      "description": {
+                                        "type": "string",
+                                        "description": "The field description."
+                                      },
+                                      "tooltip": {
+                                        "type": "string",
+                                        "description": "The field tooltip."
+                                      },
+                                      "constraints": {
+                                        "type": "object",
+                                        "properties": {
+                                          "tabIndex": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "The field tabIndex."
+                                          },
+                                          "required": {
+                                            "type": "string",
+                                            "description": "The field required."
+                                          },
+                                          "capability": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string"
+                                            },
+                                            "description": "The field capability."
+                                          }
+                                        },
+                                        "description": "The field constraints."
+                                      }
+                                    },
+                                    "description": "The field uiDefinition."
+                                  }
+                                },
+                                "description": "The field password."
+                              }
+                            },
+                            "description": "The field connectionParameters."
+                          },
+                          "runtimeUrls": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "The field runtimeUrls."
+                          },
+                          "primaryRuntimeUrl": {
+                            "type": "string",
+                            "description": "The field primaryRuntimeUrl."
+                          },
+                          "metadata": {
+                            "type": "object",
+                            "properties": {
+                              "source": {
+                                "type": "string",
+                                "description": "The field source."
+                              },
+                              "brandColor": {
+                                "type": "string",
+                                "description": "The field brandColor."
+                              }
+                            },
+                            "description": "The field metadata."
+                          },
+                          "capabilities": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "The field capabilities."
+                          },
+                          "interfaces": {
+                            "type": "object",
+                            "properties": {
+                              "CDPTabular1": {
+                                "type": "object",
+                                "properties": {
+                                  "revisions": {
+                                    "type": "object",
+                                    "properties": {
+                                      "1": {
+                                        "type": "object",
+                                        "properties": {
+                                          "baseUrl": {
+                                            "type": "string",
+                                            "description": "The field baseUrl."
+                                          },
+                                          "status": {
+                                            "type": "string",
+                                            "description": "The field status."
+                                          }
+                                        },
+                                        "description": "The field 1."
+                                      }
+                                    },
+                                    "description": "The field revisions."
+                                  }
+                                },
+                                "description": "The field CDPTabular1."
+                              },
+                              "CDPBlob0": {
+                                "type": "object",
+                                "properties": {
+                                  "revisions": {
+                                    "type": "object",
+                                    "properties": {
+                                      "1": {
+                                        "type": "object",
+                                        "properties": {
+                                          "baseUrl": {
+                                            "type": "string",
+                                            "description": "The field baseUrl."
+                                          },
+                                          "status": {
+                                            "type": "string",
+                                            "description": "The field status."
+                                          },
+                                          "deprecated": {
+                                            "type": "boolean",
+                                            "description": "The field deprecated."
+                                          }
+                                        },
+                                        "description": "The field 1."
+                                      }
+                                    },
+                                    "description": "The field revisions."
+                                  }
+                                },
+                                "description": "The field CDPBlob0."
+                              },
+                              "CDPBlob1": {
+                                "type": "object",
+                                "properties": {
+                                  "revisions": {
+                                    "type": "object",
+                                    "properties": {
+                                      "1": {
+                                        "type": "object",
+                                        "properties": {
+                                          "baseUrl": {
+                                            "type": "string",
+                                            "description": "The field baseUrl."
+                                          },
+                                          "status": {
+                                            "type": "string",
+                                            "description": "The field status."
+                                          }
+                                        },
+                                        "description": "The field 1."
+                                      }
+                                    },
+                                    "description": "The field revisions."
+                                  }
+                                },
+                                "description": "The field CDPBlob1."
+                              }
+                            },
+                            "description": "The field interfaces."
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "The field description."
+                          },
+                          "createdTime": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The field createdTime."
+                          },
+                          "changedTime": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The field changedTime."
+                          },
+                          "releaseTag": {
+                            "type": "string",
+                            "description": "The field releaseTag."
+                          },
+                          "tier": {
+                            "type": "string",
+                            "description": "The field tier."
+                          },
+                          "publisher": {
+                            "type": "string",
+                            "description": "The field publisher."
+                          },
+                          "scopes": {
+                            "type": "object",
+                            "properties": {
+                              "will": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "description": "The field will."
+                              },
+                              "wont": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "description": "The field wont."
+                              }
+                            },
+                            "description": "The field scopes."
+                          }
+                        },
+                        "description": "The field properties."
+                      }
+                    }
+                  },
+                  "description": "The field value."
+                }
+              }
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "summary": "Get Connectors",
+        "description": "Returns a list of Connectors.",
+        "operationId": "Get-Connectors",
+        "parameters": [
+          {
+            "name": "showApisWithToS",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "true",
+            "description": "Show all the Apis.",
+            "x-ms-summary": "ShowAllApis"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "A filter query parameter.",
+            "x-ms-summary": "Filter Query"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2016-11-01",
+            "description": "The date value of the API version.",
+            "x-ms-summary": "API Version"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 250,
+            "description": "Number of Connectors.",
+            "x-ms-summary": "Page size",
+            "x-ms-visibility": "advanced"
+          }
+        ]
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/environments": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The field id."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The field name."
+                      },
+                      "location": {
+                        "type": "string",
+                        "description": "The field location."
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "The field type."
+                      },
+                      "properties": {
+                        "type": "object",
+                        "properties": {
+                          "azureRegionHint": {
+                            "type": "string",
+                            "description": "The field azureRegionHint."
+                          },
+                          "displayName": {
+                            "type": "string",
+                            "description": "The field displayName."
+                          },
+                          "createdTime": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The field createdTime."
+                          },
+                          "clientUris": {
+                            "type": "object",
+                            "properties": {
+                              "admin": {
+                                "type": "string",
+                                "description": "Admin portal Uri for the environment."
+                              },
+                              "maker": {
+                                "type": "string",
+                                "description": "Maker portal Uri for the environment."
+                              }
+                            }
+                          },
+                          "createdBy": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "The field id."
+                              },
+                              "displayName": {
+                                "type": "string",
+                                "description": "The field displayName."
+                              },
+                              "type": {
+                                "type": "string",
+                                "description": "The field type."
+                              },
+                              "email": {
+                                "type": "string",
+                                "description": "The field email."
+                              },
+                              "tenantId": {
+                                "type": "string",
+                                "description": "The field tenantId."
+                              },
+                              "userPrincipalName": {
+                                "type": "string",
+                                "description": "The field userPrincipalName."
+                              }
+                            },
+                            "description": "The field createdBy."
+                          },
+                          "provisioningState": {
+                            "type": "string",
+                            "description": "The field provisioningState."
+                          },
+                          "creationType": {
+                            "type": "string",
+                            "description": "The field creationType."
+                          },
+                          "environmentSku": {
+                            "type": "string",
+                            "description": "The field environmentSku."
+                          },
+                          "environmentType": {
+                            "type": "string",
+                            "description": "The field environmentType."
+                          },
+                          "isDefault": {
+                            "type": "boolean",
+                            "description": "The field isDefault."
+                          },
+                          "permissions": {
+                            "type": "object",
+                            "properties": {
+                              "CreatePowerApp": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field CreatePowerApp."
+                              },
+                              "ReadEnvironment": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field ReadEnvironment."
+                              },
+                              "GenerateResourceStorage": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field GenerateResourceStorage."
+                              },
+                              "CreateGateway": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field CreateGateway."
+                              },
+                              "CreateFlow": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field CreateFlow."
+                              },
+                              "CreateCustomApi": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field CreateCustomApi."
+                              },
+                              "ExportEnvironmentPackage": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field ExportEnvironmentPackage."
+                              },
+                              "ImportEnvironmentPackage": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field ImportEnvironmentPackage."
+                              },
+                              "CreateFunction": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field CreateFunction."
+                              },
+                              "AdminReadEnvironment": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field AdminReadEnvironment."
+                              },
+                              "UpdateEnvironment": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field UpdateEnvironment."
+                              },
+                              "DeleteEnvironment": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field DeleteEnvironment."
+                              },
+                              "SetDLPPolicy": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field SetDLPPolicy."
+                              },
+                              "ListAnyPowerApp": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field ListAnyPowerApp."
+                              },
+                              "ListAnyFlow": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field ListAnyFlow."
+                              },
+                              "DeleteAnyPowerApp": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field DeleteAnyPowerApp."
+                              },
+                              "DeleteAnyFlow": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field DeleteAnyFlow."
+                              },
+                              "AddEnvironmentRoleAssignment": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field AddEnvironmentRoleAssignment."
+                              },
+                              "ReadEnvironmentRoleInformation": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field ReadEnvironmentRoleInformation."
+                              },
+                              "RemoveEnvironmentRoleAssignment": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field RemoveEnvironmentRoleAssignment."
+                              },
+                              "ModifyDatabaseRoleAssignments": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field ModifyDatabaseRoleAssignments."
+                              },
+                              "CreateDatabase": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field CreateDatabase."
+                              },
+                              "ManageAnyPowerApp": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field ManageAnyPowerApp."
+                              },
+                              "ManageAnyConnection": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field ManageAnyConnection."
+                              },
+                              "ManageCDSMigration": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field ManageCDSMigration."
+                              },
+                              "ManageTalentEnvironmentSettings": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field ManageTalentEnvironmentSettings."
+                              },
+                              "ManageAnyCustomApi": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field ManageAnyCustomApi."
+                              },
+                              "ListAnyFunction": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field ListAnyFunction."
+                              },
+                              "DeleteAnyFunction": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string",
+                                    "description": "The field displayName."
+                                  }
+                                },
+                                "description": "The field DeleteAnyFunction."
+                              }
+                            },
+                            "description": "The field permissions."
+                          },
+                          "runtimeEndpoints": {
+                            "type": "object",
+                            "properties": {
+                              "microsoft.BusinessAppPlatform": {
+                                "type": "string",
+                                "description": "The field microsoft BusinessAppPlatform."
+                              },
+                              "microsoft.CommonDataModel": {
+                                "type": "string",
+                                "description": "The field microsoft CommonDataModel."
+                              },
+                              "microsoft.PowerApps": {
+                                "type": "string",
+                                "description": "The field microsoft Power Apps."
+                              },
+                              "microsoft.Flow": {
+                                "type": "string",
+                                "description": "The field microsoft Flow."
+                              }
+                            },
+                            "description": "The field runtimeEndpoints."
+                          },
+                          "lastModifiedTime": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The field lastModifiedTime."
+                          },
+                          "lastModifiedBy": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "The field id."
+                              },
+                              "displayName": {
+                                "type": "string",
+                                "description": "The field displayName."
+                              },
+                              "email": {
+                                "type": "string",
+                                "description": "The field email."
+                              },
+                              "type": {
+                                "type": "string",
+                                "description": "The field type."
+                              },
+                              "tenantId": {
+                                "type": "string",
+                                "description": "The field tenantId."
+                              },
+                              "userPrincipalName": {
+                                "type": "string",
+                                "description": "The field userPrincipalName."
+                              }
+                            },
+                            "description": "The field lastModifiedBy."
+                          },
+                          "linkedEnvironmentMetadata": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "description": "The field type."
+                              },
+                              "resourceId": {
+                                "type": "string",
+                                "description": "The field resourceId."
+                              },
+                              "friendlyName": {
+                                "type": "string",
+                                "description": "The field friendlyName."
+                              },
+                              "uniqueName": {
+                                "type": "string",
+                                "description": "The field uniqueName."
+                              },
+                              "domainName": {
+                                "type": "string",
+                                "description": "The field domainName."
+                              },
+                              "version": {
+                                "type": "string",
+                                "description": "The field version."
+                              },
+                              "instanceUrl": {
+                                "type": "string",
+                                "description": "The field instanceUrl."
+                              },
+                              "instanceApiUrl": {
+                                "type": "string",
+                                "description": "The field instanceApiUrl."
+                              },
+                              "baseLanguage": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "The field baseLanguage."
+                              },
+                              "instanceState": {
+                                "type": "string",
+                                "description": "The field instanceState."
+                              },
+                              "createdTime": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "The field createdTime."
+                              },
+                              "modifiedTime": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "The field modifiedTime."
+                              },
+                              "hostNameSuffix": {
+                                "type": "string",
+                                "description": "The field hostNameSuffix."
+                              },
+                              "bapSolutionId": {
+                                "type": "string",
+                                "description": "The field bapSolutionId."
+                              },
+                              "creationTemplates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "description": "The field creationTemplates."
+                              },
+                              "managementPackageVersion": {
+                                "type": "string",
+                                "description": "The field managementPackageVersion."
+                              }
+                            },
+                            "description": "The field linkedEnvironmentMetadata."
+                          },
+                          "softDeletedTime": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The field softDeletedTime."
+                          },
+                          "provisioningDetails": {
+                            "type": "object",
+                            "properties": {
+                              "message": {
+                                "type": "string",
+                                "description": "The field message."
+                              },
+                              "operations": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "httpStatus": {
+                                      "type": "string",
+                                      "description": "The field httpStatus."
+                                    },
+                                    "code": {
+                                      "type": "string",
+                                      "description": "The field code."
+                                    }
+                                  }
+                                },
+                                "description": "The field operations."
+                              }
+                            },
+                            "description": "The field provisioningDetails."
+                          }
+                        },
+                        "description": "The field properties."
+                      }
+                    }
+                  },
+                  "description": "The field value."
+                }
+              }
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "summary": "Get Environments",
+        "parameters": [
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2022-11-01",
+            "x-ms-summary": "API Version",
+            "description": "The date value of the API version."
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 250,
+            "description": "Number of Environments.",
+            "x-ms-summary": "Page size",
+            "x-ms-visibility": "advanced"
+          }
+        ],
+        "description": "Returns a list of Environments.",
+        "operationId": "Get-Environments"
+      }
+    },
+    "/{connectionId}/providers/Microsoft.PowerApps/apps": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResourceArray[PowerApp]"
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "summary": "Get Apps",
+        "description": "Returns a list of apps.",
+        "operationId": "Get-Apps",
+        "parameters": [
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "2016-11-01",
+            "description": "The date value of the API version.",
+            "x-ms-summary": "API Version"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "A filter query parameter.",
+            "x-ms-summary": "Filter Query"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 250,
+            "description": "Number of Apps to return.",
+            "x-ms-summary": "Page size",
+            "x-ms-visibility": "advanced"
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ResourceArray[PowerApp]": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PowerApp"
+          },
+          "description": "The field value."
+        }
+      }
+    },
+    "PowerApp": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The field name."
+        },
+        "id": {
+          "type": "string",
+          "description": "The field id."
+        },
+        "type": {
+          "type": "string",
+          "description": "The field type."
+        },
+        "tags": {
+          "type": "object",
+          "properties": {
+            "primaryDeviceWidth": {
+              "type": "string",
+              "description": "The field primaryDeviceWidth."
+            },
+            "primaryDeviceHeight": {
+              "type": "string",
+              "description": "The field primaryDeviceHeight."
+            },
+            "sienaVersion": {
+              "type": "string",
+              "description": "The field sienaVersion."
+            },
+            "deviceCapabilities": {
+              "type": "string",
+              "description": "The field deviceCapabilities."
+            },
+            "supportsPortrait": {
+              "type": "string",
+              "description": "The field supportsPortrait."
+            },
+            "supportsLandscape": {
+              "type": "string",
+              "description": "The field supportsLandscape."
+            },
+            "primaryFormFactor": {
+              "type": "string",
+              "description": "The field primaryFormFactor."
+            },
+            "publisherVersion": {
+              "type": "string",
+              "description": "The field publisherVersion."
+            },
+            "minimumRequiredApiVersion": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The field minimumRequiredApiVersion."
+            }
+          },
+          "description": "The field tags."
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "appVersion": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The field appVersion."
+            },
+            "createdByClientVersion": {
+              "type": "object",
+              "properties": {
+                "major": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "The field major."
+                },
+                "minor": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "The field minor."
+                },
+                "build": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "The field build."
+                },
+                "revision": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "The field revision."
+                },
+                "majorRevision": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "The field majorRevision."
+                },
+                "minorRevision": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "The field minorRevision."
+                }
+              },
+              "description": "The field createdByClientVersion."
+            },
+            "minClientVersion": {
+              "type": "object",
+              "properties": {
+                "major": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "The field major."
+                },
+                "minor": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "The field minor."
+                },
+                "build": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "The field build."
+                },
+                "revision": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "The field revision."
+                },
+                "majorRevision": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "The field majorRevision."
+                },
+                "minorRevision": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "The field minorRevision."
+                }
+              },
+              "description": "The field minClientVersion."
+            },
+            "owner": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The field id."
+                },
+                "displayName": {
+                  "type": "string",
+                  "description": "The field displayName."
+                },
+                "email": {
+                  "type": "string",
+                  "description": "The field email."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "The field type."
+                },
+                "tenantId": {
+                  "type": "string",
+                  "description": "The field tenantId."
+                },
+                "userPrincipalName": {
+                  "type": "string",
+                  "description": "The field userPrincipalName."
+                }
+              },
+              "description": "The field owner."
+            },
+            "createdBy": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The field id."
+                },
+                "displayName": {
+                  "type": "string",
+                  "description": "The field displayName."
+                },
+                "email": {
+                  "type": "string",
+                  "description": "The field email."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "The field type."
+                },
+                "tenantId": {
+                  "type": "string",
+                  "description": "The field tenantId."
+                },
+                "userPrincipalName": {
+                  "type": "string",
+                  "description": "The field userPrincipalName."
+                }
+              },
+              "description": "The field createdBy."
+            },
+            "lastModifiedBy": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The field id."
+                },
+                "displayName": {
+                  "type": "string",
+                  "description": "The field displayName."
+                },
+                "email": {
+                  "type": "string",
+                  "description": "The field email."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "The field type."
+                },
+                "tenantId": {
+                  "type": "string",
+                  "description": "The field tenantId."
+                },
+                "userPrincipalName": {
+                  "type": "string",
+                  "description": "The field userPrincipalName."
+                }
+              },
+              "description": "The field lastModifiedBy."
+            },
+            "backgroundColor": {
+              "type": "string",
+              "description": "The field backgroundColor."
+            },
+            "backgroundImageUri": {
+              "type": "string",
+              "description": "The field backgroundImageUri."
+            },
+            "displayName": {
+              "type": "string",
+              "description": "The field displayName."
+            },
+            "description": {
+              "type": "string",
+              "description": "The field description."
+            },
+            "appUris": {
+              "type": "object",
+              "properties": {
+                "documentUri": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string",
+                      "description": "The field value."
+                    },
+                    "readonlyValue": {
+                      "type": "string",
+                      "description": "The field readonlyValue."
+                    }
+                  },
+                  "description": "The field documentUri."
+                },
+                "imageUris": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "The field imageUris."
+                }
+              },
+              "description": "The field appUris."
+            },
+            "createdTime": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The field createdTime."
+            },
+            "lastModifiedTime": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The field lastModifiedTime."
+            },
+            "sharedGroupsCount": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The field sharedGroupsCount."
+            },
+            "sharedUsersCount": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The field sharedUsersCount."
+            },
+            "appOpenProtocolUri": {
+              "type": "string",
+              "description": "The field appOpenProtocolUri."
+            },
+            "appOpenUri": {
+              "type": "string",
+              "description": "The field appOpenUri."
+            },
+            "userAppMetadata": {
+              "type": "object",
+              "properties": {
+                "favorite": {
+                  "type": "string",
+                  "description": "The field favorite."
+                },
+                "lastOpenedTime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "The field lastOpenedTime."
+                },
+                "includeInAppsList": {
+                  "type": "boolean",
+                  "description": "The field includeInAppsList."
+                }
+              },
+              "description": "The field userAppMetadata."
+            },
+            "isFeaturedApp": {
+              "type": "boolean",
+              "description": "The field isFeaturedApp."
+            },
+            "bypassConsent": {
+              "type": "boolean",
+              "description": "The field bypassConsent."
+            },
+            "isHeroApp": {
+              "type": "boolean",
+              "description": "The field isHeroApp."
+            },
+            "environment": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The field id."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The field name."
+                }
+              },
+              "description": "The field environment."
+            },
+            "appPackageDetails": {
+              "type": "object",
+              "properties": {
+                "playerPackage": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string",
+                      "description": "The field value."
+                    },
+                    "readonlyValue": {
+                      "type": "string",
+                      "description": "The field readonlyValue."
+                    }
+                  },
+                  "description": "The field playerPackage."
+                },
+                "webPackage": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string",
+                      "description": "The field value."
+                    },
+                    "readonlyValue": {
+                      "type": "string",
+                      "description": "The field readonlyValue."
+                    }
+                  },
+                  "description": "The field webPackage."
+                },
+                "documentServerVersion": {
+                  "type": "object",
+                  "properties": {
+                    "major": {
+                      "type": "integer",
+                      "format": "int32",
+                      "description": "The field major."
+                    },
+                    "minor": {
+                      "type": "integer",
+                      "format": "int32",
+                      "description": "The field minor."
+                    },
+                    "build": {
+                      "type": "integer",
+                      "format": "int32",
+                      "description": "The field build."
+                    },
+                    "revision": {
+                      "type": "integer",
+                      "format": "int32",
+                      "description": "The field revision."
+                    },
+                    "majorRevision": {
+                      "type": "integer",
+                      "format": "int32",
+                      "description": "The field majorRevision."
+                    },
+                    "minorRevision": {
+                      "type": "integer",
+                      "format": "int32",
+                      "description": "The field minorRevision."
+                    }
+                  },
+                  "description": "The field documentServerVersion."
+                },
+                "appPackageResourcesKind": {
+                  "type": "string",
+                  "description": "The field appPackageResourcesKind."
+                },
+                "packagePropertiesJson": {
+                  "type": "string",
+                  "description": "The field packagePropertiesJson."
+                }
+              },
+              "description": "The field appPackageDetails."
+            }
+          },
+          "description": "The field properties."
+        }
+      }
+    }
+  },
+  "parameters": {},
+  "responses": {},
+  "securityDefinitions": {
+    "oauth2_auth": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://login.windows.net/common/oauth2/authorize",
+      "tokenUrl": "https://login.windows.net/common/oauth2/authorize",
+      "scopes": {}
+    }
+  },
+  "security": [
+    {
+      "oauth2_auth": []
+    }
+  ],
+  "tags": [],
+  "x-ms-connector-metadata": [
+    {
+      "propertyName": "Website",
+      "propertyValue": "https://powerapps.microsoft.com/"
+    }
+  ]
+}

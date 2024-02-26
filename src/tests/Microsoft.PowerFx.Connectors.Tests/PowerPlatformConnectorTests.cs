@@ -12,7 +12,10 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Connectors.Tests;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
@@ -32,19 +35,19 @@ namespace Microsoft.PowerFx.Tests
             _output = output;
         }
 
-        // Compare strings, ignoring \r differences that can happen across Operating systems. 
+        // Compare strings, ignoring \r differences that can happen across Operating systems.
         private static void AssertEqual(string expected, string actual)
         {
             Assert.Equal(expected.Replace("\r", string.Empty), actual.Replace("\r", string.Empty));
         }
 
-        // Exercise calling the MSNWeather connector against mocked Swagger and Response.json. 
+        // Exercise calling the MSNWeather connector against mocked Swagger and Response.json.
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
         public async Task MSNWeatherConnector_CurrentWeather(bool useSwaggerParameter)
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\MSNWeather.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\MSNWeather.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -86,9 +89,9 @@ namespace Microsoft.PowerFx.Tests
             var result = await engine.EvalAsync("MSNWeather.CurrentWeather(\"Redmond\", \"Imperial\").responses.weather.current.temp", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             Assert.Equal(53.0m, result.ToObject()); // from response
 
-            // PowerPlatform Connectors transform the request significantly from what was in the swagger. 
-            // Some of this information comes from setting passed into connector client. 
-            // Other information is from swagger. 
+            // PowerPlatform Connectors transform the request significantly from what was in the swagger.
+            // Some of this information comes from setting passed into connector client.
+            // Other information is from swagger.
             var actual = testConnector._log.ToString();
 
             var version = PowerPlatformConnectorClient.Version;
@@ -101,23 +104,72 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/839eace6-59ab-4243-97ec-a5b8fcc104e4
  x-ms-client-session-id: MySessionId
  x-ms-request-method: GET
- x-ms-request-url: /apim/msnweather/shared-msnweather-8d08e763-937a-45bf-a2ea-c5ed-ecc70ca4/current/Redmond?units=I
+ x-ms-request-url: /apim/msnweather/shared-msnweather-8d08e763-937a-45bf-a2ea-c5ed-ecc70ca4/current/Redmond?units=Imperial
+ x-ms-user-agent: PowerFx/{version}
+";
+            AssertEqual(expected, actual);
+        }
+
+        [Fact]
+        public async Task MSNWeatherConnector_CurrentWeatherOrleans()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\MSNWeather.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "firstrelease-003.azure-apihub.net",                          // endpoint
+                    "49970107-0806-e5a7-be5e-7c60e2750f01",                     // environment
+                    "480a676ab6e64b168cfa41506014e45d",  // connectionId
+                    () => "eyJ0eXAiOiJKV...",
+                    httpClient)
+                {
+                    SessionId = "MySessionId"
+                };
+
+            var funcs = config.AddActionConnector("MSNWeather", apiDoc, new ConsoleLogger(_output));
+
+            var engine = new RecalcEngine(config);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("MSNWeather", client, console: _output));
+            testConnector.SetResponseFromFile(@"Responses\MSNWeather_Response2.json");
+
+            var result = await engine.EvalAsync(@"MSNWeather.CurrentWeather(""Orléans"", ""C"").responses.weather.current.temp", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            Assert.Equal(9m, result.ToObject()); // from response
+
+            // PowerPlatform Connectors transform the request significantly from what was in the swagger.
+            // Some of this information comes from setting passed into connector client.
+            // Other information is from swagger.
+            var actual = testConnector._log.ToString();
+
+            var version = PowerPlatformConnectorClient.Version;
+            var expected =
+@$"POST https://firstrelease-003.azure-apihub.net/invoke
+ authority: firstrelease-003.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJKV...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/49970107-0806-e5a7-be5e-7c60e2750f01
+ x-ms-client-session-id: MySessionId
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/msnweather/480a676ab6e64b168cfa41506014e45d/current/Orl%c3%a9ans?units=C
  x-ms-user-agent: PowerFx/{version}
 ";
             AssertEqual(expected, actual);
         }
 
         [Theory]
-        [InlineData(100)] // Continue
-        [InlineData(200)] // Ok
-        [InlineData(202)] // Accepted
-        [InlineData(305)] // Use Proxy
-        [InlineData(411)] // Length Required
-        [InlineData(500)] // Server Error
-        [InlineData(502)] // Bad Gateway
-        public async Task Connector_GenerateErrors(int statusCode)
+        [InlineData(100, null)] // Continue
+        [InlineData(200, null)] // Ok
+        [InlineData(202, null)] // Accepted
+        [InlineData(305, "Use Proxy")]
+        [InlineData(411, "Length Required")]
+        [InlineData(500, "Internal Server Error")]
+        [InlineData(502, "Bad Gateway")]
+        public async Task Connector_GenerateErrors(int statusCode, string reasonPhrase)
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\TestConnector12.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\TestConnector12.json", _output);
             var apiDoc = testConnector._apiDocument;
 
             var config = new PowerFxConfig();
@@ -165,7 +217,7 @@ namespace Microsoft.PowerFx.Tests
 
                 Assert.Equal(ErrorKind.Network, err.Kind);
                 Assert.Equal(ErrorSeverity.Critical, err.Severity);
-                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}. Response: {statusCode}", err.Message);
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode} ({reasonPhrase}). Response: {statusCode}", err.Message);
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
@@ -182,7 +234,7 @@ namespace Microsoft.PowerFx.Tests
             }
             else
             {
-                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}. Response: {statusCode}", sv2.Value);
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode} ({reasonPhrase}). Response: {statusCode}", sv2.Value);
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
@@ -209,17 +261,18 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(false, true)]
         public async Task AzureBlobConnector_UploadFile(bool useSwaggerParameter, bool useHttpsPrefix)
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
-            var token = @"eyJ0eX...";
+            config.AddFunction(new AsBlobFunctionImpl());
+            var token = @"eyJ0eXAiO...";
 
             using var httpClient = new HttpClient(testConnector);
             using var client = useSwaggerParameter ?
                 new PowerPlatformConnectorClient(
                     apiDoc,                                 // Swagger file
-                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46", // environment
-                    "3a3239ba9a2648788a83f5172d3d4ec5",     // connectionId
+                    "0a1a8d62-0453-e710-b774-446dc6634a89", // environment
+                    "1f18a56da7574c1f8b66a1ea42c23805",     // connectionId
                     () => $"{token}",
                     httpClient)
                 {
@@ -227,9 +280,9 @@ namespace Microsoft.PowerFx.Tests
                 }
                 : new PowerPlatformConnectorClient(
                     (useHttpsPrefix ? "https://" : string.Empty) +
-                        "tip1-shared-002.azure-apim.net",  // endpoint
-                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46", // environment
-                    "3a3239ba9a2648788a83f5172d3d4ec5",     // connectionId
+                    "tip2-001.azure-apihub.net",  // endpoint
+                    "0a1a8d62-0453-e710-b774-446dc6634a89", // environment
+                    "1f18a56da7574c1f8b66a1ea42c23805",     // connectionId
                     () => $"{token}",
                     httpClient)
                 {
@@ -242,45 +295,161 @@ namespace Microsoft.PowerFx.Tests
 
             // Now execute it...
             var engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("AzureBlobStorage", client));
+            var runtimeContext = new TestConnectorRuntimeContext("AzureBlobStorage", client);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(runtimeContext);
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response.json");
 
-            var result = await engine.EvalAsync(@"AzureBlobStorage.CreateFile(""container"", ""bora4.txt"", ""abc"").Size", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            // 3rd parameter here expects a blob. It's Base64 value is "YWJj8J+Yig==" and is equivalent to byte[] { 0x61, 0x62, 0x63, 0xF0, 0x9F, 0x98, 0x8A }.
+            CheckResult check = engine.Check(@"AzureBlobStorage.CreateFile(""container"", ""01.txt"", AsBlob(""abc😊"")).Size", new ParserOptions() { AllowsSideEffects = true });
+            Assert.True(check.IsSuccess);
+            _output.WriteLine($"\r\nIR: {check.PrintIR()}");
+
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+
+            if (result is ErrorValue ev)
+            {
+                Assert.True(false, $"Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}");
+            }
 
             dynamic res = result.ToObject();
             var size = (double)res;
 
-            Assert.Equal(3.0, size);
+            Assert.Equal(7.0, size);
 
-            // PowerPlatform Connectors transform the request significantly from what was in the swagger. 
-            // Some of this information comes from setting passed into connector client. 
-            // Other information is from swagger. 
+            // PowerPlatform Connectors transform the request significantly from what was in the swagger.
+            // Some of this information comes from setting passed into connector client.
+            // Other information is from swagger.
             var actual = testConnector._log.ToString();
 
             var version = PowerPlatformConnectorClient.Version;
-            var host = useSwaggerParameter ? "localhost:23340" : "tip1-shared-002.azure-apim.net";
+            var host = useSwaggerParameter ? "localhost:23340" : "tip2-001.azure-apihub.net";
             var expected = @$"POST https://{host}/invoke
  authority: {host}
- Authorization: Bearer eyJ0eX...
+ Authorization: Bearer {token}
  path: /invoke
  ReadFileMetadataFromServer: True
  scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/0a1a8d62-0453-e710-b774-446dc6634a89
  x-ms-client-session-id: ccccbff3-9d2c-44b2-bee6-cf24aab10b7e
  x-ms-request-method: POST
- x-ms-request-url: /apim/azureblob/3a3239ba9a2648788a83f5172d3d4ec5/datasets/default/files?folderPath=container&name=bora4.txt&queryParametersSingleEncoded=True
+ x-ms-request-url: /apim/azureblob/1f18a56da7574c1f8b66a1ea42c23805/datasets/default/files?folderPath=container&name=01.txt&queryParametersSingleEncoded=True
  x-ms-user-agent: PowerFx/{version}
- [content-header] Content-Type: text/plain; charset=utf-8
- [body] abc
+ [content-header] Content-Type: text/plain
+ [body] abc😊
 ";
 
             AssertEqual(expected, actual);
         }
 
+        [Fact]       
+        public async Task AzureBlobConnector_UploadFileV2()
+        {
+            string yellowPixel = "/9j/4AAQSkZJRgABAQEAeAB4AAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAABAAEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9aKKKK/wTP2g//9k=";
+
+            using var testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+            config.AddFunction(new AsBlobFunctionImpl());
+            var token = @"eyJ0eXAiOiJ...";
+
+            using var httpClient = new HttpClient(testConnector);
+            using var client = new PowerPlatformConnectorClient(
+                    "https://tip2-001.azure-apihub.net",  // endpoint
+                    "0a1a8d62-0453-e710-b774-446dc6634a89", // environment
+                    "6d228109794849049ce8116e5d4ffaf8",     // connectionId
+                    () => $"{token}",
+                    httpClient)
+                {
+                    SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
+                };
+
+            config.AddActionConnector("AzureBlobStorage", apiDoc, new ConsoleLogger(_output));
+            
+            var engine = new RecalcEngine(config);
+            var runtimeContext = new TestConnectorRuntimeContext("AzureBlobStorage", client);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(runtimeContext);
+
+            testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response2.json");
+            
+            CheckResult check = engine.Check($@"AzureBlobStorage.CreateFileV2(""pfxdevstgaccount1"", ""container"", ""001.jpg"", AsBlob(""{yellowPixel}"", true), {{'Content-Type': ""image/jpeg"" }}).Size", new ParserOptions() { AllowsSideEffects = true });
+            Assert.True(check.IsSuccess);
+            _output.WriteLine($"\r\nIR: {check.PrintIR()}");
+
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+
+            if (result is ErrorValue ev)
+            {
+                Assert.True(false, $"Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}");
+            }
+
+            dynamic res = result.ToObject();
+            var size = (double)res;
+
+            Assert.Equal(635, size);
+
+            // PowerPlatform Connectors transform the request significantly from what was in the swagger.
+            // Some of this information comes from setting passed into connector client.
+            // Other information is from swagger.
+            var actual = testConnector._log.ToString();
+
+            int idx = actual.IndexOf("[body] ") + 7;
+            actual = string.Concat(actual.AsSpan(0, idx), string.Join(string.Empty, testConnector._log.ToString().Substring(idx, 30).Select((char c) => 
+            { 
+                int d = c; 
+                return (c < 32 || c > 128) ? $"\\u{d:X4}" : c.ToString(); 
+            })));
+                        
+            var version = PowerPlatformConnectorClient.Version;            
+            var host = "tip2-001.azure-apihub.net";
+            var expected = @$"POST https://{host}/invoke
+ authority: {host}
+ Authorization: Bearer {token}
+ path: /invoke
+ ReadFileMetadataFromServer: True
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/0a1a8d62-0453-e710-b774-446dc6634a89
+ x-ms-client-session-id: ccccbff3-9d2c-44b2-bee6-cf24aab10b7e
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/azureblob/6d228109794849049ce8116e5d4ffaf8/v2/datasets/pfxdevstgaccount1/files?folderPath=container&name=001.jpg&queryParametersSingleEncoded=True
+ x-ms-user-agent: PowerFx/{version}
+ [content-header] Content-Type: image/jpeg
+ [body] \uFFFD\uFFFD\uFFFD\uFFFD\u0000\u0010JFIF\u0000\u0001\u0001\u0001\u0000x\u0000x\u0000\u0000\uFFFD\uFFFD\u0000C\u0000\u0002\u0001\u0001\u0002\u0001";
+
+            AssertEqual(expected, actual);
+        }
+
+        internal class AsBlobFunctionImpl : BuiltinFunction, IAsyncTexlFunction5
+        {
+            public AsBlobFunctionImpl()
+                : base("AsBlob", (loc) => "Converts a string to a Blob.", FunctionCategories.Text, DType.Blob, 0, 1, 2, DType.String, DType.Boolean)
+            {
+            }
+
+            public override bool IsSelfContained => true;
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield return new TexlStrings.StringGetter[] { (loc) => "string" };
+                yield return new TexlStrings.StringGetter[] { (loc) => "string", (loc) => "isBase64Encoded" };
+            }
+
+            public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                return Task.FromResult<FormulaValue>(
+                    args[0] is BlankValue || args[0] is BlobValue
+                    ? args[0]
+                    : args[0] is not StringValue sv
+                    ? CommonErrors.RuntimeTypeMismatch(args[0].IRContext)
+                    : BlobValue.NewBlob(sv.Value, args.Length >= 2 && args[1] is BooleanValue bv && bv.Value));
+            }
+        }
+
         [Fact]
         public async Task AzureBlobConnector_UseOfDeprecatedFunction()
         {
-            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json");
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
             PowerFxConfig config = new PowerFxConfig();
             string token = @"eyJ0eXAi...";
@@ -321,7 +490,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task AzureBlobConnector_Paging()
         {
-            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json");
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
             PowerFxConfig config = new PowerFxConfig();
             string token = @"eyJ0eX...";
@@ -350,7 +519,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("Office365Outlook.FindMeetingTimesV2(")]
         public void IntellisenseHelpStringsOptionalParms(string expr)
         {
-            var apiDocOutlook = Helpers.ReadSwagger(@"Swagger\Office_365_Outlook.json");
+            var apiDocOutlook = Helpers.ReadSwagger(@"Swagger\Office_365_Outlook.json", _output);
 
             var config = new PowerFxConfig();
             config.AddActionConnector("Office365Outlook", apiDocOutlook, new ConsoleLogger(_output));
@@ -372,7 +541,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("Behavior(); MSNWeather.CurrentWeather(", false, true)]
         public void IntellisenseHelpStrings(string expr, bool withAllowSideEffects, bool expectedBehaviorError)
         {
-            var apiDoc = Helpers.ReadSwagger(@"Swagger\MSNWeather.json");
+            var apiDoc = Helpers.ReadSwagger(@"Swagger\MSNWeather.json", _output);
 
             var config = new PowerFxConfig();
             config.AddActionConnector("MSNWeather", apiDoc, new ConsoleLogger(_output));
@@ -418,7 +587,7 @@ namespace Microsoft.PowerFx.Tests
         {
             using var httpClient = new HttpClient();
 
-            var ex = Assert.Throws<ArgumentException>(() => new PowerPlatformConnectorClient(
+            var ex = Assert.Throws<PowerFxConnectorException>(() => new PowerPlatformConnectorClient(
                 "http://firstrelease-001.azure-apim.net:117",  // endpoint not allowed with http scheme
                 "839eace6-59ab-4243-97ec-a5b8fcc104e4",
                 "453f61fa88434d42addb987063b1d7d2",
@@ -447,7 +616,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.NotNull(ppcl2);
             Assert.Equal("firstrelease-001.azure-apim.net:117", ppcl2.Endpoint);
 
-            using var testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json", _output);
             var apiDoc = testConnector._apiDocument;
 
             using var ppcl3 = new PowerPlatformConnectorClient(
@@ -460,10 +629,10 @@ namespace Microsoft.PowerFx.Tests
             Assert.NotNull(ppcl3);
             Assert.Equal("localhost:23340", ppcl3.Endpoint);
 
-            using var testConnector2 = new LoggingTestServer(@"Swagger\TestOpenAPI.json");
+            using var testConnector2 = new LoggingTestServer(@"Swagger\TestOpenAPI.json", _output);
             var apiDoc2 = testConnector2._apiDocument;
 
-            var ex2 = Assert.Throws<ArgumentException>(() => new PowerPlatformConnectorClient(
+            var ex2 = Assert.Throws<PowerFxConnectorException>(() => new PowerPlatformConnectorClient(
                 apiDoc2,                                        // Swagger file without "host" param
                 "839eace6-59ab-4243-97ec-a5b8fcc104e4",
                 "453f61fa88434d42addb987063b1d7d2",
@@ -476,7 +645,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Users_UserProfile_V2()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -507,7 +676,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Users_MyProfile_V2()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -537,7 +706,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Users_DirectReports_V2()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -567,7 +736,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Users_SearchUsers_V2()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -597,7 +766,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Users_UseDates()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -616,7 +785,9 @@ namespace Microsoft.PowerFx.Tests
             IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc, new ConsoleLogger(_output));
             Assert.True(functions.First(f => f.Name == "GetEmailsV2").IsDeprecated);
             Assert.False(functions.First(f => f.Name == "SendEmailV2").IsDeprecated);
-            Assert.Equal("OpenApiOperation is deprecated", functions.First(f => f.Name == "GetEmailsV2").NotSupportedReason);
+
+            // deprecated functions are supported and should not expose NotSupportedReason
+            Assert.Equal(string.Empty, functions.First(f => f.Name == "GetEmailsV2").NotSupportedReason);
             Assert.Equal(string.Empty, functions.First(f => f.Name == "SendEmailV2").NotSupportedReason);
 
             RecalcEngine engine = new RecalcEngine(config);
@@ -636,7 +807,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Outlook_GetEmailsV2()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -688,7 +859,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(2, @"Office365Outlook.V4CalendarPostItem(""Calendar"", ""Subject"", DateTime(2023, 6, 2, 11, 00, 00), DateTime(2023, 6, 2, 11, 30, 00), ""(UTC+01:00) Brussels, Copenhagen, Madrid, Paris"")")]
         public async Task Office365Outlook_V4CalendarPostItem(int id, string expr)
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -715,7 +886,7 @@ namespace Microsoft.PowerFx.Tests
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook V4CalendarPostItem.json");
             FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
-            Assert.Equal(@"![body:s, categories:*[Value:s], createdDateTime:d, end:d, endWithTimeZone:d, iCalUId:s, id:s, importance:s, isAllDay:b, isHtml:b, isReminderOn:b, lastModifiedDateTime:d, location:s, numberOfOccurences:w, optionalAttendees:s, organizer:s, recurrence:s, recurrenceEnd:D, reminderMinutesBeforeStart:w, requiredAttendees:s, resourceAttendees:s, responseRequested:b, responseTime:d, responseType:s, selectedDaysOfWeek:N, sensitivity:s, seriesMasterId:s, showAs:s, start:d, startWithTimeZone:d, subject:s, timeZone:s, webLink:s]", result.Type._type.ToString());
+            Assert.Equal(@"![body:s, categories:*[Value:s], createdDateTime:d, end:d, endWithTimeZone:d, iCalUId:s, id:s, importance:s, isAllDay:b, isHtml:b, isReminderOn:b, lastModifiedDateTime:d, location:s, numberOfOccurences:w, optionalAttendees:s, organizer:s, recurrence:s, recurrenceEnd:D, reminderMinutesBeforeStart:w, requiredAttendees:s, resourceAttendees:s, responseRequested:b, responseTime:d, responseType:s, sensitivity:s, seriesMasterId:s, showAs:s, start:d, startWithTimeZone:d, subject:s, timeZone:s, webLink:s]", result.Type._type.ToString());
 
             var actual = testConnector._log.ToString();
             var version = PowerPlatformConnectorClient.Version;
@@ -739,7 +910,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Outlook_ExportEmailV2()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -784,7 +955,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Outlook_FindMeetingTimesV2()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -831,7 +1002,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Outlook_FlagV2()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -878,7 +1049,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Outlook_GetMailTipsV2()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -925,7 +1096,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Outlook_GetRoomListsV2()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -973,7 +1144,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Outlook_Load()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -998,7 +1169,7 @@ namespace Microsoft.PowerFx.Tests
 
             ConnectorFunction cf = functions.First(cf => cf.Name == "ContactPatchItemV2");
 
-            // Validate required parameter name 
+            // Validate required parameter name
             Assert.Equal("id", cf.RequiredParameters[1].Name);
 
             // Validate optional parameter rectified name
@@ -1008,13 +1179,13 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Outlook_GetRooms()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig(Features.PowerFxV1);
 
             using var httpClient = new HttpClient(testConnector);
             using var client = new PowerPlatformConnectorClient(
-                    "firstrelease-001.azure-apim.net",          // endpoint 
+                    "firstrelease-001.azure-apim.net",          // endpoint
                     "839eace6-59ab-4243-97ec-a5b8fcc104e4",     // environment
                     "c112a9268f2a419bb0ced71f5e48ece9",         // connectionId
                     () => "eyJ0eXAiOiJK....",
@@ -1058,7 +1229,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task BingMaps_GetRouteV3()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Bing_Maps.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Bing_Maps.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -1106,14 +1277,14 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task SQL_GetStoredProcs()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig(Features.PowerFxV1);
 
             using var httpClient = new HttpClient(testConnector);
 
             using var client = new PowerPlatformConnectorClient(
-                    "tip1-shared-002.azure-apim.net",           // endpoint 
+                    "tip1-shared-002.azure-apim.net",           // endpoint
                     "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
                     "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
                     () => "ey...",
@@ -1155,14 +1326,14 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task SQL_ExecuteStoredProc()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig(Features.PowerFxV1);
 
             using var httpClient = new HttpClient(testConnector);
 
             using var client = new PowerPlatformConnectorClient(
-                    "tip1-shared-002.azure-apim.net",           // endpoint 
+                    "tip1-shared-002.azure-apim.net",           // endpoint
                     "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
                     "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
                     () => "eyJ0eX...",
@@ -1202,9 +1373,59 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public async Task SQL_ExecuteStoredProc_WithUserAgent()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "tip1-shared-002.azure-apim.net",           // endpoint
+                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
+                    "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
+                    () => "eyJ0eX...",
+                    "MyProduct/v1.2",                           // UserAgent to include
+                    httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
+            var engine = new RecalcEngine(config);
+            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
+
+            testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+
+            Assert.Equal(FormulaType.UntypedObject, result.Type);
+            Assert.True((result as UntypedObjectValue).Impl.TryGetPropertyNames(out IEnumerable<string> propertyNames));
+            Assert.Equal(3, propertyNames.Count());
+
+            string actual = testConnector._log.ToString();
+            string version = PowerPlatformConnectorClient.Version;
+            string expected = @$"POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eX...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
+ x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
+ x-ms-user-agent: MyProduct/v1.2 PowerFx/{version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""p1"":50}}
+";
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public async Task SharePointOnlineTest()
         {
-            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SharePoint.json");
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
             PowerFxConfig config = new PowerFxConfig();
             string token = @"eyJ0eXA...";
@@ -1221,7 +1442,16 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(101, functions.Count);
             Assert.Equal(101 - 51, functions.Count(f => f.IsInternal));
 
-            IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector(new ConnectorSettings("SP") { IncludeInternalFunctions = true }, apiDoc, new ConsoleLogger(_output));
+            IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector(
+                new ConnectorSettings("SP")
+                {
+                    // This shouldn't be used with expressions but this is OK here as this is a tabular connector and has no impact for this connector/these functions
+                    Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                    IncludeInternalFunctions = true,
+                    ReturnUnknownRecordFieldsAsUntypedObjects = true
+                },
+                apiDoc,
+                new ConsoleLogger(_output));
             RecalcEngine engine = new RecalcEngine(config);
             RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SP", ppClient, console: _output));
 
@@ -1245,7 +1475,7 @@ namespace Microsoft.PowerFx.Tests
 
             testConnector.SetResponseFromFile(@"Responses\SPO_Response5.json");
             FormulaValue fv5 = await engine.EvalAsync($@"SP.GetItems(""{dataset}"", ""{table}"", {{'$top': 4}})", CancellationToken.None, runtimeConfig: rc).ConfigureAwait(false);
-            Assert.Equal("Shared Documents/Document.docx", ((StringValue)((RecordValue)((TableValue)((RecordValue)fv5).GetField("value")).Rows.First().Value).GetField("{FullPath}")).Value);
+            Assert.Equal("Shared Documents/Document.docx", ((UntypedObjectValue)((RecordValue)((TableValue)((RecordValue)fv5).GetField("value")).Rows.First().Value).GetField("{FullPath}")).Impl.GetString());
 
             string version = PowerPlatformConnectorClient.Version;
             string expected = @$"POST https://tip1-shared-002.azure-apim.net/invoke
@@ -1306,7 +1536,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         [Fact]
         public async Task ExcelOnlineTest()
         {
-            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\ExcelOnlineBusiness.swagger.json");
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\ExcelOnlineBusiness.swagger.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
             PowerFxConfig config = new PowerFxConfig();
             string token = @"eyJ0eXAiOiJ...";
@@ -1314,7 +1544,14 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "b20e87387f9149e884bdf0b0c87a67e8" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
 
-            ConnectorSettings connectorSettings = new ConnectorSettings("exob") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true };
+            ConnectorSettings connectorSettings = new ConnectorSettings("exob")
+            {
+                // This shouldn't be used with expressions but this is OK here as this is a tabular connector
+                Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                AllowUnsupportedFunctions = true,
+                IncludeInternalFunctions = true,
+                ReturnUnknownRecordFieldsAsUntypedObjects = true
+            };
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
 
             IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector(connectorSettings, apiDoc, new ConsoleLogger(_output, true));
@@ -1346,75 +1583,23 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // Get PowerApps id for 2nd row = "f830UPeAXoI"
             testConnector.SetResponseFromFile(@"Responses\EXO_Response4.json");
             FormulaValue fv4 = await engine.EvalAsync(@$"exob.GetItems(""{source}"", ""{drive}"", ""{file}"", ""{table}"")", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
-            string columnId = ((StringValue)((RecordValue)((TableValue)((RecordValue)fv4).GetField("value")).Rows.Skip(1).First().Value).GetField("__PowerAppsId__")).Value;
+            string columnId = ((UntypedObjectValue)((RecordValue)((TableValue)((RecordValue)fv4).GetField("value")).Rows.Skip(1).First().Value).GetField("__PowerAppsId__")).Impl.GetString();
 
             // Get Item by columnId
             testConnector.SetResponseFromFile(@"Responses\EXO_Response5.json");
             FormulaValue fv5 = await engine.EvalAsync(@$"exob.GetItem(""{source}"", ""{drive}"", ""{file}"", ""{table}"", ""__PowerAppsId__"", ""{columnId}"")", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             RecordValue rv5 = (RecordValue)fv5;
 
-            Assert.Equal(FormulaType.String, rv5.GetField("Site").Type);
-            Assert.Equal("Atlanta", ((StringValue)rv5.GetField("Site")).Value);
+            Assert.Equal(FormulaType.UntypedObject, rv5.GetField("Site").Type);
+            Assert.Equal("Atlanta", ((UntypedObjectValue)rv5.GetField("Site")).Impl.GetString());
 
-            string version = PowerPlatformConnectorClient.Version;
-            string expected = @$"POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXAiOiJ...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
- x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
- x-ms-request-method: GET
- x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives?source=me
- x-ms-user-agent: PowerFx/{version}
-POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXAiOiJ...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
- x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
- x-ms-request-method: GET
- x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives/me/root/children?source=b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb
- x-ms-user-agent: PowerFx/{version}
-POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXAiOiJ...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
- x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
- x-ms-request-method: GET
- x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives/me/items/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/workbook/tables?source=01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO
- x-ms-user-agent: PowerFx/{version}
-POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXAiOiJ...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
- x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
- x-ms-request-method: GET
- x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/drives/me/files/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/tables/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/items?source=%7b00000000-000C-0000-FFFF-FFFF00000000%7d
- x-ms-user-agent: PowerFx/{version}
-POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXAiOiJ...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
- x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
- x-ms-request-method: GET
- x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/drives/me/files/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/tables/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/items/%257b00000000-000C-0000-FFFF-FFFF00000000%257d?source=__PowerAppsId__&idColumn=f830UPeAXoI
- x-ms-user-agent: PowerFx/{version}
-";
-            Assert.Equal(expected, testConnector._log.ToString());
+            // Network trace cannot be tested here as SwaggerCompatibility is enabled.
         }
 
         [Fact]
         public async Task DataverseTest_WithComplexMapping()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Dataverse.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Dataverse.json", _output);
             using var httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "b29c41cf-173b-e469-830b-4f00163d296b" /* environment Id */, "82728ddb6bfa461ea3e50e17da8ab164" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJ...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
 
@@ -1462,7 +1647,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         [InlineData(ConnectorCompatibility.SwaggerCompatibility, "Office365Users.SearchUserV2(", "SearchUserV2({ searchTerm:String,top:Decimal,isSearchTermRequired:Boolean })")]
         public async Task ConnectorCompatibilityIntellisenseTest(ConnectorCompatibility compact, string expression, string expected)
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -1492,6 +1677,20 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             var overload = suggestions.FunctionOverloads.First();
 
             Assert.Equal(expected, overload.DisplayText.Text);
+        }
+
+        [Fact]
+        public void Connector_UnsupportedDate()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\AzureAppService.json", _output);
+            List<ConnectorFunction> funcs = OpenApiParser.GetFunctions(new ConnectorSettings("AAS") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true }, testConnector._apiDocument, new ConsoleLogger(_output)).ToList();
+            ConnectorFunction resourceGroupsList = funcs.First(f => f.Name == "ResourceGroupsList");
+
+            Assert.True(resourceGroupsList.IsSupported);
+            Assert.Single(resourceGroupsList.HiddenRequiredParameters);
+            Assert.Equal("x-ms-api-version", resourceGroupsList.HiddenRequiredParameters[0].Name);
+            StringValue sv = Assert.IsType<StringValue>(resourceGroupsList.HiddenRequiredParameters[0].DefaultValue);
+            Assert.Equal("2020-01-01", sv.Value);
         }
     }
 }

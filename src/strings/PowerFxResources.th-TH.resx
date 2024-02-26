@@ -402,8 +402,8 @@
     <value>ชื่อคอลัมน์ใหม่</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>คอลัมน์ที่ระบุ '{0}' ไม่สามารถเปลี่ยนชื่อถึงสองครั้งได้</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>คืนค่าแถวจากตารางที่เงื่อนไขทุกอย่างที่ระบุไว้เป็นจริง</value>
@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>ค่าวันที่ที่จะปรับตามจำนวนเดือนที่ระบุ</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>จำนวนเดือนที่จะเปลี่ยนวันที่ ค่าบวกจะให้วันที่ในอนาคต ค่าลบจะให้วันที่ในอดีต และศูนย์จะไม่เปลี่ยนแปลงเดือน</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>ส่งกลับวันสุดท้ายของเดือนสำหรับวันที่ที่ระบุ ซึ่งปรับตามจำนวนเดือน</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>ค่าวันที่ที่จะปรับตามจำนวนเดือนที่ระบุ</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;จำนวนเดือนที่จะเปลี่ยนวันที่ ค่าบวกจะให้วันที่ในอนาคต ค่าลบจะให้วันที่ในอดีต และศูนย์จะไม่เปลี่ยนแปลงเดือน</value>
-         
+    <value>จำนวนเดือนที่จะเปลี่ยนวันที่ ค่าบวกจะให้วันที่ในอนาคต ค่าลบจะให้วันที่ในอดีต และศูนย์จะไม่เปลี่ยนแปลงเดือน</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>ตัดทอน 'ตัวเลข' โดยการปัดเศษไปทางจำนวนอนันต์ลบ</value>
@@ -1704,6 +1704,38 @@
     <value>ตัวคั่น</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>แจงนับและส่งกลับชื่อคอลัมน์ของเรกคอร์ดที่ไม่มีชนิด</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>เรกคอร์ด</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>เเรกคอร์ดที่จะแจงนับคอลัมน์</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>ส่งกลับค่าของคุณสมบัติของเรกคอร์ดที่ไม่มีชนิด โดยระบุชื่อคอลัมน์</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>เรกคอร์ด</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>ชื่อคอลัมน์</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>เรกคอร์ดที่จะเรียกค่าคอลัมน์</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>ชื่อของคอลัมน์ของเรกคอร์ดที่จะเรียก</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>ส่งกลับว่าเป็นจริงถ้าค่าที่ระบุเป็นชนิดที่กำหนด</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>ประเภทอาร์กิวเมนต์ ({1}) ไม่ถูกต้อง ต้องการค่า {0} มาแทน</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>ไม่สามารถใช้นิพจน์โมฆะในบริบทนี้ได้</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>มีการระบุเขตข้อมูลชื่อ '{0}' มากกว่าหนึ่งครั้งในระเบียนนี้</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>คอลัมน์ที่ระบุ '{0}' ไม่สามารถเปลี่ยนชื่อถึงสองครั้งได้</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>คอลัมน์ชื่อ '{0}' ถูกระบุมากกว่าหนึ่งครั้ง</value>
     
@@ -2370,35 +2402,52 @@
     <value>ตัวชี้ json ไม่ถูกต้อง</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>ไม่มี</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>ข้อความ</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>ลอจิคัล</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>ตาราง</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>พฤติกรรม</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>วันที่และเวลา</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>คณิตศาสตร์และทางสถิติ</value>
+    <value>คณิตศาสตร์และสถิติ</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>กำหนดโดยผู้ใช้</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>ข้อมูล</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>สี</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>บริการ</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>ส่วนประกอบ</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3851,6 @@
     <value>คุณลักษณะนี้ไม่สนับสนุนและไม่ได้รับการรองรับอีกต่อไป</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>ฟังก์ชัน {0} ไม่สนับสนุนใน namespace {1} แล้ว</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>ไม่รองรับฟังก์ชัน {0} ใน namespace {1}</value>
     
@@ -4134,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>ฟังก์ชัน JSON ไม่สามารถจัดลำดับข้อมูลไบนารีในนิพจน์ที่ไม่ใช่พฤติกรรมได้</value>    
+    <value>ฟังก์ชัน JSON ไม่สามารถจัดลำดับข้อมูลไบนารีในนิพจน์ที่ไม่ใช่พฤติกรรมได้</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>พารามิเตอร์ {0} มีคุณสมบัติชนิด {1} ซึ่งไม่ได้รับการสนับสนุน</value>
@@ -4175,6 +4220,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>ตารางไม่มีคอลัมน์ประเภทตัวอักษร</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>การใช้ '.' ในแบบที่ไม่สนับสนุนแล้ว โปรดใช้ฟังก์ชัน 'ShowColumns' แทน</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**ข้อสงวนสิทธิ์:** เนื้อหาที่สร้างโดย AI อาจมีข้อผิดพลาด ตรวจสอบให้แน่ใจว่าถูกต้องและเหมาะสมก่อนใช้งาน [ดูเงื่อนไข](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>ส่งกลับอักขระ Unicode ที่อ้างอิงโดยค่าตัวเลขที่ระบุ</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>ค่าตัวเลขที่จะแปลงเป็นอักขระ Unicode</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>ตัวเลข</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>แปลงตารางค่าตัวเลขเป็นตารางอักขระ Unicode</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>คอลัมน์ของตัวเลข</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>คอลัมน์ตารางของค่าตัวเลขที่จะแปลงเป็นอักขระ Unicode</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>ประเภทแอตทริบิวต์ที่ไม่รองรับ</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>ตัวดำเนินการ Partial ทั้งหมดในสูตรที่มีชื่อตรงกันต้องเหมือนกัน</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>ไม่รู้จักตัวดำเนินการ Partial</value>
     
   </data>
 </root>

@@ -402,8 +402,8 @@
     <value>Det nya namnet på kolumnen.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Det går inte att byta namn på den angivna kolumnen {0} två gånger.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Returnerar raderna från tabellen där alla de angivna villkoren är sanna.</value>
@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Ett datumvärde som ska justeras med angivet antal månader.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Antal månader som datumet ska ändras med. Ett positivt värde ger ett framtida datum, ett negativt ger ett tidigare datum och noll ändrar inte månaden.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Returnerar den sista dagen i månaden för ett angivet datum, justerat med ett antal månader.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Ett datumvärde som ska justeras med angivet antal månader.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Antal månader som datumet ska ändras med. Ett positivt värde ger ett framtida datum, ett negativt ger ett tidigare datum och noll ändrar inte månaden.</value>
-         
+    <value>Antal månader som datumet ska ändras med. Ett positivt värde ger ett framtida datum, ett negativt ger ett tidigare datum och noll ändrar inte månaden.</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Trunkerar "tal" genom att avrunda mot negativ oändlighet.</value>
@@ -1704,6 +1704,38 @@
     <value>avgränsare</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Räkna upp och returnera kolumnnamnen för en typlös post.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>post</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Post för att få kolumnerna uppräknade.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Returnerar värdet för en egenskap för en typlös post med kolumnnamnet.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>post</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>kolumn_namn</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Post för att hämta ett kolumnvärde.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Namn på kolumnen för den post som ska hämtas.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Returnerar sant om det angivna värdet är av den givna typen.</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Ogiltig argumenttyp ({1}). Ett {0}-värde förväntades i stället.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>Ett annullerat uttryck som inte kan användas i det här kontexten.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>Ett fält med namnet {0} angavs mer än en gång i den här posten.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Det går inte att byta namn på den angivna kolumnen {0} två gånger.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>En kolumn med namnet {0} angavs mer än en gång.</value>
     
@@ -2370,35 +2402,52 @@
     <value>Ogiltig JSON-pekare.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Inga</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Text</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logiskt</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Tabell</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Beteende</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Datum och tid</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematik och statistik</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Definierad av användaren</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Information</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Färg</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Tjänster</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Komponent</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3851,6 @@
     <value>Den här funktionen är inaktuell och stöds inte längre.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>I namnrymd {1} är funktionen {0} inaktuell.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>I namnrymd {1} stöds inte funktionen {0}.</value>
     
@@ -4134,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON-funktionen kan inte serialisera binära data i icke-beteendeuttryck.</value>    
+    <value>JSON-funktionen kan inte serialisera binära data i icke-beteendeuttryck.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parametern {0} innehåller en egenskap av typen {1} vilken inte stöds.</value>
@@ -4175,6 +4220,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Tabellen innehåller ingen kolumn av texttyp.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Inaktuell användning av ".". Använd funktionen "ShowColumns" i stället.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Ansvarsfriskrivning:** AI-genererat innehåll kan innehålla fel. Se till att det är korrekt och passande innan du använder det. [Se villkoren](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Returnerar det Unicode-tecken som det angivna numeriska värdet refererar till.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Numeriskt värde som ska konverteras till ett Unicode-tecken.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>tal</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Konverterar en tabell med numeriska värden till en tabell med Unicode-tecken.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>kolumn_med_siffror</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>En tabellkolumn med numeriska värden som ska konverteras till Unicode-tecken.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Attributtypen stöds inte</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Alla Partial-operatorer i matchande namngivna formler måste vara samma.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Okänd Partial-operator.</value>
     
   </data>
 </root>

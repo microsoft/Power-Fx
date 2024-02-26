@@ -17,16 +17,17 @@ namespace Microsoft.PowerFx.Repl.Functions
     internal class NotifyFunction : ReflectionFunction
     {
         public NotifyFunction()
+                : base("Notify", FormulaType.Void, new[] { FormulaType.String })
         {
             ConfigType = typeof(IReplOutput);
         }
 
-        public async Task<BooleanValue> Execute(IReplOutput output, StringValue message, CancellationToken cancel)
+        public async Task<VoidValue> Execute(IReplOutput output, StringValue message, CancellationToken cancel)
         {
             await output.WriteLineAsync(message.Value, OutputKind.Notify, cancel)
                 .ConfigureAwait(false);
 
-            return FormulaValue.New(true);
+            return FormulaValue.NewVoid();
         }
     }
 }

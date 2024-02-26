@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Tests
         [Theory]
         [InlineData(
             "Function(Field,1,\"foo\")",
-            "Function(custom, #$decimal$#, #$string$#)")]
+            "#$function$#(custom, #$decimal$#, #$string$#)")]
         [InlineData(
             "Lookup.Field && true",
             "custom.custom2 && #$boolean$#")]

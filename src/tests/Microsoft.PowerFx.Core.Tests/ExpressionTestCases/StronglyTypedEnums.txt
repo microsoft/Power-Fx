@@ -61,7 +61,7 @@ Date(2011,1,16)
 "A"
 
 >> If(true, 1, TimeUnit.Seconds)
-If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+If(true, {test:1}, "Void value (result of the expression can't be used).")
 
 >> Text(Date(1970, 1, 1), DateTimeFormat.LongDate) 
 "Thursday, January 1, 1970"

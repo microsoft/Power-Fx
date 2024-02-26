@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         [Fact]
         public void ConnectorLogger_Test1()
-        {            
+        {
             ConsoleLogger logger = new ConsoleLogger(_output);
             IReadOnlyList<ConnectorFunction> functions = (null as PowerFxConfig).AddActionConnector(null as string, null, logger);
 
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
             IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector(null as ConnectorSettings, null, logger);
 
-            Assert.Empty(functions);           
+            Assert.Empty(functions);
             Assert.Equal(
                 @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings <null>|" +
                 @"[ERROR] connectorSettings is null|" +
@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(
                 @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace <Namespace is null>, MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, IncludeInternalFunctions False, |" +
                 @"[ERROR] connectorSettings.Namespace is null|" +
-                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
+                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(
                 @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace Test, MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, IncludeInternalFunctions False, |" +
                 @"[ERROR] openApiDocument is null|" +
-                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
+                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());
         }
 
         [Fact]
@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(
                 @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace Test, MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, IncludeInternalFunctions False, |" +
                 @"[ERROR] OpenApiDocument is invalid, it has no Path|" +
-                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
+                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());
         }
 
         [Fact]
@@ -111,34 +111,34 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(
                 @"[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace , MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, IncludeInternalFunctions False, |" +
                 @"[ERROR] connectorSettings.Namespace is not a valid DName|" +
-                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());            
+                @"[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 0 functions", logger.GetLogs());
         }
-        
+
         [Fact]
         public void ConnectorLogger_Test8()
         {
             ConsoleLogger logger = new ConsoleLogger(_output);
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
-            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector(new ConnectorSettings("SQL"), testConnector._apiDocument, logger);
 
             Assert.NotEmpty(functions);
             Assert.Equal(
                 "[INFO ] Entering in ConfigExtensions.AddActionConnector, with ConnectorSettings Namespace SQL, MaxRows 1000, FailOnUnknownExtension False, AllowUnsupportedFunctions False, IncludeInternalFunctions False, |" +
-                "[INFO ] Operation GET /{connectionId}/datasets({dataset})/tables({table})/onnewitems is trigger|" +
-                "[INFO ] Operation GET /{connectionId}/datasets({dataset})/tables({table})/onupdateditems is trigger|" +
-                "[INFO ] Operation GET /{connectionId}/datasets/{server},{database}/tables/{table}/onupdateditems is trigger|" +
-                "[WARN ] OperationId ExecutePassThroughNativeQuery is deprecated|" +
-                "[WARN ] OperationId GetTables is deprecated|" +
-                "[WARN ] OperationId GetItems is deprecated|" +
-                "[WARN ] OperationId PostItem is deprecated|" +
-                "[WARN ] OperationId GetItem is deprecated|" +
-                "[WARN ] OperationId DeleteItem is deprecated|" +
-                "[WARN ] OperationId PatchItem is deprecated|" +
-                "[INFO ] Operation GET /{connectionId}/datasets/default/tables/{table}/onnewitems is trigger|" +
-                "[INFO ] Operation GET /{connectionId}/datasets/default/tables/{table}/onupdateditems is trigger|" +
-                "[INFO ] Operation GET /{connectionId}/v2/datasets/{server},{database}/tables/{table}/onnewitems is trigger|" +
-                "[INFO ] Namespace SQL: 'SQL Server' version 1.0 - 64 functions found|" +
+                "[INFO ] Operation GET /{connectionId}/datasets({dataset})/tables({table})/onnewitems is trigger|" + 
+                "[INFO ] Operation GET /{connectionId}/datasets({dataset})/tables({table})/onupdateditems is trigger|" + 
+                "[INFO ] Operation GET /{connectionId}/datasets/{server},{database}/tables/{table}/onupdateditems is trigger|" + 
+                "[INFO ] Operation GET /{connectionId}/datasets/default/tables/{table}/onnewitems is trigger|" + 
+                "[INFO ] Operation GET /{connectionId}/datasets/default/tables/{table}/onupdateditems is trigger|" + 
+                "[INFO ] Operation GET /{connectionId}/v2/datasets/{server},{database}/tables/{table}/onnewitems is trigger|" + 
+                "[INFO ] Namespace SQL: 'SQL Server' version 1.0 - 64 functions found|" + 
+                "[WARN ] In namespace SQL, function ExecutePassThroughNativeQuery is deprecated.|" + 
+                "[WARN ] In namespace SQL, function GetTables is deprecated.|" + 
+                "[WARN ] In namespace SQL, function GetItems is deprecated.|" + 
+                "[WARN ] In namespace SQL, function PostItem is deprecated.|" + 
+                "[WARN ] In namespace SQL, function GetItem is deprecated.|" + 
+                "[WARN ] In namespace SQL, function DeleteItem is deprecated.|" + 
+                "[WARN ] In namespace SQL, function PatchItem is deprecated.|" + 
                 "[INFO ] Exiting ConfigExtensions.AddActionConnector, returning 18 functions", logger.GetLogs());
         }
     }

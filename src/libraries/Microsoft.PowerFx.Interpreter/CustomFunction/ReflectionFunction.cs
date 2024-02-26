@@ -157,6 +157,11 @@ namespace Microsoft.PowerFx
 
         private static FormulaType GetType(Type t)
         {
+            if (t == typeof(BlobValue))
+            {
+                return FormulaType.Blob;
+            }
+
             // Handle any FormulaType deriving from Primitive<T>
             var tBase = t.BaseType;
 
@@ -303,7 +308,7 @@ namespace Microsoft.PowerFx
                     return CommonErrors.CustomError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
                 }
 
-                throw e;
+                throw;
             }
 
             if (info.IsAsync)

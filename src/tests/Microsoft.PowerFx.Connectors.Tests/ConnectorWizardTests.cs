@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public async Task ConnectorWizardTest()
         {
-            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
                     "tip1-shared-002.azure-apim.net",           // endpoint 
@@ -154,7 +154,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public async Task ConnectorWizardTest_InvalidToken()
         {
-            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
                     "tip1-shared-002.azure-apim.net",           // endpoint 
@@ -167,7 +167,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("SQL", apiDoc, new ConsoleLogger(_output)); 
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("SQL", apiDoc, new ConsoleLogger(_output));
             ConnectorFunction executeProcedureV2 = functions.First(cf => cf.Name == "ExecuteProcedureV2");
 
             BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client, throwOnError: true, console: _output);

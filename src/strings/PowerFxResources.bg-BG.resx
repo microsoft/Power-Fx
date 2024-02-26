@@ -402,8 +402,8 @@
     <value>Новото име на колоната.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Указаната колона „{0}“ не може да бъде преименувана два пъти.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Връща редовете от таблицата, за които всички указани условия са true.</value>
@@ -1053,11 +1053,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Дата, която да се коригира с указания брой месеци.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Брой месеци, с които да се промени датата. Положителна стойност дава бъдеща дата, отрицателна стойност дава минала дата, а нула не променя месеца.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Връща последния ден от месеца за зададена дата, коригирана с брой месеци.</value>
@@ -1073,11 +1073,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Дата, която да се коригира с указания брой месеци.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Брой месеци, с които да се промени датата. Положителна стойност дава бъдеща дата, отрицателна стойност дава минала дата, а нула не променя месеца.</value>
-         
+    <value>Брой месеци, с които да се промени датата. Положителна стойност дава бъдеща дата, отрицателна стойност дава минала дата, а нула не променя месеца.</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Съкращава „число“, като закръглява към отрицателна безкрайност.</value>
@@ -1704,6 +1704,38 @@
     <value>разделител</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Изброяване и връщане на имената на колоните за безтипов запис.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>запис</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Записът, чиито колони да бъдат изброени.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Връща стойността на свойство на безтипов запис, като е дадено името на колоната.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>запис</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>име_на_колона</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Запис, за който да се извлече стойност от колона.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Името на колоната за записа, който трябва да бъде извлечен.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Връща true, ако предоставената стойност е от дадения тип.</value>
     
@@ -1844,6 +1876,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Невалиден тип аргумент ({1}). Вместо това е очаквана стойност {0}.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>В този контекст не може да се използва израз от тип void.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2328,6 @@
     <value>Поле с името „{0}“ е указано повече от един път в този запис.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Указаната колона „{0}“ не може да бъде преименувана два пъти.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Колона с име „{0}“ е указана повече от един път.</value>
     
@@ -2370,35 +2402,52 @@
     <value>Невалиден json показалец.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Няма</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Текст</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Логически</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Таблица</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Поведение</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Дата и час</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Математически и статистически</value>
+    <value>Математика и статистика</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Дефинирани от потребителя</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Информация</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Цвят</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Услуги</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Компонент</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3851,6 @@
     <value>Тази функция е отхвърлена и вече не се поддържа.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>В пространството на имената {1} функцията {0} е отхвърлена.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>В пространството на имената {1} функцията {0} не се поддържа.</value>
     
@@ -4134,7 +4179,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Функцията за JSON не може да сериализира двоични данни в неповеденчески израз.</value>    
+    <value>Функцията за JSON не може да сериализира двоични данни в неповеденчески израз.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Параметърът {0} съдържа свойство от тип {1}, което не се поддържа.</value>
@@ -4175,6 +4220,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Таблицата не съдържа колони от текстов тип.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Отхвърлено използване на „.“. Вместо това използвайте функцията ShowColumns.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Отказ от отговорност:** Генерираното от AI съдържание може да има грешки. Уверете се, че е точно и подходящо, преди да го използвате. [Вижте условията](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Връща Unicode знака, който отговаря на дадената числова стойност.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Числова стойност, която да се преобразува в Unicode знак.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>число</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Преобразува таблица с числови стойности към таблица с Unicode знаци.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>колона_от_числа</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Колона от таблица с числови стойности, които да се преобразуват в Unicode знаци.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Неподдържан атрибут</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Всички оператори Partial в съответстващите наименувани формули трябва да са еднакви.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Неизвестен оператор Partial.</value>
     
   </data>
 </root>
