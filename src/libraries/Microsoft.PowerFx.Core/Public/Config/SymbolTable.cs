@@ -215,7 +215,7 @@ namespace Microsoft.PowerFx
             };
             var sb = new StringBuilder();
 
-            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult, definedTypeSymbolTable);
+            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult, Features.PowerFxV1, definedTypeSymbolTable);
 
             if (userDefinitionResult.HasErrors)
             {

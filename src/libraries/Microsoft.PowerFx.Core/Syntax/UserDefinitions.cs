@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.PowerFx.Core;
 using System.Text;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Syntax
         /// <param name="userDefinitionResult"><see cref="UserDefinitionResult"/>.</param>
         /// <param name="features">PowerFx feature flags.</param>
         /// <returns>True if there are no parser errors.</returns>
-        public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, DefinedTypeSymbolTable definedTypeSymbolTable = null, Features features = null)
+        public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null, DefinedTypeSymbolTable definedTypeSymbolTable = null)
         {
             parserOptions.AllowParseAsTypeLiteral = true;
             var userDefinitions = new UserDefinitions(script, parserOptions, features);
