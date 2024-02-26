@@ -4253,15 +4253,15 @@
     <value>유니코드 문자로 변환할 숫자 값의 테이블 열입니다.</value>
   </data>
   <data name="ErrOnlyPartialAttribute" xml:space="preserve">
-    <value>Unsupported attribute kind</value>
+    <value>지원되지 않는 특성 종류</value>
     
   </data>
   <data name="ErrOperationDoesntMatch" xml:space="preserve">
-    <value>All Partial operators on matching named formulas must be the same.</value>
+    <value>일치하는 명명된 수식의 모든 Partial 연산자는 동일해야 합니다.</value>
     
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
-    <value>Unknown Partial operator.</value>
+    <value>알 수 Partial 연산자.</value>
     
   </data>
 </root>
