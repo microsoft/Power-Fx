@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -127,6 +128,35 @@ namespace Microsoft.PowerFx.Core.Tests
                 Assert.NotNull(blob);
                 Assert.Equal($"Blob {i++}", blob.GetAsStringAsync(null, CancellationToken.None).Result);                
             }          
+        }
+
+        [Fact]
+        public void BlobTest_SomeCustomValue()
+        {
+            string internalContent = "Test Value";
+            BlobValue blob = FormulaValue.NewBlob(new CustomBlobContent(internalContent));
+
+            Assert.NotNull(blob);
+            Assert.Equal(string.Empty, blob.Content.GetAsStringAsync(null, CancellationToken.None).Result);
+            Assert.Equal(string.Empty, blob.Content.GetAsBase64Async(CancellationToken.None).Result);
+            Assert.Equal(new byte[0], blob.GetAsByteArrayAsync(CancellationToken.None).Result);
+            var customContent = Assert.IsType<CustomBlobContent>(blob.Content);
+            Assert.Equal(internalContent, customContent.InternalContent);
+        }
+
+        private class CustomBlobContent : BlobContent
+        {
+            public CustomBlobContent(string internalContent)
+            {
+                InternalContent = internalContent;
+            }
+
+            public string InternalContent { get; }
+
+            public override Task<byte[]> GetAsByteArrayAsync(CancellationToken token)
+            {
+                return Task.FromResult(new byte[0]);
+            }
         }
     }
 }

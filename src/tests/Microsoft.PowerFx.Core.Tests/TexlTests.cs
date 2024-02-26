@@ -4083,6 +4083,21 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
+        [Theory]
+        [InlineData("in")]
+        [InlineData("exactin")]
+        public void PrettyPrintTest(string op)
+        {
+            string expr = $"1 {op} [0]";
+            
+            CheckResult check = new CheckResult(new Engine()).SetText(expr);
+            ParseResult parse = check.ApplyParse();
+
+            string str = parse.Root.ToString();
+
+            Assert.Equal($"1 {op} [ 0 ]", str);
+        }
+
         internal class BlobFunc : TexlFunction
         {
             public override bool IsSelfContained => false;

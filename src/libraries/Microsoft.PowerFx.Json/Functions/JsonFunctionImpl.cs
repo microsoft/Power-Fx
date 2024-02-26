@@ -256,7 +256,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     foreach (DValue<RecordValue> row in tableValue.Rows)
                     {
-                        row.Value.Visit(this);
+                        if (row.IsBlank)
+                        {
+                            row.Blank.Visit(this);
+                        }
+                        else if (row.IsError)
+                        {
+                            row.Error.Visit(this);
+                        }
+                        else
+                        {
+                            row.Value.Visit(this);
+                        }
                     }
 
                     _writer.WriteEndArray();

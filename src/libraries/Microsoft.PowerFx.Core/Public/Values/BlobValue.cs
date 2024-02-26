@@ -12,9 +12,9 @@ namespace Microsoft.PowerFx.Types
 {
     public class BlobValue : ValidFormulaValue
     {
-        internal BlobContent Content { get; }
+        public BlobContent Content { get; }
 
-        internal BlobValue(BlobContent content)
+        public BlobValue(BlobContent content)
              : base(IRContext.NotInSource(FormulaType.Blob))
         {
             Content = content ?? throw new ArgumentNullException(nameof(content));
