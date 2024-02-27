@@ -79,6 +79,9 @@ namespace Microsoft.PowerFx
 
             config.EnableSetFunction();
             config.EnableJsonFunctions();
+#pragma warning disable CS0618 // Type or member is obsolete
+            config.EnableOptionSetInfo();
+#pragma warning restore CS0618 // Type or member is obsolete
 
             config.AddFunction(new ResetFunction());
             config.AddFunction(new Option0Function());
