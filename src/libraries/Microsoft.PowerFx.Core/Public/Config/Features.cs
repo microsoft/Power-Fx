@@ -94,9 +94,9 @@ namespace Microsoft.PowerFx
         internal bool JsonFunctionAcceptsLazyTypes { get; set; }
 
         /// <summary>
-        /// Enables enhanced lookup delegation, to properly support delegation of reduction formulas. 
+        /// Enables more robust lookup reduction delegation.
         /// </summary>
-        internal bool IsEnhancedLookUpDelegationEnabled { get; set; }
+        internal bool IsLookUpReductionDelegationEnabled { get; set; }
 
         /// <summary>
         /// This is specific for Cards team and it is a temporary feature.
