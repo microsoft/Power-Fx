@@ -8,19 +8,20 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Functions
+namespace Microsoft.PowerFx.Interpreter
 {
-    internal sealed class OptionSetInfoFunction : BuiltinFunction, IAsyncTexlFunction
+    internal sealed class OptionSetInfoFunction : TexlFunction, IAsyncTexlFunction
     {
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;
 
         public OptionSetInfoFunction()
-            : base("OptionSetInfo", TexlStrings.AboutOptionSetInfo, FunctionCategories.Text, DType.String, 0, 1, 1, DType.OptionSetValue)
+            : base(DPath.Root, "OptionSetInfo", "OptionSetInfo", TexlStrings.AboutOptionSetInfo, FunctionCategories.Text, DType.String, 0, 1, 1, DType.OptionSetValue)
         {
         }
 
