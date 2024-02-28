@@ -127,7 +127,16 @@ namespace Microsoft.PowerFx.Repl.Services
                 foreach (var row in table.Rows)
                 {
                     resultString.Append(separator);
-                    resultString.Append(FormatField(row.Value.Fields.First(), false));
+
+                    if (row.IsValue)
+                    {
+                        resultString.Append(FormatField(row.Value.Fields.First(), false));
+                    }
+                    else
+                    {
+                        resultString.Append(row.IsError ? row.Error?.Errors?[0].Message : "Blank()");
+                    }
+
                     separator = ", ";
                 }
 
