@@ -31,6 +31,8 @@ namespace Microsoft.PowerFx.Functions
 
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             switch (args[0])
             {
                 case ErrorValue errorValue:

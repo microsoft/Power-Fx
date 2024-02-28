@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        [Obsolete("OptionSetInfo function is deprecated. Use the Value function on an option set backed by a number and the Boolean function on an option set bacekd by a Boolean instead.  A new ChoiceInfo function is in the works for access to logical names.")]
+        [Obsolete("OptionSetInfo function is deprecated. Use the Value function on an option set backed by a number and the Boolean function on an option set backed by a Boolean instead. A new ChoiceInfo function is in the works for access to logical names.")]
         public static void EnableOptionSetInfo(this PowerFxConfig powerFxConfig)
         {
             powerFxConfig.AddFunction(new OptionSetInfoFunction());
