@@ -118,9 +118,9 @@ namespace Microsoft.PowerFx.Repl.Services
             }
 
             // special treatment for single column table named Value
-            else if (table.Rows.Count() > 0 && 
-                     table.Rows.First().Value?.Fields.Count() == 1 && 
-                     table.Rows.First().Value?.Fields.First().Name == "Value")
+            else if (table.Rows.Count() > 0 &&
+                     table.Type.FieldNames.Count() == 1 &&
+                     table.Type.FieldNames.First() == "Value")
             {
                 var separator = string.Empty;
                 resultString = new StringBuilder("[");
