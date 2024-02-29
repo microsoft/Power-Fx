@@ -162,13 +162,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     default:
                         {
-                            // TODO: what other types should be supported for non-boolean reduction nodes?
                             if (enforceBoolean && kind != NodeKind.BoolLit)
                             {
                                 SuggestDelegationHint(dsNode, binding, string.Format(CultureInfo.InvariantCulture, "Not supported node {0}.", kind));
                                 return false;
                             }
 
+                            // TODO: if boolean results are not being enforced, are there any other node types that should be considered non-delegable?
                             break;
                         }
                 }
