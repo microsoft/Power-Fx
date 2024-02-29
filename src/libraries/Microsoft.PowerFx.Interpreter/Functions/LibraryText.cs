@@ -1169,13 +1169,6 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue OptionSetValueToLogicalName(IRContext irContext, OptionSetValue[] args)
-        {
-            var optionSet = args[0];
-            var logicalName = optionSet.Option;
-            return new StringValue(irContext, logicalName);
-        }
-
         public static FormulaValue PlainText(IRContext irContext, StringValue[] args)
         {
             string text = args[0].Value.Trim();
