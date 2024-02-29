@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Stupac Booleovih vrijednosti za obradu.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Pretvara decimalni broj u booleovu vrijednost.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>broj</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Vrijednost decimalnog broja koju treba pretvoriti u booleovu vrijednost.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Pretvara stupac decimalnih brojčanih vrijednosti u stupac booleovih vrijednosti.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>unos</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Stupac brojčanih vrijednosti koji treba obraditi.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Pretvara vrijednost odabira koju podržava booleova vrijednost u booleovu vrijednost.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>odabir</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Odabir koji treba pretvoriti u booleovu vrijednost.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Pretvara stupac vrijednosti odabira koje podržavaju booleove vrijednosti u stupac booleovih vrijednosti.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>unos</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Stupac vrijednosti odabira koji treba obraditi.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vraća prvi argument koji nije prazan</value>
     

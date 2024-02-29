@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Colonna di valori boolean da elaborare.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Converte un valore decimale in un valore booleano.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>numero</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Valore numerico decimale da convertire in un valore booleano.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Converte una colonna di valori numerici decimali in una colonna di valori booleani.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Colonna di valori numerici da elaborare.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Converte un valore di scelta supportato da un valore booleano in un valore booleano.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>scelta</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Scelta per convertire in un valore booleano.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Converte una colonna di valori i scelta supportati dai valori booleani in una colonna di valori booleani.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Colonna di valori di scelta da elaborare.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Restituisce il primo argomento non vuoto</value>
     

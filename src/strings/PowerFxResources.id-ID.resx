@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Kolom nilai boolean untuk diproses.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Mengonversi angka desimal ke nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>angka</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Nilai angka desimal yang akan dikonversi ke nilai boolean.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Mengonversi kolom nilai numerik desimal ke kolom nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>masukan</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Kolom nilai angka untuk diproses.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Mengonversi nilai pilihan yang didukung oleh boolean ke nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>pilihan</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Nilai pilihan yang akan dikonversi ke nilai boolean.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Mengonversi kolom nilai pilihan yang didukung oleh boolean ke kolom nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>masukan</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Kolom nilai pilihan yang akan diproses.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Menampilkan argumen tidak kosong pertama</value>
     

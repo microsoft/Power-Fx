@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>A feldolgozandó logikai értékeket tartalmazó oszlop.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Átalakít egy tizedest logikai értékké.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>szám</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>A logikai értékké alakítandó tizedes érték.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Tizedesjeggyel rendelkező numerikus értékekből álló oszlopot logikai értékek oszlopává alakít át.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>bevitel</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>A feldolgozandó számértékeket tartalmazó oszlop.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Egy logikai értékkel támogatott választási értéket logikai értékké alakít.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>választási lehetőség</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>A logikai értékké alakítandó választás.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Logikai értékekkel támogatott választási értékekből álló oszlopot logikai értékek oszlopává alakít át.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>bevitel</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>A feldolgozandó választható értékeket tartalmazó oszlop.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Az első nem üres argumentumot adja vissza</value>
     

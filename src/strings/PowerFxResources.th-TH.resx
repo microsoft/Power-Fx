@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>คอลัมน์ของค่าแบบบูลีนที่จะประมวลผล</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>แปลงตัวเลขฐานสิบเป็นค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>ตัวเลข</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>ค่าตัวเลขฐานสิบที่จะแปลงเป็นค่าแบบบูลีน</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>แปลงคอลัมน์ของค่าตัวเลขฐานสิบเป็นคอลัมน์ของค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>ข้อมูลป้อนเข้า</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>คอลัมน์ของค่าตัวเลขที่จะดำเนินการ</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>แปลงค่าตัวเลือกที่รองรับโดยบูลีนเป็นค่าบูลีน</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>ชุดตัวเลือก</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>ตัวเลือกที่จะแปลงเป็นค่าแบบบูลีน</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>แปลงคอลัมน์ของค่าตัวเลือกที่รองรับโดยบูลีนเป็นคอลัมน์ของค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>ข้อมูลป้อนเข้า</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>คอลัมน์ของค่าตัวเลือกที่จะดำเนินการ</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>ส่งคืนอาร์กิวเมนต์แรกที่ไม่ได้เว้นว่าง</value>
     
