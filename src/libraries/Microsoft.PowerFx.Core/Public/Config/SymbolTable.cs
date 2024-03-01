@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx
             foreach (var udf in userDefinitionResult.UDFs)
             {
                 AddFunction(udf);
-                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
+                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default, features: Features.PowerFxV1);
 
                 List<TexlError> errors = new List<TexlError>();
 

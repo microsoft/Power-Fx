@@ -88,6 +88,21 @@ namespace Microsoft.PowerFx.Syntax
             return arg.TypeIdent.GetFormulaType()._type;
         }
 
+        internal FormulaType GetFormulaTypeFromName2(string name, DefinedTypeSymbolTable dt)
+        {
+            return FormulaType.Build(GetTypeFromName2(name, dt));
+        }
+
+        internal DType GetTypeFromName2(string name, DefinedTypeSymbolTable dt)
+        {
+            if (dt != null && dt.TryLookup(new DName(name), out NameLookupInfo nameInfo))
+            {
+                return nameInfo.Type;
+            }
+
+            return FormulaType.GetFromStringOrNull(name)._type;
+        }
+
         private bool ProcessUserDefinitions(DefinedTypeSymbolTable definedTypeSymbolTable, out UserDefinitionResult userDefinitionResult)
         {
             var parseResult = Parse(_script, _parserOptions);
@@ -190,7 +205,7 @@ namespace Microsoft.PowerFx.Syntax
 
                 var argTypes = udf.Args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => GetFormulaTypeFromName(arg, definedTypeSymbolTable)._type);
 
-                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args, argTypes);
+                var func = new UserDefinedFunction(udfName.Value, GetFormulaTypeFromName2(udf.ReturnType._value, definedTypeSymbolTable)._type, udf.Body, udf.IsImperative, udf.Args, argTypes);
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
@@ -234,8 +249,8 @@ namespace Microsoft.PowerFx.Syntax
 
             if (returnTypeFormulaType.Kind.Equals(DType.Unknown.Kind) || RestrictedTypes.Contains(returnTypeFormulaType))
             {
-                errors.Add(new TexlError(returnType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnType.Name));
-                isReturnTypeCheckSuccessful = false;
+                //errors.Add(new TexlError(returnType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnType.Name));
+                isReturnTypeCheckSuccessful = true;
             }
 
             return isReturnTypeCheckSuccessful;
