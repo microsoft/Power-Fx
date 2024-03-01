@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
@@ -62,6 +63,20 @@ namespace Microsoft.PowerFx.Core.Utils
                 errors.EnsureError(targetArg, TexlStrings.ErrInvalidArgs_Func, function.Name);
                 return;
             }
+        }
+
+        public static string GetScalarSingleColumnNameForType(Features features, DKind kind)
+        {
+            return kind switch
+            {
+                DKind.Image or
+                DKind.Hyperlink or
+                DKind.Media or
+                DKind.Blob or
+                DKind.PenImage => features.ConsistentOneColumnTableResult ? TableValue.ValueName : "Url",
+
+                _ => TableValue.ValueName
+            };
         }
     }
 }

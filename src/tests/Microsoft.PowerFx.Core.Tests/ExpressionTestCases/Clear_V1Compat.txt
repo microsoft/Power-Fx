@@ -17,3 +17,9 @@ Errors: Error 14-15: Invalid argument type (Decimal). Expecting a Table value in
 
 >> Clear(t1);Clear(t2)
 If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> Collect(t1, r2);
+  Collect(t1, {Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false});
+  Clear(t1);
+  If(CountRows(t1) = 0, "Cleared", "Failed")
+"Cleared"

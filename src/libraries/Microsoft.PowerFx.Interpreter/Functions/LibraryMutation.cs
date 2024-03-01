@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
@@ -36,8 +38,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             FormulaValue arg0;
             var argc = args.Length;
-            var returnIsTable = irContext._type.IsTable;
             var features = runtimeServiceProvider.GetService<Features>();
+
+            if (!features.PowerFxV1CompatibilityRules)
+            {
+                throw new InvalidOperationException("Collect funtion can only be executed if PowerFx V1 feature is active.");
+            }
 
             // Need to check if the Lazy first argument has been evaluated since it may have already been
             // evaluated in the ClearCollect case.
@@ -96,37 +102,27 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (arg is RecordValue)
                 {
-                    var recordValueCopy = (RecordValue)arg.MaybeShallowCopy();
+                    var recordValueCopy = CompileTimeTypeWrapperRecordValue.AdjustType(tableValue.Type.ToRecord(), (RecordValue)arg.MaybeShallowCopy());
                     resultRows.Add(await tableValue.AppendAsync(recordValueCopy, cancellationToken).ConfigureAwait(false));
                 }
                 else if (arg is ErrorValue)
                 {
                     return arg;
                 }
-                else if (arg is BlankValue && !tableValue.Type._type.IsSingleColumnTable)
-                {
-                    continue;
-                }
-                else
-                {
-                    // If arg is a scalar value, then we need to create a single column record.
-                    NamedValue namedValue = new NamedValue(tableValue.Type.SingleColumnFieldName, arg);
-                    var singleColumnRecord = FormulaValue.NewRecordFromFields(namedValue);
-
-                    resultRows.Add(await tableValue.AppendAsync(singleColumnRecord, cancellationToken).ConfigureAwait(false));
-                }
-            }
-
-            if (!features.PowerFxV1CompatibilityRules)
-            {
-                return tableValue;
+                
+                // !!! How to handle BlankValue?
+                //else if (arg is BlankValue && !tableValue.Type._type.IsSingleColumnTable)
+                //{
+                //    continue;
+                //}
             }
 
             if (resultRows.Count == 0)
             {
                 return FormulaValue.NewBlank(arg0.Type);
             }
-            else if (returnIsTable)
+
+            if (irContext._type.IsTable)
             {
                 return CompileTimeTypeWrapperTableValue.AdjustType(tableValue.Type, new InMemoryTableValue(IRContext.NotInSource(arg0.Type), resultRows));
             }

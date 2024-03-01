@@ -24,6 +24,12 @@ namespace Microsoft.PowerFx.Core.IR
                 return CoercionKind.AggregateToDataEntity;
             }
 
+            // Coercion from a primitive type to a single column record type.
+            if (fromType.IsPrimitive && toType.IsRecord)
+            {
+                return CoercionKind.PrimitiveToSingleColumnRecord;
+            }
+
             if (toType.IsLargeImage && (fromType.Kind == DKind.Image || fromType == DType.MinimalLargeImage))
             {
                 if (fromType.Kind == DKind.Image)

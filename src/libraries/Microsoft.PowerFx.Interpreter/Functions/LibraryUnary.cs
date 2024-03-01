@@ -524,6 +524,17 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: UntypedStringToUntypedDecimal)
             },
+            {
+                UnaryOpKind.PrimitiveToSingleColumnRecord,
+                StandardErrorHandling<FormulaValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<FormulaValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: PrimitiveToSingleColumnRecord)
+            },
         };
         #endregion
 
@@ -1028,6 +1039,12 @@ namespace Microsoft.PowerFx.Functions
 
             return args[0];
         }
-#endregion
+
+        public static FormulaValue PrimitiveToSingleColumnRecord(IRContext irContext, FormulaValue[] args)
+        {
+            var record = FormulaValue.NewRecordFromFields(new NamedValue("Value", args[0]));
+            return record;
+        }
+        #endregion
     }
 }

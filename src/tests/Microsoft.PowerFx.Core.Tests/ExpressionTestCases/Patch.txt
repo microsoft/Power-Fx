@@ -42,10 +42,6 @@ Errors: Error 14-31: The specified column 'Field5' does not exist.|Error 0-32: T
 >> Patch(t1, First(t1), {Field2:"Venus"}).Field2
 "Venus"
 
->> Collect(t1, r2);
-  Patch(t1, Last(t1), {Field1:10}, {Field2:"Venus"}, {Field4:true}).Field1
-10
-
 >> If(Patch(t1, First(t1), {Field4:false}).Field4, 1,0)
 0
 
@@ -98,22 +94,6 @@ Errors: Error 45-78: The type of this argument 'Field3' does not match the expec
 >> Patch(t1,LookUp(t1,DisplayNameField2="earth"),{Field1:100,Field4:false});t1
 Table({Field1:100,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false})
 
->> Collect(t1, r2);
-  Collect(t1, {Field1:3,Field2:"venus",Field3:DateTime(2030,1,1,0,0,0,0),Field4:true});
-  Collect(t1, {Field1:4,Field2:"mars",Field3:DateTime(2031,1,1,0,0,0,0),Field4:false});
-  Collect(t1, {Field1:5,Field2:"jupter",Field3:DateTime(2032,1,1,0,0,0,0),Field4:true});
-  Collect(t1, {Field1:6,Field2:"saturn",Field3:DateTime(2033,1,1,0,0,0,0),Field4:false});
-  Patch(t1, First(Filter(t1, Field1 > 4)), {Field2: "phobos"});
-{Field1:5,Field2:"phobos",Field3:DateTime(2032,1,1,0,0,0,0),Field4:true}
-
->> Collect(t1, r2);
-  Collect(t1, {DisplayNameField1:3,Field2:"venus",Field3:DateTime(2030,1,1,0,0,0,0),DisplayNameField4:true});
-  Collect(t1, {DisplayNameField1:4,Field2:"mars",Field3:DateTime(2031,1,1,0,0,0,0),DisplayNameField4:false});
-  Collect(t1, {DisplayNameField1:5,Field2:"jupter",Field3:DateTime(2032,1,1,0,0,0,0),DisplayNameField4:true});
-  Collect(t1, {DisplayNameField1:6,Field2:"saturn",Field3:DateTime(2033,1,1,0,0,0,0),DisplayNameField4:false});
-  Patch(t1, Last(Filter(t1, Field4 = false)), {DisplayNameField2: "phobos"});
-{Field1:6,Field2:"phobos",Field3:DateTime(2033,1,1,0,0,0,0),Field4:false}
-
 >> Patch(Foo, First(t1), {DisplayNameField2:"jupter"})
 Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-51: The function 'Patch' has some invalid arguments.
 
@@ -128,23 +108,6 @@ Table({a:1,b:Blank()},{a:Blank(),b:"2"})
 
 >> Set(t_an_bs, Table({a:1,b:If(false,"")},{a:Blank(),b:"2"})); Patch(t_an_bs, Last(t_an_bs), {a:2}); t_an_bs
 Table({a:1,b:Blank()},{a:2,b:"2"})
-
-
-// Base record not found. If the record in its entirety is not matched then it should produce an error. 
->> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
-   Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
-   Patch(t1,{Field2:"deimos"},{Field3:DateTime(2030,2,1,0,0,0,0)})
-Error({Kind:ErrorKind.NotFound})
-
->> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2024,2,1,0,0,0,0),Field4:false});
-   Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2025,2,1,0,0,0,0),Field4:false});
-   Patch(t1,{Field3:DateTime(2025,2,1,0,0,0,0)},{Field2:"pandora", Field1:55})
-Error({Kind:ErrorKind.NotFound})
-
->> Collect(t1, r2);
-   Patch(t1, {Field4:true}, {Field2:"phobos"});
-   First(t1).DisplayNameField2
-Error({Kind:ErrorKind.NotFound})
 
 >> Patch(t1, {Field1:1}, {DisplayNameField2:"mars"});
    First(t1).Field2

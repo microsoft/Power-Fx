@@ -13,9 +13,6 @@ Blank()
 >> Boolean(Filter([1,2,3], Value > 10))
 Table()
 
->> ForAll(Sequence(5), Collect(t_empty, {Value:ThisRecord.Value})); ForAll(Sequence(CountRows(t_empty)), Collect(t_empty2, Index(t_empty, ThisRecord.Value))); Patch(t_empty, First(t_empty), {Value:99}); Patch(t_empty2, Last(t_empty2), {Value:88}); Concat(t_empty, Value) & "," & Concat(t_empty2, Value)
-"992345,123488"
-
 >> ForAll(Boolean([3, 1/0, 0, Sqrt(-1)]), IfError(Text(Value), $"ErrorKind={FirstError.Kind}"))
 Table({Value:"true"},{Value:"ErrorKind=13"},{Value:"false"},{Value:"ErrorKind=24"})
 

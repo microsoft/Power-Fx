@@ -41,3 +41,40 @@ Errors: Error 13-143: The value passed to the 'Patch' function cannot be changed
     {Properties:{Moon:{Name:"Phobos"}}},
     {Planet:"Jupter"})
 Errors: Error 13-251: The value passed to the 'Patch' function cannot be changed.
+
+
+>> Collect(t1, r2);
+  Patch(t1, Last(t1), {Field1:10}, {Field2:"Venus"}, {Field4:true}).Field1
+10
+
+>> Collect(t1, r2);
+  Collect(t1, {Field1:3,Field2:"venus",Field3:DateTime(2030,1,1,0,0,0,0),Field4:true});
+  Collect(t1, {Field1:4,Field2:"mars",Field3:DateTime(2031,1,1,0,0,0,0),Field4:false});
+  Collect(t1, {Field1:5,Field2:"jupter",Field3:DateTime(2032,1,1,0,0,0,0),Field4:true});
+  Collect(t1, {Field1:6,Field2:"saturn",Field3:DateTime(2033,1,1,0,0,0,0),Field4:false});
+  Patch(t1, First(Filter(t1, Field1 > 4)), {Field2: "phobos"});
+{Field1:5,Field2:"phobos",Field3:DateTime(2032,1,1,0,0,0,0),Field4:true}
+
+>> Collect(t1, r2);
+  Collect(t1, {DisplayNameField1:3,Field2:"venus",Field3:DateTime(2030,1,1,0,0,0,0),DisplayNameField4:true});
+  Collect(t1, {DisplayNameField1:4,Field2:"mars",Field3:DateTime(2031,1,1,0,0,0,0),DisplayNameField4:false});
+  Collect(t1, {DisplayNameField1:5,Field2:"jupter",Field3:DateTime(2032,1,1,0,0,0,0),DisplayNameField4:true});
+  Collect(t1, {DisplayNameField1:6,Field2:"saturn",Field3:DateTime(2033,1,1,0,0,0,0),DisplayNameField4:false});
+  Patch(t1, Last(Filter(t1, Field4 = false)), {DisplayNameField2: "phobos"});
+{Field1:6,Field2:"phobos",Field3:DateTime(2033,1,1,0,0,0,0),Field4:false}
+
+// Base record not found. If the record in its entirety is not matched then it should produce an error. 
+>> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+   Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+   Patch(t1,{Field2:"deimos"},{Field3:DateTime(2030,2,1,0,0,0,0)})
+Error({Kind:ErrorKind.NotFound})
+
+>> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2024,2,1,0,0,0,0),Field4:false});
+   Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2025,2,1,0,0,0,0),Field4:false});
+   Patch(t1,{Field3:DateTime(2025,2,1,0,0,0,0)},{Field2:"pandora", Field1:55})
+Error({Kind:ErrorKind.NotFound})
+
+>> Collect(t1, r2);
+   Patch(t1, {Field4:true}, {Field2:"phobos"});
+   First(t1).DisplayNameField2
+Error({Kind:ErrorKind.NotFound})

@@ -91,15 +91,74 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public virtual DType GetCollectedType(PowerFx.Features features, DType argType)
+        public virtual DType GetCollectedType(Features features, DType argType, TexlNode arg, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.Assert(argType.IsValid);
 
             return argType;
         }
 
+        public bool TryGetUnifiedCollectedTypeCanvas(TexlNode[] args, DType[] argTypes, IErrorContainer errors, Features features, out DType collectedType, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+
+            bool fValid = true;
+            DType itemType = DType.Invalid;
+
+            var argc = args.Length;
+
+            for (int i = 1; i < argc; i++)
+            {
+                DType argType = GetCollectedType(features, argTypes[i], args[i], ref nodeToCoercedTypeMap);
+
+                // The subsequent args should all be aggregates.
+                if (!argType.IsAggregate)
+                {
+                    errors.EnsureError(args[i], TexlStrings.ErrBadType_Type, argType.GetKindString());
+                    fValid = false;
+                    continue;
+                }
+
+                // Promote the arg type to a table to facilitate unioning.
+                if (!argType.IsTable)
+                {
+                    argType = argType.ToTable();
+                }
+
+                if (!itemType.IsValid)
+                {
+                    itemType = argType;
+                }
+                else
+                {
+                    bool fUnionError = false;
+                    itemType = DType.Union(ref fUnionError, itemType, argType, useLegacyDateTimeAccepts: true, features);
+                    if (fUnionError)
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleTypes);
+                        fValid = false;
+                    }
+                }
+
+                // We only support accessing entities in collections if the collection has only 1 argument that contributes to it's type
+                if (argc != 2 && itemType.ContainsDataEntityType(DPath.Root))
+                {
+                    fValid &= DropAllOfKindNested(ref itemType, errors, args[i], DKind.DataEntity);
+                }
+            }
+
+            Contracts.Assert(!itemType.IsValid || itemType.IsTable);
+            collectedType = itemType.IsValid ? itemType.ToTable() : DType.EmptyTable;
+            return fValid;
+        }
+
         // Attempt to get the unified schema of the items being collected by an invocation.
-        private bool TryGetUnifiedCollectedType(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType collectedType)
+        private bool TryGetUnifiedCollectedTypeV1(TexlNode[] args, DType[] argTypes, IErrorContainer errors, Features features, out DType collectedType, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -117,7 +176,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 1; i < argc; i++)
             {
-                DType argType = GetCollectedType(context.Features, argTypes[i]);
+                DType argType = GetCollectedType(features, argTypes[i], args[i], ref nodeToCoercedTypeMap);
+
+                // !!! How is it possible for an argtype to be a primitive and an aggregate at the same time?
+                //if (argType.DisplayNameProvider == null && argType.Kind == DKind.ObjNull)
+                //{
+                //    argType.DisplayNameProvider = datasourceType.DisplayNameProvider;
+                //}
 
                 // The subsequent args should all be aggregates.
                 if (!argType.IsAggregate)
@@ -128,13 +193,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 // Promote the arg type to a table to facilitate unioning.
-                if (!argType.IsRecord)
+                if (!argType.IsTable)
                 {
-                    argType = argType.ToRecord();
+                    argType = argType.ToTable();
                 }
 
                 // Checks if all record names exist against table type and if its possible to coerce.
-                bool checkAggregateNames = argType.CheckAggregateNames(datasourceType, args[i], errors, context.Features, SupportsParamCoercion);
+                bool checkAggregateNames = argType.CheckAggregateNames(datasourceType, args[i], errors, features, SupportsParamCoercion);
                 fValid = fValid && checkAggregateNames;
 
                 if (!itemType.IsValid)
@@ -144,7 +209,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else
                 {
                     var fUnionError = false;
-                    itemType = DType.Union(ref fUnionError, itemType, argType, useLegacyDateTimeAccepts: true, context.Features);
+                    itemType = DType.Union(ref fUnionError, itemType, argType, useLegacyDateTimeAccepts: true, features);
                     if (fUnionError)
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleTypes);
@@ -159,8 +224,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            Contracts.Assert(!itemType.IsValid || itemType.IsRecord);
-            collectedType = itemType.IsValid ? itemType : DType.EmptyRecord;
+            Contracts.Assert(!itemType.IsValid || itemType.IsTable);
+            collectedType = itemType.IsValid ? itemType : DType.EmptyTable;
             return fValid;
         }
 
@@ -184,49 +249,42 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 fValid = false;
             }
 
+            DType collectedType = null;
+
             // Get the unified collected type on the RHS. This will generate appropriate
             // document errors for invalid arguments such as unsupported aggregate types.
-            fValid &= TryGetUnifiedCollectedType(context, args, argTypes, errors, out DType collectedType);
-            Contracts.Assert(collectedType.IsRecord);
-
-            if (fValid)
+            if (context.Features.PowerFxV1CompatibilityRules)
             {
-                if (!collectedType.TryGetCoercionSubType(collectionType, out DType coercionType, out var coercionNeeded, context.Features))
-                {
-                    fValid = false;
-                }
-                else
-                {
-                    if (coercionNeeded)
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], coercionType);
-                    }
-
-                    var fError = false;
-
-                    returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType, useLegacyDateTimeAccepts: false, context.Features, allowCoerce: true);
-
-                    if (fError)
-                    {
-                        fValid = false;
-                        if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors, context.Features))
-                        {
-                            errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTableDoesNotAcceptThisType);
-                        }
-                    }
-                }
-            }
-
-            if (context.Features.PowerFxV1CompatibilityRules && argTypes.Length == 2)
-            {
-                if (argTypes[1].IsTable && argTypes[1].Kind != DKind.ObjNull)
-                {
-                    returnType = returnType.ToTable();
-                }
+                fValid &= TryGetUnifiedCollectedTypeV1(args, argTypes, errors, context.Features, out collectedType, ref nodeToCoercedTypeMap);
             }
             else
             {
-                returnType = returnType.ToTable();
+                fValid &= TryGetUnifiedCollectedTypeCanvas(args, argTypes, errors, context.Features, out collectedType, ref nodeToCoercedTypeMap);
+            }
+
+            Contracts.Assert(collectedType.IsTable);
+
+            bool fError = false;
+            returnType = DType.Union(ref fError, collectionType, collectedType, useLegacyDateTimeAccepts: true, context.Features);
+            if (fError)
+            {
+                fValid = false;
+                if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors, context.Features))
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTableDoesNotAcceptThisType);
+                }
+            }
+            
+            if (fValid)
+            {
+                if (context.Features.PowerFxV1CompatibilityRules && argTypes.Length == 2 && (argTypes[1].IsRecord || argTypes[1].IsPrimitive))
+                {
+                    returnType = returnType.ToRecord();
+                }
+                else
+                {
+                    returnType = returnType.ToTable();
+                }
             }
 
             return fValid;
@@ -323,6 +381,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return Arg0RequiresAsync(callNode, binding);
         }
 
+        public static DType GetCollectedTypeForGivenArgType(Features features, DType argType, TexlNode arg, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var singleColumnRecordType = GetCollectedTypeForGivenArgType(features, argType);
+
+            if (!argType.IsPrimitive)
+            {
+                return argType;
+            }
+
+            CollectionUtils.Add(ref nodeToCoercedTypeMap, arg, singleColumnRecordType);
+
+            return singleColumnRecordType;
+        }
+
         public static DType GetCollectedTypeForGivenArgType(Features features, DType argType)
         {
             Contracts.Assert(argType.IsValid);
@@ -333,7 +405,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // Passed a scalar; make a record out of it, using a name that depends on the type.
-            string fieldName = Contracts.VerifyValue(CreateInvariantFieldName(features, argType.Kind));
+            var fieldName = Contracts.VerifyValue(CreateInvariantFieldName(features, argType.Kind));
             return DType.CreateRecord(new TypedName[] { new TypedName(argType, new DName(fieldName)) });
         }
 
@@ -341,21 +413,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.Assert(dKind >= DKind._Min && dKind < DKind._Lim);
 
-            return GetScalarSingleColumnNameForType(features, dKind);
-        }
-
-        private static string GetScalarSingleColumnNameForType(Features features, DKind kind)
-        {
-            return kind switch
-            {
-                DKind.Image or
-                DKind.Hyperlink or
-                DKind.Media or
-                DKind.Blob or
-                DKind.PenImage => features.ConsistentOneColumnTableResult ? TableValue.ValueName : "Url",
-
-                _ => TableValue.ValueName
-            };
+            return MutationUtils.GetScalarSingleColumnNameForType(features, dKind);
         }
     }
 
@@ -373,9 +431,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return CreateInvariantFieldName(features, dKind);
         }
 
-        public override DType GetCollectedType(PowerFx.Features features, DType argType)
+        public override DType GetCollectedType(Features features, DType argType, TexlNode arg, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return GetCollectedTypeForGivenArgType(features, argType);
+            return GetCollectedTypeForGivenArgType(features, argType, arg, ref nodeToCoercedTypeMap);
         }
     }
 }

@@ -1180,6 +1180,9 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.PenImageToText:
                         unaryOpKind = UnaryOpKind.PenImageToText;
                         break;
+                    case CoercionKind.PrimitiveToSingleColumnRecord:
+                        unaryOpKind = UnaryOpKind.PrimitiveToSingleColumnRecord;
+                        break;
                     case CoercionKind.UntypedToText:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text_UO, child);
                     case CoercionKind.UntypedToNumber:

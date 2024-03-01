@@ -6,7 +6,7 @@
 Table({Value:false},{Value:true})
 
 // AND
->> false && Last(Collect(t1, {Value:true})).Value;t1
+>> false && Clear(t1);t1
 Table({Value:false},{Value:true})
 
 >> 0.00;t1
@@ -30,7 +30,7 @@ Table({Value:false},{Value:true})
 >> 0.03;t1
 Table({Value:false},{Value:true})
 
->> false And Last(Collect(t1, {Value:true})).Value;t1
+>> false And Clear(t1);t1
 Table({Value:false},{Value:true})
 
 >> 0.10;t1
@@ -54,7 +54,7 @@ Table({Value:false},{Value:true})
 >> 0.13;t1
 Table({Value:false},{Value:true})
 
->> And(false, Last(Collect(t1, {Value:true})).Value);t1
+>> And(false, Clear(t1));t1
 Table({Value:false},{Value:true})
 
 >> 0.14;t1
@@ -79,7 +79,7 @@ Table({Value:false},{Value:true})
 Table({Value:false},{Value:true})
 
 // OR with true, none of these should execute
->> true || Last(Collect(t1, {Value:true})).Value
+>> true || With({x:1},Clear(t1);true)
 true
 
 >> -1;t1
@@ -105,10 +105,13 @@ Table({Value:false},{Value:true})
 Table({Value:false},{Value:true})
 
 // OR with false, these should all execute
->> false || Last(Collect(t1, {Value:true})).Value
+>> false || With({x:1},Clear(t1);true)
 true
 
 >> 1;t1
+Table()
+
+>> 0;Set( t1, [false,true,true] )
 Table({Value:false},{Value:true},{Value:true})
 
 >> false || Patch(t1, First(t1), {Value:true}).Value
@@ -129,10 +132,13 @@ Table({Value:false},{Value:true})
 >> 3.1;t1
 Table({Value:false},{Value:true})
 
->> Or(false, Last(Collect(t1, {Value:true})).Value)
+>> Or(false, With({x:1},Clear(t1);true))
 true
 
 >> 4;t1
+Table()
+
+>> 1;Set( t1, [false,true,true] )
 Table({Value:false},{Value:true},{Value:true})
 
 >> Or(false, Patch(t1, First(t1), {Value:true}).Value)
