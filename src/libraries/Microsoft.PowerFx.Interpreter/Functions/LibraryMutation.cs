@@ -109,12 +109,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     return arg;
                 }
-                
-                // !!! How to handle BlankValue?
-                //else if (arg is BlankValue && !tableValue.Type._type.IsSingleColumnTable)
-                //{
-                //    continue;
-                //}
+
+                // !!! This should be moved to IR.
+                else if (arg is BlankValue)
+                {
+                    if (tableValue.Type._type.IsSingleColumnTable && tableValue.Type.GetFieldTypes().First().Name.Value == "Value")
+                    {
+                        resultRows.Add(await tableValue.AppendAsync(CreateRecordFromPrimitive(tableValue, arg), cancellationToken).ConfigureAwait(false));
+                    }                    
+                }
             }
 
             if (resultRows.Count == 0)
@@ -130,6 +133,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 return CompileTimeTypeWrapperRecordValue.AdjustType(tableValue.Type.ToRecord(), (RecordValue)resultRows.First().ToFormulaValue());
             }
+        }
+
+        private RecordValue CreateRecordFromPrimitive(TableValue tableValue, FormulaValue arg)
+        {
+            return FormulaValue.NewRecordFromFields(tableValue.Type.ToRecord(), new NamedValue("Value", arg));
         }
     }
 }

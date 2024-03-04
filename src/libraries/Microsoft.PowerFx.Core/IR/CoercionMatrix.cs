@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -22,12 +21,6 @@ namespace Microsoft.PowerFx.Core.IR
             if (fromType.IsAggregate && toType.Kind == DKind.DataEntity)
             {
                 return CoercionKind.AggregateToDataEntity;
-            }
-
-            // Coercion from a primitive type to a single column record type.
-            if (fromType.IsPrimitive && toType.IsRecord)
-            {
-                return CoercionKind.PrimitiveToSingleColumnRecord;
             }
 
             if (toType.IsLargeImage && (fromType.Kind == DKind.Image || fromType == DType.MinimalLargeImage))

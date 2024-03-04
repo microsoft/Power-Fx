@@ -99,7 +99,6 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         BooleanToOptionSet,
         AggregateToDataEntity,
-        PrimitiveToSingleColumnRecord,
 
         // Argument pre-processesor in IR Phase.
 

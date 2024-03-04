@@ -108,6 +108,5 @@ namespace Microsoft.PowerFx.Core.IR
         TextToCurrency,
         CurrencyToBoolean,
         BooleanToCurrency,
-        PrimitiveToSingleColumnRecord,
     }
 }

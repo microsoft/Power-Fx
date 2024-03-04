@@ -9,11 +9,15 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using RecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -91,7 +95,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public virtual DType GetCollectedType(Features features, DType argType, TexlNode arg, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public virtual DType GetCollectedType(PowerFx.Features features, DType argType)
         {
             Contracts.Assert(argType.IsValid);
 
@@ -114,7 +118,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (int i = 1; i < argc; i++)
             {
-                DType argType = GetCollectedType(features, argTypes[i], args[i], ref nodeToCoercedTypeMap);
+                DType argType = GetCollectedType(features, argTypes[i]);
 
                 // The subsequent args should all be aggregates.
                 if (!argType.IsAggregate)
@@ -176,7 +180,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 1; i < argc; i++)
             {
-                DType argType = GetCollectedType(features, argTypes[i], args[i], ref nodeToCoercedTypeMap);
+                DType argType = GetCollectedType(features, argTypes[i]);
 
                 // !!! How is it possible for an argtype to be a primitive and an aggregate at the same time?
                 //if (argType.DisplayNameProvider == null && argType.Kind == DKind.ObjNull)
@@ -314,12 +318,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             base.CheckSemantics(binding, args, argTypes, errors);
-            base.ValidateArgumentIsMutable(binding, args[0], errors);
-
-            int skip = 1;
+            base.ValidateArgumentIsMutable(binding, args[0], errors);            
 
             MutationUtils.CheckSemantics(binding, this, args, argTypes, errors);
-            MutationUtils.CheckForReadOnlyFields(argTypes[0], args.Skip(skip).ToArray(), argTypes.Skip(skip).ToArray(), errors);
+
+            if (binding.Features.PowerFxV1CompatibilityRules)
+            {
+                MutationUtils.CheckForReadOnlyFields(argTypes[0], args.Skip(1).ToArray(), argTypes.Skip(1).ToArray(), errors);
+            }
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -330,7 +336,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex == 0;
         }
 
-        public override bool TryGetDataSourceNodes(CallNode callNode, TexlBinding binding, out IList<FirstNameNode> dsNodes)
+        public override bool TryGetDataSourceNodes(PowerFx.Syntax.CallNode callNode, TexlBinding binding, out IList<FirstNameNode> dsNodes)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
@@ -373,7 +379,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return identifiers;
         }
 
-        public override bool IsAsyncInvocation(CallNode callNode, TexlBinding binding)
+        public override bool IsAsyncInvocation(PowerFx.Syntax.CallNode callNode, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
@@ -390,7 +396,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return argType;
             }
 
-            CollectionUtils.Add(ref nodeToCoercedTypeMap, arg, singleColumnRecordType);
+            //CollectionUtils.Add(ref nodeToCoercedTypeMap, arg, singleColumnRecordType);
 
             return singleColumnRecordType;
         }
@@ -431,9 +437,36 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return CreateInvariantFieldName(features, dKind);
         }
 
-        public override DType GetCollectedType(Features features, DType argType, TexlNode arg, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override DType GetCollectedType(Features features, DType argType)
         {
-            return GetCollectedTypeForGivenArgType(features, argType, arg, ref nodeToCoercedTypeMap);
+            return GetCollectedTypeForGivenArgType(features, argType);
+        }
+
+        internal override IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
+        {
+            var newArgs = new List<IntermediateNode>() { args[0] };
+
+            // !!! Blank()?
+
+            foreach (var arg in args.Skip(1))
+            {
+                if (arg.IRContext.ResultType._type.IsPrimitive)
+                {
+                    newArgs.Add(
+                        new RecordNode(
+                            new IRContext(arg.IRContext.SourceContext, RecordType.Empty().Add(TableValue.ValueName, arg.IRContext.ResultType)), 
+                            new Dictionary<DName, IntermediateNode>
+                            {
+                                { TableValue.ValueDName, arg }
+                            }));
+                }
+                else
+                {
+                    newArgs.Add(arg);
+                }
+            }
+
+            return base.CreateIRCallNode(node, context, newArgs, scope);
         }
     }
 }

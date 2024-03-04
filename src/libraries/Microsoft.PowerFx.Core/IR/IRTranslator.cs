@@ -3,16 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
@@ -1179,9 +1174,6 @@ namespace Microsoft.PowerFx.Core.IR
                         break;
                     case CoercionKind.PenImageToText:
                         unaryOpKind = UnaryOpKind.PenImageToText;
-                        break;
-                    case CoercionKind.PrimitiveToSingleColumnRecord:
-                        unaryOpKind = UnaryOpKind.PrimitiveToSingleColumnRecord;
                         break;
                     case CoercionKind.UntypedToText:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text_UO, child);
