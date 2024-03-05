@@ -154,12 +154,12 @@ namespace Microsoft.PowerFx.Intellisense
             {
                 var suggestionsAdded = false;
                 var parentRecordNode = intellisenseData.CurNode.Parent as RecordNode;
-                var alreadyUsedFields = parentRecordNode?.Ids.Select(id => id.Name).ToImmutableHashSet();
+                var alreadyUsedFields = parentRecordNode?.Ids.Select(id => id.Name).ToImmutableHashSet() ?? Enumerable.Empty<DName>().ToImmutableHashSet();
                 foreach (var tName in aggregateType.GetNames(DPath.Root).Where(param => !param.Type.IsError))
                 {
                     var usedName = tName.Name;
 
-                    if (alreadyUsedFields?.Contains(usedName) == true)
+                    if (alreadyUsedFields.Contains(usedName))
                     {
                         continue;
                     }
