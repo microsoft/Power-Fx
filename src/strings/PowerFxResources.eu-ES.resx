@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Prozesatuko diren balio boolearren zutabea.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Zenbaki hamartar bat bihurtzen du balio boolear.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>zenbakia</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Balio hamartarra balio boolear bihurtzeko aukera.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Zenbakizko balioak dituen zutabe bat bihurtzen du balio boolearrak dituen zutabe.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>sarrera</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Prozesatuko den zenbakizko balioen zutabea.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Balio boolear batek babestutako aukerako balio bat bihurtzen du balio boolear.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>aukera</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Balio boolear bihurtzeko aukera.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Balio boolearrak dituen zutabe bat bihurtzen du balio boolearrak babestutako aukerako balioak dituen zutabe.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>sarrera</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Prozesatuko den aukerako balioen zutabea.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Hutsa ez den lehen argumentua itzultzen du</value>
     
@@ -4235,7 +4279,7 @@
     
   </data>
   <data name="AboutUniChar_number" xml:space="preserve">
-    <value>Unicode karaktere bihurtuko den zenbakizko balioa</value>
+    <value>Unicode karaktere bihurtuko den zenbakizko balioa.</value>
   </data>
   <data name="UniCharArg1" xml:space="preserve">
     <value>zenbakia</value>

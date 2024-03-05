@@ -274,21 +274,42 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             "field1:")]
         [InlineData(
             "RecordInputTest( {field1 : 1}, \"test\", {|",
-            "id:", 
+            "id:",
             "name:")]
+
+        // do not repeat already used fields.
         [InlineData(
-            "RecordInputTest( {field1 : 2}, \"test\", { id: 1, name: \"test\"}, {|", 
+            "RecordInputTest( {field1 : 2}, \"test\", { id: 1, |",
+            "name:")]
+
+        [InlineData(
+            "RecordInputTest( {field1 : 2}, \"test\", { name: \"test\", |",
+            "id:")]
+
+        [InlineData(
+            "RecordInputTest( {field1 : 2}, \"test\", { id: 1, name:\"test name\", |}")]
+
+        [InlineData(
+            "RecordInputTest( {field1 : 2}, \"test\", { id: 1, name: \"test\"}, {|",
             "nested:",
             "nested2:")]
 
         // nested record field.
         [InlineData(
-            "RecordInputTest( {field1 : 3}, \"test\", { id: 1, name: \"test\"}, { nested:{|", 
+            "RecordInputTest( {field1 : 3}, \"test\", { id: 1, name: \"test\"}, { nested:{|",
             "field1:")]
         [InlineData(
-            "RecordInputTest( {field1 : 4}, \"test\", { id: 1, name: \"test\"}, { nested2:{|", 
-            "id:", 
+            "RecordInputTest( {field1 : 4}, \"test\", { id: 1, name: \"test\"}, { nested2:{|",
+            "id:",
             "name:")]
+
+        // do not repeat already used fields.
+        [InlineData(
+            "RecordInputTest( {field1 : 4}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 2, |",
+            "name:")]
+        [InlineData(
+            "RecordInputTest( {field1 : 4}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 2, name: \"test\", |")]
+
         [InlineData(
             "RecordInputTest( {field1 : 3}, \"test\", { id: 1, name: \"test\"}, { nested:{ field1: 1}, nested2: {|",
             "id:",

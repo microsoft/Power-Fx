@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Töödeldav loogiliste väärtuste veerg.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Teisendab kümnendarvu loogikaväärtuseks.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>arv</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Arvväärtus loogikaväärtuseks teisendamise jaoks.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Teisendab arvväärtuste veeru loogikaväärtuste veeruks.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>sisend</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Töödeldav arvväärtuste veerg.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Teisendab valikuväärtuse loogilise väärtuse alusel loogiliseks väärtuseks.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>valik</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Valik loogiliseks väärtuseks teisendamise jaoks.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Teisendab loogikaväärtuste alusel valikuväärtused veeru loogikaväärtuste veeruks.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>sisend</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Töödeldav valikuväärtuste veerg.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Tagastab esimese mittetühja argumendi</value>
     
