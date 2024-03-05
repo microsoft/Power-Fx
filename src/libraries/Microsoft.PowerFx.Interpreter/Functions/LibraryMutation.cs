@@ -109,15 +109,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     return arg;
                 }
-
-                // !!!! This should be moved to IR.
-                else if (arg is BlankValue)
-                {
-                    if (tableValue.Type._type.IsSingleColumnTable && tableValue.Type.GetFieldTypes().First().Name.Value == "Value")
-                    {
-                        resultRows.Add(await tableValue.AppendAsync(CreateRecordFromPrimitive(tableValue, arg), cancellationToken).ConfigureAwait(false));
-                    }                    
-                }
             }
 
             if (resultRows.Count == 0)
