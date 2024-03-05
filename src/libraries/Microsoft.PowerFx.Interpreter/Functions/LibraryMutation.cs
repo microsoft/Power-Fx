@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return arg;
                 }
 
-                // !!! This should be moved to IR.
+                // !!!! This should be moved to IR.
                 else if (arg is BlankValue)
                 {
                     if (tableValue.Type._type.IsSingleColumnTable && tableValue.Type.GetFieldTypes().First().Name.Value == "Value")
