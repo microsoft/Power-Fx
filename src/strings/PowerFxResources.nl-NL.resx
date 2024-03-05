@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Een kolom met booleaanse waarden die moet worden verwerkt.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Hiermee wordt een decimaal getal naar een booleaanse waarde geconverteerd.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>getal</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>De decimale getalwaarde die moet worden geconverteerd naar een booleaanse waarde.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Hiermee wordt een kolom met decimale numerieke waarden naar een kolom met booleaanse waarden geconverteerd.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>invoer</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Een kolom met getalwaarden die moeten worden verwerkt.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Hiermee wordt een keuzewaarde op basis van een booleaanse waarde geconverteerd naar een booleaanse waarde.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>keuze</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>De keuze die moet worden geconverteerd naar een booleaanse waarde.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Hiermee wordt een kolom met keuzewaarden op basis van booleaanse waarden naar een kolom met booleaanse waarden geconverteerd.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>invoer</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Een kolom met keuzewaarden die moeten worden verwerkt.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Hiermee wordt het eerste niet-lege argument geretourneerd</value>
     

@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Стовпець логічних значень, який потрібно обробити.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Перетворює десяткове число на логічне значення.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>число</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Десяткове числове значення, яке потрібно перетворити на логічне значення.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Перетворює стовпець десяткових числових значень на стовпець логічних значень.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>вхідні дані</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Стовпець числових значень, який потрібно обробити.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Перетворює значення вибору, яке ґрунтується на логічному значенні, на логічне значення.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>варіант вибору</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Варіант вибору, який потрібно перетворити на логічне значення.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Перетворює стовпець значень вибору, які ґрунтуються на логічних значеннях, на стовпець логічних значень.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>вхідні дані</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Стовпець значень вибору, який потрібно обробити.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Повертає перший непустий аргумент.</value>
     

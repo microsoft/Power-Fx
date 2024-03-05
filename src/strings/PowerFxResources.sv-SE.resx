@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>En kolumn med booleska värden att bearbeta.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konverterar ett decimalvärde till ett booleskt värde.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>tal</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Decimalvärdet som ska konverteras till ett booleskt värde.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konverterar en kolumn med numeriska decimalvärden till en kolumn med booleska värden.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>indata</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>En kolumn med numeriska värden att bearbeta.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konverterar ett valvärde som stöds av en boolesk värde till ett booleskt värde.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>val</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Valet som ska konverteras till ett booleskt värde.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konverterar en kolumn med valvärden som stöds av booleska till en kolumn med booleska värden.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>indata</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>En kolumn med valvärden att bearbeta.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerar det första icke-tomma argumentet</value>
     

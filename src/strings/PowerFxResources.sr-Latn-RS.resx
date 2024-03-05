@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Kolona Bulovih vrednosti za obradu.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konvertuje decimalni broj u Bulovu vrednost.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>broj</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Decimalna brojčana vrednost koju treba konvertovati u Bulovu vrednost.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konvertuje kolonu decimalnih numeričkih vrednosti u kolonu Bulovih vrednosti.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>unos</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Kolona vrednosti brojeva za obradu.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konvertuje vrednost izbora koju podržava Bulova vrednost u Bulovu vrednost.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>izbor</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Izbor koji treba konvertovati u Bulovu vrednost.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konvertuje kolonu vrednosti izbora koje podržavaju Bulove vrednosti u kolonu Bulovih vrednosti.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>unos</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Kolona vrednosti izbora za obradu.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vraća prvi argument koji nije prazan</value>
     

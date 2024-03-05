@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Apstrādājamā Būla vērtību kolonna.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Pārvērš decimāldaļskaitli par Būla vērtību.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>skaitlis</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Decimāldaļskaitļa vērtība, kas jāpārvērš par Būla vērtību.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Pārvērš decimāldaļu skaitlisko vērtību kolonnu par Būla vērtību kolonnu.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>ievade</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Apstrādājamā skaitlisko vērtību kolonna.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Pārvērš izvēles vērtību, ko atbalsta Būla vērtība, par Būla vērtību.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>izvēle</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Izvēle, ko pārvērst par Būla vērtību.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Pārvērš izvēles vērtību kolonnu, ko atbalsta Būla vērtības, par Būla vērtību kolonnu.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>ievade</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Apstrādājamā izvēles vērtību kolonna.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Atgriež pirmo argumentu, kurš nav tukšs</value>
     

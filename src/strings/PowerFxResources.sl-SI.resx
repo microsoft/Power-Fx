@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Stolpec logičnih vrednosti, ki jih želite obdelati.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Pretvori decimalno število v logično vrednost.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>število</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Decimalna številska vrednost za pretvorbo v logično vrednost</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Pretvori stolpec decimalnih številskih vrednosti v stolpec logičnih vrednosti.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>vnos</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Stolpec številskih vrednosti za obdelavo.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Pretvori izbrano vrednost, podprto z logično vrednostjo, v logično vrednost.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>možnost</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Izbira za pretvorbo v logično vrednost.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Pretvori stolpec izbranih vrednosti, podprtih z logičnimi vrednostmi, v stolpec logičnih vrednosti.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>vnos</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Stolpec izbranih vrednosti za obdelavo</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vrne prvi neprazen argument</value>
     

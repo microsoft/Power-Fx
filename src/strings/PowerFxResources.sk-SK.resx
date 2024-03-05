@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Stĺpec booleovských hodnôt na spracovanie.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konvertuje desatinné číslo na booleovskú hodnotu.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>číslo</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Desatinné číslo, ktoré sa má konvertovať na booleovskú hodnotu.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konvertuje stĺpec desatinných čísel na stĺpec booleovských hodnôt.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>vstup</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Stĺpec číselných hodnôt na spracovanie.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konvertuje hodnotu voľby na báze booleovskej hodnoty na booleovskú hodnotu.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>voľba</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Voľba, ktorá sa má konvertovať na booleovskú hodnotu.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konvertuje stĺpec hodnôt voľby na báze booleovských hodnôt na stĺpec booleovských hodnôt.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>vstup</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Stĺpec hodnôt voľby na spracovanie.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vráti prvý argument, ktorý nie je prázdny</value>
     

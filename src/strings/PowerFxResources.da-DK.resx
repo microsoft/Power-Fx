@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>En kolonne med booleske værdier, der skal behandles.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konverterer et decimaltal til en boolesk værdi.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>tal</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Den decimaltalværdi, der skal konverteres til en boolesk værdi.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konverterer en kolonne med numeriske decimalværdier til en kolonne med booleske værdier.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>En kolonne af numeriske værdier, der skal behandles.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konverterer en valgværdi, som understøttes af en boolesk værdi, til en boolesk værdi.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>valg</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Det valg, der skal konverteres til en boolesk værdi.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konverterer en kolonne med valgværdier, som understøttes af booleske værdier, til en kolonne med booleske værdier.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>En kolonne af valgværdier, der skal behandles.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerer det første ikke-tomme argument</value>
     
