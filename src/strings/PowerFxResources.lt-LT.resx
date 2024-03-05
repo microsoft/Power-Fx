@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Bulio logikos reikšmių stulpelis, skirtas apdoroti.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konvertuoja dešimtainį skaičių į Bulio logikos reikšmę.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>skaičius</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Dešimtainė skaitinė reikšmė, kurią reikia konvertuoti į Bulio logikos reikšmę.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konvertuoja dešimtainių skaitinių reikšmių stulpelį į Bulio logikos reikšmių stulpelį.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>įvestis</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Apdorotinų skaitinių reikšmių stulpelis.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konvertuoja Bulio logikos reikšme pagrįstą pasirinkimo reikšmę į Bulio logikos reikšmę.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>pasirinkimas</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Pasirinkimas, kurį reikia konvertuoti į Bulio logikos reikšmę.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konvertuoja Bulio logikos reikšmėmis pagrįstų pasirinkimo reikšmių stulpelį į Bulio logikos reikšmių stulpelį.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>įvestis</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Apdorotinų pasirinkimų reikšmių stulpelis.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Pateikiamas pirmasis netuščias argumentas</value>
     

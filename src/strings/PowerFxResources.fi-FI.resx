@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Käsiteltävä totuusarvosarake.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Muuntaa desimaaliluvun totuusarvoksi.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>numero</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Desimaalilukuarvo, joka muunnetaan totuusarvoksi.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Muuntaa desimaalilukuarvojen sarakkeen totuusarvosarakkeeksi.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>syöte</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Käsiteltävien numeroarvojen sarake.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Muuntaa valinta-arvon, jonka taustalla on totuusarvo, totuusarvoksi.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>valinta</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Valinta, joka muunnetaan totuusarvoksi.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Muutaa valinta-arvojen sarakkeen, jonka taustalla on totuusarvoja, totuusarvosarakkeeksi.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>syöte</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Käsiteltävien valinta-arvojen sarake.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Palauttaa ensimmäisen muun kuin tyhjän argumentin</value>
     
