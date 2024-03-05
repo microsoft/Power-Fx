@@ -1632,17 +1632,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Table_UO)
             },
             {
-                BuiltinFunctionsCore.TableConcatenate,
-                StandardErrorHandling<FormulaValue>(
-                    BuiltinFunctionsCore.TableConcatenate.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: TableConcatenate)
-            },
-            {
                 BuiltinFunctionsCore.Tan,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Tan.Name,
@@ -2147,18 +2136,20 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Table(IRContext irContext, FormulaValue[] args)
         {
-            // Table literal
-            var records = Array.ConvertAll(
+            // Table literal - change to for loop 
+            var tables = Array.ConvertAll(
                 args,
                 arg => arg switch
                 {
-                    RecordValue r => DValue<RecordValue>.Of(r),
-                    BlankValue b => DValue<RecordValue>.Of(b),
-                    _ => DValue<RecordValue>.Of((ErrorValue)arg),
+                    TableValue r => r.Rows,
+                    RecordValue r => new List<DValue<RecordValue>> { DValue<RecordValue>.Of(r) },
+                    BlankValue b when b.Type._type.IsRecord => new List<DValue<RecordValue>> { DValue<RecordValue>.Of(b) },
+                    BlankValue b => new List<DValue<RecordValue>>(),
+                    _ => new List<DValue<RecordValue>> { DValue<RecordValue>.Of((ErrorValue)arg) },
                 });
 
             // Returning List to ensure that the returned table is mutable
-            return new InMemoryTableValue(irContext, records);
+            return new InMemoryTableValue(irContext, tables.SelectMany(x => x));
         }
 
         public static ValueTask<FormulaValue> Blank(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)

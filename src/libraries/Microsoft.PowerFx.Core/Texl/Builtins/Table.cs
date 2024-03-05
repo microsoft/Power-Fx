@@ -2,8 +2,10 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -56,13 +58,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsTable);
 
             // Ensure that all args (if any) are records with compatible schemas.
-            var rowType = DType.EmptyRecord;
+            var resultType = DType.EmptyRecord;
             for (var i = 0; i < argTypes.Length; i++)
             {
                 var argType = argTypes[i];
+                var argTypeRecord = argType.IsTable ? argType.ToRecord() : argType;
                 var isChildTypeAllowedInTable = !argType.IsDeferred && !argType.IsVoid;
 
-                if (!argType.IsRecord)
+                if (!argTypeRecord.IsRecord)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedRecord);
                     isValid = false;
@@ -75,18 +78,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else
                 {
                     if (DType.TryUnionWithCoerce(
-                        rowType,
-                        argType,
+                        resultType,
+                        argTypeRecord,
                         context.Features,
                         coerceToLeftTypeOnly: context.Features.StronglyTypedBuiltinEnums || context.Features.PowerFxV1CompatibilityRules,
                         out var newType,
                         out bool coercionNeeded))
                     {
-                        rowType = newType;
+                        resultType = newType;
 
                         if (coercionNeeded)
                         {
-                            CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], rowType);
+                            var coerceType = argType.IsTable ? resultType.ToTable() : resultType;
+                            CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coerceType);
                         }
                     }
                     else
@@ -96,12 +100,28 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                 }
 
-                Contracts.Assert(rowType.IsRecord);
+                Contracts.Assert(resultType.IsRecord);
             }
 
-            returnType = rowType.ToTable();
+            returnType = resultType.ToTable();
 
             return isValid;
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            base.CheckSemantics(binding, args, argTypes, errors);
+
+            for (var i = 0; i < argTypes.Length; i++)
+            {
+                var ads = argTypes[i].AssociatedDataSources?.FirstOrDefault();
+
+                if (ads is IExternalDataSource tDsInfo && tDsInfo is IExternalTabularDataSource)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.SuggestRemoteExecutionHint, args[i].ToString());
+                    continue;
+                }
+            }
         }
     }
 

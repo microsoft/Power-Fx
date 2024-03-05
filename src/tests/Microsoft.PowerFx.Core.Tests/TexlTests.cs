@@ -2464,15 +2464,10 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Table([])", "*[]")]
-        [InlineData("Table(Table())", "*[]")]
-        [InlineData("Table(Table(Table()))", "*[]")]
         [InlineData("Table(1, 2, 3)", "*[]")]
         [InlineData("Table(true, false)", "*[]")]
         [InlineData("Table(true, 2, \"hello\")", "*[]")]
         [InlineData("Table(\"hello\", \"world\")", "*[]")]
-        [InlineData("Table({X:1}, [1, 2, 3])", "*[X:n]")]
-        [InlineData("Table([true, false, true], {X:1}, {Y:2})", "*[X:n, Y:n]")]
         public void TexlFunctionTypeSemanticsTable_Negative(string script, string expectedType)
         {
             Assert.True(DType.TryParse(expectedType, out DType type));
@@ -4136,20 +4131,20 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("TableConcatenate(Blank(), Blank())", "*[]")]
-        [InlineData("TableConcatenate([1, 2, 3, 4], Blank())", "*[Value:n]")]
-        [InlineData("TableConcatenate([{a:0, b:false, c:\"Hello\"}], [{a:1, b:true, c:\"World\"}])", "*[a:n, b:b, c:s]")]
-        [InlineData("TableConcatenate([{a:0}], [{b:true}], [{c:\"Hello\"}])", "*[a:n, b:b, c:s]")]
-        [InlineData("TableConcatenate(Blank(), T2, Blank(), T1)", "*[a:n, b:b, c:s]")]
-        [InlineData("TableConcatenate([{a:0}], [{b:true}], [{c:\"Hello\", d: {x: \"World\"}}])", "*[a:n, b:b, c:s, d:![x:s]]")]
-        [InlineData("TableConcatenate(T1, T2)", "*[a:n, b:n, c:n]")]
-        [InlineData("TableConcatenate(T2, T1)", "*[a:n, b:b, c:s]")]
-        [InlineData("TableConcatenate(T2, TableConcatenate(T1, T2))", "*[a:n, b:b, c:s]")]
-        [InlineData("TableConcatenate(T1, TableConcatenate(T2, T3))", "*[a:n, b:n, c:n, d:n]")]
-        [InlineData("TableConcatenate(TableConcatenate(T1, T2), T3)", "*[a:n, b:n, c:n, d:n]")]
-        [InlineData("TableConcatenate(T1, TableConcatenate(T2, T4))", "*[a:n, b:n, c:n]")]
-        [InlineData("TableConcatenate(TableConcatenate(T1, T2), T4)", "*[a:n, b:n, c:n]")]
-        [InlineData("TableConcatenate([1,2], If(1/0<2,[3,4]), [5,6])", "*[Value: n]")]
+        [InlineData("Table(Blank(), Blank())", "*[]")]
+        [InlineData("Table([1, 2, 3, 4], Blank())", "*[Value:n]")]
+        [InlineData("Table([{a:0, b:false, c:\"Hello\"}], [{a:1, b:true, c:\"World\"}])", "*[a:n, b:b, c:s]")]
+        [InlineData("Table([{a:0}], [{b:true}], [{c:\"Hello\"}])", "*[a:n, b:b, c:s]")]
+        [InlineData("Table(Blank(), T2, Blank(), T1)", "*[a:n, b:b, c:s]")]
+        [InlineData("Table([{a:0}], [{b:true}], [{c:\"Hello\", d: {x: \"World\"}}])", "*[a:n, b:b, c:s, d:![x:s]]")]
+        [InlineData("Table(T1, T2)", "*[a:n, b:n, c:n]")]
+        [InlineData("Table(T2, T1)", "*[a:n, b:b, c:s]")]
+        [InlineData("Table(T2, Table(T1, T2))", "*[a:n, b:b, c:s]")]
+        [InlineData("Table(T1, Table(T2, T3))", "*[a:n, b:n, c:n, d:n]")]
+        [InlineData("Table(Table(T1, T2), T3)", "*[a:n, b:n, c:n, d:n]")]
+        [InlineData("Table(T1, Table(T2, T4))", "*[a:n, b:n, c:n]")]
+        [InlineData("Table(Table(T1, T2), T4)", "*[a:n, b:n, c:n]")]
+        [InlineData("Table([1,2], If(1/0<2,[3,4]), [5,6])", "*[Value: n]")]
         public void TexlFunctionTypeSemanticsTableConcatenate(string script, string expectedType)
         {
             var symbol = new SymbolTable();
@@ -4166,8 +4161,8 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("TableConcatenate(T1, T2)", "*[V: n]")]
-        [InlineData("TableConcatenate([{a:Date(2024,1,1)}], [{a:GUID(\"some-guid-value-1234\")}])", "*[a: D]")]
+        [InlineData("Table(T1, T2)", "*[V: n]")]
+        [InlineData("Table([{a:Date(2024,1,1)}], [{a:GUID(\"some-guid-value-1234\")}])", "*[a: D]")]
         public void TexlFunctionTypeSemanticsTableConcatenate_Negative(string script, string expectedType)
         {
             var symbol = new SymbolTable();
@@ -4182,14 +4177,14 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("TableConcatenate(DS, Blank())", "*[Id:n, Name:s, Age:n]", 1)]
-        [InlineData("TableConcatenate(DS, T1)", "*[Id:n, Name:s, Age:n, a:n, b:s]", 1)]
-        [InlineData("TableConcatenate(DS, Filter(DS, \"Foo\" in Name))", "*[Id:n, Name:s, Age:n]", 2)]
-        [InlineData("TableConcatenate([], TableConcatenate(DS, []))", "*[Id:n, Name:s, Age:n]", 2)]
-        [InlineData("TableConcatenate([], TableConcatenate([], Search(DS, \"Foo\", Name)))", "*[Id:n, Name:s, Age:n]", 2)]
-        [InlineData("TableConcatenate([], FirstN(DS, 5))", "*[Id:n, Name:s, Age:n]", 1)]
-        [InlineData("TableConcatenate(Search(DS, \"Foo\", Name), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 2)]
-        [InlineData("TableConcatenate(Filter(DS, Sqrt(Age) > 5), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 2)]
+        [InlineData("Table(DS, Blank())", "*[Id:n, Name:s, Age:n]", 1)]
+        [InlineData("Table(DS, T1)", "*[Id:n, Name:s, Age:n, a:n, b:s]", 1)]
+        [InlineData("Table(DS, Filter(DS, \"Foo\" in Name))", "*[Id:n, Name:s, Age:n]", 2)]
+        [InlineData("Table([], Table(DS, []))", "*[Id:n, Name:s, Age:n]", 2)]
+        [InlineData("Table([], Table([], Search(DS, \"Foo\", Name)))", "*[Id:n, Name:s, Age:n]", 2)]
+        [InlineData("Table([], FirstN(DS, 5))", "*[Id:n, Name:s, Age:n]", 1)]
+        [InlineData("Table(Search(DS, \"Foo\", Name), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 2)]
+        [InlineData("Table(Filter(DS, Sqrt(Age) > 5), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 2)]
         public void TexlFunctionTypeSemanticsTableConcatenate_Delegation_Negative(string script, string expectedSchema, int errorCount)
         {
             var dataSourceSchema = TestUtils.DT("*[Id:n, Name:s, Age:n]");

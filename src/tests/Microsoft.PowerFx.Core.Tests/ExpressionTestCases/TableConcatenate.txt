@@ -1,63 +1,63 @@
 
->> TableConcatenate([{a:0, b:false, c:"Hello"}], [{a:1, b:true, c:"World"}])
+>> Table([{a:0, b:false, c:"Hello"}], [{a:1, b:true, c:"World"}])
 Table({a:0,b:false,c:"Hello"},{a:1,b:true,c:"World"})
 
 // Simple coercions
->> TableConcatenate([{a:0}], [{a:true}], [{a:2}])
+>> Table([{a:0}], [{a:true}], [{a:2}])
 Table({a:0},{a:1},{a:2})
 
->> TableConcatenate([{a:0, b:"hello"}], [{a:true}], [{a:2}])
+>> Table([{a:0, b:"hello"}], [{a:true}], [{a:2}])
 Table({a:0,b:"hello"},{a:1,b:Blank()},{a:2,b:Blank()})
 
->> TableConcatenate([{a:0}], [{b:true}], [{c:"Hello"}])
+>> Table([{a:0}], [{b:true}], [{c:"Hello"}])
 Table({a:0,b:Blank(),c:Blank()},{a:Blank(),b:true,c:Blank()},{a:Blank(),b:Blank(),c:"Hello"})
 
->> TableConcatenate([{a:0}], [{b:true}], [{c:"Hello", d: {x: "World"}}])
+>> Table([{a:0}], [{b:true}], [{c:"Hello", d: {x: "World"}}])
 Table({a:0,b:Blank(),c:Blank(),d:Blank()},{a:Blank(),b:true,c:Blank(),d:Blank()},{a:Blank(),b:Blank(),c:"Hello",d:{x:"World"}})
 
->> If(CountRows(Blank()) = CountRows(TableConcatenate(Blank(), Blank())), "As Expected")
+>> CountRows(Table(If(1<0,[1,2,3],Blank())))
+0
+
+>> CountRows(Table(Sequence(3000)))
+3000
+
+>> If(CountRows(Table([{a:0, b:"hello"}], Blank())) = 2, "As Expected")
 "As Expected"
 
->> If((CountRows([{a:0, b:"hello"}]) + CountRows(Blank())) = CountRows(TableConcatenate([{a:0, b:"hello"}], Blank())), "As Expected")
-"As Expected"
-
->> If(CountRows(TableConcatenate([{a:0, b:"hello"}], Blank())) = 1, "As Expected")
-"As Expected"
-
-// Invalid input - record instead of table 
->> TableConcatenate({c:"Hello", d: {x: "World"}}, []) 
-Errors: Error 17-45: Invalid argument type (Record). Expecting a Table value instead.|Error 0-50: The function 'TableConcatenate' has some invalid arguments.
+// Mixing - record and table 
+>> Table({c:"Hello", d: {x: "World"}}, [{c:"PowerFx", d: {x: "Cool"}}])
+Table({c:"Hello",d:{x:"World"}},{c:"PowerFx",d:{x:"Cool"}})
 
 // Invalid input - trying to coerce guid and datetime 
->> TableConcatenate([{a:Date(2024,1,1)}], [{a:GUID("some-guid-value-1234")}]) 
-Errors: Error 39-73: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.|Error 0-74: The function 'TableConcatenate' has some invalid arguments.
+>> Table([{a:Date(2024,1,1)}], [{a:GUID("some-guid-value-1234")}]) 
+Errors: Error 0-63: The function 'Table' has some invalid arguments.|Error 28-62: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
 
 // Table type with incompatible schema
->> TableConcatenate([1, 2], If(1<0, Table({Value:{a:2}})))
-Errors: Error 25-54: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.|Error 0-55: The function 'TableConcatenate' has some invalid arguments.
+>> Table([1, 2], If(1<0, Table({Value:{a:2}})))
+Errors: Error 0-44: The function 'Table' has some invalid arguments.|Error 14-43: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
 
->> TableConcatenate()
-Errors: Error 0-18: Invalid number of arguments: received 0, expected 2 or more.
-
-// Blank inputs
->> TableConcatenate(Blank(), Blank())
+>> Table()
 Table()
 
->> TableConcatenate([1, 2], Blank(), [4, 5], Blank(), [7, 8])
-Table({Value:1},{Value:2},{Value:4},{Value:5},{Value:7},{Value:8})
+// Blank inputs
+>> Table(Blank(), Blank())
+Table(Blank(),Blank())
+
+>> Table([1, 2], Blank(), [4, 5], Blank(), [7, 8])
+Table({Value:1},{Value:2},Blank(),{Value:4},{Value:5},Blank(),{Value:7},{Value:8})
 
 // Runtime Error inputs
->> TableConcatenate([1,2], If(1/0<2,[3,4]), [5,6])
-Error({Kind:ErrorKind.Div0})
+>> Table([1,2], If(1/0<2,[3,4]), [5,6])
+Table({Value:1},{Value:2},Error({Kind:ErrorKind.Div0}),{Value:5},{Value:6})
 
->> TableConcatenate([1, 2, 3/0, 4], [5, Sqrt(-1), 7, 8])
+>> Table([1, 2, 3/0, 4], [5, Sqrt(-1), 7, 8])
 Table({Value:1},{Value:2},{Value:Error({Kind:ErrorKind.Div0})},{Value:4},{Value:5},{Value:Error({Kind:ErrorKind.Numeric})},{Value:7},{Value:8})
 
->> TableConcatenate(Filter([2,1,0,-1,-2], 1/Value>0), Filter([-2,-1,0,1,2], Log(Value)>0))
+>> Table(Filter([2,1,0,-1,-2], 1/Value>0), Filter([-2,-1,0,1,2], Log(Value)>0))
 Table({Value:2},{Value:1},Error({Kind:ErrorKind.Div0}),Error({Kind:ErrorKind.Numeric}),Error({Kind:ErrorKind.Numeric}),Error({Kind:ErrorKind.Numeric}),{Value:2})
 
->> TableConcatenate([42],["everything"])
+>> Table([42],["everything"])
 Table({Value:42},{Value:Error({Kind:ErrorKind.InvalidArgument})})
 
->> TableConcatenate(["everything"], [42])
+>> Table(["everything"], [42])
 Table({Value:"everything"},{Value:"42"})
