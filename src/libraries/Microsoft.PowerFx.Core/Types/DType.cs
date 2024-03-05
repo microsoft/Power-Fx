@@ -144,7 +144,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// Eventually, all display names should come from this centralized source.
         /// We should not be using individual DataSource/OptionSet/View references.
         /// </summary>
-        internal DisplayNameProvider DisplayNameProvider { get; set; }
+        internal DisplayNameProvider DisplayNameProvider { get; private set; }
 
         /// <summary>
         /// NamedValueKind is used only for values of kind NamedValue

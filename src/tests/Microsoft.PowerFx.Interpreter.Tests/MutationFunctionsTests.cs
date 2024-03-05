@@ -4,8 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Threading;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Tests.Helpers;
@@ -407,7 +407,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var evaluator = check.GetEvaluator();
 
             // Runtime exception
-            Assert.Throws<AggregateException>(() => evaluator.Eval());
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await evaluator.EvalAsync(CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         internal class FileObjectRecordValue : InMemoryRecordValue

@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -43,6 +44,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool CanSuggestInputColumns => true;
 
         public override bool MutatesArg0 => true;
+
+        public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Create;
 
         /// <summary>
         /// Since Arg1 and Arg2 depends on type of Arg1 return false for them.
@@ -82,6 +85,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
+            // !!! TODO
+            //yield return new[] { CanvasStringResources.CollectArg1, CanvasStringResources.CollectArg2 };
+            //yield return new[] { CanvasStringResources.CollectArg1, CanvasStringResources.CollectArg2, CanvasStringResources.CollectArg2 };
+            //yield return new[] { CanvasStringResources.CollectArg1, CanvasStringResources.CollectArg2, CanvasStringResources.CollectArg2, CanvasStringResources.CollectArg2 };
+
             yield return new[] { TexlStrings.CollectDataSourceArg, TexlStrings.CollectItemArg };
         }
 
@@ -95,14 +103,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public virtual DType GetCollectedType(PowerFx.Features features, DType argType)
+        public virtual DType GetCollectedType(Features features, DType argType)
         {
             Contracts.Assert(argType.IsValid);
 
             return argType;
         }
 
-        public bool TryGetUnifiedCollectedTypeCanvas(TexlNode[] args, DType[] argTypes, IErrorContainer errors, Features features, out DType collectedType, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public bool TryGetUnifiedCollectedTypeCanvas(TexlNode[] args, DType[] argTypes, IErrorContainer errors, Features features, out DType collectedType)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -157,12 +165,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             Contracts.Assert(!itemType.IsValid || itemType.IsTable);
-            collectedType = itemType.IsValid ? itemType.ToTable() : DType.EmptyTable;
+            collectedType = itemType.IsValid ? itemType : DType.EmptyTable;
             return fValid;
         }
 
         // Attempt to get the unified schema of the items being collected by an invocation.
-        private bool TryGetUnifiedCollectedTypeV1(TexlNode[] args, DType[] argTypes, IErrorContainer errors, Features features, out DType collectedType, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        private bool TryGetUnifiedCollectedTypeV1(TexlNode[] args, DType[] argTypes, IErrorContainer errors, Features features, out DType collectedType)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -259,11 +267,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // document errors for invalid arguments such as unsupported aggregate types.
             if (context.Features.PowerFxV1CompatibilityRules)
             {
-                fValid &= TryGetUnifiedCollectedTypeV1(args, argTypes, errors, context.Features, out collectedType, ref nodeToCoercedTypeMap);
+                fValid &= TryGetUnifiedCollectedTypeV1(args, argTypes, errors, context.Features, out collectedType);
             }
             else
             {
-                fValid &= TryGetUnifiedCollectedTypeCanvas(args, argTypes, errors, context.Features, out collectedType, ref nodeToCoercedTypeMap);
+                fValid &= TryGetUnifiedCollectedTypeCanvas(args, argTypes, errors, context.Features, out collectedType);
             }
 
             Contracts.Assert(collectedType.IsTable);
@@ -296,6 +304,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
+            // !!! TODO
             DType dataSourceType = argTypes[0];
             bool isConnected = binding.EntityScope != null
                 && binding.EntityScope.TryGetDataSource(args[0], out IExternalDataSource dataSourceInfo)
@@ -340,12 +349,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
-
-            dsNodes = new List<FirstNameNode>();
+            
             if (callNode.Args.Count != 2)
             {
+                dsNodes = null;
                 return false;
             }
+
+            dsNodes = new List<FirstNameNode>();
 
             var args = Contracts.VerifyValue(callNode.Args.Children);
             var arg1 = Contracts.VerifyValue(args[1]);
@@ -385,20 +396,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
 
             return Arg0RequiresAsync(callNode, binding);
-        }
-
-        public static DType GetCollectedTypeForGivenArgType(Features features, DType argType, TexlNode arg, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            var singleColumnRecordType = GetCollectedTypeForGivenArgType(features, argType);
-
-            if (!argType.IsPrimitive)
-            {
-                return argType;
-            }
-
-            //CollectionUtils.Add(ref nodeToCoercedTypeMap, arg, singleColumnRecordType);
-
-            return singleColumnRecordType;
         }
 
         public static DType GetCollectedTypeForGivenArgType(Features features, DType argType)
@@ -445,8 +442,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         internal override IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
         {
             var newArgs = new List<IntermediateNode>() { args[0] };
-
-            // !!! Blank()?
 
             foreach (var arg in args.Skip(1))
             {
