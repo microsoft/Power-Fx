@@ -2125,20 +2125,34 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Table(IRContext irContext, FormulaValue[] args)
         {
-            // Table literal - change to for loop 
-            var tables = Array.ConvertAll(
-                args,
-                arg => arg switch
+            // Table literal 
+            var table = new List<DValue<RecordValue>>();
+
+            for (var i = 0; i < args.Length; i++)
+            {
+                switch (args[i])
                 {
-                    TableValue r => r.Rows,
-                    RecordValue r => new List<DValue<RecordValue>> { DValue<RecordValue>.Of(r) },
-                    BlankValue b when b.Type._type.IsRecord => new List<DValue<RecordValue>> { DValue<RecordValue>.Of(b) },
-                    BlankValue b => new List<DValue<RecordValue>>(),
-                    _ => new List<DValue<RecordValue>> { DValue<RecordValue>.Of((ErrorValue)arg) },
-                });
+                    case TableValue t:
+                        table.AddRange(t.Rows);
+                        break;
+                    case RecordValue r:
+                        table.Add(DValue<RecordValue>.Of(r));
+                        break;
+                    case BlankValue b when b.Type._type.IsTableNonObjNull:
+                        break;
+                    case BlankValue b:
+                        table.Add(DValue<RecordValue>.Of(b));
+                        break;
+                    case ErrorValue e when e.Type._type.IsTableNonObjNull:
+                        return e;
+                    default:
+                        table.Add(DValue<RecordValue>.Of((ErrorValue)args[i]));
+                        break;
+                }
+            }
 
             // Returning List to ensure that the returned table is mutable
-            return new InMemoryTableValue(irContext, tables.SelectMany(x => x));
+            return new InMemoryTableValue(irContext, table);
         }
 
         public static ValueTask<FormulaValue> Blank(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)

@@ -1962,6 +1962,10 @@
     <value>Cannot use a non-record value in this context.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>In this context, only record or table values can be used.</value>
+    <comment>Error Message. If a record or table is expected.</comment>
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Cannot use this record. It may contain colliding fields of incompatible types.</value>
     <comment>Error Message.</comment>
@@ -2883,15 +2887,15 @@
     <value>Language code of the supplied text.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Creates a table from the specified records, with as many columns as there are unique record fields. For example: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Creates a table from the specified records and tables, with as many columns as there are unique record fields. For example: Table({key1: val1, key2: val2, ...}, ...)</value>
     <comment>Description of 'Table' function.</comment>
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>record</value>
-    <comment>function_parameter - Argument of the Table function - a record that will become a row in the resulting table.</comment>
+    <value>record/table</value>
+    <comment>function_parameter - Argument of the Table function - a record/table that will be part of the the resulting table.</comment>
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>A record that will become a row in the resulting table.</value>
+  <data name="AboutTable_record/table" xml:space="preserve">
+    <value>A record/table that will be part of the the resulting table.</value>
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Returns a table with all columns removed from the 'source' table except the specified columns.</value>
@@ -4507,5 +4511,9 @@
     <comment>{Locked=Partial}. Error message when the user attempted to use a Partial operator that we don't recognize.
       A partial operator is the 2nd part of a statement `[Partial Op]` and can be one of "And", "Or", "Table" or "Record".
       It's used to determine how to combine multiple expressions with the same name and operator.</comment>
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Delegation warning. The result of this argument '{0}' may be truncated for large data sets before being passed to the '{1}' function.</value>
+    <comment>Error message when an argument to non-delegable function has possible delegation and resulting rows may be truncated</comment>
   </data>
 </root>

@@ -15,14 +15,16 @@ Table({a:0,b:Blank(),c:Blank()},{a:Blank(),b:true,c:Blank()},{a:Blank(),b:Blank(
 >> Table([{a:0}], [{b:true}], [{c:"Hello", d: {x: "World"}}])
 Table({a:0,b:Blank(),c:Blank(),d:Blank()},{a:Blank(),b:true,c:Blank(),d:Blank()},{a:Blank(),b:Blank(),c:"Hello",d:{x:"World"}})
 
+// Typed blank should be treated as blank table
 >> CountRows(Table(If(1<0,[1,2,3],Blank())))
 0
 
+// untyped blank should be treated as blank record
+>> CountRows(Table([{a:0, b:"hello"}], Blank()))
+2
+
 >> CountRows(Table(Sequence(3000)))
 3000
-
->> If(CountRows(Table([{a:0, b:"hello"}], Blank())) = 2, "As Expected")
-"As Expected"
 
 // Mixing - record and table 
 >> Table({c:"Hello", d: {x: "World"}}, [{c:"PowerFx", d: {x: "Cool"}}])
@@ -36,28 +38,56 @@ Errors: Error 0-63: The function 'Table' has some invalid arguments.|Error 28-62
 >> Table([1, 2], If(1<0, Table({Value:{a:2}})))
 Errors: Error 0-44: The function 'Table' has some invalid arguments.|Error 14-43: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
 
+// No arg
 >> Table()
 Table()
+
+// Single argument with table
+>> Table([{a:0, b:false, c:"Hello"}])
+Table({a:0,b:false,c:"Hello"})
+
+// Single argument with record
+>> Table({a:0, b:false, c:"Hello"})
+Table({a:0,b:false,c:"Hello"})
 
 // Blank inputs
 >> Table(Blank(), Blank())
 Table(Blank(),Blank())
 
+>> Table(If(1<0,Blank()))
+Table(Blank())
+
 >> Table([1, 2], Blank(), [4, 5], Blank(), [7, 8])
 Table({Value:1},{Value:2},Blank(),{Value:4},{Value:5},Blank(),{Value:7},{Value:8})
 
-// Runtime Error inputs
->> Table([1,2], If(1/0<2,[3,4]), [5,6])
-Table({Value:1},{Value:2},Error({Kind:ErrorKind.Div0}),{Value:5},{Value:6})
-
+// Tables containing runtime errors
 >> Table([1, 2, 3/0, 4], [5, Sqrt(-1), 7, 8])
 Table({Value:1},{Value:2},{Value:Error({Kind:ErrorKind.Div0})},{Value:4},{Value:5},{Value:Error({Kind:ErrorKind.Numeric})},{Value:7},{Value:8})
 
 >> Table(Filter([2,1,0,-1,-2], 1/Value>0), Filter([-2,-1,0,1,2], Log(Value)>0))
 Table({Value:2},{Value:1},Error({Kind:ErrorKind.Div0}),Error({Kind:ErrorKind.Numeric}),Error({Kind:ErrorKind.Numeric}),Error({Kind:ErrorKind.Numeric}),{Value:2})
 
+// coercion failures
 >> Table([42],["everything"])
 Table({Value:42},{Value:Error({Kind:ErrorKind.InvalidArgument})})
 
 >> Table(["everything"], [42])
 Table({Value:"everything"},{Value:"42"})
+
+// Error function has type ObjNull, which can is both a record and a table; we treat it as a record
+>> Table([{a:1}], Error({Kind:ErrorKind.Div0, Message:"Please don't divide by zero"}), {a:3}, [{a:4}])
+Table({a:1},Error({Kind:ErrorKind.Div0}),{a:3},{a:4})
+
+>> Table([{a:1}], 1/0, {a:3}, [{a:4}])
+Errors: Error 0-35: The function 'Table' has some invalid arguments.|Error 16-17: In this context, only record or table values can be used.
+
+// The second argument is a record, no ambiguity
+>> Table([{a:1}], If(1/0<2,{a:2}), {a:3}, [{a:4}])
+Table({a:1},Error({Kind:ErrorKind.Div0}),{a:3},{a:4})
+
+// The second argument is a table. With an error table is passed in, the result is an error
+>> Table([{a:1}], If(1/0<2,[{a:2}]), {a:3}, [{a:4}])
+Error({Kind:ErrorKind.Div0})
+
+>> Table([{a:1}], {a:Error({Kind:ErrorKind.Custom})}, {a:3}, [{a:4}])
+Table({a:1},{a:Error({Kind:ErrorKind.Custom})},{a:3},{a:4})

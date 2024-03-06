@@ -15,7 +15,7 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // Table(rec, rec, ...)
+    // Table(rec/table, rec/table, ...)
     internal class TableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
@@ -62,12 +62,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             for (var i = 0; i < argTypes.Length; i++)
             {
                 var argType = argTypes[i];
-                var argTypeRecord = argType.IsTable ? argType.ToRecord() : argType;
+                var argTypeRecord = argType.IsTableNonObjNull ? argType.ToRecord() : argType;
                 var isChildTypeAllowedInTable = !argType.IsDeferred && !argType.IsVoid;
 
                 if (!argTypeRecord.IsRecord)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedRecord);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedRecordOrTable);
                     isValid = false;
                 }
                 else if (!isChildTypeAllowedInTable)
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (ads is IExternalDataSource tDsInfo && tDsInfo is IExternalTabularDataSource)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.SuggestRemoteExecutionHint, args[i].ToString());
+                    errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.ErrTruncatedArgWarning, args[i].ToString(), Name);
                     continue;
                 }
             }

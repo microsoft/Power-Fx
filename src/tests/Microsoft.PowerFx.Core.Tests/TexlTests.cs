@@ -4145,6 +4145,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table(T1, Table(T2, T4))", "*[a:n, b:n, c:n]")]
         [InlineData("Table(Table(T1, T2), T4)", "*[a:n, b:n, c:n]")]
         [InlineData("Table([1,2], If(1/0<2,[3,4]), [5,6])", "*[Value: n]")]
+        [InlineData("Table(Sequence(20000))", "*[Value: n]")]
+        [InlineData("Table(Filter(T1, b = 5))", "*[a:n, b:n, c:n]")]
         public void TexlFunctionTypeSemanticsTableConcatenate(string script, string expectedType)
         {
             var symbol = new SymbolTable();
@@ -4163,6 +4165,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("Table(T1, T2)", "*[V: n]")]
         [InlineData("Table([{a:Date(2024,1,1)}], [{a:GUID(\"some-guid-value-1234\")}])", "*[a: D]")]
+        [InlineData("Table([{a:1}], 1/0, {a:3}, [{a:4}])", "*[a: n]")]
         public void TexlFunctionTypeSemanticsTableConcatenate_Negative(string script, string expectedType)
         {
             var symbol = new SymbolTable();
