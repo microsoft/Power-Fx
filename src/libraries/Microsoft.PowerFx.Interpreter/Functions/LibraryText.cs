@@ -201,6 +201,9 @@ namespace Microsoft.PowerFx.Functions
                 case BooleanValue b:
                     result = BooleanToNumber(irContext, b);
                     break;
+                case OptionSetValue osv:
+                    result = new NumberValue(irContext, (double)osv.ExecutionValue);
+                    break;
                 case DateValue dv:
                     result = DateToNumber(formatInfo, irContext, dv);
                     break;
@@ -261,7 +264,7 @@ namespace Microsoft.PowerFx.Functions
         {
             result = null;
 
-            Contract.Assert(DecimalValue.AllowedListConvertToDecimal.Contains(value.Type));
+            Contract.Assert(DecimalValue.AllowedListConvertToDecimal.Contains(value.Type) || value.Type._type.IsOptionSetBackedByNumber);
 
             switch (value)
             {
@@ -284,6 +287,21 @@ namespace Microsoft.PowerFx.Functions
                     break;
                 case DateTimeValue dtv:
                     result = DateTimeToDecimal(formatInfo, irContext, dtv);
+                    break;
+                case OptionSetValue osv:
+                    if (value.Type._type.IsOptionSetBackedByNumber)
+                    {
+                        var (os, osErr) = ConvertNumberToDecimal((double)osv.ExecutionValue);
+                        if (osErr == ConvertionStatus.Ok)
+                        {
+                            result = new DecimalValue(irContext, os);
+                        }
+                    }
+                    else
+                    {
+                        result = new DecimalValue(irContext, (decimal)osv.ExecutionValue);
+                    }
+
                     break;
                 case StringValue sv:
                     var (str, strErr) = ConvertToDecimal(sv.Value, formatInfo.CultureInfo);
@@ -622,6 +640,14 @@ namespace Microsoft.PowerFx.Functions
             resultString = RestoreDoubleQuotedStrings(resultString, replaceList, cancellationToken);
 
             return resultString;
+        }
+
+        public static BooleanValue BooleanOptionSetToBoolean(IRContext irContext, OptionSetValue[] args)
+        {
+            Contract.Assert(args[0].Type._type.IsOptionSetBackedByBoolean);
+
+            var n = args[0].ExecutionValue;
+            return new BooleanValue(irContext, (bool)n);
         }
 
         private static string RestoreDoubleQuotedStrings(string format, List<string> replaceList, CancellationToken cancellationToken)
@@ -1141,13 +1167,6 @@ namespace Microsoft.PowerFx.Functions
             {
                 return CommonErrors.GenericInvalidArgument(irContext);
             }
-        }
-
-        public static FormulaValue OptionSetValueToLogicalName(IRContext irContext, OptionSetValue[] args)
-        {
-            var optionSet = args[0];
-            var logicalName = optionSet.Option;
-            return new StringValue(irContext, logicalName);
         }
 
         public static FormulaValue PlainText(IRContext irContext, StringValue[] args)

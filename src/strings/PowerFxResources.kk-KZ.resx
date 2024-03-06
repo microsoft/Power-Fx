@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Өңделетін логикалық мәндер бағаны.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Ондық бөлшек санын логикалық мәнге түрлендіреді.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>сан</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Логикалық мәнге түрлендірілетін ондық бөлшек мәні.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Ондық бөлшек мәндері бағанын логикалық мәндер бағанына түрлендіреді.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>кіріс</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Өңделетін сандық мәндер бағаны.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Логикалық мәнмен сақталған таңдаулы мәнді логикалық мәнге түрлендіреді.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>таңдау</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Логикалық мәнге түрлендірілетін таңдау.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Логикалық мәндермен сақталған таңдаулы мәндер бағанын логикалық мәндер бағанына түрлендіреді.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>кіріс</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Өңделетін таңдаулы мәндер бағаны.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Бірінші бос емес аргументті қайтарады</value>
     

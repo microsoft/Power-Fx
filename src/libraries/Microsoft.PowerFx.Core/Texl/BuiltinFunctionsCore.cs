@@ -253,9 +253,10 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Float = _featureGateFunctions.Add(new FloatFunction());
         public static readonly TexlFunction Float_UO = _featureGateFunctions.Add(new FloatFunction_UO());
         public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Add(new IsUTCTodayFunction());
-        public static readonly TexlFunction OptionsSetInfo = _featureGateFunctions.Add(new OptionSetInfoFunction());
         public static readonly TexlFunction UTCNow = _featureGateFunctions.Add(new UTCNowFunction());
         public static readonly TexlFunction UTCToday = _featureGateFunctions.Add(new UTCTodayFunction());
+        public static readonly TexlFunction BooleanL = _featureGateFunctions.Add(new BooleanLFunction());
+        public static readonly TexlFunction BooleanL_T = _featureGateFunctions.Add(new BooleanLFunction_T());
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        

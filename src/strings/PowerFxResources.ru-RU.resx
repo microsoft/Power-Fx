@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Столбец логических значений для обработки.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Преобразует десятичное число в логическое значение.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>число</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Десятичное числовое значение для преобразования в логическое значение.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Преобразует столбец десятичных числовых значений в столбец логических значений.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>входные данные</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Столбец числовых значений для обработки.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Преобразует значение варианта выбора с поддержкой логического значения в логическое значение.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>вариант выбора</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Вариант выбора для преобразования в логическое значение.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Преобразует столбец значений вариантов выбора с поддержкой логических значений в столбец логических значений.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>входные данные</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Столбец значений вариантов выбора для обработки.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Возвращает первый непустой аргумент</value>
     

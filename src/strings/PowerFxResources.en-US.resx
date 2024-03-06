@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>A column of boolean values to process.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Converts a decimal number to a boolean value.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>number</value>
+    <comment>function_parameter - First argument to the Boolean function - the decimal number that will be converted to a boolean.</comment>
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>The decimal number value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Converts a column of decimal numeric values to a column of boolean values.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>input</value>
+    <comment>function_parameter - First argument to the Boolean function - a column of decimal number values.</comment>
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>A column of number values to process.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Converts a choice value backed by a boolean to a boolean value.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>choice</value>
+    <comment>function_parameter - First argument to the Boolean function - the choice value that will be converted to a boolean.</comment>
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>The choice to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Converts a column of choice values backed by booleans to a column of boolean values.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>input</value>
+    <comment>function_parameter - First argument to the Boolean function - a column of choice values.</comment>
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>A column of choice values to process.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returns the first non blank argument</value>
     <comment>Description of 'Coalesce' function.</comment>

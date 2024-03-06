@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.Docs
             config.EnableJsonFunctions();
 #pragma warning disable CS0618 // Type or member is obsolete
             config.EnableRegExFunctions();
+            config.EnableOptionSetInfo();
 #pragma warning restore CS0618 // Type or member is obsolete
 
             config.SymbolTable.EnableMutationFunctions();
