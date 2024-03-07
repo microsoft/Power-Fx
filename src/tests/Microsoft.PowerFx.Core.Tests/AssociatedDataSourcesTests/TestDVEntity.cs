@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Entities.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation;
@@ -29,6 +28,8 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         public bool RequiresAsync => true;
 
         public bool IsPageable => true;
+
+        public bool IsWritable => true;
 
         DType IExternalEntity.Type => AccountsTypeHelper.GetDType();
 

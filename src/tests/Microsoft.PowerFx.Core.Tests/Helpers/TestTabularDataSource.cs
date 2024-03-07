@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Entities.Delegation;
@@ -218,6 +217,8 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
         public bool IsRefreshable => throw new NotImplementedException();
 
         IDelegationMetadata IExternalDataSource.DelegationMetadata => DelegationMetadata;
+
+        public bool IsWritable => throw new NotImplementedException();
 
         public bool CanIncludeExpand(IExpandInfo expandToAdd)
         {

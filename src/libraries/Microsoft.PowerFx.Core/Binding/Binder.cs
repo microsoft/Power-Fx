@@ -2882,7 +2882,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else if (lookupInfo.Kind == BindKind.ScopeCollection)
                 {
-                    _txb.SetMutable(node, true);
+                    if (lookupInfo.Data is IExternalDataSource ds)
+                    {
+                        _txb.SetMutable(node, ds.IsWritable);
+                    }
                 }
 
                 Contracts.Assert(lookupInfo.Kind != BindKind.LambdaField);
