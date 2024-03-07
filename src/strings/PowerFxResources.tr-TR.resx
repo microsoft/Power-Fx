@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>İşlenecek boole değerleri sütunu.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Bir ondalık sayısı boole değerine dönüştürür.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>sayı</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Boole değerine dönüştürülecek ondalık sayı değeri.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Ondalık sayısal değerler sütununu boole değerleri sütununa dönüştürür.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>giriş</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>İşlenecek sayı değerlerini içeren bir sütun.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Boole değeriyle desteklenen bir seçim değerini boole değerine dönüştürür.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>seçenek</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Boole değerine dönüştürülecek seçim.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Boole değerleriyle desteklenen bir seçim değerleri sütununu boole değerleri sütununa dönüştürür.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>giriş</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>İşlenecek seçim değerlerini içeren bir sütun.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Boş olmayan ilk bağımsız değişkeni döndürür</value>
     

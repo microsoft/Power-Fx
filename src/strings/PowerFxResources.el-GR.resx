@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Μια στήλη δυαδικών τιμών για επεξεργασία.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Μετατρέπει έναν δεκαδικό αριθμό σε δυαδική τιμή.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>αριθμός</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Η τιμή δεκαδικού αριθμού για μετατροπή σε δυαδική τιμή.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Μετατρέπει μια στήλη δεκαδικών αριθμητικών τιμών σε στήλη δυαδικών τιμών.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>δεδομένα_εισόδου</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Στήλη αριθμητικών τιμών για επεξεργασία.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Μετατρέπει μια τιμή επιλογής, η οποία υποστηρίζεται από δυαδική τιμή σε δυαδική τιμή.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>επιλογή</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Η επιλογή για μετατροπή σε δυαδική τιμή.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Μετατρέπει μια στήλη τιμών επιλογής που υποστηρίζονται από δυαδικές τιμές σε στήλη δυαδικών τιμών.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>δεδομένα_εισόδου</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Στήλη τιμών επιλογής για επεξεργασία.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Επιστρέφει το πρώτο μη κενό όρισμα</value>
     

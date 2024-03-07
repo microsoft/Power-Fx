@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>要处理的布尔值列。</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>将十进制数转换为布尔值。</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>数字</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>要转换为布尔值的十进制数值。</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>将十进制数值列转换为布尔值列。</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>输入</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>要处理的数值组成的列。</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>将布尔值支持的选择值转换为布尔值。</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>单选</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>要转换为布尔值的选择。</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>将布尔值支持的选择值列转换为布尔值列。</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>输入</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>要处理的选择值列。</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>返回第一个非空白参数</value>
     

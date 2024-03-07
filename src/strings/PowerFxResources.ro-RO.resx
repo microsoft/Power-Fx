@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>O coloană de valori booleene de procesat.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Convertește un număr zecimal la o valoare booleană.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>număr</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Valoarea număr zecimal de convertit la o valoare booleană.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Convertește o coloană de valori numerice zecimale la o coloană de valori booleene.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>intrare</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>O coloană de valori numerice de procesat.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Convertește o valoare de opțiune bazată pe o valoare booleană într-o valoare booleană.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>opțiune</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Opțiunea de convertit la o valoare booleană.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Convertește o coloană de opțiuni bazate pe valori booleene la o coloană de valori booleene.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>intrare</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>O coloană de valori opțiune de procesat.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnează primul argument nevid</value>
     
@@ -4231,7 +4275,7 @@
     
   </data>
   <data name="AboutUniChar" xml:space="preserve">
-    <value>Returnează caracterul Unicode re3ferită de valoarea numerică dată.</value>
+    <value>Returnează caracterul Unicode la care face referire valoarea numerică dată.</value>
     
   </data>
   <data name="AboutUniChar_number" xml:space="preserve">

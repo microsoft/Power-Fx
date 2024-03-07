@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>要處理的布林值資料行。</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>將十進位數字轉換為布林值。</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>數值</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>要轉換為布林值的十進位數字值。</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>將十進位數值資料行轉換為布林值資料行。</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>輸入</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>要處理的數字值資料行。</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>將布林值支援的選擇值轉換為布林值。</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>選擇</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>要轉換為布林值的選擇。</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>將布林值支援的選擇值資料行轉換為布林值資料行。</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>輸入</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>要處理的選擇值資料行。</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>傳回第一個非空白的引數</value>
     

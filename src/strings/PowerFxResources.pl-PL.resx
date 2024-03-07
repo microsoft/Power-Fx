@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Kolumna wartości logicznych do przetworzenia.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konwertuje liczbę dziesiętną na wartość logiczną.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>liczba</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Wartość typu liczba dziesiętna do przekonwertowania na wartość logiczną.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konwertuje kolumnę wartości typu liczba dziesiętna na kolumnę wartości logicznych.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>dane wejściowe</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Kolumna wartości liczbowych do przetworzenia.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konwertuje wartość opcji wyboru opartą na wartości logicznej na wartość logiczną.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>opcja wyboru</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Opcja wyboru do przekonwertowania na wartość logiczną.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konwertuje kolumnę wartości opcji wyboru opartych na wartościach logicznych na kolumnę wartości logicznych.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>dane wejściowe</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Kolumna wartości opcji wyboru do przetworzenia.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Zwraca pierwszy niepusty argument</value>
     
