@@ -195,9 +195,9 @@ namespace Microsoft.PowerFx.Intellisense
                 {
                     return type;
                 }
-                else
+                else if (callNode.Args?.Count > 0)
                 {
-                    type = callNode.Args?.Count > 0 ? intellisenseData.Binding.GetType(callNode.Args.Children[0]) : DType.Unknown; 
+                    type = intellisenseData.Binding.GetType(callNode.Args.Children[0]); 
                     if (type.IsTableNonObjNull)
                     {
                         return type.ToRecord();
