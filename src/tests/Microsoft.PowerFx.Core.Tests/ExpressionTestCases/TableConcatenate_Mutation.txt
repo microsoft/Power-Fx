@@ -1,0 +1,19 @@
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
+
+>> Set(r3, {a: Table({b:1})});
+   Patch(r3.a, {b:1}, {b:2});
+   r3
+{a:Table({b:2})}
+
+>> Set(t_bs1, [{b:"Hello"}]);
+   Set(t_bs2, Table(t_bs1, {b: "World"}));
+   Patch(t_bs1, {b: "Hello"}, {b: "Hi"});
+   t_bs2
+Table({b:"Hello"},{b:"World"})
+
+>> Set(t_bs1, [{b:"Hello"}]);
+   Set(t_bs2, Table(t_bs1, {b: "World"}));
+   Patch(t_bs1, {b: "Hello"}, {b: "Hi"});
+   Set(t_bs2, Table(t_bs1, {b: "World"}));
+   t_bs2
+Table({b:"Hi"},{b:"World"})

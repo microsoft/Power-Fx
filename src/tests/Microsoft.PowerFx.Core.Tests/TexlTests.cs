@@ -4131,6 +4131,9 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("Table([])", "*[]")]
+        [InlineData("Table(Table())", "*[]")]
+        [InlineData("Table(Table(Table()))", "*[]")]
         [InlineData("Table(Blank(), Blank())", "*[]")]
         [InlineData("Table([1, 2, 3, 4], Blank())", "*[Value:n]")]
         [InlineData("Table([{a:0, b:false, c:\"Hello\"}], [{a:1, b:true, c:\"World\"}])", "*[a:n, b:b, c:s]")]
@@ -4147,6 +4150,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table([1,2], If(1/0<2,[3,4]), [5,6])", "*[Value: n]")]
         [InlineData("Table(Sequence(20000))", "*[Value: n]")]
         [InlineData("Table(Filter(T1, b = 5))", "*[a:n, b:n, c:n]")]
+        [InlineData("Table({X:1}, [1, 2, 3])", "*[X:n, Value:n]")]
         public void TexlFunctionTypeSemanticsTableConcatenate(string script, string expectedType)
         {
             var symbol = new SymbolTable();

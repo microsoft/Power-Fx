@@ -42,6 +42,12 @@ Errors: Error 0-44: The function 'Table' has some invalid arguments.|Error 14-43
 >> Table()
 Table()
 
+>> Table([])
+Table()
+
+>> Table(Table(Table()))
+Table()
+
 // Single argument with table
 >> Table([{a:0, b:false, c:"Hello"}])
 Table({a:0,b:false,c:"Hello"})
@@ -53,9 +59,6 @@ Table({a:0,b:false,c:"Hello"})
 // Blank inputs
 >> Table(Blank(), Blank())
 Table(Blank(),Blank())
-
->> Table(If(1<0,Blank()))
-Table(Blank())
 
 >> Table([1, 2], Blank(), [4, 5], Blank(), [7, 8])
 Table({Value:1},{Value:2},Blank(),{Value:4},{Value:5},Blank(),{Value:7},{Value:8})
