@@ -2873,16 +2873,9 @@ namespace Microsoft.PowerFx.Core.Binding
                         isConstantNamedFormula = formula.IsConstant;
                     }
                 }
-                else if (lookupInfo.Kind == BindKind.Data)
+                else if (lookupInfo.Data is IExternalDataSource ds)
                 {
-                    if (lookupInfo.Data is IExternalCdsDataSource or IExternalTabularDataSource)
-                    {
-                        _txb.SetMutable(node, true);
-                    }
-                }
-                else if (lookupInfo.Kind == BindKind.ScopeCollection)
-                {
-                    _txb.SetMutable(node, true);
+                    _txb.SetMutable(node, ds.IsWritable);
                 }
 
                 Contracts.Assert(lookupInfo.Kind != BindKind.LambdaField);

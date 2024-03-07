@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Core.Entities
         bool IsRefreshable { get; }
 
         bool RequiresAsync { get; }
+        
+        bool IsWritable { get; }
 
         IExternalDataEntityMetadataProvider DataEntityMetadataProvider { get; }
 
