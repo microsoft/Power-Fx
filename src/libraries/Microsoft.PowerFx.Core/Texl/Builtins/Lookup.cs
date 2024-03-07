@@ -72,6 +72,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Return true if
         //        - Arg0 is delegatable ds and supports filter operation.
         //        - All predicates to filter are delegatable if each firstname/binary/unary/dottedname/call node in each predicate satisfies delegation criteria set by delegation strategy for each node.
+        //        - The reduction can be delegated, if the LookUp is nested in another delegatable predicate.
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
@@ -89,7 +90,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var args = callNode.Args.Children.VerifyValue();
 
-            // without lookup reduction delegation, follow the  legacy logic to determine if the function call is delegatable
+            // Without lookup reduction delegation, follow the  legacy logic to determine if the function call is delegatable
             // NOTE that with the reduction delegation enabled, the reduction node can only make a LookUp not delegatable if it is used inside another filter
             if (!binding.Features.IsLookUpReductionDelegationEnabled && args.Count > 2 && binding.IsDelegatable(args[2]))
             {
