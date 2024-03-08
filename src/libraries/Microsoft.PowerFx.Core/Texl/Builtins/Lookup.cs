@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Globalization;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -90,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var args = callNode.Args.Children.VerifyValue();
 
-            // Without lookup reduction delegation, follow the  legacy logic to determine if the function call is delegatable
+            // Without lookup reduction delegation, follow the legacy logic to determine if the function call is delegatable
             // NOTE that with the reduction delegation enabled, the reduction node can only make a LookUp not delegatable if it is used inside another filter
             if (!binding.Features.IsLookUpReductionDelegationEnabled && args.Count > 2 && binding.IsDelegatable(args[2]))
             {
@@ -134,7 +133,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsEcsExcemptedLambda(int index)
         {
-            // Only the second argument for lookup is an ECS excempted lambda
+            // Only the second argument for lookup is an ECS exempted lambda
             return index == 1;
         }
 

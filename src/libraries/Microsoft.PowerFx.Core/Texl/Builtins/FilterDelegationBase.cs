@@ -65,8 +65,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         // Determine whether a node can be delegated as part of a filter predicate.
-        // The enforeceBoolean flag determines whether to enforce the return type of the node.  If the node is part of a filter predicate directly, it must return a boolean type.
-        // If the node is used in other places, such as a LookUp reduction formula inside a filter, it can return any type.
+        // The enforceBoolean flag determines whether to enforce the return type of the node.  If the node is part of a filter predicate directly, it must return a boolean type.
+        // If the node is used in other places inside a filter, such as in a nested LookUp reduction formula, it can return any type.
         protected bool IsValidDelegatableFilterPredicateNode(TexlNode dsNode, TexlBinding binding, FilterOpMetadata filterMetadata, bool generateHints = true, bool enforceBoolean = true)
         {
             Contracts.AssertValue(dsNode);
