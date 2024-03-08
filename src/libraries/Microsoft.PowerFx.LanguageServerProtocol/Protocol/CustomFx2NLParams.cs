@@ -32,5 +32,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// A natural-language sentence explaining the incoming expression.
         /// </summary>
         public string Explanation { get; set; }
+
+        /// <summary>
+        /// Identification (such as name/version) for model that produced the result. 
+        /// </summary>
+        public string ModelId { get; set; }
     }
 }

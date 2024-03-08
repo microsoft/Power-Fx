@@ -152,7 +152,7 @@ namespace Microsoft.PowerFx.Intellisense
                 }
 
                 var firstNameInfo = binding.GetInfo(curNode).VerifyValue();
-                if (firstNameInfo.Kind != BindKind.Enum)
+                if (firstNameInfo?.Kind != BindKind.Enum)
                 {
                     enumSymbol = null;
                     return false;

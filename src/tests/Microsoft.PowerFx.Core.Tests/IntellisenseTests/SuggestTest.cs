@@ -168,8 +168,8 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("[@In|]", "ErrorKind")]
 
         // FunctionRecordNameSuggestionHandler
-        [InlineData("Error({Kin|d:0})", "Kind:")]
-        [InlineData("Error({|Kind:0, Test:\"\"})", "Kind:", "Test:")]
+        [InlineData("Error({Kin|d:0})")]
+        [InlineData("Error({|Kind:0, Test:\"\"})")]
 
         // ErrorNodeSuggestionHandler
         [InlineData("ForAll([0],`|", "ThisRecord", "Value")]
@@ -493,7 +493,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [Theory]
         [InlineData("{|", "output1:", "output2:")]
 
-        [InlineData("{output1: 1, |", "output1:", "output2:")]
+        [InlineData("{output1: 1, |", "output2:")]
 
         // We do not suggest nested type, as this can explode if type is DV.
         [InlineData("{output1: {|")]

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
@@ -152,9 +153,17 @@ namespace Microsoft.PowerFx.Intellisense
             internal static bool AddAggregateSuggestions(DType aggregateType, IntellisenseData.IntellisenseData intellisenseData, int cursorPos)
             {
                 var suggestionsAdded = false;
+                var parentRecordNode = intellisenseData.CurNode.Parent as RecordNode;
+                var alreadyUsedFields = parentRecordNode?.Ids.Select(id => id.Name).ToImmutableHashSet() ?? Enumerable.Empty<DName>().ToImmutableHashSet();
                 foreach (var tName in aggregateType.GetNames(DPath.Root).Where(param => !param.Type.IsError))
                 {
                     var usedName = tName.Name;
+
+                    if (alreadyUsedFields.Contains(usedName))
+                    {
+                        continue;
+                    }
+
                     if (DType.TryGetDisplayNameForColumn(aggregateType, usedName, out var maybeDisplayName))
                     {
                         usedName = new DName(maybeDisplayName);
@@ -186,9 +195,9 @@ namespace Microsoft.PowerFx.Intellisense
                 {
                     return type;
                 }
-                else
+                else if (callNode.Args?.Count > 0)
                 {
-                    type = intellisenseData.Binding.GetType(callNode.Args.Children[0]);
+                    type = intellisenseData.Binding.GetType(callNode.Args.Children[0]); 
                     if (type.IsTableNonObjNull)
                     {
                         return type.ToRecord();
