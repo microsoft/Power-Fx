@@ -4406,6 +4406,10 @@
     <value>The JSONFormat values '{0}' and '{1}' cannot be used together.</value>
     <comment>{Locked=JSONFormat} Error message shown to the user if they try to use incompatible values from the JSONFormat enumeration. The parameters are string values, members of that enumeration. For example: The JSONFormat values 'IgnoreBinaryData' and 'IncludeBinaryData' cannot be used together.</comment>
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>The value '{0}' is not supported as an option in the JSON function.</value>
+    <comment>{Locked=JSON} Error message shown to the user if they try to pass an option that is not supported to the JSON function. The parameter is a single-character string value. For example: The value '$' is not supported as an option in the JSON function.</comment>
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>The value passed to the JSON function contains media, and it is not supported by default. To allow JSON serialization of media values, make sure to use the IncludeBinaryData option in the 'format' parameter.</value>
     <comment>{Locked=JSON}{Locked=IncludeBinaryData}. Error message shown to the user if they try to serialize an object that contains media values, without specifying the flag that would allow that operation to happen. Media values are any form of media (audio, images, video) that are included as part of a record or a table. The term 'format' should be translated like the term 'JSONArg2' in this same file.</comment>

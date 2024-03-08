@@ -17,9 +17,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // JSON(data:any, [format:s])    
     internal class JsonFunction : BuiltinFunction
     {        
-        private const string _includeBinaryDataEnumValue = "B";
-        private const string _ignoreBinaryDataEnumValue = "G";
-        private const string _ignoreUnsupportedTypesEnumValue = "I";
+        private const char _includeBinaryDataEnumValue = 'B';
+        private const char _ignoreBinaryDataEnumValue = 'G';
+        private const char _ignoreUnsupportedTypesEnumValue = 'I';
+        private const char _flattenTableValuesEnumValue = '_';
+        private const char _indentFourEnumValue = '4';
 
         protected bool supportsLazyTypes = false;
 
@@ -120,6 +122,34 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (nodeValue != null)
                 {
+                    foreach (var option in nodeValue)
+                    {
+                        switch (option)
+                        {
+                            case _ignoreBinaryDataEnumValue:
+                                ignoreBinaryData = true;
+                                break;
+                            case _ignoreUnsupportedTypesEnumValue:
+                                ignoreUnsupportedTypes = true;
+                                break;
+                            case _includeBinaryDataEnumValue:
+                                includeBinaryData = true;
+                                break;
+                            case _flattenTableValuesEnumValue:
+                            case _indentFourEnumValue:
+                                // Runtime-only options
+                                break;
+                            default:
+                                if (binding.Features.PowerFxV1CompatibilityRules)
+                                {
+                                    errors.EnsureError(optionsNode, TexlStrings.ErrJSONArg2UnsupportedOption, option);
+                                    return;
+                                }
+
+                                break;
+                        }
+                    }
+
                     ignoreUnsupportedTypes = nodeValue.Contains(_ignoreUnsupportedTypesEnumValue);
                     includeBinaryData = nodeValue.Contains(_includeBinaryDataEnumValue);
                     ignoreBinaryData = nodeValue.Contains(_ignoreBinaryDataEnumValue);                    

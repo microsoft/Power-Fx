@@ -1,0 +1,6 @@
+﻿// (UTC-08:00) Pacific Time (US & Canada)
+#SETUP: OptionSetTestSetup
+#SETUP: EnableJsonFunctions
+
+>> JSON(OptionSet.Option2)
+"""option_2"""
