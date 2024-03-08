@@ -402,8 +402,8 @@
     <value>De nieuwe naam voor de kolom.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>De naam van de opgegeven kolom {0} kan niet tweemaal worden gewijzigd.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Hiermee worden de rijen uit de tabel geretourneerd waarvoor alle opgegeven voorwaarden waar zijn.</value>
@@ -580,6 +580,50 @@
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Een kolom met booleaanse waarden die moet worden verwerkt.</value>
+  </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Hiermee wordt een decimaal getal naar een booleaanse waarde geconverteerd.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>getal</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>De decimale getalwaarde die moet worden geconverteerd naar een booleaanse waarde.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Hiermee wordt een kolom met decimale numerieke waarden naar een kolom met booleaanse waarden geconverteerd.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>invoer</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Een kolom met getalwaarden die moeten worden verwerkt.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Hiermee wordt een keuzewaarde op basis van een booleaanse waarde geconverteerd naar een booleaanse waarde.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>keuze</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>De keuze die moet worden geconverteerd naar een booleaanse waarde.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Hiermee wordt een kolom met keuzewaarden op basis van booleaanse waarden naar een kolom met booleaanse waarden geconverteerd.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>invoer</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Een kolom met keuzewaarden die moeten worden verwerkt.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Hiermee wordt het eerste niet-lege argument geretourneerd</value>
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Een datumwaarde die moet worden aangepast aan het opgegeven aantal maanden.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Aantal maanden waarmee de datum moet worden gewijzigd. Een positieve waarde heeft een datum in de toekomst, een negatieve waarde een datum in het verleden en nul wijzigt de maand niet.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Retourneert de laatste dag van de maand voor een opgegeven datum, aangepast door een aantal maanden.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Een datumwaarde die moet worden aangepast aan het opgegeven aantal maanden.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Aantal maanden waarmee de datum moet worden gewijzigd. Een positieve waarde heeft een datum in de toekomst, een negatieve waarde een datum in het verleden en nul wijzigt de maand niet.</value>
-         
+    <value>Aantal maanden waarmee de datum moet worden gewijzigd. Een positieve waarde heeft een datum in de toekomst, een negatieve waarde een datum in het verleden en nul wijzigt de maand niet.</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Getal wordt afgekapt door afronding op een negatieve oneindigheid.</value>
@@ -1704,6 +1748,38 @@
     <value>scheidingsteken</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Hiermee worden de kolomnamen van een record zonder type opgesomd geretourneerd.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>record</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>De record waarvan de kolommen moeten worden opgesomd.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Hiermee wordt de waarde van een eigenschap van een record zonder type geretourneerd op basis van de kolomnaam.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>record</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>kolomnaam</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Record voor het ophalen van een kolomwaarde.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Naam van de kolom van de record die moet worden opgehaald.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Hiermee wordt waar geretourneerd als de opgegeven waarde van het opgegeven type is.</value>
     
@@ -1844,6 +1920,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Ongeldig argumenttype ({1}). Er wordt in plaats daarvan een {0}-waarde verwacht.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>Een ongeldige expressie kan niet in deze context worden gebruikt.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2372,6 @@
     <value>Er is meerdere keren een veld met de naam {0} opgegeven in deze record.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>De naam van de opgegeven kolom {0} kan niet tweemaal worden gewijzigd.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Er is meerdere keren een kolom met de naam {0} opgegeven.</value>
     
@@ -2370,35 +2446,52 @@
     <value>Ongeldige JSON-aanwijzer.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Geen</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Tekst</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logisch</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Tabel</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Gedrag</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Datum en tijd</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Wiskundig en statistisch</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Gedefinieerd door de gebruiker</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informatie</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Kleur</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Services</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Onderdeel</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3895,6 @@
     <value>Deze functie is afgeschaft en wordt niet meer ondersteund.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>Functie {0} in naamruimte {1} afgeschaft.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>Functie {0} in naamruimte {1} wordt niet ondersteund.</value>
     
@@ -4134,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>De JSON-functie kan binaire gegevens niet serialiseren in niet-gedragsexpressies.</value>    
+    <value>De JSON-functie kan binaire gegevens niet serialiseren in niet-gedragsexpressies.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>De parameter {0} bevat een eigenschap van het type {1} die niet wordt ondersteund.</value>
@@ -4175,6 +4264,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>De tabel bevat geen kolom van het type Tekst.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Het gebruik van '.' is afgeschaft. Gebruik in plaats daarvan de functie ShowColumns.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Disclaimer:** Door AI gegenereerde inhoud kan fouten bevatten. Zorg ervoor dat de inhoud correct en passend is voordat u deze gebruikt. [Lees de voorwaarden](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Hiermee wordt het Unicode-teken geretourneerd waarnaar wordt verwezen door de opgegeven numerieke waarde.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Numerieke waarde die moet worden geconverteerd naar een Unicode-teken.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>getal</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Hiermee wordt een tabel met numerieke waarden geconverteerd naar een tabel met Unicode-tekens.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>kolom_met_getallen</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Een tabelkolom met numerieke waarden die moet worden geconverteerd naar Unicode-tekens.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Niet-ondersteund type kenmerk</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Alle Partial-operators bij overeenkomende benoemde formules moeten gelijk zijn.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Onbekende Partial-operator.</value>
     
   </data>
 </root>

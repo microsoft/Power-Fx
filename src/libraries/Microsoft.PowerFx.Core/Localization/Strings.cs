@@ -106,10 +106,20 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutBooleanNT = (b) => StringResources.Get("AboutBooleanNT", b);
         public static StringGetter BooleanNTArg1 = (b) => StringResources.Get("BooleanNTArg1", b);
 
+        public static StringGetter AboutBooleanW = (b) => StringResources.Get("AboutBooleanW", b);
+        public static StringGetter BooleanWArg1 = (b) => StringResources.Get("BooleanWArg1", b);
+        public static StringGetter AboutBooleanWT = (b) => StringResources.Get("AboutBooleanWT", b);
+        public static StringGetter BooleanWTArg1 = (b) => StringResources.Get("BooleanWTArg1", b);
+
         public static StringGetter AboutBooleanB = (b) => StringResources.Get("AboutBooleanB", b);
         public static StringGetter BooleanBArg1 = (b) => StringResources.Get("BooleanBArg1", b);
         public static StringGetter AboutBooleanBT = (b) => StringResources.Get("AboutBooleanBT", b);
         public static StringGetter BooleanBTArg1 = (b) => StringResources.Get("BooleanBTArg1", b);
+
+        public static StringGetter AboutBooleanL = (b) => StringResources.Get("AboutBooleanL", b);
+        public static StringGetter BooleanLArg1 = (b) => StringResources.Get("BooleanLArg1", b);
+        public static StringGetter AboutBooleanLT = (b) => StringResources.Get("AboutBooleanLT", b);
+        public static StringGetter BooleanLTArg1 = (b) => StringResources.Get("BooleanLTArg1", b);
 
         public static StringGetter AboutConcatenate = (b) => StringResources.Get("AboutConcatenate", b);
         public static StringGetter ConcatenateArg1 = (b) => StringResources.Get("ConcatenateArg1", b);
@@ -678,7 +688,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidStringInterpolation = new ErrorResourceKey("ErrInvalidStringInterpolation");
         public static ErrorResourceKey ErrEmptyIsland = new ErrorResourceKey("ErrEmptyIsland");
         public static ErrorResourceKey ErrDeprecated = new ErrorResourceKey("ErrDeprecated");
-        public static ErrorResourceKey WarnDeprecatedFunction = new ErrorResourceKey("WarnDeprecatedFunction");
         public static ErrorResourceKey ErrUnsupportedFunction = new ErrorResourceKey("ErrUnsupportedFunction");
         public static ErrorResourceKey ErrInvalidFunction = new ErrorResourceKey("ErrInvalidFunction");
         public static ErrorResourceKey ErrUntypedObjectScope = new ErrorResourceKey("ErrUntypedObjectScope");
@@ -775,5 +784,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrDeprecatedDotUseShowColumns = new ErrorResourceKey("ErrDeprecatedDotUseShowColumns");
 
         public static ErrorResourceKey IntellisenseAiDisclaimer = new ErrorResourceKey("IntellisenseAiDisclaimer");
+
+        public static ErrorResourceKey ErrOnlyPartialAttribute = new ErrorResourceKey("ErrOnlyPartialAttribute");
+        public static ErrorResourceKey ErrOperationDoesntMatch = new ErrorResourceKey("ErrOperationDoesntMatch");
+        public static ErrorResourceKey ErrUnknownPartialOp = new ErrorResourceKey("ErrUnknownPartialOp");
     }
 }

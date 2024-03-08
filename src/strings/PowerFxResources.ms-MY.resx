@@ -402,8 +402,8 @@
     <value>Nama baru untuk lajur.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Lajur yang ditentukan '{0}' tidak boleh dinamakan semula dua kali.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Mengembalikan baris daripada jadual yang semua syarat yang ditentukan adalah benar.</value>
@@ -580,6 +580,50 @@
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Lajur nilai Boolean untuk diproses.</value>
+  </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Menukar nilai perpuluhan kepada nilai Boolean.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>nombor</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Nilai nombor perpuluhan untuk ditukar kepada nilai Boolean.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Menukar lajur nilai angka perpuluhan kepada lajur nilai Boolean.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Lajur nilai nombor untuk diproses.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Menukar nilai pilihan yang disokong oleh Boolean kepada nilai Boolean.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>pilihan</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Pilihan untuk ditukar kepada nilai Boolean.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Menukar lajur nilai pilihan yang disokong oleh Boolean kepada lajur nilai Boolean.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Lajur nilai pilihan untuk diproses.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Mengembalikan argumen bukan kosong pertama</value>
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Nilai tarikh untuk dilaraskan mengikut bilangan bulan yang ditentukan.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Bilangan bulan untuk mengubah tarikh. Nilai positif menunjukkan tarikh akan datang, nilai negatif menunjukkan tarikh lalu dan sifar tidak akan mengubah bulan tersebut.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Mengembalikan hari terakhir dalam bulan untuk tarikh yang ditentukan dengan dilaraskan mengikut bilangan bulan.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Nilai tarikh untuk dilaraskan mengikut bilangan bulan yang ditentukan.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Bilangan bulan untuk mengubah tarikh. Nilai positif menunjukkan tarikh akan datang, nilai negatif menunjukkan tarikh lalu dan sifar tidak akan mengubah bulan tersebut.</value>
-         
+    <value>Bilangan bulan untuk mengubah tarikh. Nilai positif menunjukkan tarikh akan datang, nilai negatif menunjukkan tarikh lalu dan sifar tidak akan mengubah bulan tersebut.</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Memotong 'nombor' dengan membundarkan nombor kepada infiniti negatif.</value>
@@ -1704,6 +1748,38 @@
     <value>pemisah</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Menyebut dan mengembalikan nama lajur bagi rekod yang tidak ditaip.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>rekod</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Rekod untuk disebut lajurnya.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Mengembalikan nilai sifat rekod yang tidak ditaip mengikut nama lajur.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>rekod</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>nama_lajur</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Rekod untuk mengambil nilai lajur.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Nama lajur rekod untuk diambil.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Mengembalikan benar jika nilai yang diberikan adalah daripada jenis yang diberikan.</value>
     
@@ -1844,6 +1920,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Jenis argumen ({1}) tidak sah. Menjangkakan nilai {0} sebaliknya.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>Ungkapan yang tidak sah tidak dapat digunakan dalam konteks ini.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2372,6 @@
     <value>Medan bernama '{0}' telah ditentukan lebih daripada sekali dalam rekod ini.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Lajur yang ditentukan '{0}' tidak boleh dinamakan semula dua kali.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Lajur bernama '{0}' telah ditentukan lebih daripada sekali.</value>
     
@@ -2370,35 +2446,52 @@
     <value>Penunjuk json tidak sah.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Tiada</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Teks</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logik</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Jadual</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Perilaku</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
-    <value>Tarikh dan Masa</value>
+    <value>Tarikh dan masa</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Matematik dan Statistik</value>
+    <value>Matematik dan statistik</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Ditakrifkan oleh pengguna</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Maklumat</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Warna</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Perkhidmatan</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Komponen</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3895,6 @@
     <value>Ciri ini ditamatkan dan tidak lagi disokong.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>Dalam ruang nama {1}, fungsi {0} ditamatkan.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>Dalam ruang nama {1}, fungsi {0} tidak disokong.</value>
     
@@ -4134,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Fungsi JSON tidak boleh menyirikan data perduaan dalam ungkapan bukan tingkah laku.</value>    
+    <value>Fungsi JSON tidak boleh menyirikan data perduaan dalam ungkapan bukan tingkah laku.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parameter {0} mengandungi sifat jenis {1} yang tidak disokong.</value>
@@ -4175,6 +4264,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Jadual tidak mengandungi sebarang lajur jenis teks.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Penamatan penggunaan '.'. Sila gunakan fungsi 'ShowColumns'.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Penafian:** Kandungan yang dijana AI mungkin mempunyai kesilapan. Pastikan kandungan tepat dan sesuai sebelum menggunakan kandungan. [Lihat terma](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Mengembalikan aksara Unikod yang dirujuk oleh nilai angka yang diberikan.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Nilai angka untuk ditukar menjadi aksara Unikod.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>nombor</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Menukar jadual nilai angka kepada jadual aksara Unikod.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>lajur_nombor</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Lajur jadual nilai angka untuk ditukar menjadi aksara Unikod.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Jenis atribut tidak disokong</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Semua operator Partial pada formula bernama yang dipadankan mestilah sama.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Operator Partial tidak diketahui.</value>
     
   </data>
 </root>

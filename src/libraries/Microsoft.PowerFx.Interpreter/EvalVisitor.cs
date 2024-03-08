@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx
 
         public TimeZoneInfo TimeZoneInfo { get; private set; }
 
-        public DateTimeKind DateTimeKind => TimeZoneInfo.BaseUtcOffset == TimeSpan.Zero ? DateTimeKind.Utc : DateTimeKind.Unspecified;
+        public DateTimeKind DateTimeKind => TimeZoneInfo.Equals(TimeZoneInfo.Utc) ? DateTimeKind.Utc : DateTimeKind.Unspecified;
 
         public Governor Governor { get; private set; }
 
@@ -274,6 +274,10 @@ namespace Microsoft.PowerFx
             else if (func is IAsyncTexlFunction4 asyncFunc4)
             {                
                 result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
+            }
+            else if (func is IAsyncTexlFunction5 asyncFunc5)
+            {                
+                result = await asyncFunc5.InvokeAsync(_services, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
             }
             else if (func is IAsyncConnectorTexlFunction asyncConnectorTexlFunction)
             {                

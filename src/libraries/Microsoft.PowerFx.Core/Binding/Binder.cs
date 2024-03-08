@@ -2246,7 +2246,7 @@ namespace Microsoft.PowerFx.Core.Binding
         {
             // We generate a transient CallNode (with no arguments) to the Concatenate function
             var func = BuiltinFunctionsCore.Concatenate;
-            var ident = new IdentToken(func.Name, node.Token.Span);
+            var ident = new IdentToken(func.Name, node.Token.Span, isNonSourceIdentToken: true);
             var id = node.Id;
             var listNodeId = 0;
             var minChildId = node.MinChildID;
@@ -2879,6 +2879,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         _txb.SetMutable(node, true);
                     }
+                }
+                else if (lookupInfo.Kind == BindKind.ScopeCollection)
+                {
+                    _txb.SetMutable(node, true);
                 }
 
                 Contracts.Assert(lookupInfo.Kind != BindKind.LambdaField);
@@ -5163,9 +5167,12 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Critical, node, TexlStrings.ErrUnsupportedFunction, func.Name, func.Namespace);
                     }
 
-                    if (sdf.IsDeprecated)
+                    if (sdf.Warnings != null)
                     {
-                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDeprecatedFunction, func.Name, func.Namespace);
+                        foreach (ErrorResourceKey erk in sdf.Warnings)
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, erk, func.Name, func.Namespace);
+                        }
                     }
                 }
             }

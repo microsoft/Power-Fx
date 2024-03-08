@@ -86,18 +86,19 @@ namespace Microsoft.PowerFx.Core.Tests
                 possible.Add(parserFlag.ToString());
             }
 
-            possible.Add("Default");
-            possible.Add("PowerFxV1");
-            possible.Add("DisableMemChecks");
-            possible.Add("TimeZoneInfo");
-            possible.Add("MutationFunctionsTestSetup");
-            possible.Add("OptionSetTestSetup");
-            possible.Add("AsyncTestSetup");
-            possible.Add("OptionSetSortTestSetup");
             possible.Add("AllEnumsSetup");
-            possible.Add("RegEx");
+            possible.Add("AsyncTestSetup");
+            possible.Add("Blob");
             possible.Add("DecimalSupport");
+            possible.Add("Default");
+            possible.Add("DisableMemChecks");
             possible.Add("EnableJsonFunctions");
+            possible.Add("MutationFunctionsTestSetup");
+            possible.Add("OptionSetSortTestSetup");
+            possible.Add("OptionSetTestSetup");
+            possible.Add("PowerFxV1");
+            possible.Add("RegEx");
+            possible.Add("TimeZoneInfo");
             possible.Add("TraceSetup");
 
             foreach (Match match in Regex.Matches(setup, @"(disable:)?(([\w]+|//)(\([^\)]*\))?)"))

@@ -402,8 +402,8 @@
     <value>Нове ім’я для стовпця.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Указаний стовпець "{0}" не можна перейменувати двічі.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Повертає рядки з таблиці, що відповідає всім визначеним умовам.</value>
@@ -580,6 +580,50 @@
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Стовпець логічних значень, який потрібно обробити.</value>
+  </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Перетворює десяткове число на логічне значення.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>число</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Десяткове числове значення, яке потрібно перетворити на логічне значення.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Перетворює стовпець десяткових числових значень на стовпець логічних значень.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>вхідні дані</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Стовпець числових значень, який потрібно обробити.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Перетворює значення вибору, яке ґрунтується на логічному значенні, на логічне значення.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>варіант вибору</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Варіант вибору, який потрібно перетворити на логічне значення.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Перетворює стовпець значень вибору, які ґрунтуються на логічних значеннях, на стовпець логічних значень.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>вхідні дані</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Стовпець значень вибору, який потрібно обробити.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Повертає перший непустий аргумент.</value>
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Значення дати, яке потрібно скоригувати на задану кількість місяців.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Кількість місяців, на яку потрібно скоригувати дату. Додатне значення означає дату в майбутньому, від’ємне значення — дату в минулому, а нуль не змінює місяць.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Повертає останній день місяця для заданої дати, скоригованої на кількість місяців.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Значення дати, яке потрібно скоригувати на задану кількість місяців.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Кількість місяців, на яку потрібно скоригувати дату. Додатне значення означає дату в майбутньому, від’ємне значення — дату в минулому, а нуль не змінює місяць.</value>
-         
+    <value>Кількість місяців, на яку потрібно скоригувати дату. Додатне значення означає дату в майбутньому, від’ємне значення – дату в минулому, а нуль не змінює місяць.</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Скорочує "число" за допомогою округлення до від’ємної нескінченності.</value>
@@ -1704,6 +1748,38 @@
     <value>роздільна_лінія</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Перелічує та повертає імена стовпців нетипізованого запису.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>запис</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Запис, для якого потрібно перелічити стовпці.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Повертає значення властивості нетипізованого запису на основі заданого імені стовпця.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>запис</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>ім’я_стовпця</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Запис, для якого потрібно отримати значення стовпця.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Ім’я стовпця запису, який потрібно отримати.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Повертає значення "істина", якщо надане значення відповідає заданому типу.</value>
     
@@ -1844,6 +1920,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Неприпустимий тип аргументу ({1}). Очікується значення "{0}".</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>У цьому контексті не можна використовувати вираз "пусто".</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2372,6 @@
     <value>Поле з ім’ям "{0}" зустрічається в цьому записі більше одного разу.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Указаний стовпець "{0}" не можна перейменувати двічі.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Стовпець з ім’ям "{0}" указано більше одного разу.</value>
     
@@ -2370,35 +2446,52 @@
     <value>Неприпустимий вказівник JSON.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Немає</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Текст</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Логічна</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Таблиця</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Поведінка</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
-    <value>Дата й час</value>
+    <value>Дата та час</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Математичний і статистичний</value>
+    <value>Математика та статистика</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Визначено користувачем</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Відомості</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Колір</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Служби</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Компонент</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3895,6 @@
     <value>Цю функцію вилучено. Вона більше не підтримується.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>У просторі імен "{1}" функція "{0}" застаріла.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>У просторі імен "{1}" функція "{0}" не підтримується.</value>
     
@@ -4134,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Функція JSON не може серіалізувати двійкові дані у неповедінковому виразі.</value>    
+    <value>Функція JSON не може серіалізувати двійкові дані у неповедінковому виразі.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Параметр {0} містить непідтримувану властивість типу "{1}".</value>
@@ -4175,6 +4264,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Таблиця не містить жодного текстового стовпця.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Застаріле використання крапки ("."). Використовуйте натомість функцію "ShowColumns".</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Застереження.** У вмісті, створеному штучним інтелектом, можуть бути присутні помилки. Перед використанням обов’язково переконайтеся в точності й доречності вмісту. [Див. умови](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Повертає символ Юнікоду, на який посилається дане числове значення.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Числове значення, яке потрібно перетворити на символ Юнікоду.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>число</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Перетворює таблицю числових значень на таблицю символів Юнікоду.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>кількість_стовпців</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Стовпець таблиці з числовими значеннями, які потрібно перетворити на символи Юнікоду.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Непідтримуваний тип атрибута</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Усі оператори Partial у відповідних іменованих формулах мають бути однаковими.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Невідомий оператор Partial.</value>
     
   </data>
 </root>

@@ -402,8 +402,8 @@
     <value>Der neue Name für die Spalte.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Die angegebene Spalte "{0}" kann nicht zweimal umbenannt werden.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Gibt die Zeilen aus der Tabelle zurück, für die alle angegebenen Bedingungen WAHR sind.</value>
@@ -580,6 +580,50 @@
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Eine Spalte mit booleschen Werten für die Verarbeitung.</value>
+  </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konvertiert eine Dezimalzahl in einen booleschen Wert.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>Zahl</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Der Dezimalwert, der in einen booleschen Wert konvertiert werden soll.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konvertiert eine Spalte mit Dezimalwerten in eine Spalte mit booleschen Werten.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>Eingabe</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Eine Spalte mit zu verarbeitenden Nummernwerten.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konvertiert einen auf einen booleschen Wert gestützten Auswahlwert zu einem booleschen Wert.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>Auswahl</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Der Auswahlwert, der in einen booleschen Wert konvertiert werden soll.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konvertiert eine Spalte mit auf booleschen Werten gestützten Auswahlwerten in eine Spalte mit booleschen Werten.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>Eingabe</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Eine Spalte mit zu verarbeitenden Auswahlwerten</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Hiermit wird das erste nicht leere Argument zurückgegeben.</value>
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Ein Datumswert, der um die angegebene Anzahl von Monaten angepasst werden soll.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Anzahl der Monate, um die das Datum geändert werden soll. Ein positiver Wert ergibt ein zukünftiges Datum, ein negativer Wert ein Datum in der Vergangenheit, und null ändert den Monat nicht.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Gibt den letzten Tag des Monats für ein angegebenes Datum zurück, angepasst um eine Anzahl von Monaten.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Ein Datumswert, der um die angegebene Anzahl von Monaten angepasst werden soll.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Anzahl der Monate, um die das Datum geändert werden soll. Ein positiver Wert ergibt ein zukünftiges Datum, ein negativer Wert ein Datum in der Vergangenheit, und null ändert den Monat nicht.</value>
-         
+    <value>Anzahl der Monate, um die das Datum geändert werden soll. Ein positiver Wert ergibt ein zukünftiges Datum, ein negativer Wert ein Datum in der Vergangenheit, und null ändert den Monat nicht.</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Kürzt „Zahl“ durch Runden in Richtung negativer Unendlichkeit.</value>
@@ -1704,6 +1748,38 @@
     <value>Trennzeichen</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Zählt die Spaltennamen eines nicht typisierten Datensatzes auf und gibt sie zurück.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>Datensatz</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Datensatz, dessen Spalten aufgezählt werden sollen.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Gibt den Wert einer Eigenschaft eines nicht typisierten Datensatzes unter Angabe des Spaltennamens zurück.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>Datensatz</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>spaltenname</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Datensatz zum Abrufen eines Spaltenwerts.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Name der Spalte des Datensatzes, die abgerufen werden soll.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Gibt TRUE zurück, wenn der angegebene Wert dem angegebenen Typ entspricht.</value>
     
@@ -1844,6 +1920,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Ungültiger Argumenttyp ({1}). Stattdessen wird ein {0}-Wert erwartet.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>In diesem Kontext kann kein Leere-Ausdruck verwendet werden.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2372,6 @@
     <value>Ein Feld mit dem Namen „{0}“ wurde mehrfach angegeben.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Die angegebene Spalte "{0}" kann nicht zweimal umbenannt werden.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Eine Spalte mit dem Namen „{0}“ wurde mehrfach angegeben.</value>
     
@@ -2370,35 +2446,52 @@
     <value>Ungültiger JSON-Zeiger.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Keine</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Text</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logisch</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Tabelle</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Verhalten</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
-    <value>Datum/Uhrzeit</value>
+    <value>Datum und Uhrzeit</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Mathematik und Statistik</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Vom Benutzer definiert</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informationen</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Farbe</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Dienste</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Komponente</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3895,6 @@
     <value>Diese Funktion ist veraltet und wird nicht mehr unterstützt.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>Im Namespace {1} ist die Funktion {0} veraltet.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>Im Namespace {1} wird die Funktion {0} nicht unterstützt.</value>
     
@@ -4134,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Die JSON-Funktion kann binäre Daten in einem Ausdruck, der kein Verhalten ausdrückt, nicht serialisieren.</value>    
+    <value>Die JSON-Funktion kann binäre Daten in einem Ausdruck, der kein Verhalten ausdrückt, nicht serialisieren.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Der Parameter "{0}" enthält eine Eigenschaft vom Typ "{1}". Dies wird nicht unterstützt.</value>
@@ -4175,6 +4264,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Die Tabelle enthält keine Spalten vom Texttyp.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Veraltete Verwendung von „.“. Verwenden Sie stattdessen die Funktion „ShowColumns“.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Haftungsausschluss:** KI-generierte Inhalte können Fehler enthalten. Vergewissern Sie sich, dass der Inhalt korrekt und angemessen ist, bevor Sie ihn verwenden. [Bestimmungen lesen](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Gibt das Unicode-Zeichen zurück, auf das durch den angegebenen numerischen Wert verwiesen wird.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Numerischer Wert, der in ein Unicode-Zeichen konvertiert werden soll.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>Zahlen</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Konvertiert eine Tabelle mit numerischen Werten in eine Tabelle mit Unicode-Zeichen.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>Spalte_mit_Zahlen</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Eine Tabellenspalte mit numerischen Werten, die in Unicode-Zeichen konvertiert werden sollen.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Nicht unterstützte Attributart</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Alle Partial-Operatoren für übereinstimmende benannte Formeln müssen identisch sein.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Unbekannter Partial-Operator</value>
     
   </data>
 </root>

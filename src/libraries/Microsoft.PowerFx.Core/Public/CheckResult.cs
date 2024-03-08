@@ -625,6 +625,13 @@ namespace Microsoft.PowerFx
         /// <param name="tokenTypesToSkip">Optional: Token types that would be skipped and not included in the final result. Usually provided by the language server.</param>
         /// <returns> Enumerable of tokens. Tokens are ordered only if comparer is provided.</returns>
         internal IEnumerable<ITokenTextSpan> GetTokens(IReadOnlyCollection<TokenType> tokenTypesToSkip = null) => Tokenization.Tokenize(_expression, _binding, Parse?.Comments, null, false, tokenTypesToSkip);
+        
+        /// <summary>
+        /// To be called by host without LSP context to get the tokens.
+        /// </summary>
+        /// <param name="tokenTypesToSkip"></param>
+        /// <returns>Enumerable of wrapped tokens.</returns>
+        public IEnumerable<TokenTextSpan> GetTextTokens(IReadOnlyCollection<TokenType> tokenTypesToSkip = null) => GetTokens(tokenTypesToSkip).Select(t => t as TokenTextSpan);
 
         private string _expressionInvariant;
 
@@ -686,7 +693,7 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                this._allSymbols.EnumerateNames(symbolEntries, new ReadOnlySymbolTable.EnumerateNamesOptions());
+                this._allSymbols?.EnumerateNames(symbolEntries, new ReadOnlySymbolTable.EnumerateNamesOptions());
             }
 
             var summary = new CheckContextSummary

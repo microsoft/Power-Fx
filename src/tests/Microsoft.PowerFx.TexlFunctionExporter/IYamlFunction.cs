@@ -5,30 +5,38 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
 {
     public interface IYamlFunction
     {
-        internal string GetName();
-
-        internal bool HasDetailedProperties();
-
-        internal bool GetIsSupported();
-
         internal bool GetIsDeprecated();
 
         internal bool GetIsInternal();
 
         internal bool GetIsPageable();
 
-        internal string GetNotSupportedReason();
+        internal bool GetIsSupported();
 
-        internal int GetArityMin();
+        internal bool HasDetailedProperties();
 
         internal int GetArityMax();
 
-        internal string GetRequiredParameterTypes();
+        internal int GetArityMin();
+
+        internal string GetName();
+
+        internal string GetNotSupportedReason();
 
         internal string GetOptionalParameterTypes();
+        
+        internal string GetOptionalParameterSchemas();
+
+        internal string GetParameterNames();
+
+        internal string GetRequiredParameterTypes();
+        
+        internal string GetRequiredParameterSchemas();
 
         internal string GetReturnType();
 
-        internal string GetParameterNames();
+        internal string GetReturnSchema();
+
+        internal string GetWarnings();
     }
 }

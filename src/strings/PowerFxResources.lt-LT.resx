@@ -402,8 +402,8 @@
     <value>Naujas stulpelio pavadinimas.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Nurodyto stulpelio {0} negalima du kartus pervardyti.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Iš lentelės pateikia eilutes, kurių visos nurodytos sąlygos yra teisingos.</value>
@@ -580,6 +580,50 @@
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Bulio logikos reikšmių stulpelis, skirtas apdoroti.</value>
+  </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konvertuoja dešimtainį skaičių į Bulio logikos reikšmę.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>skaičius</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Dešimtainė skaitinė reikšmė, kurią reikia konvertuoti į Bulio logikos reikšmę.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konvertuoja dešimtainių skaitinių reikšmių stulpelį į Bulio logikos reikšmių stulpelį.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>įvestis</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Apdorotinų skaitinių reikšmių stulpelis.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konvertuoja Bulio logikos reikšme pagrįstą pasirinkimo reikšmę į Bulio logikos reikšmę.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>pasirinkimas</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Pasirinkimas, kurį reikia konvertuoti į Bulio logikos reikšmę.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konvertuoja Bulio logikos reikšmėmis pagrįstų pasirinkimo reikšmių stulpelį į Bulio logikos reikšmių stulpelį.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>įvestis</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Apdorotinų pasirinkimų reikšmių stulpelis.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Pateikiamas pirmasis netuščias argumentas</value>
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Datos reikšmė, kuri turi būti pakoreguota pagal nurodytą mėnesių skaičių.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Mėnesių skaičius, pagal kurį reikia pakeisti datą. Teigiama reikšmė pateiks datą ateityje, neigiama reikšmė – datą praeityje, o nulis mėnesio nepakeis.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Pateikia paskutinę nurodytos datos mėnesio dieną, pakoreguotą pagal mėnesių skaičių.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Datos reikšmė, kuri turi būti pakoreguota pagal nurodytą mėnesių skaičių.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Mėnesių skaičius, pagal kurį reikia pakeisti datą. Teigiama reikšmė pateiks datą ateityje, neigiama reikšmė – datą praeityje, o nulis mėnesio nepakeis.</value>
-         
+    <value>Mėnesių skaičius, pagal kurį reikia pakeisti datą. Teigiama reikšmė pateiks datą ateityje, neigiama reikšmė – datą praeityje, o nulis mėnesio nepakeis.</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Skaičius trumpinamas suapvalinant iki neigiamos begalybės.</value>
@@ -1704,6 +1748,38 @@
     <value>skyriklis</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Išvardija ir grąžina neįrašyto įrašo stulpelių pavadinimus.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>įrašas</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Įrašas, kad būtų išvardyti jo stulpeliai.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Pateikia neįrašyto įrašo ypatybės reikšmę pagal nurodytą stulpelio pavadinimą.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>įrašas</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>stulpelio_pavadinimas</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Įrašas stulpelio reikšmei nuskaityti.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Norimo nuskaityti įrašo stulpelio pavadinimas.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Jei pateikta reikšmė yra nurodyto tipo, pateikiama reikšmė „True“.</value>
     
@@ -1844,6 +1920,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Neleistinas argumento tipas ({1}). Vietoj to tikimasi {0} reikšmės.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>Šiame kontekste negalima naudoti negaliojančios išraiškos.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2372,6 @@
     <value>Laukas pavadinimu {0} buvo nurodytas daugiau nei vieną kartą.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Nurodyto stulpelio {0} negalima du kartus pervardyti.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Stulpelis pavadinimu „{0}“ nurodytas daugiau nei vieną kartą.</value>
     
@@ -2370,35 +2446,52 @@
     <value>Neleistina „json“ rodyklė.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Nėra</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Tekstas</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Loginės</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Lentelė</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Veikimo būdas</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Data ir laikas</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematikos ir statistikos</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Apibrėžia vartotojas</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informacija</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Spalva</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Paslaugos</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Komponentas</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3895,6 @@
     <value>Ši funkcija nerekomenduojama ir nebepalaikoma.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>Vardų srities {1} funkcija {0} nerekomenduojama.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>Vardų srityje {1} funkcija {0} nepalaikoma.</value>
     
@@ -4134,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Funkcija JSON negali išdėstyti dvejetainių duomenų eilutėmis ne veikimo būdo išraiškoje.</value>    
+    <value>Funkcija JSON negali išdėstyti dvejetainių duomenų eilutėmis ne veikimo būdo išraiškoje.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parametras {0} turi {1} tipo tapatybę, kuri nėra palaikoma.</value>
@@ -4175,6 +4264,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Lentelėje nėra jokio teksto tipo stulpelio.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Nerekomenduojamas „.“. Vietoje to naudokite funkciją „ShowColumns“.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Atsakomybės atsisakymas.** DI sugeneruotame turinyje gali būti klaidų. Prieš naudodami įsitikinkite, kad jis tikslus ir tinkamas. [Skaityti sąlygas](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Grąžina „Unicode“ simbolį, kurį nurodo pateikta skaitinė reikšmė.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Skaitinė reikšmė, kuri turi būti konvertuojama į „Unicode“ simbolį.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>skaičius</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Skaitinių reikšmių lentelę konvertuoja į „Unicode“ simbolių lentelę.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>skaičių_stulpelis</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Skaitinių reikšmių lentelė, kuri turi būti konvertuojama į „Unicode“ simbolius.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Nepalaikomo atributo rūšis</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Visi Partial operatoriai formulėse su sutampančiais pavadinimais turi būti vienodi.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Nežinomas Partial operatorius.</value>
     
   </data>
 </root>

@@ -5,11 +5,10 @@ using System;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -604,6 +603,60 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.True(lit.Span.Min == 1);
             Assert.True(lit.Span.Lim == str.Length);
+        }
+
+        [Fact]
+        public void TextFirstEmptyStringLit()
+        {
+            string str = string.Empty;
+
+            var lit = AssertTokensAndReturnOne(
+                TexlLexer.Flags.TextFirst,
+                str,
+                2,
+                TokKind.StrInterpStart,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
+
+            Assert.True(lit.Span.Min == 0);
+            Assert.True(lit.Span.Lim == 0);
+        }
+
+        [Theory]
+        [InlineData("Hello ${\"World\"}", 3, "$\":True", "Hello :True", "World:False", "\":True")]
+        [InlineData("Hello ${$\"World\"}", 3, "$\":True", "Hello :True", "$\":False", "World:False", "\":False", "\":True")]
+        [InlineData("=$\"Hello {\"World\"}\"", 0, "$\":False", "Hello :False", "World:False", "\":False")]
+        public void TextFirstTokenFlagTest(string expression, int expectedCount, params string[] textFirstToken)
+        {
+            var tokens = TexlLexer.InvariantLexer.LexSource(expression, TexlLexer.Flags.TextFirst);
+            var tokensWithTextFirstFlag = tokens.Where(t => t is ITextFirstFlag).ToArray();
+
+            Assert.Equal(textFirstToken.Length, tokensWithTextFirstFlag.Count());
+
+            for (int i = 0; i < tokensWithTextFirstFlag.Count(); i++)
+            {
+                var token = tokensWithTextFirstFlag[i];
+                var textFirstFlag = token as ITextFirstFlag;
+                var textFirstTokenString = token.ToString() + ":" + textFirstFlag.IsTextFirst;
+
+                Assert.Equal(textFirstToken[i], textFirstTokenString);
+            }
+
+            var engine = new Engine();
+            var check = engine.Check(expression, new ParserOptions() { TextFirst = true });
+            var actualCount = check.GetTextTokens().Where(t => t is ITextFirstFlag flag ? flag.IsTextFirst : false).Count();
+
+            Assert.Equal(expectedCount, actualCount);
+        }
+
+        [Fact]
+        public void ITextFirstTokenTest()
+        {
+            TokenTextSpan token = new TokenTextSpan("Name", 0, 100, TokenType.BinaryOp, true);
+            Assert.True(token.CanBeHidden);
+
+            ITokenTextSpan tokenTextSpan = token;
+            Assert.True(tokenTextSpan.CanBeHidden);
         }
     }
 }

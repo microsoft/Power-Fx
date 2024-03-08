@@ -414,6 +414,26 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
         {
             return Signatures?.OrderByDescending(s => (s.RequiredParameters?.Length ?? 0) + (s.OptionalParameters?.Length ?? 0)).First().GetParameterNames();
         }
+
+        string IYamlFunction.GetWarnings()
+        {
+            throw new NotImplementedException();
+        }
+
+        string IYamlFunction.GetOptionalParameterSchemas()
+        {
+            throw new NotImplementedException();
+        }
+
+        string IYamlFunction.GetRequiredParameterSchemas()
+        {
+            throw new NotImplementedException();
+        }
+
+        string IYamlFunction.GetReturnSchema()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     internal class YamlTexlSignature
@@ -425,7 +445,7 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
         {
             string paramNames = string.Join(", ", RequiredParameters?.Select(rp => rp.Name) ?? Enumerable.Empty<string>());
 
-            if (OptionalParameters?.Any() == true)
+            if (OptionalParameters?.Length > 0)
             {
                 if (!string.IsNullOrEmpty(paramNames))
                 {

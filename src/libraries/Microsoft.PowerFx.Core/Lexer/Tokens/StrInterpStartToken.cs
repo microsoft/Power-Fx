@@ -6,11 +6,14 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Syntax
 {
-    internal class StrInterpStartToken : Token
+    internal class StrInterpStartToken : Token, ITextFirstFlag
     {
-        public StrInterpStartToken(Span span)
+        public bool IsTextFirst { get; }
+
+        public StrInterpStartToken(Span span, bool isTextFirst)
             : base(TokKind.StrInterpStart, span)
         {
+            IsTextFirst = isTextFirst;
         }
 
         public override string ToString()
@@ -20,7 +23,7 @@ namespace Microsoft.PowerFx.Syntax
 
         internal override Token Clone(Span ts)
         {
-            return new StrInterpStartToken(ts);
+            return new StrInterpStartToken(ts, IsTextFirst);
         }
 
         public override bool Equals(Token that)

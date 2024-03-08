@@ -6,6 +6,10 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -15,12 +19,14 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private readonly Utf8JsonWriter _writer;
         private bool _topPropertyWritten = false;
         private bool _wasDisposed;
+        private readonly CancellationToken _cancellationToken;
 
-        public OpenApiJsonSerializer(IConvertToUTC utcConverter, bool schemaLessBody)
+        public OpenApiJsonSerializer(IConvertToUTC utcConverter, bool schemaLessBody, CancellationToken cancellationToken)
             : base(utcConverter, schemaLessBody)
         {
             _stream = new MemoryStream();
             _writer = new Utf8JsonWriter(_stream, new JsonWriterOptions());
+            _cancellationToken = cancellationToken;
         }
 
         internal override string GetResult()
@@ -78,6 +84,18 @@ namespace Microsoft.PowerFx.Connectors.Execution
         protected override void WriteStringValue(string stringValue)
         {
             _writer.WriteStringValue(stringValue);
+        }
+
+        protected override async Task WriteBlobValueAsync(BlobValue blobValue)
+        {
+            if (blobValue.Content is Base64Blob)
+            {
+                _writer.WriteStringValue(await blobValue.GetAsBase64Async(_cancellationToken).ConfigureAwait(false));
+            }
+            else
+            {
+                _writer.WriteBase64StringValue(await blobValue.GetAsByteArrayAsync(_cancellationToken).ConfigureAwait(false));
+            }
         }
 
         protected override void StartObject(string name = null)

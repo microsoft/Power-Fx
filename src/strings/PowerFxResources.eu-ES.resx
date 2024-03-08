@@ -402,8 +402,8 @@
     <value>Zutabearen izen berria.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Ezin da birritan aldatu zehaztutako "{0}" zutabearen izena.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Zehaztutako baldintza guztiak egia gisa dituen taularen errenkadak itzultzen ditu.</value>
@@ -580,6 +580,50 @@
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Prozesatuko diren balio boolearren zutabea.</value>
+  </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Zenbaki hamartar bat bihurtzen du balio boolear.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>zenbakia</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Balio hamartarra balio boolear bihurtzeko aukera.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Zenbakizko balioak dituen zutabe bat bihurtzen du balio boolearrak dituen zutabe.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>sarrera</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Prozesatuko den zenbakizko balioen zutabea.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Balio boolear batek babestutako aukerako balio bat bihurtzen du balio boolear.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>aukera</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Balio boolear bihurtzeko aukera.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Balio boolearrak dituen zutabe bat bihurtzen du balio boolearrak babestutako aukerako balioak dituen zutabe.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>sarrera</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Prozesatuko den aukerako balioen zutabea.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Hutsa ez den lehen argumentua itzultzen du</value>
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Zehaztutako hilabete kopuruaren arabera doituko den data-balioa.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Hilabete kopurua data aldatzeko. Balio positibo batek etorkizuneko data bat adierazten du, balio negatiboa iraganeko data eta zero balioak ez du hilabetea aldatuko.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Zehaztutako data baten hileko azken eguna itzultzen du, hilabete kopuruaren arabera.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Zehaztutako hilabete kopuruaren arabera doituko den data-balioa.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Hilabete kopurua data aldatzeko. Balio positibo batek etorkizuneko data bat adierazten du, balio negatiboa iraganeko data eta zero balioak ez du hilabetea aldatuko.</value>
-         
+    <value>Hilabete kopurua data aldatzeko. Balio positibo batek etorkizuneko data bat adierazten du, balio negatiboa iraganeko data eta zero balioak ez du hilabetea aldatuko.</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>"Zenbakia" laburtzen du infinitu negatiborantz borobilduz.</value>
@@ -1704,6 +1748,38 @@
     <value>bereizlea</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Mota gabeko erregistro baten zutabe-izenak zerrendatu eta itzultzen ditu.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>erregistroa</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Zutabeak zerrendatuta izango dituen erregistroa.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Motarik gabeko erregistro baten propietate baten balioa itzultzen du, zutabearen izena kontuan hartuta.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>erregistroa</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>zutabe_izena</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Zutabe-balioa berreskuratzeko erregistroa.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Berreskuratuko den erregistro-zutabearen izena.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>"Egia" itzultzen du emandako balioa emandako motakoa bada.</value>
     
@@ -1844,6 +1920,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Argumentu motak ez du balio ({1}). Horren ordez, {0} balioa espero zen.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>Ezin da erabili espresio baliogabe bat testuinguru honetan.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2372,6 @@
     <value>Behin baino gehiagotan zehaztu da "{0}" eremua erregistro honetan.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Ezin da birritan aldatu zehaztutako "{0}" zutabearen izena.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Behin baino gehiagotan zehaztu da '{0}' deitzen den zutabea.</value>
     
@@ -2370,35 +2446,52 @@
     <value>JSON erakusleak ez du balio.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Bat ere ez</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Testua</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logikoa</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Taula</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Portaera</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Data eta ordua</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Matematikoa eta estatistikoa</value>
+    <value>Matematika eta estatistikoa</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Erabiltzaileak definitua</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informazioa</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Kolorea</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Zerbitzuak</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Osagaia</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3895,6 @@
     <value>Eginbidea zaharkituta dago eta ez da aurrerantzean onartuko.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>{0} funtzioa zaharkituta dago {1} izen-lekuan.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>{0} funtzioa ez da onartzen {1} izen-lekuan.</value>
     
@@ -4134,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON funtzioak ezin ditu serializatu datu bitarrak portaerarekin zerikusirik ez duten espresioetan.</value>    
+    <value>JSON funtzioak ezin ditu serializatu datu bitarrak portaerarekin zerikusirik ez duten espresioetan.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>{0} parametroak onartzen ez den {1} motako propietate bat dauka.</value>
@@ -4175,6 +4264,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Taulak ez du testu motako zutaberik.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>'.' zeinuaren erabilera zaharkitua. Erabili "ShowColumns" funtzioa horren ordez.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Erantzukizun-ukatzea:** Adimen artifizialak sortutako edukiak akatsak izan ditzake. Ziurtatu zuzena eta egokia dela erabili aurretik. [Ikusi baldintzak](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Zehaztutako zenbakizko balioak aipatzen duen Unicode karakterea itzultzen du.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Unicode karaktere bihurtuko den zenbakizko balioa.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>zenbakia</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Zenbakizko balioen taula bat Unicode karaktere-taula bihurtzen du.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>zenbakien_zutabea</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Zenbakizko balioen taula-zutabea, Unicode karaktere bihurtuko direnak.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Onartu gabeko atributu mota</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Izen bat duten formulen Partial motako eragile guztiek berdinak izan behar dute.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Partial eragile ezezaguna.</value>
     
   </data>
 </root>

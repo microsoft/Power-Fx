@@ -5,11 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Connectors.Tests.OpenApiHelperFunctions;
@@ -19,233 +18,233 @@ namespace Microsoft.PowerFx.Connectors.Tests
     public class OpenApiFormUrlEncoderTests : PowerFxTest
     {
         [Fact]
-        public void UrlEncoderSerializer_Empty()
+        public async Task UrlEncoderSerializer_Empty()
         {
-            var str = SerializeUrlEncoder(null);
+            var str = await SerializeUrlEncoderAsync(null).ConfigureAwait(false);
             Assert.Equal(string.Empty, str);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_SingleInteger()
+        public async Task UrlEncoderSerializer_SingleInteger()
         {
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaInteger, FormulaValue.New(1))
-            });
+            }).ConfigureAwait(false);
 
             Assert.Equal("a=1", str);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Number()
+        public async Task UrlEncoderSerializer_Number()
         {
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaNumber, FormulaValue.New(1.17e-4))
-            });
+            }).ConfigureAwait(false);
 
             Assert.Equal("a=0.000117", str);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_EscapedKey()
+        public async Task UrlEncoderSerializer_EscapedKey()
         {
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a\\b\"c"] = (SchemaInteger, FormulaValue.New(1))
-            });
+            }).ConfigureAwait(false);
 
             Assert.Equal("a%5cb%22c=1", str);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_SingleInteger_NoValue()
+        public async Task UrlEncoderSerializer_SingleInteger_NoValue()
         {
-            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaInteger, null)
-            }));
+            }).ConfigureAwait(false)).ConfigureAwait(false);
 
             Assert.Equal("Expected NumberValue (integer) and got <null> value, for property a", ex.Message);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_SingleInteger_NoSchema()
+        public async Task UrlEncoderSerializer_SingleInteger_NoSchema()
         {
-            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (null, null)
-            }));
+            }).ConfigureAwait(false)).ConfigureAwait(false);
 
             Assert.Equal("Missing schema for property a", ex.Message);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Integer_String_Mismatch()
+        public async Task UrlEncoderSerializer_Integer_String_Mismatch()
         {
-            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaInteger, FormulaValue.New("abc"))
-            }));
+            }).ConfigureAwait(false)).ConfigureAwait(false);
 
             Assert.Equal("Expected NumberValue (integer) and got StringValue value, for property a", ex.Message);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Number_String_Mismatch()
+        public async Task UrlEncoderSerializer_Number_String_Mismatch()
         {
-            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaNumber, FormulaValue.New("abc"))
-            }));
+            }).ConfigureAwait(false)).ConfigureAwait(false);
 
             Assert.Equal("Expected NumberValue (number) and got StringValue value, for property a", ex.Message);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_String_Integer_Mismatch()
+        public async Task UrlEncoderSerializer_String_Integer_Mismatch()
         {
-            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaString, FormulaValue.New(11))
-            }));
+            }).ConfigureAwait(false)).ConfigureAwait(false);
 
             Assert.Equal("Expected StringValue and got DecimalValue value, for property a", ex.Message);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Bool_String_Mismatch()
+        public async Task UrlEncoderSerializer_Bool_String_Mismatch()
         {
-            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaBoolean, FormulaValue.New("abc"))
-            }));
+            }).ConfigureAwait(false)).ConfigureAwait(false);
 
             Assert.Equal("Expected BooleanValue and got StringValue value, for property a", ex.Message);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_TwoIntegers()
+        public async Task UrlEncoderSerializer_TwoIntegers()
         {
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaInteger, FormulaValue.New(1)),
                 ["b"] = (SchemaInteger, FormulaValue.New(-2))
-            });
+            }).ConfigureAwait(false);
 
             Assert.Equal("a=1&b=-2", str);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_String()
+        public async Task UrlEncoderSerializer_String()
         {
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaString, FormulaValue.New("abc"))
-            });
+            }).ConfigureAwait(false);
 
             Assert.Equal("a=abc", str);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Bool()
+        public async Task UrlEncoderSerializer_Bool()
         {
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaBoolean, FormulaValue.New(true)),
                 ["b"] = (SchemaBoolean, FormulaValue.New(false))
-            });
+            }).ConfigureAwait(false);
 
             Assert.Equal("a=true&b=false", str);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_InvalidSchema()
+        public async Task UrlEncoderSerializer_InvalidSchema()
         {
-            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (new OpenApiSchema() { Type = "unknown" }, FormulaValue.New(1)),
-            }));
+            }).ConfigureAwait(false)).ConfigureAwait(false);
 
             Assert.Equal("Not supported property type unknown for property a", ex.Message);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Null()
+        public async Task UrlEncoderSerializer_Null()
         {
-            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (new OpenApiSchema() { Type = "null" }, FormulaValue.New(1)),
-            }));
+            }).ConfigureAwait(false)).ConfigureAwait(false);
 
             Assert.Equal("null schema type not supported yet for property a", ex.Message);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Array_Integer()
+        public async Task UrlEncoderSerializer_Array_Integer()
         {
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetArray(1, 2))
-            });
+            }).ConfigureAwait(false);
 
             Assert.Equal("a=1&a=2", str);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Array_Empty()
+        public async Task UrlEncoderSerializer_Array_Empty()
         {
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetArray(Array.Empty<int>()))
-            });
+            }).ConfigureAwait(false);
 
             Assert.Equal("a=", str);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Array_Blank()
+        public async Task UrlEncoderSerializer_Array_Blank()
         {
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetArray(GetRecord(("Value", FormulaValue.NewBlank()))))
-            });
+            }).ConfigureAwait(false);
 
             Assert.Equal("a=", str);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Array_String()
+        public async Task UrlEncoderSerializer_Array_String()
         {
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["z"] = (SchemaArrayInteger, GetArray("a", "b"))
-            });
+            }).ConfigureAwait(false);
 
             Assert.Equal("z=a&z=b", str);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Array_Boolean()
+        public async Task UrlEncoderSerializer_Array_Boolean()
         {
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayString, GetArray(true, false))
-            });
+            }).ConfigureAwait(false);
 
             Assert.Equal("a=true&a=false", str);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Array_DateTime()
+        public async Task UrlEncoderSerializer_Array_DateTime()
         {
             var dt1 = new DateTime(1904, 11, 4, 2, 35, 33, 981, DateTimeKind.Local);
             var dt2 = new DateTime(2022, 6, 22, 17, 5, 11, 117, DateTimeKind.Local);
 
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["A"] = (SchemaArrayDateTime, GetArray(dt1, dt2))
-            });
+            }).ConfigureAwait(false);
 
             var dates = new Regex(@"A=(?<dt>[^&]+)").Matches(str).Cast<Match>().Select(m => DateTime.Parse(HttpUtility.UrlDecode(m.Groups["dt"].Value))).ToArray();
 
@@ -256,53 +255,53 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Array_Record_Invalid()
+        public async Task UrlEncoderSerializer_Array_Record_Invalid()
         {
-            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayObject, GetArray(GetRecord(("x", FormulaValue.New(1)))))
-            }));
+            }).ConfigureAwait(false)).ConfigureAwait(false);
 
             Assert.Equal("Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName a", ex.Message);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Array_Record_Invalid2()
+        public async Task UrlEncoderSerializer_Array_Record_Invalid2()
         {
-            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayObject, GetArray(GetRecord(("Value", GetRecord(("z", FormulaValue.New(2)))))))
-            }));
+            }).ConfigureAwait(false)).ConfigureAwait(false);
 
             Assert.Equal("Not supported type Microsoft.PowerFx.Types.InMemoryRecordValue for value", ex.Message);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Array_Invalid()
+        public async Task UrlEncoderSerializer_Array_Invalid()
         {
-            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetTable(GetRecord(("a", FormulaValue.New(1)), ("b", FormulaValue.New("foo")))))
-            }));
+            }).ConfigureAwait(false)).ConfigureAwait(false);
 
             Assert.Equal("Incompatible Table for supporting array, RecordValue has more than one column - propertyName a, number of fields 2", ex.Message);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Object()
+        public async Task UrlEncoderSerializer_Object()
         {
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaObject(("x", SchemaInteger, false), ("y", SchemaString, false)), GetRecord(("x", FormulaValue.New(1)), ("y", FormulaValue.New("foo"))))
-            });
+            }).ConfigureAwait(false);
 
             Assert.Equal("a.x=1&a.y=foo", str);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_ComplexObject()
+        public async Task UrlEncoderSerializer_ComplexObject()
         {
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaObject(
                             ("x", SchemaInteger, false), 
@@ -312,18 +311,18 @@ namespace Microsoft.PowerFx.Connectors.Tests
                              ("x", FormulaValue.New(1)), 
                              ("y", FormulaValue.New("foo")), 
                              ("z", GetRecord(("a", FormulaValue.New(-1))))))
-            });
+            }).ConfigureAwait(false);
 
             Assert.Equal("a.x=1&a.y=foo&z.a.a=-1", str);
         }
 
         [Fact]
-        public void UrlEncoderSerializer_Object_MissingObjectProperty()
+        public async Task UrlEncoderSerializer_Object_MissingObjectProperty()
         {
-            var ex = Assert.Throws<PowerFxConnectorException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaObject(("x", SchemaInteger, true), ("y", SchemaString, true)), GetRecord(("x", FormulaValue.New(1))))
-            }));
+            }).ConfigureAwait(false)).ConfigureAwait(false);
 
             Assert.Equal("Missing property y, object is too complex or not supported", ex.Message);
         }
@@ -331,12 +330,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Theory]
         [InlineData("2022-06-21T14:36:59.9353993+02:00")]
         [InlineData("2022-06-21T14:36:59.9353993-08:00")]
-        public void UrlEncoderSerializer_Date(string dateString)
+        public async Task UrlEncoderSerializer_Date(string dateString)
         {
             DateTime date = DateTime.Parse(dateString);
             RuntimeConfig rtConfig = new RuntimeConfig();
             rtConfig.SetTimeZone(TimeZoneInfo.Local);            
-            string str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new ConvertToUTC(TimeZoneInfo.Local));
+            string str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new ConvertToUTC(TimeZoneInfo.Local)).ConfigureAwait(false);
             
             string dateStr = str.Substring(2);            
             date = date.AddTicks(-(date.Ticks % 10000));

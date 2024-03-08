@@ -402,8 +402,8 @@
     <value>Det nye navnet for kolonnen.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>Den angitte kolonnen '{0}' kan ikke gis nytt navn to ganger.</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Returnerer radene fra tabellen der alle de angitte betingelsene er oppfylt.</value>
@@ -580,6 +580,50 @@
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>En kolonne med boolske verdier som skal behandles.</value>
+  </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konverterer et desimaltall til en boolsk verdi.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>tall</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>De numeriske desimalverdiene som skal konverteres til en boolsk verdi.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konverterer en kolonne med numeriske desimalverdier til en kolonne med boolske verdier.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>inndata</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>En kolonne med tallverdier som skal behandles.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konverterer en valgverdi støttet av en boolsk verdi til en boolsk verdi.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>valg</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Valget som skal konverteres til en boolsk verdi.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konverterer en kolonne med valgverdier støttet av boolske verdier, til en kolonne med boolske verdier.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>inndata</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>En kolonne med valgverdier som skal behandles.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerer det første argumentet som ikke er tomt</value>
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>En datoverdi som skal justeres av det angitte antallet måneder.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Antall måneder for å endre datoen. En positiv verdi gir en dato i fremtiden, en negativ verdi en dato i fortiden, og null vil ikke endre måneden.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Returnerer den siste dagen i måneden for en angitt dato, justert med et antall måneder.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>En datoverdi som skal justeres av det angitte antallet måneder.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Antall måneder for å endre datoen. En positiv verdi gir en dato i fremtiden, en negativ verdi en dato i fortiden, og null vil ikke endre måneden.</value>
-         
+    <value>Antall måneder for å endre datoen. En positiv verdi gir en dato i fremtiden, en negativ verdi en dato i fortiden, og null vil ikke endre måneden.</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Avkorter tall ved å runde av mot negativ uendelighet.</value>
@@ -1704,6 +1748,38 @@
     <value>skilletegn</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Lister opp og returnerer kolonnenavnene til en typeløs oppføring.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>oppføring</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Oppføring som kolonnene skal listes opp i.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Returnerer verdien for en egenskap for en typeløs oppføring når kolonnenavnet er angitt.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>oppføring</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>kolonnenavn</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Oppføring for å hente en kolonneverdi.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Navn på kolonnen til oppføringen som skal hentes.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Returnerer true hvis den angitte verdien er av den angitte typen.</value>
     
@@ -1844,6 +1920,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Ugyldig argumenttype ({1}). Forventet en {0}-verdi i stedet.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>Et tomt uttrykk kan ikke brukes i denne conteksten.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2372,6 @@
     <value>Et felt med navnet {0} ble angitt mer enn én gang i denne posten.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>Den angitte kolonnen '{0}' kan ikke gis nytt navn to ganger.</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>En kolonne med navnet {0} ble angitt mer enn én gang.</value>
     
@@ -2370,35 +2446,52 @@
     <value>Ugyldig json-peker.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Ingen</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Tekst</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Logisk</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Tabell</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Virkemåte</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Dato og klokkeslett</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematikk og statistikk</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Definert av brukeren</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informasjon</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Farge</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Tjenester</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Komponent</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3895,6 @@
     <value>Denne funksjonen er avskrevet og støttes ikke lenger.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>Funksjonen {0} er avskrevet i navneområdet {1}.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>Funksjonen {0} støttes ikke i navneområdet {1}.</value>
     
@@ -4134,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON-funksjonen kan ikke serialisere binære data i ikke-atferdsuttrykk.</value>    
+    <value>JSON-funksjonen kan ikke serialisere binære data i ikke-atferdsuttrykk.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parameteren {0} inneholder en egenskap av typen {1}, som ikke støttes.</value>
@@ -4175,6 +4264,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>Tabellen inneholder ikke en kolonne av typen tekst.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>Avskrevet bruk av ".". Bruk funksjonen ShowColumns i stedet.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Ansvarsfraskrivelse:** Innhold generert av kunstig intelligens kan inneholde feil. Kontroller at det er nøyaktig og relevant før du bruker det. [Se vilkårene](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Returnerer Unicode-tegnet som den angitte numeriske verdien refererer til.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Numerisk verdi som skal konverteres til et Unicode-tegn.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>tall</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Konverterer en tabell med numeriske verdier til en tabell med Unicode-tegn.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>kolonne_med_tall</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>En tabellkolonne med numeriske verdier som skal konverteres til Unicode-tegn.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Attributtype som ikke støttes</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Alle Partial-operatorer for samsvarende navngitte formler må være like.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Ukjent Partial-operator.</value>
     
   </data>
 </root>

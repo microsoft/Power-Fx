@@ -402,8 +402,8 @@
     <value>新的列名称。</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>不能将指定的列“{0}”重命名两次。</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>从表中返回所有指定条件都是 true 的行。</value>
@@ -580,6 +580,50 @@
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>要处理的布尔值列。</value>
+  </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>将十进制数转换为布尔值。</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>数字</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>要转换为布尔值的十进制数值。</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>将十进制数值列转换为布尔值列。</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>输入</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>要处理的数值组成的列。</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>将布尔值支持的选择值转换为布尔值。</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>单选</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>要转换为布尔值的选择。</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>将布尔值支持的选择值列转换为布尔值列。</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>输入</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>要处理的选择值列。</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>返回第一个非空白参数</value>
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>要按指定的月数调整的日期值。</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>日期的更改月数。正值产生将来日期，负值产生过去日期，零将不会更改该月。</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>返回指定日期中月份的最后一天(已按月数进行了调整)。</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>要按指定的月数调整的日期值。</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;日期的更改月数。正值产生将来日期，负值产生过去日期，零将不会更改该月。</value>
-         
+    <value>日期的更改月数。正值产生将来日期，负值产生过去日期，零将不会更改该月。</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>通过向负无穷大舍入来截断“数字”。</value>
@@ -1704,6 +1748,38 @@
     <value>分隔符</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>枚举并返回非类型化记录的列名。</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>记录</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>用于枚举记录列的记录。</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>返回非类型化记录的属性的值(给定列名称)。</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>记录</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>列名</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>用于检索列值的记录。</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>用于检索的记录的列名称。</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>如果所提供的值属于给定的类型，则返回 true。</value>
     
@@ -1844,6 +1920,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>参数类型({1})无效。需要一个 {0} 值。</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>在此上下文中不能使用无效表达式。</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2372,6 @@
     <value>此记录中多次指定了名为 '{0}' 的字段。</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>不能将指定的列“{0}”重命名两次。</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>多次指定了名为 '{0}' 的列。</value>
     
@@ -2370,35 +2446,52 @@
     <value>JSON 指针无效。</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>无</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>文本</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>逻辑</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>表</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>行为</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>日期和时间</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>数学和统计</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>由用户定义</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>信息</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>颜色</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>服务</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>组件</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3895,6 @@
     <value>此功能已被弃用并且不再受支持。</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>在 {1} 命名空间中已弃用 {0} 函数。</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>在 {1} 命名空间中不支持 {0} 函数。</value>
     
@@ -4134,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON 函数无法对非行为表达式中的二进制数据进行序列化。</value>    
+    <value>JSON 函数无法对非行为表达式中的二进制数据进行序列化。</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>参数 {0} 包含类型为 {1} 的属性，而该属性不受支持。</value>
@@ -4175,6 +4264,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>表不包含文本类型的任何列。</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>已弃用 "."。请改用 "ShowColumns" 函数。</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**免责声明:** AI 生成的内容可能有错误。使用前请确保其准确且适当。[查看条款](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>返回给定数值引用的 Unicode 字符。</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>要转换为 Unicode 字符的数值。</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>数字</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>将数值表转换为 Unicode 字符表。</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>数字组成的列</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>要转换为 Unicode 字符的数值表列。</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>不支持的属性类型</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>匹配命名公式中的所有 Partial 运算符都必须相同。</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>未知 Partial 运算符。</value>
     
   </data>
 </root>

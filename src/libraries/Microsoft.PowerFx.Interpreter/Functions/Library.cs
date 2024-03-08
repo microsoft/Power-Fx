@@ -225,6 +225,17 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: DecimalToBoolean)
             },
+            {
+                BuiltinFunctionsCore.BooleanL,
+                StandardErrorHandling<OptionSetValue>(
+                    BuiltinFunctionsCore.BooleanL.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: BooleanOptionSetToBoolean)
+            },
 
             // This implementation is not actually used for this as this is handled at IR level. 
             // This is a placeholder, so that RecalcEngine._interpreterSupportedFunctions can add it for txt tests.
@@ -1225,17 +1236,6 @@ namespace Microsoft.PowerFx.Functions
                 NoErrorHandling(Now)
             },
             {
-                BuiltinFunctionsCore.OptionsSetInfo,
-                StandardErrorHandling<OptionSetValue>(
-                    BuiltinFunctionsCore.OptionsSetInfo.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
-                    targetFunction: OptionSetValueToLogicalName)
-            },
-            {
                 BuiltinFunctionsCore.Or,
                 Or
             },
@@ -1908,6 +1908,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.BooleanW_T,
                 StandardErrorHandlingTabularOverload<DecimalValue>(BuiltinFunctionsCore.BooleanW_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanW], DoNotReplaceBlank)
+            },
+            {
+                BuiltinFunctionsCore.BooleanL_T,
+                StandardErrorHandlingTabularOverload<OptionSetValue>(BuiltinFunctionsCore.BooleanL_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanL], DoNotReplaceBlank)
             },
 
             // This implementation is not actually used for this as this is handled at IR level. 

@@ -9,6 +9,7 @@ using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.Constants;
@@ -77,15 +78,18 @@ namespace Microsoft.PowerFx.Connectors
 
         internal bool Binary { get; private set; }
 
-        internal MediaKind MediaKind { get; private set; }        
+        internal MediaKind MediaKind { get; private set; }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType)
+        internal OpenApiSchema Schema { get; private set; } = null;
+
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default)
         {
             Name = openApiParameter?.Name;
             IsRequired = openApiParameter?.Required == true;
             Visibility = openApiParameter?.GetVisibility().ToVisibility() ?? Visibility.Unknown;
             FormulaType = formulaType;
-            Binary = schema.Format == "binary";
+            Schema = schema;
+            Binary = schema.Format == "binary" || schema.Format == "no_format";
             MediaKind = openApiParameter?.GetMediaKind().ToMediaKind() ?? (Binary ? MediaKind.File : MediaKind.NotBinary);
 
             if (schema != null)
@@ -121,16 +125,17 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            DynamicSchema = AggregateErrors(openApiParameter.GetDynamicSchema());
-            DynamicProperty = AggregateErrors(openApiParameter.GetDynamicProperty());
-            DynamicValues = AggregateErrors(openApiParameter.GetDynamicValue());
-            DynamicList = AggregateErrors(openApiParameter.GetDynamicList());
+            AddWarning(warning);
+            DynamicSchema = AggregateErrorsAndWarnings(openApiParameter.GetDynamicSchema());
+            DynamicProperty = AggregateErrorsAndWarnings(openApiParameter.GetDynamicProperty());
+            DynamicValues = AggregateErrorsAndWarnings(openApiParameter.GetDynamicValue());
+            DynamicList = AggregateErrorsAndWarnings(openApiParameter.GetDynamicList());
         }
 
         internal static readonly FormulaType DefaultType = FormulaType.UntypedObject;
 
-        internal ConnectorType(string error)
-            : base(error)
+        internal ConnectorType(string error, ErrorResourceKey warning = default)
+            : base(error, warning)
         {
             FormulaType = DefaultType;
         }
@@ -144,7 +149,7 @@ namespace Microsoft.PowerFx.Connectors
             : this(schema, openApiParameter, connectorType.FormulaType)
         {
             Fields = connectorType.Fields;
-            AggregateErrors(connectorType);
+            AggregateErrorsAndWarnings(connectorType);
         }
 
         internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, RecordType hiddenRecordType)
@@ -158,7 +163,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             Fields = new ConnectorType[] { tableConnectorType };
             HiddenRecordType = null;
-            AggregateErrors(tableConnectorType);
+            AggregateErrorsAndWarnings(tableConnectorType);
         }
 
         internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
@@ -177,7 +182,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 foreach (ConnectorType type in types)
                 {
-                    AggregateErrors(type);
+                    AggregateErrorsAndWarnings(type);
                 }
             }
         }

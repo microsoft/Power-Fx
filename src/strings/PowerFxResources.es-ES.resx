@@ -402,8 +402,8 @@
     <value>Nuevo nombre de la columna.</value>
   </data>
   <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>The specified column '{0}' cannot be renamed twice.</value>
-    <comment>Error message shown when a user tries to rename the same column twice in a RenameColumns invocation. Ex.: The specified column 'FirstName' cannot be renamed twice.</comment>
+    <value>No se puede cambiar dos veces el nombre de la columna especificada "{0}".</value>
+    
   </data>
   <data name="AboutFilter" xml:space="preserve">
     <value>Devuelve las filas de la tabla que cumplen todas las condiciones especificadas.</value>
@@ -580,6 +580,50 @@
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Columna de valores booleanos para procesar.</value>
+  </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Convierte un número decimal en un valor booleano.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>número</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Valor numérico decimal que se convertirá en un valor booleano.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Convierte una columna de valores numéricos decimales en una columna de valores booleanos.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Una columna de valores numéricos que se procesarán.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Convierte un valor de opción respaldado por un valor booleano en un valor booleano.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>opción</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>La opción que se convertirá en un valor booleano.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Convierte una columna de valores de opción respaldada por booleanos en una columna de valores booleanos.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Columna de valores de opción que se procesarán.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Devuelve el primer argumento que no está en blanco.</value>
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Valor de fecha que se ajustará por el número de meses especificado.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Número de meses durante los cuales se cambiará la fecha. Un valor positivo genera una fecha futura; un valor negativo, una fecha pasada; y el cero no cambiará el mes.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Devuelve el último día del mes para una fecha especificada, ajustado por varios meses.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Valor de fecha que se ajustará por el número de meses especificado.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>&gt;Número de meses durante los cuales se cambiará la fecha. Un valor positivo genera una fecha futura; un valor negativo, una fecha pasada; y el cero no cambiará el mes.</value>
-         
+    <value>Número de meses por los cuales se cambiará la fecha. Un valor positivo genera una fecha futura; un valor negativo, una fecha pasada; y el cero no cambiará el mes.</value>
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Trunca el "número" redondeando hacia el infinito negativo.</value>
@@ -1704,6 +1748,38 @@
     <value>separador</value>
     
   </data>
+  <data name="AboutColumnNames" xml:space="preserve">
+    <value>Enumera y devuelve los nombres de columna de un registro sin tipo.</value>
+    
+  </data>
+  <data name="ColumnNamesArg1" xml:space="preserve">
+    <value>registro</value>
+    
+  </data>
+  <data name="AboutColumnNames_record" xml:space="preserve">
+    <value>Registro para que se enumeren sus columnas.</value>
+    
+  </data>
+  <data name="AboutColumn" xml:space="preserve">
+    <value>Devuelve el valor de una propiedad de un registro sin tipo, dado el nombre de columna.</value>
+    
+  </data>
+  <data name="ColumnArg1" xml:space="preserve">
+    <value>registro</value>
+    
+  </data>
+  <data name="ColumnArg2" xml:space="preserve">
+    <value>nombre_columna</value>
+    
+  </data>
+  <data name="AboutColumn_record" xml:space="preserve">
+    <value>Registro para recuperar un valor de columna.</value>
+    
+  </data>
+  <data name="AboutColumn_column_name" xml:space="preserve">
+    <value>Nombre de la columna del registro que se recuperará.</value>
+    
+  </data>
   <data name="AboutIsType" xml:space="preserve">
     <value>Devuelve verdadero si el valor proporcionado es del tipo especificado.</value>
     
@@ -1844,6 +1920,10 @@
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
     <value>Tipo de argumento no válido ({1}). Se esperaba un valor {0} en su lugar.</value>
+    
+  </data>
+  <data name="ErrBadType_VoidExpression" xml:space="preserve">
+    <value>No se puede usar una expresión de nulo en este contexto.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -2292,10 +2372,6 @@
     <value>Un campo denominado "{0}" se especificó más de una vez en este registro.</value>
     
   </data>
-  <data name="ErrColRenamedTwice_Name" xml:space="preserve">
-    <value>No se puede cambiar dos veces el nombre de la columna especificada "{0}".</value>
-    
-  </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
     <value>Una columna denominada "{0}" se ha especificado más de una vez.</value>
     
@@ -2370,35 +2446,52 @@
     <value>Puntero JSON no válido.</value>
     
   </data>
+  <data name="None" xml:space="preserve">
+    <value>Ninguno</value>
+    
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Texto</value>
+    
   </data>
   <data name="Logical" xml:space="preserve">
     <value>Lógico</value>
+    
   </data>
   <data name="Table" xml:space="preserve">
     <value>Tabla</value>
+    
   </data>
   <data name="Behavior" xml:space="preserve">
     <value>Comportamiento</value>
+    
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Fecha y hora</value>
+    
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matemáticas y estadística</value>
+    
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>UserDefined</value>
+    <value>Definido por el usuario</value>
+    
   </data>
   <data name="Information" xml:space="preserve">
     <value>Información</value>
+    
   </data>
   <data name="Color" xml:space="preserve">
     <value>Color</value>
+    
   </data>
   <data name="REST" xml:space="preserve">
     <value>Servicios</value>
+    
+  </data>
+  <data name="Component" xml:space="preserve">
+    <value>Componente</value>
     
   </data>
   <data name="FunctionReference_Link" xml:space="preserve">
@@ -3802,10 +3895,6 @@
     <value>Esta característica está en desuso y ya no se admite.</value>
     
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>En el espacio de nombres {1}, la función {0} está en desuso.</value>
-    
-  </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>En el espacio de nombres {1}, no se admite la función {0}.</value>
     
@@ -4134,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>La función JSON no puede serializar los datos binarios en una expresión que no es de comportamiento.</value>    
+    <value>La función JSON no puede serializar los datos binarios en una expresión que no es de comportamiento.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>El parámetro {0} contiene una propiedad de tipo {1} que no se admite.</value>
@@ -4175,6 +4264,48 @@
   </data>
   <data name="ErrSearchWrongTableType" xml:space="preserve">
     <value>La tabla no contiene ninguna columna de tipo de texto.</value>
+    
+  </data>
+  <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
+    <value>"." en desuso. Use la función "ShowColumns" en su lugar.</value>
+    
+  </data>
+  <data name="IntellisenseAiDisclaimer" xml:space="preserve">
+    <value>**Declinación de responsabilidad:** El contenido generado por IA puede tener errores. Asegúrese de que es preciso y apropiado antes de usarlo. [Ver términos](https://go.microsoft.com/fwlink/?linkid=2225491)</value>
+    
+  </data>
+  <data name="AboutUniChar" xml:space="preserve">
+    <value>Devuelve el carácter Unicode al que hace referencia el valor numérico especificado.</value>
+    
+  </data>
+  <data name="AboutUniChar_number" xml:space="preserve">
+    <value>Valor numérico que se convertirá en un carácter Unicode.</value>
+  </data>
+  <data name="UniCharArg1" xml:space="preserve">
+    <value>número</value>
+    
+  </data>
+  <data name="AboutUniCharT" xml:space="preserve">
+    <value>Convierte una tabla de valores numéricos en una tabla de caracteres Unicode.</value>
+    
+  </data>
+  <data name="UniCharTArg1" xml:space="preserve">
+    <value>columna_de_números</value>
+    
+  </data>
+  <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
+    <value>Columna de tabla de valores numéricos que se convertirán en caracteres Unicode.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Tipo de atributo no admitido</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Todos los operadores Partial en fórmulas con nombre coincidentes deben ser iguales.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Operador Partial desconocido.</value>
     
   </data>
 </root>

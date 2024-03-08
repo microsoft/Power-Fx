@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <summary>
         /// This const represents the dummy formula that is used to create an infrastructure needed to get the symbols for Nl2Fx operation.
         /// </summary>
-        internal static readonly string Nl2FxDummyFormula = "\"f7979178-07f0-424d-8f8b-00fee6fd19b8\"";
+        public static readonly string Nl2FxDummyFormula = "\"f7979178-07f0-424d-8f8b-00fee6fd19b8\"";
 
         public delegate void SendToClient(string data);
 
@@ -67,6 +67,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// If set, provides the handler for $/nlSuggestion message.
         /// Note: This is not a thread safe. Consider using the NlHandlerFactory.
         /// </summary>
+        [Obsolete("Use NLHandlerFactory")]
         public NLHandler NL2FxImplementation { get; set; }
 
         /// <summary>
@@ -557,7 +558,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 var check = scope.Check(request.Expression);
 
                 CancellationToken cancel = default;
-                var result = nl.Fx2NLAsync(check, cancel)
+
+                var hints = (scope as IPowerFxScopeFx2NL)?.GetFx2NLParameters();
+
+                var result = nl.Fx2NLAsync(check, hints, cancel)
                     .ConfigureAwait(false).GetAwaiter().GetResult();
                 return result;
             }
@@ -565,7 +569,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private static NLHandler GetNLHandler(LanguageServer server, IPowerFxScope scope, BaseNLParams nlParams)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             return server.NLHandlerFactory?.GetNLHandler(scope, nlParams) ?? server.NL2FxImplementation;
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         private void HandleCodeActionRequest(string id, string paramsJson)
