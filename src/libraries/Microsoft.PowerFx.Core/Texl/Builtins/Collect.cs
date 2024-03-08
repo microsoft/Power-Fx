@@ -85,19 +85,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            // !!! TODO
-            //yield return new[] { CanvasStringResources.CollectArg1, CanvasStringResources.CollectArg2 };
-            //yield return new[] { CanvasStringResources.CollectArg1, CanvasStringResources.CollectArg2, CanvasStringResources.CollectArg2 };
-            //yield return new[] { CanvasStringResources.CollectArg1, CanvasStringResources.CollectArg2, CanvasStringResources.CollectArg2, CanvasStringResources.CollectArg2 };
-
-            yield return new[] { TexlStrings.CollectDataSourceArg, TexlStrings.CollectItemArg };
+            yield return new[] { TexlStrings.CollectArg1, TexlStrings.CollectArg2 };
+            yield return new[] { TexlStrings.CollectArg1, TexlStrings.CollectArg2, TexlStrings.CollectArg2 };
+            yield return new[] { TexlStrings.CollectArg1, TexlStrings.CollectArg2, TexlStrings.CollectArg2, TexlStrings.CollectArg2 };
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
             {
-                return GetGenericSignatures(arity, TexlStrings.CollectDataSourceArg, TexlStrings.CollectItemArg);
+                return GetGenericSignatures(arity, TexlStrings.CollectArg1, TexlStrings.CollectArg2);
             }
 
             return base.GetSignatures(arity);
@@ -189,12 +186,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             for (var i = 1; i < argc; i++)
             {
                 DType argType = GetCollectedType(features, argTypes[i]);
-
-                // !!! How is it possible for an argtype to be a primitive and an aggregate at the same time?
-                //if (argType.DisplayNameProvider == null && argType.Kind == DKind.ObjNull)
-                //{
-                //    argType.DisplayNameProvider = datasourceType.DisplayNameProvider;
-                //}
 
                 // The subsequent args should all be aggregates.
                 if (!argType.IsAggregate)
@@ -304,7 +295,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
-            // !!! TODO
             DType dataSourceType = argTypes[0];
             bool isConnected = binding.EntityScope != null
                 && binding.EntityScope.TryGetDataSource(args[0], out IExternalDataSource dataSourceInfo)

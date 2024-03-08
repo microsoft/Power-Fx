@@ -3109,16 +3109,22 @@
     <comment>Display text representing the Contrast value of TeamsTheme enum (TeamsTheme_Contrast_Name). The possible values for this enumeration are: Default, Dark, Contrast.</comment>
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds records to a data source.</value>
-    <comment>Description of 'Clear' function.</comment>
+    <value>Adds one or more items to the specified 'collection'. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <comment>Description of 'Collect' function.</comment>
   </data>
-  <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
-    <comment>function_parameter - First parameter for the Collect function. The data source that you want to add data to.</comment>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>collection</value>
+    <comment>function_parameter - First parameter for the Collect function - the name of the collection that will be created / appended to.</comment>
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>record</value>
-    <comment>function_parameter - Second parameter for the Collect function. The record to be added.</comment>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>item</value>
+    <comment>function_parameter - Second parameter for the Collect function - the item which will be added to the collection.</comment>
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>A new or existing collection to augment.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClear" xml:space="preserve">
     <value>Deletes all the records of a collection. The columns of the collection will remain.</value>

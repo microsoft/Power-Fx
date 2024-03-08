@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Interpreter
 
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.CollectDataSourceArg, TexlStrings.CollectRecordArg };
+            yield return new[] { TexlStrings.CollectArg1, TexlStrings.CollectArg2 };
         }
 
         public virtual DType GetCollectedType(DType argType)
