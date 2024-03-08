@@ -642,6 +642,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: EOMonth)
             },
             {
+                BuiltinFunctionsCore.EncodeHTML,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.EncodeUrl.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: EncodeHTML)
+            },
+            {
                 BuiltinFunctionsCore.EncodeUrl,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.EncodeUrl.Name,
@@ -673,17 +684,6 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnFalseIfAnyArgIsBlank,
                     targetFunction: Error)
-            },
-            {
-                BuiltinFunctionsCore.EscapeHtml,
-                StandardErrorHandling<StringValue>(
-                    BuiltinFunctionsCore.EncodeUrl.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: ExactValueType<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: EscapeHtml)
             },
             {
                 BuiltinFunctionsCore.Exp,

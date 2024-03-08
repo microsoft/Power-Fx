@@ -802,7 +802,7 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, Uri.EscapeDataString(args[0].Value));
         }
 
-        public static FormulaValue EscapeHtml(IRContext irContext, StringValue[] args)
+        public static FormulaValue EncodeHTML(IRContext irContext, StringValue[] args)
         {
             var encoded = HttpUtility.HtmlEncode(args[0].Value);
             return new StringValue(irContext, encoded);
