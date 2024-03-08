@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Patch({a:1, b:2}, {|", "a:", "b:")]
         [InlineData("ClearCollect(Table({a:1, b:2}), {|", "a:", "b:")]
         [InlineData("Remove(Table({a:1, b:2}), {|", "a:", "b:")]
-        [InlineData("Error(Ab|  Collect()", "Abs", "Color.OliveDrab", "ErrorKind.NotApplicable", "Match.Tab", "Table")]
+        [InlineData("Error(Ab|  Collect()", "Abs", "Color.OliveDrab", "ErrorKind.NotApplicable", "JSONFormat.FlattenValueTables", "Match.Tab", "Table")]
         public void TestSuggestMutationFunctions(string expression, params string[] expectedSuggestions)
         {
             var config = SuggestTests.Default;
