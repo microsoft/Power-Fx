@@ -369,6 +369,32 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void UserDefinitionOnUpdateTest()
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            engine.UpdateVariable("A", 1m);
+            engine.AddUserDefinitions("B=A*2;C=A*B;", onUpdate: OnUpdate);
+            AssertUpdate("B-->2;C-->2;");
+
+            // Can't set formulas, they're read only 
+            var check = engine.Check("Set(B, 12)");
+            Assert.False(check.IsSuccess);
+
+            // Set() function triggers recalc chain. 
+            engine.Eval("Set(A,10)", options: _opts);
+            AssertUpdate("B-->20;C-->200;");
+
+            // Compare Before/After set within an expression.
+            // Before (A,B) = 10,20 
+            // After  (A,B) = 3,6
+            var result = engine.Eval("With({x:A, y:B}, Set(A,3); x & y & A & B)", options: _opts);
+            Assert.Equal("102036", result.ToObject());
+        }
+
+        [Fact]
         public void BasicEval()
         {
             var engine = new RecalcEngine();
@@ -1006,6 +1032,9 @@ namespace Microsoft.PowerFx.Tests
             symValues.Set(option1Solt, option1);
 
             var config = new PowerFxConfig() { SymbolTable = symbol };
+#pragma warning disable CS0618 // Type or member is obsolete
+            config.EnableOptionSetInfo();
+#pragma warning restore CS0618 // Type or member is obsolete
             config.AddOptionSet(optionSet);
             var recalcEngine = new RecalcEngine(config);
 
@@ -1085,6 +1114,126 @@ namespace Microsoft.PowerFx.Tests
             var checkResult = recalcEngine.Check("SortOrder.Ascending");
             Assert.True(checkResult.IsSuccess);
             Assert.IsType<StringType>(checkResult.ReturnType);
+        }
+
+        [Theory]
+        [InlineData("Text(TestEnum.Choice1)", true)]
+        [InlineData("\"Label: \" & TestEnum.Choice1", true)]
+        [InlineData("Value(TestEnum.Choice1)", false)]
+        [InlineData("TestEnum.Choice1 + 1", false)]
+        [InlineData("Decimal(TestEnum.Choice1)", false)]
+        [InlineData("Float(TestEnum.Choice1)", false)]
+        [InlineData("Boolean(TestEnum.Choice1)", false)]
+        [InlineData("Boolean([TestEnum.Choice1,TestEnum.Choice2])", false)]
+        [InlineData("TestEnum.Choice1 And true", false)]
+        [InlineData("ColorFade(TestEnum.Choice1,10%)", false)]
+        [InlineData("ColorFade([TestEnum.Choice1,TestEnum.Choice2],10%)", false)]
+        public void OptionSetBackingTextTests(string expression, bool valid)
+        {
+            var enumStoreBuilder = new EnumStoreBuilder();
+            enumStoreBuilder.TestOnly_WithCustomEnum(new EnumSymbol(
+                new DName("TestEnum"),
+                DType.String,
+                new Dictionary<string, object>()
+                {
+                    { "Choice1", "Choice_1" },
+                    { "Choice2", "Choice_2" },
+                }));
+            var config = PowerFxConfig.BuildWithEnumStore(enumStoreBuilder, features: Features.PowerFxV1);
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check(expression, RecordType.Empty());
+            Assert.Equal(valid, checkResult.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("Text(TestEnum.Choice1)", true)]
+        [InlineData("\"Label: \" & TestEnum.Choice1", true)]
+        [InlineData("Value(TestEnum.Choice1)", true)]
+        [InlineData("TestEnum.Choice1 + 1", false)] // see https://github.com/microsoft/Power-Fx/issues/2229
+        [InlineData("Decimal(TestEnum.Choice1)", true)]
+        [InlineData("Float(TestEnum.Choice1)", true)]
+        [InlineData("Boolean(TestEnum.Choice1)", false)]
+        [InlineData("Boolean([TestEnum.Choice1,TestEnum.Choice2])", false)]
+        [InlineData("TestEnum.Choice1 And true", false)]
+        [InlineData("ColorFade(TestEnum.Choice1,10%)", false)]
+        [InlineData("ColorFade([TestEnum.Choice1,TestEnum.Choice2],10%)", false)]
+        public void OptionSetBackingNumberTests(string expression, bool valid)
+        {
+            var enumStoreBuilder = new EnumStoreBuilder();
+            enumStoreBuilder.TestOnly_WithCustomEnum(new EnumSymbol(
+                new DName("TestEnum"),
+                DType.Number,
+                new Dictionary<string, object>()
+                {
+                    { "Choice1", 1 },
+                    { "Choice2", 2 },
+                }));
+            var config = PowerFxConfig.BuildWithEnumStore(enumStoreBuilder, features: Features.PowerFxV1);
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check(expression, RecordType.Empty());
+            Assert.Equal(valid, checkResult.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("Text(TestEnum.Choice1)", true)]
+        [InlineData("\"Label: \" & TestEnum.Choice1", true)]
+        [InlineData("Value(TestEnum.Choice1)", false)]
+        [InlineData("TestEnum.Choice1 + 1", false)]
+        [InlineData("Decimal(TestEnum.Choice1)", false)]
+        [InlineData("Float(TestEnum.Choice1)", false)]
+        [InlineData("Boolean(TestEnum.Choice1)", true)]
+        [InlineData("Boolean([TestEnum.Choice1,TestEnum.Choice2])", true)]
+        [InlineData("TestEnum.Choice1 And true", true)]
+        [InlineData("ColorFade(TestEnum.Choice1,10%)", false)]
+        [InlineData("ColorFade([TestEnum.Choice1,TestEnum.Choice2],10%)", false)]
+        public void OptionSetBackingBooleanTests(string expression, bool valid)
+        {
+            var enumStoreBuilder = new EnumStoreBuilder();
+            enumStoreBuilder.TestOnly_WithCustomEnum(new EnumSymbol(
+                new DName("TestEnum"),
+                DType.Boolean,
+                new Dictionary<string, object>()
+                {
+                    { "Choice1", true },
+                    { "Choice2", false },
+                }));
+            var config = PowerFxConfig.BuildWithEnumStore(enumStoreBuilder, features: Features.PowerFxV1);
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check(expression, RecordType.Empty());
+            Assert.Equal(valid, checkResult.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("Text(TestEnum.Choice1)", true)]
+        [InlineData("\"Label: \" & TestEnum.Choice1", true)]
+        [InlineData("Value(TestEnum.Choice1)", false)]
+        [InlineData("TestEnum.Choice1 + 1", false)]
+        [InlineData("Decimal(TestEnum.Choice1)", false)]
+        [InlineData("Float(TestEnum.Choice1)", false)]
+        [InlineData("Boolean(TestEnum.Choice1)", false)]
+        [InlineData("Boolean([TestEnum.Choice1,TestEnum.Choice2])", false)]
+        [InlineData("TestEnum.Choice1 And true", false)]
+        [InlineData("ColorFade(TestEnum.Choice1,10%)", true)]
+        [InlineData("ColorFade([TestEnum.Choice1,TestEnum.Choice2],10%)", true)]
+        public void OptionSetBackingColorTests(string expression, bool valid)
+        {
+            var enumStoreBuilder = new EnumStoreBuilder();
+            enumStoreBuilder.TestOnly_WithCustomEnum(new EnumSymbol(
+                new DName("TestEnum"),
+                DType.Color,
+                new Dictionary<string, object>()
+                {
+                    { "Choice1", 0 },
+                    { "Choice2", 255 },
+                }));
+            var config = PowerFxConfig.BuildWithEnumStore(enumStoreBuilder, features: Features.PowerFxV1);
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check(expression, RecordType.Empty());
+            Assert.Equal(valid, checkResult.IsSuccess);
         }
 
         [Fact]

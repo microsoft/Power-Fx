@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Lajur nilai Boolean untuk diproses.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Menukar nilai perpuluhan kepada nilai Boolean.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>nombor</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Nilai nombor perpuluhan untuk ditukar kepada nilai Boolean.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Menukar lajur nilai angka perpuluhan kepada lajur nilai Boolean.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Lajur nilai nombor untuk diproses.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Menukar nilai pilihan yang disokong oleh Boolean kepada nilai Boolean.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>pilihan</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Pilihan untuk ditukar kepada nilai Boolean.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Menukar lajur nilai pilihan yang disokong oleh Boolean kepada lajur nilai Boolean.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Lajur nilai pilihan untuk diproses.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Mengembalikan argumen bukan kosong pertama</value>
     
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Nilai tarikh untuk dilaraskan mengikut bilangan bulan yang ditentukan.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Bilangan bulan untuk mengubah tarikh. Nilai positif menunjukkan tarikh akan datang, nilai negatif menunjukkan tarikh lalu dan sifar tidak akan mengubah bulan tersebut.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Mengembalikan hari terakhir dalam bulan untuk tarikh yang ditentukan dengan dilaraskan mengikut bilangan bulan.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Nilai tarikh untuk dilaraskan mengikut bilangan bulan yang ditentukan.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Bilangan bulan untuk mengubah tarikh. Nilai positif menunjukkan tarikh akan datang, nilai negatif menunjukkan tarikh lalu dan sifar tidak akan mengubah bulan tersebut.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Memotong 'nombor' dengan membundarkan nombor kepada infiniti negatif.</value>
@@ -4179,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Fungsi JSON tidak boleh menyirikan data perduaan dalam ungkapan bukan tingkah laku.</value>    
+    <value>Fungsi JSON tidak boleh menyirikan data perduaan dalam ungkapan bukan tingkah laku.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parameter {0} mengandungi sifat jenis {1} yang tidak disokong.</value>
@@ -4246,10 +4290,22 @@
     
   </data>
   <data name="UniCharTArg1" xml:space="preserve">
-    <value>column_of_numbers</value>
+    <value>lajur_nombor</value>
     
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Lajur jadual nilai angka untuk ditukar menjadi aksara Unikod.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Jenis atribut tidak disokong</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Semua operator Partial pada formula bernama yang dipadankan mestilah sama.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Operator Partial tidak diketahui.</value>
+    
   </data>
 </root>

@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>O coloană de valori booleene de procesat.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Convertește un număr zecimal la o valoare booleană.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>număr</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Valoarea număr zecimal de convertit la o valoare booleană.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Convertește o coloană de valori numerice zecimale la o coloană de valori booleene.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>intrare</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>O coloană de valori numerice de procesat.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Convertește o valoare de opțiune bazată pe o valoare booleană într-o valoare booleană.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>opțiune</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Opțiunea de convertit la o valoare booleană.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Convertește o coloană de opțiuni bazate pe valori booleene la o coloană de valori booleene.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>intrare</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>O coloană de valori opțiune de procesat.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnează primul argument nevid</value>
     
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>O valoare de dată care urmează a fi modificată cu un număr specificat de luni.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Numărul de luni cu care se modifică data. O valoare pozitivă returnează o dată viitoare, o valoare negativă o dată trecută, iar zero nu va schimba luna.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Returnează ultima zi din luna datei specificate, ajustată cu un număr de luni.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>O valoare de dată care urmează a fi modificată cu un număr specificat de luni.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Numărul de luni cu care se modifică data. O valoare pozitivă returnează o dată viitoare, o valoare negativă o dată trecută, iar zero nu va schimba luna.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Trunchiază „numărul” rotunjindu-l spre infinit negativ.</value>
@@ -4179,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Funcția JSON nu poate serializa datele binare într-o expresie necomportamentală.</value>    
+    <value>Funcția JSON nu poate serializa datele binare într-o expresie necomportamentală.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parametrul {0} conține o proprietate de tip {1} care nu este acceptată.</value>
@@ -4223,7 +4267,7 @@
     
   </data>
   <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
-    <value>Utilizare perimată a lui „.”. Utilizați în schimb funcția ShowColumns.</value>
+    <value>Utilizare perimată a „.”. Utilizați în schimb funcția ShowColumns.</value>
     
   </data>
   <data name="IntellisenseAiDisclaimer" xml:space="preserve">
@@ -4231,7 +4275,7 @@
     
   </data>
   <data name="AboutUniChar" xml:space="preserve">
-    <value>Returnează caracterul Unicode re3ferită de valoarea numerică dată.</value>
+    <value>Returnează caracterul Unicode la care face referire valoarea numerică dată.</value>
     
   </data>
   <data name="AboutUniChar_number" xml:space="preserve">
@@ -4251,5 +4295,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>O coloană de tabel de valori numerice care trebuie convertite la caractere Unicode.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Tip de atribut neacceptat</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Toți operatorii Partial care se potrivesc formulelor denumite trebuie să identici.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Operator Partial necunoscut.</value>
+    
   </data>
 </root>

@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Колона с булеви стойности за обработване.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Преобразува десетично число в булева стойност.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>число</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Десетичната числова стойност, която да бъде преобразувана в булева стойност.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Преобразува колона с десетични числови стойности в колона с булеви стойности.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>входни данни</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Колона с числови стойности, която да бъде обработена.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Преобразува стойност за избор, функционираща на основата на булева стойност, в булева стойност.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>възможност за избор</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Стойността за избор, която да бъде преобразувана в булева стойност.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Преобразува колона със стойности за избор, функциониращи на основата на булеви стойности, в колона с булеви стойности.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>входни данни</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Колона със стойности за избор, която да бъде обработена.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Връща първия непразен аргумент</value>
     
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Дата, която да се коригира с указания брой месеци.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Брой месеци, с които да се промени датата. Положителна стойност дава бъдеща дата, отрицателна стойност дава минала дата, а нула не променя месеца.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Връща последния ден от месеца за зададена дата, коригирана с брой месеци.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Дата, която да се коригира с указания брой месеци.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Брой месеци, с които да се промени датата. Положителна стойност дава бъдеща дата, отрицателна стойност дава минала дата, а нула не променя месеца.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Съкращава „число“, като закръглява към отрицателна безкрайност.</value>
@@ -4179,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Функцията за JSON не може да сериализира двоични данни в неповеденчески израз.</value>    
+    <value>Функцията за JSON не може да сериализира двоични данни в неповеденчески израз.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Параметърът {0} съдържа свойство от тип {1}, което не се поддържа.</value>
@@ -4251,5 +4295,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Колона от таблица с числови стойности, които да се преобразуват в Unicode знаци.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Неподдържан атрибут</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Всички оператори Partial в съответстващите наименувани формули трябва да са еднакви.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Неизвестен оператор Partial.</value>
+    
   </data>
 </root>

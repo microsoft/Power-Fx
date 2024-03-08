@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Eine Spalte mit booleschen Werten für die Verarbeitung.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konvertiert eine Dezimalzahl in einen booleschen Wert.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>Zahl</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Der Dezimalwert, der in einen booleschen Wert konvertiert werden soll.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konvertiert eine Spalte mit Dezimalwerten in eine Spalte mit booleschen Werten.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>Eingabe</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Eine Spalte mit zu verarbeitenden Nummernwerten.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konvertiert einen auf einen booleschen Wert gestützten Auswahlwert zu einem booleschen Wert.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>Auswahl</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Der Auswahlwert, der in einen booleschen Wert konvertiert werden soll.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konvertiert eine Spalte mit auf booleschen Werten gestützten Auswahlwerten in eine Spalte mit booleschen Werten.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>Eingabe</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Eine Spalte mit zu verarbeitenden Auswahlwerten</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Hiermit wird das erste nicht leere Argument zurückgegeben.</value>
     
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Ein Datumswert, der um die angegebene Anzahl von Monaten angepasst werden soll.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Anzahl der Monate, um die das Datum geändert werden soll. Ein positiver Wert ergibt ein zukünftiges Datum, ein negativer Wert ein Datum in der Vergangenheit, und null ändert den Monat nicht.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Gibt den letzten Tag des Monats für ein angegebenes Datum zurück, angepasst um eine Anzahl von Monaten.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Ein Datumswert, der um die angegebene Anzahl von Monaten angepasst werden soll.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Anzahl der Monate, um die das Datum geändert werden soll. Ein positiver Wert ergibt ein zukünftiges Datum, ein negativer Wert ein Datum in der Vergangenheit, und null ändert den Monat nicht.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Kürzt „Zahl“ durch Runden in Richtung negativer Unendlichkeit.</value>
@@ -4179,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Die JSON-Funktion kann binäre Daten in einem Ausdruck, der kein Verhalten ausdrückt, nicht serialisieren.</value>    
+    <value>Die JSON-Funktion kann binäre Daten in einem Ausdruck, der kein Verhalten ausdrückt, nicht serialisieren.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Der Parameter "{0}" enthält eine Eigenschaft vom Typ "{1}". Dies wird nicht unterstützt.</value>
@@ -4223,7 +4267,7 @@
     
   </data>
   <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
-    <value>Veraltete Verwendung von '.'. Verwenden Sie stattdessen die Funktion 'ShowColumns'.</value>
+    <value>Veraltete Verwendung von „.“. Verwenden Sie stattdessen die Funktion „ShowColumns“.</value>
     
   </data>
   <data name="IntellisenseAiDisclaimer" xml:space="preserve">
@@ -4251,5 +4295,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Eine Tabellenspalte mit numerischen Werten, die in Unicode-Zeichen konvertiert werden sollen.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Nicht unterstützte Attributart</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Alle Partial-Operatoren für übereinstimmende benannte Formeln müssen identisch sein.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Unbekannter Partial-Operator</value>
+    
   </data>
 </root>

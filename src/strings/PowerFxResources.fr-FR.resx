@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Colonne de valeurs booléennes à traiter.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Convertit un nombre décimal en une valeur booléenne.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>nombre</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Valeur numérique décimale à convertir en valeur booléenne.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Convertit une colonne de valeurs numériques décimales en une colonne de valeurs booléennes.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>entrée</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Colonne de valeurs numériques à traiter.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Convertit une valeur de choix soutenue par un booléen en une valeur booléenne.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>choix</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Choix à convertir en valeur booléenne.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Convertit une colonne de valeurs de choix soutenues par des booléens en valeurs booléennes.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>entrée</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Colonne de valeurs de choix à traiter.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Retourne le premier argument non vide</value>
     
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Valeur de date à ajuster par le nombre de mois indiqué.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Nombre de mois par lequel modifier la date. Une valeur positive produit une date future, une valeur négative une date passée et zéro ne modifie pas le mois.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Retourne le dernier jour du mois pour une date indiquée, ajusté par un nombre de mois.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Valeur de date à ajuster par le nombre de mois indiqué.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Nombre de mois par lequel modifier la date. Une valeur positive produit une date future, une valeur négative une date passée, et zéro ne modifie pas le mois.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Tronque le « nombre » en arrondissant vers l’infini négatif.</value>
@@ -4179,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>La fonction JSON ne peut pas sérialiser les données binaires dans une expression non comportementale.</value>    
+    <value>La fonction JSON ne peut pas sérialiser les données binaires dans une expression non comportementale.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Le paramètre {0} contient une propriété de type {1} qui n’est pas prise en charge.</value>
@@ -4251,5 +4295,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Colonne de table de valeurs numériques à convertir en caractères Unicode.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Type d’attribut non pris en charge</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Tous les opérateurs Partial dans les formules nommées correspondantes doivent être les mêmes.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Opérateur Partial inconnu.</value>
+    
   </data>
 </root>

@@ -34,9 +34,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
                 "Microsoft.PowerFx.LanguageServerProtocol.LanguageServer",
 
+                // NL features. 
                 "Microsoft.PowerFx.LanguageServerProtocol.NLHandler",
                 "Microsoft.PowerFx.LanguageServerProtocol.NL2FxParameters",
                 "Microsoft.PowerFx.LanguageServerProtocol.INLHandlerFactory",
+                "Microsoft.PowerFx.LanguageServerProtocol.IPowerFxScopeFx2NL",
+                "Microsoft.PowerFx.LanguageServerProtocol.Fx2NLParameters",
+                "Microsoft.PowerFx.LanguageServerProtocol.UsageHints",
 
                 // Internal
                 "Microsoft.PowerFx.LanguageServerProtocol.JsonRpcHelper",

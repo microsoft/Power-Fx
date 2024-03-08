@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Kolumna wartości logicznych do przetworzenia.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konwertuje liczbę dziesiętną na wartość logiczną.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>liczba</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Wartość typu liczba dziesiętna do przekonwertowania na wartość logiczną.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konwertuje kolumnę wartości typu liczba dziesiętna na kolumnę wartości logicznych.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>dane wejściowe</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Kolumna wartości liczbowych do przetworzenia.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konwertuje wartość opcji wyboru opartą na wartości logicznej na wartość logiczną.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>opcja wyboru</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Opcja wyboru do przekonwertowania na wartość logiczną.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konwertuje kolumnę wartości opcji wyboru opartych na wartościach logicznych na kolumnę wartości logicznych.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>dane wejściowe</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Kolumna wartości opcji wyboru do przetworzenia.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Zwraca pierwszy niepusty argument</value>
     
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Wartość daty, która ma zostać dostosowana przy użyciu określonej liczby miesięcy.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Liczba miesięcy, przy użyciu której ma zostać zmieniona data. Wartość dodatnia wskazuje datę w przyszłości, wartość ujemna datę w przeszłości, a wartość zero nie powoduje zmiany miesiąca.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Zwraca ostatni dzień miesiąca dla określonej daty dostosowanej za pomocą liczby miesięcy.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Wartość daty, która ma zostać dostosowana przy użyciu określonej liczby miesięcy.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Liczba miesięcy, przy użyciu której ma zostać zmieniona data. Wartość dodatnia wskazuje datę w przyszłości, wartość ujemna datę w przeszłości, a wartość zero nie powoduje zmiany miesiąca.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Obcina wartość typu „liczba”, wykonując zaokrąglenie w stronę ujemnej nieskończoności.</value>
@@ -4179,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Funkcja JSON nie może serializować danych binarnych w wyrażeniu niebehawioralnym.</value>    
+    <value>Funkcja JSON nie może serializować danych binarnych w wyrażeniu niebehawioralnym.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parametr {0} zawiera właściwość typu {1}, która nie jest obsługiwana.</value>
@@ -4251,5 +4295,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Kolumna tabeli wartości liczbowych, które mają zostać przekonwertowane na znaki Unicode.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Nieobsługiwany rodzaj atrybutów</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Wszystkie operatory Partial w pasujących formułach nazwanych muszą być takie same.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Nieznany operator Partial.</value>
+    
   </data>
 </root>

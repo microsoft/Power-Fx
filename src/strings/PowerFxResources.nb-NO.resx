@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>En kolonne med boolske verdier som skal behandles.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konverterer et desimaltall til en boolsk verdi.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>tall</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>De numeriske desimalverdiene som skal konverteres til en boolsk verdi.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konverterer en kolonne med numeriske desimalverdier til en kolonne med boolske verdier.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>inndata</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>En kolonne med tallverdier som skal behandles.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konverterer en valgverdi støttet av en boolsk verdi til en boolsk verdi.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>valg</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Valget som skal konverteres til en boolsk verdi.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konverterer en kolonne med valgverdier støttet av boolske verdier, til en kolonne med boolske verdier.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>inndata</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>En kolonne med valgverdier som skal behandles.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerer det første argumentet som ikke er tomt</value>
     
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>En datoverdi som skal justeres av det angitte antallet måneder.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Antall måneder for å endre datoen. En positiv verdi gir en dato i fremtiden, en negativ verdi en dato i fortiden, og null vil ikke endre måneden.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Returnerer den siste dagen i måneden for en angitt dato, justert med et antall måneder.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>En datoverdi som skal justeres av det angitte antallet måneder.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Antall måneder for å endre datoen. En positiv verdi gir en dato i fremtiden, en negativ verdi en dato i fortiden, og null vil ikke endre måneden.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Avkorter tall ved å runde av mot negativ uendelighet.</value>
@@ -4179,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON-funksjonen kan ikke serialisere binære data i ikke-atferdsuttrykk.</value>    
+    <value>JSON-funksjonen kan ikke serialisere binære data i ikke-atferdsuttrykk.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parameteren {0} inneholder en egenskap av typen {1}, som ikke støttes.</value>
@@ -4251,5 +4295,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>En tabellkolonne med numeriske verdier som skal konverteres til Unicode-tegn.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Attributtype som ikke støttes</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Alle Partial-operatorer for samsvarende navngitte formler må være like.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Ukjent Partial-operator.</value>
+    
   </data>
 </root>

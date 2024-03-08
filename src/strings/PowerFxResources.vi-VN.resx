@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Cột giá trị boolean cần xử lý.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Chuyển đổi số thập phân thành giá trị boolean.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>số</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Giá trị số thập phân cần chuyển đổi thành giá trị boolean.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Chuyển đổi cột giá trị số thập phân thành cột chứa giá trị boolean.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>đầu vào</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Cột giá trị số cần xử lý.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Chuyển đổi giá trị lựa chọn dựa trên giá trị boolean thành giá trị boolean.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>lựa chọn</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Lựa chọn cần chuyển đổi thành giá trị boolean.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Chuyển đổi cột giá trị lựa chọn dựa trên giá trị boolean thành cột giá trị boolean.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>đầu vào</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Cột giá trị lựa chọn cần xử lý.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Trả về đối số không trống đầu tiên</value>
     
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Giá trị ngày được điều chỉnh theo số tháng được chỉ định.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Số tháng để thay đổi ngày. Giá trị dương sẽ cho ra một ngày trong tương lai, giá trị âm sẽ cho ra một ngày trong quá khứ và số 0 sẽ giữ nguyên tháng.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Trả về ngày cuối cùng trong tháng cho một ngày được chỉ định, được điều chỉnh theo số tháng.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Giá trị ngày được điều chỉnh theo số tháng được chỉ định.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Số tháng để thay đổi ngày. Giá trị dương sẽ cho ra một ngày trong tương lai, giá trị âm sẽ cho ra một ngày trong quá khứ và số 0 sẽ giữ nguyên tháng.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Cắt bớt 'số' bằng cách làm tròn về phía âm vô cực.</value>
@@ -4179,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Hàm JSON không thể tuần tự hóa dữ liệu nhị phân trong biểu thức phi hành vi.</value>    
+    <value>Hàm JSON không thể tuần tự hóa dữ liệu nhị phân trong biểu thức phi hành vi.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Tham số {0} chứa thuộc tính thuộc loại {1} không được hỗ trợ.</value>
@@ -4251,5 +4295,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Một cột bảng gồm các giá trị số sẽ được chuyển đổi thành ký tự Unicode.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Loại thuộc tính không được hỗ trợ</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Tất cả các toán tử Partial trên các công thức đã đặt tên khớp nhau phải giống nhau.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Toán tử Partial không xác định.</value>
+    
   </data>
 </root>

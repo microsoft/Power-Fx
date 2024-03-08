@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>要处理的布尔值列。</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>将十进制数转换为布尔值。</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>数字</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>要转换为布尔值的十进制数值。</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>将十进制数值列转换为布尔值列。</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>输入</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>要处理的数值组成的列。</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>将布尔值支持的选择值转换为布尔值。</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>单选</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>要转换为布尔值的选择。</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>将布尔值支持的选择值列转换为布尔值列。</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>输入</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>要处理的选择值列。</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>返回第一个非空白参数</value>
     
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>要按指定的月数调整的日期值。</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>日期的更改月数。正值产生将来日期，负值产生过去日期，零将不会更改该月。</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>返回指定日期中月份的最后一天(已按月数进行了调整)。</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>要按指定的月数调整的日期值。</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>日期的更改月数。正值产生将来日期，负值产生过去日期，零将不会更改该月。</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>通过向负无穷大舍入来截断“数字”。</value>
@@ -4179,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON 函数无法对非行为表达式中的二进制数据进行序列化。</value>    
+    <value>JSON 函数无法对非行为表达式中的二进制数据进行序列化。</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>参数 {0} 包含类型为 {1} 的属性，而该属性不受支持。</value>
@@ -4251,5 +4295,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>要转换为 Unicode 字符的数值表列。</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>不支持的属性类型</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>匹配命名公式中的所有 Partial 运算符都必须相同。</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>未知 Partial 运算符。</value>
+    
   </data>
 </root>

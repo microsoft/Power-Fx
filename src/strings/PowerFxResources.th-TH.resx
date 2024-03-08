@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>คอลัมน์ของค่าแบบบูลีนที่จะประมวลผล</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>แปลงตัวเลขฐานสิบเป็นค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>ตัวเลข</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>ค่าตัวเลขฐานสิบที่จะแปลงเป็นค่าแบบบูลีน</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>แปลงคอลัมน์ของค่าตัวเลขฐานสิบเป็นคอลัมน์ของค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>ข้อมูลป้อนเข้า</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>คอลัมน์ของค่าตัวเลขที่จะดำเนินการ</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>แปลงค่าตัวเลือกที่รองรับโดยบูลีนเป็นค่าบูลีน</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>ชุดตัวเลือก</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>ตัวเลือกที่จะแปลงเป็นค่าแบบบูลีน</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>แปลงคอลัมน์ของค่าตัวเลือกที่รองรับโดยบูลีนเป็นคอลัมน์ของค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>ข้อมูลป้อนเข้า</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>คอลัมน์ของค่าตัวเลือกที่จะดำเนินการ</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>ส่งคืนอาร์กิวเมนต์แรกที่ไม่ได้เว้นว่าง</value>
     
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>ค่าวันที่ที่จะปรับตามจำนวนเดือนที่ระบุ</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>จำนวนเดือนที่จะเปลี่ยนวันที่ ค่าบวกจะให้วันที่ในอนาคต ค่าลบจะให้วันที่ในอดีต และศูนย์จะไม่เปลี่ยนแปลงเดือน</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>ส่งกลับวันสุดท้ายของเดือนสำหรับวันที่ที่ระบุ ซึ่งปรับตามจำนวนเดือน</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>ค่าวันที่ที่จะปรับตามจำนวนเดือนที่ระบุ</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>จำนวนเดือนที่จะเปลี่ยนวันที่ ค่าบวกจะให้วันที่ในอนาคต ค่าลบจะให้วันที่ในอดีต และศูนย์จะไม่เปลี่ยนแปลงเดือน</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>ตัดทอน 'ตัวเลข' โดยการปัดเศษไปทางจำนวนอนันต์ลบ</value>
@@ -4179,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>ฟังก์ชัน JSON ไม่สามารถจัดลำดับข้อมูลไบนารีในนิพจน์ที่ไม่ใช่พฤติกรรมได้</value>    
+    <value>ฟังก์ชัน JSON ไม่สามารถจัดลำดับข้อมูลไบนารีในนิพจน์ที่ไม่ใช่พฤติกรรมได้</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>พารามิเตอร์ {0} มีคุณสมบัติชนิด {1} ซึ่งไม่ได้รับการสนับสนุน</value>
@@ -4251,5 +4295,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>คอลัมน์ตารางของค่าตัวเลขที่จะแปลงเป็นอักขระ Unicode</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>ประเภทแอตทริบิวต์ที่ไม่รองรับ</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>ตัวดำเนินการ Partial ทั้งหมดในสูตรที่มีชื่อตรงกันต้องเหมือนกัน</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>ไม่รู้จักตัวดำเนินการ Partial</value>
+    
   </data>
 </root>

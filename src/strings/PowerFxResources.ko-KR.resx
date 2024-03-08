@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>처리할 부울 값의 열입니다.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>10진수를 부울 값으로 변환합니다.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>숫자</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>부울 값으로 변환할 10진수 값입니다.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>10진수 값 열을 부울 값 열로 변환합니다.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>입력</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>처리할 숫자 값 열입니다.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>부울로 백업되는 선택 값을 부울 값으로 변환합니다.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>선택 항목</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>부울 값으로 변환하는 선택 사항입니다.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>부울로 백업되는 선택 값 열을 부울 값 열로 변환합니다.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>입력</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>처리할 선택 값의 열입니다.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>공백이 아닌 첫 번째 인수를 반환함</value>
     
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>지정된 개월 수만큼 조정할 날짜 값입니다.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>날짜를 변경할 개월 수입니다. 양수 값은 미래 날짜, 음수 값은 과거 날짜가 되며 0은 월을 그대로 유지합니다.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>지정된 날짜의 월 마지막 날을 월 단위로 조정하여 반환합니다.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>지정된 개월 수만큼 조정할 날짜 값입니다.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>날짜를 변경할 개월 수입니다. 양수 값은 미래 날짜, 음수 값은 과거 날짜가 되며 0은 월을 그대로 유지합니다.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>음의 무한대로 반올림하여 '숫자'를 자릅니다.</value>
@@ -4179,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON 함수는 비동작 표현식으로 바이너리 데이터를 직렬화할 수 없습니다.</value>    
+    <value>JSON 함수는 비동작 표현식으로 바이너리 데이터를 직렬화할 수 없습니다.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>매개 변수 {0}에 지원되지 않는 {1} 유형의 속성이 포함되어 있습니다.</value>
@@ -4251,5 +4295,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>유니코드 문자로 변환할 숫자 값의 테이블 열입니다.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>지원되지 않는 특성 종류</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>일치하는 명명된 수식의 모든 Partial 연산자는 동일해야 합니다.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>알 수 Partial 연산자.</value>
+    
   </data>
 </root>

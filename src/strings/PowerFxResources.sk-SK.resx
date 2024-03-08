@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Stĺpec booleovských hodnôt na spracovanie.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konvertuje desatinné číslo na booleovskú hodnotu.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>číslo</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Desatinné číslo, ktoré sa má konvertovať na booleovskú hodnotu.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konvertuje stĺpec desatinných čísel na stĺpec booleovských hodnôt.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>vstup</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Stĺpec číselných hodnôt na spracovanie.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konvertuje hodnotu voľby na báze booleovskej hodnoty na booleovskú hodnotu.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>voľba</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Voľba, ktorá sa má konvertovať na booleovskú hodnotu.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konvertuje stĺpec hodnôt voľby na báze booleovských hodnôt na stĺpec booleovských hodnôt.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>vstup</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Stĺpec hodnôt voľby na spracovanie.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vráti prvý argument, ktorý nie je prázdny</value>
     
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>Hodnota dátumu, ktorá sa má upraviť o zadaný počet mesiacov.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Počet mesiacov, o ktoré sa má zmeniť dátum. Kladná hodnota poskytne dátum v budúcnosti, záporná hodnota dátum v minulosti a nula mesiac nezmení.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Vráti posledný deň mesiaca pre zadaný dátum upravený o určitý počet mesiacov.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>Hodnota dátumu, ktorá sa má upraviť o zadaný počet mesiacov.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Počet mesiacov, o ktoré sa má zmeniť dátum. Kladná hodnota poskytne dátum v budúcnosti, záporná hodnota dátum v minulosti a nula mesiac nezmení.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Skráti číslo zaokrúhlením smerom k zápornému nekonečnu (nadol).</value>
@@ -4179,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>Funkcia JSON nemôže serializovať binárne údaje v inom ako behaviorálnom výraze.</value>    
+    <value>Funkcia JSON nemôže serializovať binárne údaje v inom ako behaviorálnom výraze.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parameter {0} obsahuje vlastnosť typu {1}, ktorá nie je podporovaná.</value>
@@ -4251,5 +4295,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>Stĺpec tabuľky s číselnými hodnotami, ktoré sa majú konvertovať na znaky Unicode.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Nepodporovaný druh atribútu</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Všetky operátory Partial v zodpovedajúcich pomenovaných vzorcoch musia byť rovnaké.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Neznámy operátor Partial.</value>
+    
   </data>
 </root>

@@ -24,12 +24,18 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
         internal string GetNotSupportedReason();
 
         internal string GetOptionalParameterTypes();
+        
+        internal string GetOptionalParameterSchemas();
 
         internal string GetParameterNames();
 
         internal string GetRequiredParameterTypes();
+        
+        internal string GetRequiredParameterSchemas();
 
         internal string GetReturnType();
+
+        internal string GetReturnSchema();
 
         internal string GetWarnings();
     }

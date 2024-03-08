@@ -17,6 +17,7 @@ namespace Microsoft.PowerFx.Syntax
         internal readonly bool HasDelimiterStart;
         internal readonly bool HasDelimiterEnd;
         internal readonly bool IsModified;
+        internal readonly bool IsNonSourceIdentToken = false;
 
         // Unescaped, unmodified value.
         internal readonly string _value;
@@ -44,6 +45,7 @@ namespace Microsoft.PowerFx.Syntax
             Contracts.Assert(val.Length == span.Lim - span.Min || isNonSourceIdentToken);
             _value = val;
             Name = DName.MakeValid(val, out IsModified);
+            IsNonSourceIdentToken = isNonSourceIdentToken;
         }
 
         internal IdentToken(string val, Span spanTok, bool fDelimiterStart, bool fDelimiterEnd)
@@ -68,6 +70,7 @@ namespace Microsoft.PowerFx.Syntax
         private IdentToken(IdentToken tok, Span newSpan)
             : this(tok._value, newSpan, tok.HasDelimiterStart, tok.HasDelimiterEnd)
         {
+            IsNonSourceIdentToken = tok.IsNonSourceIdentToken;
         }
 
         internal override Token Clone(Span ts)

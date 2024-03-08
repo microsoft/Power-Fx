@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
@@ -14,13 +15,20 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class FunctionInfoTests
     {
-        [Fact]
-        public void FunctionInfo()
+        private FunctionInfo GetMid()
         {
             // Get any function info. 
             var engine = new Engine();
             var infos = engine.FunctionInfos.ToArray();
             var infoMid = infos.Where(info => info.Name == "Mid").First();
+
+            return infoMid;
+        }
+
+        [Fact]
+        public void FunctionInfo()
+        {
+            var infoMid = GetMid();
 
             Assert.Equal("Returns the characters from the middle of a text value, given a starting position and length.", infoMid.GetDescription(null));
             Assert.Equal(2, infoMid.MinArity);
@@ -35,12 +43,29 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void ParameterInfo()
+        {
+            var infoMid = GetMid();
+
+            var sig = infoMid.Signatures.First();
+            Assert.Equal("Mid(text, start_num)", sig.DebugToString());
+
+            var parameters = sig.GetParameters();
+            Assert.Equal(2, parameters.Length);
+
+            Assert.Equal("text", parameters[0].Name);
+
+            // This may need to be updated if resx changes. 
+            Assert.Equal("A text value from which characters will be extracted.", parameters[0].Description);
+
+            Assert.Equal("start_num", parameters[1].Name);
+        }
+
+        [Fact]
         public void LocaleTests()
         {
-            var engine = new Engine();
-            var infos = engine.FunctionInfos.ToArray();
-            var infoMid = infos.Where(info => info.Name == "Mid").First();
-            
+            var infoMid = GetMid();
+
             CultureInfo fr = new CultureInfo("fr-FR");
             fr.RunOnIsolatedThread((culture) =>
             {

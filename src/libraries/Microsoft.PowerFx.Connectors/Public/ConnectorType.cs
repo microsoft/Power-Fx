@@ -78,7 +78,9 @@ namespace Microsoft.PowerFx.Connectors
 
         internal bool Binary { get; private set; }
 
-        internal MediaKind MediaKind { get; private set; }        
+        internal MediaKind MediaKind { get; private set; }
+
+        internal OpenApiSchema Schema { get; private set; } = null;
 
         internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default)
         {
@@ -86,6 +88,7 @@ namespace Microsoft.PowerFx.Connectors
             IsRequired = openApiParameter?.Required == true;
             Visibility = openApiParameter?.GetVisibility().ToVisibility() ?? Visibility.Unknown;
             FormulaType = formulaType;
+            Schema = schema;
             Binary = schema.Format == "binary" || schema.Format == "no_format";
             MediaKind = openApiParameter?.GetMediaKind().ToMediaKind() ?? (Binary ? MediaKind.File : MediaKind.NotBinary);
 

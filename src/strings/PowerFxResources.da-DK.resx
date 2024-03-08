@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>En kolonne med booleske værdier, der skal behandles.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konverterer et decimaltal til en boolesk værdi.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>tal</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Den decimaltalværdi, der skal konverteres til en boolesk værdi.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konverterer en kolonne med numeriske decimalværdier til en kolonne med booleske værdier.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>En kolonne af numeriske værdier, der skal behandles.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konverterer en valgværdi, som understøttes af en boolesk værdi, til en boolesk værdi.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>valg</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Det valg, der skal konverteres til en boolesk værdi.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konverterer en kolonne med valgværdier, som understøttes af booleske værdier, til en kolonne med booleske værdier.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>En kolonne af valgværdier, der skal behandles.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerer det første ikke-tomme argument</value>
     
@@ -1053,11 +1097,11 @@
   </data>
   <data name="AboutEDate_date" xml:space="preserve">
     <value>En datoværdi, der skal justeres med det angivne antal måneder.</value>
-          
+    
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
     <value>Det antal måneder, datoen skal ændres med. En positiv værdi giver en fremtidig dato, en negativ værdi en tidligere dato og nul ændrer ikke måneden.</value>
-        
+    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
     <value>Returnerer den sidste dag i måneden for en angivet dato, justeret med et antal måneder.</value>
@@ -1073,11 +1117,11 @@
   </data>
   <data name="AboutEOMonth_date" xml:space="preserve">
     <value>En datoværdi, der skal justeres med det angivne antal måneder.</value>
-          
+    
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>Det antal måneder, datoen skal ændres med. En positiv værdi giver en fremtidig dato, en negativ værdi giver en tidligere dato, og nul ændrer ikke måneden.</value>
-         
+    
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Afkorter 'tal' ved at afrunde mod negativ uendelighed.</value>
@@ -4179,7 +4223,7 @@
     
   </data>
   <data name="ErrJSONArg1UnsupportedTypeWithNonBehavioral" xml:space="preserve">
-    <value>JSON-funktionen kan ikke serialisere binære data i et ikke-adfærdsbaseret udtryk.</value>    
+    <value>JSON-funktionen kan ikke serialisere binære data i et ikke-adfærdsbaseret udtryk.</value>
   </data>
   <data name="ErrTraceInvalidCustomRecordType" xml:space="preserve">
     <value>Parameteren {0} indeholder en egenskab af typen {1}, som ikke understøttes.</value>
@@ -4223,7 +4267,7 @@
     
   </data>
   <data name="ErrDeprecatedDotUseShowColumns" xml:space="preserve">
-    <value>Udfaset brug af '.'. Brug i stedet 'ShowColumns'-funktionen.</value>
+    <value>Udfaset brug af ".". Brug i stedet "ShowColumns"-funktionen.</value>
     
   </data>
   <data name="IntellisenseAiDisclaimer" xml:space="preserve">
@@ -4251,5 +4295,17 @@
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>En tabelkolonne med numeriske værdier, der skal konverteres til Unicode-tegn.</value>
+  </data>
+  <data name="ErrOnlyPartialAttribute" xml:space="preserve">
+    <value>Ikke-understøttet attributtype</value>
+    
+  </data>
+  <data name="ErrOperationDoesntMatch" xml:space="preserve">
+    <value>Alle Partial-operatorer i matchende navngivne formler skal være de samme.</value>
+    
+  </data>
+  <data name="ErrUnknownPartialOp" xml:space="preserve">
+    <value>Ukendt Partial-operator.</value>
+    
   </data>
 </root>
