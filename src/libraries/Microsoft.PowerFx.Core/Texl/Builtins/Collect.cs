@@ -52,13 +52,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         /// </summary>
         public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
         {
-            if (argIndex == 1 || argIndex == 2)
+            if (argIndex == 0)
+            {
+                type = DType.EmptyTable;
+                return true;
+            }
+            else if (argIndex == 1 || argIndex == 2)
             {
                 type = default;
                 return false;
             }
-
-            return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
+            else
+            {
+                return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
+            }            
         }
 
         public override bool ArgMatchesDatasourceType(int argNum)
@@ -79,7 +86,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         protected CollectFunction(string name, TexlStrings.StringGetter description)
-            : base(name, description, FunctionCategories.Behavior, DType.EmptyRecord, 0, 2, int.MaxValue, DType.EmptyTable)
+            : base(name, description, FunctionCategories.Behavior, DType.EmptyTable, 0, 2, int.MaxValue)
         {
         }
 
