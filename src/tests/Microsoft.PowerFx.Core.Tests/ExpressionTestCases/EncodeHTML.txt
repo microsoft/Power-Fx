@@ -45,5 +45,5 @@ Error({Kind:ErrorKind.InvalidArgument})
 "Osage alphabet (start): &#66736;&#66737;&#66738;&#66739;&#66740;&#66741;&#66742;"
 
 // Unpaired surrogate characters become the replacement character U+FFFD
->> EncodeHTML($"Unpaired: {UniChar(Hex2Dec("df32"))} {UniChar(Hex2Dec("d823"))}"))
-"Unpaired: � �"
+>> EncodeHTML($"Unpaired: {Mid(UniChar(Hex2Dec("1f600")),1,1)} {Mid(UniChar(Hex2Dec("1f600")),2,1)}") = $"Unpaired: {UniChar(65533)} {UniChar(65533)}"
+true
