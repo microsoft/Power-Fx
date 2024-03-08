@@ -263,7 +263,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         var fieldTypes = tableValue.Type.GetFieldTypes();
                         var firstField = fieldTypes.FirstOrDefault();
-                        if (firstField != null && !fieldTypes.Skip(1).Any() && firstField.Name.Value == "Value")
+                        if (firstField != null && !fieldTypes.Skip(1).Any() && firstField.Name.Value == TexlFunction.ColumnName_ValueStr)
                         {
                             isSingleColumnValueTable = true;
                         }
