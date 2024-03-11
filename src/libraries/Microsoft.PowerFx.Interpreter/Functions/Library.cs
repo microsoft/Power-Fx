@@ -653,6 +653,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: EOMonth)
             },
             {
+                BuiltinFunctionsCore.EncodeHTML,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.EncodeUrl.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: EncodeHTML)
+            },
+            {
                 BuiltinFunctionsCore.EncodeUrl,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.EncodeUrl.Name,
