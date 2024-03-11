@@ -1,0 +1,543 @@
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities.QueryOptions;
+using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Functions.DLP;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
+
+namespace Microsoft.AppMagic.Authoring.Texl
+{
+    // !!! Add to RequiresErrorContext
+    internal abstract class PatchAsyncFunctionCore : PatchAndValidateRecordFunctionBase
+    {
+        public override bool IsAsync => true;
+
+        public override bool ManipulatesCollections => true;
+
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => true;
+
+        public virtual bool ExpectsTableArgs => true;
+
+        // Return true if this function affects datasource query options.
+        public override bool AffectsDataSourceQueryOptions => true;
+
+        public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Create | RequiredDataSourcePermissions.Update;
+
+        public PatchAsyncFunctionCore(string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
+            : base(name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
+        {
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+
+            bool isValid = base.CheckTypes(context, args, argTypes, errors, out _, out nodeToCoercedTypeMap);
+
+            // We are going to discard the returnType infered by base.CheckTypes.
+            // Use DType.Error until we can correctly infer the return type.
+            returnType = DType.Error;
+            if (!isValid)
+            {
+                return false;
+            }
+
+            return CheckTypesCore(context, args, argTypes, errors, out returnType, ref nodeToCoercedTypeMap, expectsTableArgs: ExpectsTableArgs);
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            CheckSemanticsCore(binding, args, argTypes, errors, ExpectsTableArgs);
+            FunctionUtils.ManipulatesCollectionsCheckSemantics(binding, this, args, argTypes, errors);
+        }
+
+        public override bool UpdateDataQuerySelects(CallNode callNode, TexlBinding binding, DataSourceToQueryOptionsMap dataSourceToQueryOptionsMap)
+        {
+            Contracts.AssertValue(callNode);
+            Contracts.AssertValue(binding);
+
+            if (!CheckArgsCount(callNode, binding))
+            { 
+                return false;
+            }
+
+            var args = Contracts.VerifyValue(callNode.Args.Children);
+
+            DType dsType = binding.GetType(args[0]);
+            if (dsType.AssociatedDataSources == null)
+            {
+                return false;
+            }
+
+            // When using Defaults() we add the first item in the schema just to ensure that the call is made
+            if (binding.TryGetCall(args[1].Id, out var recordArg) && recordArg.Function == BuiltinFunctions.Defaults)
+            {
+                var recordArgType = binding.GetType(args[1]);
+                var firstTypeName = recordArgType.GetNames(DPath.Root).FirstOrDefault();
+                if (firstTypeName != null)
+                {
+                    DName columnName = firstTypeName.Name;
+
+                    if (columnName.IsValid && dsType.Contains(columnName))
+                    {
+                        dsType.AssociateDataSourcesToSelect(
+                            dataSourceToQueryOptionsMap,
+                            columnName,
+                            firstTypeName.Type,
+                            false /*skipIfNotInSchema*/,
+                            true); /*skipExpands*/
+                    }
+                }
+            }
+
+            // Start from third patch argument to collect selects as
+            // first argument is datasource and second argument is where clause in data call to update.
+            for (var i = 2; i < args.Count; i++)
+            {
+                var recordType = binding.GetType(args[i]);
+
+                foreach (var typeName in recordType.GetNames(DPath.Root))
+                {
+                    DType type = typeName.Type;
+                    DName columnName = typeName.Name;
+
+                    if (!dsType.Contains(columnName))
+                        continue;
+
+                    foreach (var tabularDataSource in dsType.AssociatedDataSources)
+                    {
+                        dataSourceToQueryOptionsMap.AddSelect(tabularDataSource, columnName);
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        protected override bool RequiresPagedDataForParamCore(TexlNode[] args, int paramIndex, TexlBinding binding)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.Assert(0 <= paramIndex && paramIndex < args.Length);
+            Contracts.AssertValue(binding);
+            Contracts.Assert(binding.IsPageable(Contracts.VerifyValue(args[paramIndex])));
+
+            // For the first argument, we need only metadata. No actual data from datasource is required.
+            return paramIndex > 0;
+        }
+    }
+
+    // Patch(dataSource:*[], Record, Updates1, Updates2,…)
+    internal sealed class PatchFunction : PatchAsyncFunctionCore
+    {
+        public override bool CanSuggestInputColumns { get { return true; } }
+
+        public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
+        {
+            if (argIndex > 1)
+            {
+                type = default;
+                return false;
+            }
+
+            return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
+        }
+
+        public PatchFunction()
+            : base("Patch", CanvasStringResources.AboutPatch, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyRecord, 0, 3, int.MaxValue, DType.EmptyTable, DType.EmptyRecord, DType.EmptyRecord)
+        { }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { CanvasStringResources.PatchArg_Source, CanvasStringResources.PatchArg_Record, CanvasStringResources.PatchArg_Update };
+            yield return new[] { CanvasStringResources.PatchArg_Source, CanvasStringResources.PatchArg_Record, CanvasStringResources.PatchArg_Update, CanvasStringResources.PatchArg_Update };
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
+        {
+            if (arity > 3)
+                return GetGenericSignatures(arity, CanvasStringResources.PatchArg_Source, CanvasStringResources.PatchArg_Record, CanvasStringResources.PatchArg_Update);
+            return base.GetSignatures(arity);
+        }
+    }
+
+    // Patch(DS, record_with_keys_and_updates)
+    [TexlRuntimeNameOverride(Suffix = "SingleRecord")]
+    internal sealed class PatchSingleRecordFunction : PatchAsyncFunctionCore
+    {
+        public override bool CanSuggestInputColumns { get { return true; } }
+
+        public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
+        {
+            if (argIndex == 1)
+            {
+                type = default;
+                return false;
+            }
+
+            return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
+        }
+
+        public PatchSingleRecordFunction()
+            : base("Patch", CanvasStringResources.AboutPatchSingleRecord, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyRecord, 0, 2, 2, DType.EmptyTable, DType.EmptyRecord)
+        { }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { CanvasStringResources.PatchArg_Source, CanvasStringResources.PatchArg_Record };
+        }
+    }
+
+    // Patch(DS, table_of_rows, table_of_updates)
+    [TexlRuntimeNameOverride(Suffix = "Aggregate")]
+    internal sealed class PatchAggregateFunction : PatchAsyncFunctionCore
+    {
+        public override bool ExpectsTableArgs { get { return true; } }
+
+        public PatchAggregateFunction()
+            : base("Patch", CanvasStringResources.AboutPatchAggregate, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyTable, 0, 3, 3, DType.EmptyTable, DType.EmptyTable, DType.EmptyTable)
+        { }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { CanvasStringResources.PatchArg_Source, CanvasStringResources.PatchArg_Rows, CanvasStringResources.PatchArg_Updates };
+        }
+    }
+
+    // Patch(DS, table_of_rows_with_updates)
+    [TexlRuntimeNameOverride(Suffix = "AggregateSingleTable")]
+    internal sealed class PatchAggregateSingleTableFunction : PatchAsyncFunctionCore
+    {
+        public override bool ExpectsTableArgs { get { return true; } }
+
+        public PatchAggregateSingleTableFunction()
+            : base("Patch", CanvasStringResources.AboutPatchAggregateSingleTable, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.EmptyTable)
+        { }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { CanvasStringResources.PatchArg_Source, CanvasStringResources.PatchArg_Rows };
+        }
+    }
+
+    // Patch(Record, Updates1, Updates2,…)
+    [TexlRuntimeNameOverride(Suffix = "_Record")]
+    internal sealed class PatchRecordFunction : BuiltinFunction
+    {
+        public override bool CanSuggestInputColumns => true;
+        public override bool IsSelfContained => true;
+        public override bool SupportsParamCoercion => false;
+
+        public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
+        {
+            if (argIndex > 0)
+            {
+                type = default;
+                return false;
+            }
+
+            return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
+        }
+
+        public PatchRecordFunction()
+            : base("Patch", CanvasStringResources.AboutPatchRecord, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyRecord, 0, 2, int.MaxValue, DType.EmptyRecord, DType.EmptyRecord)
+        { }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { CanvasStringResources.PatchArg_Record, CanvasStringResources.PatchArg_Update };
+            yield return new[] { CanvasStringResources.PatchArg_Record, CanvasStringResources.PatchArg_Update, CanvasStringResources.PatchArg_Update };
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
+        {
+            if (arity > 2)
+                return GetGenericSignatures(arity, CanvasStringResources.PatchArg_Source, CanvasStringResources.PatchArg_Record, CanvasStringResources.PatchArg_Update);
+            return base.GetSignatures(arity);
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+
+            bool isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+
+            // We are going to discard the returnType infered by base.CheckTypes.
+            // Use DType.Error until we can correctly infer the return type.
+            returnType = DType.Error;
+
+            if (!isValid)
+                return false;
+
+            DType recordType = argTypes[0];
+            DType retType = recordType;
+            for (int i = 1; i < args.Length; i++)
+            {
+                DType curType = argTypes[i];
+                if (!curType.IsRecord)
+                {
+                    errors.EnsureError(args[i], CanvasStringResources.ErrNeedRecord_Arg, args[i]);
+                    isValid = false;
+                    continue;
+                }
+
+                // Ensure that if the key in argument1 exists in the current record, their types match.
+                bool isSafeToUnion = true;
+                foreach (var typedName in curType.GetNames(DPath.Root))
+                {
+                    DName name = typedName.Name;
+                    if (recordType.TryGetType(name, out DType nameType) && !nameType.Accepts(typedName.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                    {
+                        errors.EnsureError(args[i], TexlStrings.ErrTypeError_Arg_Expected_Found, name, nameType.GetKindString(), typedName.Type.GetKindString());
+                        isValid = isSafeToUnion = false;
+                    }
+                }
+
+                if (isSafeToUnion)
+                    retType = DType.Union(retType, curType, useLegacyDateTimeAccepts: false, context.Features);
+            }
+
+            returnType = retType;
+            return isValid;
+        }
+    }
+
+    #region Base classes
+    internal abstract class PatchAndValidateRecordFunctionBase : FunctionWithTableInput
+    {
+        public PatchAndValidateRecordFunctionBase(DPath theNamespace, string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
+            : base(theNamespace, name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
+        { }
+
+        public PatchAndValidateRecordFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
+            : this(DPath.Root, name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
+        { }
+
+        public override bool RequiresDataSourceScope => true;
+        public override bool ArgMatchesDatasourceType(int argNum)
+        {
+            return argNum >= 1;
+        }
+
+        private DType ExpandMetaFieldType(DType metaFieldType)
+        {
+            Contracts.AssertValid(metaFieldType);
+            Contracts.Assert(metaFieldType.HasMetaField());
+
+            DType unusedType;
+            DType curType = metaFieldType;
+            foreach (var typedName in metaFieldType.GetNames(DPath.Root))
+            {
+                if (!curType.TryGetType(typedName.Name, out unusedType))
+                    curType = curType.Add(typedName);
+            }
+
+            return curType;
+        }
+
+        protected bool CheckTypesCore(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, bool expectsTableArgs = false)
+        {
+            Dictionary<TexlNode, DType> nodeToCoercedTypeMap = null;
+            return CheckTypesCore(context, args, argTypes, errors, out returnType, ref nodeToCoercedTypeMap, expectsTableArgs);
+        }
+
+        protected bool CheckTypesCore(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, bool expectsTableArgs = false)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+
+            bool isValid = true;
+            DType dataSourceType = argTypes[0];
+            DType retType = expectsTableArgs ? DType.EmptyTable : DType.EmptyRecord;
+            foreach (var assocDS in dataSourceType.AssociatedDataSources)
+            {
+                retType = DType.AttachDataSourceInfo(retType, assocDS);
+            }
+
+            bool sourceContainsControlType = dataSourceType.ContainsControlType(DPath.Root);
+
+            for (int i = 1; i < args.Length; i++)
+            {
+                DType curType = argTypes[i];
+                if (expectsTableArgs ? !curType.IsTable : !curType.IsRecord)
+                {
+                    errors.EnsureError(args[i], CanvasStringResources.ErrNeedRecord_Arg, args[i]);
+                    isValid = false;
+                    continue;
+                }
+
+                // Ensure that if the key in argument1 exists in the current record, their types match.
+                bool isSafeToUnion = true;
+                bool hasControlFieldType = false;
+                foreach (var typedName in curType.GetNames(DPath.Root))
+                {
+                    // As long as source doesn't contain control type we can skip the type check for control types.
+                    if (!sourceContainsControlType && typedName.Type.IsControl)
+                    {
+                        hasControlFieldType = true;
+                        continue;
+                    }
+
+                    // If the datasource doesn't contain the supplied type.
+                    DName name = typedName.Name;
+                    DType dsNameType;
+                    bool coercionIsSafe = true;
+                    if (!dataSourceType.TryGetType(name, out dsNameType))
+                    {
+                        dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, name, args[i]);
+                        isValid = isSafeToUnion = false;
+                        continue;
+                    }
+
+                    DType type = typedName.Type;
+                    // If the type has metafield in it then it's coming from a control type like dropdown or listbox.
+                    // For example, dropdown.SelectedItems, listbox.SelectedItems. So expand the type to include property types as well.
+                    // In Document.cs!AugmentedExpandoType function, we don't add the field to the expandotype if it conflicts with any expando property.
+                    // So the type doesn't include that field. This logic tries to rectify that by adding the missing fields back.
+                    // This is only necessary if we're trying to compare it to an entity or aggregate type, as the meta field will expand to a table or record
+                    if (type.HasMetaField() && (dsNameType.IsAggregate || dsNameType.Kind == DKind.DataEntity) && type.IsAggregate)
+                        type = ExpandMetaFieldType(type);
+
+                    // For patching entities, we expand the type and drop entities and attachments for the purpose of comparison.
+                    if (dsNameType.Kind == DKind.DataEntity && type.Kind != DKind.DataEntity)
+                    {
+                        DType expandedType;
+                        if (dsNameType.TryGetExpandedEntityTypeWithoutDataSourceSpecificColumns(out expandedType))
+                            dsNameType = expandedType;
+                    }
+
+                    if (!dsNameType.Accepts(type, out var schemaDifference, out var schemaDifferenceType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
+                        (!SupportsParamCoercion || !type.CoercesTo(dsNameType, out coercionIsSafe, aggregateCoercion: false, isTopLevelCoercion: false, context.Features) || !coercionIsSafe))
+                    {
+                        if (dsNameType.Kind == type.Kind)
+                            errors.Errors(args[i], type, schemaDifference, schemaDifferenceType);
+                        else
+                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
+
+                        isValid = isSafeToUnion = false;
+                    }
+                }
+
+                if (hasControlFieldType)
+                {
+                    bool fError = false;
+                    curType = curType.DropAllOfKind(ref fError, DPath.Root, DKind.Control);
+                    if (fError)
+                        isValid = isSafeToUnion = false;
+                }
+
+                if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                {
+                    DType coercionType;
+                    bool coercionNeeded;
+
+                    if (!curType.TryGetCoercionSubType(dataSourceType, out coercionType, out coercionNeeded, context.Features))
+                    {
+                        isValid = false;
+                    }
+                    else
+                    {
+                        if (coercionNeeded)
+                            CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
+
+                        retType = DType.Union(retType, coercionType, useLegacyDateTimeAccepts: false, context.Features);
+                    }
+                }
+                else if (isSafeToUnion)
+                    retType = DType.Union(retType, curType, useLegacyDateTimeAccepts: false, context.Features);
+            }
+
+            returnType = retType;
+            return isValid;
+        }
+
+        protected void CheckSemanticsCore(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, bool expectsTableArgs = false)
+        {
+            Contracts.AssertValue(binding);
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+
+            DType dataSourceType = argTypes[0];
+            DType retType = expectsTableArgs ? DType.EmptyTable : DType.EmptyRecord;
+            foreach (var assocDS in dataSourceType.AssociatedDataSources)
+            {
+                retType = DType.AttachDataSourceInfo(retType, assocDS);
+            }
+
+            bool sourceContainsControlType = dataSourceType.ContainsControlType(DPath.Root);
+
+            for (int i = 1; i < args.Length; i++)
+            {
+                DType curType = argTypes[i];
+                if (expectsTableArgs ? !curType.IsTable : !curType.IsRecord)
+                {
+                    errors.EnsureError(args[i], CanvasStringResources.ErrNeedRecord_Arg, args[i]);
+                    continue;
+                }
+
+                // Ensure that if the key in argument1 exists in the current record, their types match.
+                foreach (var typedName in curType.GetNames(DPath.Root))
+                {
+                    // As long as source doesn't contain control type we can skip the type check for control types.
+                    if (!sourceContainsControlType && typedName.Type.IsControl)
+                    {
+                        continue;
+                    }
+
+                    // If the datasource doesn't contain the supplied type.
+                    DName name = typedName.Name;
+                    DType dsNameType;
+                    if (!dataSourceType.TryGetType(name, out dsNameType))
+                    {
+                        dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, name, args[i]);
+                        continue;
+                    }
+
+                    DType type = typedName.Type;
+                    // If the type has metafield in it then it's coming from a control type like dropdown or listbox.
+                    // For example, dropdown.SelectedItems, listbox.SelectedItems. So expand the type to include property types as well.
+                    // In Document.cs!AugmentedExpandoType function, we don't add the field to the expandotype if it conflicts with any expando property.
+                    // So the type doesn't include that field. This logic tries to rectify that by adding the missing fields back.
+                    // This is only necessary if we're trying to compare it to an entity or aggregate type, as the meta field will expand to a table or record
+                    if (type.HasMetaField() && (dsNameType.IsAggregate || dsNameType.Kind == DKind.DataEntity) && type.IsAggregate)
+                        type = ExpandMetaFieldType(type);
+
+                    // For patching entities, we expand the type and drop entities and attachments for the purpose of comparison.
+                    if (dsNameType.Kind == DKind.DataEntity && type.Kind != DKind.DataEntity)
+                    {
+                        if (!dsNameType.TryGetExpandedEntityTypeWithoutDataSourceSpecificColumns(out _))
+                            binding.DeclareMetadataNeeded(dsNameType);
+                    }
+                }
+            }
+        }
+    }
+    #endregion
+}
