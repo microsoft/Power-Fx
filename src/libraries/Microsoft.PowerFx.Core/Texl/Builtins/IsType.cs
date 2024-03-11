@@ -13,7 +13,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
-namespace Microsoft.AppMagic.Authoring.Texl
+namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // IsType(record:P, table:*[]): b
     internal sealed class IsTypeFunction : BuiltinFunction
