@@ -23,7 +23,7 @@ using RecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Collect(collection:*[...], item1:![...]|*[...], ...)
-    internal class CollectFunction : BuiltinFunction
+    internal class CollectFunction : BuiltinFunction, ISuggestionAwareFunction
     {
         public override bool AffectsCollectionSchemas => true;
 
