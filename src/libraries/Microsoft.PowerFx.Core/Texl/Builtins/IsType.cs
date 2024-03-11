@@ -53,9 +53,8 @@ namespace Microsoft.AppMagic.Authoring.Texl
             }
 
             // !!! This code can be shared among functions that require a connected data source.
-            DType dataSourceType = argTypes[0];
             bool isConnected = binding.EntityScope != null
-                && binding.EntityScope.TryGetDataSource(args[0], out IExternalDataSource dataSourceInfo)
+                && binding.EntityScope.TryGetDataSource(args[1], out IExternalDataSource dataSourceInfo)
                 && (dataSourceInfo.Kind == DataSourceKind.Connected || dataSourceInfo.Kind == DataSourceKind.CdsNative);
 
             if (!isConnected)
