@@ -94,3 +94,19 @@ Error({Kind:ErrorKind.Div0})
 
 >> Table([{a:1}], {a:Error({Kind:ErrorKind.Custom})}, {a:3}, [{a:4}])
 Table({a:1},{a:Error({Kind:ErrorKind.Custom})},{a:3},{a:4})
+
+// Does not modify existing behavior of Inline value tables
+>> [[1, 2, 3], [4, 5, 6]]
+Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})
+
+>> [[{name:"John",age:85}], [{name:"Jane",age:79}]]
+Table({Value:Table({age:85,name:"John"})},{Value:Table({age:79,name:"Jane"})})
+
+>> [{name:"John",age:85}, If(1<0, {something:"hello"})]
+Table({age:85,name:"John",something:Blank()},Blank())
+
+>> [[4, 5, 6], If(1<0, [1, 2, 3]), If(1/0, [1, 2, 3])]
+Table({Value:Table({Value:4},{Value:5},{Value:6})},{Value:Blank()},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> [{name:"John",age:85}, If(1<0, [1, 2, 3])]
+Errors: Error 23-41: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
