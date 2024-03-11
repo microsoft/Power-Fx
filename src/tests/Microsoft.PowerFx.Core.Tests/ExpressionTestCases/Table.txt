@@ -82,7 +82,7 @@ Table({Value:"everything"},{Value:"42"})
 Table({a:1},Error({Kind:ErrorKind.Div0}),{a:3},{a:4})
 
 >> Table([{a:1}], 1/0, {a:3}, [{a:4}])
-Errors: Error 0-35: The function 'Table' has some invalid arguments.|Error 16-17: In this context, only record or table values can be used.
+Errors: Error 0-35: The function 'Table' has some invalid arguments.|Error 16-17: Only record or table values can be used in this context.
 
 // The second argument is a record, no ambiguity
 >> Table([{a:1}], If(1/0<2,{a:2}), {a:3}, [{a:4}])

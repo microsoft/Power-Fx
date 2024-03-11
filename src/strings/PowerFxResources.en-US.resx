@@ -1963,7 +1963,7 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
-    <value>In this context, only record or table values can be used.</value>
+    <value>Only record or table values can be used in this context.</value>
     <comment>Error Message. If a record or table is expected.</comment>
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
