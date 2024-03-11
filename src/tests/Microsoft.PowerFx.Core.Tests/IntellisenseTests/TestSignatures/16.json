@@ -1,54 +1,54 @@
 {
   "Signatures": [
     {
-      "Label": "Table(record/table, ...)",
+      "Label": "Table(record_or_table, ...)",
       "Documentation": "Creates a table from the specified records and tables, with as many columns as there are unique record fields. For example: Table({key1: val1, key2: val2, ...}, ...)",
       "Parameters": [
         {
-          "Label": "record/table",
-          "Documentation": "A record/table that will be part of the the resulting table."
+          "Label": "record_or_table",
+          "Documentation": "A record or a table that will be part of the the resulting table."
         }
       ]
     },
     {
-      "Label": "Table(record/table, record/table, ...)",
+      "Label": "Table(record_or_table, record_or_table, ...)",
       "Documentation": "Creates a table from the specified records and tables, with as many columns as there are unique record fields. For example: Table({key1: val1, key2: val2, ...}, ...)",
       "Parameters": [
         {
-          "Label": "record/table",
-          "Documentation": "A record/table that will be part of the the resulting table."
+          "Label": "record_or_table",
+          "Documentation": "A record or a table that will be part of the the resulting table."
         },
         {
-          "Label": "record/table",
-          "Documentation": "A record/table that will be part of the the resulting table."
+          "Label": "record_or_table",
+          "Documentation": "A record or a table that will be part of the the resulting table."
         }
       ]
     },
     {
-      "Label": "Table(record/table, record/table, record/table, ...)",
+      "Label": "Table(record_or_table, record_or_table, record_or_table, ...)",
       "Documentation": "Creates a table from the specified records and tables, with as many columns as there are unique record fields. For example: Table({key1: val1, key2: val2, ...}, ...)",
       "Parameters": [
         {
-          "Label": "record/table",
-          "Documentation": "A record/table that will be part of the the resulting table."
+          "Label": "record_or_table",
+          "Documentation": "A record or a table that will be part of the the resulting table."
         },
         {
-          "Label": "record/table",
-          "Documentation": "A record/table that will be part of the the resulting table."
+          "Label": "record_or_table",
+          "Documentation": "A record or a table that will be part of the the resulting table."
         },
         {
-          "Label": "record/table",
-          "Documentation": "A record/table that will be part of the the resulting table."
+          "Label": "record_or_table",
+          "Documentation": "A record or a table that will be part of the the resulting table."
         }
       ]
     },
     {
-      "Label": "Table(record/table)",
+      "Label": "Table(record_or_table)",
       "Documentation": "Creates a table from the specified records and tables, with as many columns as there are unique record fields. For example: Table({key1: val1, key2: val2, ...}, ...)",
       "Parameters": [
         {
-          "Label": "record/table",
-          "Documentation": "A record/table that will be part of the the resulting table."
+          "Label": "record_or_table",
+          "Documentation": "A record or a table that will be part of the the resulting table."
         }
       ]
     }

@@ -2456,11 +2456,41 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table({Y:123}, {Y:7}, {Y:99.9}, {X:true})", "*[X:b, Y:n]")]
         [InlineData("Table({Y:123}, {Z:true}, {X:\"hello\"}, {W:{A:1, B:true, C:\"hello\"}})", "*[X:s, Y:n, Z:b, W:![A:n, B:b, C:s]]")]
         [InlineData("Table({Nested:Table({Nested:Table({X:1})})})", "*[Nested:*[Nested:*[X:n]]]")]
+        [InlineData("Table([])", "*[]")]
+        [InlineData("Table(Table())", "*[]")]
+        [InlineData("Table(Table(Table()))", "*[]")]
+        [InlineData("Table(Blank(), Blank())", "*[]")]
+        [InlineData("Table([1, 2, 3, 4], Blank())", "*[Value:n]")]
+        [InlineData("Table([{a:0, b:false, c:\"Hello\"}], [{a:1, b:true, c:\"World\"}])", "*[a:n, b:b, c:s]")]
+        [InlineData("Table([{a:0}], [{b:true}], [{c:\"Hello\"}])", "*[a:n, b:b, c:s]")]
+        [InlineData("Table(Blank(), T2, Blank(), T1)", "*[a:n, b:b, c:s]")]
+        [InlineData("Table([{a:0}], [{b:true}], [{c:\"Hello\", d: {x: \"World\"}}])", "*[a:n, b:b, c:s, d:![x:s]]")]
+        [InlineData("Table(T1, T2)", "*[a:n, b:n, c:n]")]
+        [InlineData("Table(T2, T1)", "*[a:n, b:b, c:s]")]
+        [InlineData("Table(T2, Table(T1, T2))", "*[a:n, b:b, c:s]")]
+        [InlineData("Table(T1, Table(T2, T3))", "*[a:n, b:n, c:n, d:n]")]
+        [InlineData("Table(Table(T1, T2), T3)", "*[a:n, b:n, c:n, d:n]")]
+        [InlineData("Table(T1, Table(T2, T4))", "*[a:n, b:n, c:n]")]
+        [InlineData("Table(Table(T1, T2), T4)", "*[a:n, b:n, c:n]")]
+        [InlineData("Table([1,2], If(1/0<2,[3,4]), [5,6])", "*[Value: n]")]
+        [InlineData("Table(Sequence(20000))", "*[Value: n]")]
+        [InlineData("Table(Filter(T1, b = 5))", "*[a:n, b:n, c:n]")]
+        [InlineData("Table({X:1}, [1, 2, 3])", "*[X:n, Value:n]")]
         public void TexlFunctionTypeSemanticsTable(string script, string expectedType)
         {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T1", new TableType(TestUtils.DT("*[a:n, b:n, c:n]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[a:n, b:b, c:s]")));
+            symbol.AddVariable("T3", new TableType(TestUtils.DT("*[d:n]")));
+            symbol.AddVariable("T4", new TableType(TestUtils.DT("*[a:s]")));
+
             Assert.True(DType.TryParse(expectedType, out DType type));
             Assert.True(type.IsValid);
-            TestSimpleBindingSuccess(script, type);
+            TestSimpleBindingSuccess(
+                script,
+                type,
+                symbol,
+                Features.PowerFxV1);
         }
 
         [Theory]
@@ -2468,11 +2498,22 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table(true, false)", "*[]")]
         [InlineData("Table(true, 2, \"hello\")", "*[]")]
         [InlineData("Table(\"hello\", \"world\")", "*[]")]
+        [InlineData("Table(T1, T2)", "*[V: n]")]
+        [InlineData("Table([{a:Date(2024,1,1)}], [{a:GUID(\"some-guid-value-1234\")}])", "*[a: D]")]
+        [InlineData("Table([{a:1}], 1/0, {a:3}, [{a:4}])", "*[a: n]")]
         public void TexlFunctionTypeSemanticsTable_Negative(string script, string expectedType)
         {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T1", new TableType(TestUtils.DT("*[V:n]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[V:![a:n]]")));
+
             Assert.True(DType.TryParse(expectedType, out DType type));
             Assert.True(type.IsValid);
-            TestBindingErrors(script, type);
+            TestBindingErrors(
+                script,
+                type,
+                symbol,
+                features: Features.PowerFxV1);
         }
 
         [Theory]
@@ -4131,59 +4172,6 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Table([])", "*[]")]
-        [InlineData("Table(Table())", "*[]")]
-        [InlineData("Table(Table(Table()))", "*[]")]
-        [InlineData("Table(Blank(), Blank())", "*[]")]
-        [InlineData("Table([1, 2, 3, 4], Blank())", "*[Value:n]")]
-        [InlineData("Table([{a:0, b:false, c:\"Hello\"}], [{a:1, b:true, c:\"World\"}])", "*[a:n, b:b, c:s]")]
-        [InlineData("Table([{a:0}], [{b:true}], [{c:\"Hello\"}])", "*[a:n, b:b, c:s]")]
-        [InlineData("Table(Blank(), T2, Blank(), T1)", "*[a:n, b:b, c:s]")]
-        [InlineData("Table([{a:0}], [{b:true}], [{c:\"Hello\", d: {x: \"World\"}}])", "*[a:n, b:b, c:s, d:![x:s]]")]
-        [InlineData("Table(T1, T2)", "*[a:n, b:n, c:n]")]
-        [InlineData("Table(T2, T1)", "*[a:n, b:b, c:s]")]
-        [InlineData("Table(T2, Table(T1, T2))", "*[a:n, b:b, c:s]")]
-        [InlineData("Table(T1, Table(T2, T3))", "*[a:n, b:n, c:n, d:n]")]
-        [InlineData("Table(Table(T1, T2), T3)", "*[a:n, b:n, c:n, d:n]")]
-        [InlineData("Table(T1, Table(T2, T4))", "*[a:n, b:n, c:n]")]
-        [InlineData("Table(Table(T1, T2), T4)", "*[a:n, b:n, c:n]")]
-        [InlineData("Table([1,2], If(1/0<2,[3,4]), [5,6])", "*[Value: n]")]
-        [InlineData("Table(Sequence(20000))", "*[Value: n]")]
-        [InlineData("Table(Filter(T1, b = 5))", "*[a:n, b:n, c:n]")]
-        [InlineData("Table({X:1}, [1, 2, 3])", "*[X:n, Value:n]")]
-        public void TexlFunctionTypeSemanticsTableConcatenate(string script, string expectedType)
-        {
-            var symbol = new SymbolTable();
-            symbol.AddVariable("T1", new TableType(TestUtils.DT("*[a:n, b:n, c:n]")));
-            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[a:n, b:b, c:s]")));
-            symbol.AddVariable("T3", new TableType(TestUtils.DT("*[d:n]")));
-            symbol.AddVariable("T4", new TableType(TestUtils.DT("*[a:s]")));
-
-            TestSimpleBindingSuccess(
-                script,
-                TestUtils.DT(expectedType),
-                symbol,
-                Features.PowerFxV1);
-        }
-
-        [Theory]
-        [InlineData("Table(T1, T2)", "*[V: n]")]
-        [InlineData("Table([{a:Date(2024,1,1)}], [{a:GUID(\"some-guid-value-1234\")}])", "*[a: D]")]
-        [InlineData("Table([{a:1}], 1/0, {a:3}, [{a:4}])", "*[a: n]")]
-        public void TexlFunctionTypeSemanticsTableConcatenate_Negative(string script, string expectedType)
-        {
-            var symbol = new SymbolTable();
-            symbol.AddVariable("T1", new TableType(TestUtils.DT("*[V:n]")));
-            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[V:![a:n]]")));
-
-            TestBindingErrors(
-                script,
-                TestUtils.DT(expectedType),
-                symbol,
-                features: Features.PowerFxV1);
-        }
-
-        [Theory]
         [InlineData("Table(DS, Blank())", "*[Id:n, Name:s, Age:n]", 1)]
         [InlineData("Table(DS, T1)", "*[Id:n, Name:s, Age:n, a:n, b:s]", 1)]
         [InlineData("Table(DS, Filter(DS, \"Foo\" in Name))", "*[Id:n, Name:s, Age:n]", 2)]
@@ -4192,7 +4180,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table([], FirstN(DS, 5))", "*[Id:n, Name:s, Age:n]", 1)]
         [InlineData("Table(Search(DS, \"Foo\", Name), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 2)]
         [InlineData("Table(Filter(DS, Sqrt(Age) > 5), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 2)]
-        public void TexlFunctionTypeSemanticsTableConcatenate_Delegation_Negative(string script, string expectedSchema, int errorCount)
+        public void TexlFunctionTypeSemanticsTable_Delegation(string script, string expectedSchema, int errorCount)
         {
             var dataSourceSchema = TestUtils.DT("*[Id:n, Name:s, Age:n]");
 

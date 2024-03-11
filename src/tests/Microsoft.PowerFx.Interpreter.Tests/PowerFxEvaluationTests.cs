@@ -180,7 +180,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
              * Table t_empty2: *[Value:n] = []
              * Table t_an_bs: *[a:n,b:s] = []
              * Table t_name: *[name:s] = []
-             * Table t_bs: *[b:s] 
+             * Table t_bs1: *[b:s] 
+             * Table t_bs2: *[b:s] 
              */
 
             var numberType = numberIsFloat ? FormulaType.Number : FormulaType.Decimal;

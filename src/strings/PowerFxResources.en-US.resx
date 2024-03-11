@@ -2891,11 +2891,12 @@
     <comment>Description of 'Table' function.</comment>
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>record/table</value>
-    <comment>function_parameter - Argument of the Table function - a record/table that will be part of the the resulting table.</comment>
+    <value>record_or_table</value>
+    <comment>function_parameter - Argument of the Table function - a record or a table that will be part of the the resulting table. Translate this string. Maintain as a single word (do not add spaces).</comment>
   </data>
-  <data name="AboutTable_record/table" xml:space="preserve">
-    <value>A record/table that will be part of the the resulting table.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>A record or a table that will be part of the the resulting table.</value>
+    <comment>Description of parameter to table function.</comment>
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Returns a table with all columns removed from the 'source' table except the specified columns.</value>

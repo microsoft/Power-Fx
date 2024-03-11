@@ -5,6 +5,11 @@
    r3
 {a:Table({b:2})}
 
+>> Set(r3, {a: Table({b:1})});
+   Patch(r3.DisplayNamea, {b:1}, {b:3});
+   r3
+{a:Table({b:3})}
+
 >> Set(t_bs1, [{b:"Hello"}]);
    Set(t_bs2, Table(t_bs1, {b: "World"}));
    Patch(t_bs1, {b: "Hello"}, {b: "Hi"});
