@@ -150,10 +150,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         }
                     }
 
-                    ignoreUnsupportedTypes = nodeValue.Contains(_ignoreUnsupportedTypesEnumValue);
-                    includeBinaryData = nodeValue.Contains(_includeBinaryDataEnumValue);
-                    ignoreBinaryData = nodeValue.Contains(_ignoreBinaryDataEnumValue);                    
-
                     if (includeBinaryData && ignoreBinaryData)
                     {
                         errors.EnsureError(optionsNode, TexlStrings.ErrJSONArg2IncompatibleOptions, "JSONFormat.IgnoreBinaryData", "JSONFormat.IncludeBinaryData");
