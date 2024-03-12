@@ -53,6 +53,9 @@ Table()
 >> Table([{a:0, b:false, c:"Hello"}])
 Table({a:0,b:false,c:"Hello"})
 
+>> Table(Table([{a:0, b:false, c:"Hello"}]))
+Table({a:0,b:false,c:"Hello"})
+
 // Single argument with record
 >> Table({a:0, b:false, c:"Hello"})
 Table({a:0,b:false,c:"Hello"})
@@ -95,6 +98,14 @@ Error({Kind:ErrorKind.Div0})
 
 >> Table([{a:1}], {a:Error({Kind:ErrorKind.Custom})}, {a:3}, [{a:4}])
 Table({a:1},{a:Error({Kind:ErrorKind.Custom})},{a:3},{a:4})
+
+// Passing nested record and nested table inside a record
+>> Table({a: {b: {c: "Hello"}}}, {a: {b: {c: "World"}}, d: {f:Table([1, 2], [3, 4])}}, [{d: {f:Table([4, 5], [6, 7])}}])
+Table({a:{b:{c:"Hello"}},d:Blank()},{a:{b:{c:"World"}},d:{f:Table({Value:1},{Value:2},{Value:3},{Value:4})}},{a:Blank(),d:{f:Table({Value:4},{Value:5},{Value:6},{Value:7})}})
+
+// Mixing nested record and nested table inside a record - same column - type error
+>> Table({a: {b: {c: "Hello"}}}, [{a: Table({e: 1}, {e: 2}, {e:5}, {f:[1, 2, 3, 4]})}])
+Errors: Error 0-84: The function 'Table' has some invalid arguments.|Error 30-83: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
 
 // Does not modify existing behavior of Inline value tables
 >> [[1, 2, 3], [4, 5, 6]]
