@@ -173,12 +173,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
              * Record rwr2 => {![Field1:n, Field2:![Field2_1:n, Field2_2:s, Field2_3:![Field2_3_1:n, Field2_3_2:s]], Field3:b]}
              * Record rwr3 => {![Field1:n, Field2:![Field2_1:n, Field2_2:s, Field2_3:![Field2_3_1:n, Field2_3_2:s]], Field3:b]}
              * Record r_empty => {}
+             * Record r3 => ![a:*[b:n]]
              * Table t1(r1) => Type (Field1, Field2, Field3, Field4)
              * Table t2(rwr1, rwr2, rwr3)
              * Table t_empty: *[Value:n] = []
              * Table t_empty2: *[Value:n] = []
              * Table t_an_bs: *[a:n,b:s] = []
              * Table t_name: *[name:s] = []
+             * Table t_bs1: *[b:s] 
+             * Table t_bs2: *[b:s] 
              */
 
             var numberType = numberIsFloat ? FormulaType.Number : FormulaType.Decimal;
@@ -311,6 +314,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var nameTableType = TableType.Empty().Add("name", FormulaType.String);
             engine.UpdateVariable("t_name", FormulaValue.NewTable(nameTableType.ToRecord()));
+
+            var r3Table = TableType.Empty().Add("b", numberType);
+            var r3Type = RecordType.Empty()
+                .Add(new NamedFormulaType("a", r3Table, "DisplayNamea"));
+
+            var r3Fields = new List<NamedValue>()
+            {
+                new NamedValue("a", FormulaValue.NewTable(r3Table.ToRecord())),
+            };
+
+            var r3Empty = FormulaValue.NewRecordFromFields(r3Type, r3Fields);
+            engine.UpdateVariable("r3", r3Empty);
+
+            var t_bsType = TableType.Empty().Add("b", FormulaType.String);
+            engine.UpdateVariable("t_bs1", FormulaValue.NewTable(t_bsType.ToRecord()));
+            engine.UpdateVariable("t_bs2", FormulaValue.NewTable(t_bsType.ToRecord()));
         }
 
         private static void TraceSetup(RecalcEngine engine, bool numberIsFloat)

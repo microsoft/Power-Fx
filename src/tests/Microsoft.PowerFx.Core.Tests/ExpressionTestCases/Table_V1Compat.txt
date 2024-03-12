@@ -1,0 +1,8 @@
+#SETUP: PowerFxV1CompatibilityRules
+
+//Untyped Blank inputs
+>> Table(If(1<0,Blank()))
+Table(Blank())
+
+>> Table(If(1<0,Blank()), {a: 1}, [{a: 2}])
+Table(Blank(),{a:1},{a:2})
