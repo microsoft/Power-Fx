@@ -3857,6 +3857,12 @@ namespace Microsoft.PowerFx.Core.Binding
                 var leftType = _txb.GetType(node.Left);
                 var rightType = _txb.GetType(node.Right);
 
+                // Helps warn no op comparison, e.g. Filter(table, ThisRecord.Value = Value)) or Filter(table, Value = Value)
+                if (IsNoOPFirstNameComparison(node))
+                {
+                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.WrnNoOpFieldComparison);
+                }
+
                 var res = CheckBinaryOpCore(_txb.ErrorContainer, node, _txb.Features, leftType, rightType, _txb.BindingConfig.NumberIsFloat);
 
                 foreach (var coercion in res.Coercions)
@@ -3875,6 +3881,48 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(node.Left));
                 _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(node.Right));
                 _txb.SetIsUnliftable(node, _txb.IsUnliftable(node.Left) || _txb.IsUnliftable(node.Right));
+            }
+
+            private static bool IsNoOPFirstNameComparison(BinaryOpNode node)
+            {
+                if ((node.Op == BinaryOp.Equal || 
+                    node.Op == BinaryOp.NotEqual || 
+                    node.Op == BinaryOp.Less || 
+                    node.Op == BinaryOp.LessEqual || 
+                    node.Op == BinaryOp.Greater || 
+                    node.Op == BinaryOp.GreaterEqual) && 
+                    IsNoOPFirstNameComparison(node.Left, node.Right))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            private static bool IsNoOPFirstNameComparison(TexlNode left, TexlNode right)
+            {
+                if (left is FirstNameNode lfn1 && right is FirstNameNode rfn1)
+                {
+                    // This means a field comparison e.g. Value = Value
+                    return lfn1.Ident.Name == rfn1.Ident.Name;
+                }
+                else if (left is FirstNameNode leftFirstName && right is DottedNameNode rightDn && rightDn.Left is FirstNameNode rightfn)
+                {
+                    // This means a field comparison with ThisRecord, where field is on left hand side. e.g. Value = ThisRecord.Value
+                    return leftFirstName.Ident.Name == rightDn.Right.Name && rightfn.Ident.Name == ThisRecordDefaultName;
+                }
+                else if (right is FirstNameNode rightFirstName && left is DottedNameNode leftDn && leftDn.Left is FirstNameNode leftfn)
+                {
+                    // This means a field comparison with ThisRecord, where field is on right hand side. e.g. ThisRecord.Value = Value
+                    return rightFirstName.Ident.Name == leftDn.Right.Name && leftfn.Ident.Name == ThisRecordDefaultName;
+                }
+                else if (left is DottedNameNode leftDottedName && right is DottedNameNode rightDottedName)
+                {
+                    // This means field is a part of dotted name node and we need to compare the field names and recursively check for the left and right nodes.
+                    return leftDottedName.Right.Name == rightDottedName.Right.Name && IsNoOPFirstNameComparison(leftDottedName.Left, rightDottedName.Left);
+                }
+
+                return false;
             }
 
             public override void PostVisit(AsNode node)

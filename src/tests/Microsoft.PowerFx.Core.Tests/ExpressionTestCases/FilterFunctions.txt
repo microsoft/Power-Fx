@@ -66,3 +66,12 @@ Table(Blank())
 
 >> Filter(Table({a:1},{a:2},{a:4},{a:5}), IsBlank(ThisRecord))
 Table()
+
+>> Filter(Table({F1: {N1F1:  {N2F1 : 1} } } ), ThisRecord.F1.N1F1.N2F1 = F1.N1F1.N2F1)
+Errors: Error 68-69: This comparison will always be constant. (Always yields true or false). Please consider using 'As' keyword for aliasing scoped variable if this not what you want.
+
+>> Filter(Table({F1: {N1F1:  {N2F1 : 1} } } ), F1.N1F1.N2F1 = ThisRecord.F1.N1F1.N2F1)
+Errors: Error 57-58: This comparison will always be constant. (Always yields true or false). Please consider using 'As' keyword for aliasing scoped variable if this not what you want.
+
+>> Filter(Table({F1: {N1F1:  {N2F1 : 1} } } ), F1.N1F1.N2F1 = F1.N1F1.N2F1)
+Errors: Error 57-58: This comparison will always be constant. (Always yields true or false). Please consider using 'As' keyword for aliasing scoped variable if this not what you want.

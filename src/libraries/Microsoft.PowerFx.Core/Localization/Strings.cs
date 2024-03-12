@@ -794,5 +794,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUnknownPartialOp = new ErrorResourceKey("ErrUnknownPartialOp");
 
         public static ErrorResourceKey ErrTruncatedArgWarning = new ErrorResourceKey("ErrTruncatedArgWarning");
+        public static ErrorResourceKey WrnNoOpFieldComparison = new ErrorResourceKey("WrnNoOpFieldComparison");
     }
 }
