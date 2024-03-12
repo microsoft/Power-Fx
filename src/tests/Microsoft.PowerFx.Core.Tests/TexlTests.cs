@@ -2477,7 +2477,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table(Filter(T1, b = 5))", "*[a:n, b:n, c:n]")]
         [InlineData("Table({X:1}, [1, 2, 3])", "*[X:n, Value:n]")]
         [InlineData("Table(First(DS), Last(DS))", "*[Id:n, Name:s, Age:n]")]
-        [InlineData("Table(Last(DS), {count: CountRows(DS)})", "*[Id:n, Name:s, Age:n]")]
+        [InlineData("Table(Last(DS), {count: CountRows(DS)})", "*[Id:n, Name:s, Age:n, count:n]")]
         public void TexlFunctionTypeSemanticsTable(string script, string expectedType)
         {
             var symbol = new SymbolTable();
