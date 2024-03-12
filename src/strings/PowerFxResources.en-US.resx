@@ -4136,6 +4136,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>A url to be encoded.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Converts a text to an HTML-encoded text.</value>
+    <comment>Description of 'EncodeHTML' function.</comment>
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>value</value>
+    <comment>Function_parameter - First parameter for the EncodeHTML function - the value (string) to encode.</comment>
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>A text to be encoded.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' is a recognized but not supported function.</value>
     <comment>Error Message.</comment>
