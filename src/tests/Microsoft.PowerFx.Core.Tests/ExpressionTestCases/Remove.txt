@@ -1,4 +1,4 @@
-﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
+﻿#SETUP: PowerFxV1CompatibilityRules,EnableExpressionChaining,MutationFunctionsTestSetup
 
 // Check MutationFunctionsTestSetup handler (PowerFxEvaluationTests.cs) for documentation.
 

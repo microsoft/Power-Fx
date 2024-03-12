@@ -1,4 +1,4 @@
-﻿
+﻿#SETUP: PowerFxV1CompatibilityRules
 // Test mutations on a collection from ForAll() 
 
 // These are all verified in Power Apps 

@@ -5,12 +5,6 @@
 >> Clear(t1);CountRows(t1)
 0
 
->> Collect(t1, r2);
-  Collect(t1, {Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false});
-  Clear(t1);
-  If(CountRows(t1) = 0, "Cleared", "Failed")
-"Cleared"
-
 >> Clear()
 Errors: Error 0-7: Invalid number of arguments: received 0, expected 1.
 

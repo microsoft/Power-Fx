@@ -38,11 +38,12 @@ namespace Microsoft.PowerFx
         public static void EnableMutationFunctions(this SymbolTable symbolTable)
         {
             symbolTable.AddFunction(new RecalcEngineSetFunction());
-            symbolTable.AddFunction(new CollectFunction());
             symbolTable.AddFunction(new PatchFunction());
             symbolTable.AddFunction(new RemoveFunction());
             symbolTable.AddFunction(new ClearFunction());
             symbolTable.AddFunction(new ClearCollectFunction());
+            symbolTable.AddFunction(new CollectImpl());
+            symbolTable.AddFunction(new CollectScalarImpl());
         }
 
         [Obsolete("RegEx is still in preview. Grammar may change.")]

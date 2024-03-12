@@ -86,7 +86,8 @@ namespace Microsoft.PowerFx
                 _globals = globals,
                 _allSymbols = result.Symbols,
                 _parameterSymbolTable = result.Parameters,
-                _additionalFunctions = result.Engine.Config.AdditionalFunctions
+                _additionalFunctions = result.Engine.Config.AdditionalFunctions,
+                _features = result.Engine.Config.Features
             };
 
             return expr;
@@ -98,12 +99,13 @@ namespace Microsoft.PowerFx
         internal IntermediateNode _irnode;
         private readonly ScopeSymbol _topScopeSymbol;
         private readonly CultureInfo _cultureInfo;
-        private readonly StackDepthCounter _stackMarker;
+        private readonly StackDepthCounter _stackMarker;        
 
         internal ReadOnlySymbolValues _globals;
         internal ReadOnlySymbolTable _allSymbols;
         internal ReadOnlySymbolTable _parameterSymbolTable;
         internal IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> _additionalFunctions;
+        internal Features _features;
 
         internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
         {
@@ -130,6 +132,12 @@ namespace Microsoft.PowerFx
             if (_additionalFunctions != null && _additionalFunctions.Any())
             {
                 innerServices.AddService(_additionalFunctions);
+                hasInnerServices = true;
+            }
+
+            if (_features != null)
+            {
+                innerServices.AddService(_features);
                 hasInnerServices = true;
             }
 
