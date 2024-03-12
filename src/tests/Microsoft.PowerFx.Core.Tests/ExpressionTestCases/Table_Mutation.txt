@@ -1,4 +1,4 @@
-﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,TableSyntaxDoesntWrapRecords
 
 >> Set(r3, {a: Table({b:1})});
    Patch(r3.a, {b:1}, {b:2});

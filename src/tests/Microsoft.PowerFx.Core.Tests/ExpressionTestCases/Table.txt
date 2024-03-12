@@ -1,3 +1,4 @@
+#SETUP: TableSyntaxDoesntWrapRecords
 
 >> Table([{a:0, b:false, c:"Hello"}], [{a:1, b:true, c:"World"}])
 Table({a:0,b:false,c:"Hello"},{a:1,b:true,c:"World"})
