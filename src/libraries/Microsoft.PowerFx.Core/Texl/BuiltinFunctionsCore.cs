@@ -96,6 +96,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction DropColumns = _library.Add(new DropColumnsFunction());
         public static readonly TexlFunction EDate = _library.Add(new EDateFunction());
         public static readonly TexlFunction EOMonth = _library.Add(new EOMonthFunction());
+        public static readonly TexlFunction EncodeHTML = _library.Add(new EncodeHTMLFunction());
         public static readonly TexlFunction EncodeUrl = _library.Add(new EncodeUrlFunction());
         public static readonly TexlFunction EndsWith = _library.Add(new EndsWithFunction());
         public static readonly TexlFunction Error = _library.Add(new ErrorFunction());
