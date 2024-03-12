@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 var ads = argTypes[i].AssociatedDataSources?.FirstOrDefault();
 
-                if (ads is IExternalTabularDataSource)
+                if (argTypes[i].IsTableNonObjNull && ads is IExternalTabularDataSource)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.ErrTruncatedArgWarning, args[i].ToString(), Name);
                     continue;

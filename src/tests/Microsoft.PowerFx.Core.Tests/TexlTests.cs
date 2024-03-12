@@ -2476,6 +2476,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table(Sequence(20000))", "*[Value: n]")]
         [InlineData("Table(Filter(T1, b = 5))", "*[a:n, b:n, c:n]")]
         [InlineData("Table({X:1}, [1, 2, 3])", "*[X:n, Value:n]")]
+        [InlineData("Table(First(DS), Last(DS))", "*[Id:n, Name:s, Age:n]")]
+        [InlineData("Table(Last(DS), {count: CountRows(DS)})", "*[Id:n, Name:s, Age:n]")]
         public void TexlFunctionTypeSemanticsTable(string script, string expectedType)
         {
             var symbol = new SymbolTable();
@@ -2483,6 +2485,9 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.AddVariable("T2", new TableType(TestUtils.DT("*[a:n, b:b, c:s]")));
             symbol.AddVariable("T3", new TableType(TestUtils.DT("*[d:n]")));
             symbol.AddVariable("T4", new TableType(TestUtils.DT("*[a:s]")));
+
+            var dataSourceSchema = TestUtils.DT("*[Id:n, Name:s, Age:n]");
+            symbol.AddEntity(new TestDataSource("DS", dataSourceSchema));
 
             Assert.True(DType.TryParse(expectedType, out DType type));
             Assert.True(type.IsValid);
