@@ -4,6 +4,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests;
+using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -135,5 +137,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             return run.Eval();
         }
+
+        //[Theory]
+        //[InlineData("Defaults(Accounts)", "")]
+        //public void DefaultsEntityTest(string expression, string expected)
+        //{
+        //    var symbolTable = new SymbolTable();
+
+        //    symbolTable.AddEntity(new AccountsEntity());
+
+        //    var config = new PowerFxConfig()
+        //    {
+        //        SymbolTable = symbolTable
+        //    };
+
+        //    var engine = new RecalcEngine(config);
+        //    var check = engine.Check(expression);
+        //    Assert.True(check.IsSuccess);
+
+        //    var result = check.GetEvaluator().Eval();
+
+        //    Assert.Equal(expected, result.ToExpression());
+        //}
     }
 }

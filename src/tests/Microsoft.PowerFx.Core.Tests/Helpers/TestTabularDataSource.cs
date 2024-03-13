@@ -247,6 +247,12 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
         {
             throw new NotImplementedException();
         }
+
+        public RecordValue GetDefaultRecord()
+        {
+            var tableType = FormulaType.Build(Type) as TableType;
+            return FormulaValue.NewRecordFromFields(tableType.ToRecord());
+        }
     }
 
     internal class TestDelegableDataSource : TestDataSource

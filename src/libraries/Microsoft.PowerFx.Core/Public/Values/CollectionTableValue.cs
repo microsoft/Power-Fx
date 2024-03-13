@@ -331,5 +331,10 @@ namespace Microsoft.PowerFx.Types
 
             return true;
         }
+
+        public override async Task<DValue<RecordValue>> GetDefaultRecord(CancellationToken cancellationToken)
+        {
+            return DValue<RecordValue>.Of(NewRecordFromFields(Type.ToRecord()));
+        }
     }
 }

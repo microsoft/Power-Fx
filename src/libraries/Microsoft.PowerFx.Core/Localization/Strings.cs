@@ -580,6 +580,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutUniCharT = (b) => StringResources.Get("AboutUniCharT", b);
         public static StringGetter UniCharTArg1 = (b) => StringResources.Get("UniCharTArg1", b);
 
+        public static StringGetter AboutDefaults = (b) => StringResources.Get("AboutDefaults", b);
+        public static StringGetter DefaultsArg1 = (b) => StringResources.Get("DefaultsArg1", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the

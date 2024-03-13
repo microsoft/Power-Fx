@@ -4519,4 +4519,16 @@
       A partial operator is the 2nd part of a statement `[Partial Op]` and can be one of "And", "Or", "Table" or "Record".
       It's used to determine how to combine multiple expressions with the same name and operator.</comment>
   </data>
+  <data name="AboutDefaults" xml:space="preserve">
+    <value>Returns the default values for a data source as a record.</value>
+    <comment>Description of 'Defaults' function.</comment>
+  </data>
+  <data name="DefaultsArg1" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - First argument of the Defaults function - the data source from which the defaults values will be returned.</comment>
+  </data>
+  <data name="AboutDefaults_source" xml:space="preserve">
+    <value>A data source.</value>
+    <comment>Description of 'datasource' parameter.</comment>
+  </data>
 </root>

@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl
         // instead of the classic "unknown or unsupported function".
         internal static readonly IReadOnlyCollection<string> OtherKnownFunctions = new HashSet<string>()
         {
-            "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Defaults", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit", "GUID",
+            "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit", "GUID",
             "GroupBy", "HashTags", "IsMatch", "IsType", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "Print", "ReadNFC",
             "RecordInfo", "Relate", "RemoveAll", "RemoveIf", "RequestHide", "Reset", "ResetForm", "Revert", "SaveData", "ScanBarcode", "Select", "SetFocus",
             "SetProperty", "ShowColumns", "State", "SubmitForm", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm",
@@ -78,6 +78,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction CountIf = _library.Add(new CountIfFunction());
         public static readonly TexlFunction CountRows = _library.Add(new CountRowsFunction());
         public static readonly TexlFunction CountRows_UO = _library.Add(new CountRowsFunction_UO());
+        public static readonly TexlFunction Defaults = _library.Add(new DefaultsFunction());
         public static readonly TexlFunction Date = _library.Add(new DateFunction());
         public static readonly TexlFunction DateAdd = _library.Add(new DateAddFunction());
         public static readonly TexlFunction DateAddT = _library.Add(new DateAddTFunction());

@@ -975,6 +975,24 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        public static async ValueTask<FormulaValue> Defaults(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var sourceTable = (TableValue)args[0];
+
+            if (sourceTable.Type._type.AssociatedDataSources.Any())
+            {
+                var ds = sourceTable.Type._type.AssociatedDataSources.Single();
+
+                if (ds is IExternalTabularDataSource tabularDataSource)
+                {
+                    return tabularDataSource.GetDefaultRecord();
+                }
+            }
+
+            var defaultRecord = await sourceTable.GetDefaultRecord(runner.CancellationToken).ConfigureAwait(false);
+            return defaultRecord.Value;
+        }
+
         public static async ValueTask<FormulaValue> SearchImpl(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var source = args[0];
