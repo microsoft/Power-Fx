@@ -629,6 +629,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidSchemaNeedTypeCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedTypeCol_Col");
         public static ErrorResourceKey ErrInvalidSchemaNeedCol = new ErrorResourceKey("ErrInvalidSchemaNeedCol");
         public static ErrorResourceKey ErrNeedRecord = new ErrorResourceKey("ErrNeedRecord");
+        public static ErrorResourceKey ErrNeedRecordOrTable = new ErrorResourceKey("ErrNeedRecordOrTable");
         public static ErrorResourceKey ErrAutoRefreshNotAllowed = new ErrorResourceKey("ErrAutoRefreshNotAllowed");
         public static ErrorResourceKey ErrIncompatibleRecord = new ErrorResourceKey("ErrIncompatibleRecord");
         public static ErrorResourceKey ErrNeedRecord_Func = new ErrorResourceKey("ErrNeedRecord_Func");
@@ -792,5 +793,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrOnlyPartialAttribute = new ErrorResourceKey("ErrOnlyPartialAttribute");
         public static ErrorResourceKey ErrOperationDoesntMatch = new ErrorResourceKey("ErrOperationDoesntMatch");
         public static ErrorResourceKey ErrUnknownPartialOp = new ErrorResourceKey("ErrUnknownPartialOp");
+
+        public static ErrorResourceKey ErrTruncatedArgWarning = new ErrorResourceKey("ErrTruncatedArgWarning");
     }
 }
