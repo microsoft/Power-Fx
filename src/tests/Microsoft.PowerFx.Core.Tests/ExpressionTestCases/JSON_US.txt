@@ -1,0 +1,11 @@
+﻿// (UTC-08:00) Pacific Time (US & Canada)
+#SETUP: TimeZoneInfo("Pacific Standard Time")
+#SETUP: EnableJsonFunctions
+
+// Midnight local time in Pacific Time is 8 AM UTC
+>> JSON(DateTimeValue("1970-01-01T00:00:00"))
+"""1970-01-01T08:00:00.000Z"""
+
+// DateTime is local time, so 1AM in UTC
+>> JSON(Table({a:DateTime(2014,11,29,17,5,1,997),b:Date(2019, 4, 22),c:Time(12, 34, 56, 789)}))
+"[{""a"":""2014-11-30T01:05:01.997Z"",""b"":""2019-04-22"",""c"":""12:34:56.789""}]"
