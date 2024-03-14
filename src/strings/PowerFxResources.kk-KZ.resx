@@ -1962,6 +1962,10 @@
     <value>Бұл контекстте жазба емес мәнді пайдалану мүмкін емес.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Бұл контексте тек жазбаны немесе кесте мәндерін ғана пайдалануға болады.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Бұл жазбаны пайдалану мүмкін емес. Онда үйлесімсіз түрдегі қайшы келетін өрістер болуы мүмкін.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Берілген мәтіннің тіл коды.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Барлық бірегей жазба өрістері сыятындай етіп көрсетілген жазбалардан кесте жасайды. Мысалы: Кесте({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Бірегей жазба өрістері болғандықтан, көрсетілген жазбалар мен кестелерден бағандары көп кесте жасайды. Мысалы: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>жазба</value>
+    <value>жазба_немесе_кесте</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Алынатын кестедегі жол болатын жазба.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Нәтижесіндегі кестенің бөлігі болатын жазба немесе кесте.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Бастапқы кестеден көрсетілген бағандардан басқа барлық бағандары жойылған кестені қайтарады.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Кодталатын URL.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Мәтінді HTML кодталған мәтініне түрлендіреді.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>мән</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Кодталатын мәтін.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" — танылған, бірақ қолдау көрсетілмейтін функция.</value>
     
@@ -4306,6 +4322,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Белгісіз Partial амалы.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Өкілдік ету ескертуі. Бұл "{0}" аргументінің нәтижесі "{1}" функциясына өту алдында үлкен деректер жиыны үшін қысқартылуы мүмкін.</value>
     
   </data>
 </root>

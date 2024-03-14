@@ -1962,6 +1962,10 @@
     <value>Nu se poate utiliza o valoare non-înregistrare în acest context.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Doar valorile de înregistrare sau de tabel pot fi utilizate în acest context.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Nu se poate utiliza această înregistrare. Poate conține câmpuri conflictuale, cu tipuri incompatibile.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Codul de limbă al textului furnizat.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Creează un tabel din înregistrările specificate, având numărul de coloane egal cu numărul de câmpuri unice din înregistrare. De exemplu: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Creează un tabel din înregistrările și tabelele specificate, având numărul de coloane egal cu numărul de câmpuri unice din înregistrare. De exemplu: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>înregistrare</value>
+    <value>record_or_table</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>O înregistrare care va deveni un rând în tabelul rezultat.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>O înregistrare sau tabel care va face parte din tabelul rezultat.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Returnează un tabel cu toate coloanele eliminate din tabelul „sursă”, cu excepția coloanelor specificate.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Un URL de codificat.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Convertește un text normal la un text codificat HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>valoare</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Un text de codificat.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}” este o funcție recunoscută, dar nu este acceptată.</value>
     
@@ -4306,6 +4322,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operator Partial necunoscut.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Avertisment de delegare. Rezultatul argumentului „{0}” este posibil să se fi trunchiat datorită seturilor mari de date înainte de a fi transmis funcției „{1}”.</value>
     
   </data>
 </root>

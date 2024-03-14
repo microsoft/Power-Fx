@@ -1962,6 +1962,10 @@
     <value>Nie można użyć wartości bez rekordu w tym kontekście.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>W tym kontekście można użyć tylko wartości rekordów lub tabel.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Nie można użyć tego rekordu. Może zawierać kolidujące pola niezgodnych typów.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Kod języka wprowadzonego tekstu.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Tworzy tabelę na podstawie określonych rekordów, tak aby liczba kolumn była równa liczbie unikatowych pól rekordu. Na przykład: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Tworzy tabelę na podstawie określonych rekordów i tabel, tak aby liczba kolumn była równa liczbie unikatowych pól rekordu. Na przykład: Table({key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>rekord</value>
+    <value>rekord_tabeli</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Rekord, który w wynikowej tabeli będzie wierszem.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Rekord lub tabela, która będzie stanowić część tabeli wynikowej.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Zwraca tabelę ze wszystkimi kolumnami usuniętymi z tabeli „źródło” poza określonymi kolumnami.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Adres URL do zakodowania.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Konwertuje tekst na tekst zakodowany w formacie HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>wartość</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Tekst do zakodowania.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}” to rozpoznawana, ale nieobsługiwana funkcja.</value>
     
@@ -4306,6 +4322,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Nieznany operator Partial.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Ostrzeżenie dotyczące delegowania. Wynik użycia tego argumentu „{0}” może zostać obcięty w przypadku dużych zestawów danych przed przekazaniem do funkcji „{1}”.</value>
     
   </data>
 </root>
