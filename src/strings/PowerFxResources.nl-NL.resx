@@ -1962,6 +1962,10 @@
     <value>Kan geen niet-recordwaarde in deze context gebruiken.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Alleen record- of tabelwaarden kunnen in deze context worden gebruikt.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Kan deze record niet gebruiken. De record bevat mogelijk conflicterende velden die incompatibel zijn.</value>
     
@@ -2835,15 +2839,16 @@
     <value>De taalcode van de opgegeven tekst.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Hiermee wordt een tabel van de opgegeven records gemaakt, met evenveel kolommen als unieke recordvelden. Bijvoorbeeld: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Hiermee wordt een tabel van de opgegeven records en tabellen gemaakt, met evenveel kolommen als unieke recordvelden. Bijvoorbeeld: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>record</value>
+    <value>record_of_tabel</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Een record die een rij wordt in de resulterende tabel.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Een record of tabel die deel uitmaakt van de resulterende tabel.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Hiermee wordt een tabel geretourneerd waarvan alle kolommen zijn verwijderd uit de 'source'-tabel, met uitzondering van de opgegeven kolommen.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Een URL die moet worden gecodeerd.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Hiermee wordt een tekst geconverteerd naar een tekst met HTML-code.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>waarde</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Een tekst die moet worden gecodeerd.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>{0} is een herkende maar niet ondersteunde functie.</value>
     
@@ -4306,6 +4322,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Onbekende Partial-operator.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Waarschuwing bij overdracht. Het resultaat van dit argument {0} wordt mogelijk afgekapt voor grote gegevenssets voordat het wordt doorgegeven aan de functie {1}.</value>
     
   </data>
 </root>

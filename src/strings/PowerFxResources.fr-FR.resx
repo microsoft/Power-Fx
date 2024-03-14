@@ -1962,6 +1962,10 @@
     <value>Impossible d’utiliser une valeur qui n’est pas un enregistrement dans ce contexte.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Seules les valeurs d’enregistrement ou de table peuvent être utilisées dans ce contexte.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Impossible d’utiliser cet enregistrement. Il se peut qu’il contienne des champs conflictuels de types incompatibles.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Code de la langue du texte fourni.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Crée une table à partir des enregistrements spécifiés, avec autant de colonnes qu’il y a de champs d’enregistrement. Par exemple : Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Crée une table à partir des enregistrements et des tables spécifiés, avec autant de colonnes qu’il y a de champs d’enregistrement. Par exemple : Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>enregistrement</value>
+    <value>enregistrement_ou_table</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Enregistrement appelé à devenir une ligne dans la table obtenue.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Enregistrement ou table faisant partie de la table résultante.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Retourne une table dont toutes les colonnes ont été supprimées de la table « source », sauf les colonnes spécifiées.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL à coder.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Convertit un texte en texte codé en HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>valeur</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Texte à coder.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>« {0} » est une fonction reconnue mais non prise en charge.</value>
     
@@ -4306,6 +4322,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Opérateur Partial inconnu.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Avertissement de délégation. Le résultat de cet argument '{0}' peut être tronqué pour de larges ensembles de données avant d’être transmis à la fonction '{1}'.</value>
     
   </data>
 </root>

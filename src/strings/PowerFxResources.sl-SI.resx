@@ -1962,6 +1962,10 @@
     <value>V tem kontekstu ne morete uporabiti vrednosti, ki ni zapis.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>V tem kontekstu je mogoče uporabiti samo vrednosti zapisa ali tabele.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Tega zapisa ni mogoče uporabiti. Morda vsebuje nasprotujoča si polja nezdružljivih tipov.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Koda jezika podanega besedila.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Ustvari tabelo iz določenih zapisov s toliko stolpci kot je enoličnih polj zapisa. Na primer: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Ustvari tabelo iz določenih zapisov in tabel s toliko stolpci, kot je enoličnih polj zapisa. Na primer: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>zapis</value>
+    <value>zapis_ali_tabela</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Zapis, ki bo postal vrstica v dobljeni tabeli.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Zapis ali tabela, ki bo del nastale tabele.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Vrne tabelo z odstranjenimi vsemi stolpci iz tabele argumenta »vir«, razen določenih stolpcev.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Naslov URL, ki bo kodiran.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Pretvori besedilo v besedilo, kodirano s HTML-jem.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>vrednost</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Besedilo, ki ga je treba kodirati.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>Funkcija »{0}« je prepoznana, vendar ni podprta.</value>
     
@@ -4086,7 +4102,7 @@
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Odstrani vse oblikovanje in vrne vrednost v navadnem besedilu.</value>
+    <value>Odstrani vse oblikovanje in vrne navadno besedilno vrednost.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
@@ -4306,6 +4322,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Neznan operator Partial.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Opozorilo o delegiranju. Rezultat tega argumenta »{0}« lahko prirežemo za velike nabore podatkov, preden ga prenesemo v funkcijo »{1}«.</value>
     
   </data>
 </root>

@@ -1962,6 +1962,10 @@
     <value>Non se pode usar un valor que non sexa un rexistro neste contexto.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Neste contexto só se poden usar valores de rexistro ou táboas.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Non se pode usar este rexistro. É posible que conteña campos de tipos incompatibles en conflito.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Código de idioma do texto fornecido.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Crea unha táboa a partir dos rexistros especificados con tantas columnas como campos de rexistro únicos existen. Por exemplo: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Crea unha táboa a partir dos rexistros e táboas especificados, con tantas columnas como campos de rexistro únicos existen. Por exemplo: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>rexistro</value>
+    <value>rexistro_ou_táboa</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Rexistro que se converterá nunha fila da táboa resultante.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Rexistro ou táboa que formará parte da táboa resultante.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Devolve unha táboa con todas as columnas eliminadas da táboa de "orixe", excepto as columnas especificadas.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL que se vai codificar.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Converte un texto nun texto codificado en HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Texto que se vai codificar.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" é unha función recoñecida, pero non se admite.</value>
     
@@ -4306,6 +4322,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operador Partial descoñecido.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Aviso da delegación. Con conxuntos de datos grandes, é posible que o resultado deste argumento "{0}" sexa truncado antes de pasar á función "{1}".</value>
     
   </data>
 </root>
