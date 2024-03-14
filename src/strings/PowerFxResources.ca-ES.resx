@@ -1962,6 +1962,10 @@
     <value>No es pot utilitzar un valor que no sigui un registre en aquest context.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Només es poden utilitzar valors de registre o de taula en aquest context.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>No s'ha pogut utilitzar aquest registre. Pot contenir camps de tipus incompatibles en conflicte.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Codi de llengua del text proporcionat.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Crea una taula a partir dels registres especificats, amb el mateix nombre de columnes que de camps de registre únics. Per exemple: Table({key1: val1, key2: val2, ...}, ...).</value>
+    <value>Crea una taula a partir dels registres i taules especificats, amb el mateix nombre de columnes que de camps de registre únics. Per exemple: Table({key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>registre</value>
+    <value>registre_o_taula</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Registre que es convertirà en una fila a la taula resultant.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Registre o taula que formarà part de la taula resultant.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Retorna una taula amb totes les columnes suprimides de la taula 'source' excepte les columnes especificades.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>L'URL que es codificarà.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Converteix un text en un text codificat en HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Text que s'ha de codificar.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" és una funció reconeguda, però no s'admet.</value>
     
@@ -4306,6 +4322,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operador Partial desconegut.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Advertiment de delegació. El resultat d'aquest argument "{0}" es pot truncar per als conjunts de dades grans abans d'enviar-se a la funció "{1}".</value>
     
   </data>
 </root>

@@ -1962,6 +1962,10 @@
     <value>У цьому контексті не можна використати значення, що не є записом.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>У цьому контексті можна використовувати лише значення записів або таблиць.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Не вдалося використати цей запис. Він може містити конфліктні поля несумісних типів.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Мовний код наданого тексту.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Створює таблицю на основі вказаних записів, кількість стовпців у якій відповідає кількості полів з унікальними записами. Наприклад: Таблиця({key1: val1, key2: val2, ...}, ...)</value>
+    <value>На основі вказаних записів і таблиць створюється таблиця, кількість стовпців у якій відповідає кількості полів з унікальними записами. Наприклад: Таблиця({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>запис</value>
+    <value>record_or_table</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Запис, що стане рядком в отриманій таблиці.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Запис або таблиця, які будуть частиною кінцевої таблиці.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Повертає таблицю лише з указаними стовпцями, видаливши решту стовпців із вихідної таблиці.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL-адреса, яку потрібно закодувати.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Перетворює текст на текст із кодуванням HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>значення</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Текст, який потрібно закодувати.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" є розпізнаною, але непідтримуваною функцією.</value>
     
@@ -4306,6 +4322,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Невідомий оператор Partial.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Попередження про делегування. У випадку великих наборів даних результат цього аргументу "{0}" може бути обрізаний перед передачею до функції "{1}".</value>
     
   </data>
 </root>

@@ -1962,6 +1962,10 @@
     <value>Tidak boleh menggunakan nilai bukan rekod dalam konteks ini.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Hanya nilai rekod atau jadual boleh digunakan dalam konteks ini.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Tidak boleh menggunakan rekod ini. Ia mungkin mengandungi medan jenis tak serasi yang bercanggah.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Kod bahasa teks yang dibekalkan.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Mencipta jadual dari rekod yang ditentukan, dengan jalur yang banyak lajur kerana ia medan rekod unik. Sebagai contoh: Jadual({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Mencipta jadual daripada rekod dan jadual yang ditentukan, dengan lajur yang sama banyak dengan medan rekod unik yang ada. Sebagai contoh: Jadual({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>rekod</value>
+    <value>record_or_table</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Rekod yang akan menjadi baris dalam jadual yang terhasil.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Rekod atau jadual yang akan menjadi sebahagian daripada jadual yang terhasil.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Mengembalikan jadual dengan semua lajur dialih keluar darupada jadual 'sumber' kecuali lajur yang ditentukan.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Url untuk dikodkan.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Menukar teks kepada teks yang dikodkan HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>nilai</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Teks untuk dikodkan.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' ialah fungsi yang dikenali tetapi tidak disokong.</value>
     
@@ -4306,6 +4322,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operator Partial tidak diketahui.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Amaran perwakilan. Hasil argumen '{0}' ini mungkin dipotong untuk set data yang besar sebelum dihantar kepada fungsi '{1}'.</value>
     
   </data>
 </root>

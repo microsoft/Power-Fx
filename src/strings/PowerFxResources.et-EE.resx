@@ -1962,6 +1962,10 @@
     <value>Väärtust, mis pole kirje, ei saa selles kontekstis kasutada.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Selles kontekstis saab kasutada ainult kirje või tabeli väärtusi.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Seda kirjet ei saa kasutada. See võib sisaldada vastuolulisi välju, mille tüübid ei ühildu.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Esitatud teksti keelekood.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Loob määratud kirjete põhjal tabeli, milles on niipalju veerge, kui on kordumatuid kirjevälju. Nt: Tabel({võti1: väärtus1; võti2: väärtus2; ...}; ...)</value>
+    <value>Loob määratud kirjete ja tabelite põhjal tabeli, milles on niipalju veerge, kui on kordumatuid kirjevälju. Nt: Tabel({võti1: väärtus1; võti2: väärtus2; ...}; ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>kirje</value>
+    <value>record_or_table</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Kirje, mis muutub tulemitabelis reaks.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Kirje või tabel, mis kuulub saadud tabeli juurde.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Tagastab tabeli, mille allikatabelist on eemaldatud kõik veerud peale määratud veergude.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Kodeeritav URL.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Teisendab teksti HTML-iga kodeeritud tekstiks.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>väärtus</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Kodeeritav tekst.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}“ on tuntud, kuid toetuseta funktsioon.</value>
     
@@ -4306,6 +4322,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Tundmatu tehtemärk Partial.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Delegeerimise hoiatus. Selle argumendi tulemit {0} võib enne funktsioonile {1} edastamist kärbida suurte andmekogumite puhul.</value>
     
   </data>
 </root>

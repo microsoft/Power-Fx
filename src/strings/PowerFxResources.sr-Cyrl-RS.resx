@@ -1962,6 +1962,10 @@
     <value>Није могуће користити вредност која није запис у овом контексту.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>У овом контексту могу да се користе само вредности записа или табеле.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Није могуће користити овај запис. Он можда садржи преклапајућа поља некомпатибилних типова.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Шифра језика наведеног текста.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Креира табелу од наведених записа, са онолико колона колико постоји јединствених поља записа. На пример: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Креира табелу од наведених записа и табела, са онолико колона колико постоји јединствених поља записа. На пример: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>запис</value>
+    <value>запис_или_табела</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Запис који ће постати ред у добијеној табели.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Запис или табела који ће бити део добијене табеле.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Враћа табелу са свим колонама уклоњеним из табеле „извор“ осим наведених колона.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL адреса коју треба кодирати.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Конвертује текст у текст кодиран за HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>вредност</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Текст који треба кодирати.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}“ је препозната, али не и подржана функција.</value>
     
@@ -4086,7 +4102,7 @@
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Уклања сво обликовање и враћа вредност чистог текста.</value>
+    <value>Уклања сва обликовања и враћа вредност чистог текста.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
@@ -4306,6 +4322,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Непознат Partial оператер.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Упозорење о делегирању. Резултат овог аргумента „{0}“ може да буде скраћен за велике скупове података пре него што буде прослеђен у функцију „{1}“.</value>
     
   </data>
 </root>
