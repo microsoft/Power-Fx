@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            return IsValidCallNodeInternal(node, binding, metadata, trackingFunction ?? Function);
+            return base.IsValidCallNode(node, binding, metadata, trackingFunction ?? Function);
         }
     }
 }
