@@ -68,11 +68,6 @@ namespace Microsoft.PowerFx
         internal bool SkipExpandableSetSemantics { get; set; }
 
         /// <summary>
-        /// Short circuit support in the Coalesce function: Coalesce(1,Collect()) will not run the Collect.
-        /// </summary>
-        internal bool CoalesceShortCircuit { get; set; }
-
-        /// <summary>
         /// This is required by AsType() in PA delegation analysis.
         /// </summary>
         internal bool AsTypeLegacyCheck { get; set; }
@@ -127,7 +122,6 @@ namespace Microsoft.PowerFx
             RestrictedIsEmptyArguments = true,
             FirstLastNRequiresSecondArguments = true,
             PowerFxV1CompatibilityRules = true,
-            CoalesceShortCircuit = true,
             PrimaryOutputPropertyCoercionDeprecated = true,
             AsTypeLegacyCheck = false,
             JsonFunctionAcceptsLazyTypes = true
@@ -147,7 +141,6 @@ namespace Microsoft.PowerFx
             RestrictedIsEmptyArguments = other.RestrictedIsEmptyArguments;
             FirstLastNRequiresSecondArguments = other.FirstLastNRequiresSecondArguments;
             PowerFxV1CompatibilityRules = other.PowerFxV1CompatibilityRules;
-            CoalesceShortCircuit = other.CoalesceShortCircuit;
             PrimaryOutputPropertyCoercionDeprecated = other.PrimaryOutputPropertyCoercionDeprecated;
         }
     }
