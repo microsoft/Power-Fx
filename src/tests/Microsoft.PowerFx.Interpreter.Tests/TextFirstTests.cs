@@ -28,6 +28,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
+
+        // Just some string text test files. No much thought has been put into this selection.
         [InlineData("StringInterpolate.txt")]
         [InlineData("TableStringfuncs.txt")]
         [InlineData("string.txt")]
