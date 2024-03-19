@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Tests.Helpers;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -143,6 +144,36 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Throws<InvalidOperationException>(() => check.SetText(parseResult));
 
             Assert.Same(parseResult, check.Parse);
+        }
+
+        [Theory]
+
+        [InlineData("\"Something\"", "Something", true)]
+        [InlineData("1", 1d, true)]
+        [InlineData("true", true, true)]
+        [InlineData("GUID(\"ac98f780-0df8-427d-8c09-50f09b5f9cf5\")", "ac98f780-0df8-427d-8c09-50f09b5f9cf5", true)]
+        [InlineData("Abs(2)", null, false)]
+        public void GetParseLiteralsTests(string expression, object expected, bool canGetAsLiteral)
+        {
+            var check = new CheckResult(new Engine());
+            var parseResult = Engine.Parse(expression, options: new PowerFx.ParserOptions() { NumberIsFloat = true });
+
+            check.SetText(parseResult);
+            check.ApplyParse();
+
+            var gotLiteral = check.TryGetAsLiteral(out var value);
+
+            Assert.Equal(canGetAsLiteral, gotLiteral);
+
+            if (gotLiteral)
+            {
+                if (expression.StartsWith("GUID("))
+                {
+                    expected = Guid.Parse((string)expected);
+                }
+
+                Assert.Equal(expected, value);
+            }
         }
 
         [Fact]
