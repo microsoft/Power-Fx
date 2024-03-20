@@ -671,7 +671,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrColumnTypeMismatch_ColName_ExpectedType_ActualType = new ErrorResourceKey("ErrColumnTypeMismatch_ColName_ExpectedType_ActualType");
         public static ErrorResourceKey ErrColumnMissing_ColName_ExpectedType = new ErrorResourceKey("ErrColumnMissing_ColName_ExpectedType");
         public static ErrorResourceKey ErrTableDoesNotAcceptThisType = new ErrorResourceKey("ErrTableDoesNotAcceptThisType");
+        public static ErrorResourceKey ErrTableDoesNotAcceptThisTypeDetailed = new ErrorResourceKey("ErrTableDoesNotAcceptThisTypeDetailed");
         public static ErrorResourceKey ErrRecordDoesNotAcceptThisType = new ErrorResourceKey("ErrRecordDoesNotAcceptThisType");
+        public static ErrorResourceKey ErrRecordDoesNotAcceptThisTypeDetailed = new ErrorResourceKey("ErrRecordDoesNotAcceptThisTypeDetailed");
+        public static ErrorResourceKey ErrTableDoesNotAcceptThisTypeLongMessage = new ErrorResourceKey("ErrTableDoesNotAcceptThisTypeLongMessage");
         public static ErrorResourceKey ErrTypeError = new ErrorResourceKey("ErrTypeError");
         public static ErrorResourceKey ErrTypeError_Ex1_Ex2_Found = new ErrorResourceKey("ErrTypeError_Ex1_Ex2_Found");
         public static ErrorResourceKey ErrTypeError_Arg_Expected_Found = new ErrorResourceKey("ErrTypeError_Arg_Expected_Found");

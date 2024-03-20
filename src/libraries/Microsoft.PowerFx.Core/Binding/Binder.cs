@@ -5383,13 +5383,17 @@ namespace Microsoft.PowerFx.Core.Binding
                         {
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node.Children[i], TexlStrings.ErrMultipleValuesForField_Name, displayName);
                         }
-                        else if (_txb.GetType(node.Children[i]).IsDeferred || _txb.GetType(node.Children[i]).IsVoid)
-                        {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node.Children[i], TexlStrings.ErrRecordDoesNotAcceptThisType);
-                        }
                         else
                         {
-                            nodeType = nodeType.Add(fieldName, _txb.GetType(node.Children[i]));
+                            var childType = _txb.GetType(node.Children[i]);
+                            if (childType.IsDeferred || childType.IsVoid)
+                            {
+                                _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node.Children[i], TexlStrings.ErrRecordDoesNotAcceptThisTypeDetailed, childType.GetKindString());
+                            }
+                            else
+                            {
+                                nodeType = nodeType.Add(fieldName, _txb.GetType(node.Children[i]));
+                            }
                         }
                     }
                 }
@@ -5418,7 +5422,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     var isChildTypeAllowedInTable = !childType.IsDeferred && !childType.IsVoid;
                     if (!isChildTypeAllowedInTable)
                     {
-                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
+                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisTypeDetailed, childType.GetKindString());
                         continue;
                     }
 
@@ -5440,7 +5444,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
                         else
                         {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
+                            if (!TexlFunction.SetErrorForMismatchedColumns(exprType, childType, child, _txb.ErrorContainer, _features, requireAllParamColumns: false))
+                            {
+                                _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisTypeLongMessage, exprType.GetKindString(), childType.GetKindString());
+                            }
                         }
                     }
                     else
@@ -5460,7 +5467,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
                         else
                         {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
+                            if (!TexlFunction.SetErrorForMismatchedColumns(exprType, childType, child, _txb.ErrorContainer, _features, requireAllParamColumns: false))
+                            {
+                                _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisTypeLongMessage, exprType.GetKindString(), childType.GetKindString());
+                            }
                         }
                     }
                 }

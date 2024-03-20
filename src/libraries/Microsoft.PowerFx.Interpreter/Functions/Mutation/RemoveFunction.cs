@@ -165,9 +165,9 @@ namespace Microsoft.PowerFx.Functions
                 if (!checkAggregateNames)
                 {
                     fValid = false;
-                    if (!SetErrorForMismatchedColumns(collectionType, argType, args[i], errors, context.Features))
+                    if (!SetErrorForMismatchedColumns(collectionType, argType, args[i], errors, context.Features, RequireAllParamColumns))
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], ErrTableDoesNotAcceptThisType);
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], ErrTableDoesNotAcceptThisTypeDetailed, argType.GetKindString());
                     }
                 }
             }

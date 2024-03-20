@@ -33,11 +33,11 @@ Table({c:"Hello",d:{x:"World"}},{c:"PowerFx",d:{x:"Cool"}})
 
 // Invalid input - trying to coerce guid and datetime 
 >> Table([{a:Date(2024,1,1)}], [{a:GUID("some-guid-value-1234")}]) 
-Errors: Error 0-5: The function 'Table' has some invalid arguments.|Error 28-62: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+Errors: Error 0-63: The function 'Table' has some invalid arguments.|Error 28-62: Incompatible type. The 'a' column in the data source you're updating expects a 'Date' type and you're using a 'Guid' type.
 
 // Table type with incompatible schema
->> Table([1, 2], If(1<0, Table({Value:{a:2}})))
-Errors: Error 0-5: The function 'Table' has some invalid arguments.|Error 14-43: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+>> Table([Sqrt(1)], If(1<0, Table({Value:{a:2}})))
+Errors: Error 0-44: The function 'Table' has some invalid arguments.|Error 14-43: Incompatible type. The 'Value' column in the data source you're updating expects a 'Number' type and you're using a 'Record' type.
 
 // No arg
 >> Table()
@@ -105,7 +105,11 @@ Table({a:{b:{c:"Hello"}},d:Blank()},{a:{b:{c:"World"}},d:{f:Table({Value:1},{Val
 
 // Mixing nested record and nested table inside a record - same column - type error
 >> Table({a: {b: {c: "Hello"}}}, [{a: Table({e: 1}, {e: 2}, {e:5}, {f:[1, 2, 3, 4]})}])
+<<<<<<< HEAD
 Errors: Error 0-5: The function 'Table' has some invalid arguments.|Error 30-83: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+=======
+Errors: Error 0-84: The function 'Table' has some invalid arguments.|Error 30-83: Incompatible type. The 'a' column in the data source you're updating expects a 'Record' type and you're using a 'Table' type.
+>>>>>>> 1d669000 (Improves error messages.)
 
 // Does not modify existing behavior of Inline value tables
 >> [[1, 2, 3], [4, 5, 6]]
@@ -121,4 +125,4 @@ Table({age:85,name:"John",something:Blank()},Blank())
 Table({Value:Table({Value:4},{Value:5},{Value:6})},{Value:Blank()},{Value:Error({Kind:ErrorKind.Div0})})
 
 >> [{name:"John",age:85}, If(1<0, [1, 2, 3])]
-Errors: Error 23-41: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+Errors: Error 23-41: Incompatible type. The item you are trying to put into a table required the type 'Record', but found the type 'Table', which is not compatible with the table.

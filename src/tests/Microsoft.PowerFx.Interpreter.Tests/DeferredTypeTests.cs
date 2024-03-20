@@ -99,11 +99,11 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("First(Sum(X, 1))", "ErrBadType_ExpectedType_ProvidedType")]
 
         // Can't create aggregates around Deferred type.
-        [InlineData("[X]", "ErrTableDoesNotAcceptThisType")]
-        [InlineData("{test: X}", "ErrRecordDoesNotAcceptThisType")]
-        [InlineData("{ a: { a: { a: X } } }", "ErrRecordDoesNotAcceptThisType")]
-        [InlineData("Table({ a: X })", "ErrRecordDoesNotAcceptThisType")]
-        [InlineData("Table({ a: { a: { a: X } } })", "ErrRecordDoesNotAcceptThisType")]
+        [InlineData("[X]", "ErrTableDoesNotAcceptThisTypeDetailed")]
+        [InlineData("{test: X}", "ErrRecordDoesNotAcceptThisTypeDetailed")]
+        [InlineData("{ a: { a: { a: X } } }", "ErrRecordDoesNotAcceptThisTypeDetailed")]
+        [InlineData("Table({ a: X })", "ErrRecordDoesNotAcceptThisTypeDetailed")]
+        [InlineData("Table({ a: { a: { a: X } } })", "ErrRecordDoesNotAcceptThisTypeDetailed")]
 
         // Ensures expression issues an error if it exists, despite the deferred type.
         // NOTE: All error are discarded for function calls e.g. You don't get any errors for Table(deferred, number).
