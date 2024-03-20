@@ -5444,7 +5444,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
                         else
                         {
-                            if (!TexlFunction.SetErrorForMismatchedColumns(exprType, childType, child, _txb.ErrorContainer, _features, requireAllParamColumns: false))
+                            if (!TexlFunction.SetErrorForMismatchedColumnsCore(exprType, childType, child, _txb.ErrorContainer, DPath.Root, _features, requireAllParamColumnsOverride: false))
                             {
                                 _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisTypeLongMessage, exprType.GetKindString(), childType.GetKindString());
                             }
@@ -5467,7 +5467,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
                         else
                         {
-                            if (!TexlFunction.SetErrorForMismatchedColumns(exprType, childType, child, _txb.ErrorContainer, _features, requireAllParamColumns: false))
+                            if (!TexlFunction.SetErrorForMismatchedColumnsCore(exprType, childType, child, _txb.ErrorContainer, DPath.Root, _features, requireAllParamColumnsOverride: false))
                             {
                                 _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisTypeLongMessage, exprType.GetKindString(), childType.GetKindString());
                             }

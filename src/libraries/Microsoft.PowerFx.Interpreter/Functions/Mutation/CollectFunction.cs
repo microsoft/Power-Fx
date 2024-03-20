@@ -212,7 +212,7 @@ namespace Microsoft.PowerFx.Interpreter
                     if (fError)
                     {
                         fValid = false;
-                        if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors, context.Features, RequireAllParamColumns))
+                        if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors, context.Features))
                         {
                             errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTableDoesNotAcceptThisTypeDetailed, collectedType.GetKindString());
                         }

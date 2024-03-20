@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else
                     {
-                        if (!SetErrorForMismatchedColumns(resultType, argType, args[i], errors, context.Features, RequireAllParamColumns))
+                        if (!SetErrorForMismatchedColumns(resultType, argType, args[i], errors, context.Features))
                         {
                             errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisTypeLongMessage, resultType.GetKindString(), argType.GetKindString());
                         }
