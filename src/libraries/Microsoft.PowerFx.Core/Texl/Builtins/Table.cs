@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (!isChildTypeAllowedInTable)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisType);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisTypeDetailed, argType.GetKindString());
                     return false;
                 }
                 else
@@ -95,7 +95,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisType);
+                        if (!SetErrorForMismatchedColumns(resultType, argType, args[i], errors, context.Features, RequireAllParamColumns))
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisTypeLongMessage, resultType.GetKindString(), argType.GetKindString());
+                        }
+
                         isValid = false;
                     }
                 }
