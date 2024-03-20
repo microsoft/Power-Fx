@@ -615,7 +615,7 @@
     <value>Valinta, joka muunnetaan totuusarvoksi.</value>
   </data>
   <data name="AboutBooleanLT" xml:space="preserve">
-    <value>Muutaa valinta-arvojen sarakkeen, jonka taustalla on totuusarvoja, totuusarvosarakkeeksi.</value>
+    <value>Muuttaa valinta-arvojen sarakkeen, jonka taustalla on totuusarvoja, totuusarvosarakkeeksi.</value>
     
   </data>
   <data name="BooleanLTArg1" xml:space="preserve">
@@ -1120,7 +1120,7 @@
     
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>Niiden kuukausien lukumäärä, jolla päivämäärää muutetaan. Positiivinen arvo tuottaa tulevan päivämäärän, negatiivinen arvo menneen päivämäärän ja nolla ei vaihda kuukautta.</value>
+    <value>Kuukausien lukumäärä, joihin mennessä päivämäärää muutetaan. Positiivinen arvo antaa tulevan päivämäärän, negatiivinen arvo menneen päivämäärän, ja nolla ei muuta kuukautta.</value>
     
   </data>
   <data name="AboutInt" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>JSONFormat-arvoja {0} ja {1} ei voi käyttää yhdessä.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Arvoa {0} ei tueta JSON-funktion toimintona.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

@@ -4226,6 +4226,10 @@
     <value>ไม่สามารถใช้ค่า JSONFormat '{0}' และ '{1}' ร่วมกันได้</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>ค่า '{0}' ไม่ได้รับการสนับสนุนให้เป็นตัวเลือกในฟังก์ชัน JSON</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>ค่าที่ส่งผ่านไปยังฟังก์ชัน JSON มีสื่อ และไม่ได้รับการรับรองตามค่าเริ่มต้น เมื่อต้องการอนุญาตการจัดเรียงแบบอนุกรม JSON ของค่าสื่อ ให้ตรวจสอบให้แน่ใจว่าได้ใช้ตัวเลือก IncludeBinaryData ในพารามิเตอร์ 'รูปแบบ'</value>
     

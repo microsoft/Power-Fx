@@ -2843,7 +2843,7 @@
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>record_or_table</value>
+    <value>記錄或資料表</value>
     
   </data>
   <data name="AboutTable_record_or_table" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>無法同時使用 JSONFormat 值 '{0}' 和 '{1}'。</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>不支援以 '{0}' 值做為 JSON 函式中的選項。</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

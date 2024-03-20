@@ -1100,7 +1100,7 @@
     
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
-    <value>Número de meses durante los cuales se cambiará la fecha. Un valor positivo genera una fecha futura; un valor negativo, una fecha pasada; y el cero no cambiará el mes.</value>
+    <value>Número de meses por los cuales se cambiará la fecha. Un valor positivo genera una fecha futura; un valor negativo, una fecha pasada; y el cero no cambiará el mes.</value>
     
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
@@ -2843,7 +2843,7 @@
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>record_or_table</value>
+    <value>registro_o_tabla</value>
     
   </data>
   <data name="AboutTable_record_or_table" xml:space="preserve">
@@ -4074,7 +4074,7 @@
     <value>Un origen de datos conectado que se actualizará.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
-    <value>Solo se pueden actualizar las conexiones administradas.</value>
+    <value>Solo pueden actualizarse las conexiones administradas.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Los valores de JSONFormat "{0}" y "{1}" no se pueden usar juntos.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>El valor '{0}' no se admite como opción en la función JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

@@ -2843,7 +2843,7 @@
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>record_or_table</value>
+    <value>įrašas_arba_lentelė</value>
     
   </data>
   <data name="AboutTable_record_or_table" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>JSONFormat reikšmių {0} ir {1} negalima naudoti kartu.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Reikšmė „{0}“ JSON funkcijoje nepalaikoma kaip parinktis.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

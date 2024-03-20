@@ -1963,7 +1963,7 @@
     
   </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
-    <value>Only record or table values can be used in this context.</value>
+    <value>इस संदर्भ में केवल रिकॉर्ड या तालिका मानों का उपयोग किया जा सकता है.</value>
     
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
@@ -2839,15 +2839,15 @@
     <value>प्रदत्त लेख का भाषा कोड.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Creates a table from the specified records and tables, with as many columns as there are unique record fields. For example: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>निर्दिष्ट रिकॉर्ड और तालिकाओं से एक तालिका बनाता है, जिसमें उतने ही कॉलम होते हैं जितने विशिष्ट रिकॉर्ड फ़ील्ड होते हैं. उदाहरण के लिए: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>record_or_table</value>
+    <value>रिकॉर्ड_या_टेबल</value>
     
   </data>
   <data name="AboutTable_record_or_table" xml:space="preserve">
-    <value>A record or a table that will be part of the the resulting table.</value>
+    <value>एक रिकॉर्ड या तालिका जो परिणामी तालिका का हिस्सा होगी.</value>
     
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
@@ -4226,6 +4226,10 @@
     <value>JSONFormat मान '{0}' और '{1}' का उपयोग एक साथ नहीं किया जा सकता.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>मान '{0}' JSON फ़ंक्शन में एक विकल्प के रूप में समर्थित नहीं है.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>JSON फ़ंक्शन के लिए पास किए गए मान में मीडिया शामिल है और यह डिफ़ॉल्ट रूप से समर्थित नहीं है. मीडिया मानों के JSON क्रमबद्ध की अनुमति देने के लिए, 'फ़ॉर्मेट' पैरामीटर में IncludeBinaryData विकल्प का उपयोग करना सुनिश्चित करें.</value>
     
@@ -4325,7 +4329,7 @@
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
-    <value>Delegation warning. The result of this argument '{0}' may be truncated for large data sets before being passed to the '{1}' function.</value>
+    <value>प्रत्यायोजन चेतावनी. इस तर्क '{0}' के परिणाम को '{1}' फ़ंक्शन में पास करने से पहले बड़े डेटा सेट के लिए छोटा किया जा सकता है.</value>
     
   </data>
 </root>

@@ -4059,7 +4059,7 @@
     
   </data>
   <data name="AboutRefresh" xml:space="preserve">
-    <value>Actualitza la font de dades especificada.</value>
+    <value>Actualitza l'origen de les dades especificat.</value>
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
@@ -4071,7 +4071,7 @@
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
-    <value>Font de dades connectada que s'ha d'actualitzar.</value>
+    <value>Origen de les dades connectat que s'ha d'actualitzar.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Només es poden actualitzar les connexions administrades.</value>
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Els valors de JSONFormat "{0}" i "{1}" no es poden utilitzar junts.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>El valor "{0}" no s'admet com a opció a la funció JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

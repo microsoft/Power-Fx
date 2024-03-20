@@ -1100,7 +1100,7 @@
     
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
-    <value>Nombre de mois par lequel modifier la date. Une valeur positive produit une date future, une valeur négative une date passée et zéro ne modifie pas le mois.</value>
+    <value>Nombre de mois par lequel modifier la date. Une valeur positive produit une date future, une valeur négative une date passée, et zéro ne modifie pas le mois.</value>
     
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Les valeurs JSONFormat « {0} » et « {1} » ne peuvent pas être utilisées ensemble.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>La valeur '{0}' n’est pas prise en charge en tant qu’option dans la fonction JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

@@ -604,7 +604,7 @@
     <value>Columna de valores numéricos que se van procesar.</value>
   </data>
   <data name="AboutBooleanL" xml:space="preserve">
-    <value>Converte un valor de elección respaldado por un booleano nun valor booleano.</value>
+    <value>Converte un valor de elección avalado por un booleano nun valor booleano.</value>
     
   </data>
   <data name="BooleanLArg1" xml:space="preserve">
@@ -615,7 +615,7 @@
     <value>Elección que se vai converter nun valor booleano.</value>
   </data>
   <data name="AboutBooleanLT" xml:space="preserve">
-    <value>Converte unha columna de valores de elección respaldados por booleanos nunha columna de valores booleanos.</value>
+    <value>Converte unha columna de valores de elección avalados por booleanos nunha columna de valores booleanos.</value>
     
   </data>
   <data name="BooleanLTArg1" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Os valores "{0}" e "{1}" de JSONFormat non se poden usar xuntos.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>O valor "{0}" non se admite como opción na función JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

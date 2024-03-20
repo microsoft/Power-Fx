@@ -4226,6 +4226,10 @@
     <value>Значения JSONFormat "{0}" и "{1}" невозможно использовать одновременно.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Значение "{0}" не поддерживается в качестве параметра в функции JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Значение, передаваемое функции JSON, содержит медиаданные и по умолчанию не поддерживается. Чтобы включить сериализацию значений медиаданных для JSON, в качестве параметра "формат" используйте IncludeBinaryData.</value>
     

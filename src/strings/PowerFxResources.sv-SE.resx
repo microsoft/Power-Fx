@@ -4226,6 +4226,10 @@
     <value>JSONFormat-värdena {0} och {1} kan inte användas tillsammans.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Värdet "{0}" stöds inte som ett alternativ i JSON-funktionen.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Det värde som skickas till JSON-funktionen innehåller media och stöds inte som standard. Om du vill tillåta JSON-serialisering av mediavärden måste du använda alternativet IncludeBinaryData i parametern format.</value>
     
