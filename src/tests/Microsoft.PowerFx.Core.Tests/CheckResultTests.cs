@@ -152,6 +152,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("1", 1d, true)]
         [InlineData("true", true, true)]
         [InlineData("GUID(\"ac98f780-0df8-427d-8c09-50f09b5f9cf5\")", "ac98f780-0df8-427d-8c09-50f09b5f9cf5", true)]
+        [InlineData("GUID()", null, false)]
         [InlineData("Abs(2)", null, false)]
         public void GetParseLiteralsTests(string expression, object expected, bool canGetAsLiteral)
         {

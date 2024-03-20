@@ -187,13 +187,15 @@ namespace Microsoft.PowerFx.Core.Utils
                     value = booLitNode.Value;
                     return true;
                 case CallNode callNode:
-                    if (callNode.ToString().Contains("GUID("))
+                    if (callNode.IsCall("GUID"))
                     {
-                        var guidStr = callNode.Args.ChildNodes[0].AsStrLit().Value;
-                        if (Guid.TryParse(guidStr, out Guid result))
+                        if (callNode.Args.Count == 1 && callNode.Args.ChildNodes[0] is StrLitNode strLitNode)
                         {
-                            value = result;
-                            return true;
+                            if (Guid.TryParse(strLitNode.Value, out Guid result))
+                            {
+                                value = result;
+                                return true;
+                            }
                         }
                     }
 
@@ -202,6 +204,11 @@ namespace Microsoft.PowerFx.Core.Utils
 
             value = null;
             return false;
+        }
+
+        public static bool IsCall(this CallNode node, string functionName)
+        {
+            return node.Head.Namespace.Length == 0 && node.Head.Name.Value == functionName;
         }
     }
 }
