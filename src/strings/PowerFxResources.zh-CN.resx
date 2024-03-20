@@ -4226,6 +4226,10 @@
     <value>JSONFormat 值“{0}”和“{1}”不能同时使用。</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>不支持将值 '{0}' 作为 JSON 函数中的选项。</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>传递给 JSON 函数的值包含媒体，且默认不受支持。要允许媒体值的 JSON 序列化，请确保使用 "format" 参数中的 IncludeBinaryData 选项。</value>
     

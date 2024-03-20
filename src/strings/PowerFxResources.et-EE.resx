@@ -2839,11 +2839,11 @@
     <value>Esitatud teksti keelekood.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Loob määratud kirjete ja tabelite põhjal tabeli, milles on niipalju veerge, kui on kordumatuid kirjevälju. Nt: Tabel({võti1: väärtus1; võti2: väärtus2; ...}; ...)</value>
+    <value>Loob määratud kirjete ja tabelite põhjal tabeli, milles on niipalju veerge, kui on kordumatuid kirjevälju. Nt: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>record_or_table</value>
+    <value>Kirjevõitabel</value>
     
   </data>
   <data name="AboutTable_record_or_table" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>JSONFormati väärtuseid '{0}' ja '{1}' ei saa koos kasutada.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Väärtust {0} ei toetata funktsiooni JSON suvandina.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

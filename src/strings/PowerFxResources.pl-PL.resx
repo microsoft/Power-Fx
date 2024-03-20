@@ -4226,6 +4226,10 @@
     <value>Wartości JSONFormat „{0}” i „{1}” nie mogą być używane razem.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Wartość „{0}” nie jest obsługiwana jako opcja w funkcji JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Wartość przekazywana do funkcji JSON zawiera multimedia, które nie są domyślnie obsługiwane. Aby zezwolić na serializowanie JSON wartości multimedialnych, upewnij się, że w parametrze „format” podano opcję IncludeBinaryData.</value>
     

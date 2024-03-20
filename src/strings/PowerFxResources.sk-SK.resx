@@ -4226,6 +4226,10 @@
     <value>Hodnoty JSONFormat {0} a {1} sa nedajú použiť spoločne.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Hodnota {0} nie je podporovaná ako možnosť vo funkcii JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Hodnota odovzdaná funkcii JSON obsahuje médium a nie je predvolene podporovaná. Ak chcete povoliť serializáciu hodnôt médií vo formáte JSON, nezabudnite použiť možnosť IncludeBinaryData v parametri Format.</value>
     

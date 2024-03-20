@@ -512,7 +512,7 @@
     <value>A számértékké alakítandó szöveges érték.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Az érték konvertálása során használandó nyelvkód.</value>
+    <value>Az érték átalakítása során használandó nyelvkód.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -4067,7 +4067,7 @@
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
-    <value>A rendszer egy rekord- vagy táblaértéket várt.</value>
+    <value>A rendszer egy rekord vagy táblaértéket várt.</value>
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>A(z) {0} és a(z) {1} JSONFormat-érték nem használható együtt.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>A(z) '{0}' érték nem támogatott beállításként a JSON függvényben.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

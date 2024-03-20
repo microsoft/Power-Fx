@@ -2839,7 +2839,7 @@
     <value>Código de idioma do texto fornecido.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Cria uma tabela a partir das tabelas e dos registos especificados, com um número de colunas igual ao número de campos de registo exclusivos. Por exemplo: Tabela({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Cria uma tabela a partir das tabelas e dos registos especificados, com um número de colunas igual ao número de campos de registo exclusivos. Por exemplo: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Os valores JSONFormat "{0}" e "{1}" não podem ser utilizados em conjunto.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>O valor "{0}" não é suportado como uma opção na função JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

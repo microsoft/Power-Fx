@@ -1963,7 +1963,7 @@
     
   </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
-    <value>Only record or table values can be used in this context.</value>
+    <value>이 컨텍스트에서는 레코드 또는 테이블 값만 사용할 수 있습니다.</value>
     
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
@@ -2839,15 +2839,15 @@
     <value>입력한 텍스트의 언어 코드입니다.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Creates a table from the specified records and tables, with as many columns as there are unique record fields. For example: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>지정된 레코드 및 테이블을 통해 고유한 레코드 필드만큼의 열이 있는 테이블을 만듭니다. 예: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>record_or_table</value>
+    <value>레코드_또는_테이블</value>
     
   </data>
   <data name="AboutTable_record_or_table" xml:space="preserve">
-    <value>A record or a table that will be part of the the resulting table.</value>
+    <value>결과 테이블의 일부가 될 레코드 또는 테이블입니다.</value>
     
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
@@ -4226,6 +4226,10 @@
     <value>JSONFormat 값 '{0}' 및 '{1}'을(를) 함께 사용할 수 없습니다. </value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>'{0}' 값은 JSON 함수에서 옵션으로 지원되지 않습니다.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>JSON 함수에 전달된 값에 미디어가 포함되어 있는데 이는 기본적으로 지원되지 않습니다. 미디어 값의 JSON serialization을 허용하려면 '형식' 매개 변수에 IncludeBinaryData 옵션을 사용해야 합니다.</value>
     
@@ -4325,7 +4329,7 @@
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
-    <value>Delegation warning. The result of this argument '{0}' may be truncated for large data sets before being passed to the '{1}' function.</value>
+    <value>위임 경고입니다. 이 인수 '{0}'의 결과는 '{1}' 함수로 전달되기 전에 큰 데이터 집합의 경우 잘릴 수 있습니다.</value>
     
   </data>
 </root>
