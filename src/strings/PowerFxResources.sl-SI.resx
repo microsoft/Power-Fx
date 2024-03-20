@@ -590,7 +590,7 @@
     
   </data>
   <data name="AboutBooleanW_number" xml:space="preserve">
-    <value>Decimalna številska vrednost za pretvorbo v logično vrednost</value>
+    <value>Decimalna številska vrednost za pretvorbo v logično vrednost.</value>
   </data>
   <data name="AboutBooleanWT" xml:space="preserve">
     <value>Pretvori stolpec decimalnih številskih vrednosti v stolpec logičnih vrednosti.</value>
@@ -623,7 +623,7 @@
     
   </data>
   <data name="AboutBooleanLT_input" xml:space="preserve">
-    <value>Stolpec izbranih vrednosti za obdelavo</value>
+    <value>Stolpec izbranih vrednosti za obdelavo.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vrne prvi neprazen argument</value>
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Vrednosti JSONFormat »{0}« in »{1}« ni mogoče uporabiti skupaj.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Vrednost »{0}« ni podprta kot možnost v funkciji JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

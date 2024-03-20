@@ -2843,7 +2843,7 @@
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>record_or_table</value>
+    <value>záznam_nebo_tabulka</value>
     
   </data>
   <data name="AboutTable_record_or_table" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Hodnoty JSONFormat {0} a {1} se nedají použít obě najednou.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Hodnota „{0}“ není podporována jako možnost ve funkci JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

@@ -4226,6 +4226,10 @@
     <value>Vrijednosti JSONFormat "{0}" i "{1}" ne mogu se koristiti zajedno.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Vrijednost „{0}” nije podržana kao mogućnost u funkciji JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Vrijednost proslijeđena JSON funkciji sadrži medije i nije podržana prema zadanim postavkama. Da biste omogućili JSON serijalizaciju medijskih vrijednosti, obavezno upotrijebite mogućnost IncludeBinaryData u parametru "oblik".</value>
     

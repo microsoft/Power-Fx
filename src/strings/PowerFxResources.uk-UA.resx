@@ -1100,7 +1100,7 @@
     
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
-    <value>Кількість місяців, на яку потрібно скоригувати дату. Додатне значення означає дату в майбутньому, від’ємне значення — дату в минулому, а нуль не змінює місяць.</value>
+    <value>Кількість місяців, на яку потрібно скоригувати дату. Додатне значення означає дату в майбутньому, від’ємне значення – дату в минулому, а нуль не змінює місяць.</value>
     
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
@@ -2839,7 +2839,7 @@
     <value>Мовний код наданого тексту.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>На основі вказаних записів і таблиць створюється таблиця, кількість стовпців у якій відповідає кількості полів з унікальними записами. Наприклад: Таблиця({key1: val1, key2: val2, ...}, ...)</value>
+    <value>На основі вказаних записів і таблиць створюється таблиця, кількість стовпців у якій відповідає кількості полів з унікальними записами. Наприклад: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Значення JSONFormat "{0}" і "{1}" не можна використовувати разом.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Значення "{0}" не підтримується як параметр функції JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

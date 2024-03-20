@@ -4226,6 +4226,10 @@
     <value>Nevar kopā lietot JSONFormat vērtību “{0}” un “{1}”.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Vērtība “{0}” netiek atbalstīta kā opcija JSON funkcijā.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>JSON funkcijai norādītajā vērtībā ir iekļauts multivides saturs, un tā pēc noklusējuma netiek atbalstīta. Lai atļautu multivides vērtību JSON serializēšanu, parametrā “format” jāizmanto opcija IncludeBinaryData.</value>
     

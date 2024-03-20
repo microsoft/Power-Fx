@@ -1100,7 +1100,7 @@
     
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
-    <value>Número de meses para alterar a data. Um valor positivo gera uma data futura, um valor negativo uma data no passado e zero não alterará o mês.</value>
+    <value>Número de meses para alterar a data. Um valor positivo gera uma data futura, um valor negativo gera uma data no passado e zero não alterará o mês.</value>
     
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
@@ -4067,7 +4067,7 @@
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
-    <value>Um valor de registro ou de tabela esperado.</value>
+    <value>Esperado um registro ou valor de tabela.</value>
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Os valores JSONFormat '{0}' e '{1}' não podem ser usados juntos.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>O valor "{0}" não tem suporte como uma opção na função JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

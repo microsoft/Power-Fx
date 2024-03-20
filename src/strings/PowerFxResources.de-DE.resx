@@ -4071,7 +4071,7 @@
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
-    <value>Eine verbundene Datenquelle zum Aktualisieren</value>
+    <value>Eine verbundene Datenquelle für die Aktualisierung</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Nur verwaltete Verbindungen können aktualisiert werden.</value>
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Die JSONFormat-Werte "{0}" und "{1}" können nicht zusammen verwendet werden.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Der Wert „{0}“ wird in der JSON-Funktion nicht als Option unterstützt.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

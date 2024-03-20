@@ -2839,11 +2839,11 @@
     <value>Sağlanan metnin dil kodu.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Benzersiz kayıt alanı sayısı kadar sütun içerecek şekilde, belirtilen kayıt ve tablolardan bir tablo oluşturur. Örneğin: Tablo ({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Benzersiz kayıt alanı sayısı kadar sütun içerecek şekilde, belirtilen kayıt ve tablolardan bir tablo oluşturur. Örneğin: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>record_or_table</value>
+    <value>kayıt_veya_tablo</value>
     
   </data>
   <data name="AboutTable_record_or_table" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>'{0}' ve '{1}' JSONFormat değerleri birlikte kullanılamaz.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>'{0}' değeri, JSON işlevinde bir seçenek olarak desteklenmez.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

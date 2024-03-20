@@ -4226,6 +4226,10 @@
     <value>Οι τιμές JSONFormat "{0}" και "{1}" δεν είναι δυνατό να χρησιμοποιηθούν μαζί.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Η τιμή '{0}' δεν υποστηρίζεται ως επιλογή στη συνάρτηση JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Η τιμή που μεταβιβάζεται στη συνάρτηση JSON περιέχει πολυμέσα και δεν υποστηρίζεται από προεπιλογή. Για να επιτρέψετε τη σειριοποίηση JSON τιμών πολυμέσων, φροντίστε να χρησιμοποιήσετε την επιλογή IncludeBinaryData στην παράμετρο "μορφή".</value>
     

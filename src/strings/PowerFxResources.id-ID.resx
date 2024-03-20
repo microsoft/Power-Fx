@@ -597,7 +597,7 @@
     
   </data>
   <data name="BooleanWTArg1" xml:space="preserve">
-    <value>masukan</value>
+    <value>input</value>
     
   </data>
   <data name="AboutBooleanWT_input" xml:space="preserve">
@@ -619,7 +619,7 @@
     
   </data>
   <data name="BooleanLTArg1" xml:space="preserve">
-    <value>masukan</value>
+    <value>input</value>
     
   </data>
   <data name="AboutBooleanLT_input" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Nilai JSONFormat ' {0} ' dan ' {1} ' tidak dapat digunakan bersamaan.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Nilai '{0}' tidak didukung sebagai pilihan dalam fungsi JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">

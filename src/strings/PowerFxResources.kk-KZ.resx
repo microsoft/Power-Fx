@@ -4226,6 +4226,10 @@
     <value>"{0}" және "{1}" JSONFormat мәндерін бірге пайдалану мүмкін емес.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>"{0}" мәні JSON функциясында опция ретінде қолданылмайды.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>JSON функциясына берілген мәнде медиа бар және оған әдепкіде қолдау көрсетілмейді. JSON үшін медиа мәндерін сериализациялауға рұқсат ету үшін "пішім" параметрінде IncludeBinaryData опциясын пайдаланыңыз.</value>
     

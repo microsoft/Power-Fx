@@ -2839,11 +2839,11 @@
     <value>Kod bahasa teks yang dibekalkan.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Mencipta jadual daripada rekod dan jadual yang ditentukan, dengan lajur yang sama banyak dengan medan rekod unik yang ada. Sebagai contoh: Jadual({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Mencipta jadual daripada rekod dan jadual yang ditentukan, dengan lajur yang sama banyak dengan medan rekod unik yang ada. Sebagai contoh: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>record_or_table</value>
+    <value>rekod_atau_jadual</value>
     
   </data>
   <data name="AboutTable_record_or_table" xml:space="preserve">
@@ -4224,6 +4224,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Nilai '{0}' dan '{1}' JSONFormat tidak boleh digunakan bersama-sama.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Nilai '{0}' tidak disokong sebagai pilihan dalam fungsi JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
