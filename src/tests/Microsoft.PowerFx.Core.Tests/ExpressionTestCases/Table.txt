@@ -37,7 +37,7 @@ Errors: Error 0-63: The function 'Table' has some invalid arguments.|Error 28-62
 
 // Table type with incompatible schema
 >> Table([Sqrt(1)], If(1<0, Table({Value:{a:2}})))
-Errors: Error 0-44: The function 'Table' has some invalid arguments.|Error 14-43: Incompatible type. The 'Value' column in the data source you're updating expects a 'Number' type and you're using a 'Record' type.
+Errors: Error 0-47: The function 'Table' has some invalid arguments.|Error 17-46: Incompatible type. The 'Value' column in the data source you're updating expects a 'Number' type and you're using a 'Record' type.
 
 // No arg
 >> Table()
