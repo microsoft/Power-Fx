@@ -212,30 +212,6 @@ namespace Microsoft.PowerFx
             return result;
         }
 
-        [Obsolete("preview")]
-        internal IEnumerable<TexlError> DefineType(string script, ParserOptions parserOptions)
-        {
-            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
-            var definedTypes = parsedNamedFormulasAndUDFs.DefinedTypes.ToList();
-
-            var errors = new List<TexlError>();
-
-            foreach (var defType in definedTypes)
-            {
-                var name = defType.Ident.Name.Value;
-                var res = Core.Syntax.Visitors.DTypeVisitor.Run(defType.Type.TypeRoot, _definedTypeSymbolTable);
-                if (res == null)
-                {
-                    errors.Add(new TexlError(defType.Ident, DocumentErrorSeverity.Severe, Core.Localization.TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
-                    continue;
-                }
-
-                _definedTypeSymbolTable.RegisterType(name, FormulaType.Build(res));
-            }
-
-            return errors;
-        }
-
         internal FormulaType GetFormulaTypeFromName(string name)
         {
             return FormulaType.Build(GetTypeFromName(name));
@@ -419,13 +395,13 @@ namespace Microsoft.PowerFx
             var userDefinitionResult = UserDefinitions.Process(script, parseCulture, features: Config.Features);
 
             // Compose will handle null symbols
-            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions);
+            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, userDefinitionResult.DefinedTypeSymbolTable);
             var sb = new StringBuilder();
 
             foreach (var udf in userDefinitionResult.UDFs)
             {
                 Config.SymbolTable.AddFunction(udf);
-                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
+                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default, features: Config.Features);
 
                 List<TexlError> errors = new List<TexlError>();
 

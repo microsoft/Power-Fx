@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Parser;
@@ -17,12 +18,27 @@ namespace Microsoft.PowerFx
 
         internal IEnumerable<NamedFormula> NamedFormulas { get; }
 
+        internal DefinedTypeSymbolTable DefinedTypeSymbolTable { get; }
+
         internal bool HasErrors { get; }
 
         public UserDefinitionResult(IEnumerable<UserDefinedFunction> uDFs, IEnumerable<TexlError> errors, IEnumerable<NamedFormula> namedFormulas)
         {
             UDFs = uDFs;
             NamedFormulas = namedFormulas;
+
+            if (errors?.Any() ?? false)
+            {
+                Errors = errors;
+                HasErrors = true;
+            }
+        }
+
+        public UserDefinitionResult(IEnumerable<UserDefinedFunction> uDFs, IEnumerable<TexlError> errors, IEnumerable<NamedFormula> namedFormulas, DefinedTypeSymbolTable definedTypes)
+        {
+            UDFs = uDFs;
+            NamedFormulas = namedFormulas;
+            DefinedTypeSymbolTable = definedTypes;
 
             if (errors?.Any() ?? false)
             {

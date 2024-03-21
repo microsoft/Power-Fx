@@ -544,24 +544,6 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void DefTableType()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
-            };
-#pragma warning disable CS0618
-            var errors = recalcEngine.DefineType("People = Type([{Age: Number}]);", parserOptions);
-#pragma warning restore CS0618
-            Assert.Empty(errors);
-            recalcEngine.AddUserDefinedFunction("countMinors(p: People): Number = CountRows(Filter(p, Age < 18));", CultureInfo.InvariantCulture);
-            Assert.Equal(1.0, recalcEngine.Eval("countMinors([{Age: 2}])").ToObject());
-        }
-
-        [Fact]
         public void DefTypeTests()
         {
             var config = new PowerFxConfig();
@@ -571,8 +553,8 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
                 AllowParseAsTypeLiteral = true
             };
-            recalcEngine.AddUserDefinedFunction("People = Type([{Age: Number}]);countMinors(p: People): Number = CountRows(Filter(p, Age < 18)); createUser(a: Number): People = [{Age: a}];", CultureInfo.InvariantCulture);
-            recalcEngine.AddUserDefinedFunction("NWrap = Type({n: Number});getN(p: NWrap): Number = p.n;", CultureInfo.InvariantCulture);
+            recalcEngine.AddUserDefinitions("People = Type([{Age: Number}]);countMinors(p: People): Number = CountRows(Filter(p, Age < 18)); createUser(a: Number): People = [{Age: a}];", CultureInfo.InvariantCulture);
+            recalcEngine.AddUserDefinitions("NWrap = Type({n: Number});getN(p: NWrap): Number = p.n;", CultureInfo.InvariantCulture);
             Assert.Equal(1.0, recalcEngine.Eval("countMinors([{Age: 2}])").ToObject());
             Assert.Equal(2.0, recalcEngine.Eval("getN({n: 2})").ToObject());
         }
@@ -587,7 +569,7 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
                 AllowParseAsTypeLiteral = true
             };
-            recalcEngine.AddUserDefinedFunction("Person = Type({Id: Number, Age: Number}); createUser(id:Number, a: Number): Person = {Id:id, Age: a};", CultureInfo.InvariantCulture);
+            recalcEngine.AddUserDefinitions("Person = Type({Id: Number, Age: Number}); createUser(id:Number, a: Number): Person = {Id:id, Age: a};", CultureInfo.InvariantCulture);
 
             Assert.Equal(42.0, recalcEngine.Eval("createUser(\"Jon\", 42).Age").ToObject());
         }
@@ -602,7 +584,7 @@ namespace Microsoft.PowerFx.Tests
 
             engine.UpdateVariable("myArg", FormulaValue.New(10));
 
-            symbolTable.AddUserDefinedFunction(script, null, CultureInfo.InvariantCulture, engine.SupportedFunctions);
+            symbolTable.AddUserDefinedFunction(script, CultureInfo.InvariantCulture, engine.SupportedFunctions);
 
             var check = engine.Check(expression, symbolTable: symbolTable);
             var result = check.GetEvaluator().Eval();

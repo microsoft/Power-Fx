@@ -514,7 +514,7 @@ namespace Microsoft.PowerFx
 
         internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null)
         {
-            Config.SymbolTable.AddUserDefinedFunction(script, _definedTypeSymbolTable, parseCulture, SupportedFunctions, symbolTable);
+            Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, SupportedFunctions, symbolTable);
         }
     }
 }

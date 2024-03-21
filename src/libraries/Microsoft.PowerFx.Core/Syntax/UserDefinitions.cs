@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -68,42 +69,11 @@ namespace Microsoft.PowerFx.Syntax
         {
             parserOptions.AllowParseAsTypeLiteral = true;
             var userDefinitions = new UserDefinitions(script, parserOptions, features);
-            var dts = new DefinedTypeSymbolTable();
 
-            return userDefinitions.ProcessUserDefinitions(dts, out userDefinitionResult);
+            return userDefinitions.ProcessUserDefinitions(out userDefinitionResult);
         }
 
-        internal FormulaType GetFormulaTypeFromName(UDFArg arg, DefinedTypeSymbolTable dt)
-        {
-            return FormulaType.Build(GetTypeFromName(arg, dt));
-        }
-
-        internal DType GetTypeFromName(UDFArg arg, DefinedTypeSymbolTable dt)
-        {
-            if (dt != null && dt.TryLookup(new DName(arg.TypeIdent._value), out NameLookupInfo nameInfo))
-            {
-                return nameInfo.Type;
-            }
-
-            return arg.TypeIdent.GetFormulaType()._type;
-        }
-
-        internal FormulaType GetFormulaTypeFromName2(string name, DefinedTypeSymbolTable dt)
-        {
-            return FormulaType.Build(GetTypeFromName2(name, dt));
-        }
-
-        internal DType GetTypeFromName2(string name, DefinedTypeSymbolTable dt)
-        {
-            if (dt != null && dt.TryLookup(new DName(name), out NameLookupInfo nameInfo))
-            {
-                return nameInfo.Type;
-            }
-
-            return FormulaType.GetFromStringOrNull(name)._type;
-        }
-
-        private bool ProcessUserDefinitions(DefinedTypeSymbolTable definedTypeSymbolTable, out UserDefinitionResult userDefinitionResult)
+        private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult)
         {
             var parseResult = Parse(_script, _parserOptions);
 
@@ -112,6 +82,7 @@ namespace Microsoft.PowerFx.Syntax
                 parseResult = ProcessPartialAttributes(parseResult);
             }
 
+            var definedTypeSymbolTable = new DefinedTypeSymbolTable();
             var definedTypes = parseResult.DefinedTypes.ToList();
 
             var err = new List<TexlError>();
@@ -139,7 +110,8 @@ namespace Microsoft.PowerFx.Syntax
             userDefinitionResult = new UserDefinitionResult(
                 functions,
                 parseResult.Errors != null ? errors.Union(parseResult.Errors) : errors,
-                parseResult.NamedFormulas);
+                parseResult.NamedFormulas,
+                definedTypeSymbolTable);
 
             return true;
         }
@@ -196,16 +168,14 @@ namespace Microsoft.PowerFx.Syntax
                     continue;
                 }
 
-                var parametersOk = CheckParameters(udf.Args, errors);
-                var returnTypeOk = CheckReturnType(udf.ReturnType, errors);
+                var parametersOk = CheckParameters(udf.Args, errors, definedTypeSymbolTable);
+                var returnTypeOk = CheckReturnType(udf.ReturnType, errors, definedTypeSymbolTable);
                 if (!parametersOk || !returnTypeOk)
                 {
                     continue;
                 }
 
-                var argTypes = udf.Args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => GetFormulaTypeFromName(arg, definedTypeSymbolTable)._type);
-
-                var func = new UserDefinedFunction(udfName.Value, GetFormulaTypeFromName2(udf.ReturnType._value, definedTypeSymbolTable)._type, udf.Body, udf.IsImperative, udf.Args, argTypes);
+                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType(definedTypeSymbolTable)._type, udf.Body, udf.IsImperative, udf.Args, udf.Args.Select(a => a.TypeIdent.GetFormulaType(definedTypeSymbolTable)._type).ToArray());
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
@@ -214,7 +184,7 @@ namespace Microsoft.PowerFx.Syntax
             return userDefinedFunctions;
         }
 
-        private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors)
+        private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors, DefinedTypeSymbolTable definedTypeSymbolTable)
         {
             var isParamCheckSuccessful = true;
             var argsAlreadySeen = new HashSet<string>();
@@ -230,11 +200,11 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     argsAlreadySeen.Add(arg.NameIdent.Name);
 
-                    var parameterType = arg.TypeIdent.GetFormulaType()._type;
+                    var parameterType = arg.TypeIdent.GetFormulaType(definedTypeSymbolTable)._type;
                     if (parameterType.Kind.Equals(DType.Unknown.Kind) || RestrictedTypes.Contains(parameterType))
                     {
-                        //errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
-                        isParamCheckSuccessful = true;
+                        errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
+                        isParamCheckSuccessful = false;
                     }
                 }
             }
@@ -242,15 +212,15 @@ namespace Microsoft.PowerFx.Syntax
             return isParamCheckSuccessful;
         }
 
-        private bool CheckReturnType(IdentToken returnType, List<TexlError> errors)
+        private bool CheckReturnType(IdentToken returnType, List<TexlError> errors, DefinedTypeSymbolTable definedTypeSymbolTable)
         {
-            var returnTypeFormulaType = returnType.GetFormulaType()._type;
+            var returnTypeFormulaType = returnType.GetFormulaType(definedTypeSymbolTable)._type;
             var isReturnTypeCheckSuccessful = true;
 
             if (returnTypeFormulaType.Kind.Equals(DType.Unknown.Kind) || RestrictedTypes.Contains(returnTypeFormulaType))
             {
-                //errors.Add(new TexlError(returnType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnType.Name));
-                isReturnTypeCheckSuccessful = true;
+                errors.Add(new TexlError(returnType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnType.Name));
+                isReturnTypeCheckSuccessful = false;
             }
 
             return isReturnTypeCheckSuccessful;
