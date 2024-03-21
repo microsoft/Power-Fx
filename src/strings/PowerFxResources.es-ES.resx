@@ -1100,7 +1100,7 @@
     
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
-    <value>Número de meses durante los cuales se cambiará la fecha. Un valor positivo genera una fecha futura; un valor negativo, una fecha pasada; y el cero no cambiará el mes.</value>
+    <value>Número de meses por los cuales se cambiará la fecha. Un valor positivo genera una fecha futura; un valor negativo, una fecha pasada; y el cero no cambiará el mes.</value>
     
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
@@ -1960,6 +1960,10 @@
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>No se puede usar un valor que no sea un registro en este contexto.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Solo se pueden usar valores de registro o tabla en este contexto.</value>
     
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
@@ -2835,15 +2839,16 @@
     <value>Código de idioma del texto proporcionado.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Crea una tabla a partir de los registros especificados con tantas columnas como campos de registros únicos haya. Por ejemplo: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Crea una tabla a partir de los registros y tablas especificados con tantas columnas como campos de registros únicos haya. Por ejemplo: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>registro</value>
+    <value>registro_o_tabla</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Un registro que se convertirá en una fila en la tabla resultante.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Un registro o una tabla que formarán parte de la tabla resultante.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Devuelve una tabla con todas las columnas quitadas de la tabla de origen, excepto las columnas especificadas.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Dirección URL que codificará.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Convierte un texto en un texto codificado en HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Texto que se va a codificar.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" es una función reconocida pero no admitida.</value>
     
@@ -4058,7 +4074,7 @@
     <value>Un origen de datos conectado que se actualizará.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
-    <value>Solo se pueden actualizar las conexiones administradas.</value>
+    <value>Solo pueden actualizarse las conexiones administradas.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
@@ -4210,6 +4226,10 @@
     <value>Los valores de JSONFormat "{0}" y "{1}" no se pueden usar juntos.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>El valor '{0}' no se admite como opción en la función JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>El valor pasado a la función JSON contiene un elementos multimedia y no se admite de forma predeterminada. Para permitir la serialización JSON de valores multimedia, asegúrese de usar la opción IncludeBinaryData en el parámetro "format".</value>
     
@@ -4306,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operador Partial desconocido.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Advertencia de delegación. El resultado de este argumento "{0}" puede truncarse para conjuntos de datos de gran tamaño antes de pasarse a la función "{1}".</value>
     
   </data>
 </root>

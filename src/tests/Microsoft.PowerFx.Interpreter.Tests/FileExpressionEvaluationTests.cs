@@ -147,7 +147,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Whereas these are fed into a repl and each file maintains state.
         // 
         // These tests are run twice, as they are for the non-mutation tests, for both V1 and non-V1 compatibility.
-        // For Canvas, the important difference is the CoalesceShortCircuit feature, a part of PowerFxV1.
         [Theory]
         [ReplFileSimpleList("MutationScripts")]
         public void RunMutationTests_V1(string file)
@@ -165,9 +164,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 ConsistentOneColumnTableResult = true,
             };
 
-            // disable:CoalesceShortCircuit and disable:PowerFxV1CompatibilityRules will force the tests specifically for those behaviors to be excluded from this run.
+            // disable:PowerFxV1CompatibilityRules will force the tests specifically for those behaviors to be excluded from this run.
             // DecimalSupport allows tests that are written with Float and Decimal functions to operate; it is not itself a feature
-            RunMutationTestFile(file, features, "disable:CoalesceShortCircuit,disable:PowerFxV1CompatibilityRules,TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,DecimalSupport");
+            RunMutationTestFile(file, features, "disable:PowerFxV1CompatibilityRules,TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,DecimalSupport");
         }
 
         private void RunMutationTestFile(string file, Features features, string setup)

@@ -30,12 +30,12 @@ namespace Microsoft.PowerFx.Core.Utils
             if (depth > maxDepth)
             {
                 return;
-            }            
+            }
 
             if (depth > 1)
             {
                 AddSeparator(sb, depth);
-            }            
+            }
 
             if (ex == null)
             {
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 sb.Append((int)we.Status);
                 sb.Append(" (");
                 sb.Append(we.Status.ToString());
-                sb.Append(')');                
+                sb.Append(')');
             }
 
             sb.Append(", StackTrace='");
@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Utils
             {
                 int i = 0;
                 foreach (Exception ie in ae.InnerExceptions)
-                {                    
+                {
                     GetDetailedExceptionMessageInternal(sb, $"Inner#{i++}", ie, depth, maxDepth);
                 }
 
@@ -85,9 +85,9 @@ namespace Microsoft.PowerFx.Core.Utils
 
             PropertyInfo pi = ex.GetType().GetProperty("InnerException");
             if (pi?.GetValue(ex) is Exception iex)
-            {                
+            {
                 GetDetailedExceptionMessageInternal(sb, "Inner", iex, depth, maxDepth);
-            }           
+            }
         }
 
         private static void AddSeparator(StringBuilder sb, int depth)
@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
                 // !!! This is a tactical fix for the case where we have a boolean option set and a boolean value.
                 // PA allows this but we don't. We should remove this once we have a better way to handle this.
-                if (dsNameType.IsOptionSet && 
+                if (dsNameType.IsOptionSet &&
                     DType.Boolean.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) &&
                     type.CoercesTo(dsNameType, out _, aggregateCoercion: false, isTopLevelCoercion: false, features))
                 {
@@ -145,7 +145,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
                 if ((!dsNameType.Accepts(type, out var schemaDifference, out var schemaDifferenceType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) &&
                      !DType.Number.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) &&
-                     !DType.Decimal.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)) &&                    
+                     !DType.Decimal.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)) &&
                     (!supportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false, isTopLevelCoercion: false, features) || !coercionIsSafe))
                 {
                     if (dsNameType.Kind == type.Kind)
@@ -162,6 +162,53 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             return isValid;
+        }
+
+        /// <summary>
+        /// Gets the literal value from a parse. This currently works only for string, number, guid, and boolean literals.
+        /// </summary>
+        /// <param name="checkResult">Parsed expression result.</param>
+        /// <param name="value">Literal value, if available.</param>
+        /// <returns></returns>
+        public static bool TryGetAsLiteral(this CheckResult checkResult, out object value)
+        {
+            switch (checkResult.Parse.Root)
+            {
+                case StrLitNode strLitNode:
+                    value = strLitNode.Value;
+                    return true;
+                case NumLitNode numLitNode:
+                    value = numLitNode.Value.Value;
+                    return true;
+                case DecLitNode decLitNode:
+                    value = decLitNode.Value.Value;
+                    return true;
+                case BoolLitNode booLitNode:
+                    value = booLitNode.Value;
+                    return true;
+                case CallNode callNode:
+                    if (callNode.IsCall("GUID"))
+                    {
+                        if (callNode.Args.Count == 1 && callNode.Args.ChildNodes[0] is StrLitNode strLitNode)
+                        {
+                            if (Guid.TryParse(strLitNode.Value, out Guid result))
+                            {
+                                value = result;
+                                return true;
+                            }
+                        }
+                    }
+
+                    break;
+            }
+
+            value = null;
+            return false;
+        }
+
+        public static bool IsCall(this CallNode node, string functionName)
+        {
+            return node.Head.Namespace.Length == 0 && node.Head.Name.Value == functionName;
         }
     }
 }

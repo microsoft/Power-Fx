@@ -1962,6 +1962,10 @@
     <value>Bu bağlamda kayıt olmayan bir değer kullanılamaz.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Bu bağlamda yalnızca kayıt veya tablo değerleri kullanılabilir.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Bu kayıt kullanılamaz. Kayıt, uyumsuz türlerin çakışan alanlarını içeriyor olabilir.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Sağlanan metnin dil kodu.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Benzersiz kayıt alanı sayısı kadar sütun içerecek şekilde, belirtilen kayıtlardan bir tablo oluşturur. Örneğin: Tablo({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Benzersiz kayıt alanı sayısı kadar sütun içerecek şekilde, belirtilen kayıt ve tablolardan bir tablo oluşturur. Örneğin: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>kayıt</value>
+    <value>kayıt_veya_tablo</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Sonuçta elde edilen tabloda bir satıra dönüşecek olan kayıt.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Elde edilen tablonun parçası olacak bir kayıt veya tablo.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>'source' tablosunda bulunan belirtilen sütunlar haricindeki tüm sütunların kaldırılmış olduğu bir tablo döndürür.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Kodlanacak bir URL.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Metni HTML olarak kodlanmış metne dönüştürür.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>değer</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Kodlanacak metin.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' tanınan fakat desteklenmeyen bir işlev.</value>
     
@@ -4210,6 +4226,10 @@
     <value>'{0}' ve '{1}' JSONFormat değerleri birlikte kullanılamaz.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>'{0}' değeri, JSON işlevinde bir seçenek olarak desteklenmez.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>JSON işlevine geçirilen değer medya içeriyor ve varsayılan olarak desteklenmiyor. Medya değerlerinin JSON serileştirmesine izin vermek için, 'format' parametresinde IncludeBinaryData seçeneğini kullandığınızdan emin olun.</value>
     
@@ -4306,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Bilinmeyen Partial işleci.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Temsilci uyarısı. '{0}' bağımsız değişkeninin sonucu, '{1}' işlevine aktarılamadan önce büyük veri kümeleri için kısaltılabilir.</value>
     
   </data>
 </root>

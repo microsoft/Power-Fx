@@ -1962,6 +1962,10 @@
     <value>In diesem Kontext kann nur ein Datensatzwert verwendet werden.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>In diesem Kontext können nur Datensatz- oder Tabellenwerte verwendet werden.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Dieser Datensatz kann nicht verwendet werden. Er enthält möglicherweise in Konflikt stehende Felder inkompatibler Typen.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Sprachcode des eingegebenen Texts.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Erstellt eine Tabelle aus den angegebenen Datensätzen mit so vielen Spalten, wie eindeutige Datensatzfelder vorhanden sind. Beispiel "Tabelle({key1: val1, key2: val2, ...}, ...)".</value>
+    <value>Erstellt eine Tabelle aus den angegebenen Datensätzen und Tabellen mit so vielen Spalten, wie eindeutige Datensatzfelder vorhanden sind. Beispiel: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>Datensatz</value>
+    <value>datensatz_oder_tabelle</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Ein Datensatz, der in der resultierenden Tabelle zu einer Zeile wird.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Ein Datensatz oder eine Tabelle, die Teil der resultierenden Tabelle ist.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Gibt eine Tabelle zurück, bei der alle mit Ausnahme der angegebenen Spalten aus der Quelltabelle „Quelle“ entfernt wurden.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Eine zu codierende URL.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Konvertiert einen Text in einen HTML-codierten Text.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>Wert</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Ein zu codierender Text.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}“ ist eine erkannte, aber nicht unterstützte Funktion</value>
     
@@ -4055,7 +4071,7 @@
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
-    <value>Eine verbundene Datenquelle zum Aktualisieren</value>
+    <value>Eine verbundene Datenquelle für die Aktualisierung</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Nur verwaltete Verbindungen können aktualisiert werden.</value>
@@ -4210,6 +4226,10 @@
     <value>Die JSONFormat-Werte "{0}" und "{1}" können nicht zusammen verwendet werden.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Der Wert „{0}“ wird in der JSON-Funktion nicht als Option unterstützt.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Der an die JSON-Funktion übergebene Wert enthält Medien und wird standardmäßig nicht unterstützt. Um die JSON-Serialisierung von Medienwerten zuzulassen, stellen Sie sicher, dass Sie die Option "IncludeBinaryData" im Parameter "format" verwenden.</value>
     
@@ -4306,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Unbekannter Partial-Operator</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Delegierungswarnung. Das Ergebnis dieses Arguments „{0}“ kann für große Datensätze abgeschnitten werden, bevor es an die Funktion „{1}“ übergeben wird.</value>
     
   </data>
 </root>

@@ -1,0 +1,49 @@
+﻿// Escaping
+>> EncodeHTML("<p>A paragraph</p>")
+"&lt;p&gt;A paragraph&lt;/p&gt;"
+
+// Multiple encodings
+>> EncodeHTML("<h1>Mac & cheese</h1>")
+"&lt;h1&gt;Mac &amp; cheese&lt;/h1&gt;"
+
+// Quotes
+>> EncodeHTML("A value with ""double"" and 'single' quotes")
+"A value with &quot;double&quot; and &#39;single&#39; quotes"
+
+// \u00A0 to \u00af - escaped
+>> EncodeHTML(Concat(Sequence(16, 160), UniChar(Value)))
+"&#160;&#161;&#162;&#163;&#164;&#165;&#166;&#167;&#168;&#169;&#170;&#171;&#172;&#173;&#174;&#175;"
+
+// \u0090 to \u009f - not escaped
+>> With({str:Concat(Sequence(16, 144), UniChar(Value))}, str = EncodeHTML(str))
+true
+
+// \u00A0 to \u00ff - escaped
+>> With({str:EncodeHTML(Concat(Sequence(96, 160), UniChar(Value))), expectedEscaped:Concat(Sequence(96, 160), $"&#{Value};")}, str = expectedEscaped)
+true
+
+// \u0100... not escaped
+>> EncodeHTML("<b>ĀāĂă</b>")
+"&lt;b&gt;ĀāĂă&lt;/b&gt;"
+
+// Blanks
+>> EncodeHTML(Blank())
+""
+
+>> EncodeHTML("")
+""
+
+// Errors
+>> EncodeHTML(Char(-1))
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Escaping surrogate pairs
+>> EncodeHTML("<ul><li>not a pair: ❤</li><li>a surrogate pair: 💩</li></ul>")
+"&lt;ul&gt;&lt;li&gt;not a pair: ❤&lt;/li&gt;&lt;li&gt;a surrogate pair: &#128169;&lt;/li&gt;&lt;/ul&gt;"
+
+>> EncodeHTML("Osage alphabet (start): 𐒰𐒱𐒲𐒳𐒴𐒵𐒶")
+"Osage alphabet (start): &#66736;&#66737;&#66738;&#66739;&#66740;&#66741;&#66742;"
+
+// Unpaired surrogate characters become the replacement character U+FFFD
+>> EncodeHTML($"Unpaired: {Mid(UniChar(Hex2Dec("1f600")),1,1)} {Mid(UniChar(Hex2Dec("1f600")),2,1)}") = $"Unpaired: {UniChar(65533)} {UniChar(65533)}"
+true

@@ -47,12 +47,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsLazyEvalParam(int index, Features features)
         {
-            if (features.CoalesceShortCircuit)
-            {
-                return index > 0;
-            }
-
-            return false;
+            return index > 0;
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

@@ -653,6 +653,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: EOMonth)
             },
             {
+                BuiltinFunctionsCore.EncodeHTML,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.EncodeUrl.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: EncodeHTML)
+            },
+            {
                 BuiltinFunctionsCore.EncodeUrl,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.EncodeUrl.Name,
@@ -2125,18 +2136,34 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Table(IRContext irContext, FormulaValue[] args)
         {
-            // Table literal
-            var records = Array.ConvertAll(
-                args,
-                arg => arg switch
+            // Table literal 
+            var table = new List<DValue<RecordValue>>();
+
+            for (var i = 0; i < args.Length; i++)
+            {
+                switch (args[i])
                 {
-                    RecordValue r => DValue<RecordValue>.Of(r),
-                    BlankValue b => DValue<RecordValue>.Of(b),
-                    _ => DValue<RecordValue>.Of((ErrorValue)arg),
-                });
+                    case TableValue t:
+                        table.AddRange(t.Rows);
+                        break;
+                    case RecordValue r:
+                        table.Add(DValue<RecordValue>.Of(r));
+                        break;
+                    case BlankValue b when b.Type._type.IsTableNonObjNull:
+                        break;
+                    case BlankValue b:
+                        table.Add(DValue<RecordValue>.Of(b));
+                        break;
+                    case ErrorValue e when e.Type._type.IsTableNonObjNull:
+                        return e;
+                    default:
+                        table.Add(DValue<RecordValue>.Of((ErrorValue)args[i]));
+                        break;
+                }
+            }
 
             // Returning List to ensure that the returned table is mutable
-            return new InMemoryTableValue(irContext, records);
+            return new InMemoryTableValue(irContext, table);
         }
 
         public static ValueTask<FormulaValue> Blank(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
