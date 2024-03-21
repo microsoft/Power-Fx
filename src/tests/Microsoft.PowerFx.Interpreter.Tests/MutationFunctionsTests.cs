@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Threading;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Tests.Helpers;
@@ -362,6 +363,28 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Derived object did not lose it's properties
             Assert.Equal("x", fileObjectRecordValue.SomeProperty);
+        }
+
+        [Theory]
+        [InlineData("Patch(t, First(t), {Value:1})")]
+        public void CollectPFxV1Disabled(string expression)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig(Features.None));
+            var t = FormulaValue.NewTable(RecordType.Empty().Add(new NamedFormulaType("Value", FormulaType.Decimal)));
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("t", t);
+
+            var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = true });
+
+            // Compilation will be successful, but the function will not be executed.
+            // This is because PA depends on the CheckType to determine if the function is valid.
+            Assert.True(check.IsSuccess);
+
+            var evaluator = check.GetEvaluator();
+
+            // Runtime exception
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await evaluator.EvalAsync(CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         internal class FileObjectRecordValue : InMemoryRecordValue

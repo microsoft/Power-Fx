@@ -48,6 +48,11 @@ namespace Microsoft.PowerFx.Types
         /// The field names should match the names on <see cref="Type"/>. 
         /// </summary>
         public IEnumerable<NamedValue> Fields => GetFields();
+                
+        /// <summary>
+        /// Returns true if the record has no fields.
+        /// </summary>
+        public bool IsEmptyRecord => Fields.Count() == 0;
 
         public virtual bool TryGetSpecialFieldName(SpecialFieldKind kind, out string fieldName)
         {

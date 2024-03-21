@@ -14,6 +14,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -254,11 +255,22 @@ namespace Microsoft.PowerFx.Core.Binding
 
             // Consider overloads that have DType.Error parameter the last
             candidates = candidates.OrderBy(candidate => candidate.ParamTypes.Length > 0 && candidate.ParamTypes[0] == DType.Error).ToArray();
+
             foreach (var candidate in candidates)
             {
-                if (candidate.ParamTypes.Length > 0 && candidate.ParamTypes[0].Accepts(argTypes[0], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                if (candidate.ParamTypes.Length > 0 && candidate.ParamTypes.Length >= cArg)
                 {
-                    return candidate;
+                    var bestCandidate = true;
+
+                    for (int i = 0; i < cArg; i++)
+                    {
+                        bestCandidate = bestCandidate && candidate.ParamTypes[i].Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                    }
+
+                    if (bestCandidate)
+                    {
+                        return candidate;
+                    }
                 }
             }
 

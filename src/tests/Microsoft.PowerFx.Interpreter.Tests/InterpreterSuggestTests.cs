@@ -195,10 +195,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Collect(|", "Entity1", "Entity2", "Table1", "table2")]
         [InlineData("Patch(|", "Entity1", "Entity2", "Table1", "table2")]
         [InlineData("Remove(|", "Entity1", "Entity2", "Table1", "table2")]
+        [InlineData("Patch(table2,|", "Entity1", "Entity2", "Table1", "table2")]
 
         // doesn't suggest Irrelevant global variables if type1 is non empty aggregate.
         [InlineData("Collect(table2,|", "record2")]
-        [InlineData("Patch(table2,|", "record2")]
         [InlineData("Patch(table2, record2, |", "record2")]
         [InlineData("Remove(table2, |", "record2")]
 

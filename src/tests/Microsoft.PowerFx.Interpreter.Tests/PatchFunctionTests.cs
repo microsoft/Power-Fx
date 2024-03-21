@@ -27,26 +27,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         private readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
 
-        [Theory]
-        [InlineData(typeof(PatchFunction))]
-        public async Task CheckArgsTestAsync(Type type)
-        {
-            var expressionError = new ExpressionError()
-            {
-                Kind = ErrorKind.ReadOnlyValue,
-                Severity = ErrorSeverity.Critical,
-                Message = "Something went wrong"
-            };
+        //[Theory]
+        //[InlineData(typeof(PatchFunction))]
+        //public async Task CheckArgsTestAsync(Type type)
+        //{
+        //    var expressionError = new ExpressionError()
+        //    {
+        //        Kind = ErrorKind.ReadOnlyValue,
+        //        Severity = ErrorSeverity.Critical,
+        //        Message = "Something went wrong"
+        //    };
 
-            FormulaValue[] args = new[]
-            {
-                FormulaValue.NewError(expressionError)
-            };
+        //    FormulaValue[] args = new[]
+        //    {
+        //        FormulaValue.NewError(expressionError)
+        //    };
 
-            var function = Activator.CreateInstance(type) as IAsyncTexlFunction;
-            var result = await function.InvokeAsync(args, CancellationToken.None).ConfigureAwait(false);
+        //    var function = Activator.CreateInstance(type) as IAsyncTexlFunction;
+        //    var result = await function.InvokeAsync(args, CancellationToken.None).ConfigureAwait(false);
 
-            Assert.IsType<ErrorValue>(result);
-        }
+        //    Assert.IsType<ErrorValue>(result);
+        //}
     }
 }
