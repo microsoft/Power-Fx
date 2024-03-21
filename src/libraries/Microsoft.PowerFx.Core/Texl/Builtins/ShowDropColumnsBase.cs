@@ -154,6 +154,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
+            // The result of ShowColumns can be added to (since specifc columns have been chosen), but not DropColumns
+            if (!_isShowColumns)
+            {
+                colsToKeep.IsSealed = argTypes[0].IsSealed;
+            }
+
             returnType = colsToKeep;
 
             return fArgsValid;

@@ -169,6 +169,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     ? DType.CreateRecord(propertyNames)
                     : DType.CreateTable(propertyNames);
 
+                returnType.IsSealed = true;
+
                 AddWarnings(regExNode, errors, hidesFullMatch: fullMatchHidden, hidesSubMatches: subMatchesHidden, hidesStartMatch: startMatchHidden);
 
                 if (_regexTypeCache != null)
