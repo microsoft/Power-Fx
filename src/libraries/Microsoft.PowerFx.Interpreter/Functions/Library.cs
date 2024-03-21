@@ -553,6 +553,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Day)
             },
             {
+                BuiltinFunctionsCore.Defaults,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.Defaults.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<FormulaValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Defaults)
+            },
+            {
                 BuiltinFunctionsCore.Degrees,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Degrees.Name,

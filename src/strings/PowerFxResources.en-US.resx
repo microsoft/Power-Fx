@@ -4532,4 +4532,16 @@
     <value>Delegation warning. The result of this argument '{0}' may be truncated for large data sets before being passed to the '{1}' function.</value>
     <comment>Error message when an argument to non-delegable function has possible delegation and resulting rows may be truncated</comment>
   </data>
+  <data name="AboutDefaults" xml:space="preserve">
+    <value>Returns the default values for a data source as a record.</value>
+    <comment>Description of 'Defaults' function.</comment>
+  </data>
+  <data name="DefaultsArg1" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - First argument of the Defaults function - the data source from which the defaults values will be returned.</comment>
+  </data>
+  <data name="AboutDefaults_source" xml:space="preserve">
+    <value>A data source.</value>
+    <comment>Description of 'datasource' parameter.</comment>
+  </data>
 </root>

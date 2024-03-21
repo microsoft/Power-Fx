@@ -161,6 +161,16 @@ namespace Microsoft.PowerFx.Types
         }
 
         /// <summary>
+        /// Creates a new uncommited records, with default values and empty primary key.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Default record.</returns>
+        public virtual async Task<DValue<RecordValue>> GetDefaultRecord(CancellationToken cancellationToken)
+        {
+            return DValue<RecordValue>.Of(NotImplemented(IRContext));
+        }        
+
+        /// <summary>
         /// Modifies one record in a data source.
         /// </summary>
         /// <param name="baseRecord">A record to modify.</param>

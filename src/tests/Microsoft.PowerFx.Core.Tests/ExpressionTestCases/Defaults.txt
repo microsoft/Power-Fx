@@ -1,0 +1,4 @@
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
+
+>> Defaults(t1)
+{Field1:Blank(),Field2:Blank(),Field3:Blank(),Field4:Blank()}

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
@@ -14,6 +15,8 @@ namespace Microsoft.PowerFx.Core.Entities
         IReadOnlyList<string> GetKeyColumns();
 
         IEnumerable<string> GetKeyColumns(IExpandInfo expandInfo);
+
+        RecordValue GetDefaultRecord();
 
         bool CanIncludeSelect(string selectColumnName);
 
