@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return arg0;
             }
 
-            return tableValue;
+            return args[1];
         }
     }
 
@@ -201,7 +201,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (!features.PowerFxV1CompatibilityRules)
             {
-                throw new InvalidOperationException($"{functionName} funtion can only be executed if PowerFx V1 feature is active.");
+                throw new InvalidOperationException($"{functionName} function can only be executed if PowerFx V1 feature is active.");
             }
         }
 
@@ -228,11 +228,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         mergedFields[field.Name] = field.Value;
                     }
                 }
-            }
-
-            if (mergedFields.Count == 0)
-            {
-                return DValue<RecordValue>.Of(FormulaValue.NewBlank());
             }
 
             return DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(mergedFields.Select(kvp => new NamedValue(kvp.Key, kvp.Value))));

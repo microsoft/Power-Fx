@@ -1,5 +1,9 @@
 ﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,PowerFxV1CompatibilityRules
 
+// **********************************************************
+// Patch(dataSource:*[], Record, Updates1, Updates2,…)
+// **********************************************************
+
 >> Patch([1,2], {Value:1}, If(false, {x:1, Value:2}, {Value:11, z:2}))
 Errors: Error 0-67: The function 'Patch' has some invalid arguments.|Error 24-66: The specified column 'x' does not exist.|Error 6-11: The value passed to the 'Patch' function cannot be changed.
 
@@ -201,3 +205,66 @@ Error({Kind:ErrorKind.NotFound})
 >> Patch(t1, {DisplayNameField2:"earth"}, {Field2:"mars"});
    t1
 Error({Kind:ErrorKind.NotFound})
+
+>> Patch(Blank(),Blank(),Blank())
+Blank()
+
+>>Patch(If(false,Table()),{},{})
+Errors: Error 6-23: The value passed to the 'Patch' function cannot be changed.
+
+
+
+// **********************************************************
+// Patch(Record, Updates1, Updates2,…)
+// **********************************************************
+
+>> Patch(r1, r2)
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Patch(r1, {}, r2)
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Patch(Blank(), r1, r2)
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Patch(r1, r2, {ErrorField:1/0})
+{ErrorField:Error({Kind:ErrorKind.Div0}),Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Patch(r1, r2, 1/0)
+Errors: Error 0-18: The function 'Patch' has some invalid arguments.|Error 15-16: Cannot use a non-record value in this context: '1 / 0'.
+
+
+
+
+// **********************************************************
+// Patch(DS, table_of_rows, table_of_updates)
+// **********************************************************
+>> Collect(t1, r2);Patch(t1, Table(r1,r2),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}));t1
+Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true})
+
+>> Collect(t1, r2);Patch(t1, Table(r1,r2),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:1/0}));t1
+Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:Error({Kind:ErrorKind.Div0})})
+
+>> Collect(t1, r2);Patch(t1, Table(r1,r2),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}))
+Error({Kind:ErrorKind.Custom})
+
+
+// **********************************************************
+// Patch(DS, table_of_rows_with_updates)
+// **********************************************************
+
+>> Patch(t1, Table(r1))
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch(t1, If(false,t1))
+Blank()
+
+
+// **********************************************************
+// Patch(DS, record_with_keys_and_updates)
+// **********************************************************
+>> Patch(t1, r1)
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Patch(t1, If(false,r1))
+Blank()

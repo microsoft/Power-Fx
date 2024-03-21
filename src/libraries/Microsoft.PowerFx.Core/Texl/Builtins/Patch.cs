@@ -212,7 +212,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             DType dataSourceType = argTypes[0];
             DType retType = expectsTableArgs ? DType.EmptyTable : DType.EmptyRecord;
 
-            base.ValidateArgumentIsMutable(binding, args[0], errors);
+            if (binding.Features.PowerFxV1CompatibilityRules && dataSourceType.IsTable && dataSourceType.Kind != DKind.ObjNull)
+            {
+                base.ValidateArgumentIsMutable(binding, args[0], errors);
+            }
 
             foreach (var assocDS in dataSourceType.AssociatedDataSources)
             {
