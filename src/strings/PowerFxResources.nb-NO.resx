@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>En kolonne med boolske verdier som skal behandles.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konverterer et desimaltall til en boolsk verdi.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>tall</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>De numeriske desimalverdiene som skal konverteres til en boolsk verdi.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konverterer en kolonne med numeriske desimalverdier til en kolonne med boolske verdier.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>inndata</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>En kolonne med tallverdier som skal behandles.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konverterer en valgverdi støttet av en boolsk verdi til en boolsk verdi.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>valg</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Valget som skal konverteres til en boolsk verdi.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konverterer en kolonne med valgverdier støttet av boolske verdier, til en kolonne med boolske verdier.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>inndata</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>En kolonne med valgverdier som skal behandles.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerer det første argumentet som ikke er tomt</value>
     
@@ -1918,6 +1962,10 @@
     <value>Kan ikke bruke en ikke-postverdi i denne konteksten.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Bare oppførings- eller tabellverdier kan brukes i denne konteksten.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Kan ikke bruke denne posten. Den inneholder kanskje konfliktfelt for inkompatible typer.</value>
     
@@ -2791,15 +2839,16 @@
     <value>Språkkoden for den angitte teksten.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Oppretter en tabell fra de angitte postene med like mange kolonner som det er unike postfelter. Eksempel: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Oppretter en tabell fra de angitte oppføringene og tabellene med like mange kolonner som det er unike oppføringsfelter. Eksempel: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>post</value>
+    <value>oppføring_eller_tabell</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>En post som blir en rad i sluttabellen.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>En oppføring eller en tabell som vil være en del av resultattabellen.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Returnerer en tabell med alle kolonner som er fjernet fra kildetabellen, bortsett fra de angitte kolonnene.</value>
@@ -3896,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>En nettadresse som skal kodes.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Konverterer en tekst til en HTML-kodet tekst.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>verdi</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>En tekst som skal kodes.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>{0} er en gjenkjent, men ikke støttet funksjon.</value>
     
@@ -4166,6 +4226,10 @@
     <value>JSONFormat-verdiene "{0}" og "{1}" kan ikke brukes sammen.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Verdien {0} støttes ikke som et alternativ i JSON-funksjonen.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Verdien som sendes til JSON-funksjonen inneholder medier og den støttes ikke som standard. For å tillate JSON-serialisering av medieverdier, må du påse å bruke IncludeBinaryData-alternativet i parameteren format.</value>
     
@@ -4262,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Ukjent Partial-operator.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Delegeringsadvarsel. Resultatet av argumentet {0} kan bli avkortet for store datasett før det sendes til {1}-funksjonen.</value>
     
   </data>
 </root>

@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Colonna di valori boolean da elaborare.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Converte un valore decimale in un valore booleano.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>numero</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Valore numerico decimale da convertire in un valore booleano.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Converte una colonna di valori numerici decimali in una colonna di valori booleani.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Colonna di valori numerici da elaborare.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Converte un valore di scelta supportato da un valore booleano in un valore booleano.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>scelta</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Scelta per convertire in un valore booleano.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Converte una colonna di valori i scelta supportati dai valori booleani in una colonna di valori booleani.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Colonna di valori di scelta da elaborare.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Restituisce il primo argomento non vuoto</value>
     
@@ -1918,6 +1962,10 @@
     <value>Non è possibile usare un valore che non è record in questo contesto.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>In questo contesto è possibile utilizzare solo valori di record o tabella.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Non è possibile usare questo record. Può contenere campi in conflitto con tipi incompatibili.</value>
     
@@ -2791,15 +2839,16 @@
     <value>Codice della lingua del testo fornito.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Crea una tabella dai record specificati con un numero di colonne pari a quello dei campi di record univoci, ad esempio Tabella({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Crea una tabella dai record e dalle tabelle specificati con un numero di colonne pari a quello dei campi di record univoci, ad esempio Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>record</value>
+    <value>record_o_tabella</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Record che corrisponderà a una riga nella tabella risultante.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Record o tabella che fa parte della tabella ottenuta.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Restituisce una tabella con tutte le colonne rimosse dalla tabella 'origine' ad eccezione delle colonne specificate.</value>
@@ -3896,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL da codificare.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Converte un testo in un testo con codifica HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>valore</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Testo da codificare.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" è una funzione riconosciuta ma non supportata.</value>
     
@@ -4166,6 +4226,10 @@
     <value>Non è possibile usare i valori JSONFormat '{0}' e '{1}' contemporaneamente.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Il valore "{0}" non è supportato come opzione nella funzione JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Il valore passato alla funzione JSON contiene oggetti multimediali e questo scenario non è supportato per impostazione predefinita. Per consentire la serializzazione JSON dei valori multimediali, assicurarsi di usare l'opzione IncludeBinaryData nel parametro 'formato'.</value>
     
@@ -4262,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operatore Partial sconosciuto.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Avviso di delega. Il risultato di questo argomento "{0}" potrebbe essere troncato per set di dati di grandi dimensioni prima di essere passato alla funzione "{1}".</value>
     
   </data>
 </root>

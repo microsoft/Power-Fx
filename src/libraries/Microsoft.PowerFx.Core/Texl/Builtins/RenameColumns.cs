@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             // RenameColumns(source, oldName, newName, oldName, newName, ..., oldName, newName, ...)
             SignatureConstraint = new SignatureConstraint(omitStartIndex: 5, repeatSpan: 2, endNonRepeatCount: 0, repeatTopLength: 9);
-            ScopeInfo = new FunctionScopeInfo(this, canBeCreatedByRecord: true);
+            ScopeInfo = new FunctionScopeInfo(this, canBeCreatedByRecord: true, appliesToArgument: (argIndex) => argIndex % 2 == 1);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()

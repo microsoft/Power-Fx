@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Μια στήλη δυαδικών τιμών για επεξεργασία.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Μετατρέπει έναν δεκαδικό αριθμό σε δυαδική τιμή.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>αριθμός</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Η τιμή δεκαδικού αριθμού για μετατροπή σε δυαδική τιμή.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Μετατρέπει μια στήλη δεκαδικών αριθμητικών τιμών σε στήλη δυαδικών τιμών.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>δεδομένα_εισόδου</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Στήλη αριθμητικών τιμών για επεξεργασία.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Μετατρέπει μια τιμή επιλογής, η οποία υποστηρίζεται από δυαδική τιμή σε δυαδική τιμή.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>επιλογή</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Η επιλογή για μετατροπή σε δυαδική τιμή.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Μετατρέπει μια στήλη τιμών επιλογής που υποστηρίζονται από δυαδικές τιμές σε στήλη δυαδικών τιμών.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>δεδομένα_εισόδου</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Στήλη τιμών επιλογής για επεξεργασία.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Επιστρέφει το πρώτο μη κενό όρισμα</value>
     
@@ -1918,6 +1962,10 @@
     <value>Σε αυτό το περιβάλλον δεν είναι δυνατή η χρήση τιμής που δεν είναι τιμή εγγραφής.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Μόνο τιμές καρτέλας ή πίνακα μπορούν να χρησιμοποιηθούν σε αυτό το περιβάλλον.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Δεν είναι δυνατή η χρήση αυτής της εγγραφής. Μπορεί να περιλαμβάνει πεδία μη συμβατών τύπων σε διένεξη.</value>
     
@@ -2791,15 +2839,16 @@
     <value>Κωδικός γλώσσας του παρεχόμενου κειμένου.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Δημιουργεί έναν πίνακα από τις καθορισμένες εγγραφές, με όσες στήλες αντιστοιχούν στα μοναδικά πεδία εγγραφών. Για παράδειγμα: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Δημιουργεί έναν πίνακα από τις καθορισμένες καρτέλες και πίνακες, με όσες στήλες αντιστοιχούν στα μοναδικά πεδία εγγραφών. Για παράδειγμα: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>εγγραφή</value>
+    <value>καρτέλα_ή_πίνακας</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Μια εγγραφή που θα γίνει σειρά στον πίνακα που προκύπτει.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Μια καρτέλα ή ένας πίνακας που θα αποτελεί μέρος του πίνακα που προκύπτει.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Επιστρέφει έναν πίνακα με όλες τις στήλες καταργημένες από τον πίνακα "προέλευσης" εκτός από τις καθορισμένες στήλες.</value>
@@ -3896,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Μια διεύθυνση URL για κωδικοποίηση.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Μετατρέπει ένα κείμενο σε κείμενο με κωδικοποίηση HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>τιμή</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Κείμενο για κωδικοποίηση.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>Το '{0}' είναι μια αναγνωρισμένη αλλά μη υποστηριζόμενη συνάρτηση.</value>
     
@@ -4166,6 +4226,10 @@
     <value>Οι τιμές JSONFormat "{0}" και "{1}" δεν είναι δυνατό να χρησιμοποιηθούν μαζί.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Η τιμή '{0}' δεν υποστηρίζεται ως επιλογή στη συνάρτηση JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Η τιμή που μεταβιβάζεται στη συνάρτηση JSON περιέχει πολυμέσα και δεν υποστηρίζεται από προεπιλογή. Για να επιτρέψετε τη σειριοποίηση JSON τιμών πολυμέσων, φροντίστε να χρησιμοποιήσετε την επιλογή IncludeBinaryData στην παράμετρο "μορφή".</value>
     
@@ -4262,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Άγνωστος τελεστής Partial.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Προειδοποίηση ανάθεσης. Το αποτέλεσμα αυτού του ορίσματος '{0}' μπορεί να περικοπεί για μεγάλα σύνολα δεδομένων, προτού διαβιβαστεί στη συνάρτηση '{1}'.</value>
     
   </data>
 </root>

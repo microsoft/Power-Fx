@@ -2880,6 +2880,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.SetMutable(node, true);
                     }
                 }
+                else if (lookupInfo.Kind == BindKind.ScopeCollection)
+                {
+                    _txb.SetMutable(node, true);
+                }
 
                 Contracts.Assert(lookupInfo.Kind != BindKind.LambdaField);
                 Contracts.Assert(lookupInfo.Kind != BindKind.LambdaFullRecord);

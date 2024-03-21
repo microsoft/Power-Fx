@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Kolom nilai boolean untuk diproses.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Mengonversi angka desimal ke nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>angka</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Nilai angka desimal yang akan dikonversi ke nilai boolean.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Mengonversi kolom nilai numerik desimal ke kolom nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Kolom nilai angka untuk diproses.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Mengonversi nilai pilihan yang didukung oleh boolean ke nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>pilihan</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Nilai pilihan yang akan dikonversi ke nilai boolean.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Mengonversi kolom nilai pilihan yang didukung oleh boolean ke kolom nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Kolom nilai pilihan yang akan diproses.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Menampilkan argumen tidak kosong pertama</value>
     
@@ -1918,6 +1962,10 @@
     <value>Tidak dapat menggunakan nilai bukan-catatan dalam konteks ini.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Hanya nilai rekaman atau tabel yang dapat digunakan dalam konteks ini.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Tidak dapat menggunakan catatan ini. Mungkin berisi bidang bertabrakan dengan jenis yang tidak kompatibel.</value>
     
@@ -2791,15 +2839,16 @@
     <value>Kode bahasa teks yang disediakan.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Membuat tabel dari catatan yang ditentukan, dengan kolom sebanyak bidang catatan unik. Misalnya: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Membuat tabel dari rekaman dan tabel yang ditentukan, dengan jumlah kolom sebanyak bidang rekaman unik. Misalnya: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>catatan</value>
+    <value>rekaman_atau_tabel</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Catatan yang akan menjadi baris di tabel yang dihasilkan.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Rekaman atau tabel yang akan menjadi bagian dari tabel hasil.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Menampilkan tabel dengan semua kolom dihapus dari tabel 'sumber' kecuali kolom tertentu.</value>
@@ -3896,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL untuk dikodekan.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Konversikan teks ke teks yang dikodekan HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>nilai</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Teks yang akan dikodekan.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' adalah fungsi yang dikenali, tetapi tidak didukung.</value>
     
@@ -4166,6 +4226,10 @@
     <value>Nilai JSONFormat ' {0} ' dan ' {1} ' tidak dapat digunakan bersamaan.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Nilai '{0}' tidak didukung sebagai pilihan dalam fungsi JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Nilai yang diberikan ke fungsi JSON berisi media, dan hal ini tidak didukung secara default. Untuk memungkinkan serialisasi JSON dari nilai media, pastikan Anda menggunakan pilihan IncludeBinaryData dalam parameter 'format'.</value>
     
@@ -4262,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operator Partial tidak diketahui.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Peringatan delegasi. Hasil argumen '{0}' ini dapat dipotong untuk himpunan data besar sebelum diteruskan ke fungsi '{1}'.</value>
     
   </data>
 </root>

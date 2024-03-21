@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>O coloană de valori booleene de procesat.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Convertește un număr zecimal la o valoare booleană.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>număr</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Valoarea număr zecimal de convertit la o valoare booleană.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Convertește o coloană de valori numerice zecimale la o coloană de valori booleene.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>intrare</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>O coloană de valori numerice de procesat.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Convertește o valoare de opțiune bazată pe o valoare booleană într-o valoare booleană.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>opțiune</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Opțiunea de convertit la o valoare booleană.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Convertește o coloană de opțiuni bazate pe valori booleene la o coloană de valori booleene.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>intrare</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>O coloană de valori opțiune de procesat.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnează primul argument nevid</value>
     
@@ -1918,6 +1962,10 @@
     <value>Nu se poate utiliza o valoare non-înregistrare în acest context.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Doar valorile de înregistrare sau de tabel pot fi utilizate în acest context.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Nu se poate utiliza această înregistrare. Poate conține câmpuri conflictuale, cu tipuri incompatibile.</value>
     
@@ -2791,15 +2839,16 @@
     <value>Codul de limbă al textului furnizat.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Creează un tabel din înregistrările specificate, având numărul de coloane egal cu numărul de câmpuri unice din înregistrare. De exemplu: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Creează un tabel din înregistrările și tabelele specificate, având numărul de coloane egal cu numărul de câmpuri unice din înregistrare. De exemplu: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>înregistrare</value>
+    <value>înregistrare_sau_tabel</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>O înregistrare care va deveni un rând în tabelul rezultat.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>O înregistrare sau tabel care va face parte din tabelul rezultat.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Returnează un tabel cu toate coloanele eliminate din tabelul „sursă”, cu excepția coloanelor specificate.</value>
@@ -3896,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Un URL de codificat.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Convertește un text normal la un text codificat HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>valoare</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Un text de codificat.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}” este o funcție recunoscută, dar nu este acceptată.</value>
     
@@ -4166,6 +4226,10 @@
     <value>Valorile JSONFormat „{0}” și „{1}” nu pot fi utilizate împreună.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Valoarea „{0}” nu este acceptată ca opțiune în funcția JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Valoarea transmisă funcției JSON are conținut media și nu este acceptată în mod implicit. Pentru a permite serializarea JSON a valorilor media, asigurați-vă că utilizați opțiunea IncludeBinaryData în parametrul „format”.</value>
     
@@ -4231,7 +4295,7 @@
     
   </data>
   <data name="AboutUniChar" xml:space="preserve">
-    <value>Returnează caracterul Unicode re3ferită de valoarea numerică dată.</value>
+    <value>Returnează caracterul Unicode la care face referire valoarea numerică dată.</value>
     
   </data>
   <data name="AboutUniChar_number" xml:space="preserve">
@@ -4262,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operator Partial necunoscut.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Avertisment de delegare. Rezultatul argumentului „{0}” este posibil să se fi trunchiat datorită seturilor mari de date înainte de a fi transmis funcției „{1}”.</value>
     
   </data>
 </root>

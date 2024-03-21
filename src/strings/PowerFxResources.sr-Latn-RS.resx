@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Kolona Bulovih vrednosti za obradu.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konvertuje decimalni broj u Bulovu vrednost.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>broj</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Decimalna brojčana vrednost koju treba konvertovati u Bulovu vrednost.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konvertuje kolonu decimalnih numeričkih vrednosti u kolonu Bulovih vrednosti.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>unos</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Kolona vrednosti brojeva za obradu.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konvertuje vrednost izbora koju podržava Bulova vrednost u Bulovu vrednost.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>izbor</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Izbor koji treba konvertovati u Bulovu vrednost.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konvertuje kolonu vrednosti izbora koje podržavaju Bulove vrednosti u kolonu Bulovih vrednosti.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>unos</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Kolona vrednosti izbora za obradu.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vraća prvi argument koji nije prazan</value>
     
@@ -1918,6 +1962,10 @@
     <value>Nije moguće koristiti vrednost koja nije zapis u ovom kontekstu.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>U ovom kontekstu mogu da se koriste samo vrednosti zapisa ili tabele.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Nije moguće koristiti ovaj zapis. On možda sadrži preklapajuća polja nekompatibilnih tipova.</value>
     
@@ -2791,15 +2839,16 @@
     <value>Šifra jezika navedenog teksta.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Kreira tabelu od navedenih zapisa, sa onoliko kolona koliko postoji jedinstvenih polja zapisa. Na primer: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Kreira tabelu od navedenih zapisa i tabela, sa onoliko kolona koliko postoji jedinstvenih polja zapisa. Na primer: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>zapis</value>
+    <value>zapis_ili_tabela</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Zapis koji će postati red u dobijenoj tabeli.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Zapis ili tabela koji će biti deo dobijene tabele.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Vraća tabelu sa svim kolonama uklonjenim iz tabele „izvor“ osim navedenih kolona.</value>
@@ -3896,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL adresa koju treba kodirati.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Konvertuje tekst u tekst kodiran za HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>vrednost</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Tekst koji treba kodirati.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}“ je prepoznata, ali ne i podržana funkcija.</value>
     
@@ -4166,6 +4226,10 @@
     <value>JSONFormat vrednosti „{0}“ i „{1}“ ne mogu se koristiti zajedno.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Vrednost „{0}“ nije podržana kao opcija u funkciji JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Vrednost prosleđena funkciji JSON sadrži medije, a nije podržana po podrazumevanoj vrednosti. Da biste dozvolili JSON serijalizaciju medijskih vrednosti, uverite se da koristite opciju IncludeBinaryData u parametru „format“.</value>
     
@@ -4262,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Nepoznat Partial operater.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Upozorenje o delegiranju. Rezultat ovog argumenta „{0}“ može da bude skraćen za velike skupove podataka pre nego što bude prosleđen u funkciju „{1}“.</value>
     
   </data>
 </root>

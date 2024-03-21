@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>En kolonne med booleske værdier, der skal behandles.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konverterer et decimaltal til en boolesk værdi.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>tal</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Den decimaltalværdi, der skal konverteres til en boolesk værdi.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konverterer en kolonne med numeriske decimalværdier til en kolonne med booleske værdier.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>En kolonne af numeriske værdier, der skal behandles.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konverterer en valgværdi, som understøttes af en boolesk værdi, til en boolesk værdi.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>valg</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Det valg, der skal konverteres til en boolesk værdi.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konverterer en kolonne med valgværdier, som understøttes af booleske værdier, til en kolonne med booleske værdier.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>En kolonne af valgværdier, der skal behandles.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerer det første ikke-tomme argument</value>
     
@@ -1056,7 +1100,7 @@
     
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
-    <value>Det antal måneder, datoen skal ændres med. En positiv værdi giver en fremtidig dato, en negativ værdi en tidligere dato og nul ændrer ikke måneden.</value>
+    <value>Det antal måneder, datoen skal ændres med. En positiv værdi giver en fremtidig dato, en negativ værdi giver en tidligere dato, og nul ændrer ikke måneden.</value>
     
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
@@ -1916,6 +1960,10 @@
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>Kan ikke bruge en ikke-post-værdi i denne kontekst.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Kun post- eller tabelværdier kan bruges i denne sammenhæng.</value>
     
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
@@ -2791,15 +2839,16 @@
     <value>Den indsatte teksts sprogkode.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Opretter en tabel ud fra de angivne poster med så mange kolonner, som der er unikke postfelter. For eksempel: Tabel({nøgle1: værdi1, nøgle2: værdi2, ...}, ...)</value>
+    <value>Opretter en tabel ud fra de angivne poster med så mange kolonner, som der er unikke postfelter. Eksempel: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>post</value>
+    <value>post_eller_tabel</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>En post, der bliver en række i den resulterende tabel.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>En post eller tabel, der vil være en del af den tabel, der bliver resultatet.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Returnerer en tabel, hvor alle kolonner er fjernet fra 'kilde'-tabellen, undtagen de angivne kolonner.</value>
@@ -3896,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>En URL-adresse, der skal kodes.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Konverterer en tekst til en HTML-kodet tekst.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>værdi</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>En tekst, der skal kodes.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' er en genkendt, men ikke understøttet funktion.</value>
     
@@ -4166,6 +4226,10 @@
     <value>JSONFormat-værdierne '{0}' og '{1}' kan ikke bruges sammen.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Værdien "{0}" understøttes ikke som en indstilling i JSON-funktionen.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Den værdi, der overføres til JSON-funktionen, indeholder medier, og den understøttes ikke som standard. Hvis du vil tillade JSON-serialisering af medieværdier, skal du sørge for at bruge indstillingen IncludeBinaryData i parameteren 'format'.</value>
     
@@ -4262,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Ukendt Partial-operator.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Delegeringsadvarsel. Resultatet af dette argument "{0}" afkortes for store datasæt, før det sendes til funktionen "{1}".</value>
     
   </data>
 </root>

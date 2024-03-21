@@ -46,6 +46,7 @@
     "Distinct",
     "DropColumns",
     "EDate",
+    "EncodeHTML",
     "EncodeUrl",
     "EndsWith",
     "EOMonth",

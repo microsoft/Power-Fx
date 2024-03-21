@@ -310,7 +310,7 @@ namespace Microsoft.PowerFx.Syntax
             {
                 PartialAttribute.AttributeOperationKind.PartialAnd => GeneratePartialFunction("And", name, formulas),
                 PartialAttribute.AttributeOperationKind.PartialOr => GeneratePartialFunction("Or", name, formulas),
-                PartialAttribute.AttributeOperationKind.PartialTable => GeneratePartialFunction("TableConcatenate", name, formulas),
+                PartialAttribute.AttributeOperationKind.PartialTable => GeneratePartialFunction("Table", name, formulas),
                 PartialAttribute.AttributeOperationKind.PartialRecord => GeneratePartialFunction("MergeRecords", name, formulas),
                 _ => throw new InvalidOperationException("Unknown partial op while generating merged NF")
             };

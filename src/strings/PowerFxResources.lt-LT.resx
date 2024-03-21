@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Bulio logikos reikšmių stulpelis, skirtas apdoroti.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konvertuoja dešimtainį skaičių į Bulio logikos reikšmę.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>skaičius</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Dešimtainė skaitinė reikšmė, kurią reikia konvertuoti į Bulio logikos reikšmę.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konvertuoja dešimtainių skaitinių reikšmių stulpelį į Bulio logikos reikšmių stulpelį.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>įvestis</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Apdorotinų skaitinių reikšmių stulpelis.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konvertuoja Bulio logikos reikšme pagrįstą pasirinkimo reikšmę į Bulio logikos reikšmę.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>pasirinkimas</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Pasirinkimas, kurį reikia konvertuoti į Bulio logikos reikšmę.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konvertuoja Bulio logikos reikšmėmis pagrįstų pasirinkimo reikšmių stulpelį į Bulio logikos reikšmių stulpelį.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>įvestis</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Apdorotinų pasirinkimų reikšmių stulpelis.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Pateikiamas pirmasis netuščias argumentas</value>
     
@@ -1918,6 +1962,10 @@
     <value>Negalima naudoti ne įrašo reikšmės šiame kontekste.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Šiame kontekste galima naudoti tik įrašų arba lentelių reikšmes.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Negalima naudoti šio įrašo. Jame gali būti nesuderinamų tipų susikertančių laukų.</value>
     
@@ -2791,15 +2839,16 @@
     <value>Pateikto teksto kalbos kodas.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Sukuria lentelę iš nurodytų įrašų su tiek stulpelių, kiek yra unikalių įrašų laukų. Pavyzdžiui: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Sukuria lentelę iš nurodytų įrašų ir lentelių su tiek stulpelių, kiek yra unikalių įrašų laukų. Pavyzdžiui: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>įrašas</value>
+    <value>įrašas_arba_lentelė</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Įrašas, kuris taps eilute gautoje lentelėje.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Įrašas arba lentelė, kuri bus gautos lentelės dalis.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Pateikia lentelę iš šaltinio lentelės pašalinus visus stulpelius, išskyrus nurodytus.</value>
@@ -3896,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL, kuris bus užkoduotas.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Konvertuoja tekstą į HTML koduotą tekstą.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>reikšmė</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Tekstas, kurį reikia koduoti.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}“ funkcija yra atpažįstama, bet nepalaikoma.</value>
     
@@ -4166,6 +4226,10 @@
     <value>JSONFormat reikšmių {0} ir {1} negalima naudoti kartu.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Reikšmė „{0}“ JSON funkcijoje nepalaikoma kaip parinktis.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>JSON funkcijai perduota reikšmė apima mediją, o pagal numatytuosius parametrus ji nepalaikoma. Norėdami leisti medijos reikšmių JSON nuoseklinimą, būtinai naudokite parinktį IncludeBinaryData, esančią parametre formatas.</value>
     
@@ -4262,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Nežinomas Partial operatorius.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Perdavimo įspėjimas. Šio argumento rezultatas „{0}“ dideliuose duomenų rinkiniuose gali būti sutrumpintas per perduodant „{1}“ funkcijai.</value>
     
   </data>
 </root>

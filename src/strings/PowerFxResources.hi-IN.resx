@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>प्रक्रिया के लिए बूलियन मानों का एक कॉलम.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>दशमलव संख्या को बूलियन मान में रूपांतरित करें.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>संख्या</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>बूलियन मान में रूपांतरित करने के लिए दशमलव संख्या वाला मान.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>दशमलव संख्या वाले मानों के एक कॉलम को बूलियन मानों के कॉलम में रूपांतरित करें.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>इनपुट</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>संसाधित किए जाने वाले संख्या मानों का कॉलम.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>बूलियन द्वारा समर्थित विकल्प मान को बूलियन मान में रूपांतरित करें.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>विकल्प</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>बूलियन मान में रूपांतरित का विकल्प.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>बूलियन द्वारा समर्थित विकल्प मानों के एक कॉलम को बूलियन मानों के कॉलम में रूपांतरित करें.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>इनपुट</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>संसाधित करने के लिए विकल्प मानों का एक कॉलम.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>पहला गैर रिक्त तर्क वापस करता है</value>
     
@@ -1918,6 +1962,10 @@
     <value>किसी गैर-रेकॉर्ड मान का उपयोग इस प्रसंग में नहीं किया जा सकता.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>इस संदर्भ में केवल रिकॉर्ड या तालिका मानों का उपयोग किया जा सकता है.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>इस रिकॉर्ड का उपयोग नहीं किया जा सकता. इसमें असंगत प्रकारों वाली परस्पर विरोधी फ़ील्ड हो सकती हैं.</value>
     
@@ -2791,15 +2839,16 @@
     <value>प्रदत्त लेख का भाषा कोड.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>निर्दिष्ट रेकॉर्ड से एक तालिका बनाता है, जिसमें उतने ही स्तंभ होते है, जितने उसमें अद्वितीय रेकॉर्ड होते हैं. उदाहरण के लिए: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>निर्दिष्ट रिकॉर्ड और तालिकाओं से एक तालिका बनाता है, जिसमें उतने ही कॉलम होते हैं जितने विशिष्ट रिकॉर्ड फ़ील्ड होते हैं. उदाहरण के लिए: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>रिकॉर्ड</value>
+    <value>रिकॉर्ड_या_टेबल</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>ऐसा रेकॉर्ड जो परिणामी तालिका में पंक्ति बन जाएगा.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>एक रिकॉर्ड या तालिका जो परिणामी तालिका का हिस्सा होगी.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>'source' तालिका से निर्दिष्ट स्तंभों को छोड़कर सभी स्तंभ के साथ निकाली गई तालिका लौटाता है.</value>
@@ -3896,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>एन्कोड किया जाने वाला URL.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>किसी पाठ को HTML-एन्कोडेड पाठ में रूपांतरित करता है.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>मान</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>एन्कोड किया जाने वाला पाठ.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>{0}' मान्यता प्राप्त लेकिन समर्थित फ़ंक्शन नहीं है.</value>
     
@@ -4166,6 +4226,10 @@
     <value>JSONFormat मान '{0}' और '{1}' का उपयोग एक साथ नहीं किया जा सकता.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>मान '{0}' JSON फ़ंक्शन में एक विकल्प के रूप में समर्थित नहीं है.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>JSON फ़ंक्शन के लिए पास किए गए मान में मीडिया शामिल है और यह डिफ़ॉल्ट रूप से समर्थित नहीं है. मीडिया मानों के JSON क्रमबद्ध की अनुमति देने के लिए, 'फ़ॉर्मेट' पैरामीटर में IncludeBinaryData विकल्प का उपयोग करना सुनिश्चित करें.</value>
     
@@ -4235,14 +4299,14 @@
     
   </data>
   <data name="AboutUniChar_number" xml:space="preserve">
-    <value>संख्यात्मक मान को यूनिकोड वर्ण में परिवर्तित किया जाएगा.</value>
+    <value>संख्यात्मक मान को यूनिकोड वर्ण में रूपांतरित किया जाएगा.</value>
   </data>
   <data name="UniCharArg1" xml:space="preserve">
     <value>संख्या</value>
     
   </data>
   <data name="AboutUniCharT" xml:space="preserve">
-    <value>संख्यात्मक मानों की तालिका को यूनिकोड वर्णों की तालिका में परिवर्तित करता है.</value>
+    <value>संख्यात्मक मानों की तालिका को यूनिकोड वर्णों की तालिका में रूपांतरित करता है.</value>
     
   </data>
   <data name="UniCharTArg1" xml:space="preserve">
@@ -4250,7 +4314,7 @@
     
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
-    <value>संख्यात्मक मानों का एक तालिका कॉलम यूनिकोड वर्णों में परिवर्तित किया जाना है.</value>
+    <value>संख्यात्मक मानों का एक तालिका कॉलम यूनिकोड वर्णों में रूपांतरित किया जाना है.</value>
   </data>
   <data name="ErrOnlyPartialAttribute" xml:space="preserve">
     <value>असमर्थित विशेषता प्रकार</value>
@@ -4262,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>अज्ञात Partial संचाकल.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>प्रत्यायोजन चेतावनी. इस तर्क '{0}' के परिणाम को '{1}' फ़ंक्शन में पास करने से पहले बड़े डेटा सेट के लिए छोटा किया जा सकता है.</value>
     
   </data>
 </root>

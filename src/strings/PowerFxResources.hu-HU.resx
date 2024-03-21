@@ -512,7 +512,7 @@
     <value>A számértékké alakítandó szöveges érték.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Az érték konvertálása során használandó nyelvkód.</value>
+    <value>Az érték átalakítása során használandó nyelvkód.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -580,6 +580,50 @@
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>A feldolgozandó logikai értékeket tartalmazó oszlop.</value>
+  </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Átalakít egy tizedest logikai értékké.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>szám</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>A logikai értékké alakítandó tizedes érték.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Tizedesjeggyel rendelkező numerikus értékekből álló oszlopot logikai értékek oszlopává alakít át.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>bevitel</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>A feldolgozandó számértékeket tartalmazó oszlop.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Egy logikai értékkel támogatott választási értéket logikai értékké alakít.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>választási lehetőség</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>A logikai értékké alakítandó választás.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Logikai értékekkel támogatott választási értékekből álló oszlopot logikai értékek oszlopává alakít át.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>bevitel</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>A feldolgozandó választható értékeket tartalmazó oszlop.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Az első nem üres argumentumot adja vissza</value>
@@ -1918,6 +1962,10 @@
     <value>Ebben a környezetben nem használható olyan érték, amely nem rekord.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Ebben a kontextusban csak rekord- vagy táblaértékek használhatók.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Ez a rekord nem használható. Valószínűleg ütköző, nem kompatibilis típusú mezőket tartalmaz.</value>
     
@@ -2791,15 +2839,16 @@
     <value>A megadott szöveg nyelvkódja.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Létrehoz egy táblázatot a megadott rekordokból, az egyedi rekordmezőkének megfelelő számú oszloppal. Például: Table({1. kulcs: 1. érték, 2. kulcs: 2. érték, ...}, ...)</value>
+    <value>Létrehoz egy táblázatot a megadott rekordokból és táblákból, az egyedi rekordmezőkének megfelelő számú oszloppal. Például: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>rekord</value>
+    <value>rekord_vagy_tábla</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Egy rekord, amelyből sor lesz a létrejövő táblában.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Rekord vagy tábla, amely az így kapott tábla része lesz.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Olyan táblát ad vissza, amelyből el van távolítva a „forrás” argumentumban megadott tábla minden oszlopa, a megadott oszlopokat kivéve.</value>
@@ -3896,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>A kódolandó URL-cím.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Átalakít egy szöveget HTML-kódolt szöveggé.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>érték</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Egy kódolandó szöveg.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>A(z) '{0}' egy felismert, de nem támogatott függvény.</value>
     
@@ -4007,7 +4067,7 @@
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
-    <value>A rendszer egy rekord- vagy táblaértéket várt.</value>
+    <value>A rendszer egy rekord vagy táblaértéket várt.</value>
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
@@ -4166,6 +4226,10 @@
     <value>A(z) {0} és a(z) {1} JSONFormat-érték nem használható együtt.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>A(z) '{0}' érték nem támogatott beállításként a JSON függvényben.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>A JSON-függvénynek átadott érték multimédiát tartalmaz, és alapértelmezés szerint nem támogatott. Ha engedélyezni szeretné a médiaértékek JSON-szerializálását, használja az IncludeBinaryData beállítást a „format” paraméterben.</value>
     
@@ -4262,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Ismeretlen Partial operátor.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Delegálási figyelmeztetés. Lehet, hogy ezen '{0}' argumentum eredményét a rendszer csonkolja nagy adathalmazokért, mielőtt átadja a(z) '{1}' függvénynek.</value>
     
   </data>
 </root>

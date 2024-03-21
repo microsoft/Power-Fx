@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
@@ -826,6 +827,12 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, Uri.EscapeDataString(args[0].Value));
         }
 
+        public static FormulaValue EncodeHTML(IRContext irContext, StringValue[] args)
+        {
+            var encoded = HttpUtility.HtmlEncode(args[0].Value);
+            return new StringValue(irContext, encoded);
+        }
+
         public static FormulaValue Proper(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(runner.CultureInfo.TextInfo.ToLower(args[0].Value)));
@@ -1167,13 +1174,6 @@ namespace Microsoft.PowerFx.Functions
             {
                 return CommonErrors.GenericInvalidArgument(irContext);
             }
-        }
-
-        public static FormulaValue OptionSetValueToLogicalName(IRContext irContext, OptionSetValue[] args)
-        {
-            var optionSet = args[0];
-            var logicalName = optionSet.Option;
-            return new StringValue(irContext, logicalName);
         }
 
         public static FormulaValue PlainText(IRContext irContext, StringValue[] args)
