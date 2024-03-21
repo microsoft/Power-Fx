@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Readers.Exceptions;
 using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.Validations.Rules;
 
 namespace Microsoft.PowerFx.TexlFunctionExporter
 {
@@ -39,11 +40,11 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
             SwaggerLocatorSettings settings = locatorSettings ?? new SwaggerLocatorSettings();
 
             IEnumerable<(string folder, string file)> files = folders.SelectMany(folder => Directory.EnumerateFiles(folder, pattern, new EnumerationOptions() { RecurseSubdirectories = true }).Select(f => (folder, file: f)))
-                                                                     .Where(f => settings.FoldersToExclude.All(fte => f.file.IndexOf(fte, 0, StringComparison.OrdinalIgnoreCase) < 0));                                                                     
+                                                                     .Where(f => settings.FoldersToExclude.All(fte => f.file.IndexOf(fte, 0, StringComparison.OrdinalIgnoreCase) < 0));
 
             // items: <connector title, (source folder, swagger location, OpenApiDocument)>
-            Dictionary<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>> list = new (StringComparer.OrdinalIgnoreCase);
-            Dictionary<string, (string folder, string location, OpenApiDocument document, List<string> errors)> list2 = new (StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>> list = new(StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, (string folder, string location, OpenApiDocument document, List<string> errors)> list2 = new(StringComparer.OrdinalIgnoreCase);
 
             // parse all files we have
             foreach ((string folder, string file) in files)
@@ -55,12 +56,12 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
             foreach (KeyValuePair<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>> swagger in list)
             {
                 if (swagger.Key == UNKNOWN_SWAGGER)
-                { 
+                {
                     continue;
                 }
 
                 List<(string folder, string location, OpenApiDocument document, List<string> errors)> docs = swagger.Value;
-                
+
                 // determine vMax and only keep those versions
                 Version vMax = docs.Max(d => d.document.GetVersion());
                 docs = swagger.Value.Where(d => d.document.GetVersion() == vMax).ToList();
@@ -195,17 +196,15 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
             return (doc, errors);
         }
 
+        private static ValidationRuleSet _defaultRuleSet = null;
+
         internal static ValidationRuleSet DefaultValidationRuleSet
         {
             get
             {
-                IList<ValidationRule> rules = ValidationRuleSet.GetDefaultRuleSet().Rules;
-
-                // OpenApiComponentsRules.KeyMustBeRegularExpression is the only rule with this type
-                var keyMustBeRegularExpression = rules.First(r => r.GetType() == typeof(ValidationRule<OpenApiComponents>));
-                rules.Remove(keyMustBeRegularExpression);
-
-                return new ValidationRuleSet(rules);
+                // Exclude the OpenApiComponentsRules.KeyMustBeRegularExpression rule from the default rule set as some parameters don't necessarily observe ^[a-zA-Z0-9\.\-_]+$
+                _defaultRuleSet ??= new ValidationRuleSet(ValidationRuleSet.GetDefaultRuleSet().Rules.Where(r => r.Name != OpenApiComponentsRules.KeyMustBeRegularExpression.Name));
+                return _defaultRuleSet;
             }
         }
     }
