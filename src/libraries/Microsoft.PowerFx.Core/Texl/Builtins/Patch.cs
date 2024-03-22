@@ -55,13 +55,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return curType;
         }
 
-        // !!!TODO Clean up dead code.
-        //protected bool CheckTypesCore(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, bool expectsTableArgs = false)
-        //{
-        //    Dictionary<TexlNode, DType> nodeToCoercedTypeMap = null;
-        //    return CheckTypesCore(context, args, argTypes, errors, out returnType, ref nodeToCoercedTypeMap, expectsTableArgs);
-        //}
-
         protected bool CheckTypesCore(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, bool expectsTableArgs = false)
         {
             Contracts.AssertValue(args);
@@ -272,7 +265,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }    
 
-    // !!!TODO Add to RequiresErrorContext
     internal abstract class PatchAsyncFunctionCore : PatchAndValidateRecordFunctionBase
     {
         public override bool IsAsync => true;
@@ -445,7 +437,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // !!!TODO [TexlRuntimeNameOverride(Suffix = "SingleRecord")]
     // Patch(DS, record_with_keys_and_updates)
     internal class PatchSingleRecordFunction : PatchAsyncFunctionCore
     {
@@ -473,7 +464,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // !!!TODO [TexlRuntimeNameOverride(Suffix = "Aggregate")]
     // Patch(DS, table_of_rows, table_of_updates)
     internal class PatchAggregateFunction : PatchAsyncFunctionCore
     {
@@ -490,7 +480,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // !!!TODO [TexlRuntimeNameOverride(Suffix = "AggregateSingleTable")]
     // Patch(DS, table_of_rows_with_updates)
     internal class PatchAggregateSingleTableFunction : PatchAsyncFunctionCore
     {
@@ -507,7 +496,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // !!![TexlRuntimeNameOverride(Suffix = "_Record")]
     // Patch(Record, Updates1, Updates2,…)
     internal class PatchRecordFunction : BuiltinFunction
     {
