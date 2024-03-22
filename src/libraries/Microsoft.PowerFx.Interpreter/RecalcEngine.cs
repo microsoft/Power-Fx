@@ -32,6 +32,7 @@ namespace Microsoft.PowerFx
 
         internal readonly SymbolTable _symbolTable;
         internal readonly SymbolValues _symbolValues;
+        internal DefinedTypeSymbolTable _definedTypeSymbolTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
@@ -47,6 +48,7 @@ namespace Microsoft.PowerFx
         {
             _symbolTable = new SymbolTable { DebugName = "Globals" };
             _symbolValues = new SymbolValues(_symbolTable);
+            _definedTypeSymbolTable = new DefinedTypeSymbolTable();
             _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
 
             base.EngineSymbols = _symbolTable;
@@ -392,10 +394,12 @@ namespace Microsoft.PowerFx
         /// <param name="onUpdate">Function to be called when update is triggered.</param>
         public void AddUserDefinitions(string script, CultureInfo parseCulture = null, Action<string, FormulaValue> onUpdate = null)
         {
-            var userDefinitionResult = UserDefinitions.Process(script, parseCulture, features: Config.Features);
+            var userDefinitionResult = UserDefinitions.Process(script, parseCulture, features: Config.Features, _definedTypeSymbolTable);
+
+            _definedTypeSymbolTable.AddTypes(userDefinitionResult.DefinedTypeSymbolTable.DefinedTypes);
 
             // Compose will handle null symbols
-            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, userDefinitionResult.DefinedTypeSymbolTable);
+            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, _definedTypeSymbolTable);
             var sb = new StringBuilder();
 
             foreach (var udf in userDefinitionResult.UDFs)

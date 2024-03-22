@@ -209,7 +209,6 @@ namespace Microsoft.PowerFx
             var options = new ParserOptions() 
             { 
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
                 Culture = parseCulture ?? CultureInfo.InvariantCulture 
             };
             var sb = new StringBuilder();

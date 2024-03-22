@@ -57,23 +57,23 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <summary>
-        /// Parses and creates user definitions (named formulas, user defined functions).
+        /// Parses and creates user definitions (named formulas, user defined functions, user defined types).
         /// </summary>
         /// <param name="script">Script with named formulas, user defined functions and user defined types.</param>
-        /// <param name="definedTypeSymbolTable">Script with named formulas, user defined functions and user defined types.</param>
         /// <param name="parserOptions">Options for parsing an expression.</param>
         /// <param name="userDefinitionResult"><see cref="UserDefinitionResult"/>.</param>
         /// <param name="features">PowerFx feature flags.</param>
+        /// <param name="extraSymbols">Extra SymbolTable if needed.</param>
         /// <returns>True if there are no parser errors.</returns>
-        public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null, DefinedTypeSymbolTable definedTypeSymbolTable = null)
+        public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null, ReadOnlySymbolTable extraSymbols = null)
         {
             parserOptions.AllowParseAsTypeLiteral = true;
             var userDefinitions = new UserDefinitions(script, parserOptions, features);
 
-            return userDefinitions.ProcessUserDefinitions(out userDefinitionResult);
+            return userDefinitions.ProcessUserDefinitions(out userDefinitionResult, extraSymbols);
         }
 
-        private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult)
+        private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult, ReadOnlySymbolTable extraSymbols = null)
         {
             var parseResult = Parse(_script, _parserOptions);
 
@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Syntax
             var definedTypeSymbolTable = new DefinedTypeSymbolTable();
             var definedTypes = parseResult.DefinedTypes.ToList();
 
-            var err = new List<TexlError>();
+            var typeErr = new List<TexlError>();
 
             foreach (var defType in definedTypes)
             {
@@ -93,20 +93,20 @@ namespace Microsoft.PowerFx.Syntax
                 var res = DTypeVisitor.Run(defType.Type.TypeRoot, definedTypeSymbolTable);
                 if (res == null)
                 {
-                    err.Add(new TexlError(defType.Ident, DocumentErrorSeverity.Severe, Core.Localization.TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                    typeErr.Add(new TexlError(defType.Ident, DocumentErrorSeverity.Severe, Core.Localization.TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
                     continue;
                 }
 
                 definedTypeSymbolTable.RegisterType(name, FormulaType.Build(res));
             }
 
-            //var d = definedTypeSymbolTable;
-            //var parseResultT = parseResult.UDFs.Where(udf => udf.IsParseValid).Select(udf => udf.Args.Select(a => GetFormulaTypeFromName(a.TypeIdent._value, definedTypeSymbolTable)._type));
+            var composedSymbols = ReadOnlySymbolTable.Compose(extraSymbols, definedTypeSymbolTable);
 
             // Parser returns both complete & incomplete UDFs, and we are only interested in creating TexlFunctions for valid UDFs. 
-            var functions = CreateUserDefinedFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), definedTypeSymbolTable, out var errors);
+            var functions = CreateUserDefinedFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), composedSymbols, out var errors);
 
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+            errors.AddRange(typeErr);
             userDefinitionResult = new UserDefinitionResult(
                 functions,
                 parseResult.Errors != null ? errors.Union(parseResult.Errors) : errors,
@@ -117,14 +117,15 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <summary>
-        /// Process user script and returns user defined functions and named formulas.
+        /// Process user script and returns user defined functions, user defined types and named formulas.
         /// </summary>
         /// <param name="script">User script containing UDFs and/or named formulas.</param>
         /// <param name="parseCulture">CultureInfo to parse the script.</param>
         /// <param name="features">Features.</param>
+        /// <param name="extraSymbols">Extra SymbolTable if needed.</param>
         /// <returns>Tuple.</returns>
         /// <exception cref="InvalidOperationException">Throw if the user script contains errors.</exception>
-        public static UserDefinitionResult Process(string script, CultureInfo parseCulture, Features features = null)
+        public static UserDefinitionResult Process(string script, CultureInfo parseCulture, Features features = null, ReadOnlySymbolTable extraSymbols = null)
         {
             var options = new ParserOptions()
             {
@@ -134,7 +135,7 @@ namespace Microsoft.PowerFx.Syntax
 
             var sb = new StringBuilder();
 
-            ProcessUserDefinitions(script, options, out var userDefinitionResult, features);
+            ProcessUserDefinitions(script, options, out var userDefinitionResult, features, extraSymbols);
 
             if (userDefinitionResult.HasErrors)
             {
@@ -151,7 +152,7 @@ namespace Microsoft.PowerFx.Syntax
             return userDefinitionResult;
         }
 
-        private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, DefinedTypeSymbolTable definedTypeSymbolTable, out List<TexlError> errors)
+        private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, INameResolver nameResolver, out List<TexlError> errors)
         {
             Contracts.AssertValue(uDFs);
 
@@ -168,14 +169,14 @@ namespace Microsoft.PowerFx.Syntax
                     continue;
                 }
 
-                var parametersOk = CheckParameters(udf.Args, errors, definedTypeSymbolTable);
-                var returnTypeOk = CheckReturnType(udf.ReturnType, errors, definedTypeSymbolTable);
+                var parametersOk = CheckParameters(udf.Args, errors, nameResolver);
+                var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver);
                 if (!parametersOk || !returnTypeOk)
                 {
                     continue;
                 }
 
-                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType(definedTypeSymbolTable)._type, udf.Body, udf.IsImperative, udf.Args, udf.Args.Select(a => a.TypeIdent.GetFormulaType(definedTypeSymbolTable)._type).ToArray());
+                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType(nameResolver)._type, udf.Body, udf.IsImperative, udf.Args, udf.Args.Select(a => a.TypeIdent.GetFormulaType(nameResolver)._type).ToArray());
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
@@ -184,7 +185,7 @@ namespace Microsoft.PowerFx.Syntax
             return userDefinedFunctions;
         }
 
-        private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors, DefinedTypeSymbolTable definedTypeSymbolTable)
+        private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors, INameResolver nameResolver)
         {
             var isParamCheckSuccessful = true;
             var argsAlreadySeen = new HashSet<string>();
@@ -200,7 +201,7 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     argsAlreadySeen.Add(arg.NameIdent.Name);
 
-                    var parameterType = arg.TypeIdent.GetFormulaType(definedTypeSymbolTable)._type;
+                    var parameterType = arg.TypeIdent.GetFormulaType(nameResolver)._type;
                     if (parameterType.Kind.Equals(DType.Unknown.Kind) || RestrictedTypes.Contains(parameterType))
                     {
                         errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
@@ -212,9 +213,9 @@ namespace Microsoft.PowerFx.Syntax
             return isParamCheckSuccessful;
         }
 
-        private bool CheckReturnType(IdentToken returnType, List<TexlError> errors, DefinedTypeSymbolTable definedTypeSymbolTable)
+        private bool CheckReturnType(IdentToken returnType, List<TexlError> errors, INameResolver nameResolver)
         {
-            var returnTypeFormulaType = returnType.GetFormulaType(definedTypeSymbolTable)._type;
+            var returnTypeFormulaType = returnType.GetFormulaType(nameResolver)._type;
             var isReturnTypeCheckSuccessful = true;
 
             if (returnTypeFormulaType.Kind.Equals(DType.Unknown.Kind) || RestrictedTypes.Contains(returnTypeFormulaType))

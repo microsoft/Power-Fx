@@ -19,6 +19,8 @@ namespace Microsoft.PowerFx.Core
     {
         private readonly BidirectionalDictionary<string, FormulaType> _definedTypes = new ();
 
+        public IEnumerable<KeyValuePair<string, FormulaType>> DefinedTypes => _definedTypes.AsEnumerable();
+
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _definedTypes.ToDictionary(kvp => kvp.Key, kvp => ToLookupInfo(kvp.Value));
 
         internal void RegisterType(string typeName, FormulaType type)
@@ -51,6 +53,14 @@ namespace Microsoft.PowerFx.Core
         internal override bool TryGetTypeName(FormulaType type, out string typeName)
         {
             return _definedTypes.TryGetFromSecond(type, out typeName);
+        }
+
+        internal void AddTypes(IEnumerable<KeyValuePair<string, FormulaType>> types)
+        {
+            foreach (var type in types) 
+            {
+                RegisterType(type.Key, type.Value);
+            }
         }
     }
 }

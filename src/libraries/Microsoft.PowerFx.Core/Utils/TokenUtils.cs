@@ -28,13 +28,13 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             var formulaType = FormulaType.Unknown;
 
-            if (nameResolver.Lookup(token.Name, out var info) && info.Data is FormulaType ft)
+            if (nameResolver.Lookup(token.Name, out var ctInfo) && ctInfo.Data is FormulaType ct)
             {
-                formulaType = ft;
+                formulaType = ct;
             }
-            else if (PrimitiveTypesSymbolTable.Instance.TryLookup(token.Name, out var info2) && info2.Data is FormulaType ft2)
+            else if (PrimitiveTypesSymbolTable.Instance.TryLookup(token.Name, out var ptInfo) && ptInfo.Data is FormulaType pt)
             {
-                formulaType = ft2;
+                formulaType = pt;
             }
 
             return formulaType;

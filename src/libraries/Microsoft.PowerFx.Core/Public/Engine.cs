@@ -35,8 +35,6 @@ namespace Microsoft.PowerFx
         // But all threads will produce the same value, so it's ok. 
         private static volatile string _assemblyVersion;
 
-        internal readonly DefinedTypeSymbolTable _definedTypeSymbolTable;
-
         /// <summary>
         /// For diagnostics, get the assembly version of Power Fx Engine. 
         /// </summary>
@@ -72,7 +70,6 @@ namespace Microsoft.PowerFx
         public Engine(PowerFxConfig powerFxConfig)
         {
             Config = powerFxConfig ?? throw new ArgumentNullException(nameof(powerFxConfig));
-            _definedTypeSymbolTable = new DefinedTypeSymbolTable();
         }
 
         // All functions that powerfx core knows about. 
