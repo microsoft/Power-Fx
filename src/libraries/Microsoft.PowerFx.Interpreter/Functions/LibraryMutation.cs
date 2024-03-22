@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -74,12 +73,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 arg0 = await arg0lazy.EvalAsync().ConfigureAwait(false);
             }
 
-            if (arg0 is not TableValue)
+            if (arg0 is not TableValue tableValue)
             {
                 return arg0;
             }
 
-            return args[1];
+            if (args[1] is not RecordValue recordValue)
+            {
+                return args[1];
+            }
+
+            return (await tableValue.PatchAsync(recordValue, cancellationToken).ConfigureAwait(false)).ToFormulaValue();
         }
     }
 
@@ -102,22 +106,24 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return arg0;
             }
 
-            var arg1 = (TableValue)args[1];
-            var arg2 = (TableValue)args[2];
+            var arg1Rows = ((TableValue)args[1]).Rows;
+            var arg2Rows = ((TableValue)args[2]).Rows;
 
             // !!!TODO Do we need to check if args[1] and args[2] counters are equal?
             // PA does not give any error if they are not equal.
-            if (arg1.Rows.Count() != arg2.Rows.Count())
+            if (arg1Rows.Count() != arg2Rows.Count())
             {
                 return CommonErrors.CustomError(IRContext.NotInSource(tableValue.Type), "Both aggregate args must have the same number of records.");
             }
 
             List<DValue<RecordValue>> resultRows = new List<DValue<RecordValue>>();
 
-            for (int i = 0; i < arg1.Rows.Count(); i++)
+            for (int i = 0; i < arg1Rows.Count(); i++)
             {
-                var baseRecord = arg1.Rows.ElementAt(i);
-                var updatesRecord = arg2.Rows.ElementAt(i);
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var baseRecord = arg1Rows.ElementAt(i);
+                var updatesRecord = arg2Rows.ElementAt(i);
 
                 if (baseRecord.IsError)
                 {
@@ -139,7 +145,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
-                var result = await tableValue.PatchAsync(baseRecord.Value, updatesRecord.Value, cancellationToken).ConfigureAwait(false);
+                DValue<RecordValue> result = null;
+
+                // If base record is {}, then collect.
+                if (baseRecord.Value.IsEmptyRecord)
+                {
+                    result = await tableValue.AppendAsync(updatesRecord.Value, cancellationToken).ConfigureAwait(false);
+                }
+                else
+                {
+                    result = await tableValue.PatchAsync(baseRecord.Value, updatesRecord.Value, cancellationToken).ConfigureAwait(false);
+                }
 
                 if (result.IsError)
                 {
@@ -175,7 +191,38 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return arg0;
             }
 
-            return args[1];
+            if (args[1] is not TableValue tableUpdates)
+            {
+                return args[1];
+            }
+
+            List<DValue<RecordValue>> resultRows = new List<DValue<RecordValue>>();
+
+            foreach (var row in tableUpdates.Rows)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                if (row.IsError)
+                {
+                    return row.ToFormulaValue();
+                }
+
+                if (row.IsBlank)
+                {
+                    continue;
+                }
+
+                var result = await tableValue.PatchAsync(row.Value, cancellationToken).ConfigureAwait(false);
+
+                if (result.IsError)
+                {
+                    return result.ToFormulaValue();
+                }
+
+                resultRows.Add(result);
+            }
+
+            return new InMemoryTableValue(IRContext.NotInSource(tableValue.Type), resultRows);
         }
     }
 
@@ -222,7 +269,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 if (fv is RecordValue recordValue)
-                {                     
+                {
                     foreach (var field in recordValue.Fields)
                     {
                         mergedFields[field.Name] = field.Value;

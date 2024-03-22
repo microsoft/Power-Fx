@@ -161,6 +161,15 @@ namespace Microsoft.PowerFx.Types
         }
 
         /// <summary>
+        /// Patch single record implementation for derived classes.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual async Task<DValue<RecordValue>> PatchSingleRecordCoreAsync(RecordValue recordValue, CancellationToken cancellationToken)
+        {
+            return DValue<RecordValue>.Of(NotImplemented(IRContext));
+        }
+
+        /// <summary>
         /// Modifies one record in a data source.
         /// </summary>
         /// <param name="baseRecord">A record to modify.</param>
@@ -170,11 +179,22 @@ namespace Microsoft.PowerFx.Types
         public async Task<DValue<RecordValue>> PatchAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var recordType = Type.ToRecord();
 
             // IR has already resolved to logical names because of 
             // RequiresDataSourceScope, ArgMatchesDatasourceType on function.
             return await PatchCoreAsync(baseRecord, changeRecord, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Modifies a single record based on primary key within the record itself.
+        /// </summary>
+        /// <param name="recordValue">Record containing a primary key and fields to update.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns></returns>
+        public async Task<DValue<RecordValue>> PatchAsync(RecordValue recordValue, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await PatchSingleRecordCoreAsync(recordValue, cancellationToken).ConfigureAwait(false);
         }
 
         public override object ToObject()

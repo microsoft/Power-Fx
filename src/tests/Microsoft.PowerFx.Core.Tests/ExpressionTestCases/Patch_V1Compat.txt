@@ -239,14 +239,25 @@ Errors: Error 0-18: The function 'Patch' has some invalid arguments.|Error 15-16
 // **********************************************************
 // Patch(DS, table_of_rows, table_of_updates)
 // **********************************************************
->> Collect(t1, r2);Patch(t1, Table(r1,r2),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}));t1
+>> Collect(t1, r2);
+  Patch(t1, Table(r1,r2),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}));t1
 Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true})
 
->> Collect(t1, r2);Patch(t1, Table(r1,r2),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:1/0}));t1
+>> Collect(t1, r2);
+  Patch(t1, Table(r1,r2),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:1/0}));t1
 Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:Error({Kind:ErrorKind.Div0})})
 
->> Collect(t1, r2);Patch(t1, Table(r1,r2),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}))
+>> Collect(t1, r2);
+  Patch(t1, Table(r1,r2),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}))
 Error({Kind:ErrorKind.Custom})
+
+>> Collect(t1, r2);
+  Patch(t1, Table(r1,r2,{}),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:999999,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}));t1
+Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:999999,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true})
+
+>> Collect(t1, r2);
+  Patch(t1, Table(r1,r2,Blank()),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:999999,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}));t1
+Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true})
 
 
 // **********************************************************
@@ -254,7 +265,7 @@ Error({Kind:ErrorKind.Custom})
 // **********************************************************
 
 >> Patch(t1, Table(r1))
-Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+Error({Kind:ErrorKind.Internal})
 
 >> Patch(t1, If(false,t1))
 Blank()
@@ -264,7 +275,7 @@ Blank()
 // Patch(DS, record_with_keys_and_updates)
 // **********************************************************
 >> Patch(t1, r1)
-{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+Error({Kind:ErrorKind.Internal})
 
 >> Patch(t1, If(false,r1))
 Blank()
