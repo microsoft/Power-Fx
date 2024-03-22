@@ -41,9 +41,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private DType ExpandMetaFieldType(DType metaFieldType)
         {
             Contracts.AssertValid(metaFieldType);
-
-            // !!!TODO How to implement/fix type.HasMetaField()?
-            //Contracts.Assert(metaFieldType.HasMetaField());
+            Contracts.Assert(metaFieldType.HasMetaField());
 
             DType curType = metaFieldType;
             foreach (var typedName in metaFieldType.GetNames(DPath.Root))
@@ -127,16 +125,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         DType type = typedName.Type;
 
-                        // !!!TODO How to implement/fix type.HasMetaField()?
-                        //// If the type has metafield in it then it's coming from a control type like dropdown or listbox.
-                        //// For example, dropdown.SelectedItems, listbox.SelectedItems. So expand the type to include property types as well.
-                        //// In Document.cs!AugmentedExpandoType function, we don't add the field to the expandotype if it conflicts with any expando property.
-                        //// So the type doesn't include that field. This logic tries to rectify that by adding the missing fields back.
-                        //// This is only necessary if we're trying to compare it to an entity or aggregate type, as the meta field will expand to a table or record
-                        //if (type.HasMetaField() && (dsNameType.IsAggregate || dsNameType.Kind == DKind.DataEntity) && type.IsAggregate)
-                        //{
-                        //    type = ExpandMetaFieldType(type);
-                        //}
+                        // If the type has metafield in it then it's coming from a control type like dropdown or listbox.
+                        // For example, dropdown.SelectedItems, listbox.SelectedItems. So expand the type to include property types as well.
+                        // In Document.cs!AugmentedExpandoType function, we don't add the field to the expandotype if it conflicts with any expando property.
+                        // So the type doesn't include that field. This logic tries to rectify that by adding the missing fields back.
+                        // This is only necessary if we're trying to compare it to an entity or aggregate type, as the meta field will expand to a table or record
+                        if (type.HasMetaField() && (dsNameType.IsAggregate || dsNameType.Kind == DKind.DataEntity) && type.IsAggregate)
+                        {
+                            type = ExpandMetaFieldType(type);
+                        }
 
                         // For patching entities, we expand the type and drop entities and attachments for the purpose of comparison.
                         if (dsNameType.Kind == DKind.DataEntity && type.Kind != DKind.DataEntity)
@@ -252,16 +249,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     DType type = typedName.Type;
 
-                    // !!!TODO How to implement/fix type.HasMetaField()?
-                    //// If the type has metafield in it then it's coming from a control type like dropdown or listbox.
-                    //// For example, dropdown.SelectedItems, listbox.SelectedItems. So expand the type to include property types as well.
-                    //// In Document.cs!AugmentedExpandoType function, we don't add the field to the expandotype if it conflicts with any expando property.
-                    //// So the type doesn't include that field. This logic tries to rectify that by adding the missing fields back.
-                    //// This is only necessary if we're trying to compare it to an entity or aggregate type, as the meta field will expand to a table or record
-                    //if (type.HasMetaField() && (dsNameType.IsAggregate || dsNameType.Kind == DKind.DataEntity) && type.IsAggregate)
-                    //{
-                    //    type = ExpandMetaFieldType(type);
-                    //}
+                    // If the type has metafield in it then it's coming from a control type like dropdown or listbox.
+                    // For example, dropdown.SelectedItems, listbox.SelectedItems. So expand the type to include property types as well.
+                    // In Document.cs!AugmentedExpandoType function, we don't add the field to the expandotype if it conflicts with any expando property.
+                    // So the type doesn't include that field. This logic tries to rectify that by adding the missing fields back.
+                    // This is only necessary if we're trying to compare it to an entity or aggregate type, as the meta field will expand to a table or record
+                    if (type.HasMetaField() && (dsNameType.IsAggregate || dsNameType.Kind == DKind.DataEntity) && type.IsAggregate)
+                    {
+                        type = ExpandMetaFieldType(type);
+                    }
 
                     // For patching entities, we expand the type and drop entities and attachments for the purpose of comparison.
                     if (dsNameType.Kind == DKind.DataEntity && type.Kind != DKind.DataEntity)

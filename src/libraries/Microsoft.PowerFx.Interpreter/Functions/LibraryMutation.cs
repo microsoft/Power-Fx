@@ -56,9 +56,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // !!!TODO If working with collections, this wont have any effectiveness.
-    // This is due to the fact that collections have no keys.
-
+    // If arg1 is pure PFx record, it will return a runtime internal error.
     // Patch(DS, record_with_keys_and_updates)
     internal class PatchSingleRecordImpl : PatchSingleRecordFunction, IAsyncTexlFunction5
     {
@@ -169,9 +167,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // !!!TODO If working with collections, this wont have any effectiveness.
-    // This is due to the fact that collections have no keys.
-
+    // If arg1 is pure PFx record, it will return a runtime internal error.
     // Patch(DS, table_of_rows_with_updates)
     internal class PatchAggregateSingleTableImpl : PatchAggregateSingleTableFunction, IAsyncTexlFunction5
     {
