@@ -271,8 +271,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool ManipulatesCollections => true;
 
-        // !!!TODO Shouldn't this be false?
-        public override bool IsSelfContained => true;
+        public override bool IsSelfContained => false;
 
         public override bool SupportsParamCoercion => true;
 
