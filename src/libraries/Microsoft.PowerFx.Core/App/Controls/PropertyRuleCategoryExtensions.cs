@@ -3,12 +3,12 @@
 
 namespace Microsoft.PowerFx.Core.App.Controls
 {
-    internal static class PropertyRuleCategoryExtensions
+    public static class PropertyRuleCategoryExtensions
     {
-        internal static bool IsValid(this PropertyRuleCategory category) =>
+        public static bool IsValid(this PropertyRuleCategory category) =>
             category >= PropertyRuleCategory.Data && category <= PropertyRuleCategory.Functions;
 
-        internal static bool IsBehavioral(this PropertyRuleCategory category) =>
+        public static bool IsBehavioral(this PropertyRuleCategory category) =>
             category == PropertyRuleCategory.Behavior || category == PropertyRuleCategory.OnDemandData;
     }
 }

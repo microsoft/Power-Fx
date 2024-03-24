@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.App.Controls
     /// Please keep these values in sync with src/AppMagic/js/AppMagic.Controls/Constants.ts.
     /// </summary>
     [TransportType(TransportKind.Enum)]
-    internal enum PropertyRuleCategory
+    public enum PropertyRuleCategory
     {
         Data = 0,
         Design = 1,
