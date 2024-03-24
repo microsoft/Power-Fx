@@ -212,6 +212,9 @@ Blank()
 >>Patch(If(false,Table()),{},{})
 Errors: Error 6-23: The value passed to the 'Patch' function cannot be changed.
 
+>> ForAll(Sequence(5), Collect(t_empty, {Value:ThisRecord.Value})); ForAll(Sequence(CountRows(t_empty)), Collect(t_empty2, Index(t_empty, ThisRecord.Value))); Patch(t_empty, First(t_empty), {Value:99}); Patch(t_empty2, Last(t_empty2), {Value:88}); Concat(t_empty, Value) & "," & Concat(t_empty2, Value)
+"992345,123488"
+
 
 
 // **********************************************************
