@@ -135,17 +135,17 @@ namespace Microsoft.PowerFx
                 hasInnerServices = true;
             }
 
-            RuntimeConfig runtimeConfig2 = new RuntimeConfig
-            {
-                Values = symbolValues,
-                ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, hasInnerServices ? innerServices : null)
-            };
-
             if (_features != null)
             {
                 innerServices.AddService(_features);
                 hasInnerServices = true;
             }
+
+            RuntimeConfig runtimeConfig2 = new RuntimeConfig
+            {
+                Values = symbolValues,
+                ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, hasInnerServices ? innerServices : null)
+            };
 
             var evalVisitor = new EvalVisitor(runtimeConfig2, cancellationToken);
 

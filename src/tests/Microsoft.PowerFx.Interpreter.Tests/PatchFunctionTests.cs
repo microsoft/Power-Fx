@@ -2,24 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Functions;
-using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -27,26 +16,30 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         private readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
 
-        //[Theory]
-        //[InlineData(typeof(PatchFunction))]
-        //public async Task CheckArgsTestAsync(Type type)
-        //{
-        //    var expressionError = new ExpressionError()
-        //    {
-        //        Kind = ErrorKind.ReadOnlyValue,
-        //        Severity = ErrorSeverity.Critical,
-        //        Message = "Something went wrong"
-        //    };
+        [Theory]
+        [InlineData(typeof(PatchImpl))]
+        public async Task CheckArgsTestAsync(Type type)
+        {
+            var expressionError = new ExpressionError()
+            {
+                Kind = ErrorKind.ReadOnlyValue,
+                Severity = ErrorSeverity.Critical,
+                Message = "Something went wrong"
+            };
 
-        //    FormulaValue[] args = new[]
-        //    {
-        //        FormulaValue.NewError(expressionError)
-        //    };
+            FormulaValue[] args = new[]
+            {
+                FormulaValue.NewError(expressionError)
+            };
 
-        //    var function = Activator.CreateInstance(type) as IAsyncTexlFunction;
-        //    var result = await function.InvokeAsync(args, CancellationToken.None).ConfigureAwait(false);
+            BasicServiceProvider innerServices = new BasicServiceProvider();
 
-        //    Assert.IsType<ErrorValue>(result);
-        //}
+            innerServices.AddService(Features.PowerFxV1);
+
+            var function = Activator.CreateInstance(type) as IAsyncTexlFunction5;
+            var result = await function.InvokeAsync(innerServices, FormulaType.Unknown, args, CancellationToken.None).ConfigureAwait(false);
+
+            Assert.IsType<ErrorValue>(result);
+        }
     }
 }

@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
@@ -37,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return args[1];
             }
 
-            var dvalue = MutationProcessUtils.MergeRecords(args.Skip(2));
+            var dvalue = MutationUtils.MergeRecords(args.Skip(2));
 
             if (!dvalue.IsValue)
             {
@@ -229,7 +230,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             MutationProcessUtils.ThrowIfPFxV1NotActive(runtimeServiceProvider.GetService<Features>(), "Patch");
 
-            return MutationProcessUtils.MergeRecords(args).ToFormulaValue();
+            return MutationUtils.MergeRecords(args).ToFormulaValue();
         }
     }
 
@@ -246,34 +247,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 throw new InvalidOperationException($"{functionName} function can only be executed if PowerFx V1 feature is active.");
             }
-        }
-
-        /// <summary>
-        /// Merges all records starting from startIndex in args into a single record. Collisions are resolved by last-one-wins.
-        /// </summary>
-        /// <param name="records"></param>
-        /// <returns></returns>
-        public static DValue<RecordValue> MergeRecords(IEnumerable<FormulaValue> records)
-        {
-            var mergedFields = new Dictionary<string, FormulaValue>();
-
-            foreach (FormulaValue fv in records)
-            {
-                if (fv is ErrorValue errorValue)
-                {
-                    return DValue<RecordValue>.Of(errorValue);
-                }
-
-                if (fv is RecordValue recordValue)
-                {
-                    foreach (var field in recordValue.Fields)
-                    {
-                        mergedFields[field.Name] = field.Value;
-                    }
-                }
-            }
-
-            return DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(mergedFields.Select(kvp => new NamedValue(kvp.Key, kvp.Value))));
         }
     }
 }

@@ -221,7 +221,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("1 = |", "num")]
         [InlineData("1 + |", "num", "str")]
 
-        // [InlineData("Patch(table2,|", "Entity1", "Entity2", "Table1", "table2")] This test case will demand a binder change to work.
+        [InlineData("Patch(table2,|", "Entity1", "Entity2", "Table1", "table2")]
         public void TestArgSuggestion(string expression, params string[] expectedSuggestions)
         {
             var map = new SingleSourceDisplayNameProvider(new Dictionary<DName, DName>
