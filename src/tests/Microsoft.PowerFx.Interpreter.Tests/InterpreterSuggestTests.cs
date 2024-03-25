@@ -194,7 +194,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("Collect(|", "Entity1", "Entity2", "Table1", "table2")]
-        [InlineData("Patch(|", "Entity1", "Entity2", "Table1", "table2")]
+        [InlineData("Patch(|")]
         [InlineData("Remove(|", "Entity1", "Entity2", "Table1", "table2")]
 
         // doesn't suggest Irrelevant global variables if type1 is non empty aggregate.
@@ -221,7 +221,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("1 = |", "num")]
         [InlineData("1 + |", "num", "str")]
 
-        [InlineData("Patch(table2,|", "Entity1", "Entity2", "Table1", "table2")]
+        [InlineData("Patch(table2,|", "record2")]
         public void TestArgSuggestion(string expression, params string[] expectedSuggestions)
         {
             var map = new SingleSourceDisplayNameProvider(new Dictionary<DName, DName>

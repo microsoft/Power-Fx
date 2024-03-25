@@ -66,20 +66,6 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
-        public static string GetScalarSingleColumnNameForType(Features features, DKind kind)
-        {
-            return kind switch
-            {
-                DKind.Image or
-                DKind.Hyperlink or
-                DKind.Media or
-                DKind.Blob or
-                DKind.PenImage => features.ConsistentOneColumnTableResult ? TableValue.ValueName : "Url",
-
-                _ => TableValue.ValueName
-            };
-        }
-
         /// <summary>
         /// Merges all records starting from startIndex in args into a single record. Collisions are resolved by last-one-wins.
         /// </summary>

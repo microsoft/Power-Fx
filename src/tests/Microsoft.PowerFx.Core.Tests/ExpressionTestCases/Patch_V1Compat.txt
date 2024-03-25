@@ -1,5 +1,15 @@
 ﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,PowerFxV1CompatibilityRules
 
+// For easy reference of what the table looks like
+>> t1
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> r1
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> r2
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
 // **********************************************************
 // Patch(dataSource:*[], Record, Updates1, Updates2,…)
 // **********************************************************
@@ -42,7 +52,7 @@ Errors: Error 13-143: The value passed to the 'Patch' function cannot be changed
        {Planet:"earth",Properties:{Color:"blue",Size:"small",Weight:1000,Moon:{Name:"Moon", Color:"Silver"}}},
        {Planet:"Saturn",Properties:{Color:"red-brown",Size:"huge",Weight:99999,Moon:{Name:"Phobos", Color:"yellow"}}}),
     {Properties:{Moon:{Name:"Phobos"}}},
-    {Planet:"Jupter"})
+    {Planet:"jupiter"})
 Errors: Error 13-251: The value passed to the 'Patch' function cannot be changed.
 
 >> Patch(t1, r1, r_empty);
@@ -78,7 +88,6 @@ Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
    t1
 Errors: Error 14-31: The specified column 'Field5' does not exist.|Error 0-32: The function 'Patch' has some invalid arguments.
 
-// This test would fail in PA.
 >> Patch(t1, r1, {Field2:"Venus"})
 {Field1:1,Field2:"Venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
@@ -123,13 +132,13 @@ Table({Field1:Error({Kind:ErrorKind.Div0}),Field2:"earth",Field3:DateTime(2022,1
    t1
 Table({Field1:0,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
->> Patch(t1, First(t1), {DisplayNameField2:"jupter"});
+>> Patch(t1, First(t1), {DisplayNameField2:"jupiter"});
    First(t1).DisplayNameField2
-"jupter"
+"jupiter"
 
->> Patch(t1, First(t1), {DisplayNameField2:"jupter"});
+>> Patch(t1, First(t1), {DisplayNameField2:"jupiter"});
    First(t1).Field2
-"jupter"
+"jupiter"
 
 >> Patch(t1, First(t1), {DisplayNameField5:"Pandora"});
    First(t1)
@@ -144,7 +153,7 @@ Table({Field1:100,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false}
 >> Collect(t1, r2);
   Collect(t1, {Field1:3,Field2:"venus",Field3:DateTime(2030,1,1,0,0,0,0),Field4:true});
   Collect(t1, {Field1:4,Field2:"mars",Field3:DateTime(2031,1,1,0,0,0,0),Field4:false});
-  Collect(t1, {Field1:5,Field2:"jupter",Field3:DateTime(2032,1,1,0,0,0,0),Field4:true});
+  Collect(t1, {Field1:5,Field2:"jupiter",Field3:DateTime(2032,1,1,0,0,0,0),Field4:true});
   Collect(t1, {Field1:6,Field2:"saturn",Field3:DateTime(2033,1,1,0,0,0,0),Field4:false});
   Patch(t1, First(Filter(t1, Field1 > 4)), {Field2: "phobos"});
 {Field1:5,Field2:"phobos",Field3:DateTime(2032,1,1,0,0,0,0),Field4:true}
@@ -152,15 +161,15 @@ Table({Field1:100,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false}
 >> Collect(t1, r2);
   Collect(t1, {DisplayNameField1:3,Field2:"venus",Field3:DateTime(2030,1,1,0,0,0,0),DisplayNameField4:true});
   Collect(t1, {DisplayNameField1:4,Field2:"mars",Field3:DateTime(2031,1,1,0,0,0,0),DisplayNameField4:false});
-  Collect(t1, {DisplayNameField1:5,Field2:"jupter",Field3:DateTime(2032,1,1,0,0,0,0),DisplayNameField4:true});
+  Collect(t1, {DisplayNameField1:5,Field2:"jupiter",Field3:DateTime(2032,1,1,0,0,0,0),DisplayNameField4:true});
   Collect(t1, {DisplayNameField1:6,Field2:"saturn",Field3:DateTime(2033,1,1,0,0,0,0),DisplayNameField4:false});
   Patch(t1, Last(Filter(t1, Field4 = false)), {DisplayNameField2: "phobos"});
 {Field1:6,Field2:"phobos",Field3:DateTime(2033,1,1,0,0,0,0),Field4:false}
 
->> Patch(Foo, First(t1), {DisplayNameField2:"jupter"})
+>> Patch(Foo, First(t1), {DisplayNameField2:"jupiter"})
 Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-51: The function 'Patch' has some invalid arguments.
 
->> Patch(Foo, Bar, {DisplayNameField2:"jupter"})
+>> Patch(Foo, Bar, {DisplayNameField2:"jupiter"})
 Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 11-14: Name isn't valid. 'Bar' isn't recognized.|Error 0-45: The function 'Patch' has some invalid arguments.
 
 >> Set(t_an_bs, [{a:1, b:"a"}, {a:2, b:Blank()}]); Patch(t_an_bs, Last(t_an_bs), {a:3, b:"c"}); t_an_bs
