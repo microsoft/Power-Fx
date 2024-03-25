@@ -1,0 +1,104 @@
+{
+  "value": [
+    {
+      "value": 1,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Net 30",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "38d7a218-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Net 30",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "38d7a218-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 2,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "2% 10, Net 30",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "3ad7a218-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "2% 10, Net 30",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "3ad7a218-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 3,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Net 45",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "3cd7a218-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Net 45",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "3cd7a218-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 4,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Net 60",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "3ed7a218-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Net 60",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "3ed7a218-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    }
+  ]
+}

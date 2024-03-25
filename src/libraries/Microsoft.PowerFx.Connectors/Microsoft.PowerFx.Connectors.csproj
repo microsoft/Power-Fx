@@ -5,6 +5,7 @@
     <PackageVersion Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</PackageVersion>
     <PackageVersion Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</PackageVersion>
     <Configurations>Debug;Release</Configurations>
+    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
   <!-- Nuget Properties -->
