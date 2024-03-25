@@ -167,10 +167,10 @@ Table({Field1:100,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false}
 {Field1:6,Field2:"phobos",Field3:DateTime(2033,1,1,0,0,0,0),Field4:false}
 
 >> Patch(Foo, First(t1), {DisplayNameField2:"jupiter"})
-Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-51: The function 'Patch' has some invalid arguments.
+Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-52: The function 'Patch' has some invalid arguments.|Error 11-20: The specified column 'Field1' does not exist.|Error 22-51: The specified column 'DisplayNameField2' does not exist.
 
 >> Patch(Foo, Bar, {DisplayNameField2:"jupiter"})
-Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 11-14: Name isn't valid. 'Bar' isn't recognized.|Error 0-45: The function 'Patch' has some invalid arguments.
+Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 11-14: Name isn't valid. 'Bar' isn't recognized.|Error 0-46: The function 'Patch' has some invalid arguments.|Error 16-45: The specified column 'DisplayNameField2' does not exist.
 
 >> Set(t_an_bs, [{a:1, b:"a"}, {a:2, b:Blank()}]); Patch(t_an_bs, Last(t_an_bs), {a:3, b:"c"}); t_an_bs
 Table({a:1,b:"a"},{a:3,b:"c"})
