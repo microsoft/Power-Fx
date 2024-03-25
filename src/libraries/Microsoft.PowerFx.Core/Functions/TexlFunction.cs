@@ -1077,6 +1077,14 @@ namespace Microsoft.PowerFx.Core.Functions
                         continue;
                     }
 
+                    var fError = false;
+                    DType.Union(ref fError, expectedColumnType, actualColumnType, useLegacyDateTimeAccepts: false, features, allowCoerce: true, unionToLeftTypeOnly: true);
+
+                    if (!fError)
+                    {
+                        continue;
+                    }
+
                     if (!DType.TryGetDisplayNameForColumn(expectedType, expectedColumn.Name, out var errName))
                     {
                         errName = expectedColumn.Name;
