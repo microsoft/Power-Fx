@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx
 
         internal readonly SymbolTable _symbolTable;
         internal readonly SymbolValues _symbolValues;
-        internal DefinedTypeSymbolTable _definedTypeSymbolTable;
+        internal readonly DefinedTypeSymbolTable _definedTypeSymbolTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.

@@ -25,9 +25,16 @@ namespace Microsoft.PowerFx.Core
 
         internal void RegisterType(string typeName, FormulaType type)
         {
+            // todo: include gaurd
             Inc();            
 
             _definedTypes.Add(typeName, type);
+        }
+
+        internal void RemoveType(string typeName)
+        {
+            Inc();
+            _definedTypes.TryRemoveFromFirst(typeName);
         }
 
         protected void ValidateName(string name)
@@ -60,6 +67,14 @@ namespace Microsoft.PowerFx.Core
             foreach (var type in types) 
             {
                 RegisterType(type.Key, type.Value);
+            }
+        }
+
+        internal void RemoveTypes(IEnumerable<KeyValuePair<string, FormulaType>> types)
+        {
+            foreach (var type in types)
+            {
+                RemoveType(type.Key);
             }
         }
     }
