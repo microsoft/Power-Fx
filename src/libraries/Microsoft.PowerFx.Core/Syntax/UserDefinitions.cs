@@ -63,17 +63,17 @@ namespace Microsoft.PowerFx.Syntax
         /// <param name="parserOptions">Options for parsing an expression.</param>
         /// <param name="userDefinitionResult"><see cref="UserDefinitionResult"/>.</param>
         /// <param name="features">PowerFx feature flags.</param>
-        /// <param name="extraTypeSymbols">Extra Type SymbolTable if needed.</param>
+        /// <param name="extraSymbols">Extra SymbolTable if needed.</param>
         /// <returns>True if there are no parser errors.</returns>
-        public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null, DefinedTypeSymbolTable extraTypeSymbols = null)
+        public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null, ReadOnlySymbolTable extraSymbols = null)
         {
             parserOptions.AllowParseAsTypeLiteral = true;
             var userDefinitions = new UserDefinitions(script, parserOptions, features);
 
-            return userDefinitions.ProcessUserDefinitions(out userDefinitionResult, extraTypeSymbols);
+            return userDefinitions.ProcessUserDefinitions(out userDefinitionResult, extraSymbols);
         }
 
-        private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult, DefinedTypeSymbolTable extraTypeSymbols = null)
+        private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult, ReadOnlySymbolTable extraSymbols = null)
         {
             var parseResult = Parse(_script, _parserOptions);
 
@@ -85,20 +85,17 @@ namespace Microsoft.PowerFx.Syntax
             var definedTypeSymbolTable = new DefinedTypeSymbolTable();
             var definedTypes = parseResult.DefinedTypes.ToList();
 
-            if (extraTypeSymbols != null) 
-            {
-                definedTypeSymbolTable.AddTypes(extraTypeSymbols.DefinedTypes);
-            }
+            var composedSymbols = ReadOnlySymbolTable.Compose(definedTypeSymbolTable, extraSymbols);
 
             var typeErr = new List<TexlError>();
 
             foreach (var defType in definedTypes)
             {
                 var name = defType.Ident.Name.Value;
-                var res = DTypeVisitor.Run(defType.Type.TypeRoot, definedTypeSymbolTable);
+                var res = DTypeVisitor.Run(defType.Type.TypeRoot, composedSymbols);
                 if (res == null)
                 {
-                    typeErr.Add(new TexlError(defType.Ident, DocumentErrorSeverity.Severe, Core.Localization.TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                    typeErr.Add(new TexlError(defType.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
                     continue;
                 }
 
@@ -106,13 +103,7 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             // Parser returns both complete & incomplete UDFs, and we are only interested in creating TexlFunctions for valid UDFs. 
-            var functions = CreateUserDefinedFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), definedTypeSymbolTable, out var errors);
-
-            // not very efficient try doing it differently 
-            if (extraTypeSymbols != null)
-            {
-                definedTypeSymbolTable.RemoveTypes(extraTypeSymbols.DefinedTypes);
-            }
+            var functions = CreateUserDefinedFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), composedSymbols, out var errors);
 
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
             errors.AddRange(typeErr);
@@ -131,10 +122,10 @@ namespace Microsoft.PowerFx.Syntax
         /// <param name="script">User script containing UDFs and/or named formulas.</param>
         /// <param name="parseCulture">CultureInfo to parse the script.</param>
         /// <param name="features">Features.</param>
-        /// <param name="extraTypeSymbols">Extra Type SymbolTable if needed.</param>
+        /// <param name="extraSymbols">Extra SymbolTable if needed.</param>
         /// <returns>Tuple.</returns>
         /// <exception cref="InvalidOperationException">Throw if the user script contains errors.</exception>
-        public static UserDefinitionResult Process(string script, CultureInfo parseCulture, Features features = null, DefinedTypeSymbolTable extraTypeSymbols = null)
+        public static UserDefinitionResult Process(string script, CultureInfo parseCulture, Features features = null, ReadOnlySymbolTable extraSymbols = null)
         {
             var options = new ParserOptions()
             {
@@ -144,7 +135,7 @@ namespace Microsoft.PowerFx.Syntax
 
             var sb = new StringBuilder();
 
-            ProcessUserDefinitions(script, options, out var userDefinitionResult, features, extraTypeSymbols);
+            ProcessUserDefinitions(script, options, out var userDefinitionResult, features, extraSymbols);
 
             if (userDefinitionResult.HasErrors)
             {

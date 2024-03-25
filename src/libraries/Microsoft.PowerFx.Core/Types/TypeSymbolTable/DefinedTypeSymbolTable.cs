@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core
     {
         private readonly BidirectionalDictionary<string, FormulaType> _definedTypes = new ();
 
-        public IEnumerable<KeyValuePair<string, FormulaType>> DefinedTypes => _definedTypes.AsEnumerable();
+        IEnumerable<KeyValuePair<string, FormulaType>> INameResolver.DefinedTypes => _definedTypes.AsEnumerable();
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _definedTypes.ToDictionary(kvp => kvp.Key, kvp => ToLookupInfo(kvp.Value));
 
@@ -76,6 +76,11 @@ namespace Microsoft.PowerFx.Core
             {
                 RemoveType(type.Key);
             }
+        }
+
+        bool INameResolver.LookupType(DName name, out NameLookupInfo nameInfo)
+        {
+            return TryLookup(name, out nameInfo);
         }
     }
 }

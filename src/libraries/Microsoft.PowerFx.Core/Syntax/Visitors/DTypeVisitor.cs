@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -13,51 +14,51 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {
-    internal class DTypeVisitor : TexlFunctionalVisitor<DType, DefinedTypeSymbolTable>
+    internal class DTypeVisitor : TexlFunctionalVisitor<DType, INameResolver>
     {
         private DTypeVisitor()
         {
         }
 
-        public static DType Run(TexlNode node, DefinedTypeSymbolTable context)
+        public static DType Run(TexlNode node, INameResolver context)
         {
             return node.Accept(new DTypeVisitor(), context);
         }
 
-        public override DType Visit(ErrorNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(ErrorNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(BlankNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(BlankNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(BoolLitNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(BoolLitNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(StrLitNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(StrLitNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(NumLitNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(NumLitNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(DecLitNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(DecLitNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(FirstNameNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(FirstNameNode node, INameResolver context)
         {
             var name = node.Ident.Name.Value;
-            if (context.TryLookup(new DName(name), out NameLookupInfo nameInfo))
+            if (context.LookupType(new DName(name), out NameLookupInfo nameInfo))
             {
                 return nameInfo.Type;
             }
@@ -65,52 +66,52 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             return FormulaType.GetFromStringOrNull(name)._type;
         }
 
-        public override DType Visit(ParentNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(ParentNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(SelfNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(SelfNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(StrInterpNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(StrInterpNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(DottedNameNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(DottedNameNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(UnaryOpNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(UnaryOpNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(BinaryOpNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(BinaryOpNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(VariadicOpNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(VariadicOpNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(CallNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(CallNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(ListNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(ListNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }
 
-        public override DType Visit(RecordNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(RecordNode node, INameResolver context)
         {
             var list = new List<TypedName>();
             foreach (var (cNode, ident) in node.ChildNodes.Zip(node.Ids, (a, b) => (a, b)))
@@ -127,7 +128,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             return DType.CreateRecord(list);
         }
 
-        public override DType Visit(TableNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(TableNode node, INameResolver context)
         {
             var childNode = node.ChildNodes.First();
             var ty = childNode.Accept(this, context);
@@ -139,7 +140,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             return ty.ToTable();
         }
 
-        public override DType Visit(AsNode node, DefinedTypeSymbolTable context)
+        public override DType Visit(AsNode node, INameResolver context)
         {
             throw new NotImplementedException();
         }

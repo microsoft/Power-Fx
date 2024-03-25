@@ -22,18 +22,6 @@ namespace Microsoft.PowerFx
 
         internal bool HasErrors { get; }
 
-        public UserDefinitionResult(IEnumerable<UserDefinedFunction> uDFs, IEnumerable<TexlError> errors, IEnumerable<NamedFormula> namedFormulas)
-        {
-            UDFs = uDFs;
-            NamedFormulas = namedFormulas;
-
-            if (errors?.Any() ?? false)
-            {
-                Errors = errors;
-                HasErrors = true;
-            }
-        }
-
         public UserDefinitionResult(IEnumerable<UserDefinedFunction> uDFs, IEnumerable<TexlError> errors, IEnumerable<NamedFormula> namedFormulas, DefinedTypeSymbolTable definedTypes)
         {
             UDFs = uDFs;

@@ -22,6 +22,7 @@ using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Core.Functions
@@ -221,6 +222,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
             public TexlFunctionSet Functions => _globalNameResolver.Functions;
 
+            public IEnumerable<KeyValuePair<string, FormulaType>> DefinedTypes => _globalNameResolver.DefinedTypes;
+
             public bool SuggestUnqualifiedEnums => _globalNameResolver.SuggestUnqualifiedEnums;
 
             public bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
@@ -246,6 +249,11 @@ namespace Microsoft.PowerFx.Core.Functions
             public IEnumerable<TexlFunction> LookupFunctions(DPath theNamespace, string name, bool localeInvariant = false)
             {
                return _globalNameResolver.LookupFunctions(theNamespace, name, localeInvariant);
+            }
+
+            public bool LookupType(DName name, out NameLookupInfo nameInfo)
+            {
+                return _globalNameResolver.LookupType(name, out nameInfo);
             }
 
             public IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace)
