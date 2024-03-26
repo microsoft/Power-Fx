@@ -456,7 +456,7 @@ namespace Microsoft.PowerFx.Connectors
                 cancellationToken.ThrowIfCancellationRequested();
                 runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorParameterTypeAsync))}, with {LogKnownParameters(knownParameters)}, {LogConnectorParameter(connectorParameter)}");
 
-                ConnectorType result = await GetConnectorParameterTypeAsync(knownParameters, connectorParameter, runtimeContext, 1, cancellationToken).ConfigureAwait(false);
+                ConnectorType result = await GetConnectorParameterTypeAsync(knownParameters, connectorParameter, runtimeContext, new CallCounter() { CallsLeft = 1 }, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorParameterTypeAsync))}, returning from {nameof(GetConnectorTypeInternalAsync)} with {LogConnectorType(result)}");
                 return result;
             }
@@ -513,7 +513,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorTypeAsync))}, with {LogKnownParameters(knownParameters)} for {LogConnectorType(connectorType)}");
-                ConnectorType connectorType2 = await GetConnectorTypeAsync(knownParameters, connectorType, runtimeContext, 1, cancellationToken).ConfigureAwait(false);
+                ConnectorType connectorType2 = await GetConnectorTypeAsync(knownParameters, connectorType, runtimeContext, new CallCounter() { CallsLeft = 1 }, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorTypeAsync))}, returning from {nameof(GetConnectorTypeInternalAsync)} with {LogConnectorType(connectorType2)}");
                 return connectorType2;
             }
@@ -682,7 +682,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorReturnTypeAsync))}, with {LogKnownParameters(knownParameters)}");
-                ConnectorType connectorType = await GetConnectorReturnTypeAsync(knownParameters, runtimeContext, 1, cancellationToken).ConfigureAwait(false);
+                ConnectorType connectorType = await GetConnectorReturnTypeAsync(knownParameters, runtimeContext, new CallCounter() { CallsLeft = 1 }, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorReturnTypeAsync))}, returning {nameof(GetConnectorTypeAsync)}, with {LogConnectorType(connectorType)}");
                 return connectorType;
             }
