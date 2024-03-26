@@ -1202,8 +1202,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             FormulaType = connectorType.FormulaType._type.ToString();
             ExplicitInput = connectorType.ExplicitInput;
             IsEnum = connectorType.IsEnum;
+            IsOptionSet = connectorType.IsOptionSet;
 
-            if (connectorType.IsEnum)
+            if (connectorType.IsOptionSet)
             {
                 bool hasDisplayNames = connectorType.EnumDisplayNames != null && connectorType.EnumDisplayNames.Length > 0;
                 EnumValues = connectorType.EnumValues.Select((ev, i) => new YamlEnumValue()
@@ -1270,6 +1271,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public YamlConnectorType[] Fields;
         public string FormulaType;
         public bool ExplicitInput;
+        public bool IsOptionSet;
         public bool IsEnum;
         public YamlEnumValue[] EnumValues;
         public string Visibility;

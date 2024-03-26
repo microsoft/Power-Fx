@@ -642,12 +642,19 @@ namespace Microsoft.PowerFx.Connectors
                     { Constants.XMsMediaKind, new OpenApiString(connectorType.MediaKind.ToString()) }
                 }
             };
+            
             OpenApiSchema schema = new OpenApiSchema(connectorType.Schema)
             {
                 Enum = optionSet.EnumType.ValueTree.GetPairs().Select(kvp => new OpenApiDouble((double)kvp.Value.Object) as IOpenApiAny).ToList()
             };
 
-            return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
+            OpenApiArray array = new OpenApiArray();
+            array.AddRange(optionSet.EnumType.ValueTree.GetPairs().Select(kvp => new OpenApiString(kvp.Key)));
+
+            schema.Extensions.Add(new KeyValuePair<string, IOpenApiExtension>(Constants.XMsEnumDisplayName, array));
+
+            // For now, we keep the original formula type (number/string/bool...)
+            return new ConnectorType(schema, openApiParameter, connectorType.FormulaType /* optionSet.FormulaType */);
         }
 
         /// <summary>

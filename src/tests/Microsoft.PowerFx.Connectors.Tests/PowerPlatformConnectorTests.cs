@@ -1720,57 +1720,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             ConnectorType returnType = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, 23, CancellationToken.None).ConfigureAwait(false);
             string ft = returnType.FormulaType.ToStringWithDisplayNames();
 
-            string expected =
-                @"!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id':s, _createdby_value:s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdbyexternalparty_value:s, " +
-                @"'_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdonbehalfby_value:s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
-                @"_defaultpricelevelid_value:s, '_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _masterid_value:s, '_masterid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
-                @"_modifiedby_value:s, '_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _modifiedbyexternalparty_value:s, '_modifiedbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
-                @"_modifiedonbehalfby_value:s, '_modifiedonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _msa_managingpartnerid_value:s, " +
-                @"'_msa_managingpartnerid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _msdyn_accountkpiid_value:s, '_msdyn_accountkpiid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
-                @"_msdyn_salesaccelerationinsightid_value:s, '_msdyn_salesaccelerationinsightid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _originatingleadid_value:s, " +
-                @"'_originatingleadid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _ownerid_value:s, '_ownerid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owningbusinessunit_value:s, " +
-                @"'_owningbusinessunit_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owningteam_value:s, '_owningteam_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owninguser_value:s, " +
-                @"'_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _parentaccountid_value:s, '_parentaccountid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _preferredequipmentid_value:s, " +
-                @"'_preferredequipmentid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _preferredserviceid_value:s, '_preferredserviceid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
-                @"_preferredsystemuserid_value:s, '_preferredsystemuserid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _primarycontactid_value:s, " +
-                @"'_primarycontactid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _slaid_value:s, '_slaid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _slainvokedid_value:s, " +
-                @"'_slainvokedid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _territoryid_value:s, '_territoryid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _transactioncurrencyid_value:s, " +
-                @"'_transactioncurrencyid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, accountcategorycode:l('Preferred Customer'=1,Standard=2), accountclassificationcode:l('Default Value'=1), accountid:s, " +
-                @"accountnumber:s, accountratingcode:l('Default Value'=1), address1_addressid:s, address1_addresstypecode:l('Bill To'=1,Other=4,Primary=3,'Ship To'=2), address1_city:s, address1_composite:s, " +
-                @"address1_country:s, address1_county:s, address1_fax:s, address1_freighttermscode:l(FOB=1,'No Charge'=2), address1_latitude:w, address1_line1:s, address1_line2:s, address1_line3:s, " +
-                @"address1_longitude:w, address1_name:s, address1_postalcode:s, address1_postofficebox:s, address1_primarycontactname:s, address1_shippingmethodcode:l(Airborne=1,DHL=2,FedEx=3,'Full Load'=6,'Postal Mail'=5,UPS=4,'Will Call'=7), " +
-                @"address1_stateorprovince:s, address1_telephone1:s, address1_telephone2:s, address1_telephone3:s, address1_upszone:s, address1_utcoffset:w, address2_addressid:s, address2_addresstypecode:l('Default Value'=1), " +
-                @"address2_city:s, address2_composite:s, address2_country:s, address2_county:s, address2_fax:s, address2_freighttermscode:l('Default Value'=1), address2_latitude:w, address2_line1:s, address2_line2:s, " +
-                @"address2_line3:s, address2_longitude:w, address2_name:s, address2_postalcode:s, address2_postofficebox:s, address2_primarycontactname:s, address2_shippingmethodcode:l('Default Value'=1), " +
-                @"address2_stateorprovince:s, address2_telephone1:s, address2_telephone2:s, address2_telephone3:s, address2_upszone:s, address2_utcoffset:w, adx_createdbyipaddress:s, adx_createdbyusername:s, " +
-                @"adx_modifiedbyipaddress:s, adx_modifiedbyusername:s, aging30:w, aging30_base:w, aging60:w, aging60_base:w, aging90:w, aging90_base:w, businesstypecode:l('Default Value'=1), createdon:d, creditlimit:w, " +
-                @"creditlimit_base:w, creditonhold:b, customersizecode:l('Default Value'=1), customertypecode:l(Competitor=1,Consultant=2,Customer=3,Influencer=6,Investor=4,Other=12,Partner=5,Press=7,Prospect=8,Reseller=9,Supplier=10,Vendor=11), " +
-                @"description:s, donotbulkemail:b, donotbulkpostalmail:b, donotemail:b, donotfax:b, donotphone:b, donotpostalmail:b, donotsendmm:b, emailaddress1:s, emailaddress2:s, emailaddress3:s, entityimage:s, " +
-                @"entityimageid:s, exchangerate:w, fax:s, followemail:b, ftpsiteurl:s, importsequencenumber:w, industrycode:l(Accounting=1,'Agriculture and Non-petrol Natural Resource Extraction'=2," +
-                @"'Broadcasting Printing and Publishing'=3,Brokers=4,'Building Supply Retail'=5,'Business Services'=6,Consulting=7,'Consumer Services'=8,'Design, Direction and Creative Management'=9," +
-                @"'Distributors, Dispatchers and Processors'=10,'Doctor''s Offices and Clinics'=11,'Durable Manufacturing'=12,'Eating and Drinking Places'=13,'Entertainment Retail'=14,'Equipment Rental and Leasing'=15," +
-                @"Financial=16,'Food and Tobacco Processing'=17,'Inbound Capital Intensive Processing'=18,'Inbound Repair and Services'=19,Insurance=20,'Legal Services'=21,'Non-Durable Merchandise Retail'=22," +
-                @"'Outbound Consumer Service'=23,'Petrochemical Extraction and Distribution'=24,'SIG Affiliations'=26,'Service Retail'=25,'Social Services'=27,'Special Outbound Trade Contractors'=28," +
-                @"'Specialty Realty'=29,Transportation=30,'Utility Creation and Distribution'=31,'Vehicle Retail'=32,Wholesale=33), lastonholdtime:d, lastusedincampaign:d, marketcap:w, marketcap_base:w, " +
-                @"marketingonly:b, merged:b, modifiedon:d, msdyn_gdproptout:b, name:s, numberofemployees:w, onholdtime:w, opendeals:w, opendeals_date:d, opendeals_state:w, openrevenue:w, openrevenue_base:w, " +
-                @"openrevenue_date:d, openrevenue_state:w, overriddencreatedon:d, ownershipcode:l(Other=4,Private=2,Public=1,Subsidiary=3), participatesinworkflow:b, paymenttermscode:l('2% 10, Net 30'=2,'Net 30'=1,'Net 45'=3,'Net 60'=4), " +
-                @"preferredappointmentdaycode:l(Friday=5,Monday=1,Saturday=6,Sunday=0,Thursday=4,Tuesday=2,Wednesday=3), preferredappointmenttimecode:l(Afternoon=2,Evening=3,Morning=1), " +
-                @"preferredcontactmethodcode:l(Any=1,Email=2,Fax=4,Mail=5,Phone=3), primarysatoriid:s, primarytwitterid:s, processid:s, revenue:w, revenue_base:w, sharesoutstanding:w, shippingmethodcode:l('Default Value'=1), sic:s, " +
-                @"stageid:s, statecode:l(Active=0,Inactive=1), statuscode:l(Active=1,Inactive=2), stockexchange:s, teamsfollowed:w, telephone1:s, telephone2:s, telephone3:s, territorycode:l('Default Value'=1), tickersymbol:s, " +
-                @"timespentbymeonemailandmeetings:s, timezoneruleversionnumber:w, traversedpath:s, utcconversiontimezonecode:w, versionnumber:w, websiteurl:s, yominame:s]]]";
-
-            Assert.Equal(expected, ft);
-            Assert.Equal("address1_addresstypecode", returnType.Fields[0].Fields[0].Fields[7].Name);
-            Assert.Equal("1, 4, 3, 2", string.Join(", ", returnType.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));
-            Assert.Equal("l('Bill To'=1,Other=4,Primary=3,'Ship To'=2)", returnType.Fields[0].Fields[0].Fields[7].FormulaType.ToStringWithDisplayNames());
-            
-            // Now, only make a single network call and see the difference: none of the option sets is populated.
-            testConnector.SetResponseFromFiles(Enumerable.Range(0, 1).Select(i => $@"Responses\Response_DVReturnType_{i:00}.json").ToArray());
-            ConnectorType returnType2 = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, CancellationToken.None).ConfigureAwait(false);
-            string ft2 = returnType2.FormulaType.ToStringWithDisplayNames();
-
-            string expected2 =
-                @"!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id':s, _createdby_value:s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdbyexternalparty_value:s, " +
+            string expected = @"!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id':s, _createdby_value:s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdbyexternalparty_value:s, " +
                 @"'_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdonbehalfby_value:s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _defaultpricelevelid_value:s, " +
                 @"'_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _masterid_value:s, '_masterid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _modifiedby_value:s, " +
                 @"'_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _modifiedbyexternalparty_value:s, '_modifiedbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _modifiedonbehalfby_value:s, " +
@@ -1798,9 +1748,69 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 @"sharesoutstanding:w, shippingmethodcode:w, sic:s, stageid:s, statecode:w, statuscode:w, stockexchange:s, teamsfollowed:w, telephone1:s, telephone2:s, telephone3:s, territorycode:w, tickersymbol:s, " +
                 @"timespentbymeonemailandmeetings:s, timezoneruleversionnumber:w, traversedpath:s, utcconversiontimezonecode:w, versionnumber:w, websiteurl:s, yominame:s]]]";
 
-            Assert.Equal(expected2, ft2);
+            // If we would return OptionSet type, this is the return type we'd get
+            // Keeping for reference
+
+            //@"!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id':s, _createdby_value:s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdbyexternalparty_value:s, " +
+            //@"'_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdonbehalfby_value:s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
+            //@"_defaultpricelevelid_value:s, '_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _masterid_value:s, '_masterid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
+            //@"_modifiedby_value:s, '_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _modifiedbyexternalparty_value:s, '_modifiedbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
+            //@"_modifiedonbehalfby_value:s, '_modifiedonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _msa_managingpartnerid_value:s, " +
+            //@"'_msa_managingpartnerid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _msdyn_accountkpiid_value:s, '_msdyn_accountkpiid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
+            //@"_msdyn_salesaccelerationinsightid_value:s, '_msdyn_salesaccelerationinsightid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _originatingleadid_value:s, " +
+            //@"'_originatingleadid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _ownerid_value:s, '_ownerid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owningbusinessunit_value:s, " +
+            //@"'_owningbusinessunit_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owningteam_value:s, '_owningteam_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owninguser_value:s, " +
+            //@"'_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _parentaccountid_value:s, '_parentaccountid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _preferredequipmentid_value:s, " +
+            //@"'_preferredequipmentid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _preferredserviceid_value:s, '_preferredserviceid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
+            //@"_preferredsystemuserid_value:s, '_preferredsystemuserid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _primarycontactid_value:s, " +
+            //@"'_primarycontactid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _slaid_value:s, '_slaid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _slainvokedid_value:s, " +
+            //@"'_slainvokedid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _territoryid_value:s, '_territoryid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _transactioncurrencyid_value:s, " +
+            //@"'_transactioncurrencyid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, accountcategorycode:l('Preferred Customer'=1,Standard=2), accountclassificationcode:l('Default Value'=1), accountid:s, " +
+            //@"accountnumber:s, accountratingcode:l('Default Value'=1), address1_addressid:s, address1_addresstypecode:l('Bill To'=1,Other=4,Primary=3,'Ship To'=2), address1_city:s, address1_composite:s, " +
+            //@"address1_country:s, address1_county:s, address1_fax:s, address1_freighttermscode:l(FOB=1,'No Charge'=2), address1_latitude:w, address1_line1:s, address1_line2:s, address1_line3:s, " +
+            //@"address1_longitude:w, address1_name:s, address1_postalcode:s, address1_postofficebox:s, address1_primarycontactname:s, address1_shippingmethodcode:l(Airborne=1,DHL=2,FedEx=3,'Full Load'=6,'Postal Mail'=5,UPS=4,'Will Call'=7), " +
+            //@"address1_stateorprovince:s, address1_telephone1:s, address1_telephone2:s, address1_telephone3:s, address1_upszone:s, address1_utcoffset:w, address2_addressid:s, address2_addresstypecode:l('Default Value'=1), " +
+            //@"address2_city:s, address2_composite:s, address2_country:s, address2_county:s, address2_fax:s, address2_freighttermscode:l('Default Value'=1), address2_latitude:w, address2_line1:s, address2_line2:s, " +
+            //@"address2_line3:s, address2_longitude:w, address2_name:s, address2_postalcode:s, address2_postofficebox:s, address2_primarycontactname:s, address2_shippingmethodcode:l('Default Value'=1), " +
+            //@"address2_stateorprovince:s, address2_telephone1:s, address2_telephone2:s, address2_telephone3:s, address2_upszone:s, address2_utcoffset:w, adx_createdbyipaddress:s, adx_createdbyusername:s, " +
+            //@"adx_modifiedbyipaddress:s, adx_modifiedbyusername:s, aging30:w, aging30_base:w, aging60:w, aging60_base:w, aging90:w, aging90_base:w, businesstypecode:l('Default Value'=1), createdon:d, creditlimit:w, " +
+            //@"creditlimit_base:w, creditonhold:b, customersizecode:l('Default Value'=1), customertypecode:l(Competitor=1,Consultant=2,Customer=3,Influencer=6,Investor=4,Other=12,Partner=5,Press=7,Prospect=8,Reseller=9,Supplier=10,Vendor=11), " +
+            //@"description:s, donotbulkemail:b, donotbulkpostalmail:b, donotemail:b, donotfax:b, donotphone:b, donotpostalmail:b, donotsendmm:b, emailaddress1:s, emailaddress2:s, emailaddress3:s, entityimage:s, " +
+            //@"entityimageid:s, exchangerate:w, fax:s, followemail:b, ftpsiteurl:s, importsequencenumber:w, industrycode:l(Accounting=1,'Agriculture and Non-petrol Natural Resource Extraction'=2," +
+            //@"'Broadcasting Printing and Publishing'=3,Brokers=4,'Building Supply Retail'=5,'Business Services'=6,Consulting=7,'Consumer Services'=8,'Design, Direction and Creative Management'=9," +
+            //@"'Distributors, Dispatchers and Processors'=10,'Doctor''s Offices and Clinics'=11,'Durable Manufacturing'=12,'Eating and Drinking Places'=13,'Entertainment Retail'=14,'Equipment Rental and Leasing'=15," +
+            //@"Financial=16,'Food and Tobacco Processing'=17,'Inbound Capital Intensive Processing'=18,'Inbound Repair and Services'=19,Insurance=20,'Legal Services'=21,'Non-Durable Merchandise Retail'=22," +
+            //@"'Outbound Consumer Service'=23,'Petrochemical Extraction and Distribution'=24,'SIG Affiliations'=26,'Service Retail'=25,'Social Services'=27,'Special Outbound Trade Contractors'=28," +
+            //@"'Specialty Realty'=29,Transportation=30,'Utility Creation and Distribution'=31,'Vehicle Retail'=32,Wholesale=33), lastonholdtime:d, lastusedincampaign:d, marketcap:w, marketcap_base:w, " +
+            //@"marketingonly:b, merged:b, modifiedon:d, msdyn_gdproptout:b, name:s, numberofemployees:w, onholdtime:w, opendeals:w, opendeals_date:d, opendeals_state:w, openrevenue:w, openrevenue_base:w, " +
+            //@"openrevenue_date:d, openrevenue_state:w, overriddencreatedon:d, ownershipcode:l(Other=4,Private=2,Public=1,Subsidiary=3), participatesinworkflow:b, paymenttermscode:l('2% 10, Net 30'=2,'Net 30'=1,'Net 45'=3,'Net 60'=4), " +
+            //@"preferredappointmentdaycode:l(Friday=5,Monday=1,Saturday=6,Sunday=0,Thursday=4,Tuesday=2,Wednesday=3), preferredappointmenttimecode:l(Afternoon=2,Evening=3,Morning=1), " +
+            //@"preferredcontactmethodcode:l(Any=1,Email=2,Fax=4,Mail=5,Phone=3), primarysatoriid:s, primarytwitterid:s, processid:s, revenue:w, revenue_base:w, sharesoutstanding:w, shippingmethodcode:l('Default Value'=1), sic:s, " +
+            //@"stageid:s, statecode:l(Active=0,Inactive=1), statuscode:l(Active=1,Inactive=2), stockexchange:s, teamsfollowed:w, telephone1:s, telephone2:s, telephone3:s, territorycode:l('Default Value'=1), tickersymbol:s, " +
+            //@"timespentbymeonemailandmeetings:s, timezoneruleversionnumber:w, traversedpath:s, utcconversiontimezonecode:w, versionnumber:w, websiteurl:s, yominame:s]]]";
+
+            Assert.Equal(expected, ft);
+            Assert.Equal("address1_addresstypecode", returnType.Fields[0].Fields[0].Fields[7].Name);
+            Assert.Equal("w", returnType.Fields[0].Fields[0].Fields[7].FormulaType.ToStringWithDisplayNames());
+            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);
+            Assert.False(returnType.Fields[0].Fields[0].Fields[7].IsOptionSet);
+            Assert.Equal("1, 4, 3, 2", string.Join(", ", returnType.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));            
+            Assert.Equal("Bill To=1, Other=4, Primary=3, Ship To=2", string.Join(", ", returnType.Fields[0].Fields[0].Fields[7].Enum.Select(kvp => $"{kvp.Key}={kvp.Value.ToObject()}")));
+            
+            // Now, only make a single network call and see the difference: none of the option set values are populated.
+            testConnector.SetResponseFromFiles(Enumerable.Range(0, 1).Select(i => $@"Responses\Response_DVReturnType_{i:00}.json").ToArray());
+            ConnectorType returnType2 = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, CancellationToken.None).ConfigureAwait(false);
+            string ft2 = returnType2.FormulaType.ToStringWithDisplayNames();       
+
+            Assert.Equal(expected, ft2);
             Assert.Equal("address1_addresstypecode", returnType2.Fields[0].Fields[0].Fields[7].Name);
             Assert.Equal("w", returnType2.Fields[0].Fields[0].Fields[7].FormulaType.ToStringWithDisplayNames());
+            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);
+            Assert.False(returnType.Fields[0].Fields[0].Fields[7].IsOptionSet);
+
+            // Key differences
+            Assert.Equal(string.Empty, string.Join(", ", returnType2.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));
+            Assert.Null(returnType2.Fields[0].Fields[0].Fields[7].Enum);
         }
     }
 }

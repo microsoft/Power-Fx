@@ -45,18 +45,23 @@ namespace Microsoft.PowerFx.Connectors
         // "x-ms-explicit-input"
         public bool ExplicitInput { get; }
 
-        // "enum"
+        // swagger "enum"
+        public bool IsOptionSet { get; }
+
+        // defined via GetConnectorReturnTypeAsync with x-ms-dynamic-* extensions
         public bool IsEnum { get; }
 
         // Enumeration value, only defined if IsEnum is true
         public FormulaValue[] EnumValues { get; }
 
-        // Enumeration display name ("x-ms-enum-display-name"), only defined if IsEnum is true
-        // If not defined, this array will be empty
+        // Enumeration display name ("x-ms-enum-display-name"), only defined if IsOptionSet or IsEnum is true
+        // If not defined, this array will be empty 
         public string[] EnumDisplayNames { get; }
 
-        // Option Set, only defined when IsEnum is true and EnumValues is not empty
+        // Option Set, only defined when IsOptionSet is true and EnumValues is not empty
         public OptionSet OptionSet => GetOptionSet();
+
+        public Dictionary<string, FormulaValue> Enum => GetEnum();
 
         public Visibility Visibility { get; internal set; }
 
@@ -111,9 +116,9 @@ namespace Microsoft.PowerFx.Connectors
                 ExplicitInput = schema.GetExplicitInput();
 
                 Fields = Array.Empty<ConnectorType>();
-                IsEnum = schema.Enum != null && schema.Enum.Any();
+                IsOptionSet = schema.Enum != null && schema.Enum.Any();
 
-                if (IsEnum)
+                if (IsOptionSet)
                 {
                     EnumValues = schema.Enum.Select(oaa =>
                     {
@@ -126,12 +131,20 @@ namespace Microsoft.PowerFx.Connectors
                         return FormulaValue.NewBlank();
                     }).ToArray();
 
+                    // x-ms-enum-display-name
                     EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue(XMsEnumDisplayName, out IOpenApiExtension enumNames) && enumNames is OpenApiArray oaa
                                         ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
                                         : Array.Empty<string>();
+                    
+                    if (EnumValues.Any(ev => ev is not StringValue))
+                    {
+                        IsOptionSet = false;
+                        IsEnum = true;
+                    }
                 }
                 else
                 {
+                    // those values are null/empty even if x-ms-dynamic-* could be present and would define possible values
                     EnumValues = Array.Empty<FormulaValue>();
                     EnumDisplayNames = Array.Empty<string>();
                 }
@@ -196,7 +209,8 @@ namespace Microsoft.PowerFx.Connectors
             EnumDisplayNames = connectorType.EnumDisplayNames;
             EnumValues = connectorType.EnumValues;
             ExplicitInput = connectorType.ExplicitInput;
-            IsEnum = connectorType.IsEnum;
+            IsOptionSet = false;
+            IsEnum = true;
             IsRequired = connectorType.IsRequired;
             MediaKind = connectorType.MediaKind;
             Name = connectorType.Name;
@@ -228,12 +242,25 @@ namespace Microsoft.PowerFx.Connectors
 
         private OptionSet GetOptionSet()
         {
-            if (!IsEnum || string.IsNullOrEmpty(Name) || EnumValues.Length != EnumDisplayNames.Length)
+            if (!IsOptionSet || string.IsNullOrEmpty(Name))
             {
                 return null;
             }
 
-            return new OptionSet(Name, EnumValues.Select(ev => ev.ToObject().ToString()).Zip(EnumDisplayNames, (ev, dn) => new KeyValuePair<string, string>(ev, dn)).ToDictionary(kvp => new DName(kvp.Key), kvp => new DName(kvp.Value)).ToImmutableDictionary());
+            string[] enumValues = EnumValues.Select(ev => ev.ToObject().ToString()).ToArray();
+            string[] enumDisplayNames = EnumDisplayNames ?? enumValues;
+
+            return new OptionSet(Name, enumValues.Zip(enumDisplayNames, (ev, dn) => new KeyValuePair<string, string>(ev, dn)).ToDictionary(kvp => new DName(kvp.Key), kvp => new DName(kvp.Value)).ToImmutableDictionary());
+        }
+
+        private Dictionary<string, FormulaValue> GetEnum()
+        {
+            if (!IsEnum || string.IsNullOrEmpty(Name))
+            {
+                return null;
+            }
+
+            return EnumDisplayNames.Zip(EnumValues, (dn, ev) => new KeyValuePair<string, FormulaValue>(dn, ev)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
     }
 }
