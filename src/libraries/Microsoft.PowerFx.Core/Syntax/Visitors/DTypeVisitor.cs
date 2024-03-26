@@ -63,7 +63,8 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
                 return nameInfo.Type;
             }
 
-            return FormulaType.GetFromStringOrNull(name)._type;
+            var typeFromString = FormulaType.GetFromStringOrNull(name);
+            return typeFromString == null ? DType.Unknown : typeFromString._type;
         }
 
         public override DType Visit(ParentNode node, INameResolver context)
@@ -117,9 +118,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             foreach (var (cNode, ident) in node.ChildNodes.Zip(node.Ids, (a, b) => (a, b)))
             {
                 var ty = cNode.Accept(this, context);
-                if (ty == null)
+                if (ty == DType.Unknown)
                 {
-                    return null;
+                    return DType.Unknown;
                 }
 
                 list.Add(new TypedName(ty, new DName(ident.Name.Value)));
@@ -132,9 +133,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
         {
             var childNode = node.ChildNodes.First();
             var ty = childNode.Accept(this, context);
-            if (ty == null)
+            if (ty == DType.Unknown)
             {
-                return null;
+                return DType.Unknown;
             }
 
             return ty.ToTable();

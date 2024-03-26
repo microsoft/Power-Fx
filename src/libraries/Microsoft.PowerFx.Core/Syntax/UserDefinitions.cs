@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Syntax
             {
                 var name = defType.Ident.Name.Value;
                 var res = DTypeVisitor.Run(defType.Type.TypeRoot, composedSymbols);
-                if (res == null)
+                if (res == DType.Unknown)
                 {
                     typeErr.Add(new TexlError(defType.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
                     continue;
