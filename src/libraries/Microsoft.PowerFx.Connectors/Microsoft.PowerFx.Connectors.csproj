@@ -4,8 +4,7 @@
     <Version Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</Version>
     <PackageVersion Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</PackageVersion>
     <PackageVersion Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</PackageVersion>
-    <Configurations>Debug;Release</Configurations>
-    <LangVersion>10.0</LangVersion>
+    <Configurations>Debug;Release</Configurations>    
   </PropertyGroup>
 
   <!-- Nuget Properties -->

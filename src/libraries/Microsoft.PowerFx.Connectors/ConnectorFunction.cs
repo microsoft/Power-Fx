@@ -478,18 +478,22 @@ namespace Microsoft.PowerFx.Connectors
         /// <returns>Formula Type determined by dynamic Intellisense.</returns>
         public async Task<ConnectorType> GetConnectorParameterTypeAsync(NamedValue[] knownParameters, ConnectorParameter connectorParameter, BaseRuntimeConnectorContext runtimeContext, int maxCalls, CancellationToken cancellationToken)
         {
+            return await GetConnectorParameterTypeAsync(knownParameters, connectorParameter, runtimeContext, new CallCounter() { CallsLeft = maxCalls }, cancellationToken).ConfigureAwait(false);
+        }
+       
+        internal async Task<ConnectorType> GetConnectorParameterTypeAsync(NamedValue[] knownParameters, ConnectorParameter connectorParameter, BaseRuntimeConnectorContext runtimeContext, CallCounter maxCalls, CancellationToken cancellationToken)
+        {
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorParameterTypeAsync))}, with {LogKnownParameters(knownParameters)}, MaxCalls {maxCalls}, {LogConnectorParameter(connectorParameter)}");
+                runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorParameterTypeAsync))}, with {LogKnownParameters(knownParameters)}, callsLeft {maxCalls.CallsLeft}, {LogConnectorParameter(connectorParameter)}");
 
-                (ConnectorType result, maxCalls) = await GetConnectorTypeInternalAsync(knownParameters, connectorParameter.ConnectorType ?? ReturnParameterType, runtimeContext, maxCalls, cancellationToken).ConfigureAwait(false);
-                runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorParameterTypeAsync))}, returning from {nameof(GetConnectorTypeInternalAsync)} with {LogConnectorType(result)}, maxCalls {maxCalls}");
+                ConnectorType result = await GetConnectorTypeInternalAsync(knownParameters, connectorParameter.ConnectorType ?? ReturnParameterType, runtimeContext, maxCalls, cancellationToken).ConfigureAwait(false);
+                runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorParameterTypeAsync))}, returning from {nameof(GetConnectorTypeInternalAsync)} with {LogConnectorType(result)}, callsLeft {maxCalls.CallsLeft}");
                 return result;
             }
             catch (Exception ex)
-            {
-                maxCalls--;
+            {                
                 runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in {this.LogFunction(nameof(GetConnectorParameterTypeAsync))}, Context {LogKnownParameters(knownParameters)} {LogConnectorParameter(connectorParameter)}, {LogException(ex)}");
                 throw;
             }
@@ -531,41 +535,48 @@ namespace Microsoft.PowerFx.Connectors
         /// <returns>Formula Type determined by dynamic Intellisense.</returns>
         public async Task<ConnectorType> GetConnectorTypeAsync(NamedValue[] knownParameters, ConnectorType connectorType, BaseRuntimeConnectorContext runtimeContext, int maxCalls, CancellationToken cancellationToken)
         {
+            return await GetConnectorTypeAsync(knownParameters, connectorType, runtimeContext, new CallCounter() { CallsLeft = maxCalls }, cancellationToken).ConfigureAwait(false);
+        }
+
+        internal async Task<ConnectorType> GetConnectorTypeAsync(NamedValue[] knownParameters, ConnectorType connectorType, BaseRuntimeConnectorContext runtimeContext, CallCounter maxCalls, CancellationToken cancellationToken)
+        {
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorTypeAsync))}, with {LogKnownParameters(knownParameters)} and maxCalls {maxCalls} for {LogConnectorType(connectorType)}");
-                (ConnectorType connectorType2, maxCalls) = await GetConnectorTypeInternalAsync(knownParameters, connectorType, runtimeContext, maxCalls, cancellationToken).ConfigureAwait(false);
-                runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorTypeAsync))}, returning from {nameof(GetConnectorTypeInternalAsync)} with {LogConnectorType(connectorType2)}, maxCalls {maxCalls}");
+                runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorTypeAsync))}, with {LogKnownParameters(knownParameters)} and callsLeft {maxCalls.CallsLeft} for {LogConnectorType(connectorType)}");
+                ConnectorType connectorType2 = await GetConnectorTypeInternalAsync(knownParameters, connectorType, runtimeContext, maxCalls, cancellationToken).ConfigureAwait(false);
+                runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorTypeAsync))}, returning from {nameof(GetConnectorTypeInternalAsync)} with {LogConnectorType(connectorType2)}, callsLeft {maxCalls.CallsLeft}");
                 return connectorType2;
             }
             catch (Exception ex)
-            {
-                maxCalls--;
-                runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in {this.LogFunction(nameof(GetConnectorTypeAsync))}, Context {LogKnownParameters(knownParameters)}, MaxCalls {maxCalls} {LogConnectorType(connectorType)}, {LogException(ex)}");
+            {                
+                runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in {this.LogFunction(nameof(GetConnectorTypeAsync))}, Context {LogKnownParameters(knownParameters)}, callsLeft {maxCalls.CallsLeft} {LogConnectorType(connectorType)}, {LogException(ex)}");
                 throw;
             }
         }
 
-        internal async Task<(ConnectorType, int)> GetConnectorTypeInternalAsync(NamedValue[] knownParameters, ConnectorType connectorType, BaseRuntimeConnectorContext runtimeContext, int maxCalls, CancellationToken cancellationToken)
+        internal async Task<ConnectorType> GetConnectorTypeInternalAsync(NamedValue[] knownParameters, ConnectorType connectorType, BaseRuntimeConnectorContext runtimeContext, CallCounter maxCalls, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, with {LogKnownParameters(knownParameters)}, MaxCalls {maxCalls} for {LogConnectorType(connectorType)}");
+            runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, with {LogKnownParameters(knownParameters)}, callsLeft {maxCalls.CallsLeft} for {LogConnectorType(connectorType)}");
 
             if (connectorType.DynamicProperty != null && !string.IsNullOrEmpty(connectorType.DynamicProperty.ItemValuePath))
             {
+                maxCalls.CallsLeft--;
                 ConnectorType result = await GetConnectorSuggestionsFromDynamicPropertyAsync(knownParameters, runtimeContext, connectorType.DynamicProperty, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, returning from {nameof(GetConnectorSuggestionsFromDynamicPropertyAsync)} with {LogConnectorType(result)}");
-                return (result, --maxCalls);
+                return result;
             }
             else if (connectorType.DynamicSchema != null && !string.IsNullOrEmpty(connectorType.DynamicSchema.ValuePath))
             {
+                maxCalls.CallsLeft--;
                 ConnectorType result = await GetConnectorSuggestionsFromDynamicSchemaAsync(knownParameters, runtimeContext, connectorType.DynamicSchema, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, returning from {nameof(GetConnectorSuggestionsFromDynamicSchemaAsync)} with {LogConnectorType(result)}");
-                return (result, --maxCalls);
+                return result;
             }
             else if (connectorType.DynamicList != null && !string.IsNullOrEmpty(connectorType.DynamicList.ItemPath))
             {
+                maxCalls.CallsLeft--;
                 ConnectorEnhancedSuggestions result = await GetConnectorSuggestionsFromDynamicListAsync(knownParameters, runtimeContext, connectorType.DynamicList, cancellationToken).ConfigureAwait(false);
 
                 // This is an OptionSet
@@ -573,11 +584,12 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     ConnectorType connectorType2 = GetOptionSetFromSuggestions(connectorType, result);
                     runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, returning from {nameof(GetConnectorSuggestionsFromDynamicListAsync)} with {LogConnectorType(connectorType2)}");
-                    return (connectorType2, --maxCalls);
+                    return connectorType2;
                 }
             }
             else if (connectorType.DynamicValues != null && !string.IsNullOrEmpty(connectorType.DynamicValues.ValuePath))
             {
+                maxCalls.CallsLeft--;
                 ConnectorEnhancedSuggestions result = await GetConnectorSuggestionsFromDynamicValueAsync(knownParameters, runtimeContext, connectorType.DynamicValues, cancellationToken).ConfigureAwait(false);
 
                 // This is an OptionSet
@@ -585,7 +597,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     ConnectorType connectorType2 = GetOptionSetFromSuggestions(connectorType, result);
                     runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, returning from {nameof(GetConnectorSuggestionsFromDynamicValueAsync)} with {LogConnectorType(connectorType2)}");
-                    return (connectorType2, --maxCalls);
+                    return connectorType2;
                 }
             }
             else if (connectorType.ContainsDynamicIntellisense && connectorType.Fields.Any() && connectorType.FormulaType is AggregateType aggregateType)
@@ -597,9 +609,9 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     ConnectorType newFieldType = field;
 
-                    while (newFieldType.ContainsDynamicIntellisense && maxCalls > 0)
+                    while (newFieldType.ContainsDynamicIntellisense && maxCalls.CallsLeft > 0)
                     {
-                        (ConnectorType newFieldType2, maxCalls) = await GetConnectorTypeInternalAsync(knownParameters, newFieldType, runtimeContext, maxCalls, cancellationToken).ConfigureAwait(false);
+                        ConnectorType newFieldType2 = await GetConnectorTypeInternalAsync(knownParameters, newFieldType, runtimeContext, maxCalls, cancellationToken).ConfigureAwait(false);
 
                         if (newFieldType2 == null)
                         {
@@ -609,9 +621,9 @@ namespace Microsoft.PowerFx.Connectors
                         newFieldType = newFieldType2;
                     }
 
-                    if (maxCalls <= 0)
+                    if (maxCalls.CallsLeft <= 0)
                     {
-                        runtimeContext.ExecutionLogger?.LogDebug($"In {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, maxCalls is {maxCalls}.");
+                        runtimeContext.ExecutionLogger?.LogDebug($"In {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, callsLeft {maxCalls.CallsLeft}.");
                     }
 
                     fieldTypes.Add(newFieldType);
@@ -621,11 +633,11 @@ namespace Microsoft.PowerFx.Connectors
                 FormulaType formulaType = connectorType.FormulaType is RecordType ? recordType : recordType.ToTable();
                 ConnectorType newConnectorType = new ConnectorType(connectorType, fieldTypes.ToArray(), formulaType);
                 runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, returning from {nameof(GetConnectorSuggestionsFromDynamicSchemaAsync)} with {LogConnectorType(newConnectorType)}");
-                return (newConnectorType, maxCalls);
+                return newConnectorType;
             }
 
             runtimeContext.ExecutionLogger?.LogWarning($"Exiting {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, returning null as no dynamic extension defined for {LogConnectorType(connectorType)}");
-            return (null, maxCalls);
+            return null;
         }
 
         private static ConnectorType GetOptionSetFromSuggestions(ConnectorType connectorType, ConnectorEnhancedSuggestions result)
@@ -642,7 +654,7 @@ namespace Microsoft.PowerFx.Connectors
                     { Constants.XMsMediaKind, new OpenApiString(connectorType.MediaKind.ToString()) }
                 }
             };
-            
+
             OpenApiSchema schema = new OpenApiSchema(connectorType.Schema)
             {
                 Enum = optionSet.EnumType.ValueTree.GetPairs().Select(kvp => new OpenApiDouble((double)kvp.Value.Object) as IOpenApiAny).ToList()
@@ -691,10 +703,15 @@ namespace Microsoft.PowerFx.Connectors
         /// <returns>Formula Type determined by dynamic Intellisense.</returns>
         public async Task<ConnectorType> GetConnectorReturnTypeAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, int maxCalls, CancellationToken cancellationToken)
         {
+            return await GetConnectorReturnTypeAsync(knownParameters, runtimeContext, new CallCounter() { CallsLeft = maxCalls }, cancellationToken).ConfigureAwait(false);
+        }
+
+        internal async Task<ConnectorType> GetConnectorReturnTypeAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, CallCounter maxCalls, CancellationToken cancellationToken)
+        {
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorReturnTypeAsync))}, with {LogKnownParameters(knownParameters)} and maxCalls {maxCalls}");
+                runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorReturnTypeAsync))}, with {LogKnownParameters(knownParameters)} and callsLeft {maxCalls.CallsLeft}");
                 ConnectorType connectorType = await GetConnectorTypeAsync(knownParameters, ReturnParameterType, runtimeContext, maxCalls, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorReturnTypeAsync))}, returning {nameof(GetConnectorTypeAsync)}, with {LogConnectorType(connectorType)}");
                 return connectorType;
@@ -1442,6 +1459,11 @@ namespace Microsoft.PowerFx.Connectors
                     _configurationLogger?.LogError($"{this.LogFunction(nameof(VerifyCanHandle))}, unsupported {location.Value}");
                     return false;
             }
+        }
+
+        internal class CallCounter
+        {
+            internal int CallsLeft;
         }
     }
 }
