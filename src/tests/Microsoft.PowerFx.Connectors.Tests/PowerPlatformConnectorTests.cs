@@ -1792,8 +1792,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(expected, ft);
             Assert.Equal("address1_addresstypecode", returnType.Fields[0].Fields[0].Fields[7].Name);
             Assert.Equal("w", returnType.Fields[0].Fields[0].Fields[7].FormulaType.ToStringWithDisplayNames());
-            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);
-            Assert.False(returnType.Fields[0].Fields[0].Fields[7].IsOptionSet);
+            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);            
             Assert.Equal("1, 4, 3, 2", string.Join(", ", returnType.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));            
             Assert.Equal("Bill To=1, Other=4, Primary=3, Ship To=2", string.Join(", ", returnType.Fields[0].Fields[0].Fields[7].Enum.Select(kvp => $"{kvp.Key}={kvp.Value.ToObject()}")));
             
@@ -1805,8 +1804,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(expected, ft2);
             Assert.Equal("address1_addresstypecode", returnType2.Fields[0].Fields[0].Fields[7].Name);
             Assert.Equal("w", returnType2.Fields[0].Fields[0].Fields[7].FormulaType.ToStringWithDisplayNames());
-            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);
-            Assert.False(returnType.Fields[0].Fields[0].Fields[7].IsOptionSet);
+            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);            
 
             // Key differences
             Assert.Equal(string.Empty, string.Join(", ", returnType2.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));

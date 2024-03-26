@@ -1201,10 +1201,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             FormulaType = connectorType.FormulaType._type.ToString();
             ExplicitInput = connectorType.ExplicitInput;
-            IsEnum = connectorType.IsEnum;
-            IsOptionSet = connectorType.IsOptionSet;
+            IsEnum = connectorType.IsEnum;            
 
-            if (connectorType.IsOptionSet)
+            if (connectorType.IsEnum)
             {
                 bool hasDisplayNames = connectorType.EnumDisplayNames != null && connectorType.EnumDisplayNames.Length > 0;
                 EnumValues = connectorType.EnumValues.Select((ev, i) => new YamlEnumValue()

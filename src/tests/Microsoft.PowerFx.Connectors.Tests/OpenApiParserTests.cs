@@ -685,28 +685,21 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // "enum"
             Assert.Equal(FormulaType.Decimal, functions[1].OptionalParameters[2].ConnectorType.FormulaType); // "leadsourcecode"
-            Assert.True(functions[1].OptionalParameters[2].ConnectorType.IsEnum);
-            Assert.False(functions[1].OptionalParameters[2].ConnectorType.IsOptionSet);
+            Assert.True(functions[1].OptionalParameters[2].ConnectorType.IsEnum);            
             Assert.Equal(Enumerable.Range(1, 10).Select(i => (decimal)i).ToArray(), functions[1].OptionalParameters[2].ConnectorType.EnumValues.Select(fv => (decimal)fv.ToObject()));
             Assert.Equal("Advertisement, Employee Referral, External Referral, Partner, Public Relations, Seminar, Trade Show, Web, Word of Mouth, Other", string.Join(", ", functions[1].OptionalParameters[2].ConnectorType.EnumDisplayNames));
+            Assert.Equal(4m, functions[1].OptionalParameters[2].ConnectorType.Enum["Partner"].ToObject());
 
             // "x-ms-enum-display-name"
             Assert.NotNull(functions[1].OptionalParameters[2].ConnectorType.EnumDisplayNames);
             Assert.Equal("Advertisement", functions[1].OptionalParameters[2].ConnectorType.EnumDisplayNames[0]);
             Assert.Equal("Employee Referral", functions[1].OptionalParameters[2].ConnectorType.EnumDisplayNames[1]);
 
-            Assert.True(functions[1].RequiredParameters[2].ConnectorType.IsOptionSet); // "msdyn_company@odata.bind"
-            Assert.False(functions[1].RequiredParameters[2].ConnectorType.IsEnum);
+            Assert.True(functions[1].RequiredParameters[2].ConnectorType.IsEnum); // "msdyn_company@odata.bind"            
             Assert.Equal("2b629105-4a26-4607-97a5-0715059e0a55", functions[1].RequiredParameters[2].ConnectorType.EnumValues[0].ToObject());
             Assert.Equal("5cacddd3-d47f-4023-a68e-0ce3e0d401fb", functions[1].RequiredParameters[2].ConnectorType.EnumValues[1].ToObject());
             Assert.Equal("INMF", functions[1].RequiredParameters[2].ConnectorType.EnumDisplayNames[0]);
-            Assert.Equal("MYMF", functions[1].RequiredParameters[2].ConnectorType.EnumDisplayNames[1]);
-
-            OptionSet os1 = functions[1].RequiredParameters[2].ConnectorType.OptionSet;
-
-            Assert.NotNull(os1);
-            Assert.Equal("msdyn_company@odata.bind", os1.EntityName);
-            Assert.Equal("msdyn_company@odata.bind", os1.FormulaType.OptionSetName);
+            Assert.Equal("MYMF", functions[1].RequiredParameters[2].ConnectorType.EnumDisplayNames[1]);            
         }
 
         [Fact]
