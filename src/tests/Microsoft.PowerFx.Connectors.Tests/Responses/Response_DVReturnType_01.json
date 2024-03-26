@@ -1,0 +1,26 @@
+{
+  "value": [
+    {
+      "value": 1,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Default Value",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "474901bf-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Default Value",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "474901bf-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": { "localizedLabels": [] },
+      "isManaged": true,
+      "isHidden": false
+    }
+  ]
+}
