@@ -210,7 +210,23 @@ namespace Microsoft.PowerFx.Types
             // since in that case nested elements are not object and hence needs to be handled differently.
             var nestedElementsAreObjects = array.EnumerateArray().Any(nestedElement => nestedElement.ValueKind == JsonValueKind.Object);
             bool isArray = tableType?._type.IsColumn == true && !nestedElementsAreObjects;
-            FormulaType ft = isArray ? tableType.ToRecord().GetFieldType("Value") : tableType?.ToRecord();
+            FormulaType ft;
+
+            if (isArray)
+            {
+                if (array.GetArrayLength() == 0)
+                {
+                    ft = tableType?.ToRecord();
+                }
+                else
+                {
+                    ft = tableType?.ToRecord().GetFieldType("Value");
+                }
+            }
+            else
+            {
+                ft = tableType?.ToRecord();
+            }
 
             for (var i = 0; i < array.GetArrayLength(); ++i)
             {
