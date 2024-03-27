@@ -167,7 +167,7 @@ namespace Microsoft.PowerFx.Functions
                     fValid = false;
                     if (!SetErrorForMismatchedColumns(collectionType, argType, args[i], errors, context.Features))
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], ErrTableDoesNotAcceptThisType);
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], ErrTableDoesNotAcceptThisTypeDetailed, argType.GetKindString());
                     }
                 }
             }

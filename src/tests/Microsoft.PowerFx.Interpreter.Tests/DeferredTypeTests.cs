@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Text(X)", "s")]
         [InlineData("Value(X)", "n")]
         [InlineData("Boolean(X)", "b")]
-        [InlineData("Index([1,2,3].Value, X)", "![Value:n]")]
+        [InlineData("Index([1,2,3], X)", "![Value:n]")]
         [InlineData("Sum(X, 1) < 5", "b")]
         [InlineData("Sum(X, 1, R) < 5", "b")] // All error are discarded for function calls, hence we don't get error for RecordType here.
         [InlineData("Sum(X, T) < 5", "b")] // Since we discard all errors for function calls, Function calls are biased to non tabular overload.
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Interpreter
             symbolTable.AddVariable("N", FormulaType.Number, mutable: true);
             symbolTable.AddVariable("XM", FormulaType.Deferred, mutable: true);
 
-            TestDeferredTypeBindingWarning(script, Features.None, TestUtils.DT(expectedReturnType), symbolTable, numberIsFloat: true);
+            TestDeferredTypeBindingWarning(script, Features.PowerFxV1, TestUtils.DT(expectedReturnType), symbolTable, numberIsFloat: true);
         }
 
         [Theory]
@@ -99,11 +99,11 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("First(Sum(X, 1))", "ErrBadType_ExpectedType_ProvidedType")]
 
         // Can't create aggregates around Deferred type.
-        [InlineData("[X]", "ErrTableDoesNotAcceptThisType")]
-        [InlineData("{test: X}", "ErrRecordDoesNotAcceptThisType")]
-        [InlineData("{ a: { a: { a: X } } }", "ErrRecordDoesNotAcceptThisType")]
-        [InlineData("Table({ a: X })", "ErrRecordDoesNotAcceptThisType")]
-        [InlineData("Table({ a: { a: { a: X } } })", "ErrRecordDoesNotAcceptThisType")]
+        [InlineData("[X]", "ErrTableDoesNotAcceptThisTypeDetailed")]
+        [InlineData("{test: X}", "ErrRecordDoesNotAcceptThisTypeDetailed")]
+        [InlineData("{ a: { a: { a: X } } }", "ErrRecordDoesNotAcceptThisTypeDetailed")]
+        [InlineData("Table({ a: X })", "ErrRecordDoesNotAcceptThisTypeDetailed")]
+        [InlineData("Table({ a: { a: { a: X } } })", "ErrRecordDoesNotAcceptThisTypeDetailed")]
 
         // Ensures expression issues an error if it exists, despite the deferred type.
         // NOTE: All error are discarded for function calls e.g. You don't get any errors for Table(deferred, number).
@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.Interpreter
             symbolTable.AddVariable("X", FormulaType.Deferred);
             symbolTable.AddVariable("N", FormulaType.Number);
             symbolTable.AddVariable("R", RecordType.Empty());
-            TestBindingError(script, Features.None, errorMessage, symbolTable);
+            TestBindingError(script, Features.PowerFxV1, errorMessage, symbolTable);
         }
 
         [Fact]
