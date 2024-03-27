@@ -993,6 +993,11 @@ namespace Microsoft.PowerFx.Connectors
 
             JsonElement je = ExtractFromJson(sv, cdv.ValueCollection);
 
+            if (je.ValueKind != JsonValueKind.Array && string.IsNullOrEmpty(cdv.ValueCollection))
+            {
+                je = ExtractFromJson(sv, "value");
+            }
+
             if (je.ValueKind == JsonValueKind.Array)
             {
                 foreach (JsonElement jElement in je.EnumerateArray())
@@ -1120,7 +1125,7 @@ namespace Microsoft.PowerFx.Connectors
                 // doc: https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions
                 // e.g. make this example working:
                 // "destinationInputParam1/property1": {
-                //  "parameterReference": "sourceInputParam1/property1"
+                //    "parameterReference": "sourceInputParam1/property1"
                 // }
                 if (dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is StaticConnectorExtensionValue && GetLastPart(kvp.Key) == requiredParameterName).Value is StaticConnectorExtensionValue sValue)
                 {
