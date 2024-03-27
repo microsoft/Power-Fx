@@ -8,8 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
@@ -45,15 +45,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return dvalue.ToFormulaValue();
             }
 
-            // If base record is {}, then collect.
-            if (baseRecord.IsEmptyRecord)
+            var result = await tableValue.PatchAsync(baseRecord, dvalue.Value, cancellationToken).ConfigureAwait(false);
+
+            // If the base record is not found, then append update record.
+            if (result.IsError && result.Error is ErrorValue errorvalue && errorvalue.Errors.Any(err => err.Kind == ErrorKind.NotFound))
             {
                 return (await tableValue.AppendAsync(dvalue.Value, cancellationToken).ConfigureAwait(false)).ToFormulaValue();
             }
-            else
-            {
-                return (await tableValue.PatchAsync(baseRecord, dvalue.Value, cancellationToken).ConfigureAwait(false)).ToFormulaValue();
-            }
+
+            return result.ToFormulaValue();
         }
     }
 
@@ -108,11 +108,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var arg1Rows = ((TableValue)args[1]).Rows;
             var arg2Rows = ((TableValue)args[2]).Rows;
 
-            // !!!TODO Do we need to check if args[1] and args[2] counters are equal?
-            // PA does not give any error if they are not equal.
             if (arg1Rows.Count() != arg2Rows.Count())
             {
-                return CommonErrors.CustomError(IRContext.NotInSource(tableValue.Type), "Both aggregate args must have the same number of records.");
+                return CommonErrors.GenericInvalidArgument(IRContext.NotInSource(tableValue.Type), "Both aggregate args must have the same number of records.");
             }
 
             List<DValue<RecordValue>> resultRows = new List<DValue<RecordValue>>();
@@ -146,14 +144,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 DValue<RecordValue> result = null;
 
-                // If base record is {}, then collect.
-                if (baseRecord.Value.IsEmptyRecord)
+                result = await tableValue.PatchAsync(baseRecord.Value, updatesRecord.Value, cancellationToken).ConfigureAwait(false);
+
+                // If the base record is not found, then append update record.
+                if (result.IsError && result.Error is ErrorValue errorvalue && errorvalue.Errors.Any(err => err.Kind == ErrorKind.NotFound))
                 {
-                    result = await tableValue.AppendAsync(updatesRecord.Value, cancellationToken).ConfigureAwait(false);
-                }
-                else
-                {
-                    result = await tableValue.PatchAsync(baseRecord.Value, updatesRecord.Value, cancellationToken).ConfigureAwait(false);
+                    return (await tableValue.AppendAsync(updatesRecord.Value, cancellationToken).ConfigureAwait(false)).ToFormulaValue();
                 }
 
                 if (result.IsError)
@@ -220,17 +216,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return new InMemoryTableValue(IRContext.NotInSource(tableValue.Type), resultRows);
-        }
-    }
-
-    // Patch(Record, Updates1, Updates2,…)
-    internal class PatchRecordImpl : PatchRecordFunction, IAsyncTexlFunction5
-    {
-        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
-        {
-            MutationProcessUtils.ThrowIfPFxV1NotActive(runtimeServiceProvider.GetService<Features>(), "Patch");
-
-            return MutationUtils.MergeRecords(args).ToFormulaValue();
         }
     }
 

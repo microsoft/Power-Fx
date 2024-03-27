@@ -1,4 +1,4 @@
-﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,PowerFxV1CompatibilityRules
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
 
 // For easy reference of what the table looks like
 >> t1
@@ -9,6 +9,7 @@ Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
 >> r2
 {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
 
 // **********************************************************
 // Patch(dataSource:*[], Record, Updates1, Updates2,…)
@@ -182,38 +183,52 @@ Table({a:1,b:Blank()},{a:Blank(),b:"2"})
 Table({a:1,b:Blank()},{a:2,b:"2"})
 
 
-// Base record not found. If the record in its entirety is not matched then it should produce an error. 
+// Base record not found. Create a new record. 
 >> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
    Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
    Patch(t1,{Field2:"deimos"},{Field3:DateTime(2030,2,1,0,0,0,0)})
-Error({Kind:ErrorKind.NotFound})
+{Field3:DateTime(2030,2,1,0,0,0,0)}
+
+>> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+   Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+   Patch(t1,{Field2:"deimos"},{Field3:DateTime(2030,2,1,0,0,0,0)});
+   t1
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:3,Field2:"phobos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"deimos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:Blank(),Field2:Blank(),Field3:DateTime(2030,2,1,0,0,0,0),Field4:Blank()})
 
 >> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2024,2,1,0,0,0,0),Field4:false});
    Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2025,2,1,0,0,0,0),Field4:false});
    Patch(t1,{Field3:DateTime(2025,2,1,0,0,0,0)},{Field2:"pandora", Field1:55})
-Error({Kind:ErrorKind.NotFound})
+{Field1:55,Field2:"pandora"}
 
+>> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2024,2,1,0,0,0,0),Field4:false});
+   Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2025,2,1,0,0,0,0),Field4:false});
+   Patch(t1,{Field3:DateTime(2025,2,1,0,0,0,0)},{Field2:"pandora", Field1:55});
+   t1
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:3,Field2:"phobos",Field3:DateTime(2024,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"deimos",Field3:DateTime(2025,2,1,0,0,0,0),Field4:false},{Field1:55,Field2:"pandora",Field3:Blank(),Field4:Blank()})
+
+
+// !!!TODO Finding base record will fail is both base and update records don't have the same number of fields, resulting in creating a new record.
 >> Collect(t1, r2);
-   Patch(t1, {Field4:true}, {Field2:"phobos"});
-   First(t1).DisplayNameField2
-Error({Kind:ErrorKind.NotFound})
+   Patch(t1, {Field4:true}, {Field2:"mars"});
+   Last(t1).DisplayNameField2
+"mars"
 
 >> Patch(t1, {Field1:1}, {DisplayNameField2:"mars"});
    First(t1).Field2
-Error({Kind:ErrorKind.NotFound})
+"earth"
 
 >> Patch(t1, {Field1:55}, {DisplayNameField2:"mars"})
-Error({Kind:ErrorKind.NotFound})
+{Field2:"mars"}
 
 >> Patch(t1, {DisplayNameField1:55}, {DisplayNameField2:"mars"})
-Error({Kind:ErrorKind.NotFound})
+{Field2:"mars"}
 
 >> Patch(t1, {DisplayNameField1:1/0}, {DisplayNameField2:"mars"})
-Error({Kind:ErrorKind.NotFound})
+{Field2:"mars"}
 
 >> Patch(t1, {DisplayNameField2:"earth"}, {Field2:"mars"});
    t1
-Error({Kind:ErrorKind.NotFound})
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:Blank(),Field2:"mars",Field3:Blank(),Field4:Blank()})
 
 >> Patch(Blank(),Blank(),Blank())
 Blank()
@@ -223,29 +238,6 @@ Errors: Error 6-23: The value passed to the 'Patch' function cannot be changed.
 
 >> ForAll(Sequence(5), Collect(t_empty, {Value:ThisRecord.Value})); ForAll(Sequence(CountRows(t_empty)), Collect(t_empty2, Index(t_empty, ThisRecord.Value))); Patch(t_empty, First(t_empty), {Value:99}); Patch(t_empty2, Last(t_empty2), {Value:88}); Concat(t_empty, Value) & "," & Concat(t_empty2, Value)
 "992345,123488"
-
-
-
-// **********************************************************
-// Patch(Record, Updates1, Updates2,…)
-// **********************************************************
-
->> Patch(r1, r2)
-{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
-
->> Patch(r1, {}, r2)
-{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
-
->> Patch(Blank(), r1, r2)
-{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
-
->> Patch(r1, r2, {ErrorField:1/0})
-{ErrorField:Error({Kind:ErrorKind.Div0}),Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
-
->> Patch(r1, r2, 1/0)
-Errors: Error 0-18: The function 'Patch' has some invalid arguments.|Error 15-16: Cannot use a non-record value in this context: '1 / 0'.
-
-
 
 
 // **********************************************************
@@ -261,7 +253,7 @@ Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:t
 
 >> Collect(t1, r2);
   Patch(t1, Table(r1,r2),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}))
-Error({Kind:ErrorKind.Custom})
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Collect(t1, r2);
   Patch(t1, Table(r1,r2,{}),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:999999,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}));t1
@@ -271,13 +263,18 @@ Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:t
   Patch(t1, Table(r1,r2,Blank()),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:999999,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}));t1
 Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true})
 
+>> Collect(t1, r2);
+  Patch(t1, Table(r1,r2),Table({Field1:123},{Field2:"apolo"}));
+  t1
+Table({Field1:123,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"apolo",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
 
 // **********************************************************
 // Patch(DS, table_of_rows_with_updates)
 // **********************************************************
 
 >> Patch(t1, Table(r1))
-Error({Kind:ErrorKind.Internal})
+Error({Kind:ErrorKind.NotSupported})
 
 >> Patch(t1, If(false,t1))
 Blank()
@@ -287,7 +284,7 @@ Blank()
 // Patch(DS, record_with_keys_and_updates)
 // **********************************************************
 >> Patch(t1, r1)
-Error({Kind:ErrorKind.Internal})
+Error({Kind:ErrorKind.NotSupported})
 
 >> Patch(t1, If(false,r1))
 Blank()

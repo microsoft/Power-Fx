@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
+using MutationUtils = Microsoft.PowerFx.Interpreter.MutationUtils;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -1129,6 +1130,11 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return CommonErrors.CustomError(irContext, "Only managed connections can be refreshed.");
+        }
+
+        public static FormulaValue PatchRecord(IRContext irContext, FormulaValue[] args)
+        {
+            return MutationUtils.MergeRecords(args).ToFormulaValue();
         }
 
         private static async Task<DValue<RecordValue>> LazyFilterRowAsync(

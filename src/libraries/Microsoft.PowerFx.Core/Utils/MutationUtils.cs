@@ -65,38 +65,5 @@ namespace Microsoft.PowerFx.Core.Utils
                 return;
             }
         }
-
-        /// <summary>
-        /// Merges all records starting from startIndex in args into a single record. Collisions are resolved by last-one-wins.
-        /// </summary>
-        /// <param name="records"></param>
-        /// <returns></returns>
-        public static DValue<RecordValue> MergeRecords(IEnumerable<FormulaValue> records)
-        {
-            var mergedFields = new Dictionary<string, FormulaValue>();
-
-            foreach (FormulaValue fv in records)
-            {
-                if (fv is ErrorValue errorValue)
-                {
-                    return DValue<RecordValue>.Of(errorValue);
-                }
-
-                if (fv is BlankValue)
-                {
-                    continue;
-                }
-
-                if (fv is RecordValue recordValue)
-                {
-                    foreach (var field in recordValue.Fields)
-                    {
-                        mergedFields[field.Name] = field.Value;
-                    }
-                }
-            }
-
-            return DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(mergedFields.Select(kvp => new NamedValue(kvp.Key, kvp.Value))));
-        }
     }
 }

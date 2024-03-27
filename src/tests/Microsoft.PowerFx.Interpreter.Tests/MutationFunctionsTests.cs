@@ -4,13 +4,16 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -367,7 +370,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("Patch(t, First(t), {Value:1})")]
-        public void CollectPFxV1Disabled(string expression)
+        public void MutationPFxV1Disabled(string expression)
         {
             var engine = new RecalcEngine(new PowerFxConfig(Features.None));
             var t = FormulaValue.NewTable(RecordType.Empty().Add(new NamedFormulaType("Value", FormulaType.Decimal)));
@@ -385,6 +388,83 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Runtime exception
             Assert.ThrowsAsync<InvalidOperationException>(async () => await evaluator.EvalAsync(CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+        }
+
+        [Theory]        
+        [InlineData("Patch(t1, {accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),name:\"Mary Doe\"});First(t1).name", "Mary Doe")]
+        [InlineData("Patch(t1, {accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),address1_city:\"Seattle\"});First(t1).name", "John Doe")]
+        [InlineData("Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),name:\"Emily Doe\"},{accountid:GUID(\"00000000-0000-0000-0000-000000000002\"),name:\"Benjamin Doe\"}));Last(t1).name", "Benjamin Doe")]
+        [InlineData("Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),address1_city:\"Miami\"},{accountid:GUID(\"00000000-0000-0000-0000-000000000002\"),address1_city:\"Orlando\"}));Last(t1).name", "Sam Doe")]
+        public void MutationEntityTests(string expression, string expected)
+        {
+            var engine = new RecalcEngine();
+
+            var record1 = FormulaValue.NewRecordFromFields(
+                new List<NamedValue>
+            {
+                new NamedValue("accountid", FormulaValue.New(Guid.Parse("00000000-0000-0000-0000-000000000001"))),
+                new NamedValue("name", FormulaValue.New("John Doe")),
+                new NamedValue("address1_city", FormulaValue.New("Chicago"))
+            });
+
+            var record2 = FormulaValue.NewRecordFromFields(
+                new List<NamedValue>
+            {
+                new NamedValue("accountid", FormulaValue.New(Guid.Parse("00000000-0000-0000-0000-000000000002"))),
+                new NamedValue("name", FormulaValue.New("Sam Doe")),
+                new NamedValue("address1_city", FormulaValue.New("New York"))
+            });
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("t1", new EntityTableValue(new List<RecordValue>() { record1, record2 }));
+
+            var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = true });
+
+            Assert.True(check.IsSuccess);
+
+            var result = check.GetEvaluator().Eval();
+            Assert.IsNotType<ErrorValue>(result);
+
+            Assert.Equal(expected, ((StringValue)result).Value);
+        }
+
+        /// <summary>
+        /// Meant to test PatchSingleRecordCoreAsync override. Only tables with primary key column are supported.
+        /// </summary>
+        internal class EntityTableValue : TableValue
+        {
+            private readonly InMemoryTableValue _inner;
+
+            public override bool CanShallowCopy => true;
+
+            public EntityTableValue(IEnumerable<RecordValue> records)
+            : base((TableType)FormulaType.Build(AccountsTypeHelper.GetDType()))
+            {
+                _inner = new InMemoryTableValue(IRContext, records.Select(rec => DValue<RecordValue>.Of(rec)));
+            }
+
+            public override IEnumerable<DValue<RecordValue>> Rows => _inner.Rows;
+
+            protected override async Task<DValue<RecordValue>> PatchSingleRecordCoreAsync(RecordValue recordValue, CancellationToken cancellationToken)
+            {
+                var externalTabularDataSource = Type._type.AssociatedDataSources.Single() as IExternalTabularDataSource;
+
+                // TestDateSource has only one key column.
+                var keyFieldName = externalTabularDataSource.GetKeyColumns().First();
+
+                foreach (var row in _inner.Rows)
+                {
+                    var value1 = row.Value.GetField(keyFieldName);
+                    var value2 = recordValue.GetField(keyFieldName);
+
+                    if (value1.TryGetPrimitiveValue(out object primaryKeyValue1) && value2.TryGetPrimitiveValue(out object primaryKeyValue2) && primaryKeyValue1.ToString() == primaryKeyValue2.ToString())
+                    {
+                        return await row.Value.UpdateFieldsAsync(recordValue, cancellationToken).ConfigureAwait(false);
+                    }
+                }
+
+                return DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound()));
+            }
         }
 
         internal class FileObjectRecordValue : InMemoryRecordValue

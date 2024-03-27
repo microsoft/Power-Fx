@@ -49,11 +49,6 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         public IEnumerable<NamedValue> Fields => GetFields();
 
-        /// <summary>
-        /// Returns true if the record has no fields.
-        /// </summary>
-        public bool IsEmptyRecord => !Fields.Any(nv => nv.Value is not BlankValue);
-
         public virtual bool TryGetSpecialFieldName(SpecialFieldKind kind, out string fieldName)
         {
             fieldName = null;
@@ -114,6 +109,16 @@ namespace Microsoft.PowerFx.Types
                 Func<Task<FormulaValue>> getFormulaValue = async () => await GetFieldAsync(fieldName, cancellationToken).ConfigureAwait(false);
                 yield return new NamedValue(fieldName, getFormulaValue, backingDType);
             }
+        }
+
+        /// <summary>
+        /// Returns only the actual fields present in the record. This prevents fields from wrappers.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public virtual async IAsyncEnumerable<NamedValue> GetOriginalFieldsAsync([EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            yield return null;
         }
 
         /// <summary>

@@ -237,8 +237,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var st = Environment.StackTrace;
 
                 if (st.Contains("Microsoft.PowerFx.SymbolContext.GetScopeVar") ||
-                    st.Contains("Microsoft.PowerFx.Types.CollectionTableValue`1.Matches") ||
-                    st.Contains("Microsoft.PowerFx.Types.RecordValue.get_IsEmptyRecord"))
+                    st.Contains("Microsoft.PowerFx.Types.CollectionTableValue`1.Matches"))
                 {
                     return base.TryGetFieldAsync(fieldType, fieldName, cancellationToken);
                 }

@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -10,11 +9,14 @@ using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.DLP;
+using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using static Microsoft.PowerFx.Core.IR.IRTranslator;
+using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -433,6 +435,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return base.GetSignatures(arity);
+        }
+
+        internal override IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
+        {
+            return base.CreateIRCallNode(node, context, args, scope);
         }
     }
 

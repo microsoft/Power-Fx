@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
@@ -74,6 +75,14 @@ namespace Microsoft.PowerFx.Types
             return await UpdateAllowedFieldsAsync(changeRecord, _fields, cancellationToken).ConfigureAwait(false);
         }
 
+        public override async IAsyncEnumerable<NamedValue> GetOriginalFieldsAsync([EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            foreach (var field in _fields)
+            {
+                yield return new NamedValue(field.Key, field.Value);
+            }
+        }
+
         protected async Task<DValue<RecordValue>> UpdateAllowedFieldsAsync(RecordValue changeRecord, IEnumerable<KeyValuePair<string, FormulaValue>> allowedFields, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -83,7 +92,7 @@ namespace Microsoft.PowerFx.Types
                 return await base.UpdateFieldsAsync(changeRecord, cancellationToken).ConfigureAwait(false);
             }
 
-            await foreach (var field in changeRecord.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
+            await foreach (var field in changeRecord.GetOriginalFieldsAsync(cancellationToken).ConfigureAwait(false))
             {
                 _mutableFields[field.Name] = field.Value;
             }

@@ -1,0 +1,27 @@
+﻿#SETUP: SupportColumnNamesAsIdentifiers
+
+// **********************************************************
+// Patch(Record, Updates1, Updates2,…)
+// **********************************************************
+
+>> Patch({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Patch({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}, {}, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Patch(Blank(), {Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Patch({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}, {ErrorField:1/0})
+{ErrorField:Error({Kind:ErrorKind.Div0}),Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Patch({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}, 1/0)
+Errors: Error 153-154: Cannot use a non-record value in this context: '1 / 0'.|Error 0-156: The function 'Patch' has some invalid arguments.
+
+// Flattening record fields
+>> With({ rec: { Name: "John Doe", Address: { Country: "USA", State: "WA", City: "Seattle", Street: "85 Pike Street" } } },Patch(DropColumns(rec, Address),rec.Address))
+{City:"Seattle",Country:"USA",Name:"John Doe",State:"WA",Street:"85 Pike Street"}
+
+>> With({ tbl:Table({a:1,b:2}, {a:11,b:22}, {a:111,b:222}) },ForAll(Sequence(CountRows(tbl)),Patch({ Index: ThisRecord.Value },Index(tbl, ThisRecord.Value))))
+Table({Index:1,a:1,b:2},{Index:2,a:11,b:22},{Index:3,a:111,b:222})

@@ -833,11 +833,6 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, encoded);
         }
 
-        public static FormulaValue PatchRecord(IRContext irContext, FormulaValue[] args)
-        {
-            return MutationUtils.MergeRecords(args).ToFormulaValue();
-        }
-
         public static FormulaValue Proper(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(runner.CultureInfo.TextInfo.ToLower(args[0].Value)));
