@@ -393,8 +393,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Theory]        
         [InlineData("Patch(t1, {accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),name:\"Mary Doe\"});First(t1).name", "Mary Doe")]
         [InlineData("Patch(t1, {accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),address1_city:\"Seattle\"});First(t1).name", "John Doe")]
+        [InlineData("Patch(t1, {accountid:GUID(\"00000000-0000-0000-0000-000000000003\"),name:\"Microsoft Corporation\",address1_city:\"Seattle\"});Last(t1).name", "Microsoft Corporation")]
         [InlineData("Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),name:\"Emily Doe\"},{accountid:GUID(\"00000000-0000-0000-0000-000000000002\"),name:\"Benjamin Doe\"}));Last(t1).name", "Benjamin Doe")]
         [InlineData("Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),address1_city:\"Miami\"},{accountid:GUID(\"00000000-0000-0000-0000-000000000002\"),address1_city:\"Orlando\"}));Last(t1).name", "Sam Doe")]
+        [InlineData("Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000003\"),name:\"Microsoft Corporation\",address1_city:\"Seattle\"},{accountid:GUID(\"00000000-0000-0000-0000-000000000004\"),name:\"Bill Gates\",address1_city:\"Seattle\"}));Last(t1).name", "Bill Gates")]
         public void MutationEntityTests(string expression, string expected)
         {
             var engine = new RecalcEngine();
@@ -464,6 +466,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
 
                 return DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound()));
+            }
+
+            public override Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
+            {
+                return _inner.AppendAsync(record, cancellationToken);
             }
         }
 

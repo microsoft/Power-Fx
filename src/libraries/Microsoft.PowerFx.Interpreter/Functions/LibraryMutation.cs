@@ -82,7 +82,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return args[1];
             }
 
-            return (await tableValue.PatchAsync(recordValue, cancellationToken).ConfigureAwait(false)).ToFormulaValue();
+            DValue<RecordValue> result = null;
+
+            result = await tableValue.PatchAsync(recordValue, cancellationToken).ConfigureAwait(false);
+
+            // If the base record is not found, then append update record.
+            if (result.IsError && result.Error is ErrorValue errorvalue && errorvalue.Errors.Any(err => err.Kind == ErrorKind.NotFound))
+            {
+                return (await tableValue.AppendAsync(recordValue, cancellationToken).ConfigureAwait(false)).ToFormulaValue();
+            }
+
+            return result.ToFormulaValue();
         }
     }
 
@@ -205,7 +215,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
-                var result = await tableValue.PatchAsync(row.Value, cancellationToken).ConfigureAwait(false);
+                DValue<RecordValue> result = null;
+
+                result = await tableValue.PatchAsync(row.Value, cancellationToken).ConfigureAwait(false);
+
+                // If the base record is not found, then append update record.
+                if (result.IsError && result.Error is ErrorValue errorvalue && errorvalue.Errors.Any(err => err.Kind == ErrorKind.NotFound))
+                {
+                    result = await tableValue.AppendAsync(row.Value, cancellationToken).ConfigureAwait(false);
+                }
 
                 if (result.IsError)
                 {
