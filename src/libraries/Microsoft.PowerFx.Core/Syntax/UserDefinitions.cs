@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -82,25 +84,20 @@ namespace Microsoft.PowerFx.Syntax
                 parseResult = ProcessPartialAttributes(parseResult);
             }
 
-            var definedTypeSymbolTable = new DefinedTypeSymbolTable();
             var definedTypes = parseResult.DefinedTypes.ToList();
-
-            var composedSymbols = ReadOnlySymbolTable.Compose(definedTypeSymbolTable, extraSymbols);
-
             var typeErr = new List<TexlError>();
 
-            foreach (var defType in definedTypes)
-            {
-                var name = defType.Ident.Name.Value;
-                var res = DTypeVisitor.Run(defType.Type.TypeRoot, composedSymbols);
-                if (res == DType.Unknown)
-                {
-                    typeErr.Add(new TexlError(defType.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
-                    continue;
-                }
+            BuildTypeDepedencyGraph(definedTypes, extraSymbols, out var typeGraph, out var tsQueue);
 
-                definedTypeSymbolTable.RegisterType(name, FormulaType.Build(res));
+            ResolveTypes(typeGraph, tsQueue, extraSymbols, typeErr, out var definedTypeSymbolTable);
+
+            foreach (var unresolvedType in typeGraph)
+            {
+                var name = unresolvedType.Key.Ident.Name.Value;
+                typeErr.Add(new TexlError(unresolvedType.Key.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
             }
+
+            var composedSymbols = ReadOnlySymbolTable.Compose(definedTypeSymbolTable, extraSymbols);
 
             // Parser returns both complete & incomplete UDFs, and we are only interested in creating TexlFunctions for valid UDFs. 
             var functions = CreateUserDefinedFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), composedSymbols, out var errors);
@@ -225,6 +222,58 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             return isReturnTypeCheckSuccessful;
+        }
+
+        private void BuildTypeDepedencyGraph(IEnumerable<DefinedType> definedTypes, INameResolver symbols, out Dictionary<DefinedType, HashSet<string>> typeGraph, out Queue<DefinedType> tsQueue)
+        {
+            typeGraph = new Dictionary<DefinedType, HashSet<string>>();
+            tsQueue = new Queue<DefinedType>();
+
+            foreach (var defType in definedTypes)
+            {
+                var name = defType.Ident.Name.Value;
+                var res = CustomTypeGraphVisitor.Run(defType.Type.TypeRoot, symbols);
+                typeGraph.Add(defType, res);
+
+                if (!res.Any())
+                {
+                    tsQueue.Enqueue(defType);
+                }
+            }
+        }
+
+        private void ResolveTypes(Dictionary<DefinedType, HashSet<string>> typeGraph, Queue<DefinedType> tsQueue, ReadOnlySymbolTable extraSymbols, List<TexlError> errors, out DefinedTypeSymbolTable definedTypeSymbolTable)
+        {
+            definedTypeSymbolTable = new DefinedTypeSymbolTable();
+            var composedSymbols = ReadOnlySymbolTable.Compose(definedTypeSymbolTable, extraSymbols);
+
+            while (tsQueue.Any())
+            {
+                var curType = tsQueue.Dequeue();
+
+                var name = curType.Ident.Name.Value;
+                var res = DTypeVisitor.Run(curType.Type.TypeRoot, composedSymbols);
+                if (res == DType.Invalid)
+                {
+                    errors.Add(new TexlError(curType.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                    typeGraph.Remove(curType);
+                    continue;
+                }
+
+                definedTypeSymbolTable.RegisterType(name, FormulaType.Build(res));
+
+                typeGraph.Remove(curType);
+
+                foreach (var ty in typeGraph)
+                {
+                    ty.Value.Remove(name);
+
+                    if (!ty.Value.Any())
+                    {
+                        tsQueue.Enqueue(ty.Key);
+                    }
+                }
+            }
         }
 
 // This code is intended as a prototype of the Partial attribute system, for use in solution layering cases

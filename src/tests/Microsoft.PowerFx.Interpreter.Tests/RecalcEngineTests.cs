@@ -569,7 +569,7 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
                 AllowParseAsTypeLiteral = true
             };
-            recalcEngine.AddUserDefinitions("Person = Type({Id: Number, Age: Number});", CultureInfo.InvariantCulture);
+            recalcEngine.AddUserDefinitions("Person = Type({Id: MyNumber, Age: Number});MyNumber = Type(Number);", CultureInfo.InvariantCulture);
             recalcEngine.AddUserDefinitions("createUser(id:Number, a: Number): Person = {Id:id, Age: a};", CultureInfo.InvariantCulture);
 
             Assert.Equal(42.0, recalcEngine.Eval("createUser(1, 42).Age").ToObject());
