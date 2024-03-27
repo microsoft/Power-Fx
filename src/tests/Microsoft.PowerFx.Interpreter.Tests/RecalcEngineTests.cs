@@ -570,6 +570,8 @@ namespace Microsoft.PowerFx.Tests
                 AllowParseAsTypeLiteral = true
             };
             recalcEngine.AddUserDefinitions("Person = Type({Id: MyNumber, Age: Number});MyNumber = Type(Number);", CultureInfo.InvariantCulture);
+            Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(" X = Type(Y); Y = Type(X);", CultureInfo.InvariantCulture));
+            Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(" Z = Type([{a: {b: Z}}]);", CultureInfo.InvariantCulture));
             recalcEngine.AddUserDefinitions("createUser(id:Number, a: Number): Person = {Id:id, Age: a};", CultureInfo.InvariantCulture);
 
             Assert.Equal(42.0, recalcEngine.Eval("createUser(1, 42).Age").ToObject());
