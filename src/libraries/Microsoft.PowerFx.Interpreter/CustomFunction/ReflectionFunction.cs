@@ -16,6 +16,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx
 {
@@ -309,6 +310,10 @@ namespace Microsoft.PowerFx
                 }
 
                 throw;
+            }
+            catch (ServiceUnavailableException serviceUnavailableException)
+            {
+                return new ErrorValue(IRContext.NotInSource(info.RetType), serviceUnavailableException.ExpressionError);
             }
 
             if (info.IsAsync)
