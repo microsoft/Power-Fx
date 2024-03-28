@@ -20,4 +20,4 @@ Errors: Error 33-43: Invalid argument type (Text). Expecting a Enum (TimeUnit) v
 Errors: Error 26-28: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.|Error 0-7: The function 'DateAdd' has some invalid arguments.
 
 >> DateAdd(Date(2000,1,1),1,Text(1/0))
-Errors: Error 25-34: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.|Error 0-7: The function 'DateAdd' has some invalid arguments.6
+Errors: Error 25-34: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.|Error 0-7: The function 'DateAdd' has some invalid arguments.

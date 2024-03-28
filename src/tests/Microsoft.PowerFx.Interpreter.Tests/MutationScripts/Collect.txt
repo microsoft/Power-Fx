@@ -49,7 +49,7 @@ Blank()
 Table({Value:1},{Value:2},{Value:3})
 
 >> Collect(temp1,{Value:"200"}).Value
-Errors: Error 14-27: The type of this argument 'Value' does not match the expected type 'Decimal'. Found type 'Text'.|Error 0-28: The function 'Collect' has some invalid arguments.|Error 28-34: Name isn't valid. 'Value' isn't recognized.
+Errors: Error 14-27: The type of this argument 'Value' does not match the expected type 'Decimal'. Found type 'Text'.|Error 0-7: The function 'Collect' has some invalid arguments.|Error 28-34: Name isn't valid. 'Value' isn't recognized.
 
 >> Collect( temp1, { Value:"11"+0 } )
 {Value:11}
