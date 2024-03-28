@@ -87,11 +87,10 @@ namespace Microsoft.PowerFx.Syntax
             var definedTypes = parseResult.DefinedTypes.ToList();
             var typeErr = new List<TexlError>();
 
-            var typeGraph = BuildTypeDepedencyGraph(definedTypes, extraSymbols, out var tsQueue);
+            var typeGraph = new DefinedTypeDependencyGraph(definedTypes, extraSymbols);
+            var definedTypeSymbolTable = typeGraph.ResolveTypes(typeErr);
 
-            var definedTypeSymbolTable = ResolveTypes(typeGraph, tsQueue, extraSymbols, typeErr);
-
-            foreach (var unresolvedType in typeGraph)
+            foreach (var unresolvedType in typeGraph.UnresolvedTypes)
             {
                 var name = unresolvedType.Key.Ident.Name.Value;
                 typeErr.Add(new TexlError(unresolvedType.Key.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
@@ -222,90 +221,6 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             return isReturnTypeCheckSuccessful;
-        }
-
-        private Dictionary<DefinedType, HashSet<string>> BuildTypeDepedencyGraph(IEnumerable<DefinedType> definedTypes, INameResolver symbols, out Queue<DefinedType> tsQueue)
-        {
-            var typeGraph = new Dictionary<DefinedType, HashSet<string>>();
-            tsQueue = new Queue<DefinedType>();
-
-            foreach (var defType in definedTypes)
-            {
-                var name = defType.Ident.Name.Value;
-                var res = CustomTypeGraphVisitor.Run(defType.Type.TypeRoot, symbols);
-                typeGraph.Add(defType, res);
-
-                if (!res.Any())
-                {
-                    tsQueue.Enqueue(defType);
-                }
-            }
-
-            return typeGraph;
-        }
-
-        private DefinedTypeSymbolTable ResolveTypes(Dictionary<DefinedType, HashSet<string>> typeGraph, Queue<DefinedType> tsQueue, ReadOnlySymbolTable extraSymbols, List<TexlError> errors)
-        {
-            var definedTypeSymbolTable = new DefinedTypeSymbolTable();
-            var composedSymbols = ReadOnlySymbolTable.Compose(definedTypeSymbolTable, extraSymbols);
-            var invertedDeps = InvertTypeDependencies(typeGraph);
-
-            while (tsQueue.Any())
-            {
-                var curType = tsQueue.Dequeue();
-                typeGraph.Remove(curType);
-
-                var name = curType.Ident.Name.Value;
-                var res = DTypeVisitor.Run(curType.Type.TypeRoot, composedSymbols);
-                if (res == DType.Invalid)
-                {
-                    errors.Add(new TexlError(curType.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
-                    continue;
-                }
-
-                definedTypeSymbolTable.RegisterType(name, FormulaType.Build(res));
-
-                if (invertedDeps.TryGetValue(name, out var sinks))
-                { 
-                    foreach (var sink in sinks)
-                    {
-                        if (typeGraph.TryGetValue(sink, out var sources))
-                        {
-                            sources.Remove(name);
-
-                            if (!sources.Any())
-                            {
-                                tsQueue.Enqueue(sink);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return definedTypeSymbolTable;
-        }
-
-        private Dictionary<string, HashSet<DefinedType>> InvertTypeDependencies(Dictionary<DefinedType, HashSet<string>> typeGraph)
-        {
-            var result = new Dictionary<string, HashSet<DefinedType>>();
-
-            foreach (var type in typeGraph)
-            {
-                foreach (var dep in type.Value)
-                {
-                    if (result.TryGetValue(dep, out var sources))
-                    {
-                        sources.Add(type.Key);
-                    }
-                    else
-                    {
-                        var hs = new HashSet<DefinedType> { type.Key };
-                        result.Add(dep, hs);
-                    }
-                }
-            }
-
-            return result;
         }
 
 // This code is intended as a prototype of the Partial attribute system, for use in solution layering cases

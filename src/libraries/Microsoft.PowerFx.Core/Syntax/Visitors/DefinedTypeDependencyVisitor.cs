@@ -14,15 +14,15 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {
-    internal class CustomTypeGraphVisitor : TexlFunctionalVisitor<HashSet<string>, INameResolver>
+    internal class DefinedTypeDependencyVisitor : TexlFunctionalVisitor<HashSet<string>, INameResolver>
     {
-        private CustomTypeGraphVisitor()
+        private DefinedTypeDependencyVisitor()
         {
         }
 
         public static HashSet<string> Run(TexlNode node, INameResolver context)
         {
-            return node.Accept(new CustomTypeGraphVisitor(), context);
+            return node.Accept(new DefinedTypeDependencyVisitor(), context);
         }
 
         public override HashSet<string> Visit(ErrorNode node, INameResolver context)
