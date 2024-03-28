@@ -602,7 +602,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     fValid = false;
                     errors.TypeMismatchError(args[2], arg2ExpectedType, argTypes[2]);
                 }
-                else if (arg2ExpectedType.OptionSetInfo is EnumSymbol enumSymbol1)
+                else if (!context.Features.StronglyTypedBuiltinEnums && arg2ExpectedType.OptionSetInfo is EnumSymbol enumSymbol1)
                 {
                     // For implementations, coerce enum option set values to the backing type
                     var coercionType = enumSymbol1.EnumType.GetEnumSupertype();
@@ -759,7 +759,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     fValid = false;
                     errors.TypeMismatchError(args[2], arg2ExpectedType, argTypes[2]);
                 }
-                else if (arg2ExpectedType.OptionSetInfo is EnumSymbol enumSymbol1)
+                else if (!context.Features.StronglyTypedBuiltinEnums && arg2ExpectedType.OptionSetInfo is EnumSymbol enumSymbol1)
                 {
                     // For implementations, coerce enum option set values to the backing type
                     var coercionType = enumSymbol1.EnumType.GetEnumSupertype();

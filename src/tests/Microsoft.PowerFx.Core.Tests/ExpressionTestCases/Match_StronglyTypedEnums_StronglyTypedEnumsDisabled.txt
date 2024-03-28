@@ -15,9 +15,6 @@
 >> Match("Hello", "llo").FullMatch
 "llo"
 
->> Match("Hello", "llo", MatchOptions.Contains).FullMatch
-"llo"
-
 >> Match("Hello", "llo", MatchOptions.Complete).FullMatch
 Blank()
 

@@ -83,22 +83,33 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 JsonFlags flags = new JsonFlags() { HasMedia = JsonFunction.DataHasMedia(_arguments[0].Type._type) };
 
-                if (_arguments.Length > 1 && _arguments[1] is StringValue arg1string)
+                if (_arguments.Length > 1)
                 {
-                    flags.IgnoreBinaryData = arg1string.Value.Contains("G");
-                    flags.IgnoreUnsupportedTypes = arg1string.Value.Contains("I");
-                    flags.IncludeBinaryData = arg1string.Value.Contains("B");
-                    flags.IndentFour = arg1string.Value.Contains("4");
-                    flags.FlattenValueTables = arg1string.Value.Contains("_");
-                }
+                    string optionString = null;
 
-                if (_arguments.Length > 1 && _arguments[1] is OptionSetValue arg1optionset)
-                {
-                    flags.IgnoreBinaryData = arg1optionset.Option == "IgnoreBinaryData";
-                    flags.IgnoreUnsupportedTypes = arg1optionset.Option == "IgnoreUnsupportedTypes";
-                    flags.IncludeBinaryData = arg1optionset.Option == "IncludeBinaryData";
-                    flags.IndentFour = arg1optionset.Option == "IndentFour";
-                    flags.FlattenValueTables = arg1optionset.Option == "FlattenValueTables";
+                    switch (_arguments[1])
+                    {
+                        // Can be built up through concatenation, may have more than one value
+                        case OptionSetValue osv:
+                            optionString = (string)osv.ExecutionValue;
+                            break;
+
+                        // StringValue returned when StronglyTypedBuiltinOptionSet is not used
+                        case StringValue sv:
+                            optionString = sv.Value;
+                            break;
+
+                        // if not one of these, will check optionString != null below
+                    }
+
+                    if (optionString != null)
+                    {
+                        flags.IgnoreBinaryData = optionString.Contains("G");
+                        flags.IgnoreUnsupportedTypes = optionString.Contains("I");
+                        flags.IncludeBinaryData = optionString.Contains("B");
+                        flags.IndentFour = optionString.Contains("4");
+                        flags.FlattenValueTables = optionString.Contains("_");
+                    }
                 }
 
                 if ((flags.IncludeBinaryData && flags.IgnoreBinaryData) ||

@@ -25,7 +25,12 @@ namespace Microsoft.PowerFx.Types
         internal readonly object ExecutionValue;
 
         internal OptionSetValue(string option, OptionSetValueType type, object value = null)
-            : base(IRContext.NotInSource(type))
+            : this(IRContext.NotInSource(type), option, type, value)
+        {
+        }
+
+        internal OptionSetValue(IRContext irContext, string option, OptionSetValueType type, object value = null)
+            : base(irContext)
         {
             Contracts.Assert(value == null || 
                 (type._type.OptionSetInfo.BackingKind == DKind.String && value is string) ||

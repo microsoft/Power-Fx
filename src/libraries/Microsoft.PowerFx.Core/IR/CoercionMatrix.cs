@@ -340,12 +340,27 @@ namespace Microsoft.PowerFx.Core.IR
                 case DKind.OptionSetValue:
                     Contracts.Assert(
                         DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
-                        (DType.Boolean.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && toType.OptionSetInfo?.BackingKind == DKind.Boolean),
+                        (DType.Boolean.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && toType.OptionSetInfo?.BackingKind == DKind.Boolean) ||
+                        (DType.Decimal.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && toType.OptionSetInfo?.BackingKind == DKind.Number) ||
+                        (DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && toType.OptionSetInfo?.BackingKind == DKind.Number) ||
+                        (DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && toType.OptionSetInfo?.BackingKind == DKind.String),
                         "Unsupported type coercion");
 
                     if (DType.Boolean.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && toType.OptionSetInfo?.BackingKind == DKind.Boolean)
                     {
                         return CoercionKind.BooleanToOptionSet;
+                    }
+                    else if (DType.Decimal.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && toType.OptionSetInfo?.BackingKind == DKind.Number)
+                    {
+                        return CoercionKind.DecimalToOptionSet;
+                    }
+                    else if (DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && toType.OptionSetInfo?.BackingKind == DKind.Number)
+                    {
+                        return CoercionKind.NumberToOptionSet;
+                    }
+                    else if (DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && toType.OptionSetInfo?.BackingKind == DKind.String)
+                    {
+                        return CoercionKind.StringToOptionSet;
                     }
 
                     return CoercionKind.None; // Implicit coercion?

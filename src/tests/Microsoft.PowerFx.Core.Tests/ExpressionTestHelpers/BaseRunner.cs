@@ -222,7 +222,9 @@ namespace Microsoft.PowerFx.Core.Tests
                         // for tests that are run with and without NumberIsFloat set.
                         foreach (var exp in expectedStrArr)
                         {
-                            if (!actualStrArr.Contains(exp) && !(NumberIsFloat && actualStrArr.Contains(Regex.Replace(exp, "(?<!Number,)(\\s|'|\\()Decimal(\\s|'|,|\\.|\\))", "$1Number$2"))))
+                            if (!actualStrArr.Contains(exp) && 
+                                !(NumberIsFloat && actualStrArr.Contains(Regex.Replace(exp, "(?<!Number,)(\\s|'|\\()Decimal(\\s|'|,|\\.|\\))", "$1Number$2"))) &&
+                                !(NumberIsFloat && actualStrArr.Contains(Regex.Replace(exp, " Decimal, Number, ", " Number, Decimal, "))))
                             {
                                 isValid = false;
                                 break;

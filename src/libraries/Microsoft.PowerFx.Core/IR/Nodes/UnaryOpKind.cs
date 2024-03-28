@@ -98,6 +98,10 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         DateToDateTime,
 
         BooleanToOptionSet,
+        NumberToOptionSet,
+        DecimalToOptionSet,
+        StringToOptionSet,
+
         AggregateToDataEntity,
 
         // Argument pre-processesor in IR Phase.
