@@ -19,6 +19,8 @@ namespace Microsoft.PowerFx.Core.Entities
 
         bool RequiresAsync { get; }
 
+        bool IsWritable { get; }
+
         IExternalDataEntityMetadataProvider DataEntityMetadataProvider { get; }
 
         DataSourceKind Kind { get; }

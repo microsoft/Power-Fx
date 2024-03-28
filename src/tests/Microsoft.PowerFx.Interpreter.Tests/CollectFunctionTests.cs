@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Patch(lazyTable, First(lazyTable), lazyNotCoercibleRecord)", false)]
         [InlineData("Patch(lazyTable, First(lazyTable), {Value:1})", false)]
         [InlineData("Patch(lazyTable, First(lazyTable), lazyTable)", false)]
-        [InlineData("Patch(lazyRecord, First(lazyTable), lazyRecord)", false)]
+        [InlineData("Patch(lazyRecord, First(lazyTable), lazyRecord)", true)]
         [InlineData("Patch(lazyRecord, First(lazyTable), lazyTable)", false)]
         public void CheckMutationFunctionWithLazyTypesTest(string expr, bool isCheckSuccess)
         {

@@ -487,9 +487,15 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter IndexArg2 = (b) => StringResources.Get("IndexArg2", b);
 
         public static StringGetter AboutPatch = (b) => StringResources.Get("AboutPatch", b);
-        public static StringGetter PatchDataSourceArg = (b) => StringResources.Get("PatchDataSourceArg", b);
-        public static StringGetter PatchBaseRecordArg = (b) => StringResources.Get("PatchBaseRecordArg", b);
-        public static StringGetter PatchChangeRecordsArg = (b) => StringResources.Get("PatchChangeRecordsArg", b);
+        public static StringGetter AboutPatchSingleRecord = (b) => StringResources.Get("AboutPatchSingleRecord", b);
+        public static StringGetter AboutPatchAggregate = (b) => StringResources.Get("AboutPatchAggregate", b);
+        public static StringGetter AboutPatchAggregateSingleTable = (b) => StringResources.Get("AboutPatchAggregateSingleTable", b);
+        public static StringGetter AboutPatchRecord = (b) => StringResources.Get("AboutPatchRecord", b);
+        public static StringGetter PatchArg_Source = (b) => StringResources.Get("PatchArg_Source", b);
+        public static StringGetter PatchArg_Record = (b) => StringResources.Get("PatchArg_Record", b);
+        public static StringGetter PatchArg_Update = (b) => StringResources.Get("PatchArg_Update", b);
+        public static StringGetter PatchArg_Rows = (b) => StringResources.Get("PatchArg_Rows", b);
+        public static StringGetter PatchArg_Updates = (b) => StringResources.Get("PatchArg_Updates", b);
 
         public static StringGetter AboutCollect = (b) => StringResources.Get("AboutCollect", b);
         public static StringGetter CollectDataSourceArg = (b) => StringResources.Get("CollectDataSourceArg", b);
@@ -632,6 +638,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrNeedRecordOrTable = new ErrorResourceKey("ErrNeedRecordOrTable");
         public static ErrorResourceKey ErrAutoRefreshNotAllowed = new ErrorResourceKey("ErrAutoRefreshNotAllowed");
         public static ErrorResourceKey ErrIncompatibleRecord = new ErrorResourceKey("ErrIncompatibleRecord");
+        public static ErrorResourceKey ErrNeedRecord_Arg = new ErrorResourceKey("ErrNeedRecord_Arg");
         public static ErrorResourceKey ErrNeedRecord_Func = new ErrorResourceKey("ErrNeedRecord_Func");
         public static ErrorResourceKey ErrNeedEntity_EntityName = new ErrorResourceKey("ErrNeedEntity_EntityName");
         public static ErrorResourceKey ErrNeedValidVariableName_Arg = new ErrorResourceKey("ErrNeedValidVariableName_Arg");

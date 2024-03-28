@@ -1962,6 +1962,10 @@
     <value>Cannot use a non-record value in this context.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Cannot use a non-record value in this context: '{0}'.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>Only record or table values can be used in this context.</value>
     <comment>Error Message. If a record or table is expected.</comment>
@@ -3149,17 +3153,56 @@
     <value>Applies the updates to the specified row and changes the row in the specified datasource. Returns the updated row.</value>
     <comment>Description of 'Patch' function.</comment>
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
-    <comment>function_parameter - First parameter for the Patch function. The data source that contains the records that you want to modify or will contain the records that you want to create.</comment>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Takes a single record with primary keys and updated values and updates the corresponding row in the specified datasource. Returns the updated row.</value>
+    <comment>Description of 'Patch' function.</comment>
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
-    <comment>function_parameter - Second parameter for the Patch function. The record to modify or create. If the record came from a data source, the record is found and modified. If the result of Defaults is used, a record is created.</comment>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Takes a table of rows and applies the updates specified in a table of updates in a one-to-one fashion. Returns a table of updated rows.</value>
+    <comment>Description of 'Patch' function.</comment>
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
-    <comment>function_parameter - Third parameter for the Patch function. One or more records that contain properties to modify in the BaseRecord. Change records are processed in order from the beginning of the argument list to the end, with later property values overriding earlier ones.</comment>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Takes a table of rows with primary keys and updated fields and applies those updates to the datasource. Returns a table of updated rows.</value>
+    <comment>Description of 'Patch' function.</comment>
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Returns row with updates applied.</value>
+    <comment>Description of 'Patch' function.</comment>
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>The data source to be patched.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>The record that has to be patched.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>The update that needs to be patched to the given record.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>The table of rows to be patched.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>The table of updates that need to be patched to the given rows.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - First argument of the Patch function - the source (collection / table) to be updated.</comment>
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>record</value>
+    <comment>function_parameter - Second argument of the Patch function - the record to be updated.</comment>
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>update</value>
+    <comment>function_parameter - Third argument of the Patch function - the updates to be made to the record.</comment>
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>rows</value>
+    <comment>function_parameter - First argument to the Patch function - the rows to be updated.</comment>
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>updates</value>
+    <comment>function_parameter - Second argument to the Patch function - the updates to be applied to the given rows.</comment>
   </data>
   <data name="AboutRemove" xml:space="preserve">
     <value>Removes a specific record or records from a data source</value>

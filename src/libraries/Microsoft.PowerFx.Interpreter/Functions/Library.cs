@@ -1251,6 +1251,17 @@ namespace Microsoft.PowerFx.Functions
                 Or
             },
             {
+                BuiltinFunctionsCore.PatchRecord,
+                StandardErrorHandling<RecordValue>(
+                    BuiltinFunctionsCore.PatchRecord.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<RecordValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: PatchRecord)
+            },
+            {
                 BuiltinFunctionsCore.Proper,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Proper.Name,
