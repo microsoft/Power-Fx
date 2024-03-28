@@ -85,16 +85,16 @@ Blank()
 Blank()
 
 >> Match(Blank(), Blank())
-Errors: Error 15-22: Regular expressions must be constant values.|Error 0-23: The function 'Match' has some invalid arguments.
+Errors: Error 15-22: Regular expressions must be constant values.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match("28", 28)
-Errors: Error 12-14: Regular expressions must be constant values.|Error 0-15: The function 'Match' has some invalid arguments.
+Errors: Error 12-14: Regular expressions must be constant values.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match(1/0, "Hi")
 Error({Kind:ErrorKind.Div0})
 
 >> Match("Hello", Right("llo", 3)).FullMatch
-Errors: Error 15-30: Regular expressions must be constant values.|Error 0-31: The function 'Match' has some invalid arguments.|Error 31-41: Name isn't valid. 'FullMatch' isn't recognized.
+Errors: Error 15-30: Regular expressions must be constant values.|Error 0-5: The function 'Match' has some invalid arguments.|Error 31-41: Name isn't valid. 'FullMatch' isn't recognized.
 
 >> Match("(555) 123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
 {FullMatch:"(555) 123-4567",StartMatch:1,SubMatches:Table()}

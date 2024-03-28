@@ -33,7 +33,7 @@ Blank()
 Error({Kind:ErrorKind.Div0})
 
 >> If(1<0, "abc", If(1<0, {x:3}, 1), 1>0, 2)
-Errors: Error 15-32: Invalid argument type (Void). Expecting a Boolean value instead.|Error 0-41: The function 'If' has some invalid arguments.
+Errors: Error 15-32: Invalid argument type (Void). Expecting a Boolean value instead.|Error 0-2: The function 'If' has some invalid arguments.
 
 >> If(1<0, {x:3}, 1/0)
 Error({Kind:ErrorKind.Div0})
@@ -55,13 +55,13 @@ true
 
 // result of If can't be used.
 >> IsBlankOrError( If(1<0, If(false, {x:3}, 1/0)) )
-Errors: Error 0-48: The function 'IsBlankOrError' has some invalid arguments.
+Errors: Error 0-14: The function 'IsBlankOrError' has some invalid arguments.
 
 >> IsBlankOrError( If(false, { a: 1 }, 2 ) )
-Errors: Error 0-41: The function 'IsBlankOrError' has some invalid arguments.|Error 16-39: Invalid argument type.
+Errors: Error 0-14: The function 'IsBlankOrError' has some invalid arguments.|Error 16-39: Invalid argument type.
 
 >> IsNumeric( If(false, { a: 1 }, 2 ) )
-Errors: Error 11-34: Invalid argument type.|Error 0-36: The function 'IsNumeric' has some invalid arguments.
+Errors: Error 11-34: Invalid argument type.|Error 0-9: The function 'IsNumeric' has some invalid arguments.
 
 >> If( true, With({a:1},Switch(a, 1, { prop:"complex" }, "scalar")) )
 If(true, {test:1}, "Void value (result of the expression can't be used).")

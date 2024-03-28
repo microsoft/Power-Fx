@@ -54,16 +54,16 @@ Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{F
 Table({Field1:2,Field2:{Field2_1:221,Field2_2:"2_2",Field2_3:{Field2_3_1:2231,Field2_3_2:"common"}},Field3:false},{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:3231,Field2_3_2:"common"}},Field3:true})
 
 >> Remove(t2, {Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231}},Field3:false}); t2
-Errors: Error 11-98: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-98: Missing column. Your formula is missing a column 'DisplayNameField2_3.DisplayNameField2_3_2' with a type of 'Text'.|Error 0-99: The function 'Remove' has some invalid arguments.
+Errors: Error 11-98: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-98: Missing column. Your formula is missing a column 'DisplayNameField2_3.DisplayNameField2_3_2' with a type of 'Text'.|Error 0-6: The function 'Remove' has some invalid arguments.
 
 >> Remove(t2, {Field1:2,Field2:{Field2_1:221,Field2_3:{Field2_3_1:2231,Field2_3_2:"common"}},Field3:false}); t2
-Errors: Error 11-103: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-103: Missing column. Your formula is missing a column 'DisplayNameField2_2' with a type of 'Text'.|Error 0-104: The function 'Remove' has some invalid arguments.
+Errors: Error 11-103: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-103: Missing column. Your formula is missing a column 'DisplayNameField2_2' with a type of 'Text'.|Error 0-6: The function 'Remove' has some invalid arguments.
 
 >> Remove(t2, {Field2:{Field2_1:321, Field2_2:"Moon"}}); t2
-Errors: Error 11-51: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-51: Missing column. Your formula is missing a column 'DisplayNameField2_3' with a type of 'Record'.|Error 0-52: The function 'Remove' has some invalid arguments.
+Errors: Error 11-51: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-51: Missing column. Your formula is missing a column 'DisplayNameField2_3' with a type of 'Record'.|Error 0-6: The function 'Remove' has some invalid arguments.
 
 >> Remove(t2, {Field2:{Field2_3:{Field2_3_1:3231}}}) ; t2
-Errors: Error 11-48: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-48: Missing column. Your formula is missing a column 'DisplayNameField2_1' with a type of 'Decimal'.|Error 0-49: The function 'Remove' has some invalid arguments.
+Errors: Error 11-48: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-48: Missing column. Your formula is missing a column 'DisplayNameField2_1' with a type of 'Decimal'.|Error 0-6: The function 'Remove' has some invalid arguments.
 
 >> Remove(t2, {Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:3231,Field2_3_2:"common"}}}); t2
 Error({Kind:ErrorKind.NotFound})
@@ -79,16 +79,16 @@ Error({Kind:ErrorKind.NotFound})
 
 
 >> Remove(t2, {Field2:{Field2_3:{Field2_3_2:"common"}}}, "All")
-Errors: Error 11-52: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-52: Missing column. Your formula is missing a column 'DisplayNameField2_1' with a type of 'Decimal'.|Error 0-60: The function 'Remove' has some invalid arguments.
+Errors: Error 11-52: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-52: Missing column. Your formula is missing a column 'DisplayNameField2_1' with a type of 'Decimal'.|Error 0-6: The function 'Remove' has some invalid arguments.
 
 >> Remove(t2, {Field1:5}, "All")
 Error({Kind:ErrorKind.NotFound})
 
 >> Remove(t2, {Field2:{Field2_1:321}});t2
-Errors: Error 11-34: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-34: Missing column. Your formula is missing a column 'DisplayNameField2_2' with a type of 'Text'.|Error 0-35: The function 'Remove' has some invalid arguments.
+Errors: Error 11-34: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-34: Missing column. Your formula is missing a column 'DisplayNameField2_2' with a type of 'Text'.|Error 0-6: The function 'Remove' has some invalid arguments.
    
 >> Remove(t2, {Field2:{Field2_3:{Field2_3_1:3231}}});t2
-Errors: Error 11-48: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-48: Missing column. Your formula is missing a column 'DisplayNameField2_1' with a type of 'Decimal'.|Error 0-49: The function 'Remove' has some invalid arguments.
+Errors: Error 11-48: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-48: Missing column. Your formula is missing a column 'DisplayNameField2_1' with a type of 'Decimal'.|Error 0-6: The function 'Remove' has some invalid arguments.
 
 >> Remove(t2, {Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:5555,Field2_3_2:"common"}}}, "All");t2
 Error({Kind:ErrorKind.NotFound})
@@ -128,10 +128,10 @@ Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{F
 Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:3,Field2:"earth",Field3:DateTime(2030,2,1,0,0,0,0),Field4:true},{Field1:4,Field2:"earth",Field3:DateTime(2040,2,1,0,0,0,0),Field4:false})
 
 >> Remove(Foo, {Field1:5}, "All")
-Errors: Error 7-10: Name isn't valid. 'Foo' isn't recognized.|Error 12-22: The specified column 'Field1' does not exist.|Error 0-30: The function 'Remove' has some invalid arguments.
+Errors: Error 7-10: Name isn't valid. 'Foo' isn't recognized.|Error 12-22: The specified column 'Field1' does not exist.|Error 0-6: The function 'Remove' has some invalid arguments.
    
 >> Remove(Foo, Bar)
-Errors: Error 7-10: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name isn't valid. 'Bar' isn't recognized.|Error 0-16: The function 'Remove' has some invalid arguments.
+Errors: Error 7-10: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name isn't valid. 'Bar' isn't recognized.|Error 0-6: The function 'Remove' has some invalid arguments.
 
 >> Remove(t1, {Field1:2,Field2:"not in the table",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
 Error({Kind:ErrorKind.NotFound})

@@ -2,215 +2,215 @@
 
 // Block language code
 >> Text(1234.5678, "$-fr-FR] # ##0,00", "vi-VI")
-Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 16-35: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-35: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.89, "[$-fr-FR]# ###,## €", Blank())
-Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 17-38: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-38: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.89, "[$-fr-FR]# ###,## €", "fr-FR")
-Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 17-38: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-38: Incorrect format specifier for 'Text'.
 
 >> Text(1234567,89; "[$-fr-FR]# ###,## €")
 
-Errors: Error 15-16: Expected operator. We expect an operator such as +, *, or & at this point in the formula.|Error 0-39: The function 'Text' has some invalid arguments.
+Errors: Error 15-16: Expected operator. We expect an operator such as +, *, or & at this point in the formula.|Error 0-4: The function 'Text' has some invalid arguments.
 
 // Color
 >> Text(Color.Red, "###")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(Color.Red, "@")
-Errors: Error 0-20: The function 'Text' has some invalid arguments.|Warning 16-19: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-19: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(Color.Red, "@ @")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(Color.Red, "#/4")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(Color.Red, "Foo @")
-Errors: Error 0-24: The function 'Text' has some invalid arguments.|Warning 16-23: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-23: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(Color.Red, "Foo ####")
-Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 16-26: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-26: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 // Not support format string for non numeric/datetime/date/time
 >> Text("123.456", "###")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("123.456", "@")
-Errors: Error 0-20: The function 'Text' has some invalid arguments.|Warning 16-19: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-19: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("123.456", "@ @")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("123.456", "#/4")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("123.456", "Foo @")
-Errors: Error 0-24: The function 'Text' has some invalid arguments.|Warning 16-23: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-23: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("123.456", "Foo ####")
-Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 16-26: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-26: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("bsdf", "###")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 13-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("bsdf", "@")
-Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 13-16: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-16: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("bsdf", "@ @")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 13-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("bsdf", "#/4")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 13-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("bsdf", "Foo @")
-Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 13-20: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-20: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(true, "#")
-Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 11-14: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-14: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(true, "###")
-Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 11-16: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-16: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(false, "0")
-Errors: Error 0-16: The function 'Text' has some invalid arguments.|Warning 12-15: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 12-15: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(false, "0000")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 12-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 12-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("abc", "0.00")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 12-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 12-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "b")
-Errors: Error 0-51: The function 'Text' has some invalid arguments.|Warning 47-50: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 47-50: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "d", "vi-Vn")
-Errors: Error 0-60: The function 'Text' has some invalid arguments.|Warning 47-50: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 47-50: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "p", "vi-Vn")
-Errors: Error 0-60: The function 'Text' has some invalid arguments.|Warning 47-50: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 47-50: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "n", "vi-Vn")
-Errors: Error 0-60: The function 'Text' has some invalid arguments.|Warning 47-50: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 47-50: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "b", "vi-Vn")
-Errors: Error 0-60: The function 'Text' has some invalid arguments.|Warning 47-50: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 47-50: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("", "0,00.0")
-Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 9-17: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 9-17: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("", "####.#")
-Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 9-17: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 9-17: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("Hello", If(1 < 0, "d", Blank()))
-Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 14-37: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 14-37: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("Hello", If(1 < 0, "d", ""))
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 14-32: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 14-32: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("Hello", If(1 > 0, "d", ""))
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 14-32: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 14-32: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(If(1<0,false), "0.00")
-Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 20-26: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 20-26: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(If(1<0,"test",Blank()), "####")
-Errors: Error 0-36: The function 'Text' has some invalid arguments.|Warning 29-35: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 29-35: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(If(1 < 0, false), "mmm ddd yyy")
-Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 23-36: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 23-36: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(Boolean("True"), "", "vi-Vn")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-24: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-24: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "", "vi-Vn")
-Errors: Error 0-59: The function 'Text' has some invalid arguments.|Warning 47-49: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 47-49: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 // Block bad language code
 // If have empty language code, throw error
 >> Text(1234.5678,"[$-]")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 15-21: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 15-21: Incorrect format specifier for 'Text'.
 
 // If not closed by a ']', throw error
 >> Text(1234.5678,"[$-a")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 15-21: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 15-21: Incorrect format specifier for 'Text'.
 
 // If not closed by a ']', throw error
 >> Text(1234.5678, "[$-en-US#,##0.00", "en-US")
-Errors: Error 0-44: The function 'Text' has some invalid arguments.|Warning 16-34: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-34: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-]fr-FR # ##0,00", "vi-VI")
-Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 16-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-36: Incorrect format specifier for 'Text'.
 
 // End with e or e+ in numeric or datetime format is invalid
 >> Text(1234567.1234567, "0.00e+")
-Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 22-30: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-30: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.00e")
-Errors: Error 0-30: The function 'Text' has some invalid arguments.|Warning 22-29: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-29: Incorrect format specifier for 'Text'.
 
 >> Text("ss", "true")
-Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 11-17: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-17: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("ss", "false")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 11-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(1234567.1234567, "\""#\""\")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(123.456, "\m\m\m\-ddd\-yyy\")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 14-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 14-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, """""""#")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, """\""""#")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "dddd, mmm "" dd, yyy") 
-Errors: Error 0-63: The function 'Text' has some invalid arguments.|Warning 40-62: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 40-62: Incorrect format specifier for 'Text'.
 
 >> Text(30470, "DDDD, MMM "" DD, YYY") 
-Errors: Error 0-35: The function 'Text' has some invalid arguments.|Warning 12-34: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 12-34: Incorrect format specifier for 'Text'.
 
 // Format does not have close double quote
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ([""][^""]*[""]) dd yyyy") 
-Errors: Error 0-73: The function 'Text' has some invalid arguments.|Warning 42-72: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 42-72: Incorrect format specifier for 'Text'.
 
 >> Text(30470, "mmm ([""][^""]*[""]) dd yyyy") 
-Errors: Error 0-43: The function 'Text' has some invalid arguments.|Warning 12-42: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 12-42: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""([""][^""]*[""])"" dd yyyy") 
-Errors: Error 0-77: The function 'Text' has some invalid arguments.|Warning 42-76: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 42-76: Incorrect format specifier for 'Text'.
 
 >> Text(30470, "mmm ""([""][^""]*[""])"" dd yyyy") 
-Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 12-46: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 12-46: Incorrect format specifier for 'Text'.
 
 >> Text(Date(1983, 6, 3), "dddd, mmm "" dd, yyy") 
-Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 23-45: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 23-45: Incorrect format specifier for 'Text'.
 
 // Block locale until we will support for datetime as well
 >> Text(1234.5678, "[$-fr-FR]# ##0,00", "en-US")
-Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 16-35: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-35: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-fr-FR]# ##0,00", "vi-VI")
-Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 16-35: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-35: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-en-US]#,##0.00", "en-US")
-Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 16-35: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-35: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-pt-BR]#.##0,00", "en-US")
-Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 16-35: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-35: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-pt-BR]#.##0,00", "fr-FR")
-Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 16-35: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-35: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-en-US]#,##0.00", "pt-BR")
-Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 16-35: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-35: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678,"[$-en-US]0 # # # !!!", "en-US")
-Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 15-37: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 15-37: Incorrect format specifier for 'Text'.
 
 // The thousands separator in the fi-FI locale is the no-break space (U+00A0)
 >> Text(12345.6789, $"[$-fi-FI]#{Char(160)}##0.00", "en-US")
@@ -224,518 +224,518 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(1234.5678, "[$-en-US]", "en-US")
-Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 16-27: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-27: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-fr-FR]", "fr-FR")
-Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 16-27: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-27: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-fr-FR]", "en-US")
-Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 16-27: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-27: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-  fr-FR  ]# ##0,00", "vi-VI")
-Errors: Error 0-49: The function 'Text' has some invalid arguments.|Warning 16-39: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-39: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-fr-FR  ]# ##0,00", "vi-VI")
-Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 16-37: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-37: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-  fr-FR]# ##0,00", "vi-VI")
-Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 16-37: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-37: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-fr-FR][# ##0,00]", "vi-VI")
-Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 16-37: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-37: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "$-fr-FR][ # ##0,00", "vi-VI")
-Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 16-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-36: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "$[-fr-FR] # ##0,00", "vi-VI")
-Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 16-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-36: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-fr-FR][$-fr-FR# ##0,00]", "vi-VI")
-Errors: Error 0-54: The function 'Text' has some invalid arguments.|Warning 16-44: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-44: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "]$-fr-FR[ # ##0,00", "vi-VI")
-Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 16-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-36: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$ # ##0,00", "vi-VI")
-Errors: Error 0-39: The function 'Text' has some invalid arguments.|Warning 16-29: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-29: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$] # ##0,00", "vi-VI")
-Errors: Error 0-40: The function 'Text' has some invalid arguments.|Warning 16-30: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-30: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "][-$ # ##0,00", "vi-VI")
-Errors: Error 0-41: The function 'Text' has some invalid arguments.|Warning 16-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-31: Incorrect format specifier for 'Text'.
 
 // If does not have valid language code, throw error
 >> Text(1234.5678, "[$-a]0,0", "en-US")
-Errors: Error 0-36: The function 'Text' has some invalid arguments.|Warning 16-26: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-26: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-fr - FR]# ##0,00", "vi-VI")
-Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 16-37: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-37: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-fr-FR #] ##0,00", "vi-VI")
-Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 16-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-36: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-fr-FR # ##0,00]", "vi-VI")
-Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 16-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-36: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-fr-FR,en-US] # ##0,00", "vi-VI")
-Errors: Error 0-52: The function 'Text' has some invalid arguments.|Warning 16-42: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-42: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-fr-FR # ##]0,00", "vi-VI")
-Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 16-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-36: Incorrect format specifier for 'Text'.
 
 // Format contains block characters
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""([""][^""]*[""]) dd yyyy")
-Errors: Error 0-75: The function 'Text' has some invalid arguments.|Warning 42-74: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 42-74: Incorrect format specifier for 'Text'.
 
 >> Text(30470, "mmm ""([""][^""]*[""]) dd yyyy") 
-Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 12-44: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 12-44: Incorrect format specifier for 'Text'.
 
 >> Text(123456789, "???????????????????")
-Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 16-37: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-37: Incorrect format specifier for 'Text'.
 
 // Fractions with forward slash.  We should reserve the slash character for now and produce an error.
 // Excel: "5/4"
 >> Text(1.25, "#/#")
-Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 11-16: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-16: Incorrect format specifier for 'Text'.
 
 // Excel: "1 1/4"
 >> Text(1.25, "# #/#")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
 
 // Excel: "1 1/2"
 >> Text(1.5, "# #/##")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 10-18: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 10-18: Incorrect format specifier for 'Text'.
 
 // Excel: "32 1/800"
 >> Text(32.00125, "# #/#####")
-Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 15-26: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 15-26: Incorrect format specifier for 'Text'.
 
 // Excel: "3/5"
 >> Text(0.59375, "0/0")
-Errors: Error 0-20: The function 'Text' has some invalid arguments.|Warning 14-19: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 14-19: Incorrect format specifier for 'Text'.
 
 // Excel: "19/32"
 >> Text(0.59375, "00/00")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 14-21: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 14-21: Incorrect format specifier for 'Text'.
 
 // Excel: "19/32"
 >> Text(0.59375, "0/#0")
-Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 14-20: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 14-20: Incorrect format specifier for 'Text'.
 
 // Excel: "1/8"
 >> Text(0.125, "0/0")
-Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 12-17: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 12-17: Incorrect format specifier for 'Text'.
 
 // Excel: "01/08"
 >> Text(0.125, "00/00")
-Errors: Error 0-20: The function 'Text' has some invalid arguments.|Warning 12-19: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 12-19: Incorrect format specifier for 'Text'.
 
 // Excel: "1/8"
 >> Text(0.125, "0/#0")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 12-18: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 12-18: Incorrect format specifier for 'Text'.
 
 // Excel: "4 1/3"
 >> Text(4.34, "# ?/?")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
 
 // Excel: "1/3"
 >> Text(0.34, "# ?/?")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
 
 // Excel: "4 17/50"
 >> Text(4.34, "# ??/??")
-Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 11-20: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-20: Incorrect format specifier for 'Text'.
 
 // Excel: "4  17/50", note extra space
 >> Text(4.34, "# ???/???")
-Errors: Error 0-23: The function 'Text' has some invalid arguments.|Warning 11-22: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-22: Incorrect format specifier for 'Text'.
 
 // Excel: "4 1/2"
 >> Text(4.34, "# ?/2")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
 
 // Excel: "4 1/4"
 >> Text(4.34, "# ?/4")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
 
 // Excel: "4  5/16", note extra space
 >> Text(4.34, "# ??/16")
-Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 11-20: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-20: Incorrect format specifier for 'Text'.
 
 // Excel: "4 3/10"
 >> Text(4.34, "# ?/10")
-Errors: Error 0-20: The function 'Text' has some invalid arguments.|Warning 11-19: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-19: Incorrect format specifier for 'Text'.
 
 // Excel: "4 34/100"
 >> Text(4.34, "# ?/100")
-Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 11-20: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-20: Incorrect format specifier for 'Text'.
 
 // Excel: "4 1/3"
 >> Text(4.34, "# #/#")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
 
 // Excel: "1/3"
 >> Text(0.34, "# #/#")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
 
 // Excel: "4 17/50"
 >> Text(4.34, "# ##/##")
-Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 11-20: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-20: Incorrect format specifier for 'Text'.
 
 // Excel: "4 17/50"
 >> Text(4.34, "# ###/###")
-Errors: Error 0-23: The function 'Text' has some invalid arguments.|Warning 11-22: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-22: Incorrect format specifier for 'Text'.
 
 // Excel: "4 1/2"
 >> Text(4.34, "# #/2")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
 
 // Excel: "4 1/4"
 >> Text(4.34, "# #/4")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
 
 // Excel: "4 5/16"
 >> Text(4.34, "# ##/16")
-Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 11-20: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-20: Incorrect format specifier for 'Text'.
 
 // Excel: "4 3/10"
 >> Text(4.34, "# #/10")
-Errors: Error 0-20: The function 'Text' has some invalid arguments.|Warning 11-19: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-19: Incorrect format specifier for 'Text'.
 
 // Excel: "4 34/100"
 >> Text(4.34, "# #/100")
-Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 11-20: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-20: Incorrect format specifier for 'Text'.
 
 // Excel: "1/1"
 >> Text(1, "0/0")
-Errors: Error 0-14: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
 
 // Excel: "1/1"
 >> Text(1, "#/#")
-Errors: Error 0-14: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
 
 // Excel: "1/1"
 >> Text(1, "?/?")
-Errors: Error 0-14: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
 
 // Excel: "  1/1  "
 >> Text(1, "???/???")
-Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
 
 // Excel: "1/1"
 >> Text(1, "###/###")
-Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
 
 // Excel: "001/001"
 >> Text(1, "000/000")
-Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
 
 // Excel: "494/4"
 >> Text(123.456, "#/4")
-Errors: Error 0-20: The function 'Text' has some invalid arguments.|Warning 14-19: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 14-19: Incorrect format specifier for 'Text'.
 
 // block conditional sections.
 // Excel: "(123) 456-7898"
 >> Text(1234567898, "[<=9999999]###-####;(###) ###-####")
-Errors: Error 0-54: The function 'Text' has some invalid arguments.|Warning 17-53: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-53: Incorrect format specifier for 'Text'.
 
 // Excel: "123-4567"
 >> Text(1234567, "[<=9999999]###-####;(###) ###-####")
-Errors: Error 0-51: The function 'Text' has some invalid arguments.|Warning 14-50: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 14-50: Incorrect format specifier for 'Text'.
 
 // Indent with _(and _) around cell contents. Excel Text function replaces with a space. We should repalce with a space in time, error for now.
 // Excel: " 3"
 >> Text(3, "_(#")
-Errors: Error 0-14: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
 
 // Excel: " 3 "
 >> Text(3, "_(#_)")
-Errors: Error 0-16: The function 'Text' has some invalid arguments.|Warning 8-15: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-15: Incorrect format specifier for 'Text'.
 
 // Excel: "3 "
 >> Text(3, "#_)")
-Errors: Error 0-14: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
 
 // Excel: "   3"
 >> Text(3, "_(_(_(#")
-Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
 
 // Excel: "   3   "
 >> Text(3, "_(_(_(#_)_)_)")
-Errors: Error 0-24: The function 'Text' has some invalid arguments.|Warning 8-23: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-23: Incorrect format specifier for 'Text'.
 
 // Excel: "3   "
 >> Text(3, "#_)_)_)")
-Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
 
 // Excel: " 3 "
 >> Text(3, "_-#_-")
-Errors: Error 0-16: The function 'Text' has some invalid arguments.|Warning 8-15: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-15: Incorrect format specifier for 'Text'.
 
 // Excel: " $1.00* "
 >> Text(1, "_($* #,##0.00""*""_);_($* (#,##0.00);_($* ""-""??_);_(@_)")
-Errors: Error 0-68: The function 'Text' has some invalid arguments.|Warning 8-67: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-67: Incorrect format specifier for 'Text'.
 
 // Excel: " $(1.00)"
 >> Text(-1, "_($* #,##0.00""*""_);_($* (#,##0.00);_($* ""-""??_);_(@_)")
-Errors: Error 0-69: The function 'Text' has some invalid arguments.|Warning 9-68: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 9-68: Incorrect format specifier for 'Text'.
 
 // Excel: " $-   "
 >> Text(0, "_($* #,##0.00""*""_);_($* (#,##0.00);_($* ""-""??_);_(@_)")
-Errors: Error 0-68: The function 'Text' has some invalid arguments.|Warning 8-67: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-67: Incorrect format specifier for 'Text'.
 
 // Excel: " asdf "
 >> Text("asdf", "_($* #,##0.00""*""_);_($* (#,##0.00);_($* ""-""??_);_(@_)")
-Errors: Error 0-73: The function 'Text' has some invalid arguments.|Warning 13-72: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-72: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 // Asterisk is used for alignment in cell formatting, repeating character after the *. Ignored by Excel text function. We should ignore long term, error for now.
 // Excel: "$ 1.00"
 >> Text(1, "$ * 0.00")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 8-18: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-18: Incorrect format specifier for 'Text'.
 
 // Excel: "-$ 1.00"
 >> Text(-1, "$ * 0.00")
-Errors: Error 0-20: The function 'Text' has some invalid arguments.|Warning 9-19: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 9-19: Incorrect format specifier for 'Text'.
 
 // Excel: "$ 0.00"
 >> Text(0, "$ * 0.00")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 8-18: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-18: Incorrect format specifier for 'Text'.
 
 // Excel: "3"
 >> Text(3, "#,###* ; -#,###* ; 0* ;* @")
-Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 8-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-36: Incorrect format specifier for 'Text'.
 
 // Excel: " -3"
 >> Text(-3, "#,###* ; -#,###* ; 0* ;* @")
-Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 9-37: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 9-37: Incorrect format specifier for 'Text'.
 
 // Excel: " 0"
 >> Text(0, "#,###* ; -#,###* ; 0* ;* @")
-Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 8-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-36: Incorrect format specifier for 'Text'.
 
 // Excel: "asdf"
 >> Text("asdf", "#,###* ; -#,###* ; 0* ;* @")
-Errors: Error 0-42: The function 'Text' has some invalid arguments.|Warning 13-41: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-41: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 // Excel: "1"
 >> Text(1, "*0#")
-Errors: Error 0-14: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
 
 // Excel: "1"
 >> Text(1, "#*=")
-Errors: Error 0-14: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
 
 // Excel: "1"
 >> Text(1, "*(#")
-Errors: Error 0-14: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
 
 // Excel: "$ 1,234,567"
 >> Text(1234567.1234567, "$ * #,##0")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 // * by itself is an error, it needs a character to either side
 >> Text(1234567.1234567, "*")
-Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 22-25: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-25: Incorrect format specifier for 'Text'.
 
 // Excel: ""
 >> Text(1234567.1234567, "*=")
-Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 22-26: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-26: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "=*")
-Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 22-26: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-26: Incorrect format specifier for 'Text'.
 
 >> Text("asdf", "##;(##);ZZZ;""AAA """)
-Errors: Error 0-36: The function 'Text' has some invalid arguments.|Warning 13-35: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-35: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("asdf", "##;(##);ZZZ;""AAA ""@")
-Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 13-36: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-36: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text("asdf", "##;(##);ZZZ")
-Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 13-26: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-26: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 // Output localization. We will cover this with the third argumnet for now.
 // Excel: "1,234,567.1235"
 >> Text(1234567.1234567, "[$-en-US]#,####.0000")
-Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 22-44: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-44: Incorrect format specifier for 'Text'.
 
 // Excel: "$ 1,234,567.1235"
 >> Text(1234567.1234567, "[$-en-US]$ #,####.0000")
-Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 22-46: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-46: Incorrect format specifier for 'Text'.
 
 // Excel: "$ 1,234,567.1235"
 >> Text(1234567.1234567, "[$-fr-FR]$ #,####.0000")
-Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 22-46: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-46: Incorrect format specifier for 'Text'.
 
 // Excel: "$ 1,234,567.1235"
 >> Text(1234567.1234567, "[$-de-DE]$ #,####.0000")
-Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 22-46: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-46: Incorrect format specifier for 'Text'.
 
 // Excel: "€ 1,234,567.1235"
 >> Text(1234567.1234567, "[$€-fr-FR] #,####.0000")
-Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 22-46: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-46: Incorrect format specifier for 'Text'.
 
 // Excel: " 3"
 >> Text(3, "[$-000000] #")
-Errors: Error 0-23: The function 'Text' has some invalid arguments.|Warning 8-22: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-22: Incorrect format specifier for 'Text'.
 
 // Excel: "$$$$ 1,234,567.1235"
 >> Text(1234567.1234567, "[$$$$-en-US]$ #,####.0000")
-Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 22-49: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-49: Incorrect format specifier for 'Text'.
 
 // Colon, interpreted as a time seperator, not allowed between numbers
 >> Text(2, ":#:")
-Errors: Error 0-14: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
 
 >> Text(2, "#:#")
-Errors: Error 0-14: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
 
 >> Text(2, "?:?")
-Errors: Error 0-14: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
 
 >> Text(2, "z:0")
-Errors: Error 0-14: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-13: Incorrect format specifier for 'Text'.
 
 >> Text(45, "foo: ####")
-Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 9-20: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 9-20: Incorrect format specifier for 'Text'.
 
 >> Text(45, "foo: 000")
-Errors: Error 0-20: The function 'Text' has some invalid arguments.|Warning 9-19: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 9-19: Incorrect format specifier for 'Text'.
 
 >> Text(2, "0:""#""0")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 8-18: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-18: Incorrect format specifier for 'Text'.
 
 // Block General (case insensitive) and @ - Reserved word for "default" formatting
 // Excel: "1234567.123"
 >> Text(1234567.1234567, "General")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
 // Excel: "1234567.123"
 >> Text(1234567.1234567, "general")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
 // Excel: "1234567.123"
 >> Text(1234567.1234567, "gEnErAl")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
 // Excel: ""
 >> Text(1234567.1234567, "g")
-Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 22-25: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-25: Incorrect format specifier for 'Text'.
 
 // Excel: ""
 >> Text(1234567.1234567, "G")
-Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 22-25: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-25: Incorrect format specifier for 'Text'.
 
 // Excel: "Foo asdf"
 >> Text("asdf", "Foo @")
-Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 13-20: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-20: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 // Excel: #VALUE!
 >> Text(1E+23, "@ ###")
-Errors: Error 0-20: The function 'Text' has some invalid arguments.|Warning 12-19: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 12-19: Incorrect format specifier for 'Text'.
 
 // Excel: #VALUE!
 >> Text("asdf", "@ ###")
-Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 13-20: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-20: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 // Excel: "asdf"
 >> Text("asdf", "@")
-Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 13-16: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-16: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 // Excel: "asdf asdf"
 >> Text("asdf", "@ @")
-Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 13-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 // Elapsed time
 // Excel: "0:00"
 >> Text(0, "[h]:mm")
-Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-16: Incorrect format specifier for 'Text'.
 
 // Excel: "00:00"
 >> Text(0, "[mm]:ss")
-Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
 
 // Excel: "7:47"
 >> Text(0.324305555555556, "[h]:mm")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 24-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 24-32: Incorrect format specifier for 'Text'.
 
 // Excel: "467:00"
 >> Text(0.324305555555556, "[mm]:ss")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 24-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 24-33: Incorrect format specifier for 'Text'.
 
 // Excel: "24:14"
 >> Text(1.010101, "[h]:mm")
-Errors: Error 0-24: The function 'Text' has some invalid arguments.|Warning 15-23: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 15-23: Incorrect format specifier for 'Text'.
 
 // Excel: "1454:33"
 >> Text(1.010101, "[mm]:ss")
-Errors: Error 0-25: The function 'Text' has some invalid arguments.|Warning 15-24: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 15-24: Incorrect format specifier for 'Text'.
 
 // Excel: "Jan Tuesday 1900 "
 >> Text(3, "[$-en-US]mmm dddd yyyy ")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 8-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-33: Incorrect format specifier for 'Text'.
 
 // Excel: "janv. mardi 1900 "
 >> Text(3, "[$-fr-FR]mmm dddd yyyy ")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 8-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-33: Incorrect format specifier for 'Text'.
 
 >> Text(3, "/m")
-Errors: Error 0-13: The function 'Text' has some invalid arguments.|Warning 8-12: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-12: Incorrect format specifier for 'Text'.
 
 // Excel: "0003.0"
 >> Text(3, "[Blue][>10]0.00;[Yellow][>0]0000.0")
-Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 8-44: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-44: Incorrect format specifier for 'Text'.
 
 // Expanding elapsed time to include days
 // Excel: #VALUE!, Desired: 32.07:47:00.00
 >> Text(32.324305555, "[d].hh:mm:ss.00")
-Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 19-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 19-36: Incorrect format specifier for 'Text'.
 
 // Not allow the last character is opening quote (missing close quote).
 >> Text(123.456, "0.0""")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 14-21: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 14-21: Incorrect format specifier for 'Text'.
 
 >> Text(123.456, "mmm ddd yyy""")
-Errors: Error 0-30: The function 'Text' has some invalid arguments.|Warning 14-29: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 14-29: Incorrect format specifier for 'Text'.
 
 >> Text(123.456, "@")
-Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 14-17: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 14-17: Incorrect format specifier for 'Text'.
 
 >> Text(12.34567,"Foo @")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 14-21: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 14-21: Incorrect format specifier for 'Text'.
 
 // C# supports E without a '+' or '-' after it.  Consitent with Excel, we do not.
 >> Text(1234567.123,"0.00E+")
-Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 17-25: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-25: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.123,"0.00E")
-Errors: Error 0-25: The function 'Text' has some invalid arguments.|Warning 17-24: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-24: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.123,"0.00e+")
-Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 17-25: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-25: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.123,"0.00e")
-Errors: Error 0-25: The function 'Text' has some invalid arguments.|Warning 17-24: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-24: Incorrect format specifier for 'Text'.
 
 // Excel treats "e" as an era.  We shouldn't assume that an "e" by itself is scientific notation.
 >> Text(1234567.1234567, "e")
-Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 22-25: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-25: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "E")
-Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 22-25: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-25: Incorrect format specifier for 'Text'.
 
 // Reserved [@...] notation
 >> Text(1234567.123,"[@-en-US]#,###.0000")
-Errors: Error 0-39: The function 'Text' has some invalid arguments.|Warning 17-38: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-38: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.123,"[@-fr-Fr]#.###,0000")
-Errors: Error 0-39: The function 'Text' has some invalid arguments.|Warning 17-38: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-38: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.123,"[@]#,###.0000")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 17-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-32: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.123,"[@]#.###,0000")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 17-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-32: Incorrect format specifier for 'Text'.
 
 // Literal characters conflicting with date/time format specifiers.
 >> Text(72, "# \m")
@@ -745,10 +745,10 @@ Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 17-3
 "72 y"
 
 >> Text(72, "# y")
-Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
 
 >> Text(72, "# m")
-Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
 
 // Scaling factor.  Each comma on the end divides the number by 1,000.
 >> Text(1234567891234, "0,0,,,""dollar""\z\M")
@@ -789,138 +789,138 @@ Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14
 
 // 5 digit month not supported yet
 >> Text(70.125, "MMMMM DD YYY")
-Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "mmmmm dd yyy")
-Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "MMMMM DDD YYY")
-Errors: Error 0-29: The function 'Text' has some invalid arguments.|Warning 13-28: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-28: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "mmmmm ddd yyy")
-Errors: Error 0-29: The function 'Text' has some invalid arguments.|Warning 13-28: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-28: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "MMMMM DDD YY")
-Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "mmmmm ddd yy")
-Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "MMMMM DDD YYYY")
-Errors: Error 0-30: The function 'Text' has some invalid arguments.|Warning 13-29: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-29: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "mmmmm ddd yyyy")
-Errors: Error 0-30: The function 'Text' has some invalid arguments.|Warning 13-29: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-29: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "MMMMM DDDD YYYY")
-Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 13-30: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-30: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "mmmmm dddd yyyy")
-Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 13-30: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-30: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "MMMMM D YYYY")
-Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "mmmmm d yyyy")
-Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(68.125, "MMMMM D YYYY")
-Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(68.125, "mmmmm d yyyy")
-Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(68.125, "MMMMMM D YYYY")
-Errors: Error 0-29: The function 'Text' has some invalid arguments.|Warning 13-28: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-28: Incorrect format specifier for 'Text'.
 
 >> Text(68.125, "mmmmmm d yyyy")
-Errors: Error 0-29: The function 'Text' has some invalid arguments.|Warning 13-28: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-28: Incorrect format specifier for 'Text'.
 
 >> Text(68.125, "mMmMmmMM d yyyy")
-Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 13-30: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-30: Incorrect format specifier for 'Text'.
 
 >> Text(68.125, "MMMmm d yyyy")
-Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MMMMM dd, yyyy hh:mm:ss")
-Errors: Error 0-71: The function 'Text' has some invalid arguments.|Warning 39-70: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 39-70: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MMMM dd, yyyy hh:mmmmm:ss")
-Errors: Error 0-73: The function 'Text' has some invalid arguments.|Warning 39-72: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 39-72: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-mmmmm-dd hh:mm:ss")
-Errors: Error 0-64: The function 'Text' has some invalid arguments.|Warning 39-63: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 39-63: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-mmmm-dd hh:mmmmmm:ss")
-Errors: Error 0-67: The function 'Text' has some invalid arguments.|Warning 39-66: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 39-66: Incorrect format specifier for 'Text'.
 
 // Lowercase am/pm and a/p are not supported, C# has no lowercase representation
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "ha/p")
-Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 40-46: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 40-46: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hha/p")
-Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 40-47: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 40-47: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm a/p")
-Errors: Error 0-51: The function 'Text' has some invalid arguments.|Warning 40-50: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 40-50: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "H:MM a/p")
-Errors: Error 0-51: The function 'Text' has some invalid arguments.|Warning 40-50: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 40-50: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm a/p")
-Errors: Error 0-52: The function 'Text' has some invalid arguments.|Warning 40-51: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 40-51: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:MM a/p")
-Errors: Error 0-52: The function 'Text' has some invalid arguments.|Warning 40-51: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 40-51: Incorrect format specifier for 'Text'.
 
 >> Text(70.82430555555555555555555,"h:mm:ss a/p")
-Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 32-45: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 32-45: Incorrect format specifier for 'Text'.
 
 >> Text(70.32430555555555555555555,"h:mm:ss a/p")
-Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 32-45: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 32-45: Incorrect format specifier for 'Text'.
 
 >> Text(70.82430555555555555555555,"h:mm:ss am/pm")
-Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
 
 >> Text(70.32430555555555555555555,"h:mm:ss am/pm")
-Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
 
 >> Text(70.32430555555555555555555,"h:mm:ss Am/Pm")
-Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
 
 >> Text(70.32430555555555555555555,"h:mm:ss aM/pM")
-Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
 
 >> Text(70.32430555555555555555555,"h:mm:ss a/p", "vi-VN")
-Errors: Error 0-55: The function 'Text' has some invalid arguments.|Warning 32-45: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 32-45: Incorrect format specifier for 'Text'.
 
 >> Text(70.32430555555555555555555,"h:mm:ss am/pm", "vi-VN")
-Errors: Error 0-57: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "ha/putc")
-Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 40-49: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 40-49: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hha/putc")
-Errors: Error 0-51: The function 'Text' has some invalid arguments.|Warning 40-50: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 40-50: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm a/putc")
-Errors: Error 0-55: The function 'Text' has some invalid arguments.|Warning 40-54: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 40-54: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss a/p")
-Errors: Error 0-74: The function 'Text' has some invalid arguments.|Warning 39-73: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 39-73: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss am/pm")
-Errors: Error 0-76: The function 'Text' has some invalid arguments.|Warning 39-75: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 39-75: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss aM/pM")
-Errors: Error 0-76: The function 'Text' has some invalid arguments.|Warning 39-75: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 39-75: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss Am/Pm")
-Errors: Error 0-76: The function 'Text' has some invalid arguments.|Warning 39-75: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 39-75: Incorrect format specifier for 'Text'.
 
 >> Text(1, 
   "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
-Errors: Error 0-124: The function 'Text' has some invalid arguments.|Warning 11-123: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 11-123: Incorrect format specifier for 'Text'.
 
 // DateTimeFormat Enum
 >> Text(DateTimeValue(Blank()), DateTimeFormat.LongDate)
@@ -1036,175 +1036,175 @@ true
 
 // Block exponential notation with decimals, escaping character and scaling modifier
 >> Text(1234567.1234567, "0.00E+0.0")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.000E+0.000")
-Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 22-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-36: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#.#E+#.00")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.0E+#.0")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0E+0.00")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#E+#.00")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.00E-0.0")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.000E-0.000")
-Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 22-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-36: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#.#E-#.00")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.0E-#.0")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0E-0.00")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#E-#.00")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.00e+0.0")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.000e+0.000")
-Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 22-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-36: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#.#e+#.00")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.0e+#.0")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0e+0.00")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#e+#.00")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.00e-0.0")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.000e-0.000")
-Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 22-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-36: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#.#e-#.00")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.0e-#.0")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0e-0.00")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#e-#.00")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.00E+0\.0")
-Errors: Error 0-35: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.000E+0\.000")
-Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 22-37: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-37: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#.#E+#\.00")
-Errors: Error 0-35: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.0E+#\.0")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0E+0\.00")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#E+#\.00")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.00E-0\.0")
-Errors: Error 0-35: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.000E-0\.000")
-Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 22-37: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-37: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#.#E-#\.00")
-Errors: Error 0-35: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.0E-#\.0")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0E-0\.00")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#E-#\.00")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.00e+0\.0")
-Errors: Error 0-35: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.000e+0\.000")
-Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 22-37: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-37: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#.#e+#\.00")
-Errors: Error 0-35: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.0e+#\.0")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0e+0\.00")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#e+#\.00")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.00e-0\.0")
-Errors: Error 0-35: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.000e-0\.000")
-Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 22-37: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-37: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#.#e-#\.00")
-Errors: Error 0-35: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.0e-#\.0")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0e-0\.00")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#e-#\.00")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.00e-0\k0")
-Errors: Error 0-35: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-34: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.000e-0""k""000")
-Errors: Error 0-41: The function 'Text' has some invalid arguments.|Warning 22-40: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-40: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0e-0\k00")
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#e-#""k""00")
-Errors: Error 0-36: The function 'Text' has some invalid arguments.|Warning 22-35: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-35: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.00E+00%")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.000E+0000%")
-Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 22-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-36: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#.#E+#00%")
-Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-33: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.0E+#%")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0E+000%")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#E+#00%")
-Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.

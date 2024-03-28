@@ -28,11 +28,11 @@ GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
 "08:03:05"
 
 >> Sum(ParseJSON("[1,2,3]"), Blank())
-Errors: Error 4-24: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-34: The function 'Sum' has some invalid arguments.
+Errors: Error 4-24: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-3: The function 'Sum' has some invalid arguments.
 
 // Arity error code path for Sum
 >> Sum(ParseJSON("[1,2,3]"))
-Errors: Error 4-24: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-25: The function 'Sum' has some invalid arguments.
+Errors: Error 4-24: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-3: The function 'Sum' has some invalid arguments.
 
 // Scalar version of Sum
 >> Sum([ParseJSON("1"), ParseJSON("2"), ParseJSON("3")], Value)
