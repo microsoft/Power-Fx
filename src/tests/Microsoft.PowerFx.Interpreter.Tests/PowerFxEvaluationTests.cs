@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.Tests.Helpers;
@@ -80,11 +82,154 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return (symbolTable.AddVariable(varName, type, mutable, varName), FormulaValue.NewBlank(type));
         }
 
+        private static readonly EnumSymbol _testYesNo = new EnumSymbol(
+                    new DName("TestYesNo"),
+                    DType.Boolean,
+                    new Dictionary<string, object>()
+                    {
+                        { "Yes", true },
+                        { "No", false }
+                    });
+
+        private static readonly EnumSymbol _testYeaNay = new EnumSymbol(
+                    new DName("TestYeaNay"),
+                    DType.Boolean,
+                    new Dictionary<string, object>()
+                    {
+                        { "Yea", true },
+                        { "Nay", false }
+                    });
+
+        private static readonly EnumSymbol _testBlueRampColors = new EnumSymbol(
+                    new DName("TestBlueRamp"),
+                    DType.Color,
+                    new Dictionary<string, object>()
+                    {
+                        { "Blue100", (double)0xFF0000FFU },
+                        { "Blue75", (double)0xFF3F3FFFU },
+                        { "Blue50", (double)0xFF7F7FFFU },
+                        { "Blue25", (double)0xFFBFBFFFU },
+                        { "Blue0", (double)0xFFFFFFFFU }
+                    });
+
+        private static readonly EnumSymbol _testRedRampColors = new EnumSymbol(
+                    new DName("TestRedRamp"),
+                    DType.Color,
+                    new Dictionary<string, object>()
+                    {
+                        { "Red100", (double)0xFFFF0000U },
+                        { "Red75", (double)0xFFFF3F3FU },
+                        { "Red50", (double)0xFFFF7F7FU },
+                        { "Red25", (double)0xFFFFBFBFU },
+                        { "Red0", (double)0xFFFFFFFFU }
+                    });
+
         private static PowerFxConfig AllEnumsSetup(PowerFxConfig config)
         {
-            return PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet(), config.Features);
+            var store = new EnumStoreBuilder().WithDefaultEnums();
+           
+            // There are no built in enums with boolean values and only one with colors.  Adding these for testing purposes.
+            store.TestOnly_WithCustomEnum(_testYesNo);
+            store.TestOnly_WithCustomEnum(_testYeaNay);
+            store.TestOnly_WithCustomEnum(_testBlueRampColors);
+            store.TestOnly_WithCustomEnum(_testRedRampColors);
+
+            var newConfig = PowerFxConfig.BuildWithEnumStore(store, new TexlFunctionSet(), config.Features);
+
+            // There are likewise no built in functions that take Boolean backed option sets as parameters
+            newConfig.AddFunction(new TestXORBooleanFunction());
+            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORYesNoFunction() : new Boolean_TestXORYesNoFunction());
+            newConfig.AddFunction(new TestColorInvertFunction());
+            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestColorBlueRampInvertFunction() : new Color_TestColorBlueRampInvertFunction());
+
+            return newConfig;
         }
-       
+
+        private class TestXORBooleanFunction : ReflectionFunction
+        {
+            public TestXORBooleanFunction()
+                : base("TestXORBoolean", FormulaType.Boolean, new[] { FormulaType.Boolean, FormulaType.Boolean })
+            {
+            }
+
+            public FormulaValue Execute(BooleanValue x, BooleanValue y)
+            {
+                return BooleanValue.New(x.Value ^ y.Value);
+            }
+        }
+
+        private class TestColorInvertFunction : ReflectionFunction
+        {
+            public TestColorInvertFunction()
+                : base("TestColorInvert", FormulaType.Color, new[] { FormulaType.Color })
+            {
+            }
+
+            public FormulaValue Execute(ColorValue x)
+            {
+                return ColorValue.New(System.Drawing.Color.FromArgb(x.Value.A, x.Value.R ^ 0xff, x.Value.G ^ 0xff, x.Value.B ^ 0xff));
+            }
+        }
+
+        private class STE_TestColorBlueRampInvertFunction : ReflectionFunction
+        {
+            public STE_TestColorBlueRampInvertFunction()
+                : base("TestColorBlueRampInvert", FormulaType.Color, new[] { _testBlueRampColors.FormulaType })
+            {
+            }
+
+            public FormulaValue Execute(OptionSetValue x)
+            {
+                var value = Convert.ToUInt32((double)x.ExecutionValue);
+                var c = Color.FromArgb(
+                            (byte)((value >> 24) & 0xFF),
+                            (byte)((value >> 16) & 0xFF),
+                            (byte)((value >> 8) & 0xFF),
+                            (byte)(value & 0xFF));
+                return ColorValue.New(Color.FromArgb(c.A, c.R ^ 0xff, c.G ^ 0xff, c.B ^ 0xff));
+            }
+        }
+
+        private class Color_TestColorBlueRampInvertFunction : ReflectionFunction
+        {
+            public Color_TestColorBlueRampInvertFunction()
+                : base("TestColorBlueRampInvert", FormulaType.Color, new[] { FormulaType.Color })
+            {
+            }
+
+            public FormulaValue Execute(ColorValue x)
+            {
+                return ColorValue.New(Color.FromArgb(x.Value.A, x.Value.R ^ 0xff, x.Value.G ^ 0xff, x.Value.B ^ 0xff));
+            }
+        }
+
+        private class STE_TestXORYesNoFunction : ReflectionFunction
+        {
+            public STE_TestXORYesNoFunction()
+                : base("TestXORYesNo", FormulaType.Boolean, new[] { _testYesNo.FormulaType, _testYesNo.FormulaType })
+            {
+            }
+
+            public FormulaValue Execute(OptionSetValue x, OptionSetValue y)
+            {
+                return BooleanValue.New((bool)x.ExecutionValue ^ (bool)y.ExecutionValue);
+            }
+        }
+
+        // Reflection functions don't know how to coerce an enum to a Boolean, if STE is turned off
+        private class Boolean_TestXORYesNoFunction : ReflectionFunction
+        {
+            public Boolean_TestXORYesNoFunction()
+                : base("TestXORYesNo", FormulaType.Boolean, new[] { FormulaType.Boolean, FormulaType.Boolean })
+            {
+            }
+
+            public FormulaValue Execute(BooleanValue x, BooleanValue y)
+            {
+                return BooleanValue.New(x.Value ^ y.Value);
+            }
+        }
+
         private static object OptionSetTestSetup1(PowerFxConfig config, SymbolTable symbolTable)
         {
             OptionSet optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
@@ -419,41 +564,34 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 if (iSetup.HandlerNames != null && iSetup.HandlerNames.Any())
                 {
-                    try
+                    // Execute actions in order
+                    foreach (var k in iSetup.HandlerNames.Select(hn => SetupHandlers[hn]).OrderBy(kvp => kvp.initPfxConfig != null ? 1 : kvp.updatePfxConfig != null ? 2 : kvp.parameters != null ? 3 : 4))
                     {
-                        // Execute actions in order
-                        foreach (var k in iSetup.HandlerNames.Select(hn => SetupHandlers[hn]).OrderBy(kvp => kvp.initPfxConfig != null ? 1 : kvp.updatePfxConfig != null ? 2 : kvp.parameters != null ? 3 : 4))
+                        if (k.initPfxConfig != null)
                         {
-                            if (k.initPfxConfig != null)
-                            {
-                                config = k.initPfxConfig(config);
-                            }
-
-                            object o = k.updatePfxConfig?.Invoke(config, symbolTable);
-
-                            if (o is List<(ISymbolSlot slot, FormulaValue value)> slotList)
-                            {
-                                slots.AddRange(slotList);
-                            }
-
-                            if (k.parameters != null)
-                            {
-                                parameters = k.parameters(o);
-                            }
-
-                            if (k.configureEngine != null)
-                            {
-                                engine ??= new RecalcEngine(config);
-                                k.configureEngine(engine, NumberIsFloat);
-                            }                                                     
+                            config = k.initPfxConfig(config);
                         }
 
-                        engine ??= new RecalcEngine(config);
+                        object o = k.updatePfxConfig?.Invoke(config, symbolTable);
+
+                        if (o is List<(ISymbolSlot slot, FormulaValue value)> slotList)
+                        {
+                            slots.AddRange(slotList);
+                        }
+
+                        if (k.parameters != null)
+                        {
+                            parameters = k.parameters(o);
+                        }
+
+                        if (k.configureEngine != null)
+                        {
+                            engine ??= new RecalcEngine(config);
+                            k.configureEngine(engine, NumberIsFloat);
+                        }                                                     
                     }
-                    catch (Exception ex)
-                    {
-                        throw new SetupHandlerNotFoundException("Failed in setup handler", ex);
-                    }
+
+                    engine ??= new RecalcEngine(config);
                 }
                 else
                 {
@@ -552,6 +690,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         // Serialization test. Serialized expression must produce an identical result.
                         options.NumberIsFloat = true;
                         newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                    }
+                    else if (e.Message.Contains("Name isn't valid. 'CalculatedOptionSetValue' isn't recognized."))
+                    {
+                        // This will only be displayed if the result of a formula is an option set value, for example
+                        // "StartOfWeek.Tuesday" on a line by itself.  In the case, the line below effectively skips the
+                        // deserialization test as we can't serialize that value, it is a runtime only value.
+                        newValueDeserialized = newValue;
                     }
                     else
                     {

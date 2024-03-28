@@ -3,9 +3,6 @@
 >> MatchAll("Hello", "\w")
 Table({FullMatch:"H",StartMatch:1,SubMatches:Table()},{FullMatch:"e",StartMatch:2,SubMatches:Table()},{FullMatch:"l",StartMatch:3,SubMatches:Table()},{FullMatch:"l",StartMatch:4,SubMatches:Table()},{FullMatch:"o",StartMatch:5,SubMatches:Table()})
 
->> MatchAll("Hello", "llo", "c")
-Table({FullMatch:"llo",StartMatch:3,SubMatches:Table()})
-
 >> MatchAll("Hello", "llo", MatchOptions.Complete)
 Table()
 

@@ -76,7 +76,17 @@ namespace Microsoft.PowerFx.Functions
             if (args[1] is NumberValue number)
             {
                 delta = number;
-                timeUnit = ((StringValue)args[2]).Value.ToLowerInvariant();
+                switch (args[2])
+                {
+                    case StringValue sv:
+                        timeUnit = ((StringValue)args[2]).Value.ToLowerInvariant();
+                        break;
+                    case OptionSetValue osv:
+                        timeUnit = ((string)((OptionSetValue)args[2]).ExecutionValue).ToLowerInvariant();
+                        break;
+                    default:
+                        return CommonErrors.RuntimeTypeMismatch(args[2].IRContext);
+                }
             }
             else if (args[1] is TimeValue time)
             {
@@ -272,7 +282,18 @@ namespace Microsoft.PowerFx.Functions
 
             Contract.Assert(start.Kind == end.Kind);
 
-            var timeUnit = ((StringValue)args[2]).Value.ToLowerInvariant();
+            string timeUnit;
+            switch (args[2])
+            {
+                case StringValue sv:
+                    timeUnit = ((StringValue)args[2]).Value.ToLowerInvariant();
+                    break;
+                case OptionSetValue osv:
+                    timeUnit = ((string)((OptionSetValue)args[2]).ExecutionValue).ToLowerInvariant();
+                    break;
+                default:
+                    return CommonErrors.RuntimeTypeMismatch(args[2].IRContext);
+            }
 
             // When converting to months, quarters or years, we don't use the time difference
             // and applying changes to map time to UTC could lead to weird results depending on the local time zone
@@ -684,8 +705,19 @@ namespace Microsoft.PowerFx.Functions
             var timeZoneInfo = runner.TimeZoneInfo;
             var arg0 = runner.GetNormalizedDateTime(args[0]);
             var dow = arg0.DayOfWeek;
-            var startOfWeek = Math.Floor((args[1] as NumberValue).Value);
+
+            double startOfWeek;
+            switch (args[1])
+            {
+                case NumberValue nv:
+                    startOfWeek = Math.Floor((args[1] as NumberValue).Value);
+                    break;
+                case OptionSetValue osv:
+                    startOfWeek = Math.Floor((double)(args[1] as OptionSetValue).ExecutionValue);
+                    break;
+                default:
                     return CommonErrors.RuntimeTypeMismatch(args[1].IRContext);
+            }
 
             if (startOfWeek <= 0 || startOfWeek > 17 || (startOfWeek > 3 && startOfWeek < 11))
             {
@@ -848,17 +880,16 @@ namespace Microsoft.PowerFx.Functions
 
         private static double GetDoubleFromFormulaValue(FormulaValue fv, double defaultDouble = 0)
         {
-            if (fv is NumberValue numberValue)
+            switch (fv)
             {
-                return numberValue.Value;
-            }
-            else if (fv is DecimalValue decimalValue)
-            {
-                return (double)decimalValue.Value;
-            }
-            else
-            {
-                return defaultDouble;
+                case NumberValue nv:
+                    return nv.Value;
+                case DecimalValue dv:
+                    return (double)dv.Value;
+                case OptionSetValue osv:
+                    return (double)osv.ExecutionValue;
+                default:
+                    return defaultDouble;
             }
         }
     }

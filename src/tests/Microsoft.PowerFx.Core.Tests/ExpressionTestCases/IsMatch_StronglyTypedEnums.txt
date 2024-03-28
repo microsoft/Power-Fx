@@ -1,0 +1,54 @@
+﻿#SETUP: RegEx,StronglyTypedBuiltinEnums
+
+>> IsMatch("Hi", "H", MatchOptions.EndsWith )
+false
+
+>> IsMatch("Hi", "H", MatchOptions.BeginsWith)
+true
+
+>> IsMatch("Hi", "i", MatchOptions.EndsWith)
+true
+
+>> IsMatch("Hi", "I", MatchOptions.EndsWith)
+false
+
+>> IsMatch("Hi", "I", MatchOptions.EndsWith & MatchOptions.IgnoreCase)
+true
+
+>> IsMatch("Foo", "J(")
+Error({Kind:ErrorKind.BadRegex})
+
+// Dangerous Regex, will timeout (should take >2h on a fast CPU)
+>> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$")
+Error({Kind:ErrorKind.Timeout})
+
+>> IsMatch("Hi", "Hi", "foo")
+Errors: Error 20-25: Invalid argument type (Text). Expecting a Enum (MatchOptions) value instead.
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}")
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}")
+false
+
+// With Icelandic Eth
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}")
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}", MatchOptions.Contains)
+true
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}", MatchOptions.Contains)
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}", MatchOptions.Contains)
+true
+
+>> IsMatch("Foo", 17)
+Errors: Error 15-17: Invalid argument type (Decimal). Expecting a Enum (Match) value instead.
+
+>> IsMatch("Foo", 1/0)
+Errors: Error 16-17: Invalid argument type (Decimal). Expecting a Enum (Match) value instead.
+
+>> IsMatch("28", 28)
+Errors: Error 14-16: Invalid argument type (Decimal). Expecting a Enum (Match) value instead.
