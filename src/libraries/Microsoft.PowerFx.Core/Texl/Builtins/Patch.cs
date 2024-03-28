@@ -436,11 +436,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             return base.GetSignatures(arity);
         }
-
-        internal override IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
-        {
-            return base.CreateIRCallNode(node, context, args, scope);
-        }
     }
 
     // Patch(DS, record_with_keys_and_updates)

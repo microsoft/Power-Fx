@@ -112,7 +112,13 @@ namespace Microsoft.PowerFx.Types
         }
 
         /// <summary>
-        /// Returns only the actual fields present in the record. This prevents fields from wrappers.
+        /// This prevents fields that are not defined in the record, but have implicit blank values because of the type, from being returned.
+        /// GetFieldsAsync will return all fields based on the record type. For instance, the expression Table({a:1},{b:"1"}) will return *[a:w, b:s].
+        /// Now, if we traverse the records and iterate using GetFieldsAsync, we will get both a and b fields, which will return Blank() depending on the record.This could potentially update unwanted fields in the datasource to Blank().
+        /// Example (bug):
+        /// Set(t1, Table({ a: 1,b: 1,c: 1},{a:2,b:2,c:2}))
+        /// Patch(t1, Table({ a: 1, b: 99}))
+        /// t1 => Table({ a: 1,b: 99,c: Blank()},{ a: 2,b: 2,c: 2}).
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>

@@ -139,6 +139,18 @@ namespace Microsoft.PowerFx.Types
             return DValue<RecordValue>.Of(NotImplemented(IRContext));
         }
 
+        /// <summary>
+        /// Used to append a record to a table when baseRecord contains the primary key and updateRecord contains the fields to update.
+        /// </summary>
+        /// <param name="baseRecord"></param>
+        /// <param name="updateRecord"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue baseRecord, RecordValue updateRecord, CancellationToken cancellationToken)
+        {
+            return await AppendAsync(updateRecord, cancellationToken).ConfigureAwait(false);
+        }
+
         public virtual async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancellationToken)
         {
             return DValue<BooleanValue>.Of(NotImplemented(IRContext));

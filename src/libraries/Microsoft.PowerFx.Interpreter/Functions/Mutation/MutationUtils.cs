@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Interpreter
         }
 
         /// <summary>
-        /// Merges all records starting from startIndex in args into a single record. Collisions are resolved by last-one-wins.
+        /// Merges all records into a single record. Collisions are resolved by last-one-wins.
         /// </summary>
         /// <param name="records"></param>
         /// <returns></returns>

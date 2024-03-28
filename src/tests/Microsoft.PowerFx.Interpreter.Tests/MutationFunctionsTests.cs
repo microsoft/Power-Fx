@@ -391,13 +391,39 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]        
-        [InlineData("Patch(t1, {accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),name:\"Mary Doe\"});First(t1).name", "Mary Doe")]
-        [InlineData("Patch(t1, {accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),address1_city:\"Seattle\"});First(t1).name", "John Doe")]
-        [InlineData("Patch(t1, {accountid:GUID(\"00000000-0000-0000-0000-000000000003\"),name:\"Microsoft Corporation\",address1_city:\"Seattle\"});Last(t1).name", "Microsoft Corporation")]
-        [InlineData("Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),name:\"Emily Doe\"},{accountid:GUID(\"00000000-0000-0000-0000-000000000002\"),name:\"Benjamin Doe\"}));Last(t1).name", "Benjamin Doe")]
-        [InlineData("Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),address1_city:\"Miami\"},{accountid:GUID(\"00000000-0000-0000-0000-000000000002\"),address1_city:\"Orlando\"}));Last(t1).name", "Sam Doe")]
-        [InlineData("Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000003\"),name:\"Microsoft Corporation\",address1_city:\"Seattle\"},{accountid:GUID(\"00000000-0000-0000-0000-000000000004\"),name:\"Bill Gates\",address1_city:\"Seattle\"}));Last(t1).name", "Bill Gates")]
-        public void MutationEntityTests(string expression, string expected)
+        [InlineData(
+            "Patch(t1, {accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),name:\"Mary Doe\"});Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "Mary Doe from Chicago,Sam Doe from New York",
+            2)]
+        [InlineData(
+            "Patch(t1, {accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),address1_city:\"Seattle\"});Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "John Doe from Seattle,Sam Doe from New York",
+            2)]
+        [InlineData(
+            "Patch(t1, {accountid:GUID(\"00000000-0000-0000-0000-000000000003\"),name:\"Microsoft Corporation\",address1_city:\"Seattle\"});Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "John Doe from Chicago,Sam Doe from New York,Microsoft Corporation from Seattle",
+            3)]
+        [InlineData(
+            "Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),name:\"Emily Doe\"},{accountid:GUID(\"00000000-0000-0000-0000-000000000002\"),name:\"Benjamin Doe\"}));Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "Emily Doe from Chicago,Benjamin Doe from New York",
+            2)]
+        [InlineData(
+            "Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),address1_city:\"Miami\"},{accountid:GUID(\"00000000-0000-0000-0000-000000000002\"),address1_city:\"Orlando\"}));Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "John Doe from Miami,Sam Doe from Orlando",
+            2)]
+        [InlineData(
+            "Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000003\"),name:\"Microsoft Corporation\",address1_city:\"Seattle\"},{accountid:GUID(\"00000000-0000-0000-0000-000000000004\"),name:\"Bill Gates\",address1_city:\"Seattle\"}));Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "John Doe from Chicago,Sam Doe from New York,Microsoft Corporation from Seattle,Bill Gates from Seattle",
+            4)]
+        [InlineData(
+            "Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000001\")},{accountid:GUID(\"00000000-0000-0000-0000-000000000002\")}), Table({name:\"Emily Doe\"},{name:\"Mary Doe\"}));Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "Emily Doe from Chicago,Mary Doe from New York",
+            2)]
+        [InlineData(
+            "Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000003\")},{accountid:GUID(\"00000000-0000-0000-0000-000000000004\")}), Table({name:\"Emily Doe\",address1_city:\"Seattle\"},{name:\"Mary Doe\",address1_city:\"Seattle\"}));Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "John Doe from Chicago,Sam Doe from New York,Emily Doe from Seattle,Mary Doe from Seattle",
+            4)]
+        public void MutationEntityTests(string expression, string expected, int count)
         {
             var engine = new RecalcEngine();
 
@@ -417,8 +443,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 new NamedValue("address1_city", FormulaValue.New("New York"))
             });
 
+            var varTableValue = new EntityTableValue(new List<RecordValue>() { record1, record2 });
+
             engine.Config.SymbolTable.EnableMutationFunctions();
-            engine.UpdateVariable("t1", new EntityTableValue(new List<RecordValue>() { record1, record2 }));
+            engine.UpdateVariable("t1", varTableValue);
 
             var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = true });
 
@@ -428,6 +456,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.IsNotType<ErrorValue>(result);
 
             Assert.Equal(expected, ((StringValue)result).Value);
+
+            Assert.Equal(count, varTableValue.Rows.Count());
         }
 
         /// <summary>
@@ -468,9 +498,48 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound()));
             }
 
+            protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var externalTabularDataSource = Type._type.AssociatedDataSources.Single() as IExternalTabularDataSource;
+
+                // TestDateSource has only one key column.
+                var keyFieldName = externalTabularDataSource.GetKeyColumns().First();
+                var keyValue = baseRecord.GetField(keyFieldName);
+
+                foreach (var row in _inner.Rows)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    var value1 = row.Value.GetField(keyFieldName);
+
+                    if (value1.TryGetPrimitiveValue(out object primaryKeyValue1) && keyValue.TryGetPrimitiveValue(out object primaryKeyValue2) && primaryKeyValue1.ToString() == primaryKeyValue2.ToString())
+                    {
+                        return await row.Value.UpdateFieldsAsync(changeRecord, cancellationToken).ConfigureAwait(false);
+                    }
+                }
+
+                return DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound()));
+            }
+
             public override Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
             {
                 return _inner.AppendAsync(record, cancellationToken);
+            }
+
+            public override Task<DValue<RecordValue>> AppendAsync(RecordValue baseRecord, RecordValue updateRecord, CancellationToken cancellationToken)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var externalTabularDataSource = Type._type.AssociatedDataSources.Single() as IExternalTabularDataSource;
+                var keyFieldName = externalTabularDataSource.GetKeyColumns().First();
+                var keyValue = baseRecord.GetField(keyFieldName);
+
+                var fields = new List<NamedValue>() { new NamedValue(keyFieldName, keyValue) };
+                fields.AddRange(updateRecord.Fields);
+
+                return _inner.AppendAsync(FormulaValue.NewRecordFromFields(fields), cancellationToken);
             }
         }
 

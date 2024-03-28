@@ -36,8 +36,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             innerServices.AddService(Features.PowerFxV1);
 
-            var function = Activator.CreateInstance(type) as IAsyncTexlFunction5;
-            var result = await function.InvokeAsync(innerServices, FormulaType.Unknown, args, CancellationToken.None).ConfigureAwait(false);
+            var function = Activator.CreateInstance(type) as IAsyncTexlFunction3;
+            var result = await function.InvokeAsync(FormulaType.Unknown, args, CancellationToken.None).ConfigureAwait(false);
 
             Assert.IsType<ErrorValue>(result);
         }

@@ -15,12 +15,10 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Patch(dataSource:*[], Record, Updates1, Updates2,…)
-    internal class PatchImpl : PatchFunction, IAsyncTexlFunction5
+    internal class PatchImpl : PatchFunction, IAsyncTexlFunction3
     {
-        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            MutationProcessUtils.ThrowIfPFxV1NotActive(runtimeServiceProvider.GetService<Features>(), "Patch");
-
             var arg0 = args[0];
 
             if (args[0] is LambdaFormulaValue arg0lazy)
@@ -57,14 +55,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // If arg1 is pure PFx record, it will return a runtime internal error.
+    // If arg1 is pure PFx record, it will return a runtime not supported error.
     // Patch(DS, record_with_keys_and_updates)
-    internal class PatchSingleRecordImpl : PatchSingleRecordFunction, IAsyncTexlFunction5
+    internal class PatchSingleRecordImpl : PatchSingleRecordFunction, IAsyncTexlFunction3
     {
-        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            MutationProcessUtils.ThrowIfPFxV1NotActive(runtimeServiceProvider.GetService<Features>(), "Patch");
-
             var arg0 = args[0];
 
             if (args[0] is LambdaFormulaValue arg0lazy)
@@ -97,12 +93,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // Patch(DS, table_of_rows, table_of_updates)
-    internal class PatchAggregateImpl : PatchAggregateFunction, IAsyncTexlFunction5
+    internal class PatchAggregateImpl : PatchAggregateFunction, IAsyncTexlFunction3
     {
-        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            MutationProcessUtils.ThrowIfPFxV1NotActive(runtimeServiceProvider.GetService<Features>(), "Patch");
-
             var arg0 = args[0];
 
             if (args[0] is LambdaFormulaValue arg0lazy)
@@ -159,7 +153,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // If the base record is not found, then append update record.
                 if (result.IsError && result.Error is ErrorValue errorvalue && errorvalue.Errors.Any(err => err.Kind == ErrorKind.NotFound))
                 {
-                    return (await tableValue.AppendAsync(updatesRecord.Value, cancellationToken).ConfigureAwait(false)).ToFormulaValue();
+                    result = await tableValue.AppendAsync(baseRecord.Value, updatesRecord.Value, cancellationToken).ConfigureAwait(false);
                 }
 
                 if (result.IsError)
@@ -174,14 +168,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // If arg1 is pure PFx record, it will return a runtime internal error.
+    // If arg1 is pure PFx record, it will return a runtime not supported error.
     // Patch(DS, table_of_rows_with_updates)
-    internal class PatchAggregateSingleTableImpl : PatchAggregateSingleTableFunction, IAsyncTexlFunction5
+    internal class PatchAggregateSingleTableImpl : PatchAggregateSingleTableFunction, IAsyncTexlFunction3
     {
-        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            MutationProcessUtils.ThrowIfPFxV1NotActive(runtimeServiceProvider.GetService<Features>(), "Patch");
-
             var arg0 = args[0];
 
             if (args[0] is LambdaFormulaValue arg0lazy)
@@ -234,22 +226,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return new InMemoryTableValue(IRContext.NotInSource(tableValue.Type), resultRows);
-        }
-    }
-
-    internal class MutationProcessUtils
-    {
-        public static void ThrowIfPFxV1NotActive(Features features, string functionName)
-        {
-            if (features == null)
-            {
-                throw new ArgumentNullException(nameof(features));
-            }
-
-            if (!features.PowerFxV1CompatibilityRules)
-            {
-                throw new InvalidOperationException($"{functionName} function can only be executed if PowerFx V1 feature is active.");
-            }
         }
     }
 }

@@ -1134,7 +1134,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue PatchRecord(IRContext irContext, FormulaValue[] args)
         {
-            return MutationUtils.MergeRecords(args).ToFormulaValue();
+            return CompileTimeTypeWrapperRecordValue.AdjustType((RecordType)FormulaType.Build(irContext.ResultType._type), (RecordValue)MutationUtils.MergeRecords(args).ToFormulaValue());
         }
 
         private static async Task<DValue<RecordValue>> LazyFilterRowAsync(
