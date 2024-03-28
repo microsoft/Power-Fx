@@ -131,9 +131,7 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
 
             if (!HasErrors(token, severity))
             {
-                var err = new TexlError(token, severity, errKey, args);
-                CollectionUtils.Add(ref _errors, err);
-                return err;
+                Error(severity, token, errKey, args);
             }
 
             return null;
@@ -157,12 +155,27 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             return Error(DefaultSeverity, node, errKey, args);
         }
 
+        public TexlError Error(Token token, ErrorResourceKey errKey, params object[] args)
+        {
+            return Error(DefaultSeverity, token, errKey, args);
+        }
+
         public TexlError Error(DocumentErrorSeverity severity, TexlNode node, ErrorResourceKey errKey, params object[] args)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(args);
 
             var err = new TexlError(node, severity, errKey, args);
+            CollectionUtils.Add(ref _errors, err);
+            return err;
+        }
+
+        public TexlError Error(DocumentErrorSeverity severity, Token token, ErrorResourceKey errKey, params object[] args)
+        {
+            Contracts.AssertValue(token);
+            Contracts.AssertValue(args);
+
+            var err = new TexlError(token, severity, errKey, args);
             CollectionUtils.Add(ref _errors, err);
             return err;
         }

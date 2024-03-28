@@ -209,7 +209,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 "12345-6789"
 
 >> Text( "123456789", "00000-0000" )
-Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 19-31: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 19-31: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 // strings should pass straight through
 
@@ -220,10 +220,10 @@ Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 19-3
 "1234567890123456789012345678912345"
 
 >> Text( ".1234567890123456789012345678912345", "0.0000000000000000000000000000000e00" )
-Errors: Error 0-85: The function 'Text' has some invalid arguments.|Warning 45-83: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 45-83: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text( ".1234567890123456789012345678912345", "00.0000000000000000000000000000000000%" )
-Errors: Error 0-87: The function 'Text' has some invalid arguments.|Warning 45-85: The second argument of the 'Text' function is only supported for numeric and date/time values.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 45-85: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text( ParseJSON("1.234567890123456789012345678"), "0.000000000000e00" )
 "1.234567890123e00"

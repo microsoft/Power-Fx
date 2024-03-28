@@ -395,7 +395,7 @@
 "1983-06-03 00:28:07.500"
 
 >> Text(1, "00.00 dd-mm-yyyy")
-Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 8-26: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 8-26: Incorrect format specifier for 'Text'.
 
 >> Text(Time(2, 53, 9, 3), "mm:ss.00") 
 "53:09.00"

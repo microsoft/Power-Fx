@@ -64,10 +64,10 @@ If(true, {test:1}, "Void value (result of the expression can't be used).")
 If(true, {test:1}, "Void value (result of the expression can't be used).")
 
 >> If(true, 1, x)
-Errors: Error 12-13: Name isn't valid. 'x' isn't recognized.|Error 0-14: The function 'If' has some invalid arguments.
+Errors: Error 12-13: Name isn't valid. 'x' isn't recognized.|Error 0-2: The function 'If' has some invalid arguments.
 
 >> If(true, x, 1)
-Errors: Error 9-10: Name isn't valid. 'x' isn't recognized.|Error 0-14: The function 'If' has some invalid arguments.
+Errors: Error 9-10: Name isn't valid. 'x' isn't recognized.|Error 0-2: The function 'If' has some invalid arguments.
 
 // ************************************** FIRST CONDITION TRUE CASES **************************************
 

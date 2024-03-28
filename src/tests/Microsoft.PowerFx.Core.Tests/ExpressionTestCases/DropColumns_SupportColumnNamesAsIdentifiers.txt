@@ -45,11 +45,11 @@ Table({a:1,b:2},{a:3,b:4})
 Table({a:8,b:2},{a:64,b:4})
 
 >> DropColumns(Table({a:1,b:2},{a:3,b:4}), a, a)
-Errors: Error 43-44: The specified column 'a' does not exist. The column with the most similar name is 'b'.|Error 0-45: The function 'DropColumns' has some invalid arguments.
+Errors: Error 43-44: The specified column 'a' does not exist. The column with the most similar name is 'b'.|Error 0-11: The function 'DropColumns' has some invalid arguments.
 
 // Record
 >> DropColumns({a:1,b:2}, a, a)
-Errors: Error 26-27: The specified column 'a' does not exist. The column with the most similar name is 'b'.|Error 0-28: The function 'DropColumns' has some invalid arguments.
+Errors: Error 26-27: The specified column 'a' does not exist. The column with the most similar name is 'b'.|Error 0-11: The function 'DropColumns' has some invalid arguments.
 
 >> Last(DropColumns(Table({a:1,b:2},{a:3,b:4}), b)).a
 3
@@ -58,15 +58,15 @@ Errors: Error 26-27: The specified column 'a' does not exist. The column with th
 Table({},{},{})
 
 >> DropColumns([1, 2], 3)
-Errors: Error 20-21: Expected identifier name|Error 0-22: The function 'DropColumns' has some invalid arguments.
+Errors: Error 20-21: Expected identifier name|Error 0-11: The function 'DropColumns' has some invalid arguments.
 
 // Record
 >> DropColumns({Value:1}, 3)
-Errors: Error 23-24: Expected identifier name|Error 0-25: The function 'DropColumns' has some invalid arguments.
+Errors: Error 23-24: Expected identifier name|Error 0-11: The function 'DropColumns' has some invalid arguments.
 
 >> DropColumns([1, 2], z)
-Errors: Error 20-21: The specified column 'z' does not exist.|Error 0-22: The function 'DropColumns' has some invalid arguments.
+Errors: Error 20-21: The specified column 'z' does not exist.|Error 0-11: The function 'DropColumns' has some invalid arguments.
 
 // Record
 >> DropColumns({Value:1}, z)
-Errors: Error 23-24: The specified column 'z' does not exist.|Error 0-25: The function 'DropColumns' has some invalid arguments.
+Errors: Error 23-24: The specified column 'z' does not exist.|Error 0-11: The function 'DropColumns' has some invalid arguments.

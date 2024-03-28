@@ -68,6 +68,6 @@ Error({Kind:ErrorKind.Div0})
 29
 
 >> Len([])
-Errors: Error 0-7: The function 'Len' has some invalid arguments.|Error 4-6: Invalid schema, expected a one-column table.
+Errors: Error 0-3: The function 'Len' has some invalid arguments.|Error 4-6: Invalid schema, expected a one-column table.
 
 

@@ -17,7 +17,7 @@ Table({Value:false},{Value:Error({Kind:ErrorKind.InvalidArgument})})
 Table({Value:false},{Value:true})
 
 >> Boolean([])
-Errors: Error 0-11: The function 'Boolean' has some invalid arguments.|Error 8-10: Invalid schema, expected a one-column table.
+Errors: Error 0-7: The function 'Boolean' has some invalid arguments.|Error 8-10: Invalid schema, expected a one-column table.
 
 >> Boolean([false])
 Table({Value:false})

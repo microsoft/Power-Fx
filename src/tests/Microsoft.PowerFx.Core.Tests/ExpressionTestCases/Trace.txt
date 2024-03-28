@@ -37,7 +37,7 @@ Errors: Error 72-116: The 'trace_options' parameter to the Trace function must b
 Error({Kind:ErrorKind.Div0})
 
 >> Trace("test2", TraceSeverity.Critical, Float(1/0), TraceOptions.None) ; traceRecord;
-Errors: Error 39-49: Invalid argument type (Number). Expecting a Record value instead.|Error 0-69: The function 'Trace' has some invalid arguments.
+Errors: Error 39-49: Invalid argument type (Number). Expecting a Record value instead.|Error 0-5: The function 'Trace' has some invalid arguments.
 
 >> Trace(Blank(), TraceSeverity.Critical, Blank(), TraceOptions.None) ; traceRecord;
 {customRecord:"{}",message:"",severity:-1}
