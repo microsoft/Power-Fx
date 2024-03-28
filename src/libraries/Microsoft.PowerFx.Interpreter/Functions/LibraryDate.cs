@@ -685,6 +685,7 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = runner.GetNormalizedDateTime(args[0]);
             var dow = arg0.DayOfWeek;
             var startOfWeek = Math.Floor((args[1] as NumberValue).Value);
+                    return CommonErrors.RuntimeTypeMismatch(args[1].IRContext);
 
             if (startOfWeek <= 0 || startOfWeek > 17 || (startOfWeek > 3 && startOfWeek < 11))
             {
