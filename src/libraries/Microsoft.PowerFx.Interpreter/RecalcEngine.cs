@@ -394,16 +394,18 @@ namespace Microsoft.PowerFx
         /// <param name="onUpdate">Function to be called when update is triggered.</param>
         public void AddUserDefinitions(string script, CultureInfo parseCulture = null, Action<string, FormulaValue> onUpdate = null)
         {
-            var userDefinitionResult = UserDefinitions.Process(script, parseCulture, features: Config.Features);
+            var userDefinitionResult = UserDefinitions.Process(script, parseCulture, features: Config.Features, _definedTypeSymbolTable);
+
+            _definedTypeSymbolTable.AddTypes(userDefinitionResult.DefinedTypeSymbolTable.DefinedTypes);
 
             // Compose will handle null symbols
-            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions);
+            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, _definedTypeSymbolTable);
             var sb = new StringBuilder();
 
             foreach (var udf in userDefinitionResult.UDFs)
             {
                 Config.SymbolTable.AddFunction(udf);
-                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
+                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default, features: Config.Features);
 
                 List<TexlError> errors = new List<TexlError>();
 

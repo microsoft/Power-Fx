@@ -62,5 +62,10 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
             return typeName != null;
         }
+
+        bool INameResolver.LookupType(DName name, out NameLookupInfo nameInfo) 
+        {
+            return TryLookup(name, out nameInfo);
+        }
     }
 }

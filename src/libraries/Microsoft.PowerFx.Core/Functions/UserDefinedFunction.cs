@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App;
@@ -20,6 +22,7 @@ using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Core.Functions
@@ -56,7 +59,14 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             this._args = args;
             this._isImperative = isImperative;
+            this.UdfBody = body;
+        }
 
+        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes)
+        : base(DPath.Root, functionName, functionName, SG(functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, argTypes)
+        {
+            this._args = args;
+            this._isImperative = isImperative;
             this.UdfBody = body;
         }
 
@@ -175,7 +185,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(binderGlue));
             }
 
-            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args));
+            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), _args.Select(a => a.TypeIdent.GetFormulaType(nameResolver)._type).ToArray());
             binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
 
             return func;
@@ -212,6 +222,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
             public TexlFunctionSet Functions => _globalNameResolver.Functions;
 
+            public IEnumerable<KeyValuePair<string, FormulaType>> DefinedTypes => _globalNameResolver.DefinedTypes;
+
             public bool SuggestUnqualifiedEnums => _globalNameResolver.SuggestUnqualifiedEnums;
 
             public bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
@@ -219,7 +231,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 // lookup in the local scope i.e., function params & body and then look in global scope.
                 if (_args.TryGetValue(name, out var value))
                 {
-                    var type = value.TypeIdent.GetFormulaType()._type;
+                    var type = value.TypeIdent.GetFormulaType(_globalNameResolver)._type;
                     nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, value.ArgIndex, value.NameIdent.Name));
 
                     return true;
@@ -237,6 +249,11 @@ namespace Microsoft.PowerFx.Core.Functions
             public IEnumerable<TexlFunction> LookupFunctions(DPath theNamespace, string name, bool localeInvariant = false)
             {
                return _globalNameResolver.LookupFunctions(theNamespace, name, localeInvariant);
+            }
+
+            public bool LookupType(DName name, out NameLookupInfo nameInfo)
+            {
+                return _globalNameResolver.LookupType(name, out nameInfo);
             }
 
             public IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace)

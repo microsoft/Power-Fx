@@ -208,12 +208,12 @@ namespace Microsoft.PowerFx
             // Phase 1: Side affects are not allowed.
             var options = new ParserOptions() 
             { 
-                AllowsSideEffects = false, 
+                AllowsSideEffects = false,
                 Culture = parseCulture ?? CultureInfo.InvariantCulture 
             };
             var sb = new StringBuilder();
 
-            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult);
+            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult, Features.PowerFxV1);
 
             if (userDefinitionResult.HasErrors)
             {
@@ -233,7 +233,7 @@ namespace Microsoft.PowerFx
             foreach (var udf in userDefinitionResult.UDFs)
             {
                 AddFunction(udf);
-                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
+                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default, features: Features.PowerFxV1);
 
                 List<TexlError> errors = new List<TexlError>();
 

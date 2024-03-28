@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
@@ -61,6 +62,8 @@ namespace Microsoft.PowerFx
         private TexlFunctionSet _nameResolverFunctions = null;
         private VersionHash _cachedVersionHash = VersionHash.New();
 
+        private IEnumerable<KeyValuePair<string, FormulaType>> _definedTypes = null;
+
         // Expose the list to aide in intellisense suggestions. 
         TexlFunctionSet INameResolver.Functions
         {
@@ -82,6 +85,27 @@ namespace Microsoft.PowerFx
             }
         }
 
+        // Expose the list to aide in intellisense suggestions.
+        IEnumerable<KeyValuePair<string, FormulaType>> INameResolver.DefinedTypes
+        {
+            get
+            {
+                var current = this.VersionHash;
+                if (current != _cachedVersionHash)
+                {
+                    _definedTypes = null;
+                }
+
+                if (_definedTypes == null)
+                {
+                    _definedTypes = _symbolTables.Where(t => t is TypeSymbolTable).SelectMany(t => t.DefinedTypes);
+                    _cachedVersionHash = current;
+                }
+
+                return _definedTypes;
+            }
+        }
+
         public IEnumerable<KeyValuePair<string, NameLookupInfo>> GlobalSymbols
         {
             get
@@ -89,7 +113,7 @@ namespace Microsoft.PowerFx
                 var names = new HashSet<string>();
                 var map = new List<KeyValuePair<string, NameLookupInfo>>();
 
-                foreach (var table in _symbolTables)
+                foreach (var table in _symbolTables.Where(t => t is not TypeSymbolTable))
                 {
                     if (table is IGlobalSymbolNameResolver globalSymbolNameResolver)
                     {
@@ -132,7 +156,7 @@ namespace Microsoft.PowerFx
 
         public virtual bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
         {
-            foreach (INameResolver table in _symbolTables)
+            foreach (INameResolver table in _symbolTables.Where(t => t is not TypeSymbolTable))
             {
                 if (table.Lookup(name, out nameInfo, preferences))
                 {
@@ -185,6 +209,20 @@ namespace Microsoft.PowerFx
             }
 
             lookupInfo = default;
+            return false;
+        }
+
+        public virtual bool LookupType(DName name, out NameLookupInfo nameInfo)
+        {
+            foreach (INameResolver table in _symbolTables.Where(t => t is TypeSymbolTable))
+            {
+                if (table.LookupType(name, out nameInfo))
+                {
+                    return true;
+                }
+            }
+
+            nameInfo = default;
             return false;
         }
 

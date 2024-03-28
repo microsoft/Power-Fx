@@ -543,6 +543,40 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Fact]
+        public void DefTypeTests()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true
+            };
+            recalcEngine.AddUserDefinitions("People = Type([{Age: Number}]);countMinors(p: People): Number = CountRows(Filter(p, Age < 18)); createUser(a: Number): People = [{Age: a}];", CultureInfo.InvariantCulture);
+            recalcEngine.AddUserDefinitions("NWrap = Type({n: Number});getN(p: NWrap): Number = p.n;", CultureInfo.InvariantCulture);
+            Assert.Equal(1.0, recalcEngine.Eval("countMinors([{Age: 2}])").ToObject());
+            Assert.Equal(2.0, recalcEngine.Eval("getN({n: 2})").ToObject());
+        }
+
+        [Fact]
+        public void DefTypeTests2()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true
+            };
+            recalcEngine.AddUserDefinitions("Person = Type({Id: MyNumber, Age: Number});MyNumber = Type(Number);", CultureInfo.InvariantCulture);
+            Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(" X = Type(Y); Y = Type(X);", CultureInfo.InvariantCulture));
+            Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(" Z = Type([{a: {b: Z}}]);", CultureInfo.InvariantCulture));
+            recalcEngine.AddUserDefinitions("createUser(id:Number, a: Number): Person = {Id:id, Age: a};", CultureInfo.InvariantCulture);
+
+            Assert.Equal(42.0, recalcEngine.Eval("createUser(1, 42).Age").ToObject());
+        }
+
         [Theory]
         [InlineData("foo(x: Number, y:Number):Number = x + y;", "foo(1,2)", 3.0)]
         [InlineData("foo(x: Number, y:Number):Number = x - Abs(y);", "foo(myArg,1)", 9.0)]
