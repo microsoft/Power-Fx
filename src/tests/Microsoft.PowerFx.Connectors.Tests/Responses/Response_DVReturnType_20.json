@@ -1,0 +1,58 @@
+{
+  "value": [
+    {
+      "defaultStatus": 1,
+      "invariantName": "Active",
+      "value": 0,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Active",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "1d41b506-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Active",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "1d41b506-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "defaultStatus": 2,
+      "invariantName": "Inactive",
+      "value": 1,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Inactive",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "1f41b506-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Inactive",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "1f41b506-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    }
+  ]
+}

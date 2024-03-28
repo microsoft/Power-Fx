@@ -1,0 +1,304 @@
+{
+  "value": [
+    {
+      "value": 1,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Competitor",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "6c54c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Competitor",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "6c54c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 2,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Consultant",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "6e54c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Consultant",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "6e54c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 3,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Customer",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7054c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Customer",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7054c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 4,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Investor",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7254c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Investor",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7254c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 5,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Partner",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7454c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Partner",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7454c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 6,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Influencer",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7654c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Influencer",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7654c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 7,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Press",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7854c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Press",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7854c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 8,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Prospect",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7a54c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Prospect",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7a54c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 9,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Reseller",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7c54c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Reseller",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7c54c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 10,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Supplier",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7e54c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Supplier",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7e54c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 11,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Vendor",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "8054c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Vendor",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "8054c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 12,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Other",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "8254c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Other",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "8254c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    }
+  ]
+}

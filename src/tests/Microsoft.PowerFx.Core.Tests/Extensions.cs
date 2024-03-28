@@ -6,8 +6,10 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Tests;
@@ -34,9 +36,14 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         public static string ToStringWithDisplayNames(this FormulaType ftype)
-        {
-            var dtype = ftype._type;
+        {            
             var sb = new StringBuilder();
+            sb.AppendToWithDisplayNames(ftype._type);
+            return sb.ToString();
+        }
+
+        internal static string AppendToWithDisplayNames(this StringBuilder sb, DType dtype)
+        {                      
             sb.Append(DType.MapKindToStr(dtype.Kind));
 
             switch (dtype.Kind)
@@ -52,9 +59,40 @@ namespace Microsoft.PowerFx.Core.Tests
                 case DKind.Enum:
                     AppendEnumType(sb, dtype.ValueTree, dtype.EnumSuperkind, dtype.DisplayNameProvider);
                     break;
+                case DKind.OptionSetValue:
+                    AppendOptionSetValue(sb, dtype.OptionSetInfo);
+                    break;
             }
-             
+
             return sb.ToString();
+        }
+
+        private static void AppendOptionSetValue(StringBuilder sb, IExternalOptionSet optionSet)
+        {
+            if (optionSet is EnumSymbol es)
+            {
+                sb.Append('(');
+                bool first = true;
+
+                foreach (DName name in es.OptionNames)
+                {
+                    if (!first)
+                    {
+                        sb.Append(',');
+                    }
+                    
+                    first = false;                    
+
+                    sb.Append(TexlLexer.EscapeName(name.Value));
+                    if (es.TryLookupValueByName(name.Value, out object value))
+                    {
+                        sb.Append('=');
+                        sb.Append(value.ToString());
+                    }
+                }
+
+                sb.Append(')');
+            }
         }
 
         private static void AppendAggregateType(StringBuilder sb, TypeTree tree, DisplayNameProvider nameProvider)
@@ -79,7 +117,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
 
                 sb.Append(":");
-                kvp.Value.AppendTo(sb);
+                sb.AppendToWithDisplayNames(kvp.Value);
                 strPre = ", ";
             }
 
@@ -108,7 +146,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
 
                 sb.Append(":");
-                kvp.Value.AppendTo(sb);
+                sb.AppendToWithDisplayNames(kvp.Value);
                 strPre = ", ";
             }
 

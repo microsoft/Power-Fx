@@ -407,7 +407,7 @@ namespace Microsoft.PowerFx.Connectors
                 case "string":
 
                     // We don't want to have OptionSets in connections, we'll only get string/number for now in FormulaType
-                    // Anyhow, we'll have schema.Enum content in ConnertorType
+                    // Anyhow, we'll have schema.Enum content in ConnectorType
 
                     switch (schema.Format)
                     {
@@ -428,8 +428,8 @@ namespace Microsoft.PowerFx.Connectors
                         case "enum":
                             if (schema.Enum.All(e => e is OpenApiString))
                             {
-                                OptionSet os = new OptionSet("enum", schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
-                                return new ConnectorType(schema, openApiParameter, os.FormulaType);
+                                OptionSet optionSet = new OptionSet("enum", schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
+                                return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
                             }
                             else
                             {
