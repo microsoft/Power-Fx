@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx
 
                 if (_definedTypes == null)
                 {
-                    _definedTypes = _symbolTables.Where(t => t is TypeSymbolTable).SelectMany(t => t.DefinedTypes);
+                    _definedTypes = _symbolTables.SelectMany(t => t.DefinedTypes);
                     _cachedVersionHash = current;
                 }
 
@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx
                 var names = new HashSet<string>();
                 var map = new List<KeyValuePair<string, NameLookupInfo>>();
 
-                foreach (var table in _symbolTables.Where(t => t is not TypeSymbolTable))
+                foreach (var table in _symbolTables)
                 {
                     if (table is IGlobalSymbolNameResolver globalSymbolNameResolver)
                     {
@@ -156,7 +156,7 @@ namespace Microsoft.PowerFx
 
         public virtual bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
         {
-            foreach (INameResolver table in _symbolTables.Where(t => t is not TypeSymbolTable))
+            foreach (INameResolver table in _symbolTables)
             {
                 if (table.Lookup(name, out nameInfo, preferences))
                 {
@@ -214,7 +214,7 @@ namespace Microsoft.PowerFx
 
         public virtual bool LookupType(DName name, out NameLookupInfo nameInfo)
         {
-            foreach (INameResolver table in _symbolTables.Where(t => t is TypeSymbolTable))
+            foreach (INameResolver table in _symbolTables)
             {
                 if (table.LookupType(name, out nameInfo))
                 {

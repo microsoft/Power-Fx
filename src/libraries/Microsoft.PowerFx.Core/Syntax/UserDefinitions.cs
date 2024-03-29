@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Syntax
 
             var definedTypes = parseResult.DefinedTypes.ToList();
             var typeErr = new List<TexlError>();
-            extraSymbols ??= new DefinedTypeSymbolTable();
+            extraSymbols ??= new SymbolTable();
 
             var typeGraph = new DefinedTypeDependencyGraph(definedTypes, extraSymbols);
             var definedTypeSymbolTable = typeGraph.ResolveTypes(typeErr);

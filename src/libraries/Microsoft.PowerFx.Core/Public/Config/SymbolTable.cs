@@ -17,6 +17,7 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Types.Enums;
+using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -37,6 +38,10 @@ namespace Microsoft.PowerFx
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
         private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
+
+        private readonly Dictionary<string, FormulaType> _definedTypes = new Dictionary<string, FormulaType>();
+
+        IEnumerable<KeyValuePair<string, FormulaType>> INameResolver.DefinedTypes => _definedTypes;
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
@@ -411,6 +416,49 @@ namespace Microsoft.PowerFx
                 displayName: default);
 
             _variables.Add(hostDName, info);
+        }
+
+        internal void AddType(string typeName, FormulaType type)
+        {
+            using var guard = _guard.Enter(); // Region is single threaded.
+            Inc();
+            _definedTypes.Add(typeName, type);
+        }
+
+        internal void RemoveType(string typeName)
+        {
+            using var guard = _guard.Enter(); // Region is single threaded.
+            Inc();
+            _definedTypes.Remove(typeName);
+        }
+
+        internal void AddTypes(IEnumerable<KeyValuePair<string, FormulaType>> types)
+        {
+            foreach (var type in types)
+            {
+                AddType(type.Key, type.Value);
+            }
+        }
+
+        internal void RemoveTypes(IEnumerable<KeyValuePair<string, FormulaType>> types)
+        {
+            foreach (var type in types)
+            {
+                RemoveType(type.Key);
+            }
+        }
+
+        bool INameResolver.LookupType(DName name, out NameLookupInfo nameInfo)
+        {
+            if (!_definedTypes.TryGetValue(name.Value, out var type))
+            {
+                nameInfo = default;
+                return false;
+            }
+
+            nameInfo = new NameLookupInfo(BindKind.TypeName, type._type, DPath.Root, 0, data: type);
+
+            return true;
         }
     }
 }

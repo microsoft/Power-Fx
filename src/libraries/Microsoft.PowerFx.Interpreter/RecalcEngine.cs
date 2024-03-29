@@ -32,7 +32,6 @@ namespace Microsoft.PowerFx
 
         internal readonly SymbolTable _symbolTable;
         internal readonly SymbolValues _symbolValues;
-        internal readonly DefinedTypeSymbolTable _definedTypeSymbolTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
@@ -48,7 +47,6 @@ namespace Microsoft.PowerFx
         {
             _symbolTable = new SymbolTable { DebugName = "Globals" };
             _symbolValues = new SymbolValues(_symbolTable);
-            _definedTypeSymbolTable = new DefinedTypeSymbolTable();
             _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
 
             base.EngineSymbols = _symbolTable;
@@ -212,21 +210,6 @@ namespace Microsoft.PowerFx
 
             var result = await eval.EvalAsync(cancellationToken, runtimeConfig).ConfigureAwait(false);
             return result;
-        }
-
-        internal FormulaType GetFormulaTypeFromName(string name)
-        {
-            return FormulaType.Build(GetTypeFromName(name));
-        }
-
-        internal DType GetTypeFromName(string name)
-        {
-            if (_definedTypeSymbolTable.TryLookup(new DName(name), out NameLookupInfo nameInfo))
-            {
-                return nameInfo.Type;
-            }
-
-            return FormulaType.GetFromStringOrNull(name)._type;
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 
@@ -394,12 +377,12 @@ namespace Microsoft.PowerFx
         /// <param name="onUpdate">Function to be called when update is triggered.</param>
         public void AddUserDefinitions(string script, CultureInfo parseCulture = null, Action<string, FormulaValue> onUpdate = null)
         {
-            var userDefinitionResult = UserDefinitions.Process(script, parseCulture, features: Config.Features, _definedTypeSymbolTable);
+            var userDefinitionResult = UserDefinitions.Process(script, parseCulture, features: Config.Features, _symbolTable);
 
-            _definedTypeSymbolTable.AddTypes(userDefinitionResult.DefinedTypes);
+            _symbolTable.AddTypes(userDefinitionResult.DefinedTypes);
 
             // Compose will handle null symbols
-            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, _definedTypeSymbolTable);
+            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, _symbolTable);
             var sb = new StringBuilder();
 
             foreach (var udf in userDefinitionResult.UDFs)

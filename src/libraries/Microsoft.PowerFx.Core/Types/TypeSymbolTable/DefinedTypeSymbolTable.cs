@@ -19,22 +19,13 @@ namespace Microsoft.PowerFx.Core
     {
         private readonly BidirectionalDictionary<string, FormulaType> _definedTypes = new ();
 
-        IEnumerable<KeyValuePair<string, FormulaType>> INameResolver.DefinedTypes => _definedTypes.AsEnumerable();
-
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _definedTypes.ToDictionary(kvp => kvp.Key, kvp => ToLookupInfo(kvp.Value));
 
         internal void RegisterType(string typeName, FormulaType type)
         {
-            // todo: include gaurd
             Inc();            
 
             _definedTypes.Add(typeName, type);
-        }
-
-        internal void RemoveType(string typeName)
-        {
-            Inc();
-            _definedTypes.TryRemoveFromFirst(typeName);
         }
 
         protected void ValidateName(string name)
@@ -60,27 +51,6 @@ namespace Microsoft.PowerFx.Core
         internal override bool TryGetTypeName(FormulaType type, out string typeName)
         {
             return _definedTypes.TryGetFromSecond(type, out typeName);
-        }
-
-        internal void AddTypes(IEnumerable<KeyValuePair<string, FormulaType>> types)
-        {
-            foreach (var type in types) 
-            {
-                RegisterType(type.Key, type.Value);
-            }
-        }
-
-        internal void RemoveTypes(IEnumerable<KeyValuePair<string, FormulaType>> types)
-        {
-            foreach (var type in types)
-            {
-                RemoveType(type.Key);
-            }
-        }
-
-        bool INameResolver.LookupType(DName name, out NameLookupInfo nameInfo)
-        {
-            return TryLookup(name, out nameInfo);
         }
     }
 }

@@ -24,13 +24,13 @@ namespace Microsoft.PowerFx.Core.Types
         private readonly Dictionary<string, HashSet<DefinedType>> _invertedDependency;
         private readonly Queue<DefinedType> _tsQueue;
 
-        private readonly DefinedTypeSymbolTable _definedTypeSymbolTable;
+        private readonly SymbolTable _definedTypeSymbolTable;
 
         private static readonly ISet<string> _restrictedTypeNames = new HashSet<string> { "Record" };
 
         internal Dictionary<DefinedType, HashSet<string>> UnresolvedTypes => _typeWithDependency;
 
-        internal DefinedTypeSymbolTable DefinedTypes => _definedTypeSymbolTable;
+        internal SymbolTable DefinedTypes => _definedTypeSymbolTable;
 
         public DefinedTypeDependencyGraph(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable symbols) 
         {
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Core.Types
             _typeWithDependency = new Dictionary<DefinedType, HashSet<string>>();
             _invertedDependency = new Dictionary<string, HashSet<DefinedType>>();
             _tsQueue = new Queue<DefinedType>();
-            _definedTypeSymbolTable = new DefinedTypeSymbolTable();
+            _definedTypeSymbolTable = new SymbolTable();
 
             Build();
         }
@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         // Topological sort to resolve types
-        internal DefinedTypeSymbolTable ResolveTypes(List<TexlError> errors)
+        internal SymbolTable ResolveTypes(List<TexlError> errors)
         {
             var composedSymbols = ReadOnlySymbolTable.Compose(_definedTypeSymbolTable, _globalSymbols);
 
@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
 
                 var name = currentType.Ident.Name.Value;
-                _definedTypeSymbolTable.RegisterType(name, FormulaType.Build(resolvedType));
+                _definedTypeSymbolTable.AddType(name, FormulaType.Build(resolvedType));
 
                 if (_invertedDependency.TryGetValue(name, out var typeDependents))
                 {
