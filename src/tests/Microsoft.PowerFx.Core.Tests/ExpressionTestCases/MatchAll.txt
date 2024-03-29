@@ -29,3 +29,12 @@ Errors: Error 18-25: Regular expressions must be constant values.|Error 0-8: The
 
 >> MatchAll(1/0, "Hi")
 Error({Kind:ErrorKind.Div0})
+
+>> MatchAll("Hello", "Hello", MatchOptions.IgnoreCase)
+Table({FullMatch:"Hello",StartMatch:1,SubMatches:Table()})
+
+>> MatchAll("Hello", "Hello", "")
+Table({FullMatch:"Hello",StartMatch:1,SubMatches:Table()})
+
+>> MatchAll("Hi", "Hi", MatchOptions.Multiline)
+Table({FullMatch:"Hi",StartMatch:1,SubMatches:Table()})
