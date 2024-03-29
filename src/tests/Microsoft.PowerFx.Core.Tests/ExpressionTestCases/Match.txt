@@ -99,3 +99,12 @@ Errors: Error 15-30: Regular expressions must be constant values.|Error 0-31: Th
 >> Match("(555) 123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
 {FullMatch:"(555) 123-4567",StartMatch:1,SubMatches:Table()}
 
+>> Match("Hello", "Hello", MatchOptions.IgnoreCase)
+{FullMatch:"Hello",StartMatch:1,SubMatches:Table()}
+
+>> Match("Hello", "Hello", "")
+{FullMatch:"Hello",StartMatch:1,SubMatches:Table()}
+
+>> Match("Hi", "Hi", MatchOptions.Multiline)
+{FullMatch:"Hi",StartMatch:1,SubMatches:Table()}
+
