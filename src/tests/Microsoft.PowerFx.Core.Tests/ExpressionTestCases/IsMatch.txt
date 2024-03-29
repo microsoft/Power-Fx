@@ -120,7 +120,7 @@ Error({Kind:ErrorKind.BadRegex})
 Error({Kind:ErrorKind.Timeout})
 
 >> IsMatch("Hi", "Hi", "foo")
-false
+true
 
 >> IsMatch("28", 28)
 Errors: Error 14-16: Regular expressions must be constant values.
@@ -141,4 +141,13 @@ false
 true
 
 >> IsMatch("Hello 123 world", $"Hello {Sqrt(1)}{Sqrt(4)}{Sqrt(9)} world")
+true
+
+>> IsMatch("Hello", "Hello", MatchOptions.IgnoreCase)
+true
+
+>> IsMatch("Hello", "Hello", "")
+true
+
+>> IsMatch("Hi", "Hi", MatchOptions.Multiline)
 true
