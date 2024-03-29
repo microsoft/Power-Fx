@@ -69,7 +69,6 @@ namespace Microsoft.PowerFx.Syntax
         /// <returns>True if there are no parser errors.</returns>
         public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null, ReadOnlySymbolTable extraSymbols = null)
         {
-            parserOptions.AllowParseAsTypeLiteral = true;
             var userDefinitions = new UserDefinitions(script, parserOptions, features);
 
             return userDefinitions.ProcessUserDefinitions(out userDefinitionResult, extraSymbols);
@@ -86,6 +85,7 @@ namespace Microsoft.PowerFx.Syntax
 
             var definedTypes = parseResult.DefinedTypes.ToList();
             var typeErr = new List<TexlError>();
+            extraSymbols ??= new DefinedTypeSymbolTable();
 
             var typeGraph = new DefinedTypeDependencyGraph(definedTypes, extraSymbols);
             var definedTypeSymbolTable = typeGraph.ResolveTypes(typeErr);
@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Syntax
                 functions,
                 parseResult.Errors != null ? errors.Union(parseResult.Errors) : errors,
                 parseResult.NamedFormulas,
-                definedTypeSymbolTable);
+                definedTypeSymbolTable.DefinedTypes);
 
             return true;
         }
@@ -126,6 +126,7 @@ namespace Microsoft.PowerFx.Syntax
             var options = new ParserOptions()
             {
                 AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true,
                 Culture = parseCulture ?? CultureInfo.InvariantCulture
             };
 

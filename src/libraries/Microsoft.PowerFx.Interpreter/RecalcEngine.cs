@@ -396,7 +396,7 @@ namespace Microsoft.PowerFx
         {
             var userDefinitionResult = UserDefinitions.Process(script, parseCulture, features: Config.Features, _definedTypeSymbolTable);
 
-            _definedTypeSymbolTable.AddTypes(userDefinitionResult.DefinedTypeSymbolTable.DefinedTypes);
+            _definedTypeSymbolTable.AddTypes(userDefinitionResult.DefinedTypes);
 
             // Compose will handle null symbols
             var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, _definedTypeSymbolTable);

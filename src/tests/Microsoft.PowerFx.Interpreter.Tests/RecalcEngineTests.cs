@@ -555,8 +555,8 @@ namespace Microsoft.PowerFx.Tests
             };
             recalcEngine.AddUserDefinitions("People = Type([{Age: Number}]);countMinors(p: People): Number = CountRows(Filter(p, Age < 18)); createUser(a: Number): People = [{Age: a}];", CultureInfo.InvariantCulture);
             recalcEngine.AddUserDefinitions("NWrap = Type({n: Number});getN(p: NWrap): Number = p.n;", CultureInfo.InvariantCulture);
-            Assert.Equal(1.0, recalcEngine.Eval("countMinors([{Age: 2}])").ToObject());
-            Assert.Equal(2.0, recalcEngine.Eval("getN({n: 2})").ToObject());
+            Assert.Equal(1.0, recalcEngine.Eval("countMinors([{Age: 2}])", options: parserOptions).ToObject());
+            Assert.Equal(2.0, recalcEngine.Eval("getN({n: 2})", options: parserOptions).ToObject());
         }
 
         [Fact]

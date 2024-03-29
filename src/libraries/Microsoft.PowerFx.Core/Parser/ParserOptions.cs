@@ -87,7 +87,8 @@ namespace Microsoft.PowerFx
             var flags = (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
                         (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0) |
                         (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0) |
-                        (TextFirst ? TexlParser.Flags.TextFirst : 0);
+                        (TextFirst ? TexlParser.Flags.TextFirst : 0) |
+                        (AllowParseAsTypeLiteral ? TexlParser.Flags.AllowTypeLiteral : 0);
 
             var result = TexlParser.ParseScript(script, features, Culture, flags);
             result.Options = this;

@@ -7,6 +7,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -18,15 +19,15 @@ namespace Microsoft.PowerFx
 
         internal IEnumerable<NamedFormula> NamedFormulas { get; }
 
-        internal DefinedTypeSymbolTable DefinedTypeSymbolTable { get; }
+        internal IEnumerable<KeyValuePair<string, FormulaType>> DefinedTypes { get; }
 
         internal bool HasErrors { get; }
 
-        public UserDefinitionResult(IEnumerable<UserDefinedFunction> uDFs, IEnumerable<TexlError> errors, IEnumerable<NamedFormula> namedFormulas, DefinedTypeSymbolTable definedTypes)
+        public UserDefinitionResult(IEnumerable<UserDefinedFunction> uDFs, IEnumerable<TexlError> errors, IEnumerable<NamedFormula> namedFormulas, IEnumerable<KeyValuePair<string, FormulaType>> definedTypes)
         {
             UDFs = uDFs;
             NamedFormulas = namedFormulas;
-            DefinedTypeSymbolTable = definedTypes;
+            DefinedTypes = definedTypes;
 
             if (errors?.Any() ?? false)
             {

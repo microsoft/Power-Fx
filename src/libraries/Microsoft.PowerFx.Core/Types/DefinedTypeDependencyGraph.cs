@@ -22,10 +22,15 @@ namespace Microsoft.PowerFx.Core.Types
 
         private readonly Dictionary<DefinedType, HashSet<string>> _typeWithDependency;
         private readonly Dictionary<string, HashSet<DefinedType>> _invertedDependency;
-
         private readonly Queue<DefinedType> _tsQueue;
 
+        private readonly DefinedTypeSymbolTable _definedTypeSymbolTable;
+
+        private static readonly ISet<string> _restrictedTypeNames = new HashSet<string> { "Record" };
+
         internal Dictionary<DefinedType, HashSet<string>> UnresolvedTypes => _typeWithDependency;
+
+        internal DefinedTypeSymbolTable DefinedTypes => _definedTypeSymbolTable;
 
         public DefinedTypeDependencyGraph(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable symbols) 
         {
@@ -34,6 +39,9 @@ namespace Microsoft.PowerFx.Core.Types
             _typeWithDependency = new Dictionary<DefinedType, HashSet<string>>();
             _invertedDependency = new Dictionary<string, HashSet<DefinedType>>();
             _tsQueue = new Queue<DefinedType>();
+            _definedTypeSymbolTable = new DefinedTypeSymbolTable();
+
+            Build();
         }
 
         // Build type dependency graph to perform topological sort and resolve types
@@ -69,17 +77,18 @@ namespace Microsoft.PowerFx.Core.Types
         // Topological sort to resolve types
         internal DefinedTypeSymbolTable ResolveTypes(List<TexlError> errors)
         {
-            Build();
-
-            var definedTypeSymbolTable = new DefinedTypeSymbolTable();
-            var composedSymbols = ReadOnlySymbolTable.Compose(definedTypeSymbolTable, _globalSymbols);
+            var composedSymbols = ReadOnlySymbolTable.Compose(_definedTypeSymbolTable, _globalSymbols);
 
             while (_tsQueue.Any())
             {
                 var currentType = _tsQueue.Dequeue();
                 _typeWithDependency.Remove(currentType);
 
-                var name = currentType.Ident.Name.Value;
+                if (!CheckTypeName(currentType, composedSymbols, errors))
+                {
+                    continue;
+                }
+
                 var resolvedType = DTypeVisitor.Run(currentType.Type.TypeRoot, composedSymbols);
                 if (resolvedType == DType.Invalid)
                 {
@@ -87,7 +96,8 @@ namespace Microsoft.PowerFx.Core.Types
                     continue;
                 }
 
-                definedTypeSymbolTable.RegisterType(name, FormulaType.Build(resolvedType));
+                var name = currentType.Ident.Name.Value;
+                _definedTypeSymbolTable.RegisterType(name, FormulaType.Build(resolvedType));
 
                 if (_invertedDependency.TryGetValue(name, out var typeDependents))
                 {
@@ -106,7 +116,28 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            return definedTypeSymbolTable;
+            return _definedTypeSymbolTable;
+        }
+
+        private bool CheckTypeName(DefinedType dt, INameResolver symbols,  List<TexlError> errors)
+        {
+            var typeName = dt.Ident.Name;
+
+            if (_restrictedTypeNames.Contains(typeName))
+            {
+                // Todo: Change error message
+                errors.Add(new TexlError(dt.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                return false;
+            }
+
+            if (symbols.LookupType(typeName, out var _))
+            {
+                // Todo: Change error message
+                errors.Add(new TexlError(dt.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                return false;
+            }
+
+            return true;
         }
     }
 }
