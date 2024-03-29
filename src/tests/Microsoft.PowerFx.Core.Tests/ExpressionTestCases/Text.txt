@@ -269,6 +269,6 @@ Error({Kind:ErrorKind.BadLanguageCode})
 "1899-12-30 12:34:56"
 
 // This would previously throw an exception in the interpreter by the C# text formatter on the "i"
-// Actually supporting this scenario is tracked with https://github.com/MicrosoftDocs/power-platform-pr/issues/7773.
+// Actually supporting this scenario is tracked with https://github.com/microsoft/Power-Fx/issues/2291.
 >> Text( 12, "i" )
 Error({Kind:ErrorKind.InvalidArgument})
