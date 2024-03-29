@@ -3,7 +3,7 @@
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
-    internal class SemanticTokensRangeParams : SemanticTokensParams
+    public class SemanticTokensRangeParams : SemanticTokensParams
     {
         public Range Range { get; set; }
     }
