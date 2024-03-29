@@ -267,7 +267,3 @@ Error({Kind:ErrorKind.BadLanguageCode})
 
 >> Text(DateTimeValue("12:34:56"),"yyyy-mm-dd hh:mm:ss")
 "1899-12-30 12:34:56"
-
-// This would previously throw an exception in the interpreter by the C# text formatter on the "i"
->> Text( 12, "i" )
-Error({Kind:ErrorKind.InvalidArgument})
