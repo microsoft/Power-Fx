@@ -1514,7 +1514,7 @@
     <value>Өрнекті кестенің бір немесе бірнеше бағаны бойынша есептейді және есептелетін өрнек үшін бөлек (бірегей) мәндері бар бір бағанды кестені қайтарады.</value>
   </data>
   <data name="DistinctArg1" xml:space="preserve">
-    <value>бастапқы</value>
+    <value>көз</value>
     
   </data>
   <data name="DistinctArg2" xml:space="preserve">
@@ -4051,7 +4051,7 @@
     
   </data>
   <data name="MatchArg2" xml:space="preserve">
-    <value>тұрақтыөрнек</value>
+    <value>тұрақты_өрнек</value>
     
   </data>
   <data name="MatchArg3" xml:space="preserve">
@@ -4063,7 +4063,7 @@
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
-    <value>қосылған_дереккөз</value>
+    <value>қосылған_деректер_көзі</value>
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
