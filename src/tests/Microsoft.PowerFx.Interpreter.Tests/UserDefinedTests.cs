@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Theory]
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b); };")]
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(abc, { bcd: 1 }) };")]
-        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); num = 3; Collect(abc, { bcd: 1 }) };")]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(abc, { bcd: 1 }) }; num = 3;")]
         public void UserDefinedFunctions(string script)
         {
             var result = UserDefinitions.Process(script, null);
