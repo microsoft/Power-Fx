@@ -1962,6 +1962,10 @@
     <value>无法在此上下文中使用非记录值。</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>在此上下文中只能使用记录或表值。</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>无法使用此记录。它可能包含类型不兼容的冲突字段。</value>
     
@@ -2835,15 +2839,16 @@
     <value>所提供文本的语言代码。</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>基于指定的记录创建表，该表中列的数目等于唯一记录字段的数目。例如: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>基于指定的记录和表创建表，该表中列的数目等于唯一记录字段的数目。例如: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>记录</value>
+    <value>记录或表</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>将成为结果表中的一行的记录。</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>将成为所生成表的一部分的记录或表。</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>返回一个表，该表中除指定列之外的所有列均已从 "source" 表中删除。</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>要编码的 URL。</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>将文本转换为 HTML 编码的文本。</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>值</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>要编码的文本。</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' 是一个可识别但不支持的函数。</value>
     
@@ -4210,6 +4226,10 @@
     <value>JSONFormat 值“{0}”和“{1}”不能同时使用。</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>不支持将值 '{0}' 作为 JSON 函数中的选项。</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>传递给 JSON 函数的值包含媒体，且默认不受支持。要允许媒体值的 JSON 序列化，请确保使用 "format" 参数中的 IncludeBinaryData 选项。</value>
     
@@ -4306,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>未知 Partial 运算符。</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>委派警告。对于大型数据集，此参数 '{0}' 的结果在传递给 '{1}' 函数之前可能会被截断。</value>
     
   </data>
 </root>

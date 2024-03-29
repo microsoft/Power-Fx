@@ -1962,6 +1962,10 @@
     <value>Det går inte att använda icke-postvärden i den här kontexten.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Endast post- eller tabellvärden kan användas i den här kontexten.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Det går inte att använda den här posten. Det är möjligt att den innehåller kolliderande fält av inkompatibla typer.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Språkkod för den angivna texten.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Skapar en tabell från de angivna posterna med så många kolumner som det finns unika postfält. Till exempel: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Skapar en tabell från de angivna posterna och tabellerna med så många kolumner som det finns unika postfält. Till exempel: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>post</value>
+    <value>post_eller_tabell</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>En post som blir en rad i den resulterande tabellen.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>En post eller en tabell som ska ingå i den resulterande tabellen.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Returnerar en tabell med alla kolumner borttagna från källtabellen förutom de angivna kolumnerna.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>En url som ska kodas.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Konverterar en text till en HTML-kodad text.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>värde</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>En text som ska kodas.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" är en känd funktion som inte stöds.</value>
     
@@ -4210,6 +4226,10 @@
     <value>JSONFormat-värdena {0} och {1} kan inte användas tillsammans.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Värdet "{0}" stöds inte som ett alternativ i JSON-funktionen.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Det värde som skickas till JSON-funktionen innehåller media och stöds inte som standard. Om du vill tillåta JSON-serialisering av mediavärden måste du använda alternativet IncludeBinaryData i parametern format.</value>
     
@@ -4306,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Okänd Partial-operator.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Delegeringsvarning. Resultatet av det här argumentet "{0}" kan kortas av för stora datauppsättningar innan det skickas till funktionen "{1}".</value>
     
   </data>
 </root>

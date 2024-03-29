@@ -1100,7 +1100,7 @@
     
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
-    <value>Número de meses para alterar a data. Um valor positivo gera uma data futura, um valor negativo uma data no passado e zero não alterará o mês.</value>
+    <value>Número de meses para alterar a data. Um valor positivo gera uma data futura, um valor negativo gera uma data no passado e zero não alterará o mês.</value>
     
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
@@ -1960,6 +1960,10 @@
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>Não é possível usar um valor diferente de registro nesse contexto.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Somente valores de registro ou de tabela podem ser usados neste contexto.</value>
     
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
@@ -2835,15 +2839,16 @@
     <value>Código de idioma do texto fornecido.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Cria uma tabela dos registros especificados, com tantas colunas quantos forem os campos de registro exclusivos. Por exemplo: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Cria uma tabela dos registros e das tabelas especificados, com o número de colunas igual ao número de campos de registro exclusivos. Por exemplo: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>registro</value>
+    <value>registro_ou_tabela</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Um registro que se tornará uma linha na tabela resultante.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Um registro ou uma tabela que fará parte da tabela resultante.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Retorna uma tabela com todas as colunas removidas da tabela 'source' (origem), exceto as colunas especificadas.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL a ser codificada.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Converte um texto em um texto codificado em HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Um texto a ser codificado.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" é uma função reconhecida, mas sem suporte.</value>
     
@@ -4051,7 +4067,7 @@
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
-    <value>Um valor de registro ou de tabela esperado.</value>
+    <value>Esperado um registro ou valor de tabela.</value>
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
@@ -4210,6 +4226,10 @@
     <value>Os valores JSONFormat '{0}' e '{1}' não podem ser usados juntos.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>O valor "{0}" não tem suporte como uma opção na função JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>O valor passado para a função JSON contém mídia e por padrão não há suporte para ele. Para permitir a serialização JSON de valores de mídia, não se esqueça de usar a opção IncludeBinaryData no parâmetro 'format'.</value>
     
@@ -4306,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operador Partial desconhecido.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Aviso de delegação. O resultado deste argumento "{0}" pode ser truncado para conjuntos de dados grandes antes de ser passado para a função "{1}".</value>
     
   </data>
 </root>

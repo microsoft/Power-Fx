@@ -1962,6 +1962,10 @@
     <value>V tomto kontextu nejde použít jinou hodnotu než záznam.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>V tomto kontextu lze použít pouze hodnoty záznamů nebo tabulek.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Tento záznam nejde použít. Pravděpodobně obsahuje kolidující pole nekompatibilních typů.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Kód jazyka zadaného textu</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Vytvoří tabulku ze zadaných záznamů. Počet sloupců v tabulce bude odpovídat počtu jedinečných polí záznamů. Příklad: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Vytvoří tabulku ze zadaných záznamů a tabulek. Počet sloupců v tabulce bude odpovídat počtu jedinečných polí záznamů. Příklad: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>záznam</value>
+    <value>záznam_nebo_tabulka</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Záznam, který se stane řádkem ve výsledné tabulce</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Záznam nebo tabulka, která bude součástí výsledné tabulky.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Vrátí tabulku, ve které budou všechny odstraněné sloupce ze „zdrojové“ tabulky kromě určených sloupců.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Adresa URL, která má být zakódována.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Převede text na text kódovaný v HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>hodnota</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Text, který má být kódován.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' je rozpoznaná, ale nepodporovaná funkce.</value>
     
@@ -4210,6 +4226,10 @@
     <value>Hodnoty JSONFormat {0} a {1} se nedají použít obě najednou.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Hodnota „{0}“ není podporována jako možnost ve funkci JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Hodnota předaná do funkce JSON obsahuje média, což se ve výchozím nastavení nepodporuje. Pokud chcete povolit serializaci JSON pro hodnoty médií, ujistěte se, že jste v parametru format použili možnost IncludeBinaryData.</value>
     
@@ -4306,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Neznámý operátor Partial.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Upozornění na delegování. Výsledek tohoto argumentu „{0}“ může být u velkých souborů dat před předáním funkci „{1}“ zkrácen.</value>
     
   </data>
 </root>

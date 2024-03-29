@@ -64,7 +64,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return true;
         }
 
-        protected bool IsValidDelegatableFilterPredicateNode(TexlNode dsNode, TexlBinding binding, FilterOpMetadata filterMetadata, bool generateHints = true)
+        // Determine whether a node can be delegated as part of a filter predicate.
+        // The enforceBoolean flag determines whether to enforce the return type of the node.  If the node is part of a filter predicate directly, it must return a boolean type.
+        // If the node is used in other places inside a filter, such as in a nested LookUp reduction formula, it can return any type.
+        protected bool IsValidDelegatableFilterPredicateNode(TexlNode dsNode, TexlBinding binding, FilterOpMetadata filterMetadata, bool generateHints = true, bool enforceBoolean = true)
         {
             Contracts.AssertValue(dsNode);
             Contracts.AssertValue(binding);
@@ -105,7 +108,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     case NodeKind.FirstName:
                         {
-                            if (!IsNodeBooleanOptionSetorBooleanFieldorView(dsNode, binding))
+                            if (enforceBoolean && !IsNodeBooleanOptionSetorBooleanFieldorView(dsNode, binding))
                             {
                                 SuggestDelegationHint(dsNode, binding);
                                 return false;
@@ -121,7 +124,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     case NodeKind.DottedName:
                         {
-                            if (!IsNodeBooleanOptionSetorBooleanFieldorView(dsNode, binding))
+                            if (enforceBoolean && !IsNodeBooleanOptionSetorBooleanFieldorView(dsNode, binding))
                             {
                                 SuggestDelegationHint(dsNode, binding);
                                 return false;
@@ -162,7 +165,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     default:
                         {
-                            if (kind != NodeKind.BoolLit)
+                            if (enforceBoolean && kind != NodeKind.BoolLit)
                             {
                                 SuggestDelegationHint(dsNode, binding, string.Format(CultureInfo.InvariantCulture, "Not supported node {0}.", kind));
                                 return false;

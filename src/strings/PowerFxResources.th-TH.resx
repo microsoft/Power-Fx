@@ -1962,6 +1962,10 @@
     <value>ไม่สามารถใช้ค่าที่ไม่ใช่เรกคอร์ดในบริบทนี้</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>เฉพาะค่าเรกคอร์ดหรือตารางเท่านั้นที่สามารถใช้ได้ในบริบทนี้</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>ไม่สามารถใช้เรกคอร์ดนี้ อาจมีฟิล์ดขัดแย้งที่ไม่เข้ากัน</value>
     
@@ -2835,15 +2839,16 @@
     <value>รหัสภาษาของข้อความที่ระบุ</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>สร้างตารางจากเรกคอร์ดที่กำหนด ที่มีจำนวนคอลัมน์เท่ากับจำนวนฟิลด์ที่มีชื่อเฉพาะ ตัวอย่างเช่น Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>สร้างตารางจากเรกคอร์ดและตารางที่กำหนด ที่มีจำนวนคอลัมน์เท่ากับจำนวนฟิลด์ที่มีชื่อเฉพาะ ตัวอย่างเช่น Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>ระเบียน</value>
+    <value>เรกคอร์ดหรือตาราง</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>เรกคอร์ดที่จะกลายเป็นแถวในตารางผลลัพธ์</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>เรกคอร์ดหรือตารางที่จะเป็นส่วนหนึ่งของตารางผลลัพธ์</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>ส่งคืนตารางที่ลบคอลัมน์ทั้งหมดออกจากตาราง 'source' ยกเว้นคอลัมน์ที่กำหนด</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL ที่จะเข้ารหัส</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>แปลงข้อความเป็นข้อความที่เข้ารหัส HTML</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>ค่า</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>ข้อความที่จะเข้ารหัส</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' เป็นฟังก์ชันที่ได้รับการยอมรับ แต่ไม่รองรับ</value>
     
@@ -4210,6 +4226,10 @@
     <value>ไม่สามารถใช้ค่า JSONFormat '{0}' และ '{1}' ร่วมกันได้</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>ค่า '{0}' ไม่ได้รับการสนับสนุนให้เป็นตัวเลือกในฟังก์ชัน JSON</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>ค่าที่ส่งผ่านไปยังฟังก์ชัน JSON มีสื่อ และไม่ได้รับการรับรองตามค่าเริ่มต้น เมื่อต้องการอนุญาตการจัดเรียงแบบอนุกรม JSON ของค่าสื่อ ให้ตรวจสอบให้แน่ใจว่าได้ใช้ตัวเลือก IncludeBinaryData ในพารามิเตอร์ 'รูปแบบ'</value>
     
@@ -4306,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>ไม่รู้จักตัวดำเนินการ Partial</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>คำเตือนการมอบสิทธิ์ ผลลัพธ์ของอาร์กิวเมนต์นี้ '{0}' อาจถูกตัดทอนสำหรับชุดข้อมูลขนาดใหญ่ก่อนที่จะส่งผ่านไปยังฟังก์ชัน '{1}'</value>
     
   </data>
 </root>

@@ -1962,6 +1962,10 @@
     <value>無法使用此內容中非記錄的值。</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>此內容中只能使用記錄或資料表值。</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>無法使用這筆記錄。它可能包含類型不相容而相衝突的欄位。</value>
     
@@ -2835,15 +2839,16 @@
     <value>提供的文字之語言代碼。</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>從指定的記錄建立資料表，資料行的數目為記錄欄位不重複時的資料行數。例如: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>根據指定的記錄和資料表來建立資料表，表中資料行的數目等同於唯一記錄欄位的數目。例如: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>記錄</value>
+    <value>記錄或資料表</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>將成為結果資料表中資料列的記錄。</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>將成為結果資料表一部分的記錄或資料表。</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>傳回一個資料表，除了指定的資料行之外，'source' 資料表中已移除了所有資料行。</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>要編碼的 URL。</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>將文字轉換為 HTML 編碼的文字。</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>值</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>要編碼的文字。</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' 是可識別但不受支援的函式。</value>
     
@@ -4210,6 +4226,10 @@
     <value>無法同時使用 JSONFormat 值 '{0}' 和 '{1}'。</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>不支援以 '{0}' 值做為 JSON 函式中的選項。</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>傳遞至 JSON 函數的值包含媒體，但預設不予以支援。若要允許媒體值的 JSON 序列化，請務必在 'format' 參數中使用 IncludeBinaryData 選項。</value>
     
@@ -4306,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>未知的 Partial 運算子。</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>委派警告。對於大型資料集，此引數 '{0}' 的結果在傳遞至 '{1}' 函式前可能遭到截斷。</value>
     
   </data>
 </root>

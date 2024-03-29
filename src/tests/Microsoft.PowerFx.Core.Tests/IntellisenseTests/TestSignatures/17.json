@@ -1,20 +1,20 @@
 {
   "Signatures": [
     {
-      "Label": "Table(record, record, record, ...)",
-      "Documentation": "Creates a table from the specified records, with as many columns as there are unique record fields. For example: Table({key1: val1, key2: val2, ...}, ...)",
+      "Label": "Table(record_or_table, record_or_table, record_or_table, ...)",
+      "Documentation": "Creates a table from the specified records and tables, with as many columns as there are unique record fields. For example: Table({key1: val1, key2: val2, ...}, ...)",
       "Parameters": [
         {
-          "Label": "record",
-          "Documentation": "A record that will become a row in the resulting table."
+          "Label": "record_or_table",
+          "Documentation": "A record or a table that will be part of the the resulting table."
         },
         {
-          "Label": "record",
-          "Documentation": "A record that will become a row in the resulting table."
+          "Label": "record_or_table",
+          "Documentation": "A record or a table that will be part of the the resulting table."
         },
         {
-          "Label": "record",
-          "Documentation": "A record that will become a row in the resulting table."
+          "Label": "record_or_table",
+          "Documentation": "A record or a table that will be part of the the resulting table."
         }
       ]
     }

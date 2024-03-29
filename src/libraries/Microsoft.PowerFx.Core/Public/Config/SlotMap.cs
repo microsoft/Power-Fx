@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx
             _lowest = _items.Count + 1;
 
             _count++;
-            _items.Add(default(T));
+            _items.Add(default);
             return _items.Count - 1;
         }
 
@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx
                 return value != null;
             }
 
-            value = default(T);
+            value = default;
             return false;
         }
 
@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx
 
             _count--;
             Contracts.Assert(_count >= 0);
-            _items[index] = default(T);
+            _items[index] = default;
         }
     }
 }

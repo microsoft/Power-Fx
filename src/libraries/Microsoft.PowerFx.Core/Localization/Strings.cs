@@ -528,6 +528,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutEncodeUrl = (b) => StringResources.Get("AboutEncodeUrl", b);
         public static StringGetter EncodeUrlArg1 = (b) => StringResources.Get("EncodeUrlArg1", b);
 
+        public static StringGetter AboutEncodeHTML = (b) => StringResources.Get("AboutEncodeHTML", b);
+        public static StringGetter EncodeHTMLArg1 = (b) => StringResources.Get("EncodeHTMLArg1", b);
+
         public static StringGetter AboutPlainText = (b) => StringResources.Get("AboutPlainText", b);
         public static StringGetter PlainTextArg1 = (b) => StringResources.Get("PlainTextArg1", b);
 
@@ -626,6 +629,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidSchemaNeedTypeCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedTypeCol_Col");
         public static ErrorResourceKey ErrInvalidSchemaNeedCol = new ErrorResourceKey("ErrInvalidSchemaNeedCol");
         public static ErrorResourceKey ErrNeedRecord = new ErrorResourceKey("ErrNeedRecord");
+        public static ErrorResourceKey ErrNeedRecordOrTable = new ErrorResourceKey("ErrNeedRecordOrTable");
         public static ErrorResourceKey ErrAutoRefreshNotAllowed = new ErrorResourceKey("ErrAutoRefreshNotAllowed");
         public static ErrorResourceKey ErrIncompatibleRecord = new ErrorResourceKey("ErrIncompatibleRecord");
         public static ErrorResourceKey ErrNeedRecord_Func = new ErrorResourceKey("ErrNeedRecord_Func");
@@ -774,6 +778,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrJSONArg1UnsupportedType = new ErrorResourceKey("ErrJSONArg1UnsupportedType");
         public static ErrorResourceKey ErrJSONArg1ContainsUnsupportedMedia = new ErrorResourceKey("ErrJSONArg1ContainsUnsupportedMedia");
         public static ErrorResourceKey ErrJSONArg2IncompatibleOptions = new ErrorResourceKey("ErrJSONArg2IncompatibleOptions");
+        public static ErrorResourceKey ErrJSONArg2UnsupportedOption = new ErrorResourceKey("ErrJSONArg2UnsupportedOption");
         public static ErrorResourceKey ErrJSONArg1UnsupportedNestedType = new ErrorResourceKey("ErrJSONArg1UnsupportedNestedType");
         public static ErrorResourceKey ErrJSONArg1UnsupportedTypeWithNonBehavioral = new ErrorResourceKey("ErrJSONArg1UnsupportedTypeWithNonBehavioral");
         public static ErrorResourceKey ErrTraceInvalidCustomRecordType = new ErrorResourceKey("ErrTraceInvalidCustomRecordType");
@@ -788,5 +793,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrOnlyPartialAttribute = new ErrorResourceKey("ErrOnlyPartialAttribute");
         public static ErrorResourceKey ErrOperationDoesntMatch = new ErrorResourceKey("ErrOperationDoesntMatch");
         public static ErrorResourceKey ErrUnknownPartialOp = new ErrorResourceKey("ErrUnknownPartialOp");
+
+        public static ErrorResourceKey ErrTruncatedArgWarning = new ErrorResourceKey("ErrTruncatedArgWarning");
     }
 }

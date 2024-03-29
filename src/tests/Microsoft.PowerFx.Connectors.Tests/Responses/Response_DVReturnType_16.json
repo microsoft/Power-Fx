@@ -1,0 +1,129 @@
+{
+  "value": [
+    {
+      "value": 1,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Any",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7a53c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Any",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7a53c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 2,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Email",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7c53c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Email",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7c53c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 3,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Phone",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7e53c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Phone",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7e53c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 4,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Fax",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "8053c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Fax",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "8053c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 5,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Mail",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "8253c2fa-2241-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Mail",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "8253c2fa-2241-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    }
+  ]
+}

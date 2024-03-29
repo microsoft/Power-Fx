@@ -1,0 +1,104 @@
+{
+  "value": [
+    {
+      "value": 1,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Bill To",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "be41b506-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Bill To",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "be41b506-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 2,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Ship To",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "c041b506-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Ship To",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "c041b506-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 3,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Primary",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "c241b506-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Primary",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "c241b506-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 4,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Other",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "c441b506-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Other",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "c441b506-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    }
+  ]
+}

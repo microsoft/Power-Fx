@@ -615,7 +615,7 @@
     <value>Valinta, joka muunnetaan totuusarvoksi.</value>
   </data>
   <data name="AboutBooleanLT" xml:space="preserve">
-    <value>Muutaa valinta-arvojen sarakkeen, jonka taustalla on totuusarvoja, totuusarvosarakkeeksi.</value>
+    <value>Muuttaa valinta-arvojen sarakkeen, jonka taustalla on totuusarvoja, totuusarvosarakkeeksi.</value>
     
   </data>
   <data name="BooleanLTArg1" xml:space="preserve">
@@ -1120,7 +1120,7 @@
     
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>Niiden kuukausien lukumäärä, jolla päivämäärää muutetaan. Positiivinen arvo tuottaa tulevan päivämäärän, negatiivinen arvo menneen päivämäärän ja nolla ei vaihda kuukautta.</value>
+    <value>Kuukausien lukumäärä, joihin mennessä päivämäärää muutetaan. Positiivinen arvo antaa tulevan päivämäärän, negatiivinen arvo menneen päivämäärän, ja nolla ei muuta kuukautta.</value>
     
   </data>
   <data name="AboutInt" xml:space="preserve">
@@ -1960,6 +1960,10 @@
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>Muuta kuin tietuearvoa ei voi käyttää tässä kontekstissa.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Tässä kontekstissa voi käyttää vain tietue- tai taulukkoarvoja.</value>
     
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
@@ -2839,11 +2843,12 @@
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>tietue</value>
+    <value>tietue_tai_taulukko</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Tietue, josta tulee rivi tuloksena olevaan taulukkoon.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Tietue tai taulukko, joka on osa tulostaulukkoa.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Palauttaa taulukon, josta on kaikki source-taulukosta poistetut sarakkeet lukuun ottamatta määritettyjä sarakkeita.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Koodattava URL-osoite.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Muuntaa tekstin HTML-koodatuksi tekstiksi.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>arvo</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Koodattava teksti.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>{0} on tunnistettu toiminto, mutta sitä ei tueta.</value>
     
@@ -4210,6 +4226,10 @@
     <value>JSONFormat-arvoja {0} ja {1} ei voi käyttää yhdessä.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Arvoa {0} ei tueta JSON-funktion toimintona.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>JSON-funktiolle välitetty arvo sisältää mediasisältöä, eikä sitä tueta oletusarvon mukaa. Jos haluat sallia mediasisältöarvojen JSON-sarjoittamisen, varmista, että käytät IncludeBinaryData-asetusta format-parametrissa.</value>
     
@@ -4306,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Tuntematon Partial-operaattori.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Delegointiavaroitus. Tämän argumentin tulos {0} saatetaan katkaista suurille tietojoukoille ennen kuin se siirretään funktioon {1}.</value>
     
   </data>
 </root>

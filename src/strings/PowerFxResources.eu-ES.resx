@@ -1962,6 +1962,10 @@
     <value>Ezin da erabili erregistroa ez den baliorik testuinguru honetan.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Testuinguru horretan, erregistro- edo taula-balioak baino ezin dira erabili.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Ezin da erabili erregistro hau. Baliteke bateragarriak ez diren kontrako eremuak izatea.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Emandako testuaren hizkuntza-kodea.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Taula bat sortzen du zehaztutako erregistroetan oinarrituta; erregistro-eremu esklusiboen kopurua eta zutabeen kopurua berdinak izango dira. Adibidez: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Taula bat sortzen du zehaztutako erregistro eta tauletan oinarrituta; erregistro-eremu esklusiboen kopurua eta zutabeen kopurua berdinak izango dira. Adibidez: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>erregistroa</value>
+    <value>erregistroa_edo_taula</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Emaitza-taulan errenkada bihurtuko den erregistroa.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Amaierako taularen parte izango den erregistro edo taula bat.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>"source" taulako zutabe guztiak (zehaztu direnak izan ezik) ez dituen taula bat itzultzen du.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Kodetu nahi duzun URLa.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Testu bat HTML-n kodetutako testu bihurtzen du.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>balioa</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Kodetu egingo den testua.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' funtzio ezagutzen da, baina ez da onartzen.</value>
     
@@ -4210,6 +4226,10 @@
     <value>"{0}" eta "{1}" JSONFormat balioak ezin dira batera erabili.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>"{0}" balioa ez da onartzen aukera gisa JSON funtzioan.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>JSON funtziora eraman den balioak multimedia-edukia du eta ez da onartzen modu lehenetsian. JSON formatuari multimedia-balioak serializatzeko baimena emateko, ziurtatu IncludeBinaryData aukera erabiltzen duzula "format" parametroan.</value>
     
@@ -4306,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Partial eragile ezezaguna.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Ordezkatzearen abisua. "{0}" argumentuaren emaitza datu multzo handiengatik ebaki daiteke "{1}" funtziora igaro baino lehen.</value>
     
   </data>
 </root>

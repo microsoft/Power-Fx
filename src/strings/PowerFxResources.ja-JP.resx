@@ -1120,7 +1120,7 @@
     
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
-    <value>日付を変更する月数。正の値は未来の日付、負の値は過去の日付になり、ゼロは月を変更しません。</value>
+    <value>日付の変更に適用する月数です。正の値を指定すると未来の日付に、負の値を指定すると過去の日付に変わります。ゼロを指定すると月は変わりません。</value>
     
   </data>
   <data name="AboutInt" xml:space="preserve">
@@ -1960,6 +1960,10 @@
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>このコンテキストでは、レコードではない値は使用できません。</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>ここで使用できるのは、レコードまたはテーブルの値のみです。</value>
     
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
@@ -2835,15 +2839,16 @@
     <value>表示されたテキストの言語コード。</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>指定のレコードから、一意のレコード フィールドの数に対応する列を持つテーブルを作成します。例: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>指定のレコードとテーブルから、一意のレコード フィールドの数に対応する列を持つテーブルを作成します。例: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>レコード</value>
+    <value>レコードまたはテーブル</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>結果のテーブルで行に変換されるレコード。</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>結果として作成されるテーブルのレコードまたはテーブルです。</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>'ソース' テーブルから指定された列以外のすべての列が削除されたテーブルを返します。</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>エンコードされる URL です。</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>テキストを HTML エンコードのテキストに変換します。</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>値</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>エンコードされるテキストです。</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' は認識されましたが、サポートされない関数です。</value>
     
@@ -4210,6 +4226,10 @@
     <value>JSONFormat 値 '{0}' と '{1}' は同時に使用することはできません。</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>値 '{0}' は、JSON 機能のオプションとしてサポートされていません。</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>JSON 関数に渡された値はメディアを含んでおり、既定ではサポートされていません。メディア値の JSON シリアル化を許可するには、'format' パラメーターに IncludeBinaryData オプションを使用してください。</value>
     
@@ -4306,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>不明な Partial 演算子です。</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>委任の警告。この引数 '{0}' の結果となるデータ セットが大きい場合は、'{1}' 関数に渡される前に切り詰められる可能性があります。</value>
     
   </data>
 </root>

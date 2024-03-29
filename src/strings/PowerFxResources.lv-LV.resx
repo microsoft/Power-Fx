@@ -1962,6 +1962,10 @@
     <value>Šajā kontekstā nevar izmantot ar ierakstu nesaistītu vērtību.</value>
     
   </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Šajā kontekstā var izmantot tikai ieraksta vai tabulas vērtības.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Šo ierakstu nevar izmantot. Tajā var būt konfliktējoši lauki vai nesaderīgi tipi.</value>
     
@@ -2835,15 +2839,16 @@
     <value>Norādītā teksta valodas kods.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Izveido tabulu no norādītajiem ierakstiem ar tik daudz kolonnām, cik ir unikālu ierakstu lauku. Piemēram: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Izveido tabulu no norādītajiem ierakstiem un tabulām ar tik daudz kolonnām, cik ir unikālu ierakstu lauku. Piemēram: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>ieraksts</value>
+    <value>ieraksts_vai_tabula</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Ieraksts, kas iegūtajā tabulā kļūs par rindu.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Ieraksts vai tabula, kas būs daļa no iegūtās tabulas.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Atgriež tabulu, kur visas vērtības no tabulas "source" ir noņemtas, izņemot norādītās kolonnas.</value>
@@ -3940,6 +3945,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Vietrādis URL, kas jākodē.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Pārvērš tekstu par HTML kodētu tekstu.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>vērtība</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Kodējamais teksts.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' ir atpazīta, taču neatbalstīta funkcija.</value>
     
@@ -4210,6 +4226,10 @@
     <value>Nevar kopā lietot JSONFormat vērtību “{0}” un “{1}”.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Vērtība “{0}” netiek atbalstīta kā opcija JSON funkcijā.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>JSON funkcijai norādītajā vērtībā ir iekļauts multivides saturs, un tā pēc noklusējuma netiek atbalstīta. Lai atļautu multivides vērtību JSON serializēšanu, parametrā “format” jāizmanto opcija IncludeBinaryData.</value>
     
@@ -4306,6 +4326,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Nezināms operators Partial.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Deleģēšanas brīdinājums. Šī argumenta '{0}' rezultāts var tikt saīsināts lielām datu kopām, pirms tas tiek nodots funkcijai '{1}'.</value>
     
   </data>
 </root>
