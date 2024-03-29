@@ -94,7 +94,8 @@ namespace Microsoft.PowerFx.Core.Parser
             var flags = Flags.NamedFormulas |
                 (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0) |
                 (parserOptions.AllowParseAsTypeLiteral ? Flags.AllowTypeLiteral : 0) | 
-                (parserOptions.AllowAttributes ? Flags.AllowAttributes : 0);
+                (parserOptions.AllowAttributes ? Flags.AllowAttributes : 0) |
+                (parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : 0);
             var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
             var parser = new TexlParser(formulaTokens, flags);
 
@@ -390,7 +391,8 @@ namespace Microsoft.PowerFx.Core.Parser
                     {
                         _curs.TokMove();
                         ParseTrivia();
-                        var result = ParseExpr(Precedence.None);
+
+                        var result = _curs.TidCur == TokKind.CurlyOpen ? ParseUDFBody() : ParseExpr(Precedence.None);
                         ParseTrivia();
 
                         // Check if we're at EOF before a semicolon is found
@@ -427,6 +429,31 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors, _comments);
+        }
+
+        private TexlNode ParseUDFBody()
+        {
+            // Temporarily store flags
+            var flags = _flagsMode.Peek();
+            if (_curs.TidCur == TokKind.CurlyOpen)
+            {
+                _curs.TokMove();
+                ParseTrivia();
+                _flagsMode.Pop();
+                _flagsMode.Push(flags | Flags.EnableExpressionChaining);
+            }
+
+            var result = ParseExpr(Precedence.None);
+            ParseTrivia();
+
+            // Restore flags
+            _flagsMode.Pop();
+            _flagsMode.Push(flags);
+
+            // Expected curly close to terminate the UDF body
+            TokEat(TokKind.CurlyClose);
+
+            return result;
         }
 
         // Parse the script
@@ -877,7 +904,8 @@ namespace Microsoft.PowerFx.Core.Parser
                             tok = _curs.TokMove();
 
                             // Stop recursing if we reach a semicolon
-                            if (_curs.TidCur == TokKind.Semicolon && _flagsMode.Peek().HasFlag(Flags.NamedFormulas))
+                            if (_curs.TidCur == TokKind.Semicolon && _flagsMode.Peek().HasFlag(Flags.NamedFormulas) &&
+                                !_flagsMode.Peek().HasFlag(Flags.EnableExpressionChaining))
                             {
                                 return node;
                             }
@@ -926,7 +954,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         case TokKind.Semicolon:
                             _hasSemicolon = true;
-                            if (_flagsMode.Peek().HasFlag(Flags.NamedFormulas))
+                            if (_flagsMode.Peek().HasFlag(Flags.NamedFormulas) && !_flagsMode.Peek().HasFlag(Flags.EnableExpressionChaining))
                             {
                                 goto default;
                             }
