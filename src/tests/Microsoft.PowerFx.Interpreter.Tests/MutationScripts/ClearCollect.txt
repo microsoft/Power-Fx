@@ -74,7 +74,7 @@ Errors: Error 17-20: Name isn't valid. 'Foo' isn't recognized.|Error 14-15: Inva
 Errors: Error 24-27: Name isn't valid. 'Foo' isn't recognized.|Error 21-22: Invalid argument type (Number). Expecting a Table value instead.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(Error({Kind:ErrorKind.Custom}), r1)
-Errors: Error 45-47: The specified column 'a' does not exist.|Error 0-48: The function 'ClearCollect' has some invalid arguments.
+Errors: Error 45-47: The specified column 'a' does not exist.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(Error({Kind:ErrorKind.Custom}), Error({Kind:ErrorKind.Div0}))
 Errors: Error 13-43: The value passed to the 'ClearCollect' function cannot be changed.
@@ -86,7 +86,7 @@ Errors: Error 22-24: The specified column 'a' does not exist.|Error 0-12: The fu
 Errors: Error 13-20: The value passed to the 'ClearCollect' function cannot be changed.
 
 >> ClearCollect("", "")
-Errors: Error 13-15: Invalid argument type (Text). Expecting a Table value instead.|Error 17-19: Invalid argument type (Text). Expecting a Record value instead.|Error 17-19: Invalid argument type. Cannot use Text values in this context.|Error 0-20: The function 'ClearCollect' has some invalid arguments.
+Errors: Error 13-15: Invalid argument type (Text). Expecting a Table value instead.|Error 17-19: Invalid argument type (Text). Expecting a Record value instead.|Error 17-19: Invalid argument type. Cannot use Text values in this context.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(If(false,Blank()),r1)
 Errors: Error 31-33: The specified column 'a' does not exist.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
