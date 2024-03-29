@@ -1476,7 +1476,7 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
 
-            if (binding.ErrorContainer.HasErrors(callNode, errorSeverity))
+            if (binding.ErrorContainer.HasErrors(callNode, errorSeverity) || binding.ErrorContainer.HasErrors(callNode.Head.Token, errorSeverity))
             {
                 return false;
             }

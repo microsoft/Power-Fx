@@ -217,12 +217,7 @@ namespace Microsoft.PowerFx.Functions
                 string regularExpression = sv1.Value;
                 string matchOptions = args.Length == 3 ? ((StringValue)args[2]).Value : RegexOptions;
 
-                RegexOptions regOptions = System.Text.RegularExpressions.RegexOptions.CultureInvariant;
-
-                if (!matchOptions.Contains("c"))
-                {
-                    return Task.FromResult<FormulaValue>(FormulaValue.New(false));
-                }
+                RegexOptions regOptions = System.Text.RegularExpressions.RegexOptions.CultureInvariant;                
 
                 if (matchOptions.Contains("i"))
                 {

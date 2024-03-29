@@ -290,10 +290,10 @@ Errors: Error 4-9: Expected number. We expect a number at this point in the form
 Errors: Error 4-9: Expected number. We expect a number at this point in the formula.|Error 11-16: Expected number. We expect a number at this point in the formula.|Error 18-23: Expected number. We expect a number at this point in the formula.
 
 >> Min([1,2,3], [1])
-Errors: Error 13-16: Expected number. We expect a number at this point in the formula.|Error 0-17: The function 'Min' has some invalid arguments.
+Errors: Error 13-16: Expected number. We expect a number at this point in the formula.|Error 0-3: The function 'Min' has some invalid arguments.
 
 >> Max([1,2,3], [1])
-Errors: Error 13-16: Expected number. We expect a number at this point in the formula.|Error 0-17: The function 'Max' has some invalid arguments.
+Errors: Error 13-16: Expected number. We expect a number at this point in the formula.|Error 0-3: The function 'Max' has some invalid arguments.
 
 >> Max(Table({a:1},Blank(),{a:3}), If(IsBlank(ThisRecord),100,a))
 100

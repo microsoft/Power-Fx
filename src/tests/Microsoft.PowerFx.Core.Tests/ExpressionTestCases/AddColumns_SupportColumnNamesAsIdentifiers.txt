@@ -8,11 +8,11 @@ Table({Double:2,Value:1},{Double:4,Value:2},{Double:6,Value:3},{Double:8,Value:4
 {Double:6,Value:3}
 
 >> AddColumns([1,2,3,4,5], Value, Value * 2)
-Errors: Warning 24-29: A column named 'Value' already exists.|Error 0-41: The function 'AddColumns' has some invalid arguments.
+Errors: Warning 24-29: A column named 'Value' already exists.|Error 0-10: The function 'AddColumns' has some invalid arguments.
 
 // Record overload
 >> AddColumns({Value:1}, Value, Value * 2)
-Errors: Warning 22-27: A column named 'Value' already exists.|Error 0-39: The function 'AddColumns' has some invalid arguments.
+Errors: Warning 22-27: A column named 'Value' already exists.|Error 0-10: The function 'AddColumns' has some invalid arguments.
 
 >> AddColumns([1,2,3,4,5], Blanks, Blank())
 Table({Blanks:Blank(),Value:1},{Blanks:Blank(),Value:2},{Blanks:Blank(),Value:3},{Blanks:Blank(),Value:4},{Blanks:Blank(),Value:5})
@@ -49,7 +49,7 @@ Table({a:1,b:1},{a:2,b:8})
 {a:2,b:8}
 
 >> AddColumns(Table({a: 1, b: {c: 3}}, {a: 2, b: {c: 4}}), b.d, a * a * a)
-Errors: Error 56-57: Name isn't valid. 'b' isn't recognized.|Error 57-59: Invalid use of '.'|Error 0-71: The function 'AddColumns' has some invalid arguments.
+Errors: Error 56-57: Name isn't valid. 'b' isn't recognized.|Error 57-59: Invalid use of '.'|Error 0-10: The function 'AddColumns' has some invalid arguments.
 
 >> AddColumns(Table({a: 1, b: {c: 3}}, {a: 2, b: {c: 4}}), 'b.d', a * a * a)
 Table({a:1,b:{c:3},'b.d':1},{a:2,b:{c:4},'b.d':8})
@@ -58,7 +58,7 @@ Table({a:1,b:{c:3},'b.d':1},{a:2,b:{c:4},'b.d':8})
 Table({a:1,b:{c:3},'b d':1},{a:2,b:{c:4},'b d':8})
 
 >> AddColumns(Table({a: 1}, {a: 2}), b, c)
-Errors: Error 37-38: Name isn't valid. 'c' isn't recognized.|Error 0-39: The function 'AddColumns' has some invalid arguments.
+Errors: Error 37-38: Name isn't valid. 'c' isn't recognized.|Error 0-10: The function 'AddColumns' has some invalid arguments.
 
 // Record overload
 >> AddColumns({a: 1}, b, c)
@@ -98,11 +98,11 @@ Table({Value:1,_:1},{Value:2,_:4})
 Table({Value:1,z:Blank()},{Value:2,z:Blank()})
 
 >> AddColumns([1,2], 3, Value * Value)
-Errors: Error 18-19: Expected identifier name|Error 0-35: The function 'AddColumns' has some invalid arguments.
+Errors: Error 18-19: Expected identifier name|Error 0-10: The function 'AddColumns' has some invalid arguments.
 
 >> AddColumns([1, 2, 3], a, Value^2, a, Value^3)
-Errors: Warning 34-35: Column name conflict for 'a'.|Error 0-45: The function 'AddColumns' has some invalid arguments.
+Errors: Warning 34-35: Column name conflict for 'a'.|Error 0-10: The function 'AddColumns' has some invalid arguments.
 
 // Record overload
 >> AddColumns({Value:3}, a, Value^2, a, Value^3)
-Errors: Warning 34-35: Column name conflict for 'a'.|Error 0-45: The function 'AddColumns' has some invalid arguments.
+Errors: Warning 34-35: Column name conflict for 'a'.|Error 0-10: The function 'AddColumns' has some invalid arguments.
