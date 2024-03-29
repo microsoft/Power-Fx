@@ -604,6 +604,8 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsOptionSetBackedByColor => IsOptionSet && OptionSetInfo.BackingKind == DKind.Color;
 
+        public bool IsOptionSetBackedByString => IsOptionSet && OptionSetInfo.BackingKind == DKind.String;
+
         public bool IsView => Kind == DKind.View || Kind == DKind.ViewValue;
 
         public bool IsAggregate => IsRecord || IsTable;

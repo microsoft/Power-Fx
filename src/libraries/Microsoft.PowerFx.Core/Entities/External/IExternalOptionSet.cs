@@ -33,5 +33,20 @@ namespace Microsoft.PowerFx.Core.Entities
         {
             return optionSet.BackingKind == DKind.Boolean;
         }
+
+        public static bool IsStringValued(this IExternalOptionSet optionSet)
+        {
+            return optionSet.BackingKind == DKind.String;
+        }
+
+        public static bool IsNumberValued(this IExternalOptionSet optionSet)
+        {
+            return optionSet.BackingKind == DKind.Number;
+        }
+
+        public static bool IsColorValued(this IExternalOptionSet optionSet)
+        {
+            return optionSet.BackingKind == DKind.Color;
+        }
     }
 }
