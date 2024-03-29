@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // If the base record is not found, then append update record.
                 if (result.IsError && result.Error is ErrorValue errorvalue && errorvalue.Errors.Any(err => err.Kind == ErrorKind.NotFound))
                 {
-                    result = await tableValue.AppendAsync(baseRecord.Value, updatesRecord.Value, cancellationToken).ConfigureAwait(false);
+                    result = await tableValue.AppendAsync(updatesRecord.Value, cancellationToken).ConfigureAwait(false);
                 }
 
                 if (result.IsError)

@@ -525,19 +525,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             public override Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
             {
-                return _inner.AppendAsync(record, cancellationToken);
-            }
-
-            public override Task<DValue<RecordValue>> AppendAsync(RecordValue baseRecord, RecordValue updateRecord, CancellationToken cancellationToken)
-            {
                 cancellationToken.ThrowIfCancellationRequested();
 
                 var externalTabularDataSource = Type._type.AssociatedDataSources.Single() as IExternalTabularDataSource;
-                var keyFieldName = externalTabularDataSource.GetKeyColumns().First();
-                var keyValue = baseRecord.GetField(keyFieldName);
+                var keyFieldName = externalTabularDataSource.GetKeyColumns().First();       
+                var fields = new List<NamedValue>();
 
-                var fields = new List<NamedValue>() { new NamedValue(keyFieldName, keyValue) };
-                fields.AddRange(updateRecord.Fields);
+                fields.AddRange(record.Fields);
+
+                // If the key field is not present in the record, add it.
+                if (!record.Fields.Any(f => f.Name == keyFieldName))
+                {
+                    var keyValue = New(Guid.NewGuid());
+                    fields.Add(new NamedValue(keyFieldName, keyValue));
+                }
 
                 return _inner.AppendAsync(FormulaValue.NewRecordFromFields(fields), cancellationToken);
             }
