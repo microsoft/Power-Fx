@@ -131,7 +131,9 @@ namespace Microsoft.PowerFx.Connectors
             catch (Exception ex)
             {
                 runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in [Texl] {ConnectorFunction.LogFunction(nameof(GetConnectorSuggestionsAsync))} with {LogArguments(arguments)} and position {argPosition} {LogException(ex)}");
-                throw;
+
+                // This is Intellisense and we don't want to throw exceptions to the user
+                return null;
             }
         }
     }

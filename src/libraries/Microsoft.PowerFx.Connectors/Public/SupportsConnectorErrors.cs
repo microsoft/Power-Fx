@@ -16,9 +16,9 @@ namespace Microsoft.PowerFx.Connectors
 
         public IReadOnlyCollection<ErrorResourceKey> Warnings => _warnings;
 
-        private HashSet<string> _errors = null;
+        protected HashSet<string> _errors = null;
 
-        private HashSet<ErrorResourceKey> _warnings = null;
+        protected HashSet<ErrorResourceKey> _warnings = null;
 
         protected SupportsConnectorErrors()
         {
