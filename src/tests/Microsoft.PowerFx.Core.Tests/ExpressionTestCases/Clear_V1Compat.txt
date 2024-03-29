@@ -7,6 +7,7 @@ Errors: Error 6-13: The value passed to the 'Clear' function cannot be changed.
 Errors: Error 6-36: The value passed to the 'Clear' function cannot be changed.
 
 >> Clear(1)
+
 Errors: Error 6-7: Invalid argument type (Decimal). Expecting a Table value instead.|Error 0-8: The function 'Clear' has some invalid arguments.
 
 >> Clear(1/0)

@@ -14,16 +14,16 @@ Errors: Error 13-54: The specified column 'x' does not exist.|Error 57-99: The s
 Errors: Error 6-76: The value passed to the 'Patch' function cannot be changed.
 
 >> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, {Value:1}, If(false, {x:1, Value:2}, {Value:11, z:2}))
-Errors: Error 84-126: The specified column 'x' does not exist.|Error 58-127: The function 'Patch' has some invalid arguments.
+Errors: Error 84-126: The specified column 'x' does not exist.|Error 58-63: The function 'Patch' has some invalid arguments.
 
 >> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, If(false, {x:1, Value:2}, {Value:1, z:2}),  {Value:11})
-Errors: Error 73-114: The specified column 'x' does not exist.|Error 58-128: The function 'Patch' has some invalid arguments.
+Errors: Error 73-114: The specified column 'x' does not exist.|Error 58-63: The function 'Patch' has some invalid arguments.
 
 >> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, If(false, {x:1, Value:2}, {Value:1, z:2}),  If(false, {x:1, Value:2}, {Value:11, z:2}))
-Errors: Error 73-114: The specified column 'x' does not exist.|Error 117-159: The specified column 'x' does not exist.|Error 58-160: The function 'Patch' has some invalid arguments.
+Errors: Error 73-114: The specified column 'x' does not exist.|Error 117-159: The specified column 'x' does not exist.|Error 58-63: The function 'Patch' has some invalid arguments.
 
 >> Collect(t_empty, {Value:1}); Collect(t_empty, If(false, {x:1, Value:2}, {Value:2, z:2})); Collect(t_empty, {Value:3}); Patch(t_empty, {Value:2}, {Value:11})
-Errors: Error 46-87: The specified column 'x' does not exist.|Error 29-88: The function 'Collect' has some invalid arguments.
+Errors: Error 46-87: The specified column 'x' does not exist.|Error 29-36: The function 'Collect' has some invalid arguments.
 
 // field22 is missing
 >> Patch(

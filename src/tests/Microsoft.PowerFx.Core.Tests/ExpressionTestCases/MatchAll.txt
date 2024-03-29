@@ -25,7 +25,16 @@ Table({FullMatch:"Joe 164",StartMatch:1,SubMatches:Table({Value:"Joe"},{Value:"1
 Table()
 
 >> MatchAll(Blank(), Blank())
-Errors: Error 18-25: Regular expressions must be constant values.|Error 0-26: The function 'MatchAll' has some invalid arguments.
+Errors: Error 18-25: Regular expressions must be constant values.|Error 0-8: The function 'MatchAll' has some invalid arguments.
 
 >> MatchAll(1/0, "Hi")
 Error({Kind:ErrorKind.Div0})
+
+>> MatchAll("Hello", "Hello", MatchOptions.IgnoreCase)
+Table({FullMatch:"Hello",StartMatch:1,SubMatches:Table()})
+
+>> MatchAll("Hello", "Hello", "")
+Table({FullMatch:"Hello",StartMatch:1,SubMatches:Table()})
+
+>> MatchAll("Hi", "Hi", MatchOptions.Multiline)
+Table({FullMatch:"Hi",StartMatch:1,SubMatches:Table()})
