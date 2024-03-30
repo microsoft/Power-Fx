@@ -118,18 +118,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-#if false
+#if true
         // Helper to run a single .txt 
         [Fact]
         public void RunOne()
         {
-            var path = @"D:\dev\pa2\Power-Fx\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\OptionSet.txt";
-            var line = 41;
+            var path = @"D:\repos\pfx\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\Summarize.txt";
+            var line = 0;
 
             var runner = new InterpreterRunner();
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(path);
+            testRunner.AddFile(new Dictionary<string, bool>() { { "PowerFxV1", true } }, path);
 
             // We can filter to just cases we want 
             if (line > 0)
@@ -138,6 +138,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             var result = testRunner.RunTests();
+
+            if (result.Fail > 0)
+            {
+                Assert.True(false, result.Output);
+            }
+            else
+            {
+                Console.WriteLine(result.Output);
+            }
         }
 #endif
 

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -208,7 +209,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             public Func<string, string, RunResult> _hook2;
 
-            protected override Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
+            protected override Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, Dictionary<string, string> setupFormulas = null)
             {
                 if (_hook != null)
                 {
@@ -426,7 +427,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // Override IsError
         private class MockErrorRunner : MockRunner
         {
-            protected override Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
+            protected override Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, Dictionary<string, string> setupFormulas = null)
             {
                 return Task.FromResult(new RunResult(_hook(expr, setupHandlerName)));
             }

@@ -3,18 +3,22 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.Tests.Helpers;
 using Microsoft.PowerFx.Logging;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 
@@ -399,7 +403,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return result;
             }
 
-            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName)
+            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName, Dictionary<string, string> setupFormulas)
             {
                 RecalcEngine engine = null;
                 RecordValue parameters = null;
@@ -466,11 +470,53 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     parameters = RecordValue.Empty();
                 }
 
+                if (setupFormulas != null)
+                {
+                    foreach (var f in setupFormulas)
+                    {
+                        engine.SetFormula(f.Key, f.Value, null);
+                    }
+                }
+
                 var symbolTableFromParams = ReadOnlySymbolTable.NewFromRecord(parameters.Type);
                 var combinedSymbolTable = new ComposedReadOnlySymbolTable(symbolTableFromParams, symbolTable);
 
                 // These tests are only run in en-US locale for now
                 var options = iSetup.Flags.ToParserOptions(new CultureInfo("en-US"));
+
+                var parse = Engine.Parse(expr, options: options);
+                if (parse.Root.Kind == Microsoft.PowerFx.Syntax.NodeKind.Call && 
+                    parse.Root is Microsoft.PowerFx.Syntax.CallNode call &&
+                    call.Head.Name.Value == "Summarize")
+                {
+                    List<string> groupColumns = new List<string>();
+                    Dictionary<string, string> aggregates = new Dictionary<string, string>();
+                    var table = call.Args.Children[0].GetCompleteSpan().GetFragment(expr);
+
+                    for (var i = 1; i < call.Args.Count; i++)
+                    {
+                        switch (call.Args.Children[i])
+                        {
+                            case FirstNameNode fn:
+                                groupColumns.Add(fn.Ident.Name);
+                                break;
+                            case AsNode a:
+                                aggregates.Add(a.Right.Name, a.Left.ToString());
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    expr = $"ForAll( Distinct( {table},\n" +
+                                $" JSON( {{ {string.Join(",", groupColumns.Select(x => $"{x}:{x}"))} }} ) ) As _distinct, \n" +
+                                $" With( AddColumns( {{ {string.Join(",", groupColumns.Select(x => $"{x}:Text(ParseJSON(_distinct.Value).{x})"))} }},\n" +
+                                $" ThisGroup, Filter( {table} As _filter, {string.Join(" And ", groupColumns.Select(x => $"_filter.{x}={x}"))} ) ),\n" +
+                                $" {{ {string.Join(", ", groupColumns.Select(x => $"{x}:{x}"))}, {string.Join(", ", aggregates.Keys.Select(x => $"{x}:{aggregates[x]}"))} }} ) )";
+
+                    expr = expr + " ";
+                }
+
                 var check = engine.Check(expr, options: options, symbolTable: combinedSymbolTable);                
                 if (!check.IsSuccess)
                 {
@@ -588,7 +634,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #pragma warning restore CS0618 // Type or member is obsolete
             }
 
-            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
+            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, Dictionary<string, string> setupFormulas = null)
             {
                 var replResult = await _repl.HandleCommandAsync(expr, default).ConfigureAwait(false);
 

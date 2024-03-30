@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Parser;
 
@@ -195,6 +196,7 @@ namespace Microsoft.PowerFx.Core.Tests
             string fileSetup = null;
             string fileOveride = null;
             Dictionary<string, bool> fileSetupDict = new Dictionary<string, bool>();
+            Dictionary<string, string> fileFormulaDict = new Dictionary<string, string>();
 
             var i = -1;
 
@@ -231,6 +233,30 @@ namespace Microsoft.PowerFx.Core.Tests
                             {
                                 fileSetupDict.Add(flag.Key, flag.Value);
                             }
+                        }
+                    }
+                    else if (TryParseDirective(line, "#FORMULA:", out var thisFormula))
+                    {
+                        var m = new Regex(@"^#FORMULA:\s*(?<name>\w+)\s*=(?<rest>.*)$", RegexOptions.IgnoreCase).Match(line);
+
+                        if (m.Success)
+                        {
+                            var sb = new StringBuilder();
+                            sb.Append(m.Groups["rest"].Value);
+                            for (i++;  i < lines.Length - 1 && !lines[i + 1].StartsWith("#") && !lines[i + 1].StartsWith(">"); i++)
+                            {
+                                line = lines[i + 1];
+                                if (line.Contains("//"))
+                                {
+                                    line = line.Substring(line.IndexOf("//"));
+                                }
+
+                                sb.Append(line.Trim());
+                            }
+
+                            fileFormulaDict.Add(m.Groups["name"].Value, sb.ToString());
+
+                            continue;
                         }
                     }
                     else if (TryParseDirective(line, "#OVERRIDE:", out var thisOveride))
@@ -296,7 +322,8 @@ namespace Microsoft.PowerFx.Core.Tests
                         Input = line,
                         SourceLine = i + 1, // 1-based
                         SourceFile = thisFile,
-                        SetupHandlerName = fileSetup
+                        SetupHandlerName = fileSetup,
+                        SetupFormulas = fileFormulaDict
                     };
                     continue;
                 }
@@ -318,7 +345,13 @@ namespace Microsoft.PowerFx.Core.Tests
                         throw ParseError(i, $"Multiline comments aren't supported in output");
                     }
 
-                    test.Expected = line.Trim();                    
+                    test.Expected = line.Trim();
+
+                    while (i < lines.Length && Regex.IsMatch(lines[i + 1], @"^\s+[^\s]"))
+                    {
+                        test.Expected += lines[i + 1].Trim();
+                        i++;
+                    }
 
                     var key = test.GetUniqueId(fileOveride);
                     if (_keyToTests.TryGetValue(key, out var existingTest))

@@ -1,0 +1,42 @@
+#SETUP: ConsistentOneColumnTableResult,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+
+#FORMULA: Sales = Table(
+        {Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1)},
+        {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1)},
+        {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2)},
+        {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2)},
+        {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3)},
+        {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3)}
+    )
+
+>> Summarize( Sales, Supplier, Fruit, Average( ThisGroup, Price ) As Avg_Price )
+Table({Avg_Price:215,Fruit:"Grapes",Supplier:"Contoso"},
+    {Avg_Price:30.5,Fruit:"Lemons",Supplier:"Fabrikam"},
+    {Avg_Price:29,Fruit:"Lemons",Supplier:"Contoso"},
+    {Avg_Price:12,Fruit:"Bananas",Supplier:"Contoso"})
+
+>> Summarize( Sales, Supplier, Fruit, CountRows( ThisGroup ) As Count )
+Table({Count:2,Fruit:"Grapes",Supplier:"Contoso"},
+    {Count:2,Fruit:"Lemons",Supplier:"Fabrikam"},
+    {Count:1,Fruit:"Lemons",Supplier:"Contoso"},
+    {Count:1,Fruit:"Bananas",Supplier:"Contoso"})
+
+>> Summarize( Sales, CountRows( ThisGroup ) As Count, Supplier, Fruit )
+Table({Count:2,Fruit:"Grapes",Supplier:"Contoso"},
+    {Count:2,Fruit:"Lemons",Supplier:"Fabrikam"},
+    {Count:1,Fruit:"Lemons",Supplier:"Contoso"},
+    {Count:1,Fruit:"Bananas",Supplier:"Contoso"})
+
+>> Summarize( Sales, CountRows( ThisGroup ) As Count, Supplier )
+Table({Count:4,Supplier:"Contoso"},{Count:2,Supplier:"Fabrikam"})
+
+>> Summarize( Sales, CountRows( ThisGroup ) As Count, Fruit )
+Table({Count:2,Fruit:"Grapes"},{Count:3,Fruit:"Lemons"},{Count:1,Fruit:"Bananas"})
+
+>> Summarize( Sales, Fruit, Sum( ThisGroup, Price ) As Sales_By_Fruit )
+Table({Fruit:"Grapes",Sales_By_Fruit:430},{Fruit:"Lemons",Sales_By_Fruit:90},{Fruit:"Bananas",Sales_By_Fruit:12})
+
+>> Summarize( Sales, Fruit, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
+Table({CountOfSuppliers:1,Fruit:"Grapes"},{CountOfSuppliers:2,Fruit:"Lemons"},{CountOfSuppliers:1,Fruit:"Bananas"})
+
+

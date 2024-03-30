@@ -23,6 +23,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public string SourceFile;
         public int SourceLine;
         public string SetupHandlerName;
+        public Dictionary<string, string> SetupFormulas;
 
         // For diagnostics, save the orginal location
         public string OverrideFrom;
