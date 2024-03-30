@@ -473,10 +473,10 @@ Error({Kind:ErrorKind.InvalidArgument})
 98765432198.12
 
 >> Round( 98765432198.1234567892, 100 )
-98765432198.1234567892
+Error({Kind:ErrorKind.Numeric})
 
 >> Round( 98765432198.1234567892, -100 )
-0
+Error({Kind:ErrorKind.Numeric})
 
 >> RoundUp( 98765432198.1234567892, -2 )
 98765432200
@@ -485,10 +485,10 @@ Error({Kind:ErrorKind.InvalidArgument})
 98765432198.13
 
 >> RoundUp( 98765432198.1234567892, 100 )
-98765432198.1234567892
+Error({Kind:ErrorKind.Numeric})
 
 >> RoundUp( 98765432198.1234567892, -100 )
-0
+Error({Kind:ErrorKind.Numeric})
 
 >> RoundDown( 98765432198.1234567892, -2 )
 98765432100
@@ -497,9 +497,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 98765432198.12
 
 >> RoundDown( 98765432198.1234567892, 100 )
-98765432198.1234567892
+Error({Kind:ErrorKind.Numeric})
 
 >> RoundDown( 98765432198.1234567892, -100 )
-0
-
-
+Error({Kind:ErrorKind.Numeric})
