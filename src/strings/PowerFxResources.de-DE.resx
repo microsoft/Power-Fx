@@ -4063,7 +4063,7 @@
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
-    <value>Verbindungsdatenquellen</value>
+    <value>Verbundene_Datenquelle</value>
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">

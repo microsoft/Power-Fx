@@ -1514,7 +1514,7 @@
     <value>Avalia uma expressão sobre uma ou mais colunas da tabela e retorna uma tabela de coluna única que contém valores distintos (exclusivos) para a expressão avaliada.</value>
   </data>
   <data name="DistinctArg1" xml:space="preserve">
-    <value>origem</value>
+    <value>fonte</value>
     
   </data>
   <data name="DistinctArg2" xml:space="preserve">
