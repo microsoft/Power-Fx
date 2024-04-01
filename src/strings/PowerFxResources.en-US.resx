@@ -3225,6 +3225,10 @@
     <value>Supply an operand value that will complete the expression. Ensure that the operand's type (text, number, date, or true/false) fits the expression. Match numbers with numbers, text with text, and so on. For example, '1 + "Hi"' isn't valid, but '1 + 2' is valid.</value>
     <comment>How to fix the error.</comment>
   </data>
+  <data name="ErrorResource_ErrSummarizeColumnOrAs_ShortMessage" xml:space="preserve">
+    <value>The Summarize function's arguments must be either existing column names or formulas named with the As keyword.</value>
+    <comment>Error Message.</comment>    
+  </data>
   <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
     <value>Unexpected characters. Characters are used in the formula in an unexpected way.</value>
     <comment>Error Message.</comment>

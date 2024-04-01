@@ -1,8 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
+using System.Xml.Linq;
+using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Syntax;
 using static Microsoft.PowerFx.Core.Parser.TexlParser;
 
 namespace Microsoft.PowerFx
@@ -74,6 +83,36 @@ namespace Microsoft.PowerFx
             return Parse(script, Features.None);
         }
 
+        private CallNode FindSummarize(TexlNode node)
+        {
+            if (node is CallNode call)
+            {
+                if (call.Head.Name.Value == "Summarize")
+                {
+                    return call;
+                }
+                else
+                {
+                    return FindSummarize(call.Args);
+                }
+            }
+            else if (node is VariadicBase var)
+            {
+                for (int i = 0; i < var.ChildNodes.Count(); i++)
+                {
+                    var s = FindSummarize(var.Children[i]);
+                    if (s != null)
+                    {
+                        return s;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private static int summarizeCounter;
+
         internal ParseResult Parse(string script, Features features)
         {
             if (MaxExpressionLength > 0 && script.Length > MaxExpressionLength)
@@ -91,6 +130,59 @@ namespace Microsoft.PowerFx
 
             var result = TexlParser.ParseScript(script, features, Culture, flags);
             result.Options = this;
+
+            if (result.IsSuccess)
+            {
+                var summarize = FindSummarize(result.Root);
+
+                if (summarize != null)
+                {
+                    var id = ++summarizeCounter;
+                    List<string> groupColumns = new List<string>();
+                    Dictionary<string, string> aggregates = new Dictionary<string, string>();
+                    var table = summarize.Args.Children[0].GetCompleteSpan().GetFragment(script);
+
+                    for (var i = 1; i < summarize.Args.Count; i++)
+                    {
+                        switch (summarize.Args.Children[i])
+                        {
+                            case FirstNameNode fn:
+                                groupColumns.Add(fn.Ident.Name);
+                                break;
+                            case AsNode a:
+                                aggregates.Add(a.Right.Name, a.Left.ToString());
+                                break;
+                            default:
+                                return new ParseResult(
+                                    summarize,
+                                    new List<TexlError>() { new TexlError(summarize, DocumentErrorSeverity.Critical, TexlStrings.ErrSummarizeColumnOrAs) },
+                                    true,
+                                    new List<CommentToken>(),
+                                    null,
+                                    null,
+                                    script)
+                                {
+                                    Options = this
+                                };
+                        }
+                    }
+
+                    var script2 = $"With( {{ _table{id}:{table} }},\n ForAll( Distinct( _table{id}, " +
+                                $"JSON( {{ {string.Join(",", groupColumns.Select(x => $"{x}:{x}"))} }} ) ) As _distinct{id}, \n" +
+                                $"  With( AddColumns( {{ {string.Join(",", groupColumns.Select(x => $"{x}:{(x.StartsWith("num", StringComparison.InvariantCultureIgnoreCase) ? "Value" : "Text")}(ParseJSON(_distinct{id}.Value).{x})"))} }},\n" +
+                                $"     ThisGroup, DropColumns( Filter( _table{id} As _filter{id}, {string.Join(" And ", groupColumns.Select(x => $"_filter{id}.{x}={x}"))} ), " +
+                                $"{string.Join(",", groupColumns.Select(x => $"{x}"))}) ),\n" +
+                                $"{{ {string.Join(", ", groupColumns.Select(x => $"{x}:{x}"))}, {string.Join(", ", aggregates.Keys.Select(x => $"{x}:{aggregates[x]}"))} }} ) ) )";
+
+                    Debug.WriteLine(string.Empty);
+                    Debug.Write("Summarize: " + script);
+                    Debug.Write("Transform: " + script2);
+
+                    var script3 = script.Substring(0, summarize.GetCompleteSpan().Min) + script2 + script.Substring(summarize.GetCompleteSpan().Lim);
+                    return this.Parse(script3, features);
+                }
+            }
+
             return result;
         }
 

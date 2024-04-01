@@ -591,6 +591,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess = new ErrorResourceKey("ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess");
         public static ErrorResourceKey ErrOperandExpected = new ErrorResourceKey("ErrOperandExpected");
         public static ErrorResourceKey ErrBadToken = new ErrorResourceKey("ErrBadToken");
+        public static ErrorResourceKey ErrSummarizeColumnOrAs = new ErrorResourceKey("ErrSummarizeColumnOrAs");
         public static ErrorResourceKey UnexpectedCharacterToken = new ErrorResourceKey("UnexpectedCharacterToken");
         public static ErrorResourceKey ErrMissingEndOfBlockComment = new ErrorResourceKey("ErrMissingEndOfBlockComment");
         public static ErrorResourceKey ErrExpectedFound_Ex_Fnd = new ErrorResourceKey("ErrExpectedFound_Ex_Fnd");
