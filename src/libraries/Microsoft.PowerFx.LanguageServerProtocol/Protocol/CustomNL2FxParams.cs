@@ -47,6 +47,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         public string Expression { get; set; }
 
         /// <summary>
+        /// An expression that has all PII stripped and can be logged. 
+        /// </summary>
+        public string AnonymizedExpression { get; set; }
+
+        /// <summary>
         /// The expression from the model, prior to any client-side LSP filtering.
         /// This can be useful for diagnostics. 
         /// </summary>
