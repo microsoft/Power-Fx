@@ -196,19 +196,19 @@ true
 // Boolean-Date type conversion is not supported
 
 >> Coalesce(If(1<0,false), Date(2000,2,12))
-Errors: Error 24-39: Invalid argument type (Date). Expecting a Boolean value instead.|Error 0-40: The function 'Coalesce' has some invalid arguments.
+Errors: Error 24-39: Invalid argument type (Date). Expecting a Boolean value instead.|Error 0-8: The function 'Coalesce' has some invalid arguments.
 
 // BOOLEAN-TIME
 // Boolean-Time type conversion is not supported
 
 >> Coalesce(If(1<0,false), Time(12,34,56))
-Errors: Error 24-38: Invalid argument type (Time). Expecting a Boolean value instead.|Error 0-39: The function 'Coalesce' has some invalid arguments.
+Errors: Error 24-38: Invalid argument type (Time). Expecting a Boolean value instead.|Error 0-8: The function 'Coalesce' has some invalid arguments.
 
 // BOOLEAN-DATETIME
 // Boolean-DateTime type conversion is not supported
 
 >> Coalesce(If(1<0,false), DateTime(2000,1,2,12,34,56))
-Errors: Error 24-51: Invalid argument type (DateTime). Expecting a Boolean value instead.|Error 0-52: The function 'Coalesce' has some invalid arguments.
+Errors: Error 24-51: Invalid argument type (DateTime). Expecting a Boolean value instead.|Error 0-8: The function 'Coalesce' has some invalid arguments.
 
 // DATE-NUMBER
 >> Coalesce(If(1<0,Date(2000,12,11)), 2)
@@ -225,19 +225,19 @@ Date(2021,9,7)
 // Date-Boolean type conversion is not supported
 
 >> Coalesce(If(1<0,Date(2000,2,12)), false)
-Errors: Error 34-39: Invalid argument type (Boolean). Expecting a Date value instead.|Error 0-40: The function 'Coalesce' has some invalid arguments.
+Errors: Error 34-39: Invalid argument type (Boolean). Expecting a Date value instead.|Error 0-8: The function 'Coalesce' has some invalid arguments.
 
 // TIME-BOOLEAN
 // Time-Boolean type conversion is not supported
 
 >> Coalesce(If(1<0,Time(12,34,56)), true)
-Errors: Error 33-37: Invalid argument type (Boolean). Expecting a Time value instead.|Error 0-38: The function 'Coalesce' has some invalid arguments.
+Errors: Error 33-37: Invalid argument type (Boolean). Expecting a Time value instead.|Error 0-8: The function 'Coalesce' has some invalid arguments.
 
 // DATETIME-BOOLEAN
 // DateTime-Boolean type conversion is not supported
 
 >> Coalesce(If(1<0,DateTime(2000,1,2,12,34,56)), false)
-Errors: Error 46-51: Invalid argument type (Boolean). Expecting a DateTime value instead.|Error 0-52: The function 'Coalesce' has some invalid arguments.
+Errors: Error 46-51: Invalid argument type (Boolean). Expecting a DateTime value instead.|Error 0-8: The function 'Coalesce' has some invalid arguments.
 
 // DATE-DATE
 >> Coalesce(If(1<0,Date(2022,1,1)), Date(2021,9,8))

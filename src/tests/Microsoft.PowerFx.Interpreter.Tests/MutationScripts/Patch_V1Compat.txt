@@ -37,13 +37,13 @@ Table({b:true,d:1,t:"hi"},{b:false,d:2,t:"back"},{b:Blank(),d:3,t:"cycle"})
 Table({b:true,d:1,t:"hi"},{b:Blank(),d:12,t:"different"},{b:Blank(),d:3,t:"cycle"})
 
 >> Patch( y, Index(y,2), {b:1,d:"23",t:DateTime(2002,2,2,2,2,2)})
-Errors: Error 22-61: The type of this argument 'd' does not match the expected type 'Decimal'. Found type 'Text'.|Error 0-62: The function 'Patch' has some invalid arguments.
+Errors: Error 22-61: The type of this argument 'd' does not match the expected type 'Decimal'. Found type 'Text'.|Error 0-5: The function 'Patch' has some invalid arguments.
 
 >> 5;y
 Table({b:true,d:1,t:"hi"},{b:Blank(),d:12,t:"different"},{b:Blank(),d:3,t:"cycle"})
 
 >> Patch( y, Index(y,3), {b:"0",d:true,t:GUID("1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49c")} )
-Errors: Error 22-83: The type of this argument 'b' does not match the expected type 'Boolean'. Found type 'Text'.|Error 0-85: The function 'Patch' has some invalid arguments.
+Errors: Error 22-83: The type of this argument 'b' does not match the expected type 'Boolean'. Found type 'Text'.|Error 0-5: The function 'Patch' has some invalid arguments.
 
 // should not have been changed from the previous patch
 >> 6;y
@@ -79,7 +79,7 @@ Table({Value:1},{Value:88},{Value:3})
 Table({Value:1},{Value:88},{Value:3},{Value:77})
 
 >> Patch(x.t, {Value:88}, {Value:"77"})
-Errors: Error 23-35: The type of this argument 'Value' does not match the expected type 'Decimal'. Found type 'Text'.|Error 0-36: The function 'Patch' has some invalid arguments.
+Errors: Error 23-35: The type of this argument 'Value' does not match the expected type 'Decimal'. Found type 'Text'.|Error 0-5: The function 'Patch' has some invalid arguments.
 
 >> 4;x.t
 Table({Value:1},{Value:88},{Value:3},{Value:77})

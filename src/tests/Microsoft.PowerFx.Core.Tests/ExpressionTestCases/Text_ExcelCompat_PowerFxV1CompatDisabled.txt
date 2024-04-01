@@ -4,7 +4,7 @@
 >> Text(1234.5678, "$-fr-FR] # ##0,00", "vi-VI")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text(1234567.89, "[$-fr-FR]# ###,## €", "fr-FR")
+>> Text(1234567.89, "[$-fr-FR]# ###,## ï¿½", "fr-FR")
 Error({Kind:ErrorKind.InvalidArgument})
 
 // Not support format string for non numeric/datetime/date/time
@@ -480,10 +480,10 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text("asdf", "##;(##);ZZZ;""AAA """)
-Errors: Error 0-36: The function 'Text' has some invalid arguments.|Warning 13-35: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-35: Incorrect format specifier for 'Text'.
 
 >> Text("asdf", "##;(##);ZZZ;""AAA ""@")
-Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 13-36: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 13-36: Incorrect format specifier for 'Text'.
 
 >> Text("asdf", "##;(##);ZZZ")
 Error({Kind:ErrorKind.InvalidArgument})
@@ -505,8 +505,8 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(1234567.1234567, "[$-de-DE]$ #,####.0000")
 Error({Kind:ErrorKind.InvalidArgument})
 
-// Excel: "€ 1,234,567.1235"
->> Text(1234567.1234567, "[$€-fr-FR] #,####.0000")
+// Excel: "ï¿½ 1,234,567.1235"
+>> Text(1234567.1234567, "[$ï¿½-fr-FR] #,####.0000")
 Error({Kind:ErrorKind.InvalidArgument})
 
 // Excel: " 3"
@@ -669,53 +669,53 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 // Literal characters conflicting with date/time format specifiers.
 >> Text(72, "# \m")
-Errors: Error 0-16: The function 'Text' has some invalid arguments.|Warning 9-15: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 9-15: Incorrect format specifier for 'Text'.
 
 >> Text(72, "# \y")
-Errors: Error 0-16: The function 'Text' has some invalid arguments.|Warning 9-15: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 9-15: Incorrect format specifier for 'Text'.
 
 >> Text(72, "# y")
-Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
 
 >> Text(72, "# m")
-Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
 
 // Scaling factor.  Each comma on the end divides the number by 1,000.
 >> Text(1234567891234, "0,0,,,""dollar""\z\M")
-Errors: Error 0-43: The function 'Text' has some invalid arguments.|Warning 20-42: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 20-42: Incorrect format specifier for 'Text'.
 
 >> Text(1234567891234, "0,0,""dollar"",\z,\M")
-Errors: Error 0-43: The function 'Text' has some invalid arguments.|Warning 20-42: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 20-42: Incorrect format specifier for 'Text'.
 
 >> Text(1234567891234, "0,0,""dollar"",\z,z""P""\M")
-Errors: Error 0-49: The function 'Text' has some invalid arguments.|Warning 20-48: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 20-48: Incorrect format specifier for 'Text'.
 
 >> Text(1234567891234, "\K#\M,,,z'""TH""")
-Errors: Error 0-39: The function 'Text' has some invalid arguments.|Warning 20-38: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 20-38: Incorrect format specifier for 'Text'.
 
 >> Text(1234567891234, "\K#\M,,z'""TH"",")
-Errors: Error 0-39: The function 'Text' has some invalid arguments.|Warning 20-38: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 20-38: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#,#.##################,,,z'\k\m")
-Errors: Error 0-56: The function 'Text' has some invalid arguments.|Warning 22-55: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-55: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#,#.###,###,###,###,###,###,,,z'\k\m")
-Errors: Error 0-61: The function 'Text' has some invalid arguments.|Warning 22-60: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-60: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#,#.##################,,,z'\k\m""am""")
-Errors: Error 0-62: The function 'Text' has some invalid arguments.|Warning 22-61: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-61: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#,#.##################,,,z'\k\m\d\y""am""")
-Errors: Error 0-66: The function 'Text' has some invalid arguments.|Warning 22-65: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-65: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#,#.##################,z'\k\m,\d\y,""am"",")
-Errors: Error 0-67: The function 'Text' has some invalid arguments.|Warning 22-66: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-66: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#,#.###############,###,z'\k\m,\d\y,""am"",")
-Errors: Error 0-68: The function 'Text' has some invalid arguments.|Warning 22-67: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-67: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "#,#.###,###,###,###,###,###,z'\k\m,\d\y,""am"",")
-Errors: Error 0-72: The function 'Text' has some invalid arguments.|Warning 22-71: Incorrect format specifier for 'Text'.
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 22-71: Incorrect format specifier for 'Text'.
 
 // 5 digit month not supported yet
 >> Text(70.125, "MMMMM DD YYY")
