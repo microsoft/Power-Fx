@@ -311,10 +311,6 @@ namespace Microsoft.PowerFx
 
                 throw;
             }
-            catch (ServiceUnavailableException serviceUnavailableException)
-            {
-                return new ErrorValue(IRContext.NotInSource(info.RetType), serviceUnavailableException.ExpressionError);
-            }
 
             if (info.IsAsync)
             {
@@ -326,6 +322,10 @@ namespace Microsoft.PowerFx
                 catch (CustomFunctionErrorException customFunctionErrorException)
                 {
                     return CommonErrors.CustomError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
+                }
+                catch (ServiceUnavailableException serviceUnavailableException)
+                {
+                    return FormulaValue.NewError(serviceUnavailableException.ExpressionError);
                 }
             }
 
