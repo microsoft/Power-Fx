@@ -4059,7 +4059,7 @@
     
   </data>
   <data name="AboutRefresh" xml:space="preserve">
-    <value>Actualitza l'origen de les dades especificat.</value>
+    <value>Actualitza la font de dades especificada.</value>
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
@@ -4071,7 +4071,7 @@
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
-    <value>Origen de les dades connectat que s'ha d'actualitzar.</value>
+    <value>Font de dades connectada que s'ha d'actualitzar.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Només es poden actualitzar les connexions administrades.</value>
