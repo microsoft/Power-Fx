@@ -184,7 +184,7 @@ Table({Value:1},{Value:1},{Value:3},{Value:0})
 Table({Value:1},{Value:2},{Value:3})
 
 >> ForAll(ParseJSON("[1,2,3]"), ThisItem)
-Errors: Error 29-37: Name isn't valid. 'ThisItem' isn't recognized.|Error 0-38: The function 'ForAll' has some invalid arguments.
+Errors: Error 29-37: Name isn't valid. 'ThisItem' isn't recognized.|Error 0-6: The function 'ForAll' has some invalid arguments.
 
 >> ParseJSON("5") + ParseJSON("5")
 10

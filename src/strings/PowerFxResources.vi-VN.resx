@@ -1518,7 +1518,7 @@
     
   </data>
   <data name="DistinctArg2" xml:space="preserve">
-    <value>biểu thức</value>
+    <value>biểu_thức</value>
     
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
@@ -3835,7 +3835,7 @@
     
   </data>
   <data name="SetArg2" xml:space="preserve">
-    <value>giá trị</value>
+    <value>giá_trị</value>
     
   </data>
   <data name="AboutDec2Hex" xml:space="preserve">
@@ -4055,7 +4055,7 @@
     
   </data>
   <data name="MatchArg3" xml:space="preserve">
-    <value>tùy_chọn</value>
+    <value>tùy_chọn</value>
     
   </data>
   <data name="AboutRefresh" xml:space="preserve">

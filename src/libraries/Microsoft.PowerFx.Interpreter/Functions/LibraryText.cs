@@ -426,120 +426,127 @@ namespace Microsoft.PowerFx.Functions
 
             Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
 
-            switch (value)
+            try
             {
-                case StringValue sv:
-                    result = sv;
-                    break;
-                case BooleanValue b:
-                    result = new StringValue(irContext, b.Value.ToString(culture).ToLowerInvariant());
-                    break;
-                case GuidValue g:
-                    result = new StringValue(irContext, g.Value.ToString("d", CultureInfo.InvariantCulture));
-                    break;
-                case DecimalValue:
-                case NumberValue:
-                    NumberValue numberValue = value as NumberValue;
-                    if (formatString != null && textFormatArgs.DateTimeFmt != DateTimeFmtType.NoDateTimeFormat)
-                    {
-                        // It's a number, formatted as date/time. Let's convert it to a date/time value first
-                        if (value is DecimalValue decimalValue)
+                switch (value)
+                {
+                    case StringValue sv:
+                        result = sv;
+                        break;
+                    case BooleanValue b:
+                        result = new StringValue(irContext, b.Value.ToString(culture).ToLowerInvariant());
+                        break;
+                    case GuidValue g:
+                        result = new StringValue(irContext, g.Value.ToString("d", CultureInfo.InvariantCulture));
+                        break;
+                    case DecimalValue:
+                    case NumberValue:
+                        NumberValue numberValue = value as NumberValue;
+                        if (formatString != null && textFormatArgs.DateTimeFmt != DateTimeFmtType.NoDateTimeFormat)
                         {
-                            // Convert decimal to number
-                            numberValue = new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)decimalValue.Value);
-                        }
-
-                        var dateTimeResult = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), numberValue).GetConvertedValue(timeZoneInfo);
-
-                        // Update the right section for DateTime format
-                        textFormatArgs.FormatArg = SectionFormatStr(textFormatArgs.FormatArg, textFormatArgs.Sections, numberValue.Value);
-
-                        return textFormatArgs.DateTimeFmt == DateTimeFmtType.EnumDateTimeFormat ? TryExpandDateTimeFromEnumFormat(irContext, textFormatArgs, dateTimeResult, timeZoneInfo, culture, cancellationToken, out result) :
-                            TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, "g", dateTimeResult, timeZoneInfo, culture, cancellationToken, out result);
-                    }
-                    else
-                    {
-                        if (value is DecimalValue decimalValue)
-                        {
-                            result = new StringValue(irContext, formatString == string.Empty ? string.Empty : decimalValue.Normalize().ToString(formatString ?? "G", culture));
-                        }
-                        else
-                        {
-                            result = new StringValue(irContext, formatString == string.Empty ? string.Empty : numberValue.Value.ToString(formatString ?? "G", culture));
-                        }
-                    }
-
-                    break;
-                case DateTimeValue:
-                case DateValue:
-                case TimeValue:
-                    if (formatString != null && textFormatArgs.HasNumericFmt)
-                    {
-                        NumberValue numberValueResult;
-
-                        // It's a datetime, formatted as number. Let's convert it to a number value first
-                        if (value is DateTimeValue dateTimeValue)
-                        {
-                            numberValueResult = Library.DateTimeToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateTimeValue);
-                        }
-                        else if (value is DateValue dateValue)
-                        {
-                            numberValueResult = Library.DateToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateValue) as NumberValue;
-                        }
-                        else
-                        {
-                            var timeValue = value as TimeValue;
-                            numberValueResult = Library.TimeToNumber(IRContext.NotInSource(FormulaType.Number), new TimeValue[] { timeValue });
-                        }
-
-                        result = new StringValue(irContext, numberValueResult.Value.ToString(formatString, culture));
-                    }
-                    else
-                    {
-                        DateTime dateTimeResult;
-                        string defaultFormat = "g";
-
-                        if (value is DateTimeValue dateTimeValue)
-                        {
-                            dateTimeResult = dateTimeValue.GetConvertedValue(timeZoneInfo);
-                        }
-                        else if (value is DateValue dateValue)
-                        {
-                            dateTimeResult = dateValue.GetConvertedValue(timeZoneInfo);
-                            defaultFormat = "d";
-                        }
-                        else
-                        {
-                            var timeValue = value as TimeValue;
-                            dateTimeResult = Library.TimeToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), timeValue).GetConvertedValue(timeZoneInfo);
-                            defaultFormat = "t";
-                        }
-
-                        // Update the right section for DateTime format
-                        if (textFormatArgs.Sections != null && textFormatArgs.Sections.Count > 1)
-                        {
-                            NumberValue dateTimeNumberValue;
-                            if (value is DateTimeValue datetimeValue)
+                            // It's a number, formatted as date/time. Let's convert it to a date/time value first
+                            if (value is DecimalValue decimalValue)
                             {
-                                dateTimeNumberValue = Library.DateTimeToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), datetimeValue);
+                                // Convert decimal to number
+                                numberValue = new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)decimalValue.Value);
                             }
-                            else if (value is DateValue dateValue)
+
+                            var dateTimeResult = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), numberValue).GetConvertedValue(timeZoneInfo);
+
+                            // Update the right section for DateTime format
+                            textFormatArgs.FormatArg = SectionFormatStr(textFormatArgs.FormatArg, textFormatArgs.Sections, numberValue.Value);
+
+                            return textFormatArgs.DateTimeFmt == DateTimeFmtType.EnumDateTimeFormat ? TryExpandDateTimeFromEnumFormat(irContext, textFormatArgs, dateTimeResult, timeZoneInfo, culture, cancellationToken, out result) :
+                                TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, "g", dateTimeResult, timeZoneInfo, culture, cancellationToken, out result);
+                        }
+                        else
+                        {
+                            if (value is DecimalValue decimalValue)
                             {
-                                dateTimeNumberValue = Library.DateToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateValue);
+                                result = new StringValue(irContext, formatString == string.Empty ? string.Empty : decimalValue.Normalize().ToString(formatString ?? "G", culture));
                             }
                             else
                             {
-                                dateTimeNumberValue = Library.TimeToNumber(IRContext.NotInSource(FormulaType.Number), new TimeValue[] { value as TimeValue });
+                                result = new StringValue(irContext, formatString == string.Empty ? string.Empty : numberValue.Value.ToString(formatString ?? "G", culture));
                             }
-
-                            textFormatArgs.FormatArg = SectionFormatStr(textFormatArgs.FormatArg, textFormatArgs.Sections, dateTimeNumberValue.Value);
                         }
 
-                        return textFormatArgs.DateTimeFmt == DateTimeFmtType.EnumDateTimeFormat ? TryExpandDateTimeFromEnumFormat(irContext, textFormatArgs, dateTimeResult, timeZoneInfo, culture, cancellationToken, out result) :
-                            TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, defaultFormat, dateTimeResult, timeZoneInfo, culture, cancellationToken, out result);
-                    }
+                        break;
+                    case DateTimeValue:
+                    case DateValue:
+                    case TimeValue:
+                        if (formatString != null && textFormatArgs.HasNumericFmt)
+                        {
+                            NumberValue numberValueResult;
 
-                    break;
+                            // It's a datetime, formatted as number. Let's convert it to a number value first
+                            if (value is DateTimeValue dateTimeValue)
+                            {
+                                numberValueResult = Library.DateTimeToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateTimeValue);
+                            }
+                            else if (value is DateValue dateValue)
+                            {
+                                numberValueResult = Library.DateToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateValue) as NumberValue;
+                            }
+                            else
+                            {
+                                var timeValue = value as TimeValue;
+                                numberValueResult = Library.TimeToNumber(IRContext.NotInSource(FormulaType.Number), new TimeValue[] { timeValue });
+                            }
+
+                            result = new StringValue(irContext, numberValueResult.Value.ToString(formatString, culture));
+                        }
+                        else
+                        {
+                            DateTime dateTimeResult;
+                            string defaultFormat = "g";
+
+                            if (value is DateTimeValue dateTimeValue)
+                            {
+                                dateTimeResult = dateTimeValue.GetConvertedValue(timeZoneInfo);
+                            }
+                            else if (value is DateValue dateValue)
+                            {
+                                dateTimeResult = dateValue.GetConvertedValue(timeZoneInfo);
+                                defaultFormat = "d";
+                            }
+                            else
+                            {
+                                var timeValue = value as TimeValue;
+                                dateTimeResult = Library.TimeToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), timeValue).GetConvertedValue(timeZoneInfo);
+                                defaultFormat = "t";
+                            }
+
+                            // Update the right section for DateTime format
+                            if (textFormatArgs.Sections != null && textFormatArgs.Sections.Count > 1)
+                            {
+                                NumberValue dateTimeNumberValue;
+                                if (value is DateTimeValue datetimeValue)
+                                {
+                                    dateTimeNumberValue = Library.DateTimeToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), datetimeValue);
+                                }
+                                else if (value is DateValue dateValue)
+                                {
+                                    dateTimeNumberValue = Library.DateToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateValue);
+                                }
+                                else
+                                {
+                                    dateTimeNumberValue = Library.TimeToNumber(IRContext.NotInSource(FormulaType.Number), new TimeValue[] { value as TimeValue });
+                                }
+
+                                textFormatArgs.FormatArg = SectionFormatStr(textFormatArgs.FormatArg, textFormatArgs.Sections, dateTimeNumberValue.Value);
+                            }
+
+                            return textFormatArgs.DateTimeFmt == DateTimeFmtType.EnumDateTimeFormat ? TryExpandDateTimeFromEnumFormat(irContext, textFormatArgs, dateTimeResult, timeZoneInfo, culture, cancellationToken, out result) :
+                                TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, defaultFormat, dateTimeResult, timeZoneInfo, culture, cancellationToken, out result);
+                        }
+
+                        break;
+                }
+            }
+            catch (FormatException)
+            {
+                return false;
             }
 
             return result != null;
