@@ -140,7 +140,18 @@ namespace Microsoft.PowerFx
                     var id = ++summarizeCounter;
                     List<string> groupColumns = new List<string>();
                     Dictionary<string, string> aggregates = new Dictionary<string, string>();
-                    var table = summarize.Args.Children[0].GetCompleteSpan().GetFragment(script);
+                    string table = summarize.Args.Children[0].GetCompleteSpan().GetFragment(script);
+                    string tableAs = string.Empty;
+
+                    if (summarize.Args.Children[0] is FirstNameNode fnt)
+                    {
+                        table = fnt.Ident.Name;
+                    }
+                    else if (summarize.Args.Children[0] is AsNode a && a.Left is FirstNameNode fna)
+                    {
+                        table = fna.Ident.Name;
+                        tableAs = a.Right.Name;
+                    }
 
                     for (var i = 1; i < summarize.Args.Count; i++)
                     {
@@ -167,16 +178,31 @@ namespace Microsoft.PowerFx
                         }
                     }
 
+                    if (groupColumns.Count == 0)
+                    {
+                        return new ParseResult(
+                            summarize,
+                            new List<TexlError>() { new TexlError(summarize, DocumentErrorSeverity.Critical, TexlStrings.ErrSummarizeNoGroupByColumns) },
+                            true,
+                            new List<CommentToken>(),
+                            null,
+                            null,
+                            script)
+                        {
+                            Options = this
+                        };
+                    }
+
                     var script2 = $"With( {{ _table{id}:{table} }},\n ForAll( Distinct( _table{id}, " +
                                 $"JSON( {{ {string.Join(",", groupColumns.Select(x => $"{x}:{x}"))} }} ) ) As _distinct{id}, \n" +
                                 $"  With( AddColumns( {{ {string.Join(",", groupColumns.Select(x => $"{x}:{(x.StartsWith("num", StringComparison.InvariantCultureIgnoreCase) ? "Value" : "Text")}(ParseJSON(_distinct{id}.Value).{x})"))} }},\n" +
-                                $"     ThisGroup, DropColumns( Filter( _table{id} As _filter{id}, {string.Join(" And ", groupColumns.Select(x => $"_filter{id}.{x}={x}"))} ), " +
-                                $"{string.Join(",", groupColumns.Select(x => $"{x}"))}) ),\n" +
-                                $"{{ {string.Join(", ", groupColumns.Select(x => $"{x}:{x}"))}, {string.Join(", ", aggregates.Keys.Select(x => $"{x}:{aggregates[x]}"))} }} ) ) )";
+                                $"     ThisGroup, Filter( _table{id} As _filter{id}, {string.Join(" And ", groupColumns.Select(x => $"_filter{id}.{x}={x}"))} ) ) " +
+                                (tableAs != string.Empty ? $" As {tableAs}" : string.Empty) +
+                                $", {{ {string.Join(", ", groupColumns.Select(x => $"{x}:{(tableAs != string.Empty ? $"{tableAs}." : string.Empty) + x}"))}, {string.Join(", ", aggregates.Keys.Select(x => $"{x}:{aggregates[x]}"))} }} ) ) )";
 
                     Debug.WriteLine(string.Empty);
-                    Debug.Write("Summarize: " + script);
-                    Debug.Write("Transform: " + script2);
+                    Debug.Write("Summarize: " + script + "\n");
+                    Debug.Write("Transform: " + script2 + "\n");
 
                     var script3 = script.Substring(0, summarize.GetCompleteSpan().Min) + script2 + script.Substring(summarize.GetCompleteSpan().Lim);
                     return this.Parse(script3, features);

@@ -3226,7 +3226,11 @@
     <comment>How to fix the error.</comment>
   </data>
   <data name="ErrorResource_ErrSummarizeColumnOrAs_ShortMessage" xml:space="preserve">
-    <value>The Summarize function's arguments must be either existing column names or formulas named with the As keyword.</value>
+    <value>Summarize arguments must be either existing column names to group by or formulas named with the As keyword.</value>
+    <comment>Error Message.</comment>    
+  </data>
+  <data name="ErrorResource_ErrSummarizeNoGroupByColumns_ShortMessage" xml:space="preserve">
+    <value>Summarize requires at least one grouping column.</value>
     <comment>Error Message.</comment>    
   </data>
   <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
