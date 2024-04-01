@@ -1,4 +1,4 @@
-# Changes for 1.1.0
+# Changes for 1.3.0 [RC]
 
 ## Breaking Language changes:
 
