@@ -1,4 +1,4 @@
-﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers,disable:NumberIsFloat
 
 // For easy reference of what the table looks like
 >> t1
@@ -16,28 +16,28 @@ Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 // **********************************************************
 
 >> Patch([1,2], {Value:1}, If(false, {x:1, Value:2}, {Value:11, z:2}))
-Errors: Error 0-67: The function 'Patch' has some invalid arguments.|Error 24-66: The specified column 'x' does not exist.|Error 6-11: The value passed to the 'Patch' function cannot be changed.
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 24-66: The specified column 'x' does not exist.|Error 6-11: The value passed to the 'Patch' function cannot be changed.
 
 >> Patch([1,2], If(false, {x:1, Value:2}, {Value:1, z:2}),  {Value:11})
 Errors: Error 6-11: The value passed to the 'Patch' function cannot be changed.|Error 13-54: The specified column 'x' does not exist.
 
 >> Patch([1,2], If(false, {x:1, Value:2}, {Value:1, z:2}),  If(false, {x:1, Value:2}, {Value:11, z:2}))
-Errors: Error 13-54: The specified column 'x' does not exist.|Error 57-99: The specified column 'x' does not exist.|Error 6-11: The value passed to the 'Patch' function cannot be changed.|Error 0-100: The function 'Patch' has some invalid arguments.
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 13-54: The specified column 'x' does not exist.|Error 57-99: The specified column 'x' does not exist.|Error 6-11: The value passed to the 'Patch' function cannot be changed.
 
 >> Patch(Table({Value:1}, If(false, {x:1, Value:2}, {Value:2, z:2}), {Value:3}), {Value:2}, {Value:11})
 Errors: Error 6-76: The value passed to the 'Patch' function cannot be changed.
 
 >> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, {Value:1}, If(false, {x:1, Value:2}, {Value:11, z:2}))
-Errors: Error 84-126: The specified column 'x' does not exist.|Error 58-127: The function 'Patch' has some invalid arguments.
+Errors: Error 58-63: The function 'Patch' has some invalid arguments.|Error 84-126: The specified column 'x' does not exist.
 
 >> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, If(false, {x:1, Value:2}, {Value:1, z:2}),  {Value:11})
 Errors: Error 73-114: The specified column 'x' does not exist.
 
 >> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, If(false, {x:1, Value:2}, {Value:1, z:2}),  If(false, {x:1, Value:2}, {Value:11, z:2}))
-Errors: Error 73-114: The specified column 'x' does not exist.|Error 117-159: The specified column 'x' does not exist.|Error 58-160: The function 'Patch' has some invalid arguments.
+Errors: Error 58-63: The function 'Patch' has some invalid arguments.|Error 73-114: The specified column 'x' does not exist.|Error 117-159: The specified column 'x' does not exist.
 
 >> Collect(t_empty, {Value:1}); Collect(t_empty, If(false, {x:1, Value:2}, {Value:2, z:2})); Collect(t_empty, {Value:3}); Patch(t_empty, {Value:2}, {Value:11})
-Errors: Error 46-87: The specified column 'x' does not exist.|Error 29-88: The function 'Collect' has some invalid arguments.
+Errors: Error 46-87: The specified column 'x' does not exist.|Error 29-36: The function 'Collect' has some invalid arguments.
 
 // field22 is missing
 >> Patch(
@@ -87,7 +87,7 @@ Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
 
 >> Patch(t1, r1, {Field5:"Field5"});
    t1
-Errors: Error 14-31: The specified column 'Field5' does not exist.|Error 0-32: The function 'Patch' has some invalid arguments.
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 14-31: The specified column 'Field5' does not exist.
 
 >> Patch(t1, r1, {Field2:"Venus"})
 {Field1:1,Field2:"Venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
@@ -114,7 +114,7 @@ Blank()
 Table({Field1:10,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
 >> Patch(t1, 0, 0)
-Errors: Error 0-15: The function 'Patch' has some invalid arguments.|Error 10-11: Invalid argument type (Decimal). Expecting a Record value instead.|Error 13-14: Invalid argument type (Decimal). Expecting a Record value instead.|Error 10-11: Cannot use a non-record value in this context: '0'.|Error 13-14: Cannot use a non-record value in this context: '0'.
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 10-11: Invalid argument type (Decimal). Expecting a Record value instead.|Error 13-14: Invalid argument type (Decimal). Expecting a Record value instead.|Error 10-11: Cannot use a non-record value in this context: '0'.|Error 13-14: Cannot use a non-record value in this context: '0'.
 
 // Display names
 >> Patch(t1, First(t1), {DisplayNameField2:"Saturn"});
@@ -143,10 +143,10 @@ Table({Field1:0,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
 >> Patch(t1, First(t1), {DisplayNameField5:"Pandora"});
    First(t1)
-Errors: Error 21-50: The specified column 'DisplayNameField5' does not exist. The column with the most similar name is 'DisplayNameField1'.|Error 0-51: The function 'Patch' has some invalid arguments.
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 21-50: The specified column 'DisplayNameField5' does not exist. The column with the most similar name is 'DisplayNameField1'.
 
 >> Patch(t1, First(Filter(t1, Field2="earth")), {Field3: "2022-11-14 7:22:06 pm"})
-Errors: Error 45-78: The type of this argument 'Field3' does not match the expected type 'DateTime'. Found type 'Text'.|Error 0-79: The function 'Patch' has some invalid arguments.
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 45-78: The type of this argument 'Field3' does not match the expected type 'DateTime'. Found type 'Text'.
 
 >> Patch(t1,LookUp(t1,DisplayNameField2="earth"),{Field1:100,Field4:false});t1
 Table({Field1:100,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false})
@@ -168,10 +168,10 @@ Table({Field1:100,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false}
 {Field1:6,Field2:"phobos",Field3:DateTime(2033,1,1,0,0,0,0),Field4:false}
 
 >> Patch(Foo, First(t1), {DisplayNameField2:"jupiter"})
-Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-52: The function 'Patch' has some invalid arguments.|Error 11-20: The specified column 'Field1' does not exist.|Error 22-51: The specified column 'DisplayNameField2' does not exist.
+Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-5: The function 'Patch' has some invalid arguments.|Error 11-20: The specified column 'Field1' does not exist.|Error 22-51: The specified column 'DisplayNameField2' does not exist.
 
 >> Patch(Foo, Bar, {DisplayNameField2:"jupiter"})
-Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 11-14: Name isn't valid. 'Bar' isn't recognized.|Error 0-46: The function 'Patch' has some invalid arguments.|Error 16-45: The specified column 'DisplayNameField2' does not exist.
+Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 11-14: Name isn't valid. 'Bar' isn't recognized.|Error 0-5: The function 'Patch' has some invalid arguments.|Error 16-45: The specified column 'DisplayNameField2' does not exist.
 
 >> Set(t_an_bs, [{a:1, b:"a"}, {a:2, b:Blank()}]); Patch(t_an_bs, Last(t_an_bs), {a:3, b:"c"}); t_an_bs
 Table({a:1,b:"a"},{a:3,b:"c"})
