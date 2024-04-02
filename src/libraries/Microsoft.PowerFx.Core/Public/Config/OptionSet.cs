@@ -17,39 +17,16 @@ namespace Microsoft.PowerFx
     {
         private readonly DisplayNameProvider _displayNameProvider;
         private readonly DType _type;
-        private readonly DKind _dkind;
-
-        // At this time, only these data types are supported.
-        // Don't be tempted to add Decimal until we have a specific need,
-        // not that it should be a problem to add, but it would add more comlication that is needed.
-        // Dataverse option sets easily fit within the integer range of Number (floating point).
-        public enum OptionSetBackingType
-        {
-            String = 1,
-            Number,
-            Boolean,
-            Color,
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OptionSet"/> class.
         /// </summary>
         /// <param name="name">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
         /// <param name="options">The members of the option set. Enumerable of pairs of logical name to display name.
-        /// <param name="backingType">The option set uses a specific backing type.</param>
-        /// <param name="canCoerceFromBackingKind">Can the backing kind be used to replace this option set.</param>
-        /// <param name="canConcatenateStronglyTyped">Can members of this option set be concatenated together, and with text if canCoerceBackingKind is true. Only applies to String.</param>
-        /// <param name="canCompareNumeric">Can members of this option set be compared numerically? Only applies to Number.</param>
         /// NameCollisionException is thrown if display and logical names for options are not unique.
         /// </param>
-        public OptionSet(
-            string name, 
-            ImmutableDictionary<DName, DName> options,
-            OptionSetBackingType backingType = OptionSetBackingType.String,
-            bool canCoerceFromBackingKind = false,
-            bool canConcatenateStronglyTyped = false,
-            bool canCompareNumeric = false)
-            : this(name, new SingleSourceDisplayNameProvider(options), canCoerceFromBackingKind: canCoerceFromBackingKind, canConcatenateStronglyTyped: canConcatenateStronglyTyped, canCompareNumeric: canCompareNumeric)
+        public OptionSet(string name, ImmutableDictionary<DName, DName> options)
+            : this(name, new SingleSourceDisplayNameProvider(options))
         {
         }
 
@@ -57,51 +34,14 @@ namespace Microsoft.PowerFx
         /// Initializes a new instance of the <see cref="OptionSet"/> class.
         /// </summary>
         /// <param name="name">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
-        /// <param name="displayNameProvider">The DisplayNameProvider for the members of the OptionSet.</param>
-        /// <param name="backingType">The option set uses a specific backing type.</param>
-        /// <param name="canCoerceFromBackingKind">Can the backing kind be used to replace this option set.</param>
-        /// <param name="canConcatenateStronglyTyped">Can members of this option set be concatenated together, and with text if canCoerceBackingKind is true. Only applies to String.</param>
-        /// <param name="canCompareNumeric">Can members of this option set be compared numerically? Only applies to Number.</param>
-        /// <param name="canCoerceToBackingKind">Can member of this option set coerce to the backing kind.</param>
+        /// <param name="displayNameProvider">The DisplayNameProvider for the members of the OptionSet.
         /// Consider using <see cref="DisplayNameUtility.MakeUnique(IEnumerable{KeyValuePair{string, string}})"/> to generate
         /// the DisplayNameProvider.
-        public OptionSet(
-            string name, 
-            DisplayNameProvider displayNameProvider, 
-            OptionSetBackingType backingType = OptionSetBackingType.String, 
-            bool canCoerceFromBackingKind = false, 
-            bool canConcatenateStronglyTyped = false,
-            bool canCompareNumeric = false,
-            bool canCoerceToBackingKind = false)
+        /// </param>
+        public OptionSet(string name, DisplayNameProvider displayNameProvider)
         {
             EntityName = new DName(name);
             Options = displayNameProvider.LogicalToDisplayPairs;
-
-            Contracts.Assert(backingType == OptionSetBackingType.Number || !canCompareNumeric);
-            Contracts.Assert(backingType == OptionSetBackingType.String || !canConcatenateStronglyTyped);
-
-            switch (backingType)
-            {
-                case OptionSetBackingType.String:
-                    _dkind = DKind.String;
-                    break;
-                case OptionSetBackingType.Number:
-                    _dkind = DKind.Number;
-                    break;
-                case OptionSetBackingType.Boolean:
-                    _dkind = DKind.Boolean;
-                    break;
-                case OptionSetBackingType.Color:
-                    _dkind = DKind.Color;
-                    break;
-                default:
-                    throw new InvalidEnumException(nameof(backingType));
-            }
-
-            CanCoerceFromBackingKind = canCoerceFromBackingKind;
-            CanConcatenateStronglyTyped = canConcatenateStronglyTyped;
-            CanCompareNumeric = canCompareNumeric;
-            CanCoerceToBackingKind = canCoerceToBackingKind;
 
             _displayNameProvider = displayNameProvider;
             FormulaType = new OptionSetValueType(this);
@@ -140,20 +80,20 @@ namespace Microsoft.PowerFx
         IEnumerable<DName> IExternalOptionSet.OptionNames => Options.Select(option => option.Key);
 
         DisplayNameProvider IExternalOptionSet.DisplayNameProvider => _displayNameProvider;
-        
+
         bool IExternalOptionSet.IsConvertingDisplayNameMapping => false;
 
         DType IExternalEntity.Type => _type;
 
-        DKind IExternalOptionSet.BackingKind => _dkind;
+        DKind IExternalOptionSet.BackingKind => DKind.String;
 
-        public bool CanCoerceFromBackingKind { get; }
+        bool IExternalOptionSet.CanCoerceFromBackingKind => false;
 
-        public bool CanConcatenateStronglyTyped { get; }
+        bool IExternalOptionSet.CanCoerceToBackingKind => false;
 
-        public bool CanCompareNumeric { get; }
+        bool IExternalOptionSet.CanCompareNumeric => false;
 
-        public bool CanCoerceToBackingKind { get; }
+        bool IExternalOptionSet.CanConcatenateStronglyTyped => false;
 
         public override bool Equals(object obj)
         {
