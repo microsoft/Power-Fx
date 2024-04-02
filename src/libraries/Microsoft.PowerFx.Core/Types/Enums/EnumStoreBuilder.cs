@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 },
                 {
                     LanguageConstants.StartOfWeekEnumString,
-                    $"%n[{string.Join(", ", BuiltInEnums.StartOfWeekEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}: {pair.Value.Object}"))}]"
+                    $"%n[{string.Join(", ", BuiltInEnums.StartOfWeekEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:{pair.Value.Object}"))}]"
                 },
                 {
                     LanguageConstants.SortOrderEnumString,
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 },
                 {
                     LanguageConstants.TraceSeverityEnumString,
-                    $"%n[{string.Join(", ", BuiltInEnums.TraceSeverityEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}: {pair.Value.Object}"))}]"
+                    $"%n[{string.Join(", ", BuiltInEnums.TraceSeverityEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:{pair.Value.Object}"))}]"
                 },
                 {
                     LanguageConstants.TraceOptionsEnumString,
@@ -124,8 +124,13 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         #endregion
 
         // Do not use, only for testing
-        internal EnumStoreBuilder TestOnly_WithCustomEnum(EnumSymbol custom)
+        internal EnumStoreBuilder TestOnly_WithCustomEnum(EnumSymbol custom, bool append = false)
         {
+            if (!append)
+            {
+                _enumSymbols.Clear();
+            }
+
             _enumSymbols.Add(custom.EntityName, custom);
             return this;
         }
