@@ -1436,6 +1436,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             {
                 public string Expression { get; set; }
 
+                public string AnonymizedExpression { get; set; }
+
                 public string RawExpression { get; set; }
 
                 public string ModelId { get; set; }
@@ -1707,11 +1709,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         [Theory]
-        [InlineData("Score < 50", true, true)]
-        [InlineData("missing < 50", false, true)] // doesn't compile, should get filtered out by LSP 
-        [InlineData("Score < 50", true, false)]
+        [InlineData("Score < 50", true, true, "#$PowerFxResolvedObject$# < #$decimal$#")]
+        [InlineData("missing < 50", false, true, "#$firstname$# < #$decimal$#")] // doesn't compile, should get filtered out by LSP 
+        [InlineData("Score < 50", true, false, "#$PowerFxResolvedObject$# < #$decimal$#")]
         [InlineData("missing < 50", false, false)]
-        public void TestNL2FX(string expectedExpr, bool success, bool useFactory)
+        public void TestNL2FX(string expectedExpr, bool success, bool useFactory, string anonExpr = null)
         {
             var documentUri = "powerfx://app?context=1";
 
@@ -1747,6 +1749,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             Assert.Single(items);
             var expression = items[0];
+
+            if (anonExpr != null)
+            {
+                Assert.Equal(anonExpr, items[0].AnonymizedExpression);
+            }
 
             if (success)
             {

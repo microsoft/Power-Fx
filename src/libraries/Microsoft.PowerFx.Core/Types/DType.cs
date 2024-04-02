@@ -210,6 +210,7 @@ namespace Microsoft.PowerFx.Core.Types
         // Constructor for the single invalid DType sentinel value.
         private DType()
         {
+            AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
         }
 
         internal DType(DKind kind)
