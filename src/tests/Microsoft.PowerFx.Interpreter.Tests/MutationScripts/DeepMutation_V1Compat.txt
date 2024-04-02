@@ -1,4 +1,4 @@
-
+#SETUP: PowerFxV1CompatibilityRules
 // NESTED TABLES - PATCH
 
 >> Set( aa, [[1,2,3], [4,5,6]] )

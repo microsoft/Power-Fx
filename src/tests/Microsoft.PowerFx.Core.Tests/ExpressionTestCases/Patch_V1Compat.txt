@@ -1,29 +1,43 @@
-﻿#SETUP: PowerFxV1CompatibilityRules
-#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers,disable:NumberIsFloat
+
+// For easy reference of what the table looks like
+>> t1
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> r1
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> r2
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+
+// **********************************************************
+// Patch(dataSource:*[], Record, Updates1, Updates2,…)
+// **********************************************************
 
 >> Patch([1,2], {Value:1}, If(false, {x:1, Value:2}, {Value:11, z:2}))
-Errors: Error 24-66: The specified column 'x' does not exist.|Error 6-11: The value passed to the 'Patch' function cannot be changed.|Error 0-67: The function 'Patch' has some invalid arguments.
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 24-66: The specified column 'x' does not exist.|Error 6-11: The value passed to the 'Patch' function cannot be changed.
 
 >> Patch([1,2], If(false, {x:1, Value:2}, {Value:1, z:2}),  {Value:11})
-Errors: Error 13-54: The specified column 'x' does not exist.|Error 6-11: The value passed to the 'Patch' function cannot be changed.|Error 0-68: The function 'Patch' has some invalid arguments.
+Errors: Error 6-11: The value passed to the 'Patch' function cannot be changed.|Error 13-54: The specified column 'x' does not exist.
 
 >> Patch([1,2], If(false, {x:1, Value:2}, {Value:1, z:2}),  If(false, {x:1, Value:2}, {Value:11, z:2}))
-Errors: Error 13-54: The specified column 'x' does not exist.|Error 6-11: The value passed to the 'Patch' function cannot be changed.|Error 57-99: The specified column 'x' does not exist.|Error 0-100: The function 'Patch' has some invalid arguments.
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 13-54: The specified column 'x' does not exist.|Error 57-99: The specified column 'x' does not exist.|Error 6-11: The value passed to the 'Patch' function cannot be changed.
 
 >> Patch(Table({Value:1}, If(false, {x:1, Value:2}, {Value:2, z:2}), {Value:3}), {Value:2}, {Value:11})
 Errors: Error 6-76: The value passed to the 'Patch' function cannot be changed.
 
 >> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, {Value:1}, If(false, {x:1, Value:2}, {Value:11, z:2}))
-Errors: Error 84-126: The specified column 'x' does not exist.|Error 58-127: The function 'Patch' has some invalid arguments.
+Errors: Error 58-63: The function 'Patch' has some invalid arguments.|Error 84-126: The specified column 'x' does not exist.
 
 >> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, If(false, {x:1, Value:2}, {Value:1, z:2}),  {Value:11})
-Errors: Error 73-114: The specified column 'x' does not exist.|Error 58-128: The function 'Patch' has some invalid arguments.
+Errors: Error 73-114: The specified column 'x' does not exist.
 
 >> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, If(false, {x:1, Value:2}, {Value:1, z:2}),  If(false, {x:1, Value:2}, {Value:11, z:2}))
-Errors: Error 73-114: The specified column 'x' does not exist.|Error 117-159: The specified column 'x' does not exist.|Error 58-160: The function 'Patch' has some invalid arguments.
+Errors: Error 58-63: The function 'Patch' has some invalid arguments.|Error 73-114: The specified column 'x' does not exist.|Error 117-159: The specified column 'x' does not exist.
 
 >> Collect(t_empty, {Value:1}); Collect(t_empty, If(false, {x:1, Value:2}, {Value:2, z:2})); Collect(t_empty, {Value:3}); Patch(t_empty, {Value:2}, {Value:11})
-Errors: Error 46-87: The specified column 'x' does not exist.|Error 29-88: The function 'Collect' has some invalid arguments.
+Errors: Error 46-87: The specified column 'x' does not exist.|Error 29-36: The function 'Collect' has some invalid arguments.
 
 // field22 is missing
 >> Patch(
@@ -39,5 +53,238 @@ Errors: Error 13-143: The value passed to the 'Patch' function cannot be changed
        {Planet:"earth",Properties:{Color:"blue",Size:"small",Weight:1000,Moon:{Name:"Moon", Color:"Silver"}}},
        {Planet:"Saturn",Properties:{Color:"red-brown",Size:"huge",Weight:99999,Moon:{Name:"Phobos", Color:"yellow"}}}),
     {Properties:{Moon:{Name:"Phobos"}}},
-    {Planet:"Jupter"})
+    {Planet:"jupiter"})
 Errors: Error 13-251: The value passed to the 'Patch' function cannot be changed.
+
+>> Patch(t1, r1, r_empty);
+   t1
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch(t1, r1, {Field2:"mars"});
+   t1
+Table({Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch(t1, r1, {Field2:"mars"})
+{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Patch(t1, r1, {Field2:"mars"}, Blank());
+   t1
+Table({Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch(t1, r1, {Field3:DateTime(2022,12,12,0,0,0,0)}, {Field4:false});
+   t1
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,12,12,0,0,0,0),Field4:false})
+
+>> Patch(t1, r1, {Field3:DateTime(2022,12,12,0,0,0,0)}, {Field4:false})
+{Field1:1,Field2:"earth",Field3:DateTime(2022,12,12,0,0,0,0),Field4:false}
+
+>> Patch(t1, r1, r2);
+   t1
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Patch(t1, r1, r2)
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Patch(t1, r1, {Field5:"Field5"});
+   t1
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 14-31: The specified column 'Field5' does not exist.
+
+>> Patch(t1, r1, {Field2:"Venus"})
+{Field1:1,Field2:"Venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Patch(t1, First(t1), {Field2:"Venus"}).Field2
+"Venus"
+
+>> Collect(t1, r2);
+  Patch(t1, Last(t1), {Field1:10}, {Field2:"Venus"}, {Field4:true}).Field1
+10
+
+>> If(Patch(t1, First(t1), {Field4:false}).Field4, 1,0)
+0
+
+>> Patch(t1, r1, {Field1:1/0});
+   t1
+Table({Field1:Error({Kind:ErrorKind.Div0}),Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch(t1, Blank(), {Field1:10})
+Blank()
+
+>> Patch(t1, r1, {Field1:1/0}, {Field1:10});
+   t1
+Table({Field1:10,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch(t1, 0, 0)
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 10-11: Invalid argument type (Decimal). Expecting a Record value instead.|Error 13-14: Invalid argument type (Decimal). Expecting a Record value instead.|Error 10-11: Cannot use a non-record value in this context: '0'.|Error 13-14: Cannot use a non-record value in this context: '0'.
+
+// Display names
+>> Patch(t1, First(t1), {DisplayNameField2:"Saturn"});
+   First(t1)
+{Field1:1,Field2:"Saturn",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Patch(t1, r1, {DisplayNameField1:123,DisplayNameField2:"sun",DisplayNameField3:DateTime(2022,12,12,0,0,0,0),DisplayNameField4:false});
+   First(t1)
+{Field1:123,Field2:"sun",Field3:DateTime(2022,12,12,0,0,0,0),Field4:false}
+
+>> Patch(t1, First(t1), {DisplayNameField1:1/0});
+   t1
+Table({Field1:Error({Kind:ErrorKind.Div0}),Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch(t1, First(t1), {DisplayNameField1:1/0}, {DisplayNameField1:Blank()}, {DisplayNameField1:0});
+   t1
+Table({Field1:0,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch(t1, First(t1), {DisplayNameField2:"jupiter"});
+   First(t1).DisplayNameField2
+"jupiter"
+
+>> Patch(t1, First(t1), {DisplayNameField2:"jupiter"});
+   First(t1).Field2
+"jupiter"
+
+>> Patch(t1, First(t1), {DisplayNameField5:"Pandora"});
+   First(t1)
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 21-50: The specified column 'DisplayNameField5' does not exist. The column with the most similar name is 'DisplayNameField1'.
+
+>> Patch(t1, First(Filter(t1, Field2="earth")), {Field3: "2022-11-14 7:22:06 pm"})
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 45-78: The type of this argument 'Field3' does not match the expected type 'DateTime'. Found type 'Text'.
+
+>> Patch(t1,LookUp(t1,DisplayNameField2="earth"),{Field1:100,Field4:false});t1
+Table({Field1:100,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false})
+
+>> Collect(t1, r2);
+  Collect(t1, {Field1:3,Field2:"venus",Field3:DateTime(2030,1,1,0,0,0,0),Field4:true});
+  Collect(t1, {Field1:4,Field2:"mars",Field3:DateTime(2031,1,1,0,0,0,0),Field4:false});
+  Collect(t1, {Field1:5,Field2:"jupiter",Field3:DateTime(2032,1,1,0,0,0,0),Field4:true});
+  Collect(t1, {Field1:6,Field2:"saturn",Field3:DateTime(2033,1,1,0,0,0,0),Field4:false});
+  Patch(t1, First(Filter(t1, Field1 > 4)), {Field2: "phobos"});
+{Field1:5,Field2:"phobos",Field3:DateTime(2032,1,1,0,0,0,0),Field4:true}
+
+>> Collect(t1, r2);
+  Collect(t1, {DisplayNameField1:3,Field2:"venus",Field3:DateTime(2030,1,1,0,0,0,0),DisplayNameField4:true});
+  Collect(t1, {DisplayNameField1:4,Field2:"mars",Field3:DateTime(2031,1,1,0,0,0,0),DisplayNameField4:false});
+  Collect(t1, {DisplayNameField1:5,Field2:"jupiter",Field3:DateTime(2032,1,1,0,0,0,0),DisplayNameField4:true});
+  Collect(t1, {DisplayNameField1:6,Field2:"saturn",Field3:DateTime(2033,1,1,0,0,0,0),DisplayNameField4:false});
+  Patch(t1, Last(Filter(t1, Field4 = false)), {DisplayNameField2: "phobos"});
+{Field1:6,Field2:"phobos",Field3:DateTime(2033,1,1,0,0,0,0),Field4:false}
+
+>> Patch(Foo, First(t1), {DisplayNameField2:"jupiter"})
+Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-5: The function 'Patch' has some invalid arguments.|Error 11-20: The specified column 'Field1' does not exist.|Error 22-51: The specified column 'DisplayNameField2' does not exist.
+
+>> Patch(Foo, Bar, {DisplayNameField2:"jupiter"})
+Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 11-14: Name isn't valid. 'Bar' isn't recognized.|Error 0-5: The function 'Patch' has some invalid arguments.|Error 16-45: The specified column 'DisplayNameField2' does not exist.
+
+>> Set(t_an_bs, [{a:1, b:"a"}, {a:2, b:Blank()}]); Patch(t_an_bs, Last(t_an_bs), {a:3, b:"c"}); t_an_bs
+Table({a:1,b:"a"},{a:3,b:"c"})
+
+>> Set(t_an_bs, [{a:1,b:If(false,"")}, {a:Blank(),b:"1"}]); Patch(t_an_bs, Last(t_an_bs), {b:"2"}); t_an_bs
+Table({a:1,b:Blank()},{a:Blank(),b:"2"})
+
+>> Set(t_an_bs, Table({a:1,b:If(false,"")},{a:Blank(),b:"2"})); Patch(t_an_bs, Last(t_an_bs), {a:2}); t_an_bs
+Table({a:1,b:Blank()},{a:2,b:"2"})
+
+
+// Base record not found. Create a new record. 
+>> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+   Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+   Patch(t1,{Field2:"deimos"},{Field3:DateTime(2030,2,1,0,0,0,0)})
+{Field3:DateTime(2030,2,1,0,0,0,0)}
+
+>> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+   Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+   Patch(t1,{Field2:"deimos"},{Field3:DateTime(2030,2,1,0,0,0,0)});
+   t1
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:3,Field2:"phobos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"deimos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:Blank(),Field2:Blank(),Field3:DateTime(2030,2,1,0,0,0,0),Field4:Blank()})
+
+>> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2024,2,1,0,0,0,0),Field4:false});
+   Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2025,2,1,0,0,0,0),Field4:false});
+   Patch(t1,{Field3:DateTime(2025,2,1,0,0,0,0)},{Field2:"pandora", Field1:55})
+{Field1:55,Field2:"pandora"}
+
+>> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2024,2,1,0,0,0,0),Field4:false});
+   Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2025,2,1,0,0,0,0),Field4:false});
+   Patch(t1,{Field3:DateTime(2025,2,1,0,0,0,0)},{Field2:"pandora", Field1:55});
+   t1
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:3,Field2:"phobos",Field3:DateTime(2024,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"deimos",Field3:DateTime(2025,2,1,0,0,0,0),Field4:false},{Field1:55,Field2:"pandora",Field3:Blank(),Field4:Blank()})
+
+
+// !!!TODO Finding base record will fail is both base and update records don't have the same number of fields, resulting in creating a new record.
+>> Collect(t1, r2);
+   Patch(t1, {Field4:true}, {Field2:"mars"});
+   Last(t1).DisplayNameField2
+"mars"
+
+>> Patch(t1, {Field1:1}, {DisplayNameField2:"mars"});
+   First(t1).Field2
+"earth"
+
+>> Patch(t1, {Field1:55}, {DisplayNameField2:"mars"})
+{Field2:"mars"}
+
+>> Patch(t1, {DisplayNameField1:55}, {DisplayNameField2:"mars"})
+{Field2:"mars"}
+
+>> Patch(t1, {DisplayNameField1:1/0}, {DisplayNameField2:"mars"})
+{Field2:"mars"}
+
+>> Patch(t1, {DisplayNameField2:"earth"}, {Field2:"mars"});
+   t1
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:Blank(),Field2:"mars",Field3:Blank(),Field4:Blank()})
+
+>> Patch(Blank(),Blank(),Blank())
+Blank()
+
+>>Patch(If(false,Table()),{},{})
+Errors: Error 6-23: The value passed to the 'Patch' function cannot be changed.
+
+>> ForAll(Sequence(5), Collect(t_empty, {Value:ThisRecord.Value})); ForAll(Sequence(CountRows(t_empty)), Collect(t_empty2, Index(t_empty, ThisRecord.Value))); Patch(t_empty, First(t_empty), {Value:99}); Patch(t_empty2, Last(t_empty2), {Value:88}); Concat(t_empty, Value) & "," & Concat(t_empty2, Value)
+"992345,123488"
+
+
+// **********************************************************
+// Patch(DS, table_of_rows, table_of_updates)
+// **********************************************************
+>> Collect(t1, r2);
+  Patch(t1, Table(r1,r2),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}));t1
+Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true})
+
+>> Collect(t1, r2);
+  Patch(t1, Table(r1,r2),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:1/0}));t1
+Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:Error({Kind:ErrorKind.Div0})})
+
+>> Collect(t1, r2);
+  Patch(t1, Table(r1,r2),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Collect(t1, r2);
+  Patch(t1, Table(r1,r2,{}),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:999999,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}));t1
+Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:999999,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true})
+
+>> Collect(t1, r2);
+  Patch(t1, Table(r1,r2,Blank()),Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:999999,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}));t1
+Table({Field1:100000,Field2:"athenas",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true},{Field1:200000,Field2:"zeus",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true})
+
+>> Collect(t1, r2);
+  Patch(t1, Table(r1,r2),Table({Field1:123},{Field2:"apolo"}));
+  t1
+Table({Field1:123,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"apolo",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+
+// **********************************************************
+// Patch(DS, table_of_rows_with_updates)
+// **********************************************************
+
+>> Patch(t1, Table(r1))
+Error({Kind:ErrorKind.NotSupported})
+
+>> Patch(t1, If(false,t1))
+Blank()
+
+
+// **********************************************************
+// Patch(DS, record_with_keys_and_updates)
+// **********************************************************
+>> Patch(t1, r1)
+Error({Kind:ErrorKind.NotSupported})
+
+>> Patch(t1, If(false,r1))
+Blank()

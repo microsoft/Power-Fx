@@ -80,6 +80,12 @@ Error({Kind:ErrorKind.BadRegex})
 >> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$")
 Error({Kind:ErrorKind.Timeout})
 
+>> IsMatch("Hi", "Hi", "foo")
+true
+
+>> IsMatch("28", 28)
+Errors: Error 14-16: Regular expressions must be constant values.
+
 >> IsMatch("(555) 123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
 true
 
@@ -96,4 +102,13 @@ false
 true
 
 >> IsMatch("Hello 123 world", $"Hello {Sqrt(1)}{Sqrt(4)}{Sqrt(9)} world")
+true
+
+>> IsMatch("Hello", "Hello", MatchOptions.IgnoreCase)
+true
+
+>> IsMatch("Hello", "Hello", "")
+true
+
+>> IsMatch("Hi", "Hi", MatchOptions.Multiline)
 true

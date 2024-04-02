@@ -243,12 +243,7 @@ namespace Microsoft.PowerFx.Functions
                     matchOptions = RegexOptions;
                 }
 
-                RegexOptions regOptions = System.Text.RegularExpressions.RegexOptions.CultureInvariant;
-
-                if (!matchOptions.Contains("c"))
-                {
-                    return Task.FromResult<FormulaValue>(FormulaValue.New(false));
-                }
+                RegexOptions regOptions = System.Text.RegularExpressions.RegexOptions.CultureInvariant;                
 
                 if (matchOptions.Contains("i"))
                 {
