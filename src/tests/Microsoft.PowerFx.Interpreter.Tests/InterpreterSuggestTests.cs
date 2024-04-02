@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Collect(Table({a:1, 'test space': \"test\"), {|", "a:", "'test space':")]
         [InlineData("ClearCollect(Table({a:1, b:2}), {|", "a:", "b:")]
         [InlineData("Remove(Table({a:1, b:2}), {|", "a:", "b:")]
-        [InlineData("Error(Ab|  Collect()", "Abs", "Color.OliveDrab", "ErrorKind.NotApplicable", "JSONFormat.FlattenValueTables", "Match.Tab", "Table")]
+        [InlineData("Error(Ab|  Collect()", "Abs", "Color.OliveDrab", "ErrorKind.NotApplicable", "ErrorKind.ServiceUnavailable", "JSONFormat.FlattenValueTables", "Match.Tab", "Table")]
 
         //[InlineData("Patch({a:1, b:2}, {|", "a:", "b:")] This test case will demand a binder change to work.
         //[InlineData("Patch(Table({a:1, b:2}), {|", "a:", "b:")] This test case will demand a binder change to work.

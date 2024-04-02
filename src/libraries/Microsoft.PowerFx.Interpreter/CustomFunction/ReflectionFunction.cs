@@ -321,11 +321,12 @@ namespace Microsoft.PowerFx
                 }
                 catch (CustomFunctionErrorException customFunctionErrorException)
                 {
+                    if (customFunctionErrorException.ExpressionError != null)
+                    {
+                        return FormulaValue.NewError(customFunctionErrorException.ExpressionError);
+                    }
+
                     return CommonErrors.CustomError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
-                }
-                catch (ServiceUnavailableException serviceUnavailableException)
-                {
-                    return FormulaValue.NewError(serviceUnavailableException.ExpressionError);
                 }
             }
 
