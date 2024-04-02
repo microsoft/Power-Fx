@@ -355,13 +355,13 @@ Error({Kind:ErrorKind.Div0})
 // Decimal and Float functions
 
 >> Value( 1e100 )
-Errors: Error 7-12: Numeric value is too large.|Error 0-14: The function 'Value' has some invalid arguments.|Error 7-12: Expected text or number. We expect text or a number at this point in the formula.
+Errors: Error 7-12: Numeric value is too large.|Error 0-5: The function 'Value' has some invalid arguments.|Error 7-12: Expected text or number. We expect text or a number at this point in the formula.
 
 >> Decimal( 1e100 )
-Errors: Error 9-14: Numeric value is too large.|Error 0-16: The function 'Decimal' has some invalid arguments.|Error 9-14: Expected text or number. We expect text or a number at this point in the formula.
+Errors: Error 9-14: Numeric value is too large.|Error 0-7: The function 'Decimal' has some invalid arguments.|Error 9-14: Expected text or number. We expect text or a number at this point in the formula.
 
 >> Float( 1e100 )
-Errors: Error 7-12: Numeric value is too large.|Error 0-14: The function 'Float' has some invalid arguments.|Error 7-12: Expected text or number. We expect text or a number at this point in the formula.
+Errors: Error 7-12: Numeric value is too large.|Error 0-5: The function 'Float' has some invalid arguments.|Error 7-12: Expected text or number. We expect text or a number at this point in the formula.
 
 >> Value( "1e100" )
 Error({Kind:ErrorKind.InvalidArgument})

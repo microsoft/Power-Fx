@@ -18,4 +18,4 @@ Errors: Error 0-7: Invalid number of arguments: received 0, expected 1.
 Errors: Error 0-13: Invalid number of arguments: received 2, expected 1.
 
 >> Clear(Foo)
-Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-10: The function 'Clear' has some invalid arguments.
+Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-5: The function 'Clear' has some invalid arguments.
