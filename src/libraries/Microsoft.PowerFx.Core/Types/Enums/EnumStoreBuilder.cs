@@ -58,6 +58,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 },
                 {
                     LanguageConstants.ErrorKindEnumString,
+                    $"%n[{string.Join(", ", BuiltInEnums.ErrorKindEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:{pair.Value.Object}"))}]"
                 },
                 {
                     LanguageConstants.MatchOptionsEnumString,
