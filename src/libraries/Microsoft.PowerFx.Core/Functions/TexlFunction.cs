@@ -434,7 +434,6 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             var result = CheckTypes(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             CheckSemantics(binding, args, argTypes, errors, ref nodeToCoercedTypeMap);
-
             return result;
         }
 
