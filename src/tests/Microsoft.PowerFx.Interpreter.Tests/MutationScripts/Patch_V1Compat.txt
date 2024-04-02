@@ -72,30 +72,29 @@ Table({Value:1},{Value:99},{Value:3})
 >> 2;x.t
 Table({Value:1},{Value:88},{Value:3})
 
-// works in Canvas, with or without Defaults function, but does not work in C# Power Fx (yet)
 >> Patch(x.t, {}, {Value:77})
-Error({Kind:ErrorKind.NotFound})
+{Value:77}
 
 >> 3;x.t
-Table({Value:1},{Value:88},{Value:3})
+Table({Value:1},{Value:88},{Value:3},{Value:77})
 
 >> Patch(x.t, {Value:88}, {Value:"77"})
 Errors: Error 23-35: The type of this argument 'Value' does not match the expected type 'Decimal'. Found type 'Text'.|Error 0-5: The function 'Patch' has some invalid arguments.
 
 >> 4;x.t
-Table({Value:1},{Value:88},{Value:3})
+Table({Value:1},{Value:88},{Value:3},{Value:77})
 
 >> Patch(x.t, {Value:88}, {Value:Float(66)})
 {Value:66}
 
 >> 5;x.t
-Table({Value:1},{Value:66},{Value:3})
+Table({Value:1},{Value:66},{Value:3},{Value:77})
 
 >> Patch(x.t, First(x.t), {Value:false})
 {Value:0}
 
 >> 6;x.t
-Table({Value:0},{Value:66},{Value:3})
+Table({Value:0},{Value:66},{Value:3},{Value:77})
 
 >> Set(j, [{d:1,t:"hi",b:true},{d:2,t:"bye",b:false},{d:3,t:GUID("1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d"),b:Blank()}] )
 Table({b:true,d:1,t:"hi"},{b:false,d:2,t:"bye"},{b:Blank(),d:3,t:"1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d"})
