@@ -2553,6 +2553,9 @@ namespace Microsoft.PowerFx.Functions
                 case ErrorKind.Timeout:
                     // Default message that is shown to users when they execute an operation that was cancelled because of a timeout
                     return "Timeout error";
+                case ErrorKind.ServiceUnavailable:
+                    // Default message that is shown to users when they execute an operation requires a online service connection that is not available
+                    return "Online service connection not available";
                 case ErrorKind.Custom:
                     // Default message that is shown to users when they create an error with a custom kind
                     return "Custom error";
