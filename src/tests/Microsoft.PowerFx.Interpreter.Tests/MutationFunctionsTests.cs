@@ -4,12 +4,16 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -362,6 +366,182 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Derived object did not lose it's properties
             Assert.Equal("x", fileObjectRecordValue.SomeProperty);
+        }
+
+        [Theory]
+        [InlineData("Patch(t, First(t), {Value:1})")]
+        public void MutationPFxV1Disabled(string expression)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig(Features.None));
+            var t = FormulaValue.NewTable(RecordType.Empty().Add(new NamedFormulaType("Value", FormulaType.Decimal)));
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("t", t);
+
+            var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = true });
+
+            // Compilation will be successful, but the function will not be executed.
+            // This is because PA depends on the CheckType to determine if the function is valid.
+            Assert.True(check.IsSuccess);
+
+            var evaluator = check.GetEvaluator();
+
+            // Runtime exception
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await evaluator.EvalAsync(CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+        }
+
+        [Theory]        
+        [InlineData(
+            "Patch(t1, {accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),name:\"Mary Doe\"});Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "Mary Doe from Chicago,Sam Doe from New York",
+            2)]
+        [InlineData(
+            "Patch(t1, {accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),address1_city:\"Seattle\"});Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "John Doe from Seattle,Sam Doe from New York",
+            2)]
+        [InlineData(
+            "Patch(t1, {accountid:GUID(\"00000000-0000-0000-0000-000000000003\"),name:\"Microsoft Corporation\",address1_city:\"Seattle\"});Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "John Doe from Chicago,Sam Doe from New York,Microsoft Corporation from Seattle",
+            3)]
+        [InlineData(
+            "Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),name:\"Emily Doe\"},{accountid:GUID(\"00000000-0000-0000-0000-000000000002\"),name:\"Benjamin Doe\"}));Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "Emily Doe from Chicago,Benjamin Doe from New York",
+            2)]
+        [InlineData(
+            "Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000001\"),address1_city:\"Miami\"},{accountid:GUID(\"00000000-0000-0000-0000-000000000002\"),address1_city:\"Orlando\"}));Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "John Doe from Miami,Sam Doe from Orlando",
+            2)]
+        [InlineData(
+            "Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000003\"),name:\"Microsoft Corporation\",address1_city:\"Seattle\"},{accountid:GUID(\"00000000-0000-0000-0000-000000000004\"),name:\"Bill Gates\",address1_city:\"Seattle\"}));Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "John Doe from Chicago,Sam Doe from New York,Microsoft Corporation from Seattle,Bill Gates from Seattle",
+            4)]
+        [InlineData(
+            "Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000001\")},{accountid:GUID(\"00000000-0000-0000-0000-000000000002\")}), Table({name:\"Emily Doe\"},{name:\"Mary Doe\"}));Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "Emily Doe from Chicago,Mary Doe from New York",
+            2)]
+        [InlineData(
+            "Patch(t1, Table({accountid:GUID(\"00000000-0000-0000-0000-000000000003\")},{accountid:GUID(\"00000000-0000-0000-0000-000000000004\")}), Table({name:\"Emily Doe\",address1_city:\"Seattle\"},{name:\"Mary Doe\",address1_city:\"Seattle\"}));Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "John Doe from Chicago,Sam Doe from New York,Emily Doe from Seattle,Mary Doe from Seattle",
+            4)]
+        public void MutationEntityTests(string expression, string expected, int count)
+        {
+            var engine = new RecalcEngine();
+
+            var record1 = FormulaValue.NewRecordFromFields(
+                new List<NamedValue>
+            {
+                new NamedValue("accountid", FormulaValue.New(Guid.Parse("00000000-0000-0000-0000-000000000001"))),
+                new NamedValue("name", FormulaValue.New("John Doe")),
+                new NamedValue("address1_city", FormulaValue.New("Chicago"))
+            });
+
+            var record2 = FormulaValue.NewRecordFromFields(
+                new List<NamedValue>
+            {
+                new NamedValue("accountid", FormulaValue.New(Guid.Parse("00000000-0000-0000-0000-000000000002"))),
+                new NamedValue("name", FormulaValue.New("Sam Doe")),
+                new NamedValue("address1_city", FormulaValue.New("New York"))
+            });
+
+            var varTableValue = new EntityTableValue(new List<RecordValue>() { record1, record2 });
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("t1", varTableValue);
+
+            var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = true });
+
+            Assert.True(check.IsSuccess);
+
+            var result = check.GetEvaluator().Eval();
+            Assert.IsNotType<ErrorValue>(result);
+
+            Assert.Equal(expected, ((StringValue)result).Value);
+
+            Assert.Equal(count, varTableValue.Rows.Count());
+        }
+
+        /// <summary>
+        /// Meant to test PatchSingleRecordCoreAsync override. Only tables with primary key column are supported.
+        /// </summary>
+        internal class EntityTableValue : TableValue
+        {
+            private readonly InMemoryTableValue _inner;
+
+            public override bool CanShallowCopy => true;
+
+            public EntityTableValue(IEnumerable<RecordValue> records)
+            : base((TableType)FormulaType.Build(AccountsTypeHelper.GetDType()))
+            {
+                _inner = new InMemoryTableValue(IRContext, records.Select(rec => DValue<RecordValue>.Of(rec)));
+            }
+
+            public override IEnumerable<DValue<RecordValue>> Rows => _inner.Rows;
+
+            protected override async Task<DValue<RecordValue>> PatchSingleRecordCoreAsync(RecordValue recordValue, CancellationToken cancellationToken)
+            {
+                var externalTabularDataSource = Type._type.AssociatedDataSources.Single() as IExternalTabularDataSource;
+
+                // TestDateSource has only one key column.
+                var keyFieldName = externalTabularDataSource.GetKeyColumns().First();
+
+                foreach (var row in _inner.Rows)
+                {
+                    var value1 = row.Value.GetField(keyFieldName);
+                    var value2 = recordValue.GetField(keyFieldName);
+
+                    if (value1.TryGetPrimitiveValue(out object primaryKeyValue1) && value2.TryGetPrimitiveValue(out object primaryKeyValue2) && primaryKeyValue1.ToString() == primaryKeyValue2.ToString())
+                    {
+                        return await row.Value.UpdateFieldsAsync(recordValue, cancellationToken).ConfigureAwait(false);
+                    }
+                }
+
+                return DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound()));
+            }
+
+            protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var externalTabularDataSource = Type._type.AssociatedDataSources.Single() as IExternalTabularDataSource;
+
+                // TestDateSource has only one key column.
+                var keyFieldName = externalTabularDataSource.GetKeyColumns().First();
+                var keyValue = baseRecord.GetField(keyFieldName);
+
+                foreach (var row in _inner.Rows)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    var value1 = row.Value.GetField(keyFieldName);
+
+                    if (value1.TryGetPrimitiveValue(out object primaryKeyValue1) && keyValue.TryGetPrimitiveValue(out object primaryKeyValue2) && primaryKeyValue1.ToString() == primaryKeyValue2.ToString())
+                    {
+                        return await row.Value.UpdateFieldsAsync(changeRecord, cancellationToken).ConfigureAwait(false);
+                    }
+                }
+
+                return DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound()));
+            }
+
+            public override Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var externalTabularDataSource = Type._type.AssociatedDataSources.Single() as IExternalTabularDataSource;
+                var keyFieldName = externalTabularDataSource.GetKeyColumns().First();       
+                var fields = new List<NamedValue>();
+
+                fields.AddRange(record.Fields);
+
+                // If the key field is not present in the record, add it.
+                if (!record.Fields.Any(f => f.Name == keyFieldName))
+                {
+                    var keyValue = New(Guid.NewGuid());
+                    fields.Add(new NamedValue(keyFieldName, keyValue));
+                }
+
+                return _inner.AppendAsync(FormulaValue.NewRecordFromFields(fields), cancellationToken);
+            }
         }
 
         internal class FileObjectRecordValue : InMemoryRecordValue
