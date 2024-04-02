@@ -43,6 +43,11 @@ namespace Microsoft.PowerFx.Functions
             return new BlankValue(irContext);
         }
 
+        public static async ValueTask<FormulaValue> Summarize(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            return new BlankValue(irContext);
+        }
+
         public static FormulaValue First(IRContext irContext, TableValue[] args)
         {
             var arg0 = args[0];
