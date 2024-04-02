@@ -1423,6 +1423,64 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public async Task SQL_ExecuteStoredProc_WithEmptyServerResponse()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            using var httpClient = new HttpClient(testConnector);
+            using var client = new PowerPlatformConnectorClient("tip1-shared-002.azure-apim.net", "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46", "5f57ec83acef477b8ccc769e52fa22cc", () => "eyJ0eX...", "MyProduct/v1.2", httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
+            var engine = new RecalcEngine(config);
+            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
+
+            testConnector.SetResponseFromFile(@"Responses\EmptyResponse.json");
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+            Assert.True(result is BlankValue);
+        }
+
+        [Fact]
+        public async Task SQL_ExecuteStoredProc_WithInvalidResponse()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            using var httpClient = new HttpClient(testConnector);
+            using var client = new PowerPlatformConnectorClient("tip1-shared-002.azure-apim.net", "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46", "5f57ec83acef477b8ccc769e52fa22cc", () => "eyJ0eX...", "MyProduct/v1.2", httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
+            var engine = new RecalcEngine(config);
+            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
+
+            testConnector.SetResponseFromFile(@"Responses\Invalid.txt");
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+
+            ErrorValue ev = Assert.IsType<ErrorValue>(result);
+
+#pragma warning disable SA1116 // Split parameters should start on line after declaration
+
+            Assert.Equal(@$"SQL.ExecuteProcedureV2 failed: JsonReaderException '+' is an invalid start of a value. LineNumber: 0 | BytePositionInLine: 0.    at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader& json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)
+   at System.Text.Json.Utf8JsonReader.ConsumeValue(Byte marker)
+   at System.Text.Json.Utf8JsonReader.ReadFirstToken(Byte first)
+   at System.Text.Json.Utf8JsonReader.ReadSingleSegment()
+   at System.Text.Json.Utf8JsonReader.Read()
+   at System.Text.Json.JsonDocument.Parse(ReadOnlySpan`1 utf8JsonSpan, JsonReaderOptions readerOptions, MetadataDb& database, StackRowStack& stack)
+   at System.Text.Json.JsonDocument.Parse(ReadOnlyMemory`1 utf8Json, JsonReaderOptions readerOptions, Byte[] extraRentedArrayPoolBytes, PooledByteBufferWriter extraPooledByteBufferWriter)
+   at System.Text.Json.JsonDocument.Parse(ReadOnlyMemory`1 json, JsonDocumentOptions options)
+   at System.Text.Json.JsonDocument.Parse(String json, JsonDocumentOptions options)
+   at Microsoft.PowerFx.Types.FormulaValueJSON.FromJson(String jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType) in C:\Data\Power-Fx\src\libraries\Microsoft.PowerFx.Json\FormulaValueJSON.cs:line 38", ev.Errors[0].Message);
+
+#pragma warning restore SA1116 // Split parameters should start on line after declaration
+        }
+
+        [Fact]
         public async Task SharePointOnlineTest()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);

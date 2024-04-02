@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text.Json;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
@@ -32,10 +31,22 @@ namespace Microsoft.PowerFx.Types
       
         public static FormulaValue FromJson(string jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
         {
-            using JsonDocument document = JsonDocument.Parse(jsonString);
-            JsonElement propBag = document.RootElement;
+            try
+            {
+                using JsonDocument document = JsonDocument.Parse(jsonString);
+                JsonElement propBag = document.RootElement;
 
-            return FromJson(propBag, settings, formulaType);
+                return FromJson(propBag, settings, formulaType);
+            }
+            catch (JsonException je)
+            {                
+                return new ErrorValue(IRContext.NotInSource(formulaType), new ExpressionError()
+                {
+                    Message = $"{je.GetType().Name} {je.Message} {je.StackTrace}",
+                    Span = new Syntax.Span(0, 0),
+                    Kind = ErrorKind.Network
+                });
+            }
         }
 
         /// <summary>
