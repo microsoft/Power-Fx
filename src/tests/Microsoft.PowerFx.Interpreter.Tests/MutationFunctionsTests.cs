@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -425,39 +426,34 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             4)]
         public void MutationEntityTests(string expression, string expected, int count)
         {
-            var engine = new RecalcEngine();
-
-            var record1 = FormulaValue.NewRecordFromFields(
-                new List<NamedValue>
-            {
-                new NamedValue("accountid", FormulaValue.New(Guid.Parse("00000000-0000-0000-0000-000000000001"))),
-                new NamedValue("name", FormulaValue.New("John Doe")),
-                new NamedValue("address1_city", FormulaValue.New("Chicago"))
-            });
-
-            var record2 = FormulaValue.NewRecordFromFields(
-                new List<NamedValue>
-            {
-                new NamedValue("accountid", FormulaValue.New(Guid.Parse("00000000-0000-0000-0000-000000000002"))),
-                new NamedValue("name", FormulaValue.New("Sam Doe")),
-                new NamedValue("address1_city", FormulaValue.New("New York"))
-            });
-
-            var varTableValue = new EntityTableValue(new List<RecordValue>() { record1, record2 });
-
-            engine.Config.SymbolTable.EnableMutationFunctions();
-            engine.UpdateVariable("t1", varTableValue);
-
+            var engine = PatchEngine;
             var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = true });
 
             Assert.True(check.IsSuccess);
 
             var result = check.GetEvaluator().Eval();
             Assert.IsNotType<ErrorValue>(result);
-
             Assert.Equal(expected, ((StringValue)result).Value);
 
+            var varTableValue = engine.GetValue("t1") as EntityTableValue;
             Assert.Equal(count, varTableValue.Rows.Count());
+        }
+
+        [Theory]
+        [InlineData("Patch(t1, First(t1), {accountid:GUID(\"00000000-0000-0000-0000-000000000001\")})")]
+        [InlineData("Patch(t1, Table(First(t1)), Table({accountid:GUID(\"00000000-0000-0000-0000-000000000001\")}))")]
+        public void MutationCheckSemanticsTests(string expression)
+        {
+            var engine = PatchEngine;
+
+            var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = true });
+
+            Assert.False(check.IsSuccess);
+            Assert.Contains(check.Errors, e => e.MessageKey == "ErrRecordContainsInvalidFields_Arg");
+
+            // Rows count hasn't changed.
+            var varTableValue = engine.GetValue("t1") as EntityTableValue;
+            Assert.Equal(2, varTableValue.Rows.Count());
         }
 
         /// <summary>
@@ -470,7 +466,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             public override bool CanShallowCopy => true;
 
             public EntityTableValue(IEnumerable<RecordValue> records)
-            : base((TableType)FormulaType.Build(AccountsTypeHelper.GetDType()))
+            : base((TableType)FormulaType.Build(AccountsTypeHelper.GetDTypeCds()))
             {
                 _inner = new InMemoryTableValue(IRContext, records.Select(rec => DValue<RecordValue>.Of(rec)));
             }
@@ -528,7 +524,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 cancellationToken.ThrowIfCancellationRequested();
 
                 var externalTabularDataSource = Type._type.AssociatedDataSources.Single() as IExternalTabularDataSource;
-                var keyFieldName = externalTabularDataSource.GetKeyColumns().First();       
+                var keyFieldName = externalTabularDataSource.GetKeyColumns().First();
                 var fields = new List<NamedValue>();
 
                 fields.AddRange(record.Fields);
@@ -558,6 +554,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 copy = new FileObjectRecordValue(SomeProperty, IRContext, Fields);
                 return true;
+            }
+        }
+
+        private RecalcEngine PatchEngine
+        {
+            get
+            {
+                var engine = new RecalcEngine();
+
+                var record1 = FormulaValue.NewRecordFromFields(
+                    new List<NamedValue>
+                {
+                new NamedValue("accountid", FormulaValue.New(Guid.Parse("00000000-0000-0000-0000-000000000001"))),
+                new NamedValue("name", FormulaValue.New("John Doe")),
+                new NamedValue("address1_city", FormulaValue.New("Chicago"))
+                });
+
+                var record2 = FormulaValue.NewRecordFromFields(
+                    new List<NamedValue>
+                {
+                new NamedValue("accountid", FormulaValue.New(Guid.Parse("00000000-0000-0000-0000-000000000002"))),
+                new NamedValue("name", FormulaValue.New("Sam Doe")),
+                new NamedValue("address1_city", FormulaValue.New("New York"))
+                });
+
+                var varTableValue = new EntityTableValue(new List<RecordValue>() { record1, record2 });
+
+                engine.Config.SymbolTable.EnableMutationFunctions();
+                engine.UpdateVariable("t1", varTableValue);
+
+                return engine;
             }
         }
     }
