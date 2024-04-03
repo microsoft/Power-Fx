@@ -1464,7 +1464,7 @@ namespace Microsoft.PowerFx.Tests
             FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
 
             ErrorValue ev = Assert.IsType<ErrorValue>(result);
-            string message = ev.Errors[0].Message.Substring(0, 125);
+            string message = ev.Errors[0].Message;
 
             Assert.Equal(@$"SQL.ExecuteProcedureV2 failed: JsonReaderException '+' is an invalid start of a value. LineNumber: 0 | BytePositionInLine: 0.", message);
         }

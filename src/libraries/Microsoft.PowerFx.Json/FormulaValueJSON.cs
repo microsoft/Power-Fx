@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Types
             {                
                 return new ErrorValue(IRContext.NotInSource(formulaType), new ExpressionError()
                 {
-                    Message = $"{je.GetType().Name} {je.Message} {je.StackTrace}",
+                    Message = $"{je.GetType().Name} {je.Message}",
                     Span = new Syntax.Span(0, 0),
                     Kind = ErrorKind.Network
                 });
