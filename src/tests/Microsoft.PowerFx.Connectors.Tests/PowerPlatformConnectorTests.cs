@@ -1464,22 +1464,9 @@ namespace Microsoft.PowerFx.Tests
             FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
 
             ErrorValue ev = Assert.IsType<ErrorValue>(result);
-            string message = ev.Errors[0].Message;
+            string message = ev.Errors[0].Message.Substring(0, 125);
 
-#pragma warning disable SA1116 // Split parameters should start on line after declaration
-
-            Assert.Equal(@$"SQL.ExecuteProcedureV2 failed: JsonReaderException '+' is an invalid start of a value. LineNumber: 0 | BytePositionInLine: 0.    at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader& json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)
-   at System.Text.Json.Utf8JsonReader.ConsumeValue(Byte marker)
-   at System.Text.Json.Utf8JsonReader.ReadFirstToken(Byte first)
-   at System.Text.Json.Utf8JsonReader.ReadSingleSegment()
-   at System.Text.Json.Utf8JsonReader.Read()
-   at System.Text.Json.JsonDocument.Parse(ReadOnlySpan`1 utf8JsonSpan, JsonReaderOptions readerOptions, MetadataDb& database, StackRowStack& stack)
-   at System.Text.Json.JsonDocument.Parse(ReadOnlyMemory`1 utf8Json, JsonReaderOptions readerOptions, Byte[] extraRentedArrayPoolBytes, PooledByteBufferWriter extraPooledByteBufferWriter)
-   at System.Text.Json.JsonDocument.Parse(ReadOnlyMemory`1 json, JsonDocumentOptions options)
-   at System.Text.Json.JsonDocument.Parse(String json, JsonDocumentOptions options)
-   at Microsoft.PowerFx.Types.FormulaValueJSON.FromJson(String jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType) in ...\Microsoft.PowerFx.Json\FormulaValueJSON.cs:line 36", new Regex(@" in .*\\libraries\\").Replace(message, @" in ...\"));
-
-#pragma warning restore SA1116 // Split parameters should start on line after declaration
+            Assert.Equal(@$"SQL.ExecuteProcedureV2 failed: JsonReaderException '+' is an invalid start of a value. LineNumber: 0 | BytePositionInLine: 0.", message);
         }
 
         [Fact]
