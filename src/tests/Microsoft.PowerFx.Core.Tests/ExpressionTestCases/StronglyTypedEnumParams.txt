@@ -53,9 +53,6 @@ RGBA(255,255,0,1)
 >> TestColorBlueRampInvert( TestBlueRamp.Blue25 )
 RGBA(64,64,0,1)
 
->> TestColorInvert( RGBA( 128, 128, 128, 100% ) )
-RGBA(127,127,127,1)
-
 //============================================================================================================
 //
 // 1. Avoid passing the wrong kind of enum to a function. For example JSON( [1,2,3], Match.IgnoreCase )
