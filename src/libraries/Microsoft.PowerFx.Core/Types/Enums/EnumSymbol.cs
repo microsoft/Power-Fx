@@ -57,6 +57,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         public EnumSymbol(DName name, DType backingType, IEnumerable<KeyValuePair<string, object>> members, bool canCoerceFromBackingKind = false, bool canConcatenateStronglyTyped = false, bool canCompareNumeric = false, bool canCoerceToBackingKind = false)
         {
             Contracts.AssertValid(name);
+            Contracts.Assert(backingType.Kind == DKind.String || backingType.Kind == DKind.Boolean || backingType.Kind == DKind.Number || backingType.Kind == DKind.Color);
             Contracts.Assert(backingType.Kind == DKind.String || !canConcatenateStronglyTyped);
             Contracts.Assert(backingType.Kind == DKind.Number || !canCompareNumeric);
             Contracts.Assert(backingType.Kind != DKind.Color || !canCoerceFromBackingKind);

@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
     internal sealed class EnumStoreBuilder
     {
         #region Default Enums
-        private static IReadOnlyDictionary<string, EnumSymbol> DefaultEnumsEnumSymbols { get; } =
+        private static IReadOnlyDictionary<string, EnumSymbol> DefaultEnumSymbols { get; } =
             new Dictionary<string, EnumSymbol>()
             {
                 { LanguageConstants.ColorEnumString, BuiltInEnums.ColorEnum },
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { LanguageConstants.TraceOptionsEnumString, BuiltInEnums.TraceOptionsEnum },
             };
 
-        // DefaultEnums is legacy and only used by Power Apps
+        // DefaultEnums, with enum strings, is legacy and only used by Power Apps
         internal static IReadOnlyDictionary<string, string> DefaultEnums { get; } =
             new Dictionary<string, string>()
             {
@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             {
                 if (!_enumSymbols.ContainsKey(name))
                 {
-                    if (!DefaultEnumsEnumSymbols.TryGetValue(name, out var enumSymbol))
+                    if (!DefaultEnumSymbols.TryGetValue(name, out var enumSymbol))
                     {
                         throw new InvalidOperationException($"Could not find enum {name}");
                     }
@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         internal EnumStoreBuilder WithDefaultEnums()
         {
-            foreach (var defaultEnum in DefaultEnumsEnumSymbols)
+            foreach (var defaultEnum in DefaultEnumSymbols)
             {
                 if (!_enumSymbols.ContainsKey(defaultEnum.Key))
                 {
@@ -124,8 +124,13 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         #endregion
 
         // Do not use, only for testing
-        internal EnumStoreBuilder TestOnly_WithCustomEnum(EnumSymbol custom)
+        internal EnumStoreBuilder TestOnly_WithCustomEnum(EnumSymbol custom, bool append = false)
         {
+            if (!append)
+            {
+                _enumSymbols.Clear();
+            }
+
             _enumSymbols.Add(custom.EntityName, custom);
             return this;
         }

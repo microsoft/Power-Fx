@@ -40,6 +40,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
              Action<RecalcEngine, bool> configureEngine)> SetupHandlers = new ()
         {
             { "AllEnumsSetup", (AllEnumsSetup, null, null, null) },
+            { "AllEnumsPlusTestEnumsSetup", (AllEnumsPlusTestEnumsSetup, null, null, null) },
             { "Blob", (null, BlobSetup, null, null) },
             { "DecimalSupport", (null, null, null, null) }, // Decimal is enabled in the C# interpreter
             { "EnableJsonFunctions", (null, EnableJsonFunctions, null, null) },
@@ -80,6 +81,41 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private static (ISymbolSlot slot, FormulaValue value) AddBlankVar(SymbolTable symbolTable, FormulaType type, string varName, bool mutable)
         {
             return (symbolTable.AddVariable(varName, type, mutable, varName), FormulaValue.NewBlank(type));
+        }
+
+        private static PowerFxConfig AllEnumsSetup(PowerFxConfig config)
+        {
+            var store = new EnumStoreBuilder().WithDefaultEnums();
+            var newConfig = PowerFxConfig.BuildWithEnumStore(store, new TexlFunctionSet(), config.Features);
+
+            // There are likewise no built in functions that take Boolean backed option sets as parameters
+            newConfig.AddFunction(new TestXORBooleanFunction());
+            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORYesNoFunction() : new Boolean_TestXORYesNoFunction());
+            newConfig.AddFunction(new TestColorInvertFunction());
+            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestColorBlueRampInvertFunction() : new Color_TestColorBlueRampInvertFunction());
+
+            return newConfig;
+        }
+
+        private static PowerFxConfig AllEnumsPlusTestEnumsSetup(PowerFxConfig config)
+        {
+            var store = new EnumStoreBuilder().WithDefaultEnums();
+
+            // There are no built in enums with boolean values and only one with colors.  Adding these for testing purposes.
+            store.TestOnly_WithCustomEnum(_testYesNo, append: true);
+            store.TestOnly_WithCustomEnum(_testYeaNay, append: true);
+            store.TestOnly_WithCustomEnum(_testBlueRampColors, append: true);
+            store.TestOnly_WithCustomEnum(_testRedRampColors, append: true);
+
+            var newConfig = PowerFxConfig.BuildWithEnumStore(store, new TexlFunctionSet(), config.Features);
+
+            // There are likewise no built in functions that take Boolean backed option sets as parameters
+            newConfig.AddFunction(new TestXORBooleanFunction());
+            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORYesNoFunction() : new Boolean_TestXORYesNoFunction());
+            newConfig.AddFunction(new TestColorInvertFunction());
+            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestColorBlueRampInvertFunction() : new Color_TestColorBlueRampInvertFunction());
+
+            return newConfig;
         }
 
         private static readonly EnumSymbol _testYesNo = new EnumSymbol(
@@ -123,27 +159,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         { "Red25", (double)0xFFFFBFBFU },
                         { "Red0", (double)0xFFFFFFFFU }
                     });
-
-        private static PowerFxConfig AllEnumsSetup(PowerFxConfig config)
-        {
-            var store = new EnumStoreBuilder().WithDefaultEnums();
-           
-            // There are no built in enums with boolean values and only one with colors.  Adding these for testing purposes.
-            store.TestOnly_WithCustomEnum(_testYesNo);
-            store.TestOnly_WithCustomEnum(_testYeaNay);
-            store.TestOnly_WithCustomEnum(_testBlueRampColors);
-            store.TestOnly_WithCustomEnum(_testRedRampColors);
-
-            var newConfig = PowerFxConfig.BuildWithEnumStore(store, new TexlFunctionSet(), config.Features);
-
-            // There are likewise no built in functions that take Boolean backed option sets as parameters
-            newConfig.AddFunction(new TestXORBooleanFunction());
-            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORYesNoFunction() : new Boolean_TestXORYesNoFunction());
-            newConfig.AddFunction(new TestColorInvertFunction());
-            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestColorBlueRampInvertFunction() : new Color_TestColorBlueRampInvertFunction());
-
-            return newConfig;
-        }
 
         private class TestXORBooleanFunction : ReflectionFunction
         {

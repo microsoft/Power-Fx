@@ -102,9 +102,6 @@ Errors: Error 15-30: Regular expressions must be constant values.|Error 0-5: The
 >> Match("Hello", "Hello", MatchOptions.IgnoreCase)
 {FullMatch:"Hello",StartMatch:1,SubMatches:Table()}
 
->> Match("Hello", "Hello", "")
-{FullMatch:"Hello",StartMatch:1,SubMatches:Table()}
-
 >> Match("Hi", "Hi", MatchOptions.Multiline)
 {FullMatch:"Hi",StartMatch:1,SubMatches:Table()}
 

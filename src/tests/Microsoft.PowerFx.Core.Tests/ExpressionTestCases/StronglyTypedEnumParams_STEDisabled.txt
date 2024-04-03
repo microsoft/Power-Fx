@@ -1,4 +1,4 @@
-﻿#SETUP: disable:StronglyTypedBuiltinEnums,disable:PowerFxV1CompatibilityRules,AllEnumsSetup,RegEx,EnableJsonFunctions
+﻿#SETUP: disable:StronglyTypedBuiltinEnums,disable:PowerFxV1CompatibilityRules,AllEnumsPlusTestEnumsSetup,RegEx,EnableJsonFunctions
 
 // Strongly typed enums were strengthened to:
 //    0. Strongly typed enum usage is the most common scenario and what Intellisense will suggest.
@@ -80,16 +80,16 @@ Blank()
 Blank()
 
 >> Match( "hi", "h.*", JSONFormat.IndentFour )
-false
+{FullMatch:"hi",StartMatch:1,SubMatches:Table()}
 
 >> Match( "hi", Match.Email, JSONFormat.IndentFour )
-false
+Blank()
 
 >> IsMatch( "hi", JSONFormat.IndentFour )
 false
 
 >> IsMatch( "hi", "h.*", JSONFormat.IndentFour )
-false
+true
 
 >> IsMatch( "hi", Match.Email, JSONFormat.IndentFour )
 false
@@ -98,10 +98,10 @@ false
 Table()
 
 >> MatchAll( "hi", "h.*", JSONFormat.IndentFour )
-false
+Table({FullMatch:"hi",StartMatch:1,SubMatches:Table()})
 
 >> MatchAll( "hi", Match.Email, JSONFormat.IndentFour )
-false
+Table()
 
 >> Text( 12, JSONFormat.IndentFour )
 "4"
@@ -165,6 +165,12 @@ Table({Value:3},{Value:2},{Value:1})
 
 >> Match( "howdy", "h", "c" )
 {FullMatch:"h",StartMatch:1,SubMatches:Table()}
+
+>> IsMatch("Foo", 17)
+Errors: Error 15-17: Regular expressions must be constant values.
+
+>> IsMatch("Foo", 1/0)
+Errors: Error 16-17: Regular expressions must be constant values.
 
 //===========================================================================================================
 //

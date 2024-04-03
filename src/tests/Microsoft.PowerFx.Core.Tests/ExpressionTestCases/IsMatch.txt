@@ -80,9 +80,6 @@ Error({Kind:ErrorKind.BadRegex})
 >> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$")
 Error({Kind:ErrorKind.Timeout})
 
->> IsMatch("Hi", "Hi", "foo")
-true
-
 >> IsMatch("28", 28)
 Errors: Error 14-16: Regular expressions must be constant values.
 
@@ -107,8 +104,29 @@ true
 >> IsMatch("Hello", "Hello", MatchOptions.IgnoreCase)
 true
 
->> IsMatch("Hello", "Hello", "")
+>> IsMatch("Hi", "Hi", MatchOptions.Multiline)
 true
 
->> IsMatch("Hi", "Hi", MatchOptions.Multiline)
+>> IsMatch("Hi", "H", MatchOptions.EndsWith )
+false
+
+>> IsMatch("Hi", "H", MatchOptions.BeginsWith)
+true
+
+>> IsMatch("Hi", "i", MatchOptions.EndsWith)
+true
+
+>> IsMatch("Hi", "I", MatchOptions.EndsWith)
+false
+
+>> IsMatch("Hi", "I", MatchOptions.EndsWith & MatchOptions.IgnoreCase)
+true
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}", MatchOptions.Contains)
+true
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}", MatchOptions.Contains)
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}", MatchOptions.Contains)
 true

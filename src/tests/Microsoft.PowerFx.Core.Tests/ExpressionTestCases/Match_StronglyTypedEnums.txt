@@ -1,7 +1,0 @@
-﻿#SETUP: RegEx,StronglyTypedBuiltinEnums
-
->> Match("Hello", "llo", MatchOptions.Contains ).FullMatch
-"llo"
-
->> MatchAll("Hello", "llo", MatchOptions.Contains)
-Table({FullMatch:"llo",StartMatch:3,SubMatches:Table()})

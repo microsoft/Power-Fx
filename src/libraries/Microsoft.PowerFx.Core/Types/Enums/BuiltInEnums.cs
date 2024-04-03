@@ -153,6 +153,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Internal", 26 },
                 { "NotApplicable", 27 },
                 { "Timeout", 28 },
+                { "ServiceUnavailable", 29 },
                 { "Custom", 1000 },
             },
             canCompareNumeric: true,
@@ -196,6 +197,6 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "None", "none" },
                 { "IgnoreUnsupportedTypes", TraceFunction.IgnoreUnsupportedTypesEnumValue },
             },
-            canConcatenateStronglyTyped: true); // $$ check with Carlos
+            canConcatenateStronglyTyped: true);
     }
 }

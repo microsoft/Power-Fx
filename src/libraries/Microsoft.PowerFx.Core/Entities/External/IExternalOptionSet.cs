@@ -29,42 +29,46 @@ namespace Microsoft.PowerFx.Core.Entities
         //
         // Here are some of the most common usage patterns...
         //
-        // Strongly typed, single option (default): All flags = false. The option set doesn't mix with the backing kind
-        //          in any way. Useful for a strongly typed choice between options.
+        // Strongly typed, single option (default): 
+        //          All flags = false.
         //          Used by SortOder, TimeUnit, StartOfWeek, TraceSeverity, ...
+        //          The option set doesn't mix with the backing kind in any way. Useful for a strongly typed choice between options.
         //
-        // Strongly typed, multiple options at once: CanStronglyTypedConcatenation = true, string backed only.
+        // Strongly typed, multiple options at once:
+        //          CanStronglyTypedConcatenation = true, string backed only.
+        //          Used by JSONFormat, MatchOptions, ...
         //          Used when multiple options are supported, members of the option set can be concatenated
         //          together to form new runtime members of the option set, thus retaining the strong typing.
         //          Concatenation with the backing kind is not allowed (see below for this case).
-        //          Used by JSONFormat, MatchOptions, ...
         // 
-        // Option set is shorthand for the backind kind: CanCoerceToBackingKind = true. The option set is a convenient
-        //          shorthand for using the backind kind. Loosely typed, the only type safety is that a function defined
-        //          with the option set can't be passed the backing type.
-        //          Used by Color.
+        // Option set is shorthand for the backind kind:
+        //          CanCoerceToBackingKind = true. Always true for Boolean.
+        //          Used by Color. 
+        //          The option set is a convenient shorthand for using the backind kind. Loosely typed, the only
+        //          type safety is that a function defined with the option set can't be passed the backing type.
         //
-        // Option set is shorthand for the backind kind, with Numerical Compare: CanCoreceToBackindKind and
-        //          CanCompareNumerical = true, number backed only. Numerical order comparisons (<, >, <=, >=)
-        //          are supported.
+        // Option set is shorthand for the backind kind, with Numerical Compare:
+        //          CanCoreceToBackindKind = true and CanCompareNumerical = true, number backed only.
         //          Used by ErrorKind.
+        //          Numerical order comparisons (<, >, <=, >=) are supported.
         //
         // Custom backing kind can be used in place of the option set:
-        //          CanCoerceFromBackindKind = true, not supported for Color.
-        //          Functions that have this option set as a parameter type can be passed the backing kind.
+        //          CanCoerceFromBackindKind = true. Always true for Boolean.
+        //          Not supported for Color. 
         //          Used by DateTimeFormat.
+        //          Functions that have this option set as a parameter type can be passed the backing kind.
         //
         // Custom backing kind mixes with the option set:
         //          CanCoerceFromBackindKind and CanContenateStronglyTyped = true.
+        //          Used by Match.
         //          Functions that have this option set as a parameter type can be passed the backing kind and
         //          concatenations between the option set and the backind kind result in the option set type.
-        //          Used by Match.
 
         /// <summary>
         /// Backing kind typed values can be used in placed of this option set value.  
         /// This is also possible for concatenate and numeric compare if those flags are set.
         /// Examples: a completely custom regular expression string can passed for a Match enum
-        /// and a number can be used in palce of an ErrorKind.
+        /// and a number can be used in place of an ErrorKind.
         /// </summary>
         bool CanCoerceFromBackingKind { get; }
 

@@ -209,7 +209,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Filter([1,2], |", "ThisRecord", "Value")]
 
         // Suggests Enum.
-        [InlineData("Text(Now(), |", "str", "DateTimeFormat.LongDate", "DateTimeFormat.LongDateTime", "DateTimeFormat.LongDateTime24", "DateTimeFormat.LongTime", "DateTimeFormat.LongTime24", "DateTimeFormat.ShortDate", "DateTimeFormat.ShortDateTime", "DateTimeFormat.ShortDateTime24", "DateTimeFormat.ShortTime", "DateTimeFormat.ShortTime24", "DateTimeFormat.UTC", "num")]
+        [InlineData("Text(Now(), |", "str", "DateTimeFormat.LongDate", "DateTimeFormat.LongDateTime", "DateTimeFormat.LongDateTime24", "DateTimeFormat.LongTime", "DateTimeFormat.LongTime24", "DateTimeFormat.ShortDate", "DateTimeFormat.ShortDateTime", "DateTimeFormat.ShortDateTime24", "DateTimeFormat.ShortTime", "DateTimeFormat.ShortTime24", "DateTimeFormat.UTC")]
 
         // Custom Function has arg with signature of tableType2, So only suggest table2
         [InlineData("RecordsTest(|", "table2")]
