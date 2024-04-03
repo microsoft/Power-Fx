@@ -1962,6 +1962,10 @@
     <value>無法使用此內容中非記錄的值。</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>無法使用此內容中非記錄的值: '{0}'。</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>此內容中只能使用記錄或資料表值。</value>
     
@@ -3070,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>資料來源</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3086,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>資料來源</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>資料來源</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>將更新套用至指定的資料列，並變更指定資料來源中的資料列。傳回更新後的資料列。</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>採用具備主索引鍵及更新值的單一記錄，並更新指定的資料來源中對應的資料列。傳回更新的資料列。</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>採用資料列的資料表，並套用以一對一方式更新的資料表中指定的更新。傳回已更新資料列的資料表。</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>採用具備主索引鍵及更新欄位的資料列資料表，並將這些更新套用至資料來源。傳回已更新資料列的資料表。</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>傳回已套用更新的資料列。</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>要進行修補的資料來源。</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>必須修補的記錄。</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>需要對指定的記錄修補之更新。</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>要修補的資料列資料表。</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>更新的資料表，需要修補至指定的資料列。</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>來源</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>記錄</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>更新</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>資料列</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>更新</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>資料來源</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>移除記錄</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -4199,7 +4242,7 @@
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>追蹤選項</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
