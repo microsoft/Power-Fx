@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
@@ -1463,6 +1464,7 @@ namespace Microsoft.PowerFx.Tests
             FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
 
             ErrorValue ev = Assert.IsType<ErrorValue>(result);
+            string message = ev.Errors[0].Message;
 
 #pragma warning disable SA1116 // Split parameters should start on line after declaration
 
@@ -1475,7 +1477,7 @@ namespace Microsoft.PowerFx.Tests
    at System.Text.Json.JsonDocument.Parse(ReadOnlyMemory`1 utf8Json, JsonReaderOptions readerOptions, Byte[] extraRentedArrayPoolBytes, PooledByteBufferWriter extraPooledByteBufferWriter)
    at System.Text.Json.JsonDocument.Parse(ReadOnlyMemory`1 json, JsonDocumentOptions options)
    at System.Text.Json.JsonDocument.Parse(String json, JsonDocumentOptions options)
-   at Microsoft.PowerFx.Types.FormulaValueJSON.FromJson(String jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType) in C:\Data\Power-Fx\src\libraries\Microsoft.PowerFx.Json\FormulaValueJSON.cs:line 38", ev.Errors[0].Message);
+   at Microsoft.PowerFx.Types.FormulaValueJSON.FromJson(String jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType) in ...\Microsoft.PowerFx.Json\FormulaValueJSON.cs:line 36", new Regex(@" in .*\\libraries\\").Replace(message, @" in ...\"));
 
 #pragma warning restore SA1116 // Split parameters should start on line after declaration
         }
