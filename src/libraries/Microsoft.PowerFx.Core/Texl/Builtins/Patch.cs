@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -436,6 +437,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             return base.GetSignatures(arity);
         }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            base.CheckSemantics(binding, args, argTypes, errors);
+
+            if (binding.Features.PowerFxV1CompatibilityRules)
+            {
+                MutationUtils.CheckForReadOnlyFields(argTypes[0], args.Skip(2).ToArray(), argTypes.Skip(2).ToArray(), errors);
+            }
+        }
     }
 
     // Patch(DS, record_with_keys_and_updates)
@@ -478,6 +489,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.PatchArg_Source, TexlStrings.PatchArg_Rows, TexlStrings.PatchArg_Updates };
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            base.CheckSemantics(binding, args, argTypes, errors);
+
+            if (binding.Features.PowerFxV1CompatibilityRules)
+            {
+                MutationUtils.CheckForReadOnlyFields(argTypes[0], args.Skip(2).ToArray(), argTypes.Skip(2).ToArray(), errors);
+            }
         }
     }
 
