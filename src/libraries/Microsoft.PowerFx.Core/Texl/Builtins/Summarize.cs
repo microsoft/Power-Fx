@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -10,14 +11,14 @@ using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // GroupBy(source:*, groupBy_col:s [, groupBy_col:s, ...], groupName:s)
+    // Summarize(source, groupby_column, aggregation, ..., groupby_column, ..., aggregation, ...)
     // !!!TODO [RequiresErrorContext]
     internal sealed class SummarizeFunction : FunctionWithTableInput
     {
-        // !!! TODO UNCOMMENT
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;
@@ -27,9 +28,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public SummarizeFunction()
             : base("Summarize", TexlStrings.AboutSummarize, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable)
         {
-            // Summarize(source, groupby_column, aggregation, ..., groupby_column, ..., aggregation, ...)
             SignatureConstraint = new SignatureConstraint(omitStartIndex: 3, repeatSpan: 1, endNonRepeatCount: 1, repeatTopLength: 6);
-
             ScopeInfo = new FunctionScopeInfo(this);
         }
 
@@ -104,79 +103,50 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (int i = 1; i < args.Length; i++)
             {
-                // All args starting at index 1 need to be identifiers or lambda.
-
                 var argType = argTypes[i];
                 var arg = args[i];
 
-                if (!base.TryGetColumnLogicalName(sourceType, supportColumnNamesAsIdentifiers, args[i], errors, out DName columnName, out DType existingType))
+                DName columnName;
+                DType existingType;
+
+                switch (arg)
                 {
-                    isValid = false;
-                    continue;
+                    case AsNode nameNode:
+                        existingType = argType;
+                        columnName = nameNode.Right.Name;
+                        break;
+
+                    case FirstNameNode:
+                        if (!TryGetColumnLogicalName(sourceType, supportColumnNamesAsIdentifiers, arg, errors, out columnName, out existingType))
+                        {
+                            isValid = false;
+                            continue;
+                        }
+
+                        break;
+
+                    default:
+                        isValid = false;
+                        errors.EnsureError(DocumentErrorSeverity.Moderate, arg, TexlStrings.ErrNotSupportedFormat_Func, Name);
+                        continue;
                 }
 
-                // Summarize can only group by primitive keys.
+                // All args starting at index 1 need to be identifiers or primitives.
                 if (!existingType.IsPrimitive)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedPrimitive);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrNeedPrimitive);
                     isValid = false;
                     continue;
                 }
 
-                /*
-                if (i < lastIndex)
+                var fError = false;
+                returnType = returnType.Add(ref fError, DPath.Root, columnName, existingType);
+                if (fError)
                 {
-                    if (!base.TryGetColumnLogicalName(sourceType, supportColumnNamesAsIdentifiers, args[i], errors, out DName columnName, out DType existingType))
-                    {
-                        isValid = false;
-                        continue;
-                    }
-
-                    // GroupBy can only group by primitive keys.
-                    if (!existingType.IsPrimitive)
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedPrimitive);
-                        isValid = false;
-                        continue;
-                    }
-
-                    // Keys cannot be specified multiple times.
-                    bool dropError = false;
-                    groupType = groupType.Drop(ref dropError, DPath.Root, columnName);
-                    if (dropError)
-                    {
-                        Contracts.Assert(groupKeyType.TryGetType(columnName, out existingType));
-                        errors.EnsureError(DocumentErrorSeverity.Moderate, args[i], TexlStrings.ErrColMultipleDest_Name, columnName);
-                        isValid = false;
-                    }
-                    else
-                    {
-                        groupKeyType = groupKeyType.Add(columnName, existingType);
-                    }
+                    isValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Moderate, arg, TexlStrings.ErrColConflict_Name, columnName);
+                    continue;
                 }
-                else
-                {
-                    if (!base.TryGetColumnLogicalName(null, supportColumnNamesAsIdentifiers, args[i], errors, out DName columnName))
-                    {
-                        isValid = false;
-                        continue;
-                    }
-
-                    // The group name has to not collide with any other column in the resulting table.
-                    Contracts.Assert(groupKeyType.IsTable);
-                    if (groupKeyType.TryGetType(columnName, out DType existingType))
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrAddColNameExists);
-                        isValid = false;
-                        continue;
-                    }
-
-                    // Assemble the final return type from the type that respresents the group keys
-                    // and the nested/grouped type.
-                    Contracts.Assert(groupType.IsTable);
-                    returnType = groupKeyType.Add(columnName, groupType);
-                }
-                */
             }
 
             Contracts.Assert(returnType.IsTable);
