@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Entities.Delegation;
@@ -246,6 +247,40 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
         }
 
         public IEnumerable<string> GetKeyColumns(IExpandInfo expandInfo)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class CdsTestDataSource : TestDataSource, IExternalCdsDataSource
+    {
+        internal CdsTestDataSource(string name, DType schema, string[] keyColumns = null, IEnumerable<string> selectableColumns = null) 
+            : base(name, schema, keyColumns, selectableColumns)
+        {
+        }
+
+        public string DatasetName => throw new NotImplementedException();
+
+        public IExternalDocument Document => throw new NotImplementedException();
+
+        public IExternalTableDefinition TableDefinition => throw new NotImplementedException();
+
+        public bool IsArgTypeValidForMutation(DType type, out IEnumerable<string> invalidFieldNames)
+        {
+            var externalTabularDataSource = Type.AssociatedDataSources.Single() as IExternalTabularDataSource;
+            var keyFieldName = externalTabularDataSource.GetKeyColumns().First();
+
+            if (type.GetAllNames(DPath.Root).Any(name => name.Name.Value == keyFieldName))
+            {
+                invalidFieldNames = new List<string>() { keyFieldName };
+                return false;
+            }
+
+            invalidFieldNames = null;
+            return true;
+        }
+
+        public bool TryGetRelatedColumn(string selectColumnName, out string additionalColumnName, IExternalTableDefinition expandsTableDefinition = null)
         {
             throw new NotImplementedException();
         }
