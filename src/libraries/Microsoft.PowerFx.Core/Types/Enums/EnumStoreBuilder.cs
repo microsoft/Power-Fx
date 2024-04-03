@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
     internal sealed class EnumStoreBuilder
     {
         #region Default Enums
-        private static IReadOnlyDictionary<string, EnumSymbol> DefaultEnumsEnumSymbols { get; } =
+        private static IReadOnlyDictionary<string, EnumSymbol> DefaultEnumSymbols { get; } =
             new Dictionary<string, EnumSymbol>()
             {
                 { LanguageConstants.ColorEnumString, BuiltInEnums.ColorEnum },
@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 },
                 {
                     LanguageConstants.StartOfWeekEnumString,
-                    $"%n[{string.Join(", ", BuiltInEnums.StartOfWeekEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:{pair.Value.Object}"))}]"
+                    $"%n[{string.Join(", ", BuiltInEnums.StartOfWeekEnum.EnumType.ValueTree.GetPairs().OrderBy(pair => pair.Value.Object).Select(pair => $@"{pair.Key}:{pair.Value.Object}"))}]"
                 },
                 {
                     LanguageConstants.SortOrderEnumString,
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 },
                 {
                     LanguageConstants.ErrorKindEnumString,
-                    $"%n[{string.Join(", ", BuiltInEnums.ErrorKindEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:{pair.Value.Object}"))}]"
+                    $"%n[{string.Join(", ", BuiltInEnums.ErrorKindEnum.EnumType.ValueTree.GetPairs().OrderBy(pair => pair.Value.Object).Select(pair => $@"{pair.Key}:{pair.Value.Object}"))}]"
                 },
                 {
                     LanguageConstants.MatchOptionsEnumString,
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 },
                 {
                     LanguageConstants.TraceSeverityEnumString,
-                    $"%n[{string.Join(", ", BuiltInEnums.TraceSeverityEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:{pair.Value.Object}"))}]"
+                    $"%n[{string.Join(", ", BuiltInEnums.TraceSeverityEnum.EnumType.ValueTree.GetPairs().OrderBy(pair => pair.Value.Object).Select(pair => $@"{pair.Key}:{pair.Value.Object}"))}]"
                 },
                 {
                     LanguageConstants.TraceOptionsEnumString,
@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             {
                 if (!_enumSymbols.ContainsKey(name))
                 {
-                    if (!DefaultEnumsEnumSymbols.TryGetValue(name, out var enumSymbol))
+                    if (!DefaultEnumSymbols.TryGetValue(name, out var enumSymbol))
                     {
                         throw new InvalidOperationException($"Could not find enum {name}");
                     }
@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         internal EnumStoreBuilder WithDefaultEnums()
         {
-            foreach (var defaultEnum in DefaultEnumsEnumSymbols)
+            foreach (var defaultEnum in DefaultEnumSymbols)
             {
                 if (!_enumSymbols.ContainsKey(defaultEnum.Key))
                 {
