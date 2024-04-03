@@ -42,23 +42,28 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 },
                 {
                     LanguageConstants.DateTimeFormatEnumString,
-                    $"%s[{string.Join(", ", BuiltInEnums.DateTimeFormatEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
+                    "%s[LongDate:\"'longdate'\", ShortDate:\"'shortdate'\", LongTime:\"'longtime'\", ShortTime:\"'shorttime'\", LongTime24:\"'longtime24'\", " +
+                    "ShortTime24:\"'shorttime24'\", LongDateTime:\"'longdatetime'\", ShortDateTime:\"'shortdatetime'\", " +
+                    "LongDateTime24:\"'longdatetime24'\", ShortDateTime24:\"'shortdatetime24'\", UTC:\"utc\"]"
                 },
                 {
                     LanguageConstants.StartOfWeekEnumString,
-                    $"%n[{string.Join(", ", BuiltInEnums.StartOfWeekEnum.EnumType.ValueTree.GetPairs().OrderBy(pair => pair.Value.Object).Select(pair => $@"{pair.Key}:{pair.Value.Object}"))}]"
+                    "%n[Sunday:1, Monday:2, MondayZero:3, Tuesday:12, Wednesday:13, Thursday:14, Friday:15, Saturday:16]"
                 },
                 {
                     LanguageConstants.SortOrderEnumString,
-                    $"%s[{string.Join(", ", BuiltInEnums.SortOrderEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
+                    "%s[Ascending:\"ascending\", Descending:\"descending\"]"
                 },
                 {
                     LanguageConstants.TimeUnitEnumString,
-                    $"%s[{string.Join(", ", BuiltInEnums.TimeUnitEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
+                    "%s[Years:\"years\", Quarters:\"quarters\", Months:\"months\", Days:\"days\", Hours:\"hours\", Minutes:\"minutes\", Seconds:\"seconds\", Milliseconds:\"milliseconds\"]"
                 },
                 {
                     LanguageConstants.ErrorKindEnumString,
-                    $"%n[{string.Join(", ", BuiltInEnums.ErrorKindEnum.EnumType.ValueTree.GetPairs().OrderBy(pair => pair.Value.Object).Select(pair => $@"{pair.Key}:{pair.Value.Object}"))}]"
+                    "%n[None:0, Sync:1, MissingRequired:2, CreatePermission:3, EditPermissions:4, DeletePermissions:5, Conflict:6, NotFound:7, " +
+                    "ConstraintViolated:8, GeneratedValue:9, ReadOnlyValue:10, Validation: 11, Unknown: 12, Div0: 13, BadLanguageCode: 14, " +
+                    "BadRegex: 15, InvalidFunctionUsage: 16, FileNotFound: 17, AnalysisError: 18, ReadPermission: 19, NotSupported: 20, " +
+                    "InsufficientMemory: 21, QuotaExceeded: 22, Network: 23, Numeric: 24, InvalidArgument: 25, Internal: 26, NotApplicable: 27, Timeout: 28, ServiceUnavailable:29, Custom: 1000]"
                 },
                 {
                     LanguageConstants.MatchOptionsEnumString,
@@ -70,11 +75,11 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 },
                 {
                     LanguageConstants.JSONFormatEnumString,
-                    $"%s[{string.Join(", ", BuiltInEnums.JSONFormatEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
+                    "%s[Compact:\"\", IndentFour:\"4\", IgnoreBinaryData:\"G\", IncludeBinaryData:\"B\", IgnoreUnsupportedTypes:\"I\", FlattenValueTables:\"_\"]"
                 },
                 {
                     LanguageConstants.TraceSeverityEnumString,
-                    $"%n[{string.Join(", ", BuiltInEnums.TraceSeverityEnum.EnumType.ValueTree.GetPairs().OrderBy(pair => pair.Value.Object).Select(pair => $@"{pair.Key}:{pair.Value.Object}"))}]"
+                    $"%n[{string.Join(", ", BuiltInEnums.TraceSeverityEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}: {pair.Value.Object}"))}]"
                 },
                 {
                     LanguageConstants.TraceOptionsEnumString,
