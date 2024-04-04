@@ -113,10 +113,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // abstract will force them to do so.
         public abstract bool IsSelfContained { get; }
 
-        // Return true if the function has other overloads with or without side effects.
-        // Patch is an example of a function that has other overloads with side effects.
-        public virtual bool HasOtherOverloadsWithOrWithoutSideEffects { get; }
-
         // Return true if the function is stateless (same result for same input), or false otherwise.
         public virtual bool IsStateless => true;
 

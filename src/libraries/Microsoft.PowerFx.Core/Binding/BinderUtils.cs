@@ -248,11 +248,6 @@ namespace Microsoft.PowerFx.Core.Binding
         {
             var candidates = overloads.Where(overload => overload.MinArity <= cArg && cArg <= overload.MaxArity);
 
-            if (overloads.First()?.HasOtherOverloadsWithOrWithoutSideEffects == true)
-            {
-                candidates = candidates.Where(overload => overload.IsSelfContained != allowSideEffects);
-            }
-
             if (cArg == 0)
             {
                 return candidates.FirstOrDefault();

@@ -865,6 +865,11 @@ namespace Microsoft.PowerFx.Core.Binding
             return lookupInfo.Data as IExternalControl;
         }
 
+        private static bool OverloadsWithAndWithoutSideEffects(IEnumerable<TexlFunction> overloads)
+        {
+            return overloads.Any(overload => overload.IsSelfContained) && overloads.Any(overload => !overload.IsSelfContained);
+        }
+
         private bool IsDataComponentDataSource(NameLookupInfo lookupInfo)
         {
             return lookupInfo.Kind == BindKind.Data &&
@@ -5236,7 +5241,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     TexlFunction overload;
 
-                    if (overloads.First()?.HasOtherOverloadsWithOrWithoutSideEffects == true)
+                    if (OverloadsWithAndWithoutSideEffects(overloads))
                     {
                         // In case an functions has both self-container and non-self-contained overloads, get the first overload based on the context.
                         overload = overloads.FirstOrDefault(f => f.IsSelfContained != _txb.CheckTypesContext.AllowsSideEffects);
