@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 
@@ -73,7 +74,8 @@ namespace Microsoft.PowerFx.Types
         internal TableValue(IRContext irContext)
             : base(irContext)
         {
-            Contract.Assert(IRContext.ResultType is TableType);
+            Contract.Assert(IRContext.ResultType._type.Kind == DKind.Table ||
+                            IRContext.ResultType._type.Kind == DKind.LazyTable);
         }
 
         public virtual int Count()

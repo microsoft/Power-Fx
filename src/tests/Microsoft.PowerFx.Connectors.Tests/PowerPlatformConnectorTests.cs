@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -1760,7 +1761,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             NamedValue[] parameters = new NamedValue[]
             {
                 new NamedValue("organization", FormulaValue.New("https://aurorabapenv969d7.crm10.dynamics.com")),
-                new NamedValue("entityName", FormulaValue.New("accounts"))                
+                new NamedValue("entityName", FormulaValue.New("accounts"))
             };
 
             testConnector.SetResponseFromFiles(Enumerable.Range(0, 23).Select(i => $@"Responses\Response_DVReturnType_{i:00}.json").ToArray());
@@ -1839,23 +1840,177 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(expected, ft);
             Assert.Equal("address1_addresstypecode", returnType.Fields[0].Fields[0].Fields[7].Name);
             Assert.Equal("w", returnType.Fields[0].Fields[0].Fields[7].FormulaType.ToStringWithDisplayNames());
-            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);            
-            Assert.Equal("1, 4, 3, 2", string.Join(", ", returnType.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));            
+            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);
+            Assert.Equal("1, 4, 3, 2", string.Join(", ", returnType.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));
             Assert.Equal("Bill To=1, Other=4, Primary=3, Ship To=2", string.Join(", ", returnType.Fields[0].Fields[0].Fields[7].Enum.Select(kvp => $"{kvp.Key}={kvp.Value.ToObject()}")));
-            
+
             // Now, only make a single network call and see the difference: none of the option set values are populated.
             testConnector.SetResponseFromFiles(Enumerable.Range(0, 1).Select(i => $@"Responses\Response_DVReturnType_{i:00}.json").ToArray());
             ConnectorType returnType2 = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, CancellationToken.None).ConfigureAwait(false);
-            string ft2 = returnType2.FormulaType.ToStringWithDisplayNames();       
+            string ft2 = returnType2.FormulaType.ToStringWithDisplayNames();
 
             Assert.Equal(expected, ft2);
             Assert.Equal("address1_addresstypecode", returnType2.Fields[0].Fields[0].Fields[7].Name);
             Assert.Equal("w", returnType2.Fields[0].Fields[0].Fields[7].FormulaType.ToStringWithDisplayNames());
-            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);            
+            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);
 
             // Key differences
             Assert.Equal(string.Empty, string.Join(", ", returnType2.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));
             Assert.Null(returnType2.Fields[0].Fields[0].Fields[7].Enum);
+        }
+
+        [Fact]
+        public async Task SQL_ExecuteStoredProc_Scoped()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+
+            using var httpClient = new HttpClient(testConnector);
+            using var client = new PowerPlatformConnectorClient("tip1-shared-002.azure-apim.net", "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46", "5f57ec83acef477b8ccc769e52fa22cc", () => "eyJ0eX...", httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            // Here, apart from connectionId, we define server and database as globals
+            // This will modify the list of functions and their parameters as 'server' and 'database' will be removed from required parameter list
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("5f57ec83acef477b8ccc769e52fa22cc") },
+                { "server", FormulaValue.New("pfxdev-sql.database.windows.net") },
+                { "database", FormulaValue.New("connectortest") }
+            });
+
+            // Action connector with global values
+            IReadOnlyList<ConnectorFunction> fList = config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output, true), globals);
+            ConnectorFunction executeProcedureV2 = fList.First(f => f.Name == "ExecuteProcedureV2");
+
+            var engine = new RecalcEngine(config);
+            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client));
+
+            testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
+
+            // The list of parameters is reduced here (compare with SQL_ExecuteStoredProc test)
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+
+            Assert.Equal(FormulaType.UntypedObject, result.Type);
+            Assert.True((result as UntypedObjectValue).Impl.TryGetPropertyNames(out IEnumerable<string> propertyNames));
+            Assert.Equal(3, propertyNames.Count());
+
+            string actual = testConnector._log.ToString();
+            string version = PowerPlatformConnectorClient.Version;
+            string expected = @$"POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eX...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
+ x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
+ x-ms-user-agent: PowerFx/{version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""p1"":50}}
+";
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task SQL_Tabular()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient("tip2-001.azure-apihub.net", "Default-f0900a13-bc1c-4df3-87a2-b7a403db8dd0", "5a6d0eb8c4dd44178c46d85caa5593dc", () => "eyJ0eXAiOiJKVZ...", httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("5a6d0eb8c4dd44178c46d85caa5593dc") },
+                { "server", FormulaValue.New("pfxdev-sql.database.windows.net") },
+                { "database", FormulaValue.New("connectortest") },
+                { "table", FormulaValue.New("Customers") }
+            });
+
+            // Use of tabular connector
+            // There is a network call here to retrieve the table's schema
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
+            ConnectorTableValue sqlTable = await config.AddTabularConnector("Customers", apiDoc, globals, client, CancellationToken.None).ConfigureAwait(false);
+
+            Assert.Equal("Customers", sqlTable.Name);
+            Assert.Equal("_tbl_Customers", sqlTable.Namespace); // internal connector namespace
+            Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
+
+            // Enable IR rewritter to auto-inject ServiceProvider where needed
+            engine.EnableTabularConnectors();
+
+            SymbolValues symbolValues = new SymbolValues().Add(sqlTable.Name, sqlTable);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddRuntimeContext(new TestConnectorRuntimeContext(sqlTable.Namespace, client, console: _output));
+
+            // Expression with tabular connector
+            string expr = @"First(Customers).Address";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // Confirm that InjectServiceProviderFunction has properly been added
+            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
+            Assert.Equal("FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](InjectServiceProviderFunction:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX'))), Address)", ir);
+
+            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");            
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+
+            StringValue address = Assert.IsType<StringValue>(result);
+            Assert.Equal("Juigné", address.Value);
+
+            // Rows are not cached here as the cache is stored in ConnectorTableValueWithServiceProvider which is created by InjectServiceProviderFunction, itself added during Engine.Check
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
+            result = await engine.EvalAsync("Last(Customers).Phone", CancellationToken.None, runtimeConfig: rc).ConfigureAwait(false);
+            StringValue phone = Assert.IsType<StringValue>(result);
+            Assert.Equal("+1-425-705-0000", phone.Value);
+        }
+
+        public class HttpLogger : HttpClient
+        {
+            private readonly ITestOutputHelper _console;
+
+            public HttpLogger(ITestOutputHelper console)
+                : base()
+            {
+                _console = console;
+            }
+
+            public HttpLogger(ITestOutputHelper console, HttpMessageHandler handler)
+                : base(handler)
+            {
+                _console = console;
+            }
+
+            public HttpLogger(ITestOutputHelper console, HttpMessageHandler handler, bool disposeHandler)
+                : base(handler, disposeHandler)
+            {
+                _console = console;
+            }
+
+            public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            {
+                HttpResponseMessage response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var text = response?.Content == null ? string.Empty : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    _console.WriteLine($"[HTTP Status {(int)response.StatusCode} {response.StatusCode} - {text}");
+                }
+
+                return response;
+            }
         }
     }
 }

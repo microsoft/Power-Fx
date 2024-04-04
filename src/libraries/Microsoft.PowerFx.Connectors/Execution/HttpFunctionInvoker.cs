@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -75,7 +76,8 @@ namespace Microsoft.PowerFx.Connectors
 
             foreach (OpenApiParameter param in _function.Operation.Parameters)
             {
-                if (incomingParameters.TryGetValue(param.Name, out var paramValue))
+                if (incomingParameters.TryGetValue(param.Name, out FormulaValue paramValue) || 
+                    _function.GlobalContext.ConnectorValues?.TryGetValue(param.Name, out paramValue) == true)
                 {
                     var valueStr = paramValue?.ToObject()?.ToString() ?? string.Empty;
 
@@ -123,6 +125,18 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();
+
+            // Replace connectionId or other parameters in the URL
+            foreach (Match m in new Regex(@"{(?<p>[^{}]+)}").Matches(url))
+            {
+                string toReplace = m.Groups["p"].Value;
+
+                if (_function.GlobalContext.ConnectorValues?.TryGetValue(toReplace, out FormulaValue value) == true)
+                {
+                    url = url.Replace("{" + toReplace + "}", value.ToObject().ToString());
+                }
+            }
+
             var request = new HttpRequestMessage(_function.HttpMethod, url);
 
             foreach (var kv in headers)
@@ -427,8 +441,8 @@ namespace Microsoft.PowerFx.Connectors
 
         private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, HttpMessageInvoker localInvoker, CancellationToken cancellationToken)
         {
-            var client = localInvoker ?? _httpClient;
-            var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            HttpMessageInvoker client = localInvoker ?? _httpClient;
+            HttpResponseMessage response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             if ((int)response.StatusCode >= 300)
             {
