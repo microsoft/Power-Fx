@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Tests
 
             public bool CanCoerceFromBackingKind => false;
 
-            public bool CanCoerceToBackingKind => false;
+            public bool CanCoerceToBackingKind => true;
 
             public bool CanConcatenateStronglyTyped => false;
 

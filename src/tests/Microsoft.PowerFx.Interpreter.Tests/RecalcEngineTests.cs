@@ -1198,7 +1198,8 @@ namespace Microsoft.PowerFx.Tests
                 {
                     { "Choice1", true },
                     { "Choice2", false },
-                }));
+                },
+                canCoerceToBackingKind: true));
             var config = PowerFxConfig.BuildWithEnumStore(enumStoreBuilder, features: Features.PowerFxV1);
             var recalcEngine = new RecalcEngine(config);
 

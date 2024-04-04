@@ -9,8 +9,8 @@
 // Default operations with backing type
 //    4. Equals/not equals between enum values is always supported.  For example, StartOfWeek.Tuesday = StartOfWeek.Monday
 //    5. Order comparisons between number based enums are not supported, by default. For example StartOfWeek.Tuesday < StartOfWeek.Monday
-//    6. Math operations between number based enums are never supported. For example, StartOfWeek.Tuesday + StartOfWeek.Monday 
-//    7. Boolean logic between Boolean based enums is always supported. 
+//    6. By default, math operations between number based enums are never supported. For example, StartOfWeek.Tuesday + StartOfWeek.Monday 
+//    7. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
 //    8. Equals/not equals between Boolean backed enum values and Booleans is supported.  For example, TestYesNo.Yes = false
 //    9. If the underlying value is desired, the Text, Value, Decimal, Float, and Boolean functions can be called to get the backing value.
 //
@@ -23,6 +23,7 @@
 //
 // Misc
 //   15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
+//   16. Everything coerces to string
 
 //============================================================================================================
 //
@@ -293,7 +294,7 @@ Errors: Error 19-21: Unable to compare values of type Enum (StartOfWeek).
 
 //===========================================================================================================
 //
-// 6. Math operations between number based enums are not supported. For example, StartOfWeek.Tuesday + StartOfWeek.Monday 
+// 6. By default, math operations between number based enums are never supported. For example, StartOfWeek.Tuesday + StartOfWeek.Monday 
 //
 
 >> StartOfWeek.Tuesday + 3
@@ -305,61 +306,69 @@ Errors: Error 11-19: Invalid argument type. Expecting one of the following: Deci
 >> StartOfWeek.Tuesday * 2
 Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
->> ErrorKind.Unknown + 2
-Errors: Error 9-17: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> ErrorKind.Unknown * 2
-Errors: Error 9-17: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> ErrorKind.Unknown / 2
-Errors: Error 9-17: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> ErrorKind.Unknown ^ 2
-Errors: Error 9-17: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
 //===========================================================================================================
 //
-// 7. Boolean logic between Boolean backed enums is always supported. 
+// 7. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
 //
 
->> TestYesNo.Yes && TestYeaNay.Yea
-true
+>> TestYesNo.Yes && TestBooleanNoCoerceTo.SuperTrue
+Errors: Error 38-48: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
->> !TestYesNo.Yes
-false
+>> TestBooleanNoCoerceTo.SuperTrue && TestBooleanNoCoerceTo.SuperFalse
+Errors: Error 21-31: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.|Error 56-67: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
->> TestYesNo.Yes || TestYeaNay.Nay
-true
+>> TestBooleanNoCoerceTo.SuperTrue && false
+Errors: Error 21-31: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
->> !TestYesNo.Yes || !TestYeaNay.Yea
-false
+>> !TestBooleanNoCoerceTo.SuperTrue
+Errors: Error 22-32: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
->> TestYesNo.Yes And TestYeaNay.Yea
-true
+>> TestYesNo.Yes Or TestBooleanNoCoerceTo.SuperTrue
+Errors: Error 38-48: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
->> Not TestYesNo.Yes
-false
+>> Not TestBooleanNoCoerceTo.SuperTrue And Not TestBooleanNoCoerceTo.SuperFalse
+Errors: Error 25-35: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.|Error 65-76: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
->> TestYesNo.Yes Or TestYeaNay.Nay
-true
+>> TestBooleanNoCoerceTo.SuperTrue
+TestBooleanNoCoerceTo.SuperTrue
 
->> Not TestYesNo.Yes And Not TestYeaNay.Yea
-false
+>> And( TestBooleanNoCoerceTo.SuperTrue, TestBooleanNoCoerceTo.SuperTrue )
+Errors: Error 26-36: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 59-69: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 0-3: The function 'And' has some invalid arguments.
 
->> TestYesNo.No
-TestYesNo.No
+>> Not( TestBooleanNoCoerceTo.SuperTrue )
+Errors: Error 26-36: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 0-3: The function 'Not' has some invalid arguments.
 
->> And( TestYesNo.Yes, TestYeaNay.Yea )
-true
+>> Or( TestBooleanNoCoerceTo.SuperTrue, TestBooleanNoCoerceTo.SuperFalse )
+Errors: Error 25-35: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 58-69: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 0-2: The function 'Or' has some invalid arguments.
 
->> Not( TestYesNo.Yes )
-false
+>> Or(Not(TestBooleanNoCoerceTo.SuperFalse),  Not(TestBooleanNoCoerceTo.SuperTrue))
+Errors: Error 28-39: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 3-6: The function 'Not' has some invalid arguments.|Error 68-78: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 43-46: The function 'Not' has some invalid arguments.
 
->> Or( TestYesNo.Yes, TestYeaNay.Nay )
-true
+// Booleans cannot be used in math expressions
 
->> Or(Not(TestYesNo.Yes),  Not(TestYeaNay.Yea))
-false
+>> TestBooleanNoCoerceTo.SuperFalse + 2
+Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestBooleanNoCoerceTo.SuperFalse * 2
+Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestBooleanNoCoerceTo.SuperFalse / 2
+Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestBooleanNoCoerceTo.SuperFalse ^ 2
+Errors: Error 21-32: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> TestYesNo.Yes + 2
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestYesNo.No * 2
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestYesNo.Yes / 2
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestYesNo.Yes ^ 2
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
 //===========================================================================================================
 //
@@ -508,6 +517,76 @@ Error({Kind:ErrorKind.Div0})
 
 >> Error( {Kind: 13} )
 Error({Kind:ErrorKind.Div0})
+
+>> ColorFade( Color.Pink, 10% )
+RGBA(255,198,208,1)
+
+>> ColorFade( RGBA(1,4,9,100%), 10% )
+RGBA(26,29,33,1)
+
+>> TestNumberCoerceTo.V + TestNumberCoerceTo.X
+15
+
+>> Int( TestNumberCoerceTo.V )
+5
+
+>> Power( TestNumberCoerceTo.V, TestNumberCoerceTo.V )
+3125
+
+// Unless there is a specific reason, CanCoerceToBackingKind is expected to be true for most Boolean option sets
+
+>> TestYesNo.Yes && TestYeaNay.Yea
+true
+
+>> !TestYesNo.Yes
+false
+
+>> TestYesNo.Yes || TestYeaNay.Nay
+true
+
+>> !TestYesNo.Yes || !TestYeaNay.Yea
+false
+
+>> TestYesNo.Yes And TestYeaNay.Yea
+true
+
+>> Not TestYesNo.Yes
+false
+
+>> TestYesNo.Yes Or TestYeaNay.Nay
+true
+
+>> Not TestYesNo.Yes And Not TestYeaNay.Yea
+false
+
+>> TestYesNo.No
+TestYesNo.No
+
+>> And( TestYesNo.Yes, TestYeaNay.Yea )
+true
+
+>> Not( TestYesNo.Yes )
+false
+
+>> Or( TestYesNo.Yes, TestYeaNay.Nay )
+true
+
+>> Or(Not(TestYesNo.Yes),  Not(TestYeaNay.Yea))
+false
+
+// ErrorKind has CoerceTo set
+
+>> ErrorKind.Unknown + 2
+14
+
+>> ErrorKind.Unknown * 2
+24
+
+>> ErrorKind.Unknown / 2
+6
+
+>> ErrorKind.Unknown ^ 2
+144
 
 // Most other enums do not, see section 2 above
 
@@ -663,3 +742,95 @@ If(true, {test:1}, "Void value (result of the expression can't be used).")
 
 >> If(true, StartOfWeek.Tuesday, 1)
 If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+//===========================================================================================================
+//
+// 16. Everything coerces to string
+//
+
+>> Text( StartOfWeek.Sunday )
+"Sunday"
+
+>> "Label:" & StartOfWeek.Sunday
+"Label:Sunday"
+
+>> Mid( StartOfWeek.Sunday, 2 )
+"unday"
+
+>> Len( StartOfWeek.Sunday )
+6
+
+>> Text( Match.MultipleDigits )
+"\d+"
+
+>> "Label:" & Match.MultipleDigits
+Match.CalculatedOptionSetValue
+
+>> Text( "Label:" & Match.MultipleDigits )
+"Label:\d+"
+
+>> Mid( Match.MultipleDigits, 2 )
+"d+"
+
+>> Len( Match.MultipleDigits )
+3
+
+>> Text( MatchOptions.IgnoreCase )
+"i"
+
+>> "Label:" & MatchOptions.IgnoreCase
+"Label:i"
+
+>> Text( TestYesNo.No )
+"No"
+
+>> "Label:" & TestYesNo.No
+"Label:No"
+
+>> Text( TestYeaNay.Nay )
+"Nay"
+
+>> "Label:" & TestYeaNay.Nay
+"Label:Nay"
+
+>> Text( TestBooleanNoCoerceTo.SuperTrue )
+"SuperTrue"
+
+>> "Label:" & TestBooleanNoCoerceTo.SuperTrue
+"Label:SuperTrue"
+
+>> Text( TestYeaNay.Yea )
+"Yea"
+
+>> "Label:" & TestYeaNay.Yea
+"Label:Yea"
+
+>> Text( ErrorKind.FileNotFound )
+"FileNotFound"
+
+>> "Label:" & ErrorKind.FileNotFound
+"Label:FileNotFound"
+
+>> Text( TestBlueRamp.Blue50 )
+"Blue50"
+
+>> "Label:" & TestBlueRamp.Blue50
+"Label:Blue50"
+
+>> Mid( TestBlueRamp.Blue50, 2 )
+"lue50"
+
+>> Len( TestBlueRamp.Blue50 )
+6
+
+>> Text( TestRedRamp.Red25 )
+"Red25"
+
+>> "Label:" & TestRedRamp.Red25
+"Label:Red25"
+
+>> Mid( TestRedRamp.Red25, 2 )
+"ed25"
+
+>> Len( TestRedRamp.Red25 )
+5

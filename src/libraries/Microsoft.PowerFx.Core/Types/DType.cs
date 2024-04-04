@@ -3386,7 +3386,7 @@ namespace Microsoft.PowerFx.Core.Types
                                  (usePowerFxV1CompatibilityRules && Currency.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true)) ||
                                  Number.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  Decimal.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
-                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.IsBooleanValued());
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Boolean && (OptionSetInfo.CanCoerceToBackingKind || !usePowerFxV1CompatibilityRules));
                     break;
                 case DKind.DateTime:
                 case DKind.Date:

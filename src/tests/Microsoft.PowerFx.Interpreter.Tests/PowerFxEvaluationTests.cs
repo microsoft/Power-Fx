@@ -104,6 +104,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // There are no built in enums with boolean values and only one with colors.  Adding these for testing purposes.
             store.TestOnly_WithCustomEnum(_testYesNo, append: true);
             store.TestOnly_WithCustomEnum(_testYeaNay, append: true);
+            store.TestOnly_WithCustomEnum(_testBooleanNoCoerceTo, append: true);
+            store.TestOnly_WithCustomEnum(_testNumberCoerceTo, append: true);
             store.TestOnly_WithCustomEnum(_testBlueRampColors, append: true);
             store.TestOnly_WithCustomEnum(_testRedRampColors, append: true);
 
@@ -125,7 +127,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     {
                         { "Yes", true },
                         { "No", false }
-                    });
+                    },
+                    canCoerceToBackingKind: true);
 
         private static readonly EnumSymbol _testYeaNay = new EnumSymbol(
                     new DName("TestYeaNay"),
@@ -134,7 +137,28 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     {
                         { "Yea", true },
                         { "Nay", false }
+                    },
+                    canCoerceToBackingKind: true);
+
+        private static readonly EnumSymbol _testBooleanNoCoerceTo = new EnumSymbol(
+                    new DName("TestBooleanNoCoerceTo"),
+                    DType.Boolean,
+                    new Dictionary<string, object>()
+                    {
+                        { "SuperTrue", true },
+                        { "SuperFalse", false }
                     });
+
+        private static readonly EnumSymbol _testNumberCoerceTo = new EnumSymbol(
+                    new DName("TestNumberCoerceTo"),
+                    DType.Number,
+                    new Dictionary<string, object>()
+                    {
+                        { "X", 10 },
+                        { "V", 5 },
+                        { "I", 1 }
+                    },
+                    canCoerceToBackingKind: true);
 
         private static readonly EnumSymbol _testBlueRampColors = new EnumSymbol(
                     new DName("TestBlueRamp"),

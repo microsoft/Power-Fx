@@ -191,13 +191,13 @@ Error({Kind:ErrorKind.InvalidArgument})
 true
 
 >> !Date(2000,1,1)
-Errors: Error 1-15: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, OptionSetValue, UntypedObject.
+Errors: Error 1-15: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
 >> !DateTime(2000,1,1,12,0,0)
-Errors: Error 1-26: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, OptionSetValue, UntypedObject.
+Errors: Error 1-26: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
 >> !Time(12,0,0)
-Errors: Error 1-13: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, OptionSetValue, UntypedObject.
+Errors: Error 1-13: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
 >> !ParseJSON("2")
 false
