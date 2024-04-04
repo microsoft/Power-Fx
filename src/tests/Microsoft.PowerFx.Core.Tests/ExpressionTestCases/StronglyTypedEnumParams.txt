@@ -7,11 +7,11 @@
 //    3. Avoid passing a scalar where an enum was expected, excepf for text backed enums. For example Weekday( Now(), 12 )
 //
 // Default operations with backing type
-//    4. Equals/not equals between enum values is always supported.  For example, StartOfWeek.Tuesday = StartOfWeek.Monday
-//    5. Order comparisons between number based enums are not supported, by default. For example StartOfWeek.Tuesday < StartOfWeek.Monday
-//    6. By default, math operations between number based enums are never supported. For example, StartOfWeek.Tuesday + StartOfWeek.Monday 
-//    7. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
-//    8. Equals/not equals between Boolean backed enum values and Booleans is supported.  For example, TestYesNo.Yes = false
+//    4. Equals/not equals between enum values of the same enum is always supported.  For example, StartOfWeek.Tuesday = StartOfWeek.Monday
+//    5. By default, Equals/not equals with the backing kind is not supported.  For example, StartOfWeek.Tuesday = 12
+//    6. By default, Order comparisons between number based enums are not supported, by default. For example StartOfWeek.Tuesday < StartOfWeek.Monday
+//    7. By default, math operations between number based enums are never supported. For example, StartOfWeek.Tuesday + StartOfWeek.Monday 
+//    8. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
 //    9. If the underlying value is desired, the Text, Value, Decimal, Float, and Boolean functions can be called to get the backing value.
 //
 // In addition, there are flags for each option set that govern how it can be used.  Default is no flags, used by Dataverse option sets.
@@ -193,7 +193,7 @@ Errors: Error 16-17: Invalid argument type (Decimal). Expecting a Enum (Match) v
 
 //===========================================================================================================
 //
-// 4. Equals/not equals between enum values is always supported.  For example, StartOfWeek.Tuesday = StartOfWeek.Monday
+// 4. Equals/not equals between enum values of the same enum is always supported.  For example, StartOfWeek.Tuesday = StartOfWeek.Monday
 //
 
 >> StartOfWeek.Tuesday = StartOfWeek.Wednesday
@@ -229,10 +229,34 @@ true
 >> TestYesNo.Yes <> TestYesNo.No
 true
 
-// Equals/not equals between two different enum values is not supported, even if same backing type
+>> TestBooleanNoCoerceTo.SuperTrue = TestBooleanNoCoerceTo.SuperFalse
+false
+
+>> TestBooleanNoCoerceTo.SuperTrue <> TestBooleanNoCoerceTo.SuperFalse
+true
+
+>> Color.Red = Color.Pink
+false
+
+>> Color.Red <> Color.Pink
+true
+
+>> TestNumberCoerceTo.V = TestNumberCoerceTo.V2
+true
+
+>> ErrorKind.Custom <> ErrorKind.Custom
+false
+
+>> ErrorKind.Div0 <> ErrorKind.Custom
+true
+
+// Not supported between different enums, even if the same backing kind or if CanCoerceToBackindKind is true
 
 >> StartOfWeek.Tuesday = ErrorKind.Div0
 Errors: Error 20-21: Incompatible types for comparison. These types can't be compared: Enum (StartOfWeek), Enum (ErrorKind).
+
+>> TestNumberCoerceTo.V = ErrorKind.Div0
+Errors: Error 21-22: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCoerceTo), Enum (ErrorKind).
 
 >> StartOfWeek.Tuesday <> ErrorKind.Unknown
 Errors: Error 20-22: Incompatible types for comparison. These types can't be compared: Enum (StartOfWeek), Enum (ErrorKind).
@@ -249,7 +273,13 @@ Errors: Error 14-15: Incompatible types for comparison. These types can't be com
 >> TestYesNo.Yes <> TestYeaNay.Nay
 Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Enum (TestYeaNay).
 
-// Equals/not equals between enum values and backing type is not supported
+>> Color.Red = TestRedRamp.Red100
+Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Enum (Color), Enum (TestRedRamp).
+
+//===========================================================================================================
+//
+//  5. By default, Equals/not equals with the backing kind is not supported.  For example, StartOfWeek.Tuesday = 12
+//
 
 >> StartOfWeek.Tuesday = 12
 Errors: Error 20-21: Incompatible types for comparison. These types can't be compared: Enum (StartOfWeek), Decimal.
@@ -263,9 +293,15 @@ Errors: Error 22-23: Incompatible types for comparison. These types can't be com
 >> JSONFormat.IndentFour <> "_"
 Errors: Error 22-24: Incompatible types for comparison. These types can't be compared: Enum (JSONFormat), Text.
 
+>> TestRedRamp.Red25 = RGBA( 1,1,1,1 )
+Errors: Error 18-19: Incompatible types for comparison. These types can't be compared: Enum (TestRedRamp), Color.
+
+>> TestBooleanNoCoerceTo.SuperTrue = true
+Errors: Error 32-33: Incompatible types for comparison. These types can't be compared: Enum (TestBooleanNoCoerceTo), Boolean.
+
 //===========================================================================================================
 //
-// 5. Order comparisons between number based enums are not supported by default, for example StartOfWeek.Tuesday < StartOfWeek.Monday
+// 6. By default, Order comparisons between number based enums are not supported by default, for example StartOfWeek.Tuesday < StartOfWeek.Monday
 //
 
 >> StartOfWeek.Tuesday > 3
@@ -294,7 +330,7 @@ Errors: Error 19-21: Unable to compare values of type Enum (StartOfWeek).
 
 //===========================================================================================================
 //
-// 6. By default, math operations between number based enums are never supported. For example, StartOfWeek.Tuesday + StartOfWeek.Monday 
+// 7. By default, math operations between number based enums are never supported. For example, StartOfWeek.Tuesday + StartOfWeek.Monday 
 //
 
 >> StartOfWeek.Tuesday + 3
@@ -306,9 +342,35 @@ Errors: Error 11-19: Invalid argument type. Expecting one of the following: Deci
 >> StartOfWeek.Tuesday * 2
 Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
+// Booleans cannot be used in math expressions, even if they support coercion to backing kind
+
+>> TestBooleanNoCoerceTo.SuperFalse + 2
+Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestBooleanNoCoerceTo.SuperFalse * 2
+Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestBooleanNoCoerceTo.SuperFalse / 2
+Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestBooleanNoCoerceTo.SuperFalse ^ 2
+Errors: Error 21-32: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> TestYesNo.Yes + 2
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestYesNo.No * 2
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestYesNo.Yes / 2
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestYesNo.Yes ^ 2
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
 //===========================================================================================================
 //
-// 7. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
+// 8. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
 //
 
 >> TestYesNo.Yes && TestBooleanNoCoerceTo.SuperTrue
@@ -343,49 +405,6 @@ Errors: Error 25-35: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expec
 
 >> Or(Not(TestBooleanNoCoerceTo.SuperFalse),  Not(TestBooleanNoCoerceTo.SuperTrue))
 Errors: Error 28-39: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 3-6: The function 'Not' has some invalid arguments.|Error 68-78: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 43-46: The function 'Not' has some invalid arguments.
-
-// Booleans cannot be used in math expressions
-
->> TestBooleanNoCoerceTo.SuperFalse + 2
-Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> TestBooleanNoCoerceTo.SuperFalse * 2
-Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> TestBooleanNoCoerceTo.SuperFalse / 2
-Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> TestBooleanNoCoerceTo.SuperFalse ^ 2
-Errors: Error 21-32: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
->> TestYesNo.Yes + 2
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> TestYesNo.No * 2
-Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> TestYesNo.Yes / 2
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> TestYesNo.Yes ^ 2
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
-//===========================================================================================================
-//
-// 8. Equals/not equals between Boolean backed enum values and Booleans is supported.  For example, TestYesNo.Yes = false
-//
-
->> TestYesNo.Yes = false
-false
-
->> TestYesNo.Yes <> true
-false
-
->> TestYesNo.Yes = true
-true
-
->> TestYesNo.Yes <> false
-true
 
 //===========================================================================================================
 //
@@ -477,6 +496,14 @@ false
 
 >> Boolean( TestYeaNay.Yea )
 true
+
+>> Boolean( TestBooleanNoCoerceTo.SuperTrue )
+true
+
+>> Boolean( TestBooleanNoCoerceTo.SuperFalse )
+false
+
+// no constructor for Color values
 
 //===========================================================================================================
 //
@@ -588,6 +615,38 @@ false
 >> ErrorKind.Unknown ^ 2
 144
 
+// Equals/not equals comparisons
+
+>> TestYesNo.Yes = false
+false
+
+>> TestYesNo.Yes <> true
+false
+
+>> TestYesNo.Yes = true
+true
+
+>> TestYesNo.Yes <> false
+true
+
+>> Color.Red = RGBA(1,1,1,1)
+false
+
+>> Color.Red <> RGBA(1,1,1,1)
+true
+
+>> Color.Red = RGBA(255,0,0,1)
+true
+
+>> Color.Red <> RGBA(255,0,0,1)
+false
+
+>> ErrorKind.Div0 = 13
+true
+
+>> ErrorKind.Div0 <> 13
+false
+
 // Most other enums do not, see section 2 above
 
 //===========================================================================================================
@@ -645,6 +704,46 @@ Errors: Error 25-26: Invalid argument type (Text). Expecting a Enum (JSONFormat)
 // 13. CanCompareNumeric (numbers only) - For example, ErrorKind can compare values
 //
 
+>> TestNumberCompareNumeric.V2 < TestNumberCompareNumeric.V
+false
+
+>> TestNumberCompareNumeric.V2 <= TestNumberCompareNumeric.V
+true
+
+>> TestNumberCompareNumeric.V2 >= TestNumberCompareNumeric.V
+true
+
+>> TestNumberCompareNumeric.V2 > TestNumberCompareNumeric.V
+false
+
+>> TestNumberCompareNumericCoerceFrom.V2 < TestNumberCompareNumericCoerceFrom.V
+false
+
+>> TestNumberCompareNumericCoerceFrom.V2 <= TestNumberCompareNumericCoerceFrom.V
+true
+
+>> TestNumberCompareNumericCoerceFrom.V2 >= TestNumberCompareNumericCoerceFrom.V
+true
+
+>> TestNumberCompareNumericCoerceFrom.V2 > TestNumberCompareNumericCoerceFrom.V
+false
+
+// Paired with CoerceFromBackingKind, can compare with backing kind
+
+>> TestNumberCompareNumeric.V < 5
+Errors: Error 27-28: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), Decimal.
+
+>> TestNumberCompareNumeric.V2 < 5
+Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), Decimal.
+
+>> TestNumberCompareNumericCoerceFrom.V < 5
+false
+
+>> TestNumberCompareNumericCoerceFrom.V2 < 5
+false
+
+// Long term, ErrorKind should be a strongly typed value and no longer use CoerceTo and depend on CompareNumeric/CoerceFrom instead
+
 >> ErrorKind.Unknown < ErrorKind.Custom
 true
 
@@ -660,13 +759,7 @@ true
 >> ErrorKind.Unknown >= 1000
 false
 
->> ErrorKind.Custom <> ErrorKind.Custom
-false
-
 >> ErrorKind.Custom = 1000
-true
-
->> ErrorKind.Div0 <> ErrorKind.Custom
 true
 
 // Most other number backeded enums can not, see section 5 above

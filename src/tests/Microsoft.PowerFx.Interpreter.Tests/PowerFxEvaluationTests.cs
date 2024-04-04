@@ -106,6 +106,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             store.TestOnly_WithCustomEnum(_testYeaNay, append: true);
             store.TestOnly_WithCustomEnum(_testBooleanNoCoerceTo, append: true);
             store.TestOnly_WithCustomEnum(_testNumberCoerceTo, append: true);
+            store.TestOnly_WithCustomEnum(_testNumberCompareNumeric, append: true);
+            store.TestOnly_WithCustomEnum(_testNumberCompareNumericCoerceFrom, append: true);
             store.TestOnly_WithCustomEnum(_testBlueRampColors, append: true);
             store.TestOnly_WithCustomEnum(_testRedRampColors, append: true);
 
@@ -156,9 +158,35 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     {
                         { "X", 10 },
                         { "V", 5 },
+                        { "V2", 5 }, // intentionally the same value, should compare on value and not label
                         { "I", 1 }
                     },
                     canCoerceToBackingKind: true);
+
+        private static readonly EnumSymbol _testNumberCompareNumeric = new EnumSymbol(
+                    new DName("TestNumberCompareNumeric"),
+                    DType.Number,
+                    new Dictionary<string, object>()
+                    {
+                        { "X", 10 },
+                        { "V", 5 },
+                        { "V2", 5 }, // intentionally the same value, should compare on value and not label
+                        { "I", 1 }
+                    },
+                    canCompareNumeric: true);
+
+        private static readonly EnumSymbol _testNumberCompareNumericCoerceFrom = new EnumSymbol(
+                    new DName("TestNumberCompareNumericCoerceFrom"),
+                    DType.Number,
+                    new Dictionary<string, object>()
+                    {
+                        { "X", 10 },
+                        { "V", 5 },
+                        { "V2", 5 }, // intentionally the same value, should compare on value and not label
+                        { "I", 1 }
+                    },
+                    canCompareNumeric: true,
+                    canCoerceFromBackingKind: true);
 
         private static readonly EnumSymbol _testBlueRampColors = new EnumSymbol(
                     new DName("TestBlueRamp"),
