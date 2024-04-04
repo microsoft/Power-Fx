@@ -5225,7 +5225,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                var someFunc = FindBestErrorOverload(overloads, argTypes, carg, _txb.Features.PowerFxV1CompatibilityRules);
+                var someFunc = FindBestErrorOverload(overloads, argTypes, carg, _txb.Features.PowerFxV1CompatibilityRules, _txb.CheckTypesContext.AllowsSideEffects);
 
                 // If nothing matches even the arity, we're done.
                 if (someFunc == null)
@@ -5234,7 +5234,19 @@ namespace Microsoft.PowerFx.Core.Binding
                     var maxArity = overloads.Max(func => func.MaxArity);
                     ArityError(minArity, maxArity, node, carg, _txb.ErrorContainer);
 
-                    _txb.SetInfo(node, new CallInfo(overloads.First(), node));
+                    TexlFunction overload;
+
+                    if (overloads.First()?.HasOtherOverloadsWithOrWithoutSideEffects == true)
+                    {
+                        // In case an functions has both self-container and non-self-contained overloads, get the first overload based on the context.
+                        overload = overloads.FirstOrDefault(f => f.IsSelfContained != _txb.CheckTypesContext.AllowsSideEffects);
+                    }
+                    else
+                    {
+                        overload = overloads.First();
+                    }
+
+                    _txb.SetInfo(node, new CallInfo(overload, node));
                     _txb.SetType(node, DType.Error);
                     return;
                 }

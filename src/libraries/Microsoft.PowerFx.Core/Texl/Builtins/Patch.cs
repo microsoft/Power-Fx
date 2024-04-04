@@ -285,6 +285,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool MutatesArg0 => true;
 
+        public override bool HasOtherOverloadsWithOrWithoutSideEffects => true;
+
         public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Create | RequiredDataSourcePermissions.Update;
 
         public PatchAsyncFunctionCore(string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
@@ -526,6 +528,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;
+
+        public override bool HasOtherOverloadsWithOrWithoutSideEffects => true;
 
         public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
         {

@@ -244,9 +244,15 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <summary>
         /// Returns best overload in case there are no matches based on first argument and order.
         /// </summary>
-        internal static TexlFunction FindBestErrorOverload(TexlFunction[] overloads, DType[] argTypes, int cArg, bool usePowerFxV1CompatibilityRules)
+        internal static TexlFunction FindBestErrorOverload(TexlFunction[] overloads, DType[] argTypes, int cArg, bool usePowerFxV1CompatibilityRules, bool allowSideEffects)
         {
             var candidates = overloads.Where(overload => overload.MinArity <= cArg && cArg <= overload.MaxArity);
+
+            if (overloads.First()?.HasOtherOverloadsWithOrWithoutSideEffects == true)
+            {
+                candidates = candidates.Where(overload => overload.IsSelfContained != allowSideEffects);
+            }
+
             if (cArg == 0)
             {
                 return candidates.FirstOrDefault();
