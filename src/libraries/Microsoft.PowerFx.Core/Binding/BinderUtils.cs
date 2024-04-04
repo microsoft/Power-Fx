@@ -247,6 +247,7 @@ namespace Microsoft.PowerFx.Core.Binding
         internal static TexlFunction FindBestErrorOverload(TexlFunction[] overloads, DType[] argTypes, int cArg, bool usePowerFxV1CompatibilityRules)
         {
             var candidates = overloads.Where(overload => overload.MinArity <= cArg && cArg <= overload.MaxArity);
+
             if (cArg == 0)
             {
                 return candidates.FirstOrDefault();
