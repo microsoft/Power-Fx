@@ -5230,7 +5230,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                var someFunc = FindBestErrorOverload(overloads, argTypes, carg, _txb.Features.PowerFxV1CompatibilityRules, _txb.CheckTypesContext.AllowsSideEffects);
+                var someFunc = FindBestErrorOverload(overloads, argTypes, carg, _txb.Features.PowerFxV1CompatibilityRules);
 
                 // If nothing matches even the arity, we're done.
                 if (someFunc == null)
