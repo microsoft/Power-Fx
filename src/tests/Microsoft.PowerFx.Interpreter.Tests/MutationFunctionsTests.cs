@@ -457,6 +457,31 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         /// <summary>
+        /// Intellisense should suggest different symbols depending on AllowSideEffect.
+        /// </summary>
+        [Theory]        
+        [InlineData("Patch(", false, "r1")]
+        [InlineData("Patch(", true, "MyDataSource")]
+        [InlineData("Patch(MyDataSource,", true, "r1")]
+        [InlineData("Patch(MyDataSource,First(MyDataSource),", true, "r1")]
+        public void MutationSuggestionTests(string expression, bool allowSideEffects, params string[] expectedSuggestions)
+        {
+            var config = new PowerFxConfig();
+            var varTableValue = new TestDataSource("MyDataSource", TestUtils.DT("*[Id:n, Name:s, Age:n]"));
+
+            config.SymbolTable.AddEntity(varTableValue);
+            config.SymbolTable.AddVariable("r1", FormulaType.Build(varTableValue.Type.ToRecord()));
+            config.SymbolTable.EnableMutationFunctions();
+
+            var engine = new RecalcEngine(config);
+            var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = allowSideEffects });
+            var suggestions = engine.Suggest(check, expression.Length);
+
+            Assert.Equal(expectedSuggestions.Length, suggestions.Suggestions.Count());
+            Assert.Equal(string.Join("-", expectedSuggestions), string.Join("-", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
+        }
+
+        /// <summary>
         /// Meant to test PatchSingleRecordCoreAsync override. Only tables with primary key column are supported.
         /// </summary>
         internal class EntityTableValue : TableValue
