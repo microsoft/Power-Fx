@@ -27,32 +27,32 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public override DType Visit(ErrorNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(BlankNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(BoolLitNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(StrLitNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(NumLitNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(DecLitNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(FirstNameNode node, INameResolver context)
@@ -69,47 +69,47 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public override DType Visit(ParentNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(SelfNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(StrInterpNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(DottedNameNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(UnaryOpNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(BinaryOpNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(VariadicOpNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(CallNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(ListNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
 
         public override DType Visit(RecordNode node, INameResolver context)
@@ -143,7 +143,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public override DType Visit(AsNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
     }
 }

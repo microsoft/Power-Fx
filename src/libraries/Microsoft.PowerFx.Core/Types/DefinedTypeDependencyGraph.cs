@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Types
             foreach (var defType in _definedTypes)
             {
                 var name = defType.Ident.Name.Value;
-                var dependencies = DefinedTypeDependencyVisitor.Run(defType.Type.TypeRoot, _globalSymbols);
+                var dependencies = DefinedTypeDependencyVisitor.FindDependencies(defType.Type.TypeRoot, _globalSymbols);
 
                 _typeWithDependency.Add(defType, dependencies);
 

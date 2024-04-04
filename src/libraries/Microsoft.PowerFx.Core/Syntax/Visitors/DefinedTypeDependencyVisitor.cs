@@ -14,138 +14,39 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {
-    internal class DefinedTypeDependencyVisitor : TexlFunctionalVisitor<HashSet<string>, INameResolver>
+    internal class DefinedTypeDependencyVisitor : IdentityTexlVisitor
     {
-        private DefinedTypeDependencyVisitor()
+        private readonly HashSet<string> _result;
+        private readonly INameResolver _context;
+
+        private DefinedTypeDependencyVisitor(INameResolver context)
         {
+            _result = new HashSet<string>();
+            _context = context;
         }
 
-        public static HashSet<string> Run(TexlNode node, INameResolver context)
-        {
-            return node.Accept(new DefinedTypeDependencyVisitor(), context);
+        public static HashSet<string> FindDependencies(TexlNode node, INameResolver context)
+        { 
+            var visitor = new DefinedTypeDependencyVisitor(context);
+            node.Accept(visitor);
+            return visitor._result;
         }
 
-        public override HashSet<string> Visit(ErrorNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(BlankNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(BoolLitNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(StrLitNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(NumLitNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(DecLitNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(FirstNameNode node, INameResolver context)
+        public override void Visit(FirstNameNode node)
         {
             var name = node.Ident.Name.Value;
-            var result = new HashSet<string>();
 
-            if (context.LookupType(new DName(name), out NameLookupInfo nameInfo))
+            if (_context.LookupType(new DName(name), out NameLookupInfo _))
             {
-                return result;
+                return;
             }
 
             var typeFromString = FormulaType.GetFromStringOrNull(name);
 
-            if (typeFromString == null) 
-            { 
-                result.Add(name);
-            }
-
-            return result;
-        }
-
-        public override HashSet<string> Visit(ParentNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(SelfNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(StrInterpNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(DottedNameNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(UnaryOpNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(BinaryOpNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(VariadicOpNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(CallNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(ListNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override HashSet<string> Visit(RecordNode node, INameResolver context)
-        {
-            var result = new HashSet<string>();
-            foreach (var (cNode, ident) in node.ChildNodes.Zip(node.Ids, (a, b) => (a, b)))
+            if (typeFromString == null)
             {
-                var deps = cNode.Accept(this, context);
-                if (deps.Any())
-                {
-                    result.UnionWith(deps);
-                }
+                _result.Add(name);
             }
-
-            return result;
-        }
-
-        public override HashSet<string> Visit(TableNode node, INameResolver context)
-        {
-            var childNode = node.ChildNodes.First();
-            var result = childNode.Accept(this, context);
-
-            return result;
-        }
-
-        public override HashSet<string> Visit(AsNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
         }
     }
 }

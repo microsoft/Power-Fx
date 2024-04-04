@@ -92,7 +92,6 @@ namespace Microsoft.PowerFx.Syntax
 
             foreach (var unresolvedType in typeGraph.UnresolvedTypes)
             {
-                var name = unresolvedType.Key.Ident.Name.Value;
                 typeErr.Add(new TexlError(unresolvedType.Key.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
             }
 

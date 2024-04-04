@@ -54,14 +54,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="body">TexlNode for user defined function body.</param>
         /// <param name="isImperative"></param>
         /// <param name="args"></param>
-        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args)
-        : base(DPath.Root, functionName, functionName, SG(functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType()._type).ToArray())
-        {
-            this._args = args;
-            this._isImperative = isImperative;
-            this.UdfBody = body;
-        }
-
+        /// <param name="argTypes"></param>
         public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes)
         : base(DPath.Root, functionName, functionName, SG(functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, argTypes)
         {
