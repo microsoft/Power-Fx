@@ -1,0 +1,430 @@
+﻿#SETUP: disable:StronglyTypedBuiltinEnums,disable:PowerFxV1CompatibilityRules,AllEnumsPlusTestEnumsSetup,RegEx,EnableJsonFunctions
+
+// **** Using test enums, Pre V1. ****
+// Some enum varients are not represented in the Builtin set, including for example, any Boolean enums.
+// The companion _BuiltInEnums version of this file uses only the built in enums.
+//
+// Expected resutls in this file were captured before the April 2024 changes for testing compatibilty with the old settings.
+
+// Strongly typed enums were strengthened to:
+//    0. Strongly typed enum usage is the most common scenario and what Intellisense will suggest.
+//    1. Avoid passing the wrong kind of enum to a function. For example JSON( [1,2,3], Match.IgnoreCase )
+//    2. Avoid passing an enum where a scalar was expected, except for text backed enums. For example Mid( "foo", StartOfWeek.Tuesday )
+//    3. Avoid passing a scalar where an enum was expected, excepf for text backed enums. For example Weekday( Now(), 12 )
+//
+// Default operations with backing type
+//    4. Equals/not equals between enum values of the same enum is always supported.  For example, StartOfWeek.Tuesday = StartOfWeek.Monday
+//    5. By default, Equals/not equals with the backing kind is not supported.  For example, StartOfWeek.Tuesday = 12
+//    6. By default, Order comparisons between number based enums are not supported, by default. For example StartOfWeek.Tuesday < StartOfWeek.Monday
+//    7. By default, math operations between number based enums are never supported. For example, StartOfWeek.Tuesday + StartOfWeek.Monday 
+//    8. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
+//    9. If the underlying value is desired, the Text, Value, Decimal, Float, and Boolean functions can be called to get the backing value.
+//
+// In addition, there are flags for each option set that govern how it can be used.  Default is no flags, used by Dataverse option sets.
+//   10. CanCoerceFromBackingKind - For example, Match which allows a string in place of the enum
+//   11. CanCoerceToBackingKind - For example, ErrorKind that can be used as a number
+//   12. CanConcatenateStronglyTyped (text only) - For example, JSONFormat which can concatenate different members together to create a new member
+//   13. CanCompareNumeric (numbers only) - For example, ErrorKind can compare values
+//   14. CanConcatenateStronglyTyped & CanCoerceFromBackingKind - An important combination, used by Match, allows strings and enums to be mixed
+//
+// Misc
+//   15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
+//   16. Everything coerces to string
+
+//============================================================================================================
+//
+// 0. Strongly typed enum usage is the most common scenario and what Intellisense will suggest.
+//
+
+>> TestXORYesNo( TestYesNo.Yes, TestYesNo.No )
+true
+
+>> TestColorInvert( Color.Blue )
+RGBA(255,255,0,1)
+
+>> TestColorBlueRampInvert( TestBlueRamp.Blue25 )
+RGBA(64,64,0,1)
+
+//============================================================================================================
+//
+// 1. Avoid passing the wrong kind of enum to a function. For example JSON( [1,2,3], Match.IgnoreCase )
+//
+
+>> TestXORYesNo( TestYeaNay.Yea, TestYeaNay.Nay )
+true
+
+>> TestColorBlueRampInvert( TestRedRamp.Red25 )
+RGBA(0,64,64,1)
+
+>> TestColorBlueRampInvert( Color.Purple )
+RGBA(127,255,127,1)
+
+>> TestColorBlueRampInvert( ColorFade( Color.Yellow, 25% ) )
+RGBA(0,0,192,1)
+
+>> ColorFade( TestRedRamp.Red25, 10% )
+RGBA(255,197,197,1)
+
+>> TestColorInvert( TestRedRamp.Red50 )
+RGBA(0,128,128,1)
+
+//===========================================================================================================
+//
+// 2. Avoid passing an enum where a scalar was expected, except for text.  For example Mid( "foo", StartOfWeek.Tuesday ). 
+//
+
+//===========================================================================================================
+//
+// 3. Avoid passing a scalar where an enum was expected, excepf for text backed enums. For example Weekday( Now(), 12 )
+//
+
+>> TestColorBlueRampInvert( RGBA( 128, 128, 128, 100% ) )
+RGBA(127,127,127,1)
+
+//===========================================================================================================
+//
+// 4. Equals/not equals between enum values of the same enum is always supported.  For example, StartOfWeek.Tuesday = StartOfWeek.Monday
+//
+
+>> TestYesNo.Yes = TestYesNo.No
+false
+
+>> TestYesNo.Yes = TestYesNo.Yes
+true
+
+>> TestYesNo.Yes <> TestYesNo.No
+true
+
+>> TestBooleanNoCoerceTo.SuperTrue = TestBooleanNoCoerceTo.SuperFalse
+false
+
+>> TestBooleanNoCoerceTo.SuperTrue <> TestBooleanNoCoerceTo.SuperFalse
+true
+
+>> TestNumberCoerceTo.V = TestNumberCoerceTo.V2
+true
+
+// Not supported between different enums, even if the same backing kind or if CanCoerceToBackindKind is true
+
+>> TestNumberCoerceTo.V = ErrorKind.Div0
+false
+
+>> TestYesNo.Yes = TestYeaNay.Nay
+false
+
+>> TestYesNo.Yes <> TestYeaNay.Nay
+true
+
+>> Color.Red = TestRedRamp.Red100
+true
+
+//===========================================================================================================
+//
+//  5. By default, Equals/not equals with the backing kind is not supported.  For example, StartOfWeek.Tuesday = 12
+//
+
+>> TestRedRamp.Red25 = RGBA( 1,1,1,1 )
+false
+
+>> TestBooleanNoCoerceTo.SuperTrue = true
+true
+
+//===========================================================================================================
+//
+// 6. By default, Order comparisons between number based enums are not supported by default, for example StartOfWeek.Tuesday < StartOfWeek.Monday
+//
+
+//===========================================================================================================
+//
+// 7. By default, math operations between number based enums are never supported. For example, StartOfWeek.Tuesday + StartOfWeek.Monday 
+//
+
+// Booleans cannot be used in math expressions, even if they support coercion to backing kind
+
+>> TestBooleanNoCoerceTo.SuperFalse + 2
+2
+
+>> TestBooleanNoCoerceTo.SuperFalse * 2
+0
+
+>> TestBooleanNoCoerceTo.SuperFalse / 2
+0
+
+>> TestBooleanNoCoerceTo.SuperFalse ^ 2
+0
+
+>> TestYesNo.Yes + 2
+3
+
+>> TestYesNo.No * 2
+0
+
+>> TestYesNo.Yes / 2
+0.5
+
+>> TestYesNo.Yes ^ 2
+1
+
+//===========================================================================================================
+//
+// 8. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
+//
+
+>> TestYesNo.Yes && TestBooleanNoCoerceTo.SuperTrue
+true
+
+>> TestBooleanNoCoerceTo.SuperTrue && TestBooleanNoCoerceTo.SuperFalse
+false
+
+>> TestBooleanNoCoerceTo.SuperTrue && false
+false
+
+>> !TestBooleanNoCoerceTo.SuperTrue
+false
+
+>> TestYesNo.Yes Or TestBooleanNoCoerceTo.SuperTrue
+true
+
+>> Not TestBooleanNoCoerceTo.SuperTrue And Not TestBooleanNoCoerceTo.SuperFalse
+false
+
+>> TestBooleanNoCoerceTo.SuperTrue
+true
+
+>> And( TestBooleanNoCoerceTo.SuperTrue, TestBooleanNoCoerceTo.SuperTrue )
+true
+
+>> Not( TestBooleanNoCoerceTo.SuperTrue )
+false
+
+>> Or( TestBooleanNoCoerceTo.SuperTrue, TestBooleanNoCoerceTo.SuperFalse )
+true
+
+>> Or(Not(TestBooleanNoCoerceTo.SuperFalse),  Not(TestBooleanNoCoerceTo.SuperTrue))
+true
+
+//===========================================================================================================
+//
+// 9. If the underlying value is desired, the Text, Value, Decimal, Float, and Boolean functions can be called to get the backing value.
+//
+
+// Text can be called on all option set values
+
+>> Text( TestYesNo.Yes )
+"true"
+
+>> Value( TestYesNo.Yes )
+1
+
+>> Float( TestYesNo.Yes )
+1
+
+>> Decimal( TestYesNo.Yes )
+1
+
+>> Boolean( TestYesNo.No )
+false
+
+>> Boolean( TestYesNo.Yes )
+true
+
+>> Boolean( TestYeaNay.Nay )
+false
+
+>> Boolean( TestYeaNay.Yea )
+true
+
+>> Boolean( TestBooleanNoCoerceTo.SuperTrue )
+true
+
+>> Boolean( TestBooleanNoCoerceTo.SuperFalse )
+false
+
+// no constructor for Color values
+
+//===========================================================================================================
+//
+// 10. CanCoerceFromBackingKind - For example, Match which allows a string in place of the enum
+//
+
+//===========================================================================================================
+//
+// 11. CanCoerceToBackingKind - For example, ErrorKind that can be used as a number
+//
+
+>> TestNumberCoerceTo.V + TestNumberCoerceTo.X
+15
+
+>> Int( TestNumberCoerceTo.V )
+5
+
+>> Power( TestNumberCoerceTo.V, TestNumberCoerceTo.V )
+3125
+
+// Unless there is a specific reason, CanCoerceToBackingKind is expected to be true for most Boolean option sets
+
+>> TestYesNo.Yes && TestYeaNay.Yea
+true
+
+>> !TestYesNo.Yes
+false
+
+>> TestYesNo.Yes || TestYeaNay.Nay
+true
+
+>> !TestYesNo.Yes || !TestYeaNay.Yea
+false
+
+>> TestYesNo.Yes And TestYeaNay.Yea
+true
+
+>> Not TestYesNo.Yes
+false
+
+>> TestYesNo.Yes Or TestYeaNay.Nay
+true
+
+>> Not TestYesNo.Yes And Not TestYeaNay.Yea
+false
+
+>> TestYesNo.No
+false
+
+>> And( TestYesNo.Yes, TestYeaNay.Yea )
+true
+
+>> Not( TestYesNo.Yes )
+false
+
+>> Or( TestYesNo.Yes, TestYeaNay.Nay )
+true
+
+>> Or(Not(TestYesNo.Yes),  Not(TestYeaNay.Yea))
+false
+
+// Equals/not equals comparisons
+
+>> TestYesNo.Yes = false
+false
+
+>> TestYesNo.Yes <> true
+false
+
+>> TestYesNo.Yes = true
+true
+
+>> TestYesNo.Yes <> false
+true
+
+//===========================================================================================================
+//
+// 12. CanConcatenateStronglyTyped (text only) - For example, JSONFormat which can concatenate different members together to create a new member
+//
+
+//===========================================================================================================
+//
+// 13. CanCompareNumeric (numbers only) - For example, ErrorKind can compare values
+//
+
+>> TestNumberCompareNumeric.V2 < TestNumberCompareNumeric.V
+false
+
+>> TestNumberCompareNumeric.V2 <= TestNumberCompareNumeric.V
+true
+
+>> TestNumberCompareNumeric.V2 >= TestNumberCompareNumeric.V
+true
+
+>> TestNumberCompareNumeric.V2 > TestNumberCompareNumeric.V
+false
+
+>> TestNumberCompareNumericCoerceFrom.V2 < TestNumberCompareNumericCoerceFrom.V
+false
+
+>> TestNumberCompareNumericCoerceFrom.V2 <= TestNumberCompareNumericCoerceFrom.V
+true
+
+>> TestNumberCompareNumericCoerceFrom.V2 >= TestNumberCompareNumericCoerceFrom.V
+true
+
+>> TestNumberCompareNumericCoerceFrom.V2 > TestNumberCompareNumericCoerceFrom.V
+false
+
+// Paired with CoerceFromBackingKind, can compare with backing kind
+
+>> TestNumberCompareNumeric.V < 5
+false
+
+>> TestNumberCompareNumeric.V2 < 5
+false
+
+>> TestNumberCompareNumericCoerceFrom.V < 5
+false
+
+>> TestNumberCompareNumericCoerceFrom.V2 < 5
+false
+
+// Most other number backeded enums can not, see section 5 above
+
+//===========================================================================================================
+//
+// 14. CanConcatenateStronglyTyped & CanCoerceFromBackingKind - An important combination, used by Match, allows strings and enums to be mixed
+//
+
+//===========================================================================================================
+//
+// 15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
+//
+
+//===========================================================================================================
+//
+// 16. Everything coerces to string
+//
+
+>> Text( TestYesNo.No )
+"false"
+
+>> "Label:" & TestYesNo.No
+"Label:false"
+
+>> Text( TestYeaNay.Nay )
+"false"
+
+>> "Label:" & TestYeaNay.Nay
+"Label:false"
+
+>> Text( TestBooleanNoCoerceTo.SuperTrue )
+"true"
+
+>> "Label:" & TestBooleanNoCoerceTo.SuperTrue
+"Label:true"
+
+>> Text( TestYeaNay.Yea )
+"true"
+
+>> "Label:" & TestYeaNay.Yea
+"Label:true"
+
+>> Text( TestBlueRamp.Blue50 )
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Error 18-25: Expected text or number. We expect text or a number at this point in the formula.
+
+>> "Label:" & TestBlueRamp.Blue50
+Errors: Error 23-30: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, OptionSetValue, ViewValue, UntypedObject.
+
+>> Mid( TestBlueRamp.Blue50, 2 )
+Errors: Error 0-3: The function 'Mid' has some invalid arguments.|Error 17-24: Invalid argument type (Color). Expecting a Text value instead.
+
+>> Len( TestBlueRamp.Blue50 )
+Errors: Error 17-24: Invalid argument type (Color). Expecting a Text value instead.
+
+>> Text( TestRedRamp.Red25 )
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Error 17-23: Expected text or number. We expect text or a number at this point in the formula.
+
+>> "Label:" & TestRedRamp.Red25
+Errors: Error 22-28: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, OptionSetValue, ViewValue, UntypedObject.
+
+>> Mid( TestRedRamp.Red25, 2 )
+Errors: Error 0-3: The function 'Mid' has some invalid arguments.|Error 16-22: Invalid argument type (Color). Expecting a Text value instead.
+
+>> Len( TestRedRamp.Red25 )
+Errors: Error 16-22: Invalid argument type (Color). Expecting a Text value instead.

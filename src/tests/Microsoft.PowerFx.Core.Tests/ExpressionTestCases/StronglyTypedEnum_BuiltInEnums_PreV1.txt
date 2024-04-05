@@ -1,7 +1,11 @@
-﻿#SETUP: disable:StronglyTypedBuiltinEnums,disable:PowerFxV1CompatibilityRules,AllEnumsPlusTestEnumsSetup,RegEx,EnableJsonFunctions
+﻿#SETUP: disable:StronglyTypedBuiltinEnums,disable:PowerFxV1CompatibilityRules,AllEnumsSetup,RegEx,EnableJsonFunctions
 
-// This file is/was the same as StronglyTypedEnumParams, but run without strongly typed enums to ensure pre-change behavior has not been altered.
-// Output in this file was captured before the April 2024 changes.
+// **** Using built in enums only, Pre V1. ****
+// Some enum varients are not represented in the Builtin set, including, for example, any Boolean enums.
+// For tihs reason, the companion _TestEnums version of this file uses built in and additional test enums.
+// While this version remains compatible with Canvas.
+//
+// Expected resutls in this file were captured before the April 2024 changes for testing compatibilty with the old settings.
 
 // Strongly typed enums were strengthened to:
 //    0. Strongly typed enum usage is the most common scenario and what Intellisense will suggest.
@@ -45,17 +49,8 @@ Table({Value:1},{Value:2},{Value:3})
 >> Weekday( Date(1990,1,1), StartOfWeek.Tuesday )
 7
 
->> TestXORYesNo( TestYesNo.Yes, TestYesNo.No )
-true
-
 >> ColorFade( Color.Red, 10% )
 RGBA(255,25,25,1)
-
->> TestColorInvert( Color.Blue )
-RGBA(255,255,0,1)
-
->> TestColorBlueRampInvert( TestBlueRamp.Blue25 )
-RGBA(64,64,0,1)
 
 //============================================================================================================
 //
@@ -119,24 +114,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Weekday( Date(1980,1,1), JSONFormat.IndentFour )
 Error({Kind:ErrorKind.InvalidArgument})
 
->> TestXORYesNo( TestYeaNay.Yea, TestYeaNay.Nay )
-true
-
->> TestColorBlueRampInvert( TestRedRamp.Red25 )
-RGBA(0,64,64,1)
-
->> TestColorBlueRampInvert( Color.Purple )
-RGBA(127,255,127,1)
-
->> TestColorBlueRampInvert( ColorFade( Color.Yellow, 25% ) )
-RGBA(0,0,192,1)
-
->> ColorFade( TestRedRamp.Red25, 10% )
-RGBA(255,197,197,1)
-
->> TestColorInvert( TestRedRamp.Red50 )
-RGBA(0,128,128,1)
-
 //===========================================================================================================
 //
 // 2. Avoid passing an enum where a scalar was expected, except for text.  For example Mid( "foo", StartOfWeek.Tuesday ). 
@@ -185,9 +162,6 @@ Table({Value:3},{Value:2},{Value:1})
 >> Match( "howdy", "h", "c" )
 {FullMatch:"h",StartMatch:1,SubMatches:Table()}
 
->> TestColorBlueRampInvert( RGBA( 128, 128, 128, 100% ) )
-RGBA(127,127,127,1)
-
 >> IsMatch("Foo", 17)
 Errors: Error 15-17: Regular expressions must be constant values.
 
@@ -223,28 +197,10 @@ false
 >> ErrorKind.Div0 <> ErrorKind.Unknown
 true
 
->> TestYesNo.Yes = TestYesNo.No
-false
-
->> TestYesNo.Yes = TestYesNo.Yes
-true
-
->> TestYesNo.Yes <> TestYesNo.No
-true
-
->> TestBooleanNoCoerceTo.SuperTrue = TestBooleanNoCoerceTo.SuperFalse
-false
-
->> TestBooleanNoCoerceTo.SuperTrue <> TestBooleanNoCoerceTo.SuperFalse
-true
-
 >> Color.Red = Color.Pink
 false
 
 >> Color.Red <> Color.Pink
-true
-
->> TestNumberCoerceTo.V = TestNumberCoerceTo.V2
 true
 
 >> ErrorKind.Custom <> ErrorKind.Custom
@@ -258,9 +214,6 @@ true
 >> StartOfWeek.Tuesday = ErrorKind.Div0
 false
 
->> TestNumberCoerceTo.V = ErrorKind.Div0
-false
-
 >> StartOfWeek.Tuesday <> ErrorKind.Unknown
 false
 
@@ -268,15 +221,6 @@ false
 false
 
 >> JSONFormat.IndentFour <> Match.Email
-true
-
->> TestYesNo.Yes = TestYeaNay.Nay
-false
-
->> TestYesNo.Yes <> TestYeaNay.Nay
-true
-
->> Color.Red = TestRedRamp.Red100
 true
 
 //===========================================================================================================
@@ -294,12 +238,6 @@ true
 true
 
 >> JSONFormat.IndentFour <> "_"
-true
-
->> TestRedRamp.Red25 = RGBA( 1,1,1,1 )
-false
-
->> TestBooleanNoCoerceTo.SuperTrue = true
 true
 
 //===========================================================================================================
@@ -345,69 +283,10 @@ true
 >> StartOfWeek.Tuesday * 2
 24
 
-// Booleans cannot be used in math expressions, even if they support coercion to backing kind
-
->> TestBooleanNoCoerceTo.SuperFalse + 2
-2
-
->> TestBooleanNoCoerceTo.SuperFalse * 2
-0
-
->> TestBooleanNoCoerceTo.SuperFalse / 2
-0
-
->> TestBooleanNoCoerceTo.SuperFalse ^ 2
-0
-
->> TestYesNo.Yes + 2
-3
-
->> TestYesNo.No * 2
-0
-
->> TestYesNo.Yes / 2
-0.5
-
->> TestYesNo.Yes ^ 2
-1
-
 //===========================================================================================================
 //
 // 8. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
 //
-
->> TestYesNo.Yes && TestBooleanNoCoerceTo.SuperTrue
-true
-
->> TestBooleanNoCoerceTo.SuperTrue && TestBooleanNoCoerceTo.SuperFalse
-false
-
->> TestBooleanNoCoerceTo.SuperTrue && false
-false
-
->> !TestBooleanNoCoerceTo.SuperTrue
-false
-
->> TestYesNo.Yes Or TestBooleanNoCoerceTo.SuperTrue
-true
-
->> Not TestBooleanNoCoerceTo.SuperTrue And Not TestBooleanNoCoerceTo.SuperFalse
-false
-
->> TestBooleanNoCoerceTo.SuperTrue
-true
-
->> And( TestBooleanNoCoerceTo.SuperTrue, TestBooleanNoCoerceTo.SuperTrue )
-true
-
->> Not( TestBooleanNoCoerceTo.SuperTrue )
-false
-
->> Or( TestBooleanNoCoerceTo.SuperTrue, TestBooleanNoCoerceTo.SuperFalse )
-true
-
->> Or(Not(TestBooleanNoCoerceTo.SuperFalse),  Not(TestBooleanNoCoerceTo.SuperTrue))
-true
 
 //===========================================================================================================
 //
@@ -428,9 +307,6 @@ true
 >> Text( JSONFormat.IndentFour )
 "4"
 
->> Text( TestYesNo.Yes )
-"true"
-
 >> Value( StartOfWeek.Friday )
 15
 
@@ -442,9 +318,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Value( JSONFormat.IndentFour )
 4
-
->> Value( TestYesNo.Yes )
-1
 
 >> Float( StartOfWeek.Friday )
 15
@@ -458,9 +331,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Float( JSONFormat.IndentFour )
 4
 
->> Float( TestYesNo.Yes )
-1
-
 >> Decimal( StartOfWeek.Friday )
 15
 
@@ -473,9 +343,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Decimal( JSONFormat.IndentFour )
 4
 
->> Decimal( TestYesNo.Yes )
-1
-
 >> Boolean( StartOfWeek.Friday )
 true
 
@@ -487,24 +354,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Boolean( JSONFormat.IndentFour )
 Error({Kind:ErrorKind.InvalidArgument})
-
->> Boolean( TestYesNo.No )
-false
-
->> Boolean( TestYesNo.Yes )
-true
-
->> Boolean( TestYeaNay.Nay )
-false
-
->> Boolean( TestYeaNay.Yea )
-true
-
->> Boolean( TestBooleanNoCoerceTo.SuperTrue )
-true
-
->> Boolean( TestBooleanNoCoerceTo.SuperFalse )
-false
 
 // no constructor for Color values
 
@@ -554,56 +403,6 @@ RGBA(255,198,208,1)
 >> ColorFade( RGBA(1,4,9,100%), 10% )
 RGBA(26,29,33,1)
 
->> TestNumberCoerceTo.V + TestNumberCoerceTo.X
-15
-
->> Int( TestNumberCoerceTo.V )
-5
-
->> Power( TestNumberCoerceTo.V, TestNumberCoerceTo.V )
-3125
-
-// Unless there is a specific reason, CanCoerceToBackingKind is expected to be true for most Boolean option sets
-
->> TestYesNo.Yes && TestYeaNay.Yea
-true
-
->> !TestYesNo.Yes
-false
-
->> TestYesNo.Yes || TestYeaNay.Nay
-true
-
->> !TestYesNo.Yes || !TestYeaNay.Yea
-false
-
->> TestYesNo.Yes And TestYeaNay.Yea
-true
-
->> Not TestYesNo.Yes
-false
-
->> TestYesNo.Yes Or TestYeaNay.Nay
-true
-
->> Not TestYesNo.Yes And Not TestYeaNay.Yea
-false
-
->> TestYesNo.No
-false
-
->> And( TestYesNo.Yes, TestYeaNay.Yea )
-true
-
->> Not( TestYesNo.Yes )
-false
-
->> Or( TestYesNo.Yes, TestYeaNay.Nay )
-true
-
->> Or(Not(TestYesNo.Yes),  Not(TestYeaNay.Yea))
-false
-
 // ErrorKind has CoerceTo set
 
 >> ErrorKind.Unknown + 2
@@ -619,18 +418,6 @@ false
 144
 
 // Equals/not equals comparisons
-
->> TestYesNo.Yes = false
-false
-
->> TestYesNo.Yes <> true
-false
-
->> TestYesNo.Yes = true
-true
-
->> TestYesNo.Yes <> false
-true
 
 >> Color.Red = RGBA(1,1,1,1)
 false
@@ -706,44 +493,6 @@ Table({Value:1},{Value:2},{Value:3})
 //
 // 13. CanCompareNumeric (numbers only) - For example, ErrorKind can compare values
 //
-
->> TestNumberCompareNumeric.V2 < TestNumberCompareNumeric.V
-false
-
->> TestNumberCompareNumeric.V2 <= TestNumberCompareNumeric.V
-true
-
->> TestNumberCompareNumeric.V2 >= TestNumberCompareNumeric.V
-true
-
->> TestNumberCompareNumeric.V2 > TestNumberCompareNumeric.V
-false
-
->> TestNumberCompareNumericCoerceFrom.V2 < TestNumberCompareNumericCoerceFrom.V
-false
-
->> TestNumberCompareNumericCoerceFrom.V2 <= TestNumberCompareNumericCoerceFrom.V
-true
-
->> TestNumberCompareNumericCoerceFrom.V2 >= TestNumberCompareNumericCoerceFrom.V
-true
-
->> TestNumberCompareNumericCoerceFrom.V2 > TestNumberCompareNumericCoerceFrom.V
-false
-
-// Paired with CoerceFromBackingKind, can compare with backing kind
-
->> TestNumberCompareNumeric.V < 5
-false
-
->> TestNumberCompareNumeric.V2 < 5
-false
-
->> TestNumberCompareNumericCoerceFrom.V < 5
-false
-
->> TestNumberCompareNumericCoerceFrom.V2 < 5
-false
 
 // Long term, ErrorKind should be a strongly typed value and no longer use CoerceTo and depend on CompareNumeric/CoerceFrom instead
 
@@ -877,56 +626,8 @@ true
 >> "Label:" & MatchOptions.IgnoreCase
 "Label:i"
 
->> Text( TestYesNo.No )
-"false"
-
->> "Label:" & TestYesNo.No
-"Label:false"
-
->> Text( TestYeaNay.Nay )
-"false"
-
->> "Label:" & TestYeaNay.Nay
-"Label:false"
-
->> Text( TestBooleanNoCoerceTo.SuperTrue )
-"true"
-
->> "Label:" & TestBooleanNoCoerceTo.SuperTrue
-"Label:true"
-
->> Text( TestYeaNay.Yea )
-"true"
-
->> "Label:" & TestYeaNay.Yea
-"Label:true"
-
 >> Text( ErrorKind.FileNotFound )
 "17"
 
 >> "Label:" & ErrorKind.FileNotFound
 "Label:17"
-
->> Text( TestBlueRamp.Blue50 )
-Errors: Error 0-4: The function 'Text' has some invalid arguments.|Error 18-25: Expected text or number. We expect text or a number at this point in the formula.
-
->> "Label:" & TestBlueRamp.Blue50
-Errors: Error 23-30: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, OptionSetValue, ViewValue, UntypedObject.
-
->> Mid( TestBlueRamp.Blue50, 2 )
-Errors: Error 0-3: The function 'Mid' has some invalid arguments.|Error 17-24: Invalid argument type (Color). Expecting a Text value instead.
-
->> Len( TestBlueRamp.Blue50 )
-Errors: Error 17-24: Invalid argument type (Color). Expecting a Text value instead.
-
->> Text( TestRedRamp.Red25 )
-Errors: Error 0-4: The function 'Text' has some invalid arguments.|Error 17-23: Expected text or number. We expect text or a number at this point in the formula.
-
->> "Label:" & TestRedRamp.Red25
-Errors: Error 22-28: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, OptionSetValue, ViewValue, UntypedObject.
-
->> Mid( TestRedRamp.Red25, 2 )
-Errors: Error 0-3: The function 'Mid' has some invalid arguments.|Error 16-22: Invalid argument type (Color). Expecting a Text value instead.
-
->> Len( TestRedRamp.Red25 )
-Errors: Error 16-22: Invalid argument type (Color). Expecting a Text value instead.

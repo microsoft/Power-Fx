@@ -1,4 +1,9 @@
-﻿#SETUP: StronglyTypedBuiltinEnums,PowerFxV1CompatibilityRules,AllEnumsPlusTestEnumsSetup,RegEx,EnableJsonFunctions
+﻿#SETUP: StronglyTypedBuiltinEnums,PowerFxV1CompatibilityRules,AllEnumsSetup,RegEx,EnableJsonFunctions
+
+// **** Using built in enums only, V1 compat. ****
+// Some enum varients are not represented in the Builtin set, including, for example, any Boolean enums.
+// For tihs reason, the companion _TestEnums version of this file uses built in and additional test enums.
+// While this version remains compatible with Canvas.
 
 // Strongly typed enums were strengthened to:
 //    0. Strongly typed enum usage is the most common scenario and what Intellisense will suggest.
@@ -42,17 +47,8 @@ Table({Value:1},{Value:2},{Value:3})
 >> Weekday( Date(1990,1,1), StartOfWeek.Tuesday )
 7
 
->> TestXORYesNo( TestYesNo.Yes, TestYesNo.No )
-true
-
 >> ColorFade( Color.Red, 10% )
 RGBA(255,25,25,1)
-
->> TestColorInvert( Color.Blue )
-RGBA(255,255,0,1)
-
->> TestColorBlueRampInvert( TestBlueRamp.Blue25 )
-RGBA(64,64,0,1)
 
 //============================================================================================================
 //
@@ -116,24 +112,6 @@ Errors: Error 34-39: Invalid argument type (Enum (ErrorKind)). Expecting a Enum 
 >> Weekday( Date(1980,1,1), JSONFormat.IndentFour )
 Errors: Error 35-46: Invalid argument type (Enum (JSONFormat)). Expecting a Enum (StartOfWeek) value instead.
 
->> TestXORYesNo( TestYeaNay.Yea, TestYeaNay.Nay )
-Errors: Error 24-28: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestYesNo) value instead.|Error 40-44: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.
-
->> TestColorBlueRampInvert( TestRedRamp.Red25 )
-Errors: Error 36-42: Invalid argument type (Enum (TestRedRamp)). Expecting a Enum (TestBlueRamp) value instead.|Error 0-23: The function 'TestColorBlueRampInvert' has some invalid arguments.
-
->> TestColorBlueRampInvert( Color.Purple )
-Errors: Error 30-37: Invalid argument type (Enum (Color)). Expecting a Enum (TestBlueRamp) value instead.|Error 0-23: The function 'TestColorBlueRampInvert' has some invalid arguments.
-
->> TestColorBlueRampInvert( ColorFade( Color.Yellow, 25% ) )
-Errors: Error 25-55: Invalid argument type (Color). Expecting a Enum (TestBlueRamp) value instead.|Error 0-23: The function 'TestColorBlueRampInvert' has some invalid arguments.
-
->> ColorFade( TestRedRamp.Red25, 10% )
-Errors: Error 0-9: The function 'ColorFade' has some invalid arguments.|Error 22-28: Invalid argument type (Enum (TestRedRamp)). Expecting a Color value instead.
-
->> TestColorInvert( TestRedRamp.Red50 )
-Errors: Error 28-34: Invalid argument type (Enum (TestRedRamp)). Expecting a Color value instead.|Error 0-15: The function 'TestColorInvert' has some invalid arguments.
-
 //===========================================================================================================
 //
 // 2. Avoid passing an enum where a scalar was expected, except for text.  For example Mid( "foo", StartOfWeek.Tuesday ). 
@@ -182,9 +160,6 @@ Errors: Error 15-18: Invalid argument type (Text). Expecting a Enum (JSONFormat)
 >> Match( "howdy", "h", "c" )
 Errors: Error 21-24: Invalid argument type (Text). Expecting a Enum (MatchOptions) value instead.|Error 0-5: The function 'Match' has some invalid arguments.
 
->> TestColorBlueRampInvert( RGBA( 128, 128, 128, 100% ) )
-Errors: Error 25-52: Invalid argument type (Color). Expecting a Enum (TestBlueRamp) value instead.|Error 0-23: The function 'TestColorBlueRampInvert' has some invalid arguments.
-
 >> IsMatch("Foo", 17)
 Errors: Error 15-17: Invalid argument type (Decimal). Expecting a Enum (Match) value instead.
 
@@ -220,28 +195,10 @@ false
 >> ErrorKind.Div0 <> ErrorKind.Unknown
 true
 
->> TestYesNo.Yes = TestYesNo.No
-false
-
->> TestYesNo.Yes = TestYesNo.Yes
-true
-
->> TestYesNo.Yes <> TestYesNo.No
-true
-
->> TestBooleanNoCoerceTo.SuperTrue = TestBooleanNoCoerceTo.SuperFalse
-false
-
->> TestBooleanNoCoerceTo.SuperTrue <> TestBooleanNoCoerceTo.SuperFalse
-true
-
 >> Color.Red = Color.Pink
 false
 
 >> Color.Red <> Color.Pink
-true
-
->> TestNumberCoerceTo.V = TestNumberCoerceTo.V2
 true
 
 >> ErrorKind.Custom <> ErrorKind.Custom
@@ -255,9 +212,6 @@ true
 >> StartOfWeek.Tuesday = ErrorKind.Div0
 Errors: Error 20-21: Incompatible types for comparison. These types can't be compared: Enum (StartOfWeek), Enum (ErrorKind).
 
->> TestNumberCoerceTo.V = ErrorKind.Div0
-Errors: Error 21-22: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCoerceTo), Enum (ErrorKind).
-
 >> StartOfWeek.Tuesday <> ErrorKind.Unknown
 Errors: Error 20-22: Incompatible types for comparison. These types can't be compared: Enum (StartOfWeek), Enum (ErrorKind).
 
@@ -266,15 +220,6 @@ Errors: Error 22-23: Incompatible types for comparison. These types can't be com
 
 >> JSONFormat.IndentFour <> Match.Email
 Errors: Error 22-24: Incompatible types for comparison. These types can't be compared: Enum (JSONFormat), Enum (Match).
-
->> TestYesNo.Yes = TestYeaNay.Nay
-Errors: Error 14-15: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Enum (TestYeaNay).
-
->> TestYesNo.Yes <> TestYeaNay.Nay
-Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Enum (TestYeaNay).
-
->> Color.Red = TestRedRamp.Red100
-Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Enum (Color), Enum (TestRedRamp).
 
 //===========================================================================================================
 //
@@ -292,12 +237,6 @@ Errors: Error 22-23: Incompatible types for comparison. These types can't be com
 
 >> JSONFormat.IndentFour <> "_"
 Errors: Error 22-24: Incompatible types for comparison. These types can't be compared: Enum (JSONFormat), Text.
-
->> TestRedRamp.Red25 = RGBA( 1,1,1,1 )
-Errors: Error 18-19: Incompatible types for comparison. These types can't be compared: Enum (TestRedRamp), Color.
-
->> TestBooleanNoCoerceTo.SuperTrue = true
-Errors: Error 32-33: Incompatible types for comparison. These types can't be compared: Enum (TestBooleanNoCoerceTo), Boolean.
 
 //===========================================================================================================
 //
@@ -342,69 +281,10 @@ Errors: Error 11-19: Invalid argument type. Expecting one of the following: Deci
 >> StartOfWeek.Tuesday * 2
 Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
-// Booleans cannot be used in math expressions, even if they support coercion to backing kind
-
->> TestBooleanNoCoerceTo.SuperFalse + 2
-Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> TestBooleanNoCoerceTo.SuperFalse * 2
-Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> TestBooleanNoCoerceTo.SuperFalse / 2
-Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> TestBooleanNoCoerceTo.SuperFalse ^ 2
-Errors: Error 21-32: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
->> TestYesNo.Yes + 2
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> TestYesNo.No * 2
-Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> TestYesNo.Yes / 2
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
-
->> TestYesNo.Yes ^ 2
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
 //===========================================================================================================
 //
 // 8. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
 //
-
->> TestYesNo.Yes && TestBooleanNoCoerceTo.SuperTrue
-Errors: Error 38-48: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
-
->> TestBooleanNoCoerceTo.SuperTrue && TestBooleanNoCoerceTo.SuperFalse
-Errors: Error 21-31: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.|Error 56-67: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
-
->> TestBooleanNoCoerceTo.SuperTrue && false
-Errors: Error 21-31: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
-
->> !TestBooleanNoCoerceTo.SuperTrue
-Errors: Error 22-32: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
-
->> TestYesNo.Yes Or TestBooleanNoCoerceTo.SuperTrue
-Errors: Error 38-48: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
-
->> Not TestBooleanNoCoerceTo.SuperTrue And Not TestBooleanNoCoerceTo.SuperFalse
-Errors: Error 25-35: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.|Error 65-76: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
-
->> TestBooleanNoCoerceTo.SuperTrue
-TestBooleanNoCoerceTo.SuperTrue
-
->> And( TestBooleanNoCoerceTo.SuperTrue, TestBooleanNoCoerceTo.SuperTrue )
-Errors: Error 26-36: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 59-69: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 0-3: The function 'And' has some invalid arguments.
-
->> Not( TestBooleanNoCoerceTo.SuperTrue )
-Errors: Error 26-36: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 0-3: The function 'Not' has some invalid arguments.
-
->> Or( TestBooleanNoCoerceTo.SuperTrue, TestBooleanNoCoerceTo.SuperFalse )
-Errors: Error 25-35: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 58-69: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 0-2: The function 'Or' has some invalid arguments.
-
->> Or(Not(TestBooleanNoCoerceTo.SuperFalse),  Not(TestBooleanNoCoerceTo.SuperTrue))
-Errors: Error 28-39: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 3-6: The function 'Not' has some invalid arguments.|Error 68-78: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 43-46: The function 'Not' has some invalid arguments.
 
 //===========================================================================================================
 //
@@ -425,9 +305,6 @@ Errors: Error 28-39: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expec
 >> Text( JSONFormat.IndentFour )
 "4"
 
->> Text( TestYesNo.Yes )
-"Yes"
-
 >> Value( StartOfWeek.Friday )
 15
 
@@ -439,9 +316,6 @@ Errors: Error 0-5: The function 'Value' has some invalid arguments.|Error 12-18:
 
 >> Value( JSONFormat.IndentFour )
 Errors: Error 0-5: The function 'Value' has some invalid arguments.|Error 17-28: Expected text or number. We expect text or a number at this point in the formula.
-
->> Value( TestYesNo.Yes )
-Errors: Error 0-5: The function 'Value' has some invalid arguments.|Error 16-20: Expected text or number. We expect text or a number at this point in the formula.
 
 >> Float( StartOfWeek.Friday )
 15
@@ -455,9 +329,6 @@ Errors: Error 0-5: The function 'Float' has some invalid arguments.|Error 12-18:
 >> Float( JSONFormat.IndentFour )
 Errors: Error 0-5: The function 'Float' has some invalid arguments.|Error 17-28: Expected text or number. We expect text or a number at this point in the formula.
 
->> Float( TestYesNo.Yes )
-Errors: Error 0-5: The function 'Float' has some invalid arguments.|Error 16-20: Expected text or number. We expect text or a number at this point in the formula.
-
 >> Decimal( StartOfWeek.Friday )
 15
 
@@ -470,9 +341,6 @@ Errors: Error 0-7: The function 'Decimal' has some invalid arguments.|Error 14-2
 >> Decimal( JSONFormat.IndentFour )
 Errors: Error 0-7: The function 'Decimal' has some invalid arguments.|Error 19-30: Expected text or number. We expect text or a number at this point in the formula.
 
->> Decimal( TestYesNo.Yes )
-Errors: Error 0-7: The function 'Decimal' has some invalid arguments.|Error 18-22: Expected text or number. We expect text or a number at this point in the formula.
-
 >> Boolean( StartOfWeek.Friday )
 Errors: Error 0-7: The function 'Boolean' has some invalid arguments.
 
@@ -484,24 +352,6 @@ Errors: Error 0-7: The function 'Boolean' has some invalid arguments.
 
 >> Boolean( JSONFormat.IndentFour )
 Errors: Error 0-7: The function 'Boolean' has some invalid arguments.
-
->> Boolean( TestYesNo.No )
-false
-
->> Boolean( TestYesNo.Yes )
-true
-
->> Boolean( TestYeaNay.Nay )
-false
-
->> Boolean( TestYeaNay.Yea )
-true
-
->> Boolean( TestBooleanNoCoerceTo.SuperTrue )
-true
-
->> Boolean( TestBooleanNoCoerceTo.SuperFalse )
-false
 
 // no constructor for Color values
 
@@ -551,56 +401,6 @@ RGBA(255,198,208,1)
 >> ColorFade( RGBA(1,4,9,100%), 10% )
 RGBA(26,29,33,1)
 
->> TestNumberCoerceTo.V + TestNumberCoerceTo.X
-15
-
->> Int( TestNumberCoerceTo.V )
-5
-
->> Power( TestNumberCoerceTo.V, TestNumberCoerceTo.V )
-3125
-
-// Unless there is a specific reason, CanCoerceToBackingKind is expected to be true for most Boolean option sets
-
->> TestYesNo.Yes && TestYeaNay.Yea
-true
-
->> !TestYesNo.Yes
-false
-
->> TestYesNo.Yes || TestYeaNay.Nay
-true
-
->> !TestYesNo.Yes || !TestYeaNay.Yea
-false
-
->> TestYesNo.Yes And TestYeaNay.Yea
-true
-
->> Not TestYesNo.Yes
-false
-
->> TestYesNo.Yes Or TestYeaNay.Nay
-true
-
->> Not TestYesNo.Yes And Not TestYeaNay.Yea
-false
-
->> TestYesNo.No
-TestYesNo.No
-
->> And( TestYesNo.Yes, TestYeaNay.Yea )
-true
-
->> Not( TestYesNo.Yes )
-false
-
->> Or( TestYesNo.Yes, TestYeaNay.Nay )
-true
-
->> Or(Not(TestYesNo.Yes),  Not(TestYeaNay.Yea))
-false
-
 // ErrorKind has CoerceTo set
 
 >> ErrorKind.Unknown + 2
@@ -616,18 +416,6 @@ false
 144
 
 // Equals/not equals comparisons
-
->> TestYesNo.Yes = false
-false
-
->> TestYesNo.Yes <> true
-false
-
->> TestYesNo.Yes = true
-true
-
->> TestYesNo.Yes <> false
-true
 
 >> Color.Red = RGBA(1,1,1,1)
 false
@@ -704,44 +492,6 @@ Errors: Error 25-26: Invalid argument type (Text). Expecting a Enum (JSONFormat)
 // 13. CanCompareNumeric (numbers only) - For example, ErrorKind can compare values
 //
 
->> TestNumberCompareNumeric.V2 < TestNumberCompareNumeric.V
-false
-
->> TestNumberCompareNumeric.V2 <= TestNumberCompareNumeric.V
-true
-
->> TestNumberCompareNumeric.V2 >= TestNumberCompareNumeric.V
-true
-
->> TestNumberCompareNumeric.V2 > TestNumberCompareNumeric.V
-false
-
->> TestNumberCompareNumericCoerceFrom.V2 < TestNumberCompareNumericCoerceFrom.V
-false
-
->> TestNumberCompareNumericCoerceFrom.V2 <= TestNumberCompareNumericCoerceFrom.V
-true
-
->> TestNumberCompareNumericCoerceFrom.V2 >= TestNumberCompareNumericCoerceFrom.V
-true
-
->> TestNumberCompareNumericCoerceFrom.V2 > TestNumberCompareNumericCoerceFrom.V
-false
-
-// Paired with CoerceFromBackingKind, can compare with backing kind
-
->> TestNumberCompareNumeric.V < 5
-Errors: Error 27-28: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), Decimal.
-
->> TestNumberCompareNumeric.V2 < 5
-Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), Decimal.
-
->> TestNumberCompareNumericCoerceFrom.V < 5
-false
-
->> TestNumberCompareNumericCoerceFrom.V2 < 5
-false
-
 // Long term, ErrorKind should be a strongly typed value and no longer use CoerceTo and depend on CompareNumeric/CoerceFrom instead
 
 >> ErrorKind.Unknown < ErrorKind.Custom
@@ -761,8 +511,6 @@ false
 
 >> ErrorKind.Custom = 1000
 true
-
-// Most other number backeded enums can not, see section 5 above
 
 //===========================================================================================================
 //
@@ -874,56 +622,9 @@ Match.CalculatedOptionSetValue
 >> "Label:" & MatchOptions.IgnoreCase
 "Label:i"
 
->> Text( TestYesNo.No )
-"No"
-
->> "Label:" & TestYesNo.No
-"Label:No"
-
->> Text( TestYeaNay.Nay )
-"Nay"
-
->> "Label:" & TestYeaNay.Nay
-"Label:Nay"
-
->> Text( TestBooleanNoCoerceTo.SuperTrue )
-"SuperTrue"
-
->> "Label:" & TestBooleanNoCoerceTo.SuperTrue
-"Label:SuperTrue"
-
->> Text( TestYeaNay.Yea )
-"Yea"
-
->> "Label:" & TestYeaNay.Yea
-"Label:Yea"
-
 >> Text( ErrorKind.FileNotFound )
 "FileNotFound"
 
 >> "Label:" & ErrorKind.FileNotFound
 "Label:FileNotFound"
 
->> Text( TestBlueRamp.Blue50 )
-"Blue50"
-
->> "Label:" & TestBlueRamp.Blue50
-"Label:Blue50"
-
->> Mid( TestBlueRamp.Blue50, 2 )
-"lue50"
-
->> Len( TestBlueRamp.Blue50 )
-6
-
->> Text( TestRedRamp.Red25 )
-"Red25"
-
->> "Label:" & TestRedRamp.Red25
-"Label:Red25"
-
->> Mid( TestRedRamp.Red25, 2 )
-"ed25"
-
->> Len( TestRedRamp.Red25 )
-5
