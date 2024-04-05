@@ -219,7 +219,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         IDelegationMetadata IExternalDataSource.DelegationMetadata => DelegationMetadata;
 
-        public bool IsWritable => throw new NotImplementedException();
+        public bool IsWritable => true;
 
         public bool CanIncludeExpand(IExpandInfo expandToAdd)
         {
