@@ -39,7 +39,10 @@ namespace Microsoft.PowerFx
         {
             symbolTable.AddFunction(new RecalcEngineSetFunction());
             symbolTable.AddFunction(new CollectFunction());
-            symbolTable.AddFunction(new PatchFunction());
+            symbolTable.AddFunction(new PatchImpl());
+            symbolTable.AddFunction(new PatchSingleRecordImpl());
+            symbolTable.AddFunction(new PatchAggregateImpl());
+            symbolTable.AddFunction(new PatchAggregateSingleTableImpl());
             symbolTable.AddFunction(new RemoveFunction());
             symbolTable.AddFunction(new ClearFunction());
             symbolTable.AddFunction(new ClearCollectFunction());

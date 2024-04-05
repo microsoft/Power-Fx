@@ -5,9 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
@@ -131,7 +128,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // CallNodeSuggestionHandler
         [InlineData("ForAll|([1],Value)", "ForAll")]
-        [InlineData("at|(", "Atan", "Atan2", "Concat", "Concatenate", "Date", "DateAdd", "DateDiff", "DateTime", "DateTimeValue", "DateValue", "EDate")]
+        [InlineData("at|(", "Atan", "Atan2", "Concat", "Concatenate", "Date", "DateAdd", "DateDiff", "DateTime", "DateTimeValue", "DateValue", "EDate", "Patch")]
         [InlineData("Atan |(")]
         [InlineData("Clock.A|(", "Clock.AmPm", "Clock.AmPmShort")]
         [InlineData("ForAll([\"test\"],EndsWith(|))", "Value")]

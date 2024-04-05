@@ -4,14 +4,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Interpreter
+namespace Microsoft.PowerFx.Core.Utils
 {
     internal class MutationUtils
     {
@@ -35,36 +37,33 @@ namespace Microsoft.PowerFx.Interpreter
         }
 
         /// <summary>
-        /// Merges all records into a single record. Collisions are resolved by last-one-wins.
+        /// Adds specific errors for mutation functions.
         /// </summary>
-        /// <param name="records"></param>
-        /// <returns></returns>
-        public static DValue<RecordValue> MergeRecords(IEnumerable<FormulaValue> records)
+        public static void CheckSemantics(TexlBinding binding, TexlFunction function, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
-            var mergedFields = new Dictionary<string, FormulaValue>();
+            var targetArg = args[0];
 
-            foreach (FormulaValue fv in records)
+            // control!property are not valid targets for Collect, Remove, etc.
+            DottedNameNode dotted;
+            if ((dotted = targetArg.AsDottedName()) != null
+                && binding.TryCastToFirstName(dotted.Left, out var firstNameInfo)
+                && firstNameInfo.Kind == BindKind.Control)
             {
-                if (fv is ErrorValue errorValue)
-                {
-                    return DValue<RecordValue>.Of(errorValue);
-                }
-
-                if (fv is BlankValue)
-                {
-                    continue;
-                }
-
-                if (fv is RecordValue recordValue)
-                {
-                    foreach (var field in recordValue.Fields)
-                    {
-                        mergedFields[field.Name] = field.Value;
-                    }
-                }
+                errors.EnsureError(targetArg, TexlStrings.ErrInvalidArgs_Func, function.Name);
+                return;
             }
 
-            return DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(mergedFields.Select(kvp => new NamedValue(kvp.Key, kvp.Value))));
+            // Checks for something similar to Collect(x.a, 4).
+            if (!binding.TryCastToFirstName(targetArg, out firstNameInfo))
+            {
+                return;
+            }
+
+            if (firstNameInfo.Data is IExternalDataSource info && !info.IsWritable)
+            {
+                errors.EnsureError(targetArg, TexlStrings.ErrInvalidArgs_Func, function.Name);
+                return;
+            }
         }
     }
 }
