@@ -1077,10 +1077,7 @@ namespace Microsoft.PowerFx.Core.Functions
                         continue;
                     }
 
-                    var fError = false;
-                    DType.Union(ref fError, expectedColumnType, actualColumnType, useLegacyDateTimeAccepts: false, features, allowCoerce: true, unionToLeftTypeOnly: true);
-
-                    if (!fError)
+                    if (DType.TryUnionWithCoerce(expectedColumnType, actualColumnType, features, coerceToLeftTypeOnly: true, out var _, out var _))
                     {
                         continue;
                     }
