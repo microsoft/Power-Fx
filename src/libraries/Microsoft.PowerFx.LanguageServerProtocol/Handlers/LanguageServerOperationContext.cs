@@ -15,6 +15,16 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     public class LanguageServerOperationContext
     {
         /// <summary>
+        /// A factory to create a scope for the operation.
+        /// </summary>
+        private readonly IPowerFxScopeFactory _scopeFactory;
+
+        public LanguageServerOperationContext(IPowerFxScopeFactory scopeFactory)
+        {
+            _scopeFactory = scopeFactory;
+        }
+
+        /// <summary>
         /// Language Server Method Identifier for which this context is created.
         /// </summary>
         public string LspMethod { get; init; }
@@ -35,11 +45,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         public string RawOperationInput { get; init; }
 
         /// <summary>
-        /// A factory to create a scope for the operation.
-        /// </summary>
-        private IPowerFxScopeFactory ScopeFactory { get; init; }
-
-        /// <summary>
         /// A builder to create the output of the operation.
         /// No handlers are expected to return a value. They should use this builder to write the response.
         /// A handler can write multiple responses and the builder will take care of the correct format.
@@ -55,7 +60,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <returns>Scope.</returns>
         public IPowerFxScope GetScope(string uri)
         {
-            return _scope ??= ScopeFactory.GetOrCreateInstance(uri);
+            return _scope ??= _scopeFactory.GetOrCreateInstance(uri);
         }
     }
 

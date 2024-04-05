@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 {
-    internal class NoopLanguageServerOperationHandler : ILanguageServerOperationHandler
+    public class NoopLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         private const string NotSupportedMessage = "Requested Operation is not supported";
 
-        public string LspMethod => throw new System.NotImplementedException(NotSupportedMessage);
+        public bool IsRequest => false;
+
+        public string LspMethod => string.Empty;
 
         public void Handle(LanguageServerOperationContext operationContext)
         {

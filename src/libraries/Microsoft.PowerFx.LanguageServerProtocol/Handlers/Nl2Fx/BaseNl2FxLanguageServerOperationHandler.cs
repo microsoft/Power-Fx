@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         protected CustomNL2FxResult _nl2FxResult;
         protected CustomNL2FxParams _nl2FxRequestParams;
 
+        public override bool IsRequest => true;
+
         public override string LspMethod => CustomProtocolNames.NL2FX;
 
         /// <summary>

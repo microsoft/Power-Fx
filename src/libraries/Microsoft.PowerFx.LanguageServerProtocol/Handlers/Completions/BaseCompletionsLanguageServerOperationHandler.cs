@@ -23,6 +23,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// </summary>
     public class BaseCompletionsLanguageServerOperationHandler : BaseLanguageServerOperationHandler
     {
+        public override bool IsRequest => true;
+
         public override string LspMethod => TextDocumentNames.Completion;
 
         /// <summary>

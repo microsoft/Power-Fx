@@ -12,6 +12,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     public interface ILanguageServerOperationHandler
     {
         /// <summary>
+        /// Indicates if the operation is a request.
+        /// </summary>
+        bool IsRequest { get; }
+
+        /// <summary>
         /// The LSP method that this handler is for.
         /// </summary>
         string LspMethod { get; }

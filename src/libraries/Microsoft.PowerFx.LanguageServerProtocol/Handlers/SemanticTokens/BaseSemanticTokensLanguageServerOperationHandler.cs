@@ -26,6 +26,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 
         public override string LspMethod => _lspMethod;
 
+        public override bool IsRequest => true;
+
         public BaseSemanticTokensLanguageServerOperationHandler(bool isRangeSemanticTokens = false)
         {
             _lspMethod = isRangeSemanticTokens ? TextDocumentNames.RangeDocumentSemanticTokens : TextDocumentNames.FullDocumentSemanticTokens;

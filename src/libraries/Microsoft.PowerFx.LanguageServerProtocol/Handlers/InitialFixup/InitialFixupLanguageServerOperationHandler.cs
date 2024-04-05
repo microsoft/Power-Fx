@@ -12,6 +12,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// </summary>
     public class InitialFixupLanguageServerOperationHandler : BaseLanguageServerOperationHandler
     {
+        public override bool IsRequest => true;
+
         public override string LspMethod => CustomProtocolNames.InitialFixup;
 
         /// <summary>

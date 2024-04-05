@@ -14,6 +14,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// </summary>
     public class BaseFx2NlLanguageServerOperationHandler : BaseLanguageServerOperationHandler
     {
+        public override bool IsRequest => true;
+
         public override string LspMethod => CustomProtocolNames.FX2NL;
 
         protected CheckResult _checkResultFromInputExpresion;

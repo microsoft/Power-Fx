@@ -1,10 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
-namespace Microsoft.PowerFx.LanguageServerProtocol.Logging
+using System;
+
+namespace Microsoft.PowerFx.LanguageServerProtocol
 {
-    internal class BackwardsCompatibleLogger
+    /// <summary>
+    /// Backwards compatible logger that can be used in place of the ILanguageServerLogger.
+    /// </summary>
+    internal class BackwardsCompatibleLogger : ILanguageServerLogger
     {
+        private readonly Action<string> _logger;
+
+        public BackwardsCompatibleLogger(Action<string> logger = null)
+        {
+            _logger = logger;
+        }
+
+        private void Log(string message)
+        {
+            _logger?.Invoke(message);
+        }
+
+        public void LogError(string message, object data = null)
+        {
+            Log(message);
+        }
+
+        public void LogException(Exception exception, object data = null)
+        {
+            Log(exception.Message);
+        }
+
+        public void LogInformation(string message, object data = null)
+        {
+            Log(message);
+        }
+
+        public void LogWarning(string message, object data = null)
+        {
+            Log(message);
+        }
     }
 }

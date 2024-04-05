@@ -14,6 +14,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// </summary>
     internal class BackwardsCompatibleGetCustomCapabilitiesLanguageServerOperationHandler : BaseLanguageServerOperationHandler
     {
+        public override bool IsRequest => true;
+
         public override string LspMethod => CustomProtocolNames.GetCapabilities;
 
         private readonly INLHandlerFactory _nlHandlerFactory;

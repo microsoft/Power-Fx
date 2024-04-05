@@ -120,5 +120,16 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         {
             outputBuilder.AddErrorResponse(id, JsonRpcHelper.ErrorCode.InvalidRequest, message);
         }
+
+        /// <summary>
+        /// Add an error response with MethodNotFound error code.
+        /// </summary>
+        /// <param name="outputBuilder">Output Builder.</param>
+        /// <param name="id">Request Id.</param>
+        /// <param name="message">Option Error Message.</param>
+        public static void AddMethodNotFoundError(this LanguageServerOutputBuilder outputBuilder, string id, string message = null)
+        {
+            outputBuilder.AddErrorResponse(id, JsonRpcHelper.ErrorCode.MethodNotFound, message);
+        }
     }
 }

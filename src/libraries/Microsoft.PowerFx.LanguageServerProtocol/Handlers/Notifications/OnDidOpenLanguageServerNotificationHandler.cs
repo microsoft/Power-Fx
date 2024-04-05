@@ -15,6 +15,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     {
         public override string LspMethod => TextDocumentNames.DidOpen;
 
+        public override bool IsRequest => false;
+
         /// <summary>
         /// Handles the DidOpen notification from the client.
         /// </summary>

@@ -16,6 +16,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// </summary>
     public class BaseCodeActionsLanguageServerOperationHandler : BaseLanguageServerOperationHandler
     {
+        public override bool IsRequest => true;
+
         public override string LspMethod => TextDocumentNames.CodeAction;
 
         private readonly OnLogUnhandledExceptionHandler _onLogUnhandledExceptionHandler;

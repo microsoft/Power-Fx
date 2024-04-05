@@ -8,6 +8,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 {
     public abstract class BaseLanguageServerOperationHandler : ILanguageServerOperationHandler
     { 
+        public abstract bool IsRequest { get; } 
+
         public abstract string LspMethod { get; }
 
         public abstract Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken);

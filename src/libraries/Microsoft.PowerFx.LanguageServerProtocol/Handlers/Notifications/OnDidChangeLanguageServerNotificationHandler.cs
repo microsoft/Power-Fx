@@ -15,12 +15,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     {
         public override string LspMethod => TextDocumentNames.DidChange;
 
+        public override bool IsRequest => false;
+
         /// <summary>
         /// An overridable hook that lets hosts run custom logic when a document changes.
         /// </summary>
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="didChangeTextDocumentParams">Notification Params.</param>
-        protected virtual async Task OnDidChange(LanguageServerOperationContext operationContext, DidChangeTextDocumentParams didChangeTextDocumentParams)
+        /// <param name="cancellationToken">Cancellation Token.</param>
+        protected virtual async Task OnDidChange(LanguageServerOperationContext operationContext, DidChangeTextDocumentParams didChangeTextDocumentParams, CancellationToken cancellationToken)
         {
             return;
         }
@@ -44,7 +47,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return;
             }
 
-            await OnDidChange(operationContext, didChangeParams).ConfigureAwait(false);
+            await OnDidChange(operationContext, didChangeParams, cancellationToken).ConfigureAwait(false);
             var documentUri = didChangeParams.TextDocument.Uri;
 
             var expression = didChangeParams.ContentChanges[0].Text;

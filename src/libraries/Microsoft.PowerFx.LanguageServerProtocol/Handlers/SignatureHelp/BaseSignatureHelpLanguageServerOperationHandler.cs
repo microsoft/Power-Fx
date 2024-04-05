@@ -20,6 +20,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     {
         public override string LspMethod => TextDocumentNames.SignatureHelp;
 
+        public override bool IsRequest => true;
+
         /// <summary>
         /// Handles the signature help operation and computes the signature help.
         /// </summary>
