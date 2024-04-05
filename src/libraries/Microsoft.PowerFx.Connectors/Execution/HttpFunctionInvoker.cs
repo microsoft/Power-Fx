@@ -286,7 +286,7 @@ namespace Microsoft.PowerFx.Connectors
 
             foreach (NamedValue nv in lst)
             {
-                rt = rt.Add(nv.Name, nv.Value.Type);
+                rt = rt.Add(nv.Name, nv.Value.Type, OpenApiExtensions.GetDisplayName(nv.Name));
             }
 
             return new InMemoryRecordValue(IRContext.NotInSource(rt), lst);

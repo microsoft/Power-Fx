@@ -31,8 +31,10 @@ namespace Microsoft.PowerFx.Connectors
 
             _tabularFunctions = tabularFunctions;
 
-            // $$$ Hardcoded for SQL connector
-            _getItems = _tabularFunctions.First(f => f.Name.Contains("GetItemsV2"));
+            // $$$ Hardcoded for SQL: GetItemsV2, SP: GetItems
+            _getItems = _tabularFunctions.FirstOrDefault(f => f.Name == "GetItemsV2")
+                     ?? _tabularFunctions.First(f => f.Name == "GetItems");
+
             _tableType = recordType.ToTable();
         }
 

@@ -15,6 +15,22 @@ namespace Microsoft.PowerFx.Connectors
             Namespace = @namespace;
         }
 
+        public ConnectorSettings(ConnectorSettings cs)
+        {
+            if (cs == null)
+            {
+                throw new ArgumentNullException(nameof(cs));
+            }
+
+            Namespace = cs.Namespace;
+            MaxRows = cs.MaxRows;
+            FailOnUnknownExtension = cs.FailOnUnknownExtension;
+            AllowUnsupportedFunctions = cs.AllowUnsupportedFunctions;
+            IncludeInternalFunctions = cs.IncludeInternalFunctions;
+            ReturnUnknownRecordFieldsAsUntypedObjects = cs.ReturnUnknownRecordFieldsAsUntypedObjects;
+            Compatibility = cs.Compatibility;
+        }
+
         /// <summary>
         /// Namespace of the connector.
         /// </summary>

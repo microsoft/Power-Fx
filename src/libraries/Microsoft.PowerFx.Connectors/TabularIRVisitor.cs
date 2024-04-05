@@ -15,8 +15,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public override RetVal Visit(ResolvedObjectNode node, Context context)
         {
-            // Key test to determine when we will add InjectServiceProviderFunction call: only for ConnectorDType nodes (created in ConnectorTableType constructor)
-            if (node.IRContext.ResultType._type is ConnectorDType dType)
+            // Key test to determine when we will add InjectServiceProviderFunction call: only for TabularDType nodes (created in ConnectorTableType constructor)
+            if (node.IRContext.ResultType._type is TabularDType dType)
             {
                 return new RetVal(node, true, dType);
             }
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Connectors
             internal readonly bool NeedsInjection;
             internal readonly RecordType RecordType;
 
-            public RetVal(IntermediateNode node, bool needsInjection = false, ConnectorDType dType = null)
+            public RetVal(IntermediateNode node, bool needsInjection = false, TabularDType dType = null)
             {
                 OriginalNode = node;
                 NeedsInjection = needsInjection;

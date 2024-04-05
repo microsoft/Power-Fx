@@ -104,10 +104,18 @@ namespace Microsoft.PowerFx
 
         public static async Task<ConnectorTableValue> AddTabularConnector(this PowerFxConfig config, ConnectorSettings connectorSettings, string tableName, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, HttpClient client, CancellationToken cancellationToken, ConnectorLogger configurationLogger = null)
         {
-            IReadOnlyList<ConnectorFunction> tabularFunctions = config.AddActionConnector(connectorSettings, openApiDocument, configurationLogger, globalValues);
+            ConnectorSettings internalConnectorSettings = new ConnectorSettings(connectorSettings) 
+            { 
+                IncludeInternalFunctions = true,
+                Compatibility = ConnectorCompatibility.SwaggerCompatibility
+            };
 
-            // $$$ Retrieve table schema with dynamic intellisense on 'GetItem' function            
-            ConnectorFunction getItem = tabularFunctions.First(f => f.Name.Contains("GetItemV2") && !f.Name.Contains("GetItems")); // SQL: GetItemV2 (not GetItemsV2, with an 's')
+            IReadOnlyList<ConnectorFunction> tabularFunctions = config.AddActionConnector(internalConnectorSettings, openApiDocument, configurationLogger, globalValues);
+
+            // $$$ Retrieve table schema with dynamic intellisense on 'GetItem' function
+            ConnectorFunction getItem = tabularFunctions.FirstOrDefault(f => f.Name == "GetItemV2") // SQL
+                                     ?? tabularFunctions.First(f => f.Name == "GetItem");           // SP
+
             ConnectorType tableSchema = await getItem.GetConnectorReturnTypeAsync(globalValues.Select(kvp => new NamedValue(kvp)).ToArray(), new SimpleRuntimeConnectorContext(client), cancellationToken).ConfigureAwait(false);
 
             return tableSchema == null

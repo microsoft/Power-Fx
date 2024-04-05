@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Connectors
         internal RecordType RecordType;
 
         public ConnectorTableType(RecordType recordType)
-            : base(new ConnectorDType(recordType))
+            : base(new TabularDType(recordType))
         {
             RecordType = recordType;
         }
@@ -20,17 +20,5 @@ namespace Microsoft.PowerFx.Connectors
         {
             throw new System.NotImplementedException();
         }
-    }
-
-    // Used in TabularIRVisitor
-    internal class ConnectorDType : DType
-    {
-        internal RecordType RecordType;
-
-        internal ConnectorDType(RecordType recordType)            
-            : base(DKind.Table, recordType._type.ToTable().TypeTree) // 2nd param: key part that allows Texl functions to get the right return type (otherwise, we get ![] or *[])
-        {
-            RecordType = recordType;
-        }
-    }
+    }    
 }
