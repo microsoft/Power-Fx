@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
     [TransportType(TransportKind.ByValue)]
-    internal interface ITokenTextSpan
+    public interface ITokenTextSpan
     {
         /// <summary>
         /// A predefined name for the token or a variable name.
