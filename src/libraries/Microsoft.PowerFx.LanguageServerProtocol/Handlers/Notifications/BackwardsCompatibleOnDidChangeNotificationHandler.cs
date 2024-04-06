@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers.Notifications
 
         protected override async Task OnDidChange(LanguageServerOperationContext operationContext, DidChangeTextDocumentParams didChangeTextDocumentParams, CancellationToken cancellationToken)
         {
-            _notifyDidChange(didChangeTextDocumentParams);
+            _notifyDidChange?.Invoke(didChangeTextDocumentParams);
         }
     }
 }

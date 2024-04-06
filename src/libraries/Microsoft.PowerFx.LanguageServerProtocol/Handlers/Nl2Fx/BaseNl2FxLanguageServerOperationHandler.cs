@@ -12,15 +12,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// An abstract handler for NL2FX operations.
     /// This is a class and not interface to allow us to add new methods in future without breaking existing implementations.
     /// </summary>
-    public class BaseNl2FxLanguageServerOperationHandler : BaseLanguageServerOperationHandler
+    public class BaseNl2FxLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         protected NL2FxParameters _nl2FxParameters;
         protected CustomNL2FxResult _nl2FxResult;
         protected CustomNL2FxParams _nl2FxRequestParams;
 
-        public override bool IsRequest => true;
+        public bool IsRequest => true;
 
-        public override string LspMethod => CustomProtocolNames.NL2FX;
+        public string LspMethod => CustomProtocolNames.NL2FX;
 
         /// <summary>
         /// Performs pre-handle operations for NL2FX.
@@ -77,6 +77,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                         item.RawExpression = item.Expression;
                         item.Expression = null;
                     }
+
+                    item.AnonymizedExpression = check?.ApplyGetLogging();
                 }
             }
 
@@ -99,7 +101,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// </summary>
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        public sealed override async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        public async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
             if (!ParseAndValidateParams(operationContext))
             {

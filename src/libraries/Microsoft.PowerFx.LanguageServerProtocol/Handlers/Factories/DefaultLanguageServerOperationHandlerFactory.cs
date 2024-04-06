@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 case CustomProtocolNames.InitialFixup:
                     return new InitialFixupLanguageServerOperationHandler();
                 default:
-                    return new NoopLanguageServerOperationHandler();
+                    return null;
             }
         }
     }

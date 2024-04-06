@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
     public class LanguageServerInput
     {
         /// <summary>
-        /// Id of the request. Applicable onlt for request messages.
+        /// Id of the request. Applicable only for request messages.
         /// </summary>
         public string Id { get; private set; }
 

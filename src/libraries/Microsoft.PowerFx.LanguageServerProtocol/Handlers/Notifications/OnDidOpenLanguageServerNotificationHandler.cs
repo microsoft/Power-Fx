@@ -11,18 +11,18 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     /// Handler to handle the DidOpen notification from the client.
     /// </summary>
-    public class OnDidOpenLanguageServerNotificationHandler : BaseLanguageServerOperationHandler
+    public class OnDidOpenLanguageServerNotificationHandler : ILanguageServerOperationHandler
     {
-        public override string LspMethod => TextDocumentNames.DidOpen;
+        public string LspMethod => TextDocumentNames.DidOpen;
 
-        public override bool IsRequest => false;
+        public bool IsRequest => false;
 
         /// <summary>
         /// Handles the DidOpen notification from the client.
         /// </summary>
         /// <param name="operationContext"> Language Server Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        public override async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        public async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
             operationContext.Logger?.LogInformation($"[PFX] HandleDidOpenNotification: paramsJson={operationContext.RawOperationInput ?? "<null>"}");
 

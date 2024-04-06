@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private readonly ILanguageServerLogger _loggerInstance;
 
-        private ILanguageServerOperationHandlerFactory _handlerFactory;
+        private readonly ILanguageServerOperationHandlerFactory _handlerFactory;
 
         [Obsolete("Use the constructor with ILanguageServerOperationHandlerFactory")]
         public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
@@ -109,13 +109,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private ILanguageServerOperationHandlerFactory GetHandlerFactory()
         {
-            if (_handlerFactory != null)
-            {
-                return _handlerFactory;
-            }
-
 #pragma warning disable CS0618 // Type or member is obsolete
-            return _handlerFactory = new DefaultLanguageServerOperationHandlerFactory(GetNLHandlerFactory(), OnDidChange);
+            return _handlerFactory ?? new DefaultLanguageServerOperationHandlerFactory(GetNLHandlerFactory(), OnDidChange);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 

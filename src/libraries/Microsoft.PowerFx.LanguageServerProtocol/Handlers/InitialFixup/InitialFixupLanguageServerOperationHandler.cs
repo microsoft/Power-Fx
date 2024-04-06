@@ -10,18 +10,18 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     /// Handles the initial fixup operation.
     /// </summary>
-    public class InitialFixupLanguageServerOperationHandler : BaseLanguageServerOperationHandler
+    public class InitialFixupLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
-        public override bool IsRequest => true;
+        public bool IsRequest => true;
 
-        public override string LspMethod => CustomProtocolNames.InitialFixup;
+        public string LspMethod => CustomProtocolNames.InitialFixup;
 
         /// <summary>
         /// Handles the initial fixup operation.
         /// </summary>
         /// <param name="operationContext"> Language Server Operation Context. </param>
         /// <param name="cancellationToken"> Cancellation Token. </param>   
-        public override async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        public async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
             operationContext.Logger?.LogInformation($"[PFX] HandleInitialFixupRequest: id={operationContext.RequestId ?? "<null>"}, paramsJson={operationContext.RawOperationInput ?? "<null>"}");
 

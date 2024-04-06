@@ -21,18 +21,18 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// Those are not needed to be exposed as overridable methods/hooks.
     /// Therefore, there's only one HandleAsync method.
     /// </summary>
-    public class BaseCompletionsLanguageServerOperationHandler : BaseLanguageServerOperationHandler
+    public class BaseCompletionsLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
-        public override bool IsRequest => true;
+        public bool IsRequest => true;
 
-        public override string LspMethod => TextDocumentNames.Completion;
+        public string LspMethod => TextDocumentNames.Completion;
 
         /// <summary>
         /// Handles the completion operation and computes the completions.
         /// </summary>
         /// <param name="operationContext">Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        public sealed override async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        public async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
             operationContext.Logger?.LogInformation($"[PFX] HandleCompletionRequest: id={operationContext.RequestId ?? "<null>"}, paramsJson={operationContext.RawOperationInput ?? "<null>"}");
             if (!TryParseAndValidateParams(operationContext, out var completionParams))

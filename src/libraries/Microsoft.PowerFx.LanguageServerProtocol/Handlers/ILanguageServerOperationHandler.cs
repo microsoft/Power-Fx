@@ -29,11 +29,5 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="operationContext">Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
         Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken);
-
-        /// <summary>
-        /// Synchronously handles the operation.
-        /// </summary>
-        /// <param name="operationContext">Operation Context.</param>
-        void Handle(LanguageServerOperationContext operationContext);
     }
 }

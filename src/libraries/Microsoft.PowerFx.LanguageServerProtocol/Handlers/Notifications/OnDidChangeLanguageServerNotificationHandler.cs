@@ -11,11 +11,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     /// Handler to handle the DidChangeTextDocument notification.
     /// </summary>
-    public class OnDidChangeLanguageServerNotificationHandler : BaseLanguageServerOperationHandler
+    public class OnDidChangeLanguageServerNotificationHandler : ILanguageServerOperationHandler
     {
-        public override string LspMethod => TextDocumentNames.DidChange;
+        public string LspMethod => TextDocumentNames.DidChange;
 
-        public override bool IsRequest => false;
+        public bool IsRequest => false;
 
         /// <summary>
         /// An overridable hook that lets hosts run custom logic when a document changes.
@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// </summary>
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        public override async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        public async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
             operationContext.Logger?.LogInformation($"[PFX] HandleDidChangeNotification: paramsJson={operationContext.RawOperationInput ?? "<null>"}");
 

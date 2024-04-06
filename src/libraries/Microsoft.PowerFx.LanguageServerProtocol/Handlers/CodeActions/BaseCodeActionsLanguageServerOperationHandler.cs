@@ -14,11 +14,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     /// Handler for code actions.
     /// </summary>
-    public class BaseCodeActionsLanguageServerOperationHandler : BaseLanguageServerOperationHandler
+    public class BaseCodeActionsLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
-        public override bool IsRequest => true;
+        public bool IsRequest => true;
 
-        public override string LspMethod => TextDocumentNames.CodeAction;
+        public string LspMethod => TextDocumentNames.CodeAction;
 
         private readonly OnLogUnhandledExceptionHandler _onLogUnhandledExceptionHandler;
 
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// </summary>
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        public sealed override async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        public virtual async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
             operationContext.Logger?.LogInformation($"[PFX] HandleCodeActionRequest: id={operationContext.RequestId ?? "<null>"}, paramsJson={operationContext.RawOperationInput ?? "<null>"}");
 

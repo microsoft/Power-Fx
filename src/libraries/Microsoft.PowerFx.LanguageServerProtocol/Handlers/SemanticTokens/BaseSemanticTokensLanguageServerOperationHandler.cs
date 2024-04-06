@@ -18,15 +18,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     /// Handles all kinds of semantic tokens operations.
     /// </summary>
-    public class BaseSemanticTokensLanguageServerOperationHandler : BaseLanguageServerOperationHandler
+    public class BaseSemanticTokensLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         private readonly string _lspMethod;
 
         private readonly bool _isRangeSemanticTokens;
 
-        public override string LspMethod => _lspMethod;
+        public string LspMethod => _lspMethod;
 
-        public override bool IsRequest => true;
+        public bool IsRequest => true;
 
         public BaseSemanticTokensLanguageServerOperationHandler(bool isRangeSemanticTokens = false)
         {
@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// </summary>
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        public sealed override async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        public async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
             operationContext.Logger?.LogInformation($"[PFX] {(_isRangeSemanticTokens ? "HandleRangeSemanticTokens" : "HandleFullDocumentSemanticTokens")}: id={operationContext.RequestId ?? "<null>"}, paramsJson={operationContext.RawOperationInput ?? "<null>"}");
 
@@ -119,7 +119,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             }
 
             var tokenTypesToSkip = ParseTokenTypesToSkipParam(queryParams?.Get("tokenTypesToSkip"));
-            var tokens = await GetTokensAsync(operationContext, new GetTokensContext(tokenTypesToSkip, expression, semanticTokensParams.TextDocument.Uri), cancellationToken).ConfigureAwait(false);
+            var tokens = await GetTokensAsync(operationContext, new GetTokensContext(tokenTypesToSkip, semanticTokensParams.TextDocument.Uri, expression), cancellationToken).ConfigureAwait(false);
 
             if (tokens == null)
             {

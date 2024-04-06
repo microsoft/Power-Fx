@@ -12,11 +12,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// An abstract handler for Fx2Nl operations.
     /// This is a class and not interface to allow us to add new methods in future without breaking existing implementations.
     /// </summary>
-    public class BaseFx2NlLanguageServerOperationHandler : BaseLanguageServerOperationHandler
+    public class BaseFx2NlLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
-        public override bool IsRequest => true;
+        public bool IsRequest => true;
 
-        public override string LspMethod => CustomProtocolNames.FX2NL;
+        public string LspMethod => CustomProtocolNames.FX2NL;
 
         protected CheckResult _checkResultFromInputExpresion;
         protected Fx2NLParameters _fx2NlParameters;
@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// </summary>
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        public sealed override async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        public async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
             if (!ParseAndValidateParams(operationContext))
             {

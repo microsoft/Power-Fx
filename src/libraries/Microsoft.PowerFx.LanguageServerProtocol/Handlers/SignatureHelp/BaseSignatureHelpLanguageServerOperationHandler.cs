@@ -16,18 +16,18 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// Those are not needed to be exposed as overridable methods/hooks.
     /// Therefore, there's only one HandleAsync method.
     /// </summary>
-    public class BaseSignatureHelpLanguageServerOperationHandler : BaseLanguageServerOperationHandler
+    public class BaseSignatureHelpLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
-        public override string LspMethod => TextDocumentNames.SignatureHelp;
+        public string LspMethod => TextDocumentNames.SignatureHelp;
 
-        public override bool IsRequest => true;
+        public bool IsRequest => true;
 
         /// <summary>
         /// Handles the signature help operation and computes the signature help.
         /// </summary>
         /// <param name="operationContext">Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        public sealed override async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        public async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
             operationContext.Logger?.LogInformation($"[PFX] HandleSignatureHelpRequest: id={operationContext.RequestId ?? "<null>"}, paramsJson={operationContext.RawOperationInput ?? "<null>"}");
 

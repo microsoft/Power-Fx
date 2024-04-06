@@ -10,11 +10,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     ///  Handler for CommandExecuted operation.
     /// </summary>
-    public class BaseCommandExecutedLanguageServerOperationHandler : BaseLanguageServerOperationHandler
+    public class BaseCommandExecutedLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
-        public override bool IsRequest => true;
+        public bool IsRequest => true;
 
-        public override string LspMethod => CustomProtocolNames.CommandExecuted;
+        public string LspMethod => CustomProtocolNames.CommandExecuted;
 
         /// <summary>
         /// Hook to handle the CodeActionApplied operation.
@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// </summary>
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        public sealed override async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        public virtual async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
             operationContext.Logger?.LogInformation($"[PFX] HandleCommandExecutedRequest: id={operationContext.RequestId ?? "<null>"}, paramsJson={operationContext.RawOperationInput ?? "<null>"}");
             if (!TryParseAndValidateParams(operationContext, out var commandExecutedParams))
