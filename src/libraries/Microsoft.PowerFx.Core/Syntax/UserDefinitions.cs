@@ -84,18 +84,17 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             var definedTypes = parseResult.DefinedTypes.ToList();
-            var typeErr = new List<TexlError>();
-            extraSymbols ??= new SymbolTable();
 
+            var typeErr = new List<TexlError>();
             var typeGraph = new DefinedTypeDependencyGraph(definedTypes, extraSymbols);
-            var definedTypeSymbolTable = typeGraph.ResolveTypes(typeErr);
+            var resolvedTypes = typeGraph.ResolveTypes(typeErr);
 
             foreach (var unresolvedType in typeGraph.UnresolvedTypes)
             {
                 typeErr.Add(new TexlError(unresolvedType.Key.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
             }
 
-            var composedSymbols = ReadOnlySymbolTable.Compose(definedTypeSymbolTable, extraSymbols);
+            var composedSymbols = ReadOnlySymbolTable.Compose(typeGraph.DefinedTypesTable, extraSymbols);
 
             // Parser returns both complete & incomplete UDFs, and we are only interested in creating TexlFunctions for valid UDFs. 
             var functions = CreateUserDefinedFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), composedSymbols, out var errors);
@@ -106,7 +105,7 @@ namespace Microsoft.PowerFx.Syntax
                 functions,
                 parseResult.Errors != null ? errors.Union(parseResult.Errors) : errors,
                 parseResult.NamedFormulas,
-                definedTypeSymbolTable.DefinedTypes);
+                resolvedTypes);
 
             return true;
         }

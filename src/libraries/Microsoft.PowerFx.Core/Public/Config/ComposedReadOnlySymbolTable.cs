@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx
         private TexlFunctionSet _nameResolverFunctions = null;
         private VersionHash _cachedVersionHash = VersionHash.New();
 
-        private IEnumerable<KeyValuePair<string, FormulaType>> _definedTypes = null;
+        private IEnumerable<KeyValuePair<DName, FormulaType>> _definedTypes = null;
 
         // Expose the list to aide in intellisense suggestions. 
         TexlFunctionSet INameResolver.Functions
@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx
         }
 
         // Expose the list to aide in intellisense suggestions.
-        IEnumerable<KeyValuePair<string, FormulaType>> INameResolver.DefinedTypes
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.DefinedTypes
         {
             get
             {
@@ -212,17 +212,17 @@ namespace Microsoft.PowerFx
             return false;
         }
 
-        public virtual bool LookupType(DName name, out NameLookupInfo nameInfo)
+        public virtual bool LookupType(DName name, out FormulaType fType)
         {
             foreach (INameResolver table in _symbolTables)
             {
-                if (table.LookupType(name, out nameInfo))
+                if (table.LookupType(name, out fType))
                 {
                     return true;
                 }
             }
 
-            nameInfo = default;
+            fType = default;
             return false;
         }
 

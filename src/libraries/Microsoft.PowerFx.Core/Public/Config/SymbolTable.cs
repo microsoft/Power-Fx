@@ -16,6 +16,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
@@ -39,9 +40,9 @@ namespace Microsoft.PowerFx
 
         private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 
-        private readonly Dictionary<string, FormulaType> _definedTypes = new Dictionary<string, FormulaType>();
+        private readonly Dictionary<DName, FormulaType> _definedTypes = new Dictionary<DName, FormulaType>();
 
-        IEnumerable<KeyValuePair<string, FormulaType>> INameResolver.DefinedTypes => _definedTypes;
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.DefinedTypes => _definedTypes;
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
@@ -218,7 +219,7 @@ namespace Microsoft.PowerFx
             };
             var sb = new StringBuilder();
 
-            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult, Features.PowerFxV1);
+            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult);
 
             if (userDefinitionResult.HasErrors)
             {
@@ -238,7 +239,7 @@ namespace Microsoft.PowerFx
             foreach (var udf in userDefinitionResult.UDFs)
             {
                 AddFunction(udf);
-                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default, features: Features.PowerFxV1);
+                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
 
                 List<TexlError> errors = new List<TexlError>();
 
@@ -418,47 +419,51 @@ namespace Microsoft.PowerFx
             _variables.Add(hostDName, info);
         }
 
-        internal void AddType(string typeName, FormulaType type)
+        internal void AddType(DName typeName, FormulaType type)
         {
             using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
+
             _definedTypes.Add(typeName, type);
         }
 
-        internal void RemoveType(string typeName)
+        internal void RemoveType(DName typeName)
         {
             using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
+
             _definedTypes.Remove(typeName);
         }
 
-        internal void AddTypes(IEnumerable<KeyValuePair<string, FormulaType>> types)
+        internal void AddTypes(IEnumerable<UserDefinedType> types)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
+            Inc();
+
             foreach (var type in types)
             {
-                AddType(type.Key, type.Value);
+                _definedTypes.Add(type.Name, type.Type);
             }
         }
 
-        internal void RemoveTypes(IEnumerable<KeyValuePair<string, FormulaType>> types)
+        internal void RemoveTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
+
             foreach (var type in types)
             {
                 RemoveType(type.Key);
             }
         }
 
-        bool INameResolver.LookupType(DName name, out NameLookupInfo nameInfo)
+        bool INameResolver.LookupType(DName name, out FormulaType fType)
         {
-            if (!_definedTypes.TryGetValue(name.Value, out var type))
+            if (_definedTypes.TryGetValue(name, out fType))
             {
-                nameInfo = default;
-                return false;
+                return true;
             }
 
-            nameInfo = new NameLookupInfo(BindKind.TypeName, type._type, DPath.Root, 0, data: type);
-
-            return true;
+            return false;
         }
     }
 }

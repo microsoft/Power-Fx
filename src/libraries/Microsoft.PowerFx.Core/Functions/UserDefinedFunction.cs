@@ -215,7 +215,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             public TexlFunctionSet Functions => _globalNameResolver.Functions;
 
-            public IEnumerable<KeyValuePair<string, FormulaType>> DefinedTypes => _globalNameResolver.DefinedTypes;
+            public IEnumerable<KeyValuePair<DName, FormulaType>> DefinedTypes => _globalNameResolver.DefinedTypes;
 
             public bool SuggestUnqualifiedEnums => _globalNameResolver.SuggestUnqualifiedEnums;
 
@@ -244,9 +244,9 @@ namespace Microsoft.PowerFx.Core.Functions
                return _globalNameResolver.LookupFunctions(theNamespace, name, localeInvariant);
             }
 
-            public bool LookupType(DName name, out NameLookupInfo nameInfo)
+            public bool LookupType(DName name, out FormulaType fType)
             {
-                return _globalNameResolver.LookupType(name, out nameInfo);
+                return _globalNameResolver.LookupType(name, out fType);
             }
 
             public IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace)

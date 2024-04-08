@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             var formulaType = FormulaType.Unknown;
 
-            if (nameResolver.LookupType(token.Name, out var ctInfo) && ctInfo.Data is FormulaType ct)
+            if (nameResolver.LookupType(token.Name, out var ct))
             {
                 formulaType = ct;
             }

@@ -63,9 +63,16 @@ namespace Microsoft.PowerFx.Core.Public.Types
             return typeName != null;
         }
 
-        bool INameResolver.LookupType(DName name, out NameLookupInfo nameInfo) 
+        bool INameResolver.LookupType(DName name, out FormulaType fType) 
         {
-            return TryLookup(name, out nameInfo);
+            if (TryLookup(name, out var nameInfo))
+            {
+                fType = FormulaType.Build(nameInfo.Type);
+                return true;
+            }
+
+            fType = default;
+            return false;
         }
     }
 }

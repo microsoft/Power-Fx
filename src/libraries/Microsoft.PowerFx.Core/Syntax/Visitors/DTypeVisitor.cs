@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -57,14 +58,18 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public override DType Visit(FirstNameNode node, INameResolver context)
         {
-            var name = node.Ident.Name.Value;
-            if (context.LookupType(new DName(name), out NameLookupInfo nameInfo))
+            var name = node.Ident.Name;
+            if (context.LookupType(name, out FormulaType cType))
             {
-                return nameInfo.Type;
+                return cType._type;
             }
 
-            var typeFromString = FormulaType.GetFromStringOrNull(name);
-            return typeFromString == null ? DType.Invalid : typeFromString._type;
+            if (((INameResolver)PrimitiveTypesSymbolTable.Instance).LookupType(name, out FormulaType pType))
+            {
+                return pType._type;
+            }
+
+            return DType.Invalid;
         }
 
         public override DType Visit(ParentNode node, INameResolver context)
@@ -138,7 +143,14 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
                 return DType.Invalid;
             }
 
-            return ty.ToTable();
+            if (ty.IsRecord || ty.IsTable)
+            {
+                return ty.ToTable();
+            }
+
+            var rowType = DType.EmptyRecord.Add(new TypedName(ty, TableValue.ValueDName));
+
+            return rowType.ToTable();
         }
 
         public override DType Visit(AsNode node, INameResolver context)

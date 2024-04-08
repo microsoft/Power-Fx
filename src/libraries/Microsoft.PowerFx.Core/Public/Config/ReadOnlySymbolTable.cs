@@ -322,7 +322,7 @@ namespace Microsoft.PowerFx
 
         internal TexlFunctionSet Functions => ((INameResolver)this).Functions;
 
-        internal IEnumerable<KeyValuePair<string, FormulaType>> DefinedTypes => ((INameResolver)this).DefinedTypes;
+        internal IEnumerable<KeyValuePair<DName, FormulaType>> DefinedTypes => ((INameResolver)this).DefinedTypes;
 
         TexlFunctionSet INameResolver.Functions => _functions;
 
@@ -443,7 +443,7 @@ namespace Microsoft.PowerFx
 
         bool INameResolver.SuggestUnqualifiedEnums => false;
 
-        IEnumerable<KeyValuePair<string, FormulaType>> INameResolver.DefinedTypes => default;
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.DefinedTypes => default;
 
         bool INameResolver.LookupParent(out NameLookupInfo lookupInfo)
         {
@@ -487,9 +487,9 @@ namespace Microsoft.PowerFx
             throw new NotImplementedException();
         }
 
-        bool INameResolver.LookupType(DName name, out NameLookupInfo nameInfo)
+        bool INameResolver.LookupType(DName name, out FormulaType fType)
         {
-            nameInfo = default;
+            fType = default;
             return false;
         }
         #endregion

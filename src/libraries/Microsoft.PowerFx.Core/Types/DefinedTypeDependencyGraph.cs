@@ -30,16 +30,19 @@ namespace Microsoft.PowerFx.Core.Types
 
         internal Dictionary<DefinedType, HashSet<string>> UnresolvedTypes => _typeWithDependency;
 
-        internal SymbolTable DefinedTypes => _definedTypeSymbolTable;
+        internal SymbolTable DefinedTypesTable => _definedTypeSymbolTable;
 
-        public DefinedTypeDependencyGraph(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable symbols) 
+        private readonly HashSet<UserDefinedType> _userDefinedTypes;
+
+        public DefinedTypeDependencyGraph(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable symbols = null) 
         {
             _definedTypes = definedTypes;
-            _globalSymbols = symbols;
+            _globalSymbols = symbols ?? new SymbolTable();
             _typeWithDependency = new Dictionary<DefinedType, HashSet<string>>();
             _invertedDependency = new Dictionary<string, HashSet<DefinedType>>();
             _tsQueue = new Queue<DefinedType>();
             _definedTypeSymbolTable = new SymbolTable();
+            _userDefinedTypes = new HashSet<UserDefinedType>();
 
             Build();
         }
@@ -75,7 +78,7 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         // Topological sort to resolve types
-        internal SymbolTable ResolveTypes(List<TexlError> errors)
+        internal IEnumerable<UserDefinedType> ResolveTypes(List<TexlError> errors)
         {
             var composedSymbols = ReadOnlySymbolTable.Compose(_definedTypeSymbolTable, _globalSymbols);
 
@@ -96,8 +99,9 @@ namespace Microsoft.PowerFx.Core.Types
                     continue;
                 }
 
-                var name = currentType.Ident.Name.Value;
+                var name = currentType.Ident.Name;
                 _definedTypeSymbolTable.AddType(name, FormulaType.Build(resolvedType));
+                _userDefinedTypes.Add(new UserDefinedType(name, FormulaType.Build(resolvedType), currentType.Type));
 
                 if (_invertedDependency.TryGetValue(name, out var typeDependents))
                 {
@@ -105,7 +109,7 @@ namespace Microsoft.PowerFx.Core.Types
                     {
                         if (_typeWithDependency.TryGetValue(typeDependent, out var unresolvedTypes))
                         {
-                            unresolvedTypes.Remove(name);
+                            unresolvedTypes.Remove(name.Value);
 
                             if (!unresolvedTypes.Any())
                             {
@@ -116,7 +120,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            return _definedTypeSymbolTable;
+            return _userDefinedTypes;
         }
 
         private bool CheckTypeName(DefinedType dt, INameResolver symbols,  List<TexlError> errors)

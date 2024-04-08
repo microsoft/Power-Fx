@@ -14,13 +14,13 @@ namespace Microsoft.PowerFx.Core.Types
 {
     internal class UserDefinedType
     {
-        public string Name { get; }
+        public DName Name { get; }
 
         public TexlNode TypeDefinition { get; }
 
         public FormulaType Type { get; }
 
-        public UserDefinedType(string typeName, FormulaType type, TexlNode typeNode)
+        public UserDefinedType(DName typeName, FormulaType type, TexlNode typeNode)
         {
             this.Name = typeName;
             this.Type = type;

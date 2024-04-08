@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         TexlFunctionSet Functions { get; }
 
-        IEnumerable<KeyValuePair<string, FormulaType>> DefinedTypes { get; }
+        IEnumerable<KeyValuePair<DName, FormulaType>> DefinedTypes { get; }
 
         // This advertises whether the INameResolver instance will suggest unqualified enums ("Hours")
         // or only qualified enums ("TimeUnit.Hours").
@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Core.Binding
         IEnumerable<TexlFunction> LookupFunctions(DPath theNamespace, string name, bool localeInvariant = false);
 
         // Look up a type by name.
-        bool LookupType(DName name, out NameLookupInfo nameInfo);
+        bool LookupType(DName name, out FormulaType fType);
 
         /// <returns>
         /// List of functions in <paramref name="nameSpace"/>.
