@@ -9,8 +9,6 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
-    // need this to be public but there's a test doesn't allow this to be public.
-    // so we need to keep this internal and had to create a public interface which this interface extends from.
     [TransportType(TransportKind.ByValue)]
     internal interface ITokenTextSpan
     {
