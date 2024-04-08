@@ -68,6 +68,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.LanguageServerProtocol.Handlers.OnDidChangeLanguageServerNotificationHandler",
                 "Microsoft.PowerFx.LanguageServerProtocol.Handlers.OnDidOpenLanguageServerNotificationHandler",
                 "Microsoft.PowerFx.LanguageServerProtocol.Handlers.BaseSemanticTokensLanguageServerOperationHandler",
+                "Microsoft.PowerFx.LanguageServerProtocol.Handlers.RangeSemanticTokensLanguageServerOperationHandler",
                 "Microsoft.PowerFx.LanguageServerProtocol.Handlers.GetTokensContext",
                 "Microsoft.PowerFx.LanguageServerProtocol.Handlers.BaseSignatureHelpLanguageServerOperationHandler",
 
