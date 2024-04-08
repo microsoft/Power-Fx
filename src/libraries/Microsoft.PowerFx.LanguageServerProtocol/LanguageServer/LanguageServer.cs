@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <returns> Response to be sent to the client.</returns>
         public async Task<string> OnDataReceivedAsync(LanguageServerInput input, CancellationToken cancellationToken = default)
         {
-            var outputBuilder = await OnDataRecievedAsyncInternal(input, cancellationToken).ConfigureAwait(false);
+            var outputBuilder = await OnDataReceivedAsyncInternal(input, cancellationToken).ConfigureAwait(false);
             return outputBuilder.Response;
         }
 
@@ -123,17 +123,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <returns> Response to be sent to the client.</returns>
         public async Task<string> OnDataReceivedAsync(string jsonRpcPayload, CancellationToken cancellationToken = default)
         {
-            var outputBuilder = await OnDataRecievedAsyncInternal(jsonRpcPayload, cancellationToken).ConfigureAwait(false);
+            var outputBuilder = await OnDataReceivedAsyncInternal(jsonRpcPayload, cancellationToken).ConfigureAwait(false);
             return outputBuilder.Response;
         }
 
-        private async Task<LanguageServerOutputBuilder> OnDataRecievedAsyncInternal(string jsonRpcPayload, CancellationToken cancellationToken)
+        private async Task<LanguageServerOutputBuilder> OnDataReceivedAsyncInternal(string jsonRpcPayload, CancellationToken cancellationToken)
         {
             var input = LanguageServerInput.Parse(jsonRpcPayload);
-            return await OnDataRecievedAsyncInternal(input, cancellationToken).ConfigureAwait(false);
+            return await OnDataReceivedAsyncInternal(input, cancellationToken).ConfigureAwait(false);
         }
 
-        private async Task<LanguageServerOutputBuilder> OnDataRecievedAsyncInternal(LanguageServerInput input, CancellationToken cancellationToken)
+        private async Task<LanguageServerOutputBuilder> OnDataReceivedAsyncInternal(LanguageServerInput input, CancellationToken cancellationToken)
         {
             var outputBuilder = new LanguageServerOutputBuilder();
             try
@@ -212,7 +212,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             // Creating log string is expensive here, especially for the completion requests
             // Only create log strings when logger is not null
             _loggerInstance?.LogInformation($"[PFX] OnDataReceived Received: {jsonRpcPayload ?? "<null>"}");
-            var outputBuilder = OnDataRecievedAsyncInternal(jsonRpcPayload, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+            var outputBuilder = OnDataReceivedAsyncInternal(jsonRpcPayload, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
             try
             {
