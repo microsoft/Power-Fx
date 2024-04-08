@@ -15,31 +15,30 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     internal sealed class BackwardsCompatibleFx2NlLanguageServerOperationHandler : BaseFx2NlLanguageServerOperationHandler
     {
         private readonly INLHandlerFactory _nLHandlerFactory;
-        private NLHandler _nlHandler;
 
         public BackwardsCompatibleFx2NlLanguageServerOperationHandler(INLHandlerFactory nLHandlerFactory)
         {
             _nLHandlerFactory = nLHandlerFactory;
         }
 
-        protected override async Task<bool> PreHandleFx2NlAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        protected override async Task<Fx2NlHandleContext> PreHandleFx2NlAsync(LanguageServerOperationContext operationContext, Fx2NlHandleContext handleContext, CancellationToken cancellationToken)
         {
             // Existing SDK relies on GetNLHandler to get the handler for Nl2Fx operation.
             // This is a legacy handler and not to be confused with the new handler pattern.
-            _nlHandler = _nLHandlerFactory.GetNLHandler(operationContext.GetScope(_fx2NlRequestParams.TextDocument.Uri), _fx2NlRequestParams) ?? throw new NullReferenceException("No suitable handler found to handle Fx2Nl");
-            if (!_nlHandler.SupportsFx2NL)
+            var nlHandler = _nLHandlerFactory?.GetNLHandler(operationContext.GetScope(handleContext.fx2NlRequestParams.TextDocument.Uri), handleContext.fx2NlRequestParams) ?? throw new NullReferenceException("No suitable handler found to handle Fx2Nl");
+            if (!nlHandler.SupportsFx2NL)
             {
                 throw new NotSupportedException("Fx2Nl is not supported");
             }
 
-            return await base.PreHandleFx2NlAsync(operationContext, cancellationToken).ConfigureAwait(false);
+            var basePreHandleResult = await base.PreHandleFx2NlAsync(operationContext, handleContext, cancellationToken).ConfigureAwait(false);
+            return handleContext with { preHandleResult = new BackwardsCompatibleFx2NlPreHandleResult(nlHandler, basePreHandleResult.preHandleResult) };
         }
 
-        protected override async Task<bool> Fx2NlAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
-        {
-            var result = await _nlHandler.Fx2NLAsync(_checkResultFromInputExpresion, _fx2NlParameters, cancellationToken).ConfigureAwait(false);
+        protected override async Task Fx2NlAsync(LanguageServerOperationContext operationContext, Fx2NlHandleContext handleContext, CancellationToken cancellationToken)
+        { 
+            var result = await (handleContext.preHandleResult as BackwardsCompatibleFx2NlPreHandleResult).nlHandler.Fx2NLAsync(handleContext.preHandleResult.checkResult, handleContext.preHandleResult.parameters, cancellationToken).ConfigureAwait(false);
             operationContext.OutputBuilder.AddSuccessResponse(operationContext.RequestId, result);
-            return true;
         }
     }
 }

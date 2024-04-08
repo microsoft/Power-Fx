@@ -10,6 +10,18 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
     /// </summary>
     public class LanguageServerInput
     {
+        private LanguageServerInput()
+        {
+        }
+
+        /// <summary>
+        /// Indicates if the input was successfully parsed.
+        /// This does not indicate if the input is valid.
+        /// Even if it was successfully parsed, it might be invalid 
+        /// let's say because Id is missing.
+        /// </summary>
+        public bool WasSucessfullyParsed { get; private set; }
+
         /// <summary>
         /// Id of the request. Applicable only for request messages.
         /// </summary>
@@ -37,7 +49,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <returns>Parsed Input.</returns>
         public static LanguageServerInput Parse(string jsonRpcPayload)
         {
-            var input = new LanguageServerInput();
+            var input = new LanguageServerInput() { WasSucessfullyParsed = false };
             try
             {
                 using (var document = JsonDocument.Parse(jsonRpcPayload))
@@ -47,6 +59,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                         return input;
                     }
 
+                    input.WasSucessfullyParsed = true;
                     var root = document.RootElement;
                     if (root.TryGetProperty("id", out var idElement))
                     {
@@ -72,6 +85,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             catch (JsonException)
             {
                 // Ignore the exception and return the input.
+                return input;
             }
             
             return input;

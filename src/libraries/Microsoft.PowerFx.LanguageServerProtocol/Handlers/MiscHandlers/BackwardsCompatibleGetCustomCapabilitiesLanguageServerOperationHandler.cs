@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// This is backwards compatible as it used the NLHandlerFactory to get the NLHandler.
     /// This should ideally be replaced with the LSP initialization protocol.
     /// </summary>
-    internal class BackwardsCompatibleGetCustomCapabilitiesLanguageServerOperationHandler : ILanguageServerOperationHandler
+    internal sealed class BackwardsCompatibleGetCustomCapabilitiesLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         public bool IsRequest => true;
 
@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             }
 
             var scope = operationContext.GetScope(customGetCapabilitiesParams.TextDocument.Uri);
-            var nlHandler = _nlHandlerFactory.GetNLHandler(scope, null);
+            var nlHandler = _nlHandlerFactory?.GetNLHandler(scope, null);
             if (nlHandler == null)
             {
                 operationContext.OutputBuilder.AddSuccessResponse(operationContext.RequestId, new CustomGetCapabilitiesResult());

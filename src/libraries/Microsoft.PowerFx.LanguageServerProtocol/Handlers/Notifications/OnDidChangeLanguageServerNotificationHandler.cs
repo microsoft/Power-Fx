@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         {
             operationContext.Logger?.LogInformation($"[PFX] HandleDidChangeNotification: paramsJson={operationContext.RawOperationInput ?? "<null>"}");
 
-            if (!operationContext.TryParseParamsAndAddErrorResponseIfNeeded<DidChangeTextDocumentParams>(out var didChangeParams))
+            if (!operationContext.TryParseParamsAndAddErrorResponseIfNeeded(out DidChangeTextDocumentParams didChangeParams))
             {
                 return;
             }

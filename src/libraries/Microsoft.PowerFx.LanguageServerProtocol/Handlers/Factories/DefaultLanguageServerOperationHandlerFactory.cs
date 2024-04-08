@@ -37,9 +37,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 case TextDocumentNames.SignatureHelp:
                     return new BaseSignatureHelpLanguageServerOperationHandler();
                 case TextDocumentNames.RangeDocumentSemanticTokens:
-                    return new BaseSemanticTokensLanguageServerOperationHandler(true);
+                    return new RangeSemanticTokensLanguageServerOperationHandler();
                 case TextDocumentNames.FullDocumentSemanticTokens:
-                    return new BaseSemanticTokensLanguageServerOperationHandler(false);
+                    return new BaseSemanticTokensLanguageServerOperationHandler();
                 case TextDocumentNames.CodeAction:
                     return new BaseCodeActionsLanguageServerOperationHandler(creationContext.onLogUnhandledExceptionHandler);
                 case TextDocumentNames.DidChange:

@@ -4,12 +4,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Schemas;
 
@@ -20,18 +20,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// </summary>
     public class BaseSemanticTokensLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
-        private readonly string _lspMethod;
-
-        private readonly bool _isRangeSemanticTokens;
-
-        public string LspMethod => _lspMethod;
+        public virtual string LspMethod => TextDocumentNames.FullDocumentSemanticTokens;
 
         public bool IsRequest => true;
 
-        public BaseSemanticTokensLanguageServerOperationHandler(bool isRangeSemanticTokens = false)
+        private bool IsRangeSemanticTokens => LspMethod == TextDocumentNames.RangeDocumentSemanticTokens;
+
+        public BaseSemanticTokensLanguageServerOperationHandler()
         {
-            _lspMethod = isRangeSemanticTokens ? TextDocumentNames.RangeDocumentSemanticTokens : TextDocumentNames.FullDocumentSemanticTokens;
-            _isRangeSemanticTokens = isRangeSemanticTokens;
         }
 
         /// <summary>
@@ -42,7 +38,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="getTokensContext"> Context that might be needed to compute tokens. </param>
         /// <param name="cancellationToken">Cancellation Token.</param>
         /// <returns>A set of semantic tokens.</returns>
-        protected virtual async Task<IEnumerable<ITokenTextSpan>> GetTokensAsync(LanguageServerOperationContext operationContext, GetTokensContext getTokensContext, CancellationToken cancellationToken)
+        // TODO: Need to revisit this at some point in future
+        // TODO cont.: ITokenTextSpan is internal so this hook cannot be exposed
+        // TODO cont.: Cannot make it public due to it being transport type
+        private protected virtual async Task<IEnumerable<ITokenTextSpan>> GetTokensAsync(LanguageServerOperationContext operationContext, GetTokensContext getTokensContext, CancellationToken cancellationToken)
         {
             var result = await operationContext.CheckAsync(getTokensContext.documentUri, getTokensContext.expression, cancellationToken).ConfigureAwait(false);
             if (result == null)
@@ -84,7 +83,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="cancellationToken">Cancellation Token.</param>
         public async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
-            operationContext.Logger?.LogInformation($"[PFX] {(_isRangeSemanticTokens ? "HandleRangeSemanticTokens" : "HandleFullDocumentSemanticTokens")}: id={operationContext.RequestId ?? "<null>"}, paramsJson={operationContext.RawOperationInput ?? "<null>"}");
+            var isRangeSemanticTokens = IsRangeSemanticTokens;
+            operationContext.Logger?.LogInformation($"[PFX] {(isRangeSemanticTokens ? "HandleRangeSemanticTokens" : "HandleFullDocumentSemanticTokens")}: id={operationContext.RequestId ?? "<null>"}, paramsJson={operationContext.RawOperationInput ?? "<null>"}");
 
             if (!TryParseAndValidateSemanticTokenParams(operationContext, out var semanticTokensParams))
             {
@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 
             var startIndex = -1;
             var endIndex = -1;
-            if (_isRangeSemanticTokens)
+            if (isRangeSemanticTokens)
             {
                 (startIndex, endIndex) = (semanticTokensParams as SemanticTokensRangeParams).Range.ConvertRangeToPositions(expression, eol);
                 if (startIndex < 0 || endIndex < 0)
@@ -127,13 +127,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return;
             }
 
-            if (_isRangeSemanticTokens)
+            if (isRangeSemanticTokens)
             {
                 // Only consider overlapping tokens. end index is exlcusive
                 tokens = tokens.Where(token => !(token.EndIndex <= startIndex || token.StartIndex >= endIndex));
             }
 
-            var controlTokensObj = !_isRangeSemanticTokens ? new ControlTokens() : null;
+            var controlTokensObj = !isRangeSemanticTokens ? new ControlTokens() : null;
 
             var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol, controlTokensObj);
             operationContext.OutputBuilder.AddSuccessResponse(operationContext.RequestId, new SemanticTokensResponse() { Data = encodedTokens });
@@ -152,7 +152,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             SemanticTokensRangeParams semanticTokensRangeParams = null;
 
             var parseResult = false;
-            if (_isRangeSemanticTokens)
+            if (IsRangeSemanticTokens)
             {
                 parseResult = operationContext.TryParseParamsAndAddErrorResponseIfNeeded(out semanticTokensRangeParams);
                 semanticTokenParams = semanticTokensRangeParams;
@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return false;
             }
 
-            if (_isRangeSemanticTokens && semanticTokensRangeParams?.Range == null)
+            if (IsRangeSemanticTokens && semanticTokensRangeParams?.Range == null)
             {
                 WriteEmptySemanticTokensResponse(operationContext);
                 return false;

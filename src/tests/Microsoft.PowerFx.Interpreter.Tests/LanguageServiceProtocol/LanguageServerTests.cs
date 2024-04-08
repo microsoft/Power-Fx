@@ -101,21 +101,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void TestTopParseError()
         {
             var list = new List<Exception>();
-
-            _testServer.LogUnhandledExceptionHandler += (ex) =>
-            {
-                list.Add(ex);
-            };
             _testServer.OnDataReceived("parse error");
-
-            Assert.Single(list); // ensure handler was invoked. 
 
             Assert.Single(_sendToClientData);
             var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
-            Assert.Equal(InternalError, errorResponse.Error.Code);
-            Assert.Equal(list[0].GetDetailedExceptionMessage(), errorResponse.Error.Message);
+            Assert.Equal(ParseError, errorResponse.Error.Code);
         }
 
         // Scope facotry that throws. simulate server crashes.

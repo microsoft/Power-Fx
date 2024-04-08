@@ -11,6 +11,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     /// A context for a language server operation with information that might be needed when handling the operation.
     /// It also has helper methods to simplify the operation handling.
+    /// Lifetime of this context is per request.
     /// </summary>
     public class LanguageServerOperationContext
     {

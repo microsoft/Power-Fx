@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
     /// <summary>
     /// Backwards compatible logger that can be used in place of the ILanguageServerLogger.
     /// </summary>
-    internal class BackwardsCompatibleLogger : ILanguageServerLogger
+    internal sealed class BackwardsCompatibleLogger : ILanguageServerLogger
     {
         private readonly Action<string> _logger;
 

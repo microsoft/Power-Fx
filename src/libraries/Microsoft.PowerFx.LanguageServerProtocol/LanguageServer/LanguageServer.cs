@@ -2,24 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Globalization;
-using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Handlers;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
-using Microsoft.PowerFx.LanguageServerProtocol.Schemas;
-using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
@@ -114,15 +103,27 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
-        public async Task<string> OnDataReceivedAsync(LanguageServerInput input, CancellationToken cancellationToken)
+        /// <summary>
+        /// Asynchronously process the incoming request/notification payload from client.
+        /// </summary>
+        /// <param name="input">Parsed Language Server Input.</param>
+        /// <param name="cancellationToken">Cancellation Token.</param>
+        /// <returns> Response to be sent to the client.</returns>
+        public async Task<string> OnDataReceivedAsync(LanguageServerInput input, CancellationToken cancellationToken = default)
         {
             var outputBuilder = await OnDataRecievedAsyncInternal(input, cancellationToken).ConfigureAwait(false);
             return outputBuilder.Response;
         }
 
-        public async Task<string> OnDataReceivedAsync(string jsonRpcPayload, CancellationToken cancellationToken)
+        /// <summary>
+        /// Asynchronously process the incoming request/notification payload from client.
+        /// </summary>
+        /// <param name="jsonRpcPayload">Raw Input from the client.</param>
+        /// <param name="cancellationToken"> Cancellation Token.</param>
+        /// <returns> Response to be sent to the client.</returns>
+        public async Task<string> OnDataReceivedAsync(string jsonRpcPayload, CancellationToken cancellationToken = default)
         {
-            var outputBuilder = await OnDataRecievedAsyncInternal(jsonRpcPayload, CancellationToken.None).ConfigureAwait(false);
+            var outputBuilder = await OnDataRecievedAsyncInternal(jsonRpcPayload, cancellationToken).ConfigureAwait(false);
             return outputBuilder.Response;
         }
 
@@ -137,6 +138,12 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var outputBuilder = new LanguageServerOutputBuilder();
             try
             {
+                if (input == null || !input.WasSucessfullyParsed)
+                {
+                    outputBuilder.AddParseError(null, "Could not parse the incoming params");
+                    return outputBuilder;
+                }
+
                 if (input.Method == null)
                 {
                     _loggerInstance?.LogError($"[PFX] OnDataReceived CreateErrorResult InvalidRequest (method not found)");
@@ -193,7 +200,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         /// <summary>
         /// Received request/notification payload from client.
+        /// Note: Do not use this overload. Move to using OnDataReceivedAsync overloads.
+        /// Note: This only exists for backward compatibility and runs synchronously which could affect performance.
         /// </summary>
+        [Obsolete("Use OnDataReceivedAsync Overloads", false)]
         public void OnDataReceived(string jsonRpcPayload)
         {
             Contracts.AssertValue(jsonRpcPayload);
@@ -203,9 +213,18 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             // Only create log strings when logger is not null
             _loggerInstance?.LogInformation($"[PFX] OnDataReceived Received: {jsonRpcPayload ?? "<null>"}");
             var outputBuilder = OnDataRecievedAsyncInternal(jsonRpcPayload, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
-            foreach (var outputItem in outputBuilder)
+
+            try
             {
-                _sendToClient(outputItem.Output);
+                foreach (var outputItem in outputBuilder)
+                {
+                    _sendToClient?.Invoke(outputItem.Output);
+                }
+            }
+            catch (Exception ex)
+            {
+                _loggerInstance?.LogException(ex);
+                LogUnhandledExceptionHandler?.Invoke(ex);
             }
         }
     }

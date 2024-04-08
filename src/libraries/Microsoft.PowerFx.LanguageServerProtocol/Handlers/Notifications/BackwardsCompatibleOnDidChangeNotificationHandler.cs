@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers.Notifications
     /// Old sdk used to have a delegate to notify the change in document.
     /// This handler just wraps that delegate and calls it. 
     /// </summary>
-    internal class BackwardsCompatibleOnDidChangeNotificationHandler : OnDidChangeLanguageServerNotificationHandler
+    internal sealed class BackwardsCompatibleOnDidChangeNotificationHandler : OnDidChangeLanguageServerNotificationHandler
     {
         private readonly LanguageServer.NotifyDidChange _notifyDidChange;
 

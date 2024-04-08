@@ -14,10 +14,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// </summary>
     public class BaseNl2FxLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
-        protected NL2FxParameters _nl2FxParameters;
-        protected CustomNL2FxResult _nl2FxResult;
-        protected CustomNL2FxParams _nl2FxRequestParams;
-
         public bool IsRequest => true;
 
         public string LspMethod => CustomProtocolNames.NL2FX;
@@ -26,52 +22,55 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// Performs pre-handle operations for NL2FX.
         /// </summary>
         /// <param name="operationContext"> Language Server Operation Context. </param>
+        /// <param name="handleContext">  Context for handling NL2Fx operation.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        /// <returns>True if operation was successful or false.</returns>
-        protected virtual async Task<bool> PreHandleNl2FxAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        /// <returns> A immutable copy of modified handleContext with more information. </returns>
+        protected virtual async Task<Nl2FxHandleContext> PreHandleNl2FxAsync(LanguageServerOperationContext operationContext, Nl2FxHandleContext handleContext,  CancellationToken cancellationToken)
         {
-            var check = await operationContext.CheckAsync(_nl2FxRequestParams.TextDocument.Uri, LanguageServer.Nl2FxDummyFormula, cancellationToken).ConfigureAwait(false) ?? throw new NullReferenceException("Check result was not found for NL2Fx operation");
+            var check = await operationContext.CheckAsync(handleContext.nl2FxRequestParams.TextDocument.Uri, LanguageServer.Nl2FxDummyFormula, cancellationToken).ConfigureAwait(false) ?? throw new NullReferenceException("Check result was not found for NL2Fx operation");
             var summary = check.ApplyGetContextSummary();
-            _nl2FxParameters = new NL2FxParameters
+            var nl2FxParameters = new NL2FxParameters
             {
-                Sentence = _nl2FxRequestParams.Sentence,
+                Sentence = handleContext.nl2FxRequestParams.Sentence,
                 SymbolSummary = summary,
                 Engine = check.Engine
             };
 
-            return true;  
+            return handleContext with { preHandleResult = new Nl2FxPreHandleResult(nl2FxParameters) };
          }
 
         /// <summary>
         /// Performs Core NL2FX operation.
         /// </summary>
         /// <param name="operationContext">Language Server Operation Context.</param>
+        /// <param name="handleContext">  Context for handling NL2Fx operation.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        /// <returns> True if operation was successful or false.</returns>
-        protected virtual async Task<bool> Nl2FxAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        /// <returns> A immutable copy of modified handleContext with more information. </returns>
+        protected virtual async Task<Nl2FxHandleContext> Nl2FxAsync(LanguageServerOperationContext operationContext, Nl2FxHandleContext handleContext, CancellationToken cancellationToken)
         {
-            _nl2FxResult = new CustomNL2FxResult();
-            return true;
+            return handleContext with { nl2FxResult = new Nl2FxResult(new CustomNL2FxResult()) };
         }
 
         /// <summary>
         /// Performs post-handle operations for NL2FX.
         /// </summary>
         /// <param name="operationContext">Language Server Operation Context.</param>
+        /// <param name="handleContext">  Context for handling NL2Fx operation.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
         /// <returns>Trye if operation was successful or false.</returns>
-        protected virtual async Task<bool> PostHandleNl2FxResultsAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        protected virtual async Task PostHandleNl2FxResultsAsync(LanguageServerOperationContext operationContext, Nl2FxHandleContext handleContext, CancellationToken cancellationToken)
         {
-            if (_nl2FxResult?.Expressions != null)
+            var nl2FxResult = handleContext?.nl2FxResult?.actualResult;
+            if (nl2FxResult?.Expressions != null)
             {
-                foreach (var item in _nl2FxResult.Expressions)
+                foreach (var item in nl2FxResult.Expressions)
                 {
                     if (item?.Expression == null)
                     {
                         continue;
                     }
 
-                    var check = await operationContext.CheckAsync(_nl2FxRequestParams.TextDocument.Uri, item.Expression, cancellationToken).ConfigureAwait(false);
+                    var check = await operationContext.CheckAsync(handleContext.nl2FxRequestParams.TextDocument.Uri, item.Expression, cancellationToken).ConfigureAwait(false);
                     if (check != null && !check.IsSuccess)
                     {
                         item.RawExpression = item.Expression;
@@ -82,18 +81,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 }
             }
 
-            operationContext.OutputBuilder.AddSuccessResponse(operationContext.RequestId, _nl2FxResult);
-            return true;
-        }
-
-        /// <summary>
-        /// Parses and validates the parameters for NL2Fx operation.
-        /// </summary>
-        /// <param name="operationContext">Operation Context.</param>
-        /// <returns>True if parsing and validation was success or false otherwise.</returns>
-        protected bool ParseAndValidateParams(LanguageServerOperationContext operationContext)
-        {
-            return operationContext.TryParseParamsAndAddErrorResponseIfNeeded(out _nl2FxRequestParams);
+            operationContext.OutputBuilder.AddSuccessResponse(operationContext.RequestId, nl2FxResult);
         }
 
         /// <summary>
@@ -103,22 +91,28 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="cancellationToken">Cancellation Token.</param>
         public async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
-            if (!ParseAndValidateParams(operationContext))
+            if (!operationContext.TryParseParamsAndAddErrorResponseIfNeeded(out CustomNL2FxParams nl2FxRequestParams))
             {
                 return;
             }
 
-            if (!await PreHandleNl2FxAsync(operationContext, cancellationToken).ConfigureAwait(false))
+            var handleContext = new Nl2FxHandleContext(nl2FxRequestParams, null, null);
+
+            // Each stage incremntally adds more information to the handleContext.
+            // HandleContext is immutable and each stage creates a new instance of handleContext with more information.
+            handleContext = await PreHandleNl2FxAsync(operationContext, handleContext, cancellationToken).ConfigureAwait(false);
+            if (handleContext.preHandleResult == null)
             {
                 return;
             }
 
-            if (!await Nl2FxAsync(operationContext, cancellationToken).ConfigureAwait(false))
+            handleContext = await Nl2FxAsync(operationContext, handleContext, cancellationToken).ConfigureAwait(false);
+            if (handleContext.nl2FxResult == null)
             {
                 return;
             }
 
-            await PostHandleNl2FxResultsAsync(operationContext, cancellationToken).ConfigureAwait(false);
+            await PostHandleNl2FxResultsAsync(operationContext, handleContext, cancellationToken).ConfigureAwait(false);
         }
     }
 }
