@@ -386,8 +386,6 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(true)]
         public void DTypeAcceptanceTest(bool usePowerFxV1CompatibilityRules)
         {
-            // usePowerFxV1CompatibilityRules intentionally breaks the accepts relationship between enums and scalars
-
             Assert.False(DType.Unknown.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.True(DType.Number.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
@@ -396,9 +394,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.Number.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Number.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Number.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(usePowerFxV1CompatibilityRules ^ DType.Number.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(DType.TryParse("%n[A:1, B:2]", out DType type) && type.IsEnum &&
-                        (usePowerFxV1CompatibilityRules ^ DType.Number.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
+            Assert.True(DType.Number.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%n[A:1, B:2]", out DType type) && type.IsEnum && DType.Number.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.False(DType.Decimal.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Decimal.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
@@ -406,14 +403,12 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.Decimal.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Decimal.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Decimal.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(usePowerFxV1CompatibilityRules ^ DType.Decimal.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(DType.TryParse("%w[A:1, B:2]", out type) && type.IsEnum && 
-                        (usePowerFxV1CompatibilityRules ^ DType.Decimal.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
+            Assert.True(DType.Decimal.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%w[A:1, B:2]", out type) && type.IsEnum && DType.Decimal.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.True(DType.Boolean.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(usePowerFxV1CompatibilityRules ^ DType.Boolean.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(DType.TryParse("%b[A:true, B:false]", out type) && type.IsEnum && 
-                        (usePowerFxV1CompatibilityRules ^ DType.Boolean.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
+            Assert.True(DType.Boolean.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%b[A:true, B:false]", out type) && type.IsEnum && DType.Boolean.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.True(DType.String.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.Equal(!usePowerFxV1CompatibilityRules, DType.String.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
@@ -422,41 +417,40 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(!usePowerFxV1CompatibilityRules, DType.String.Accepts(DType.PenImage, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.Equal(!usePowerFxV1CompatibilityRules, DType.String.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.Equal(!usePowerFxV1CompatibilityRules, DType.String.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(usePowerFxV1CompatibilityRules ^ DType.String.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(DType.TryParse("%s[A:\"a\", B:\"b\"]", out type) && type.IsEnum && 
-                        (usePowerFxV1CompatibilityRules ^ DType.String.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
+            Assert.True(DType.String.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%s[A:\"a\", B:\"b\"]", out type) && type.IsEnum && DType.String.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.True(DType.Hyperlink.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.Equal(!usePowerFxV1CompatibilityRules, DType.Hyperlink.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.Equal(!usePowerFxV1CompatibilityRules, DType.Hyperlink.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.Equal(!usePowerFxV1CompatibilityRules, DType.Hyperlink.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(usePowerFxV1CompatibilityRules ^ DType.Hyperlink.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Hyperlink.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.True(DType.Image.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(usePowerFxV1CompatibilityRules ^ DType.Image.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Image.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.True(DType.Media.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(usePowerFxV1CompatibilityRules ^ DType.Media.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Media.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.True(DType.Blob.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(usePowerFxV1CompatibilityRules ^ DType.Blob.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Blob.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.True(DType.Color.Accepts(DType.Color, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(usePowerFxV1CompatibilityRules ^ DType.Color.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Color.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.True(DType.Currency.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(usePowerFxV1CompatibilityRules ^ DType.Currency.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Currency.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.True(DType.DateTime.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.Equal(!usePowerFxV1CompatibilityRules, DType.DateTime.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.Equal(!usePowerFxV1CompatibilityRules, DType.DateTime.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(usePowerFxV1CompatibilityRules ^ DType.DateTime.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.DateTime.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.True(DType.Date.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(usePowerFxV1CompatibilityRules ^ DType.Date.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Date.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.True(DType.Time.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(usePowerFxV1CompatibilityRules ^ DType.Time.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Time.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
         }
 
         [Fact]
@@ -1111,8 +1105,6 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void EnumDTypeTests()
         {
-            // usePowerFxV1CompatibilityRules intentionally breaks the accepts relationship between enums and scalars
-
             foreach (var usePowerFxV1CompatibilityRules in new[] { false, true })
             {
                 Assert.True(DType.TryParse("%n[A:0, B:1, C:2, D:3]", out DType type) && type.IsEnum);
@@ -1122,39 +1114,38 @@ namespace Microsoft.PowerFx.Tests
                 Assert.True(type.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
                 Assert.True(type2.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
                 Assert.False(type.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-                Assert.True(usePowerFxV1CompatibilityRules ^ DType.Number.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.True(DType.Number.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
                 Assert.True(DType.TryParse("%n[A:0]", out type2) && type2.IsEnum);
                 Assert.False(type == type2);
                 Assert.True(type.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)); // The enum type with more values accepts an enum value from the type with less values.
                 Assert.False(type2.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)); // The enum type with less values does not accept values from the larger enum.
                 Assert.False(type2.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-                var na2 = DType.Number.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
-                Assert.True(usePowerFxV1CompatibilityRules ^ DType.Number.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.True(DType.Number.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
                 Assert.True(DType.TryParse("%s[A:\"letter\"]", out type2) && type2.IsEnum);
                 Assert.False(type == type2);
                 Assert.False(type.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
                 Assert.False(type2.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
                 Assert.False(type2.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-                Assert.True(usePowerFxV1CompatibilityRules ^ DType.String.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.True(DType.String.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
                 Assert.True(DType.TryParse("%b[A:true, B:false]", out type2) && type2.IsEnum);
                 Assert.False(type == type2);
                 Assert.False(type.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
                 Assert.False(type2.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
                 Assert.False(type2.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-                Assert.True(usePowerFxV1CompatibilityRules ^ DType.Boolean.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.True(DType.Boolean.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
                 Assert.True(DType.TryParse("%n[A:12345, B:1, C:2, D:3]", out type2) && type2.IsEnum);
                 Assert.False(type == type2);
                 Assert.False(type.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
                 Assert.False(type2.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
                 Assert.False(type2.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-                Assert.True(usePowerFxV1CompatibilityRules ^ DType.Number.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.True(DType.Number.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
                 Assert.True(DType.TryParse("%s['Segoe UI':\"segoe ui\", 'bah humbug':\"bah and then humbug\"]", out type2) && type2.IsEnum);
-                Assert.True(usePowerFxV1CompatibilityRules ^ DType.String.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.True(DType.String.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
                 Assert.Equal("%s['Segoe UI':\"segoe ui\", 'bah humbug':\"bah and then humbug\"]", type2.ToString());
             }
         }

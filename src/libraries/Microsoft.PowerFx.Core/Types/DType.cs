@@ -1913,7 +1913,7 @@ namespace Microsoft.PowerFx.Core.Types
                     targetType.Kind == Kind ||
                     targetType.Kind == DKind.Unknown ||
                     targetType.Kind == DKind.Deferred ||
-                    (!usePowerFxV1CompatibilityRules && targetType.Kind == DKind.Enum && Accepts(targetType.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                    (targetType.Kind == DKind.Enum && Accepts(targetType.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             bool accepts;
             switch (Kind)
