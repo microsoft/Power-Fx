@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.LanguageServerProtocol.Handlers;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
@@ -227,5 +228,22 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 LogUnhandledExceptionHandler?.Invoke(ex);
             }
         }
+
+        #region Need to keep these functions to not breaking binaries
+        protected int GetPosition(string expression, int line, int character)
+        {
+            return PositionRangeHelper.GetPosition(expression, line, character);
+        }
+
+        public static Range GetRange(string expression, Span span)
+        {
+            return span.ConvertSpanToRange(expression);
+        }
+
+        protected static int GetCharPosition(string expression, int position)
+        {
+            return PositionRangeHelper.GetCharPosition(expression, position);
+        }
+        #endregion
     }
 }
