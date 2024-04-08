@@ -926,10 +926,7 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            JsonElement je = ExtractFromJson(sv, cds.ValuePath);
-            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
-            OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
-            ConnectorType connectorType = new ConnectorType(schema, ConnectorSettings.Compatibility);
+            ConnectorType connectorType = GetConnectorType(cds.ValuePath, sv, ConnectorSettings.Compatibility);
 
             if (connectorType.HasErrors)
             {
@@ -939,6 +936,16 @@ namespace Microsoft.PowerFx.Connectors
             {
                 runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorSuggestionsFromDynamicSchemaAsync))}, with {LogConnectorType(connectorType)}");
             }
+
+            return connectorType;
+        }
+
+        internal static ConnectorType GetConnectorType(string valuePath, StringValue sv, ConnectorCompatibility compatibility)
+        {
+            JsonElement je = ExtractFromJson(sv, valuePath);
+            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
+            OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
+            ConnectorType connectorType = new ConnectorType(schema, compatibility);
 
             return connectorType;
         }
@@ -961,10 +968,7 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            JsonElement je = ExtractFromJson(sv, cdp.ItemValuePath);
-            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
-            OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
-            ConnectorType connectorType = new ConnectorType(schema, ConnectorSettings.Compatibility);
+            ConnectorType connectorType = GetConnectorType(cdp.ItemValuePath, sv, ConnectorSettings.Compatibility);
 
             if (connectorType.HasErrors)
             {

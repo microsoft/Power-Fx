@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
@@ -11,31 +10,22 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    // Returned by AddTabularConnector
+    // Doesn't contain any ServiceProvider which is runtime only
     public class ConnectorTableValue : TableValue, IRefreshable
     {
-        public string Name { get; }
+        public string Name => _tabularService.TableName;
 
-        public string Namespace => _tabularFunctions[0].Namespace;
+        public string Namespace => _tabularService.Namespace;
 
-        protected internal readonly IReadOnlyList<ConnectorFunction> _tabularFunctions;
-        protected readonly ConnectorFunction _getItems;
+        public new TableType Type => _tabularService.TableType;
 
-        public new TableType Type => _tableType;
-
-        protected readonly TableType _tableType;
-
-        public ConnectorTableValue(string tableName, IReadOnlyList<ConnectorFunction> tabularFunctions, RecordType recordType)
+        protected internal readonly TabularService _tabularService;                        
+        
+        public ConnectorTableValue(TabularService tabularService, RecordType recordType)
             : base(IRContext.NotInSource(new ConnectorTableType(recordType)))
-        {
-            Name = tableName;
-
-            _tabularFunctions = tabularFunctions;
-
-            // $$$ Hardcoded for SQL: GetItemsV2, SP: GetItems
-            _getItems = _tabularFunctions.FirstOrDefault(f => f.Name == "GetItemsV2")
-                     ?? _tabularFunctions.First(f => f.Name == "GetItems");
-
-            _tableType = recordType.ToTable();
+        {            
+            _tabularService = tabularService;            
         }
 
         public ConnectorTableValue(RecordType recordType)

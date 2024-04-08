@@ -97,44 +97,15 @@ namespace Microsoft.PowerFx
             }            
         }
 
-        public static async Task<ConnectorTableValue> AddTabularConnector(this PowerFxConfig config, string tableName, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, HttpClient client, CancellationToken cancellationToken, ConnectorLogger configurationLogger = null)
+        public static async Task<ConnectorTableValue> AddTabularConnector(this PowerFxConfig config, string tableName, TabularService tabularService, BaseRuntimeConnectorContext runtimeConnectorContext, CancellationToken cancellationToken, ConnectorLogger configurationLogger = null)
         {
-            return await config.AddTabularConnector(new ConnectorSettings($"_tbl_{tableName}"), tableName, openApiDocument, globalValues, client, cancellationToken, configurationLogger).ConfigureAwait(false);
-        }
+            cancellationToken.ThrowIfCancellationRequested();
 
-        public static async Task<ConnectorTableValue> AddTabularConnector(this PowerFxConfig config, ConnectorSettings connectorSettings, string tableName, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, HttpClient client, CancellationToken cancellationToken, ConnectorLogger configurationLogger = null)
-        {
-            ConnectorSettings internalConnectorSettings = new ConnectorSettings(connectorSettings) 
-            { 
-                IncludeInternalFunctions = true,
-                Compatibility = ConnectorCompatibility.SwaggerCompatibility
-            };
+            RecordType recordType = await tabularService.InitAsync(config, tableName, runtimeConnectorContext, cancellationToken).ConfigureAwait(false);
 
-            IReadOnlyList<ConnectorFunction> tabularFunctions = config.AddActionConnector(internalConnectorSettings, openApiDocument, configurationLogger, globalValues);
-
-            // $$$ Retrieve table schema with dynamic intellisense on 'GetItem' function
-            ConnectorFunction getItem = tabularFunctions.FirstOrDefault(f => f.Name == "GetItemV2") // SQL
-                                     ?? tabularFunctions.First(f => f.Name == "GetItem");           // SP
-
-            ConnectorType tableSchema = await getItem.GetConnectorReturnTypeAsync(globalValues.Select(kvp => new NamedValue(kvp)).ToArray(), new SimpleRuntimeConnectorContext(client), cancellationToken).ConfigureAwait(false);
-
-            return tableSchema == null
+            return recordType == null
                 ? throw new InvalidOperationException("Cannot determine table schema")
-                : new ConnectorTableValue(tableName, tabularFunctions, tableSchema.FormulaType as RecordType);
-        }
-
-        private class SimpleRuntimeConnectorContext : BaseRuntimeConnectorContext
-        {
-            private readonly HttpMessageInvoker _invoker;
-
-            internal SimpleRuntimeConnectorContext(HttpMessageInvoker invoker)
-            {
-                _invoker = invoker;
-            }
-
-            public override TimeZoneInfo TimeZoneInfo => TimeZoneInfo.Utc;
-
-            public override HttpMessageInvoker GetInvoker(string @namespace) => _invoker;
-        }
+                : new ConnectorTableValue(tabularService, recordType);
+        }        
     }
 }

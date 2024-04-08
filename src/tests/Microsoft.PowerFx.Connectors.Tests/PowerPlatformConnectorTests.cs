@@ -1942,7 +1942,9 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // Use of tabular connector
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
-            ConnectorTableValue sqlTable = await config.AddTabularConnector("Customers", apiDoc, globals, client, CancellationToken.None).ConfigureAwait(false);
+            TabularService tabularService = new SwaggerTabularService(apiDoc, globals, client, new ConsoleLogger(_output));
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext(tabularService.Namespace, client, console: _output);
+            ConnectorTableValue sqlTable = await config.AddTabularConnector("Customers", tabularService, runtimeContext, CancellationToken.None).ConfigureAwait(false);
 
             Assert.Equal("Customers", sqlTable.Name);
             Assert.Equal("_tbl_Customers", sqlTable.Namespace); // internal connector namespace
@@ -1952,7 +1954,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             engine.EnableTabularConnectors();
 
             SymbolValues symbolValues = new SymbolValues().Add(sqlTable.Name, sqlTable);
-            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddRuntimeContext(new TestConnectorRuntimeContext(sqlTable.Namespace, client, console: _output));
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddRuntimeContext(runtimeContext);
 
             // Expression with tabular connector
             string expr = @"First(Customers).Address";
@@ -1964,7 +1966,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal("FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](InjectServiceProviderFunction:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX'))), Address)", ir);
 
             // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
-            testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");            
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
 
             StringValue address = Assert.IsType<StringValue>(result);
@@ -2002,7 +2004,10 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // Use of tabular connector
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SP GetTable.json");
-            ConnectorTableValue spTable = await config.AddTabularConnector("Documents", apiDoc, globals, client, CancellationToken.None).ConfigureAwait(false);
+
+            TabularService tabularService = new SwaggerTabularService(apiDoc, globals, client, new ConsoleLogger(_output));
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext(tabularService.Namespace, client, console: _output);
+            ConnectorTableValue spTable = await config.AddTabularConnector("Documents", tabularService, runtimeContext, CancellationToken.None).ConfigureAwait(false);
 
             Assert.Equal("Documents", spTable.Name);
             Assert.Equal("_tbl_Documents", spTable.Namespace); // internal connector namespace
@@ -2018,7 +2023,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             engine.EnableTabularConnectors();
 
             SymbolValues symbolValues = new SymbolValues().Add(spTable.Name, spTable);
-            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddRuntimeContext(new TestConnectorRuntimeContext(spTable.Namespace, client, console: _output));
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddRuntimeContext(runtimeContext);
 
             // Expression with tabular connector
             string expr = @"First(Documents).Name";
