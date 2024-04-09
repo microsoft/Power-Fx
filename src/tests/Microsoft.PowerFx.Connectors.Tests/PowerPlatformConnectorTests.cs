@@ -373,7 +373,7 @@ namespace Microsoft.PowerFx.Tests
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response2.json");
 
             CheckResult check = engine.Check($@"AzureBlobStorage.CreateFileV2(""pfxdevstgaccount1"", ""container"", ""001.jpg"", AsBlob(""{yellowPixel}"", true), {{'Content-Type': ""image/jpeg"" }}).Size", new ParserOptions() { AllowsSideEffects = true });
-            Assert.True(check.IsSuccess);
+            Assert.True(check.IsSuccess, string.Join(", ", check.Errors.Select(er => er.Message)));
             _output.WriteLine($"\r\nIR: {check.PrintIR()}");
 
             var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
@@ -1581,6 +1581,25 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         }
 
         [Fact]
+        public async Task EdenAITest()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\Eden AI.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;           
+
+            ConnectorSettings connectorSettings = new ConnectorSettings("edenai")
+            {                
+                Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                AllowUnsupportedFunctions = true,
+                IncludeInternalFunctions = true                
+            };
+
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
+
+            Assert.False(functions.First(f => f.Name == "ReceiptParser").IsSupported);
+            Assert.Equal("Body with multiple parameters is not supported when one of the parameters is of type 'blob'", functions.First(f => f.Name == "ReceiptParser").NotSupportedReason);
+        }
+
+        [Fact]
         public async Task ExcelOnlineTest()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\ExcelOnlineBusiness.swagger.json", _output);
@@ -1760,7 +1779,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             NamedValue[] parameters = new NamedValue[]
             {
                 new NamedValue("organization", FormulaValue.New("https://aurorabapenv969d7.crm10.dynamics.com")),
-                new NamedValue("entityName", FormulaValue.New("accounts"))                
+                new NamedValue("entityName", FormulaValue.New("accounts"))
             };
 
             testConnector.SetResponseFromFiles(Enumerable.Range(0, 23).Select(i => $@"Responses\Response_DVReturnType_{i:00}.json").ToArray());
@@ -1839,19 +1858,19 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(expected, ft);
             Assert.Equal("address1_addresstypecode", returnType.Fields[0].Fields[0].Fields[7].Name);
             Assert.Equal("w", returnType.Fields[0].Fields[0].Fields[7].FormulaType.ToStringWithDisplayNames());
-            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);            
-            Assert.Equal("1, 4, 3, 2", string.Join(", ", returnType.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));            
+            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);
+            Assert.Equal("1, 4, 3, 2", string.Join(", ", returnType.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));
             Assert.Equal("Bill To=1, Other=4, Primary=3, Ship To=2", string.Join(", ", returnType.Fields[0].Fields[0].Fields[7].Enum.Select(kvp => $"{kvp.Key}={kvp.Value.ToObject()}")));
-            
+
             // Now, only make a single network call and see the difference: none of the option set values are populated.
             testConnector.SetResponseFromFiles(Enumerable.Range(0, 1).Select(i => $@"Responses\Response_DVReturnType_{i:00}.json").ToArray());
             ConnectorType returnType2 = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, CancellationToken.None).ConfigureAwait(false);
-            string ft2 = returnType2.FormulaType.ToStringWithDisplayNames();       
+            string ft2 = returnType2.FormulaType.ToStringWithDisplayNames();
 
             Assert.Equal(expected, ft2);
             Assert.Equal("address1_addresstypecode", returnType2.Fields[0].Fields[0].Fields[7].Name);
             Assert.Equal("w", returnType2.Fields[0].Fields[0].Fields[7].FormulaType.ToStringWithDisplayNames());
-            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);            
+            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);
 
             // Key differences
             Assert.Equal(string.Empty, string.Join(", ", returnType2.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));
