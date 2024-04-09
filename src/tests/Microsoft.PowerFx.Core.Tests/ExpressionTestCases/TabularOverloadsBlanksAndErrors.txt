@@ -187,7 +187,7 @@ Error({Kind:ErrorKind.Div0})
 >> Concatenate( If(Sqrt(-1)<0,["Hi", "hello"]), If(1/0<2, [" world", "people"]) )
 Error({Kind:ErrorKind.Numeric})
 
->> Concatenate(Filter([1,2], Value<>Value), If(1/0<0, "test"))
+>> Concatenate(Filter([1,2], Value = 3), If(1/0<0, "test"))
 Table()
 
 >> Concatenate(["hello", "hi"], If(1/0<2," world"))

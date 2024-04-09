@@ -4575,4 +4575,8 @@
     <value>Delegation warning. The result of this argument '{0}' may be truncated for large data sets before being passed to the '{1}' function.</value>
     <comment>Error message when an argument to non-delegable function has possible delegation and resulting rows may be truncated</comment>
   </data>
+  <data name="WrnNoOpFieldComparison" xml:space="preserve">
+    <value>This comparison will always be constant. (Always yields true or false). Please consider using 'As' keyword for aliasing scoped variable if this not what you want.</value>
+    <comment>Warning when comparing same first name node.</comment>
+  </data>
 </root>
