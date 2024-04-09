@@ -374,7 +374,7 @@ namespace Microsoft.PowerFx.Tests
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response2.json");
 
             CheckResult check = engine.Check($@"AzureBlobStorage.CreateFileV2(""pfxdevstgaccount1"", ""container"", ""001.jpg"", AsBlob(""{yellowPixel}"", true), {{'Content-Type': ""image/jpeg"" }}).Size", new ParserOptions() { AllowsSideEffects = true });
-            Assert.True(check.IsSuccess);
+            Assert.True(check.IsSuccess, string.Join(", ", check.Errors.Select(er => er.Message)));
             _output.WriteLine($"\r\nIR: {check.PrintIR()}");
 
             var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
@@ -1579,6 +1579,25 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 ";
 
             Assert.Equal(expected, testConnector._log.ToString());
+        }
+
+        [Fact]
+        public async Task EdenAITest()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\Eden AI.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;           
+
+            ConnectorSettings connectorSettings = new ConnectorSettings("edenai")
+            {                
+                Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                AllowUnsupportedFunctions = true,
+                IncludeInternalFunctions = true                
+            };
+
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
+
+            Assert.False(functions.First(f => f.Name == "ReceiptParser").IsSupported);
+            Assert.Equal("Body with multiple parameters is not supported when one of the parameters is of type 'blob'", functions.First(f => f.Name == "ReceiptParser").NotSupportedReason);
         }
 
         [Fact]

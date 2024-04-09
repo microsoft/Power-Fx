@@ -1404,6 +1404,11 @@ namespace Microsoft.PowerFx.Connectors
                 _configurationLogger?.LogWarning($"{msg}");
             }
 
+            if (openApiBodyParameters.Count > 1 && openApiBodyParameters.Any(p => p.Key.FormulaType._type.Kind == DKind.Blob))
+            {
+                errorsAndWarnings.AddError("Body with multiple parameters is not supported when one of the parameters is of type 'blob'");
+            }
+
             if (errorsAndWarnings.HasErrors)
             {
                 foreach (string error in errorsAndWarnings.Errors)
