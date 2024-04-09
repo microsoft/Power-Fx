@@ -18,19 +18,19 @@ namespace Microsoft.PowerFx.Connectors
         protected ODataQueryableTableValue(TableType tableType, ODataParameters odataParams = default)
             : base(IRContext.NotInSource(tableType))
         {
-            ODataParams = odataParams;
+            ODataParams = odataParams ?? new ODataParameters();
         }
 
         protected abstract ODataQueryableTableValue WithParameters(ODataParameters odataParamsNew);
 
-        internal sealed override TableValue Filter(LambdaFormulaValue lambda, EvalVisitor runner, EvalVisitorContext context)
+        internal override sealed TableValue Filter(LambdaFormulaValue lambda, EvalVisitor runner, EvalVisitorContext context)
         {
             ODataVisitorContext runContext = new (runner, context);
             var filterClause = lambda.Visit(ODataVisitor.I, runContext);
             return WithParameters(ODataParams.WithFilter(filterClause));
         }
 
-        internal sealed override TableValue Sort(LambdaFormulaValue lambda, bool isDescending, EvalVisitor runner, EvalVisitorContext context)
+        internal override sealed TableValue Sort(LambdaFormulaValue lambda, bool isDescending, EvalVisitor runner, EvalVisitorContext context)
         {
             ODataVisitorContext runContext = new (runner, context);
             var orderby = lambda.Visit(ODataVisitor.I, runContext);
@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Connectors
         }
     }
 
-    public readonly struct ODataParameters
+    public class ODataParameters
     {
         // Missing parameters: skip, skipToken, expand, search, select, apply
         public bool Count { get; }
@@ -65,6 +65,14 @@ namespace Microsoft.PowerFx.Connectors
             Filter = filter;
             OrderBy = orderby;
             Top = top;
+        }
+
+        internal ODataParameters()
+        {
+            Count = false;
+            Filter = null;
+            OrderBy = null;
+            Top = 0;
         }
 
         public void AddTo(NameValueCollection query)

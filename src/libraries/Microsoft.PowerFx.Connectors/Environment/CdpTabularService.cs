@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Connectors
             string text = response?.Content == null ? string.Empty : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             int statusCode = (int)response.StatusCode;
 
-            return statusCode < 300 ? GetSchema(text) : null;            
+            return statusCode < 300 ? GetSchema(text) : null;
         }
 
         internal static RecordType GetSchema(string text)
@@ -57,9 +57,16 @@ namespace Microsoft.PowerFx.Connectors
         // GET AN ITEM - GET: /datasets/{datasetName}/tables/{tableName}/items/{id}?api-version=2015-09-01
 
         // LIST ITEMS - GET: /datasets/{datasetName}/tables/{tableName}/items?$filter=’CreatedBy’ eq ‘john.doe’&$top=50&$orderby=’Priority’ asc, ’CreationDate’ desc
-        public override async Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        public override async Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, ODataParameters odataParameters, CancellationToken cancellationToken)
         {
-            using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, _uriPrefix + $"/datasets/{DataSetName}/tables/{TableName}/items?api-version=2015-09-01");
+            Uri uri = new Uri(_uriPrefix + $"/datasets/{DataSetName}/tables/{TableName}/items?api-version=2015-09-01", UriKind.Relative);
+
+            if (odataParameters != null)
+            {
+                uri = odataParameters.GetUri(uri);
+            }
+
+            using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
             using HttpResponseMessage response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             string text = response?.Content == null ? string.Empty : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -69,7 +76,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         protected ICollection<DValue<RecordValue>> GetResult(string text)
-        {           
+        {
             // $$$ Is this always this type?
             RecordValue rv = FormulaValueJSON.FromJson(text, RecordType.Empty().Add("value", TableType)) as RecordValue;
             TableValue tv = rv.Fields.FirstOrDefault(field => field.Name == "value").Value as TableValue;

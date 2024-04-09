@@ -6,7 +6,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public class ConnectorTableType : FormulaType
+    internal class ConnectorTableType : FormulaType
     {
         internal RecordType RecordType;
 

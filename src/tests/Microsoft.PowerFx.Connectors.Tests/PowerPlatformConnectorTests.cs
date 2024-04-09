@@ -1978,10 +1978,11 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal("Juigné", address.Value);
 
             // Rows are not cached here as the cache is stored in ConnectorTableValueWithServiceProvider which is created by InjectServiceProviderFunction, itself added during Engine.Check
-            testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
-            result = await engine.EvalAsync("Last(Customers).Phone", CancellationToken.None, runtimeConfig: rc).ConfigureAwait(false);
+            testConnector.SetResponseFromFiles(@"Responses\SQL Server Get First Customers.json", @"Responses\SQL Server Get First Customers.json");
+            result = await engine.EvalAsync("First(Customers).Phone; Last(Customers).Phone", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
             StringValue phone = Assert.IsType<StringValue>(result);
             Assert.Equal("+1-425-705-0000", phone.Value);
+            Assert.Equal(2, testConnector.CurrentResponse); // This confirms we had 2 network calls
         }
 
         [Fact]
@@ -2014,7 +2015,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // IMPORTANT NOTE: This is NOT what PowerApps is doing as they use /v2 version and do NOT use "default" dataset.
             CdpTabularService tabularService = new CdpTabularService("default", "Customers", client, "/apim/sql/e74bd8913489439e886426eba8dec1c8");
             Assert.False(tabularService.IsInitialized);
-            Assert.Equal("Customers", tabularService.TableName);            
+            Assert.Equal("Customers", tabularService.TableName);
 
             await tabularService.InitAsync(CancellationToken.None).ConfigureAwait(false);
             Assert.True(tabularService.IsInitialized);
@@ -2026,7 +2027,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // Enable IR rewritter to auto-inject ServiceProvider where needed
             engine.EnableTabularConnectors();
 
-            SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);            
+            SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues);
 
             // Expression with tabular connector

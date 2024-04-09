@@ -79,13 +79,39 @@ namespace Microsoft.PowerFx.Connectors
         // LIST ITEMS - GET: /datasets/{datasetName}/tables/{tableName}/items?$filter=’CreatedBy’ eq ‘john.doe’&$top=50&$orderby=’Priority’ asc, ’CreationDate’ desc
         internal ConnectorFunction GetItems => _getItems ??= GetItemsFunction();
 
-        public override async Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        public override async Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, ODataParameters odataParameters, CancellationToken cancellationToken)
         {
             BaseRuntimeConnectorContext runtimeConnectorContext = serviceProvider.GetService<BaseRuntimeConnectorContext>() ?? throw new InvalidOperationException("Cannot determine runtime connector context.");
 
+            List<NamedValue> optionalParameters = new List<NamedValue>();
+            if (odataParameters != default)
+            {
+                if (odataParameters.Count)
+                {
+                    optionalParameters.Add(new NamedValue("$count", FormulaValue.New(true)));
+                }
+
+                if (!string.IsNullOrEmpty(odataParameters.Filter))
+                {
+                    optionalParameters.Add(new NamedValue("$filter", FormulaValue.New(odataParameters.Filter)));
+                }
+
+                if (!string.IsNullOrEmpty(odataParameters.OrderBy))
+                {
+                    optionalParameters.Add(new NamedValue("$orderby", FormulaValue.New(odataParameters.OrderBy)));
+                }
+
+                if (odataParameters.Top > 0)
+                {
+                    optionalParameters.Add(new NamedValue("$top", FormulaValue.New(odataParameters.Top)));
+                }
+            }
+
+            FormulaValue[] parameters = optionalParameters.Any() ? new FormulaValue[] { FormulaValue.NewRecordFromFields(optionalParameters.ToArray()) } : Array.Empty<FormulaValue>();
+
             // Notice that there is no paging here, just get 1 page
             // Use WithRawResults to ignore _getItems return type which is in the form of ![value:*[dynamicProperties:![]]] (ie. without the actual type)
-            FormulaValue rowsRaw = await GetItems.InvokeAsync(Array.Empty<FormulaValue>(), runtimeConnectorContext.WithRawResults(), CancellationToken.None).ConfigureAwait(false);
+            FormulaValue rowsRaw = await GetItems.InvokeAsync(parameters, runtimeConnectorContext.WithRawResults(), CancellationToken.None).ConfigureAwait(false);
 
             return rowsRaw is StringValue sv ? GetResult(sv.Value) : Array.Empty<DValue<RecordValue>>();
         }

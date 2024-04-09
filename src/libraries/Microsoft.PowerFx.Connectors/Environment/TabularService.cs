@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Connectors
         // GET AN ITEM - GET: /datasets/{datasetName}/tables/{tableName}/items/{id}?api-version=2015-09-01
 
         // LIST ITEMS - GET: /datasets/{datasetName}/tables/{tableName}/items?$filter=’CreatedBy’ eq ‘john.doe’&$top=50&$orderby=’Priority’ asc, ’CreationDate’ desc
-        public abstract Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken);
+        public abstract Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, ODataParameters odataParameters, CancellationToken cancellationToken);
 
         // TABLE DATA SERVICE - UPDATE
         // PATCH: /datasets/{datasetName}/tables/{tableName}/items/{id}

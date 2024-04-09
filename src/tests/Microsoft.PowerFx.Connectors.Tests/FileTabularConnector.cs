@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("*[line:s]", fileTable.Type._type.ToString());
 
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
-            RecalcEngine engine = new RecalcEngine(config);            
+            RecalcEngine engine = new RecalcEngine(config);
             engine.EnableTabularConnectors();
 
             SymbolValues symbolValues = new SymbolValues().Add("File", fileTable);
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
             Assert.Equal("FieldAccess(Last:![line:s](FirstN:*[line:s](InjectServiceProviderFunction:![line:s](ResolvedObject('File:RuntimeValues_XXX')), Float:n(2:w))), line)", ir);
 
-            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data            
+            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, symbolValues).ConfigureAwait(false);
             StringValue str = Assert.IsType<StringValue>(result);
             Assert.Equal("b", str.Value);
@@ -70,8 +70,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         public FileTabularService(string fileName)
         {
-            _fileName = File.Exists(fileName) ? fileName : throw new FileNotFoundException($"File not found: {_fileName}");            
-        }       
+            _fileName = File.Exists(fileName) ? fileName : throw new FileNotFoundException($"File not found: {_fileName}");
+        }
 
         public override Task<RecordType> GetSchemaAsync(CancellationToken cancellationToken)
         {
@@ -79,11 +79,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             return Task.FromResult(RecordType.Empty().Add("line", FormulaType.String));
         }
 
-        public override async Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        public override async Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, ODataParameters odataParameters, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             string[] lines = await File.ReadAllLinesAsync(_fileName, cancellationToken).ConfigureAwait(false);
             return lines.Select(line => DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(new NamedValue("line", FormulaValue.New(line))))).ToArray();
-        }        
+        }
     }
 }
