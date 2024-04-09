@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="operationContext"> Language Server Operation Context. </param>
         /// <param name="handleContext">  Context for handling NL2Fx operation.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        /// <returns> A immutable copy of modified handleContext with more information. </returns>
+        /// <returns> Nl2Fx Handle Context extended with pre-handle result. </returns>
         protected virtual async Task<Nl2FxHandleContext> PreHandleNl2FxAsync(LanguageServerOperationContext operationContext, Nl2FxHandleContext handleContext,  CancellationToken cancellationToken)
         {
             var check = await operationContext.CheckAsync(handleContext.nl2FxRequestParams.TextDocument.Uri, LanguageServer.Nl2FxDummyFormula, cancellationToken).ConfigureAwait(false) ?? throw new NullReferenceException("Check result was not found for NL2Fx operation");
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="handleContext">  Context for handling NL2Fx operation.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        /// <returns> A immutable copy of modified handleContext with more information. </returns>
+        /// <returns> Nl2Fx Handle Context extended with NL2Fx result. </returns>
         protected virtual async Task<Nl2FxHandleContext> Nl2FxAsync(LanguageServerOperationContext operationContext, Nl2FxHandleContext handleContext, CancellationToken cancellationToken)
         {
             return handleContext with { nl2FxResult = new Nl2FxResult(new CustomNL2FxResult()) };

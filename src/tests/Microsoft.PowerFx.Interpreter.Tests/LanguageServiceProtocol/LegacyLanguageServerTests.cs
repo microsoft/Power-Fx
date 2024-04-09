@@ -35,7 +35,12 @@ using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
-    public class LanguageServerTests : PowerFxTest
+    /// <summary>
+    ///  Do not write tests in this file.
+    ///  Write any new test in RedesignedLanguageServerTest folder.
+    ///  Look there for examples.
+    /// </summary>
+    public class LegacyLanguageServerTests : PowerFxTest
     {
         protected static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
         {
@@ -52,7 +57,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         private readonly ITestOutputHelper _output;
         private readonly ConcurrentBag<Exception> _exList = new ConcurrentBag<Exception>();
 
-        public LanguageServerTests(ITestOutputHelper output)
+        public LegacyLanguageServerTests(ITestOutputHelper output)
             : base()
         {
             _output = output;
@@ -930,44 +935,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("testDocument1", errorResponse.Id);
             Assert.Equal(PropertyValueRequired, errorResponse.Error.Code);
             Assert.Empty(exList);
-        }
-
-        [Theory]
-        [InlineData("{1}", 1)]
-        [InlineData("12{3}45", 3)]
-        [InlineData("1234{5}", 5)]
-        [InlineData("123\n1{2}3", 2)]
-        [InlineData("123\n{5}67", 1)]
-        [InlineData("123\n5{6}7", 2)]
-        [InlineData("123\n56{7}", 3)]
-        [InlineData("123\n567{\n}890", 3)]
-        public void TestGetCharPosition(string expression, int expected)
-        {
-            var pattern = @"\{[0-9|\n]\}";
-            var re = new Regex(pattern);
-            var matches = re.Matches(expression);
-            Assert.Single(matches);
-
-            var position = matches[0].Index;
-            expression = expression.Substring(0, position) + expression[position + 1] + expression.Substring(position + 3);
-
-            Assert.Equal(expected, _testServer.TestGetCharPosition(expression, position));
-            Assert.Empty(_exList);
-        }
-
-        [Fact]
-        public void TestGetPosition()
-        {
-            Assert.Equal(0, _testServer.TestGetPosition("123", 0, 0));
-            Assert.Equal(1, _testServer.TestGetPosition("123", 0, 1));
-            Assert.Equal(2, _testServer.TestGetPosition("123", 0, 2));
-            Assert.Equal(4, _testServer.TestGetPosition("123\n123456\n12345", 1, 0));
-            Assert.Equal(5, _testServer.TestGetPosition("123\n123456\n12345", 1, 1));
-            Assert.Equal(11, _testServer.TestGetPosition("123\n123456\n12345", 2, 0));
-            Assert.Equal(13, _testServer.TestGetPosition("123\n123456\n12345", 2, 2));
-            Assert.Equal(3, _testServer.TestGetPosition("123", 0, 999));
-
-            Assert.Empty(_exList);
         }
 
         // Ensure the disclaimer shows up in a signature.

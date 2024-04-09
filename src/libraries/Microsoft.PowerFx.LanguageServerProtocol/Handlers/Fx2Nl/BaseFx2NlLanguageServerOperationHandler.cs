@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
         /// <param name="handleContext">Fx2Nl Handle Context.</param>
-        /// <returns>Result of pre handle operations for Fx2Nl.</returns>
+        /// <returns>Fx2Nl Handle Context extended with pre-handle result.</returns>
         protected virtual async Task<Fx2NlHandleContext> PreHandleFx2NlAsync(LanguageServerOperationContext operationContext, Fx2NlHandleContext handleContext, CancellationToken cancellationToken)
         {
             var checkResult = await operationContext.CheckAsync(handleContext.fx2NlRequestParams.TextDocument.Uri, handleContext.fx2NlRequestParams.Expression, cancellationToken).ConfigureAwait(false) ?? throw new NullReferenceException("Check result was not found for Fx2NL operation");
@@ -50,9 +50,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
         /// <param name="handleContext">Fx2Nl Handle Context.</param>
-        /// <returns></returns>
-        protected virtual async Task Fx2NlAsync(LanguageServerOperationContext operationContext, Fx2NlHandleContext handleContext, CancellationToken cancellationToken)
-        {   
+        /// <returns> Extended Fx2Nl Handle Contex.</returns>
+        protected virtual async Task<Fx2NlHandleContext> Fx2NlAsync(LanguageServerOperationContext operationContext, Fx2NlHandleContext handleContext, CancellationToken cancellationToken)
+        {
+            return handleContext;
         }
 
         /// <summary>

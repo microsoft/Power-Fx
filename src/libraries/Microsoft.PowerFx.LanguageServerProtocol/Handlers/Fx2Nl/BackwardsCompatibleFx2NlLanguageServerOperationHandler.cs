@@ -35,10 +35,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             return handleContext with { preHandleResult = new BackwardsCompatibleFx2NlPreHandleResult(nlHandler, basePreHandleResult.preHandleResult) };
         }
 
-        protected override async Task Fx2NlAsync(LanguageServerOperationContext operationContext, Fx2NlHandleContext handleContext, CancellationToken cancellationToken)
+        protected override async Task<Fx2NlHandleContext> Fx2NlAsync(LanguageServerOperationContext operationContext, Fx2NlHandleContext handleContext, CancellationToken cancellationToken)
         { 
             var result = await (handleContext.preHandleResult as BackwardsCompatibleFx2NlPreHandleResult).nlHandler.Fx2NLAsync(handleContext.preHandleResult.checkResult, handleContext.preHandleResult.parameters, cancellationToken).ConfigureAwait(false);
             operationContext.OutputBuilder.AddSuccessResponse(operationContext.RequestId, result);
+            return handleContext;
         }
     }
 }
