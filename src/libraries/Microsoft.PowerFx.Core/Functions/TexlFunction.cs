@@ -1054,6 +1054,11 @@ namespace Microsoft.PowerFx.Core.Functions
         // DTypes are guaranteed to be finite, so there is no risk of a call stack overflow
         private bool SetErrorForMismatchedColumnsCore(DType expectedType, DType actualType, TexlNode errorArg, IErrorContainer errors, DPath columnPrefix, Features features)
         {
+            return SetErrorForMismatchedColumnsCore(expectedType, actualType, errorArg, errors, columnPrefix, features, requireAllParamColumnsOverride: RequireAllParamColumns);
+        }
+
+        internal static bool SetErrorForMismatchedColumnsCore(DType expectedType, DType actualType, TexlNode errorArg, IErrorContainer errors, DPath columnPrefix, Features features, bool requireAllParamColumnsOverride)
+        {
             Contracts.AssertValid(expectedType);
             Contracts.AssertValid(actualType);
             Contracts.AssertValue(errorArg);
@@ -1072,6 +1077,11 @@ namespace Microsoft.PowerFx.Core.Functions
                         continue;
                     }
 
+                    if (DType.TryUnionWithCoerce(expectedColumnType, actualColumnType, features, coerceToLeftTypeOnly: true, out var _, out var _))
+                    {
+                        continue;
+                    }
+
                     if (!DType.TryGetDisplayNameForColumn(expectedType, expectedColumn.Name, out var errName))
                     {
                         errName = expectedColumn.Name;
@@ -1085,7 +1095,8 @@ namespace Microsoft.PowerFx.Core.Functions
                             errorArg,
                             errors,
                             columnPrefix.Append(new DName(errName)),
-                            features);
+                            features,
+                            requireAllParamColumnsOverride);
                     }
 
                     if (expectedColumn.Type.IsExpandEntity
@@ -1105,7 +1116,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
 
                 // Second, set column missing message if applicable
-                if (RequireAllParamColumns && !expectedType.AreFieldsOptional)
+                if (requireAllParamColumnsOverride && !expectedType.AreFieldsOptional)
                 {
                     errors.EnsureError(
                         DocumentErrorSeverity.Severe,

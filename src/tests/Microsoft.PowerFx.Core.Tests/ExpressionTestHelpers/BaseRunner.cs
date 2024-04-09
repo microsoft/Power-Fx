@@ -214,8 +214,8 @@ namespace Microsoft.PowerFx.Core.Tests
                     var expectedCompilerError = expected.StartsWith("Errors: Error") || expected.StartsWith("Errors: Warning"); // $$$ Match error message. 
                     if (expectedCompilerError)
                     {
-                        string[] expectedStrArr = expected.Replace("Errors: ", string.Empty).Split("|");
-                        string[] actualStrArr = runResult.Errors.Select(err => err.ToString()).ToArray();
+                        string[] expectedStrArr = expected.Replace("Errors: ", string.Empty).Replace("’", "'").Split("|");
+                        string[] actualStrArr = runResult.Errors.Select(err => err.ToString().Replace("’", "'")).ToArray();
                         bool isValid = true;
 
                         // Try both unaltered comparison and by replacing Decimal with Number for errors,

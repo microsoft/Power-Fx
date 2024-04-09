@@ -3710,8 +3710,20 @@
     <value>Incompatible type. The item you are trying to put into a record has a type that is not compatible with the record.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrRecordDoesNotAcceptThisTypeDetailed" xml:space="preserve">
+    <value>Incompatible type. The item you are trying to put into a record has a type '{0}', which is not compatible with the record.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrTableDoesNotAcceptThisTypeDetailed" xml:space="preserve">
+    <value>Incompatible type. The item you are trying to put into a table has a type '{0}', which is not compatible with the table.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrTableDoesNotAcceptThisTypeLongMessage" xml:space="preserve">
+    <value>Incompatible type. The item you are trying to put into a table required the type '{0}', but found the type '{1}', which is not compatible with the table.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
