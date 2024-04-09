@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
@@ -14,18 +13,14 @@ namespace Microsoft.PowerFx.Connectors
     // Doesn't contain any ServiceProvider which is runtime only
     public class ConnectorTableValue : TableValue, IRefreshable
     {
-        public string Name => _tabularService.TableName;
-
-        public string Namespace => _tabularService.Namespace;
-
         public new TableType Type => _tabularService.TableType;
 
-        protected internal readonly TabularService _tabularService;                        
-        
+        protected internal readonly TabularService _tabularService;
+
         public ConnectorTableValue(TabularService tabularService, RecordType recordType)
             : base(IRContext.NotInSource(new ConnectorTableType(recordType)))
-        {            
-            _tabularService = tabularService;            
+        {
+            _tabularService = tabularService;
         }
 
         public ConnectorTableValue(RecordType recordType)
@@ -45,12 +40,7 @@ namespace Microsoft.PowerFx.Connectors
         {
         }
 
-        public override IEnumerable<DValue<RecordValue>> Rows => GetRowsInternal().ConfigureAwait(false).GetAwaiter().GetResult();
-
-        protected virtual Task<IEnumerable<DValue<RecordValue>>> GetRowsInternal()
-        {
-            throw new Exception("No HttpClient context");
-        }
+        public override IEnumerable<DValue<RecordValue>> Rows => throw new InvalidOperationException("No service context. Make sure to call engine.EnableTabularConnectors().");
 
         public virtual void Refresh()
         {

@@ -19,19 +19,19 @@ namespace Microsoft.PowerFx
     public static class ConfigExtensions
     {
         /// <summary>
-        /// Add functions for each operation in the <see cref="OpenApiDocument"/>. 
+        /// Add functions for each operation in the <see cref="OpenApiDocument"/>.
         /// Functions names will be 'functionNamespace.operationName'.
-        /// Functions are invoked via rest via the httpClient. The client must handle authentication. 
+        /// Functions are invoked via rest via the httpClient. The client must handle authentication.
         /// </summary>
-        /// 
+        ///
         /// <param name="config">Config to add the functions to.</param>
-        /// <param name="connectorSettings">Connector settings containing Namespace and MaxRows to be returned.</param>        
+        /// <param name="connectorSettings">Connector settings containing Namespace and MaxRows to be returned.</param>
         /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
         /// <param name="configurationLogger">Logger.</param>
         /// <param name="globalValues">Global Values.</param>
         /// <returns>List of connector functions.</returns>
         public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
-        {            
+        {
             try
             {
                 configurationLogger?.LogInformation($"Entering in ConfigExtensions.{nameof(AddActionConnector)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");
@@ -65,9 +65,9 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Add functions for each operation in the <see cref="OpenApiDocument"/>. 
+        /// Add functions for each operation in the <see cref="OpenApiDocument"/>.
         /// Functions names will be 'functionNamespace.operationName'.
-        /// Functions are invoked via rest via the httpClient. The client must handle authentication. 
+        /// Functions are invoked via rest via the httpClient. The client must handle authentication.
         /// </summary>
         /// <param name="config">Config to add the functions to.</param>
         /// <param name="namespace">Namespace name.</param>
@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx
         /// <param name="globalValues">Global Values.</param>
         /// <returns>List of connector functions.</returns>
         public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
-        {            
+        {
             try
             {
                 configurationLogger?.LogInformation($"Entering in ConfigExtensions.{nameof(AddActionConnector)}, with {nameof(ConnectorSettings)} Namespace {@namespace ?? Null(nameof(@namespace))}");
@@ -87,25 +87,14 @@ namespace Microsoft.PowerFx
                     return null;
                 }
 
-                configurationLogger?.LogInformation($"Exiting ConfigExtensions.{nameof(AddActionConnector)}, returning {connectorFunctions.Count()} functions");                
+                configurationLogger?.LogInformation($"Exiting ConfigExtensions.{nameof(AddActionConnector)}, returning {connectorFunctions.Count()} functions");
                 return connectorFunctions;
             }
             catch (Exception ex)
             {
                 configurationLogger?.LogException(ex, $"Exception in ConfigExtensions.{nameof(AddActionConnector)}, Namespace {@namespace ?? Null(nameof(@namespace))}, {LogException(ex)}");
                 throw;
-            }            
+            }
         }
-
-        public static async Task<ConnectorTableValue> AddTabularConnector(this PowerFxConfig config, string tableName, TabularService tabularService, BaseRuntimeConnectorContext runtimeConnectorContext, CancellationToken cancellationToken, ConnectorLogger configurationLogger = null)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            RecordType recordType = await tabularService.InitAsync(config, tableName, runtimeConnectorContext, cancellationToken).ConfigureAwait(false);
-
-            return recordType == null
-                ? throw new InvalidOperationException("Cannot determine table schema")
-                : new ConnectorTableValue(tabularService, recordType);
-        }        
     }
 }

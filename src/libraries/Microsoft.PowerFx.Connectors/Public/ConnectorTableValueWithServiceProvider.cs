@@ -19,16 +19,18 @@ namespace Microsoft.PowerFx.Connectors
             ServiceProvider = serviceProvider;
         }
 
-        private IEnumerable<DValue<RecordValue>> _cachedRows;
+        private ICollection<DValue<RecordValue>> _cachedRows;
 
-        protected override async Task<IEnumerable<DValue<RecordValue>>> GetRowsInternal()
+        public override IEnumerable<DValue<RecordValue>> Rows => GetRowsInternal().ConfigureAwait(false).GetAwaiter().GetResult();
+
+        private async Task<IEnumerable<DValue<RecordValue>>> GetRowsInternal()
         {
             if (_cachedRows != null)
             {
                 return _cachedRows;
             }
 
-            _cachedRows = await _tabularService.GetItemsAsync(ServiceProvider.GetService<BaseRuntimeConnectorContext>(), CancellationToken.None).ConfigureAwait(false);
+            _cachedRows = await _tabularService.GetItemsAsync(ServiceProvider, CancellationToken.None).ConfigureAwait(false);
 
             return _cachedRows;
         }

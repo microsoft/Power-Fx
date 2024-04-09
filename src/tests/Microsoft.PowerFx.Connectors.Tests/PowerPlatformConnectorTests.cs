@@ -1925,15 +1925,15 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             var engine = new RecalcEngine(config);
 
             using var httpClient = new HttpClient(testConnector);
-
-            using var client = new PowerPlatformConnectorClient("tip2-001.azure-apihub.net", "Default-f0900a13-bc1c-4df3-87a2-b7a403db8dd0", "5a6d0eb8c4dd44178c46d85caa5593dc", () => "eyJ0eXAiOiJKVZ...", httpClient)
+            string jwt = "eyJ0eXAiOi...";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", "e74bd8913489439e886426eba8dec1c8", () => jwt, httpClient)
             {
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
             IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
             {
-                { "connectionId", FormulaValue.New("5a6d0eb8c4dd44178c46d85caa5593dc") },
+                { "connectionId", FormulaValue.New("e74bd8913489439e886426eba8dec1c8") },
                 { "server", FormulaValue.New("pfxdev-sql.database.windows.net") },
                 { "database", FormulaValue.New("connectortest") },
                 { "table", FormulaValue.New("Customers") }
@@ -1942,19 +1942,92 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // Use of tabular connector
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
-            TabularService tabularService = new SwaggerTabularService(apiDoc, globals, client, new ConsoleLogger(_output));
-            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext(tabularService.Namespace, client, console: _output);
-            ConnectorTableValue sqlTable = await config.AddTabularConnector("Customers", tabularService, runtimeContext, CancellationToken.None).ConfigureAwait(false);
+            SwaggerTabularService tabularService = new SwaggerTabularService(config, apiDoc, globals, client, new ConsoleLogger(_output));
+            Assert.False(tabularService.IsInitialized);
+            Assert.Equal("Customers", tabularService.TableName);
+            Assert.Equal("_tbl_e74bd8913489439e886426eba8dec1c8", tabularService.Namespace);
 
-            Assert.Equal("Customers", sqlTable.Name);
-            Assert.Equal("_tbl_Customers", sqlTable.Namespace); // internal connector namespace
+            await tabularService.InitAsync(CancellationToken.None).ConfigureAwait(false);
+            Assert.True(tabularService.IsInitialized);
+
+            ConnectorTableValue sqlTable = tabularService.GetTableValue();
+            Assert.True(sqlTable._tabularService.IsInitialized);
             Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
 
             // Enable IR rewritter to auto-inject ServiceProvider where needed
             engine.EnableTabularConnectors();
 
-            SymbolValues symbolValues = new SymbolValues().Add(sqlTable.Name, sqlTable);
+            SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext(tabularService.Namespace, client, console: _output);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddRuntimeContext(runtimeContext);
+
+            // Expression with tabular connector
+            string expr = @"First(Customers).Address";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // Confirm that InjectServiceProviderFunction has properly been added
+            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
+            Assert.Equal("FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](InjectServiceProviderFunction:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX'))), Address)", ir);
+
+            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+
+            StringValue address = Assert.IsType<StringValue>(result);
+            Assert.Equal("Juigné", address.Value);
+
+            // Rows are not cached here as the cache is stored in ConnectorTableValueWithServiceProvider which is created by InjectServiceProviderFunction, itself added during Engine.Check
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
+            result = await engine.EvalAsync("Last(Customers).Phone", CancellationToken.None, runtimeConfig: rc).ConfigureAwait(false);
+            StringValue phone = Assert.IsType<StringValue>(result);
+            Assert.Equal("+1-425-705-0000", phone.Value);
+        }
+
+        [Fact]
+        public async Task SQL_CdpTabular()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            using var httpClient = new HttpClient(testConnector);
+            string jwt = "eyJ0eXAiOi...";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", "e74bd8913489439e886426eba8dec1c8", () => jwt, httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("e74bd8913489439e886426eba8dec1c8") },
+                { "server", FormulaValue.New("pfxdev-sql.database.windows.net") },
+                { "database", FormulaValue.New("connectortest") },
+                { "table", FormulaValue.New("Customers") }
+            });
+
+            // Use of tabular connector
+            // There is a network call here to retrieve the table's schema
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
+
+            // IMPORTANT NOTE: This is NOT what PowerApps is doing as they use /v2 version and do NOT use "default" dataset.
+            CdpTabularService tabularService = new CdpTabularService("default", "Customers", client, "/apim/sql/e74bd8913489439e886426eba8dec1c8");
+            Assert.False(tabularService.IsInitialized);
+            Assert.Equal("Customers", tabularService.TableName);            
+
+            await tabularService.InitAsync(CancellationToken.None).ConfigureAwait(false);
+            Assert.True(tabularService.IsInitialized);
+
+            ConnectorTableValue sqlTable = tabularService.GetTableValue();
+            Assert.True(sqlTable._tabularService.IsInitialized);
+            Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
+
+            // Enable IR rewritter to auto-inject ServiceProvider where needed
+            engine.EnableTabularConnectors();
+
+            SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);            
+            RuntimeConfig rc = new RuntimeConfig(symbolValues);
 
             // Expression with tabular connector
             string expr = @"First(Customers).Address";
@@ -2005,12 +2078,17 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SP GetTable.json");
 
-            TabularService tabularService = new SwaggerTabularService(apiDoc, globals, client, new ConsoleLogger(_output));
-            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext(tabularService.Namespace, client, console: _output);
-            ConnectorTableValue spTable = await config.AddTabularConnector("Documents", tabularService, runtimeContext, CancellationToken.None).ConfigureAwait(false);
+            SwaggerTabularService tabularService = new SwaggerTabularService(config, apiDoc, globals, client, new ConsoleLogger(_output));
+            Assert.False(tabularService.IsInitialized);
+            Assert.Equal("Documents", tabularService.TableName);
+            Assert.Equal("_tbl_cc276c328f62456bb944f0736b3cb3b1", tabularService.Namespace);
 
-            Assert.Equal("Documents", spTable.Name);
-            Assert.Equal("_tbl_Documents", spTable.Namespace); // internal connector namespace
+            await tabularService.InitAsync(CancellationToken.None).ConfigureAwait(false);
+            Assert.True(tabularService.IsInitialized);
+
+            ConnectorTableValue spTable = tabularService.GetTableValue();
+            Assert.True(spTable._tabularService.IsInitialized);
+
             Assert.Equal(
                 "*[Author:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], " +
                 "ComplianceAssetId:s, Created:d, Editor:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag:s, OData__DisplayName:s, " +
@@ -2022,7 +2100,8 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // Enable IR rewritter to auto-inject ServiceProvider where needed
             engine.EnableTabularConnectors();
 
-            SymbolValues symbolValues = new SymbolValues().Add(spTable.Name, spTable);
+            SymbolValues symbolValues = new SymbolValues().Add("Documents", spTable);
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext(tabularService.Namespace, client, console: _output);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddRuntimeContext(runtimeContext);
 
             // Expression with tabular connector
