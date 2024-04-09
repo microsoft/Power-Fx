@@ -216,12 +216,6 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsFormatCh(char ch)
-        {
-            return ch >= 128 && (GetUniCatFlags(ch) & UniCatFlags.Format) != 0;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsLatinAlpha(char ch)
         {
             return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');

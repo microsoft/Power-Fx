@@ -163,6 +163,18 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void DontRemoveSpecialCharacters()
+        {
+            var expression = string.Format("\"AA{0}BB\"", '\u200B');
+            var tokens = TexlLexer.InvariantLexer.LexSource(expression, TexlLexer.Flags.None);
+            var stringToken = tokens[0] as StrLitToken;
+
+            // expression.Length is 7 (with quotes)
+            // expression.Length - 2 to remove the quotes
+            Assert.Equal(stringToken.Value.Length, expression.Length - 2);
+        }
+
+        [Fact]
         public void TestLexDottedNames()
         {
             var tokens = TexlLexer.InvariantLexer.LexSource("A!B");

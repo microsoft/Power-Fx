@@ -1567,7 +1567,7 @@ namespace Microsoft.PowerFx.Syntax
                         _sb.Append(ch);
                         NextChar();
                     }
-                    else if (!CharacterUtils.IsFormatCh(ch))
+                    else
                     {
                         _sb.Append(ch);
                     }
@@ -1689,7 +1689,7 @@ namespace Microsoft.PowerFx.Syntax
                         _sb.Append(ch);
                         NextChar();
                     }
-                    else if (!CharacterUtils.IsFormatCh(ch))
+                    else
                     {
                         _sb.Append(ch);
                     }
@@ -1721,7 +1721,7 @@ namespace Microsoft.PowerFx.Syntax
                     {
                         return new StrLitToken(_sb.ToString(), GetTextSpan(), IsTextFirstActive);
                     }
-                    else if (!CharacterUtils.IsFormatCh(ch))
+                    else
                     {
                         _sb.Append(ch);
                     }
