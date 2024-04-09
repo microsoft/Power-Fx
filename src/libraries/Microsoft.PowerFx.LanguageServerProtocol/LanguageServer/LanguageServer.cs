@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var outputBuilder = new LanguageServerOutputBuilder();
             try
             {
-                if (input == null || !input.WasSucessfullyParsed)
+                if (input == null)
                 {
                     outputBuilder.AddParseError(null, "Could not parse the incoming params");
                     return outputBuilder;
@@ -161,7 +161,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     return outputBuilder;
                 }
 
-                if (string.IsNullOrWhiteSpace(input.Params))
+                var inputParams = input.RawParams;
+
+                if (string.IsNullOrWhiteSpace(inputParams))
                 {
                     outputBuilder.AddInvalidRequestError(input.Id, $"Invalid params for method {input.Method}");
                     return outputBuilder;
@@ -181,7 +183,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     LspMethod = input.Method,
                     Logger = _loggerInstance,
                     RequestId = input.Id,
-                    RawOperationInput = input.Params,
+                    RawOperationInput = inputParams,
                     OutputBuilder = outputBuilder
                 };
 

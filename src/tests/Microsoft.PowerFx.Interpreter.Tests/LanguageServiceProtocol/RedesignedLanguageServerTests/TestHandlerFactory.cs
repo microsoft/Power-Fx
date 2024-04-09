@@ -31,9 +31,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             switch (method)
             {
                 case CustomProtocolNames.NL2FX:
-                    return new BaseNl2FxLanguageServerOperationHandler();
+                    return new BackwardsCompatibleNl2FxLanguageServerOperationHandler(null);
                 case CustomProtocolNames.FX2NL:
-                    return new BaseFx2NlLanguageServerOperationHandler();
+                    return new BackwardsCompatibleFx2NlLanguageServerOperationHandler(null);
                 case CustomProtocolNames.GetCapabilities:
                     return new BackwardsCompatibleGetCustomCapabilitiesLanguageServerOperationHandler(null);
                 case TextDocumentNames.Completion:

@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// An abstract handler for NL2FX operations.
     /// This is a class and not interface to allow us to add new methods in future without breaking existing implementations.
     /// </summary>
-    public class BaseNl2FxLanguageServerOperationHandler : ILanguageServerOperationHandler
+    public abstract class BaseNl2FxLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         public bool IsRequest => true;
 
@@ -46,10 +46,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="handleContext">  Context for handling NL2Fx operation.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
         /// <returns> Nl2Fx Handle Context extended with NL2Fx result. </returns>
-        protected virtual async Task<Nl2FxHandleContext> Nl2FxAsync(LanguageServerOperationContext operationContext, Nl2FxHandleContext handleContext, CancellationToken cancellationToken)
-        {
-            return handleContext with { nl2FxResult = new Nl2FxResult(new CustomNL2FxResult()) };
-        }
+        protected abstract Task<Nl2FxHandleContext> Nl2FxAsync(LanguageServerOperationContext operationContext, Nl2FxHandleContext handleContext, CancellationToken cancellationToken);
 
         /// <summary>
         /// Performs post-handle operations for NL2FX.
