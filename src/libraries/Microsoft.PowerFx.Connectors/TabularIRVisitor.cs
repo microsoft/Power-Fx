@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Connectors
                 return ret.OriginalNode;
             }
 
-            return new CallNode(IRContext.NotInSource(ret.RecordType), new InjectServiceProviderFunction(), ret.OriginalNode);
+            return new CallNode(IRContext.NotInSource(ret.TableType), new InjectServiceProviderFunction(), ret.OriginalNode);
         }
 
         protected override RetVal Ret(IntermediateNode node)
@@ -48,14 +48,16 @@ namespace Microsoft.PowerFx.Connectors
         public class RetVal
         {
             internal readonly IntermediateNode OriginalNode;
+
             internal readonly bool NeedsInjection;
-            internal readonly RecordType RecordType;
+
+            internal readonly TableType TableType;
 
             public RetVal(IntermediateNode node, bool needsInjection = false, TabularDType dType = null)
             {
                 OriginalNode = node;
                 NeedsInjection = needsInjection;
-                RecordType = dType?.RecordType;
+                TableType = dType?.TableType;
             }
         }
 

@@ -6,19 +6,17 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ConnectorTableType : FormulaType
+    // Used in ConnectorTableValue
+    internal class ConnectorTableType : TableType
     {
-        internal RecordType RecordType;
-
-        public ConnectorTableType(RecordType recordType)
-            : base(new TabularDType(recordType))
+        public ConnectorTableType(TableType tableType)
+            : base(new TabularDType(tableType))
         {
-            RecordType = recordType;
         }
 
         public override void Visit(ITypeVisitor vistor)
         {
             throw new System.NotImplementedException();
         }
-    }    
+    }
 }

@@ -9,12 +9,12 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public class ConnectorTableValueWithServiceProvider : ConnectorTableValue
+    internal class ConnectorTableValueWithServiceProvider : ConnectorTableValue
     {
         internal IServiceProvider ServiceProvider { get; }
 
-        public ConnectorTableValueWithServiceProvider(ConnectorTableValue tableValue, IServiceProvider serviceProvider)
-            : base(tableValue._tabularService, (tableValue.IRContext.ResultType as ConnectorTableType).RecordType)
+        internal ConnectorTableValueWithServiceProvider(ConnectorTableValue tableValue, IServiceProvider serviceProvider)
+            : base(tableValue._tabularService, tableValue.IRContext.ResultType as TableType)
         {
             ServiceProvider = serviceProvider;
         }
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Connectors
                 return _cachedRows;
             }
 
-            _cachedRows = await _tabularService.GetItemsAsync(ServiceProvider, null /* no OData filter */, CancellationToken.None).ConfigureAwait(false);
+            _cachedRows = await _tabularService.GetItemsAsync(ServiceProvider, CancellationToken.None).ConfigureAwait(false);
 
             return _cachedRows;
         }

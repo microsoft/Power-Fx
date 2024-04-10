@@ -9,12 +9,12 @@ namespace Microsoft.PowerFx.Connectors
     // Used in TabularIRVisitor
     internal class TabularDType : DType
     {
-        internal RecordType RecordType;
+        internal TableType TableType;
 
-        internal TabularDType(RecordType recordType)
-            : base(DKind.Table, recordType._type.ToTable().TypeTree, null, recordType._type.DisplayNameProvider)
+        internal TabularDType(TableType tableType)
+            : base(DKind.Table, tableType._type.TypeTree, null, tableType._type.DisplayNameProvider)
         {
-            RecordType = recordType;
+            TableType = tableType;
         }
     }
 }

@@ -9,30 +9,16 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    // Returned by AddTabularConnector
+    // Created by TabularService.GetTableValue
     // Doesn't contain any ServiceProvider which is runtime only
     public class ConnectorTableValue : TableValue, IRefreshable
     {
-        public new TableType Type => _tabularService.TableType;
-
         protected internal readonly TabularService _tabularService;
 
-        public ConnectorTableValue(TabularService tabularService, RecordType recordType)
-            : base(IRContext.NotInSource(new ConnectorTableType(recordType)))
+        public ConnectorTableValue(TabularService tabularService, TableType tableType)
+            : base(IRContext.NotInSource(new ConnectorTableType(tableType)))
         {
             _tabularService = tabularService;
-        }
-
-        public ConnectorTableValue(RecordType recordType)
-            : this(recordType.ToTable())
-        {
-            throw new NotImplementedException("This constructor should never be called. We need to set tabular functions.");
-        }
-
-        public ConnectorTableValue(TableType type)
-            : this(IRContext.NotInSource(type))
-        {
-            throw new NotImplementedException("This constructor should never be called. We need to set tabular functions.");
         }
 
         internal ConnectorTableValue(IRContext irContext)

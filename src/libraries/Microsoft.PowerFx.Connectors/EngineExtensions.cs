@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -10,6 +11,7 @@ namespace Microsoft.PowerFx.Connectors
     public static class EngineExtensions
     {
         // To support tabular connectors, we need to use an IR transform to inject the ServiceProvider at runtime (which contains the HttpClient)
+        [Obsolete("Might not be needed in future.")]
         public static void EnableTabularConnectors(this Engine engine)
         {
             engine.IRTransformList.Add(new TabularTransform());

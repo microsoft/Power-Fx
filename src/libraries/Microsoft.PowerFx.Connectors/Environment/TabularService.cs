@@ -11,30 +11,28 @@ namespace Microsoft.PowerFx.Connectors
 {
     public abstract class TabularService
     {
-        public RecordType RecordType { get; private set; } = null;
+        public TableType TableType { get; private set; } = null;
 
-        public TableType TableType => _tableType ??= RecordType.ToTable();
-
-        public bool IsInitialized => RecordType != null;
-
-        private TableType _tableType;
+        public bool IsInitialized => TableType != null;
 
         public virtual ConnectorTableValue GetTableValue()
         {
-            return RecordType == null
-                ? throw new InvalidOperationException("Tabular service is not initialized.")
-                : new ConnectorTableValue(this, RecordType);
+            return IsInitialized
+                ? new ConnectorTableValue(this, TableType)
+                : throw new InvalidOperationException("Tabular service is not initialized.");
         }
 
         public async Task InitAsync(CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();            
-            RecordType = await GetSchemaAsync(cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            RecordType recordType = await GetSchemaAsync(cancellationToken).ConfigureAwait(false);
+            TableType = recordType?.ToTable();
         }
 
         // TABLE METADATA SERVICE
         // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01
-        public abstract Task<RecordType> GetSchemaAsync(CancellationToken cancellationToken);
+        protected abstract Task<RecordType> GetSchemaAsync(CancellationToken cancellationToken);
 
         // TABLE DATA SERVICE - CREATE
         // POST: /datasets/{datasetName}/tables/{tableName}/items?api-version=2015-09-01
@@ -43,7 +41,7 @@ namespace Microsoft.PowerFx.Connectors
         // GET AN ITEM - GET: /datasets/{datasetName}/tables/{tableName}/items/{id}?api-version=2015-09-01
 
         // LIST ITEMS - GET: /datasets/{datasetName}/tables/{tableName}/items?$filter=’CreatedBy’ eq ‘john.doe’&$top=50&$orderby=’Priority’ asc, ’CreationDate’ desc
-        public abstract Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, ODataParameters odataParameters, CancellationToken cancellationToken);
+        public abstract Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken);
 
         // TABLE DATA SERVICE - UPDATE
         // PATCH: /datasets/{datasetName}/tables/{tableName}/items/{id}

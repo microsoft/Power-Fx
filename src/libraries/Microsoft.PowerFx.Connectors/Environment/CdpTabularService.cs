@@ -13,30 +13,31 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Connectors
 {
     // Implements CDP protocol for Tabular connectors
+    [Obsolete("Preview. Not compatible with Power Apps yet.")]
     public class CdpTabularService : TabularService
     {
         public string DataSetName { get; }
 
         public string TableName { get; }
 
-        protected HttpClient _httpClient;
+        protected Func<HttpClient> _getHttpClient;
 
         protected string _uriPrefix;
 
-        public CdpTabularService(string dataset, string table, HttpClient httpClient, string uriPrefix = null)
+        public CdpTabularService(string dataset, string table, Func<HttpClient> getHttpClient, string uriPrefix = null)
         {
             DataSetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
             TableName = table ?? throw new ArgumentNullException(nameof(table));
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            _getHttpClient = getHttpClient ?? throw new ArgumentNullException(nameof(getHttpClient));
             _uriPrefix = uriPrefix;
         }
 
         //// TABLE METADATA SERVICE
         // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01
-        public override async Task<RecordType> GetSchemaAsync(CancellationToken cancellationToken)
+        protected override async Task<RecordType> GetSchemaAsync(CancellationToken cancellationToken)
         {
             using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, _uriPrefix + $"/$metadata.json/datasets/{DataSetName}/tables/{TableName}?api-version=2015-09-01");
-            using HttpResponseMessage response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            using HttpResponseMessage response = await _getHttpClient().SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             string text = response?.Content == null ? string.Empty : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             int statusCode = (int)response.StatusCode;
@@ -57,17 +58,18 @@ namespace Microsoft.PowerFx.Connectors
         // GET AN ITEM - GET: /datasets/{datasetName}/tables/{tableName}/items/{id}?api-version=2015-09-01
 
         // LIST ITEMS - GET: /datasets/{datasetName}/tables/{tableName}/items?$filter=’CreatedBy’ eq ‘john.doe’&$top=50&$orderby=’Priority’ asc, ’CreationDate’ desc
-        public override async Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, ODataParameters odataParameters, CancellationToken cancellationToken)
+        public override async Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
             Uri uri = new Uri(_uriPrefix + $"/datasets/{DataSetName}/tables/{TableName}/items?api-version=2015-09-01", UriKind.Relative);
 
+            ODataParameters odataParameters = serviceProvider.GetService<ODataParameters>();
             if (odataParameters != null)
             {
                 uri = odataParameters.GetUri(uri);
             }
 
             using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
-            using HttpResponseMessage response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            using HttpResponseMessage response = await _getHttpClient().SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             string text = response?.Content == null ? string.Empty : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             int statusCode = (int)response.StatusCode;

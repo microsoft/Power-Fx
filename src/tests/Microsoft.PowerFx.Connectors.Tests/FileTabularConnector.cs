@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,7 +42,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
             RecalcEngine engine = new RecalcEngine(config);
+
+#pragma warning disable CS0618 // Type or member is obsolete
             engine.EnableTabularConnectors();
+#pragma warning restore CS0618 // Type or member is obsolete
 
             SymbolValues symbolValues = new SymbolValues().Add("File", fileTable);
 
@@ -55,7 +57,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Confirm that InjectServiceProviderFunction has properly been added
             string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
-            Assert.Equal("FieldAccess(Last:![line:s](FirstN:*[line:s](InjectServiceProviderFunction:![line:s](ResolvedObject('File:RuntimeValues_XXX')), Float:n(2:w))), line)", ir);
+            Assert.Equal("FieldAccess(Last:![line:s](FirstN:*[line:s](InjectServiceProviderFunction:*[line:s](ResolvedObject('File:RuntimeValues_XXX')), Float:n(2:w))), line)", ir);
 
             // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, symbolValues).ConfigureAwait(false);
@@ -73,13 +75,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _fileName = File.Exists(fileName) ? fileName : throw new FileNotFoundException($"File not found: {_fileName}");
         }
 
-        public override Task<RecordType> GetSchemaAsync(CancellationToken cancellationToken)
+        protected override Task<RecordType> GetSchemaAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             return Task.FromResult(RecordType.Empty().Add("line", FormulaType.String));
         }
 
-        public override async Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, ODataParameters odataParameters, CancellationToken cancellationToken)
+        public override async Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             string[] lines = await File.ReadAllLinesAsync(_fileName, cancellationToken).ConfigureAwait(false);

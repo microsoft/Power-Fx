@@ -1961,7 +1961,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // Use of tabular connector
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
-            SwaggerTabularService tabularService = new SwaggerTabularService(config, apiDoc, globals, client, new ConsoleLogger(_output));
+            SwaggerTabularService tabularService = new SwaggerTabularService(config, apiDoc, globals, () => client, new ConsoleLogger(_output));
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Customers", tabularService.TableName);
             Assert.Equal("_tbl_e74bd8913489439e886426eba8dec1c8", tabularService.Namespace);
@@ -1973,8 +1973,12 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.True(sqlTable._tabularService.IsInitialized);
             Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
 
+#pragma warning disable CS0618 // Type or member is obsolete
+            
             // Enable IR rewritter to auto-inject ServiceProvider where needed
             engine.EnableTabularConnectors();
+
+#pragma warning restore CS0618 // Type or member is obsolete
 
             SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);
             BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext(tabularService.Namespace, client, console: _output);
@@ -1987,7 +1991,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
             // Confirm that InjectServiceProviderFunction has properly been added
             string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
-            Assert.Equal("FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](InjectServiceProviderFunction:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX'))), Address)", ir);
+            Assert.Equal("FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](InjectServiceProviderFunction:*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX'))), Address)", ir);            
 
             // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
@@ -2031,8 +2035,13 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
 
+#pragma warning disable CS0618 // Type or member is obsolete
+
             // IMPORTANT NOTE: This is NOT what PowerApps is doing as they use /v2 version and do NOT use "default" dataset.
-            CdpTabularService tabularService = new CdpTabularService("default", "Customers", client, "/apim/sql/e74bd8913489439e886426eba8dec1c8");
+            CdpTabularService tabularService = new CdpTabularService("default", "Customers", () => client, "/apim/sql/e74bd8913489439e886426eba8dec1c8");
+
+#pragma warning disable CS0618 // Type or member is obsolete
+
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Customers", tabularService.TableName);
 
@@ -2043,8 +2052,12 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.True(sqlTable._tabularService.IsInitialized);
             Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
 
+#pragma warning disable CS0618 // Type or member is obsolete
+
             // Enable IR rewritter to auto-inject ServiceProvider where needed
             engine.EnableTabularConnectors();
+
+#pragma warning restore CS0618 // Type or member is obsolete
 
             SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues);
@@ -2056,7 +2069,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
             // Confirm that InjectServiceProviderFunction has properly been added
             string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
-            Assert.Equal("FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](InjectServiceProviderFunction:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX'))), Address)", ir);
+            Assert.Equal("FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](InjectServiceProviderFunction:*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX'))), Address)", ir);
 
             // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
@@ -2098,7 +2111,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SP GetTable.json");
 
-            SwaggerTabularService tabularService = new SwaggerTabularService(config, apiDoc, globals, client, new ConsoleLogger(_output));
+            SwaggerTabularService tabularService = new SwaggerTabularService(config, apiDoc, globals, () => client, new ConsoleLogger(_output));
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Documents", tabularService.TableName);
             Assert.Equal("_tbl_cc276c328f62456bb944f0736b3cb3b1", tabularService.Namespace);
@@ -2117,8 +2130,12 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 "'{ModerationStatus}'`ModerationStatus:s, '{Name}'`Name:s, '{Path}'`Path:s, '{Thumbnail}'`Thumbnail:![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}'`TriggerWindowEndToken:s, " +
                 "'{TriggerWindowStartToken}'`TriggerWindowStartToken:s, '{VersionNumber}'`VersionNumber:s]", spTable.Type.ToStringWithDisplayNames());
 
+#pragma warning disable CS0618 // Type or member is obsolete
+
             // Enable IR rewritter to auto-inject ServiceProvider where needed
             engine.EnableTabularConnectors();
+
+#pragma warning restore CS0618 // Type or member is obsolete
 
             SymbolValues symbolValues = new SymbolValues().Add("Documents", spTable);
             BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext(tabularService.Namespace, client, console: _output);
@@ -2136,7 +2153,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 "ComplianceAssetId:s, Created:d, Editor:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag:s, OData__DisplayName:s, " +
                 "OData__ExtendedDescription:s, OData__ip_UnifiedCompliancePolicyProperties:s, Title:s, '{FilenameWithExtension}':s, '{FullPath}':s, '{Identifier}':s, '{IsCheckedOut}':b, '{IsFolder}':b, " +
                 "'{Link}':s, '{ModerationComment}':s, '{ModerationStatus}':s, '{Name}':s, '{Path}':s, '{Thumbnail}':![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}':s, '{TriggerWindowStartToken}':s, " +
-                "'{VersionNumber}':s](InjectServiceProviderFunction:![Author:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser:![Claims:s, Department:s, DisplayName:s, " +
+                "'{VersionNumber}':s](InjectServiceProviderFunction:*[Author:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser:![Claims:s, Department:s, DisplayName:s, " +
                 "Email:s, JobTitle:s, Picture:s], ComplianceAssetId:s, Created:d, Editor:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag:s, " +
                 "OData__DisplayName:s, OData__ExtendedDescription:s, OData__ip_UnifiedCompliancePolicyProperties:s, Title:s, '{FilenameWithExtension}':s, '{FullPath}':s, '{Identifier}':s, '{IsCheckedOut}':b, " +
                 "'{IsFolder}':b, '{Link}':s, '{ModerationComment}':s, '{ModerationStatus}':s, '{Name}':s, '{Path}':s, '{Thumbnail}':![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}':s, " +

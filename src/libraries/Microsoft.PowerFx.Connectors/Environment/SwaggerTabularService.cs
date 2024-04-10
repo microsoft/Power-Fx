@@ -14,9 +14,13 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
+#pragma warning disable CS0618 // Type or member is obsolete
+
     // Swagger based CDP tabular service
     public sealed class SwaggerTabularService : CdpTabularService
     {
+#pragma warning disable CS0618 // Type or member is obsolete
+
         public string Namespace => $"_tbl_{ConnectionId}";
 
         public string ConnectionId => _connectionId;
@@ -37,8 +41,8 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly PowerFxConfig _config;
 
-        public SwaggerTabularService(PowerFxConfig config, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, HttpClient httpClient, ConnectorLogger configurationLogger = null)
-            : base(GetDataSetName(globalValues), GetTableName(globalValues), httpClient)
+        public SwaggerTabularService(PowerFxConfig config, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, Func<HttpClient> getHttpClient, ConnectorLogger configurationLogger = null)
+            : base(GetDataSetName(globalValues), GetTableName(globalValues), getHttpClient)
         {
             _config = config;
             _openApiDocument = openApiDocument;
@@ -51,7 +55,7 @@ namespace Microsoft.PowerFx.Connectors
         // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01
         internal ConnectorFunction MetadataService => _metadataService ??= GetMetadataService();
 
-        public override async Task<RecordType> GetSchemaAsync(CancellationToken cancellationToken)
+        protected override async Task<RecordType> GetSchemaAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -64,7 +68,7 @@ namespace Microsoft.PowerFx.Connectors
             // Swagger based tabular connectors
             _tabularFunctions = _config.AddActionConnector(connectorSettings, _openApiDocument, _connectorLogger, _globalValues);
 
-            BaseRuntimeConnectorContext runtimeConnectorContext = new RawRuntimeConnectorContext(_httpClient);
+            BaseRuntimeConnectorContext runtimeConnectorContext = new RawRuntimeConnectorContext(_getHttpClient());
             FormulaValue schema = await MetadataService.InvokeAsync(Array.Empty<FormulaValue>(), runtimeConnectorContext, cancellationToken).ConfigureAwait(false);
 
             return schema is StringValue str ? GetSchema(str.Value) : null;
@@ -79,33 +83,11 @@ namespace Microsoft.PowerFx.Connectors
         // LIST ITEMS - GET: /datasets/{datasetName}/tables/{tableName}/items?$filter=’CreatedBy’ eq ‘john.doe’&$top=50&$orderby=’Priority’ asc, ’CreationDate’ desc
         internal ConnectorFunction GetItems => _getItems ??= GetItemsFunction();
 
-        public override async Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, ODataParameters odataParameters, CancellationToken cancellationToken)
+        public override async Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
             BaseRuntimeConnectorContext runtimeConnectorContext = serviceProvider.GetService<BaseRuntimeConnectorContext>() ?? throw new InvalidOperationException("Cannot determine runtime connector context.");
-
-            List<NamedValue> optionalParameters = new List<NamedValue>();
-            if (odataParameters != default)
-            {
-                if (odataParameters.Count)
-                {
-                    optionalParameters.Add(new NamedValue("$count", FormulaValue.New(true)));
-                }
-
-                if (!string.IsNullOrEmpty(odataParameters.Filter))
-                {
-                    optionalParameters.Add(new NamedValue("$filter", FormulaValue.New(odataParameters.Filter)));
-                }
-
-                if (!string.IsNullOrEmpty(odataParameters.OrderBy))
-                {
-                    optionalParameters.Add(new NamedValue("$orderby", FormulaValue.New(odataParameters.OrderBy)));
-                }
-
-                if (odataParameters.Top > 0)
-                {
-                    optionalParameters.Add(new NamedValue("$top", FormulaValue.New(odataParameters.Top)));
-                }
-            }
+            ODataParameters odataParameters = serviceProvider.GetService<ODataParameters>();
+            IReadOnlyList<NamedValue> optionalParameters = odataParameters != null ? odataParameters.GetNamedValues() : Array.Empty<NamedValue>();
 
             FormulaValue[] parameters = optionalParameters.Any() ? new FormulaValue[] { FormulaValue.NewRecordFromFields(optionalParameters.ToArray()) } : Array.Empty<FormulaValue>();
 
