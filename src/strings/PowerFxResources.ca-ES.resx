@@ -1962,6 +1962,10 @@
     <value>No es pot utilitzar un valor que no sigui un registre en aquest context.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>No es pot utilitzar un valor que no sigui un registre en aquest context: '{0}'.</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>Només es poden utilitzar valors de registre o de taula en aquest context.</value>
     
@@ -3070,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origen_dades</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3086,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origen_dades</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origen_dades</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>Aplica les actualitzacions a la fila especificada i canvia la fila de l'origen de dades especificat. Retorna la fila actualitzada.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Agafa un sol registre amb les claus principals i els valors actualitzats i actualitza la fila corresponent de l'origen de dades especificat. Retorna la fila actualitzada.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Agafa una taula de files i aplica d'una en una les actualitzacions especificades en una taula d'actualitzacions. Retorna una taula de files actualitzades.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Agafa una taula de files amb les claus principals i els camps actualitzats i aplica aquestes actualitzacions a l'origen de dades. Retorna una taula de files actualitzades.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Retorna la fila amb les actualitzacions aplicades.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Origen de dades al qual s'aplicarà el pedaç.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Registre al qual s'ha d'aplicar el pedaç.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Actualització que s'ha d'aplicar al pedaç del registre proporcionat.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Taula de files que s'han de revisar.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Taula d'actualitzacions que s'han de revisar a les files proporcionades.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>origen</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>registre</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>actualització</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>files</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>actualitzacions</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origen_dades</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>suprimir_registres</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -4059,7 +4102,7 @@
     
   </data>
   <data name="AboutRefresh" xml:space="preserve">
-    <value>Actualitza l'origen de les dades especificat.</value>
+    <value>Actualitza la font de dades especificada.</value>
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
@@ -4071,7 +4114,7 @@
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
-    <value>Origen de les dades connectat que s'ha d'actualitzar.</value>
+    <value>Font de dades connectada que s'ha d'actualitzar.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Només es poden actualitzar les connexions administrades.</value>
@@ -4199,7 +4242,7 @@
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>opcions_seguiment</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">

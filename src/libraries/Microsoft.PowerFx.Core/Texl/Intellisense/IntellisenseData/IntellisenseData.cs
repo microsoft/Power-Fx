@@ -606,14 +606,19 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                 // Case 2: Aggregate type with function manipulations or scope info.
                 isSuggestable = symbolType.CoercesTo(argType, false, false, features);
             }
+            else if (argType.IsAggregate && function.ParamTypes.Any(parm => parm.Kind == symbolType.Kind))
+            {
+                // Case 3: None of the aggregate check worked. Try to mach any ParamType kind.
+                isSuggestable = true;
+            }
             else if (!argType.IsAggregate && function.SupportCoercionForArg(argIndex))
             {
-                // Case 3: Non-aggregate type with support for coercion.
+                // Case 4: Non-aggregate type with support for coercion.
                 isSuggestable = symbolType.CoercesTo(argType, false, false, features);
             }
             else if (!argType.IsAggregate)
             {
-                // Case 4: Non-aggregate type without support for coercion.
+                // Case 5: Non-aggregate type without support for coercion.
                 isSuggestable = symbolType == argType;
             }
             else

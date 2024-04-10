@@ -1962,6 +1962,10 @@
     <value>Non è possibile usare un valore che non è record in questo contesto.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Non è possibile usare un valore che non è un record in questo contesto: '{0}'.</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>In questo contesto è possibile utilizzare solo valori di record o tabella.</value>
     
@@ -3070,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origine_dati</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3086,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origine_dati</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origine_dati</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>Applica gli aggiornamenti alla riga specificata e modifica la riga nell'origine dati specificata. Restituisce la riga aggiornata.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Accetta un singolo record con chiavi primarie e valori aggiornati e aggiorna la riga corrispondente nell'origine dati specificata. Restituisce la riga aggiornata.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Accetta una tabella di righe e applica gli aggiornamenti specificati nella tabella di aggiornamenti in modalità uno a uno. Restituisce una tabella di righe aggiornate.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Accetta una tabella di righe con chiavi primarie e campi aggiornati e applica gli aggiornamenti all'origine dati. Restituisce una tabella di righe aggiornate.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Restituisce la riga con gli aggiornamenti applicati.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Origine dati a cui deve essere applicata la patch.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Record a cui deve essere applicata la patch.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Aggiornamento che deve essere applicato come patch al record specifico.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Tabella di righe a cui applicare la patch.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Tabella di aggiornamenti a cui è necessario applicare patch per le righe specificate.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>origine</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>record</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>aggiornamento</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>righe</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>aggiornamenti</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origine_dati</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>record_rimozione</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">

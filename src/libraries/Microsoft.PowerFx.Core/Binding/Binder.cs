@@ -865,6 +865,11 @@ namespace Microsoft.PowerFx.Core.Binding
             return lookupInfo.Data as IExternalControl;
         }
 
+        private static bool OverloadsWithAndWithoutSideEffects(IEnumerable<TexlFunction> overloads)
+        {
+            return overloads.Any(overload => overload.IsSelfContained) && overloads.Any(overload => !overload.IsSelfContained);
+        }
+
         private bool IsDataComponentDataSource(NameLookupInfo lookupInfo)
         {
             return lookupInfo.Kind == BindKind.Data &&
@@ -4221,7 +4226,7 @@ namespace Microsoft.PowerFx.Core.Binding
             private void UntypedObjectScopeError(CallNode node, TexlFunction maybeFunc, TexlNode firstArg)
             {
                 _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, firstArg, TexlStrings.ErrUntypedObjectScope);
-                _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgs_Func, maybeFunc.Name);
+                _txb.ErrorContainer.Error(node.Head.Token, TexlStrings.ErrInvalidArgs_Func, maybeFunc.Name);
 
                 _txb.SetInfo(node, new CallInfo(maybeFunc, node, null, default, false, _currentScope.Nest));
                 _txb.SetType(node, maybeFunc.ReturnType);
@@ -4485,7 +4490,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // If there is a single function with this name, and the first arg is not
                         // a good match, then we have an erroneous invocation.
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, nodeInput, TexlStrings.ErrBadType);
-                        _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgs_Func, maybeFunc.Name);
+                        _txb.ErrorContainer.Error(node.Head.Token, TexlStrings.ErrInvalidArgs_Func, maybeFunc.Name);
                         _txb.SetInfo(node, new CallInfo(maybeFunc, node, typeScope, scopeIdent, identRequired, _currentScope.Nest));
                         _txb.SetType(node, maybeFunc.ReturnType);
                     }
@@ -4609,7 +4614,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // on their argument types.
                 if (!fArgsValid)
                 {
-                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, maybeFunc.Name);
+                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node.Head.Token, TexlStrings.ErrInvalidArgs_Func, maybeFunc.Name);
                 }
 
                 // Set the inferred return type for the node.
@@ -4920,7 +4925,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // If PreVisit resulted in errors for the node (and a non-null CallInfo),
                 // we're done -- we have a match and appropriate errors logged already.
-                if (_txb.ErrorContainer.HasErrors(node))
+                if (_txb.ErrorContainer.HasErrors(node) || _txb.ErrorContainer.HasErrors(node.Head.Token))
                 {
                     Contracts.Assert(info != null);
 
@@ -4951,7 +4956,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!fArgsValid)
                 {
-                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, func.Name);
+                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node.Head.Token, TexlStrings.ErrInvalidArgs_Func, func.Name);
                 }
 
                 _txb.SetType(node, returnType);
@@ -4969,7 +4974,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var info = _txb.GetInfo(node);
                 Contracts.AssertValueOrNull(info);
-                Contracts.Assert(info == null || _txb.ErrorContainer.HasErrors(node));
+                Contracts.Assert(info == null || _txb.ErrorContainer.HasErrors(node) || _txb.ErrorContainer.HasErrors(node.Head.Token));
 
                 // Attempt to get the overloads, so we can determine the scope to use for datasource name matching
                 // We're only interested in the overloads without lambdas, since those were
@@ -5035,7 +5040,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     var functionsWithLambdas = LookupFunctions(funcNamespace, node.Head.Name.Value).Where(fnc => fnc.HasLambdas);
 
-                    if (functionsWithLambdas.Any() && !_txb.ErrorContainer.HasErrors(node))
+                    if (functionsWithLambdas.Any() && !_txb.ErrorContainer.HasErrors(node) && !_txb.ErrorContainer.HasErrors(node.Head.Token))
                     {
                         // PreVisitBottomUp is called along the arity error code path. For functions such as Sum,
                         // there is an overload with a lambda as well as an overload with scalars. Using untyped
@@ -5065,7 +5070,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // If PreVisit resulted in errors for the node (and a non-null CallInfo),
                 // we're done -- we have a match and appropriate errors logged already.
-                if (_txb.ErrorContainer.HasErrors(node))
+                if (_txb.ErrorContainer.HasErrors(node) || _txb.ErrorContainer.HasErrors(node.Head.Token))
                 {
                     Contracts.Assert(info != null);
 
@@ -5144,7 +5149,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!fArgsValid && !func.HasPreciseErrors)
                 {
-                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, func.Name);
+                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node.Head.Token, TexlStrings.ErrInvalidArgs_Func, func.Name);
                 }
 
                 _txb.SetType(node, returnType);
@@ -5234,7 +5239,19 @@ namespace Microsoft.PowerFx.Core.Binding
                     var maxArity = overloads.Max(func => func.MaxArity);
                     ArityError(minArity, maxArity, node, carg, _txb.ErrorContainer);
 
-                    _txb.SetInfo(node, new CallInfo(overloads.First(), node));
+                    TexlFunction overload;
+
+                    if (OverloadsWithAndWithoutSideEffects(overloads))
+                    {
+                        // In case an functions has both self-container and non-self-contained overloads, get the first overload based on the context.
+                        overload = overloads.FirstOrDefault(f => f.IsSelfContained != _txb.CheckTypesContext.AllowsSideEffects);
+                    }
+                    else
+                    {
+                        overload = overloads.First();
+                    }
+
+                    _txb.SetInfo(node, new CallInfo(overload, node));
                     _txb.SetType(node, DType.Error);
                     return;
                 }
@@ -5242,7 +5259,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // We exhausted the overloads without finding an exact match, so post a document error.
                 if (!someFunc.HasPreciseErrors)
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgs_Func, someFunc.Name);
+                    _txb.ErrorContainer.Error(node.Head.Token, TexlStrings.ErrInvalidArgs_Func, someFunc.Name);
                 }
 
                 // The final CheckInvocation call will post all the necessary document errors.

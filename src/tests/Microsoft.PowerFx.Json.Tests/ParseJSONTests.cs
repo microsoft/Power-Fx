@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -547,6 +548,37 @@ namespace Microsoft.PowerFx.Json.Tests
                         break;
                 }
             }
+        }
+
+        [Theory]
+        [InlineData("[{\"Name\": \"Peter\"}]", "[]")]
+        [InlineData("[1,2,3]", "[]")]
+        [InlineData("[1,2,3]", "[5, 6]")]
+        [InlineData("[\"A\", \"B\"]", "[\"1\"]")]
+        [InlineData("[{\"Name\": \"Peter\"}]", "[{\"Name\": \"Julia\"}]")]
+        [InlineData("[]", "[]")]
+        public void FromArrayWithType(string prototypeJson, string valueJson)
+        {
+            FormulaValue prototypeValue = FormulaValueJSON.FromJson(prototypeJson);
+            FormulaValue value = FormulaValueJSON.FromJson(valueJson, prototypeValue.Type);
+            Assert.Equal(prototypeValue.Type, value.Type);
+        }
+
+        [Theory]
+        [InlineData("[{\"Name\": \"Peter\"}]", "[{\"OtherName\": \"Julia\"}]")]
+        public void FromArrayWithDifferentTableColumnType(string prototypeJson, string valueJson)
+        {
+            FormulaValue prototypeValue = FormulaValueJSON.FromJson(prototypeJson);
+            FormulaValue value = FormulaValueJSON.FromJson(valueJson, prototypeValue.Type);
+            Assert.NotEqual(prototypeValue.Type, value.Type);
+        }
+
+        [Theory]
+        [InlineData("[{\"Name\": \"Peter\"}]", "[1,2,3]")]
+        public async Task FromArrayWithIncompatibleType2(string prototypeJson, string valueJson)
+        {
+            FormulaValue prototypeValue = FormulaValueJSON.FromJson(prototypeJson);
+            Assert.Throws<InvalidOperationException>(() => FormulaValueJSON.FromJson(valueJson, prototypeValue.Type));
         }
     }
 }

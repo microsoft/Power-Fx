@@ -1962,6 +1962,10 @@
     <value>Kan ikke bruke en ikke-postverdi i denne konteksten.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Kan ikke bruke en ikke-postverdi i denne konteksten: {0}.</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>Bare oppførings- eller tabellverdier kan brukes i denne konteksten.</value>
     
@@ -3070,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datakilde</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3086,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datakilde</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datakilde</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>Bruker oppdateringene i den angitte raden, og endrer raden i den angitte datakilden. Returnerer den oppdaterte raden.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Tar en enkel post med primærnøkler og oppdaterte verdier, og oppdaterer de tilsvarende radene i den angitte datakilden. Returnerer den oppdaterte raden.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Tar en tabell med rader og bruker oppdateringene angitt i en oppdateringstabell på en-til-en-basis. Returnerer en tabell med oppdaterte rader.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Tar en tabell med rader med primærnøkler og oppdaterte felt, og bruker disse oppdateringene på datakilden. Returnerer en tabell med oppdaterte rader.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Returnerer rad med oppdateringer tatt i bruk.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Datakilden som skal oppdateres.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Posten som må oppdateres.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Oppdateringen som må oppdateres til den angitte posten.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Tabellen med rader som skal implementeres.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Tabellen med oppdateringer som skal implementeres i de gitte radene.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>post</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>oppdateringer</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>rader</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>oppdateringer</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datakilde</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>fjern_oppføringer</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -4051,7 +4094,7 @@
     
   </data>
   <data name="MatchArg2" xml:space="preserve">
-    <value>regulært_expression</value>
+    <value>regulært_uttrykk</value>
     
   </data>
   <data name="MatchArg3" xml:space="preserve">
@@ -4199,7 +4242,7 @@
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>sporingsalternativer</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">

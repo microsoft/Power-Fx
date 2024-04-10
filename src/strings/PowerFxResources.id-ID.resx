@@ -1962,6 +1962,10 @@
     <value>Tidak dapat menggunakan nilai bukan-catatan dalam konteks ini.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Tidak dapat menggunakan nilai tidak-mencatat dalam konteks ini: '{0}'.</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>Hanya nilai rekaman atau tabel yang dapat digunakan dalam konteks ini.</value>
     
@@ -3070,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>sumber_data</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3086,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>sumber_data</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>sumber_data</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>Menerapkan pembaruan ke baris yang ditentukan dan mengubah baris di sumber data tertentu. Mengembalikan baris yang diperbarui.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Mengambil satu rekaman dengan kunci utama dan nilai yang diperbarui serta memperbarui baris terkait dalam sumber data yang ditentukan. Menghasilkan baris yang diperbarui.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Mengambil tabel baris dan menerapkan pembaruan yang ditentukan dalam tabel pembaruan dengan gaya satu-satu. Mengembalikan tabel baris yang diperbarui.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Mengambil tabel baris dengan kunci utama dan bidang yang diperbarui serta menerapkan pembaruan tersebut ke sumber data. Mengembalikan tabel baris yang diperbarui.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Menampilkan baris dengan pembaruan yang diterapkan.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Sumber data yang harus ditambal.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Catatan yang harus ditambal.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Pembaruan yang perlu ditambal ke catatan yang ditentukan.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Tabel baris untuk ditambal.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Tabel pembaruan yang perlu ditambal ke baris yang diberikan.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>sumber</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>catatan</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>pembaruan</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>baris</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>pembaruan</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>sumber_data</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>hapus_catatan</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -4195,11 +4238,11 @@
     
   </data>
   <data name="TraceArg3" xml:space="preserve">
-    <value>custom_record</value>
+    <value>catatan_kustom</value>
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>opsi_pelacakan</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">

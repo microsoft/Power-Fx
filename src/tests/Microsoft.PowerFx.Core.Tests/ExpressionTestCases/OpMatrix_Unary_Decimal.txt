@@ -278,13 +278,13 @@ Error({Kind:ErrorKind.InvalidArgument})
 true
 
 >> Not(Date(2000,1,1))
-Errors: Error 4-18: Invalid argument type (Date). Expecting a Boolean value instead.|Error 0-19: The function 'Not' has some invalid arguments.
+Errors: Error 4-18: Invalid argument type (Date). Expecting a Boolean value instead.|Error 0-3: The function 'Not' has some invalid arguments.
 
 >> Not(DateTime(2000,1,1,12,0,0))
-Errors: Error 4-29: Invalid argument type (DateTime). Expecting a Boolean value instead.|Error 0-30: The function 'Not' has some invalid arguments.
+Errors: Error 4-29: Invalid argument type (DateTime). Expecting a Boolean value instead.|Error 0-3: The function 'Not' has some invalid arguments.
 
 >> Not(Time(12,0,0))
-Errors: Error 4-16: Invalid argument type (Time). Expecting a Boolean value instead.|Error 0-17: The function 'Not' has some invalid arguments.
+Errors: Error 4-16: Invalid argument type (Time). Expecting a Boolean value instead.|Error 0-3: The function 'Not' has some invalid arguments.
 
 >> Not(Decimal("2.000000000000000000000002"))
 false

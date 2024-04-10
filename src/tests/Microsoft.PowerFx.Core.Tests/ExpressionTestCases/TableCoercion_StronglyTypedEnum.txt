@@ -10,4 +10,4 @@ Errors: Error 17-19: Incompatible type. The item you are trying to put into a ta
 
 // Table type enum (Table function), cannot have numbers
 >> Table({a:ErrorKind.Div0}, {a:12})
-Errors: Error 0-33: The function 'Table' has some invalid arguments.|Error 26-32: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+Errors: Error 0-5: The function 'Table' has some invalid arguments.|Error 26-32: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.

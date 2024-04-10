@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text.Json;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
@@ -32,10 +31,22 @@ namespace Microsoft.PowerFx.Types
       
         public static FormulaValue FromJson(string jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
         {
-            using JsonDocument document = JsonDocument.Parse(jsonString);
-            JsonElement propBag = document.RootElement;
+            try
+            {
+                using JsonDocument document = JsonDocument.Parse(jsonString);
+                JsonElement propBag = document.RootElement;
 
-            return FromJson(propBag, settings, formulaType);
+                return FromJson(propBag, settings, formulaType);
+            }
+            catch (JsonException je)
+            {                
+                return new ErrorValue(IRContext.NotInSource(formulaType), new ExpressionError()
+                {
+                    Message = $"{je.GetType().Name} {je.Message}",
+                    Span = new Syntax.Span(0, 0),
+                    Kind = ErrorKind.Network
+                });
+            }
         }
 
         /// <summary>
@@ -210,7 +221,23 @@ namespace Microsoft.PowerFx.Types
             // since in that case nested elements are not object and hence needs to be handled differently.
             var nestedElementsAreObjects = array.EnumerateArray().Any(nestedElement => nestedElement.ValueKind == JsonValueKind.Object);
             bool isArray = tableType?._type.IsColumn == true && !nestedElementsAreObjects;
-            FormulaType ft = isArray ? tableType.ToRecord().GetFieldType("Value") : tableType?.ToRecord();
+            FormulaType ft;
+
+            if (isArray)
+            {
+                if (array.GetArrayLength() == 0)
+                {
+                    ft = tableType?.ToRecord();
+                }
+                else
+                {
+                    ft = tableType?.ToRecord().GetFieldType("Value");
+                }
+            }
+            else
+            {
+                ft = tableType?.ToRecord();
+            }
 
             for (var i = 0; i < array.GetArrayLength(); ++i)
             {

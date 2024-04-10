@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
@@ -125,9 +126,9 @@ namespace Microsoft.PowerFx.Tests
                     "480a676ab6e64b168cfa41506014e45d",  // connectionId
                     () => "eyJ0eXAiOiJKV...",
                     httpClient)
-                {
-                    SessionId = "MySessionId"
-                };
+            {
+                SessionId = "MySessionId"
+            };
 
             var funcs = config.AddActionConnector("MSNWeather", apiDoc, new ConsoleLogger(_output));
 
@@ -341,7 +342,7 @@ namespace Microsoft.PowerFx.Tests
             AssertEqual(expected, actual);
         }
 
-        [Fact]       
+        [Fact]
         public async Task AzureBlobConnector_UploadFileV2()
         {
             string yellowPixel = "/9j/4AAQSkZJRgABAQEAeAB4AAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAABAAEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9aKKKK/wTP2g//9k=";
@@ -359,20 +360,20 @@ namespace Microsoft.PowerFx.Tests
                     "6d228109794849049ce8116e5d4ffaf8",     // connectionId
                     () => $"{token}",
                     httpClient)
-                {
-                    SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
-                };
+            {
+                SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
+            };
 
             config.AddActionConnector("AzureBlobStorage", apiDoc, new ConsoleLogger(_output));
-            
+
             var engine = new RecalcEngine(config);
             var runtimeContext = new TestConnectorRuntimeContext("AzureBlobStorage", client);
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(runtimeContext);
 
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response2.json");
-            
+
             CheckResult check = engine.Check($@"AzureBlobStorage.CreateFileV2(""pfxdevstgaccount1"", ""container"", ""001.jpg"", AsBlob(""{yellowPixel}"", true), {{'Content-Type': ""image/jpeg"" }}).Size", new ParserOptions() { AllowsSideEffects = true });
-            Assert.True(check.IsSuccess);
+            Assert.True(check.IsSuccess, string.Join(", ", check.Errors.Select(er => er.Message)));
             _output.WriteLine($"\r\nIR: {check.PrintIR()}");
 
             var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
@@ -393,13 +394,13 @@ namespace Microsoft.PowerFx.Tests
             var actual = testConnector._log.ToString();
 
             int idx = actual.IndexOf("[body] ") + 7;
-            actual = string.Concat(actual.AsSpan(0, idx), string.Join(string.Empty, testConnector._log.ToString().Substring(idx, 30).Select((char c) => 
-            { 
-                int d = c; 
-                return (c < 32 || c > 128) ? $"\\u{d:X4}" : c.ToString(); 
+            actual = string.Concat(actual.AsSpan(0, idx), string.Join(string.Empty, testConnector._log.ToString().Substring(idx, 30).Select((char c) =>
+            {
+                int d = c;
+                return (c < 32 || c > 128) ? $"\\u{d:X4}" : c.ToString();
             })));
-                        
-            var version = PowerPlatformConnectorClient.Version;            
+
+            var version = PowerPlatformConnectorClient.Version;
             var host = "tip2-001.azure-apihub.net";
             var expected = @$"POST https://{host}/invoke
  authority: {host}
@@ -1423,6 +1424,52 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public async Task SQL_ExecuteStoredProc_WithEmptyServerResponse()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            using var httpClient = new HttpClient(testConnector);
+            using var client = new PowerPlatformConnectorClient("tip1-shared-002.azure-apim.net", "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46", "5f57ec83acef477b8ccc769e52fa22cc", () => "eyJ0eX...", "MyProduct/v1.2", httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
+            var engine = new RecalcEngine(config);
+            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
+
+            testConnector.SetResponseFromFile(@"Responses\EmptyResponse.json");
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+            Assert.True(result is BlankValue);
+        }
+
+        [Fact]
+        public async Task SQL_ExecuteStoredProc_WithInvalidResponse()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            using var httpClient = new HttpClient(testConnector);
+            using var client = new PowerPlatformConnectorClient("tip1-shared-002.azure-apim.net", "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46", "5f57ec83acef477b8ccc769e52fa22cc", () => "eyJ0eX...", "MyProduct/v1.2", httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
+            var engine = new RecalcEngine(config);
+            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
+
+            testConnector.SetResponseFromFile(@"Responses\Invalid.txt");
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+
+            ErrorValue ev = Assert.IsType<ErrorValue>(result);
+            string message = ev.Errors[0].Message;
+
+            Assert.Equal(@$"SQL.ExecuteProcedureV2 failed: JsonReaderException '+' is an invalid start of a value. LineNumber: 0 | BytePositionInLine: 0.", message);
+        }
+
+        [Fact]
         public async Task SharePointOnlineTest()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
@@ -1531,6 +1578,25 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 ";
 
             Assert.Equal(expected, testConnector._log.ToString());
+        }
+
+        [Fact]
+        public async Task EdenAITest()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\Eden AI.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;           
+
+            ConnectorSettings connectorSettings = new ConnectorSettings("edenai")
+            {                
+                Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                AllowUnsupportedFunctions = true,
+                IncludeInternalFunctions = true                
+            };
+
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
+
+            Assert.False(functions.First(f => f.Name == "ReceiptParser").IsSupported);
+            Assert.Equal("Body with multiple parameters is not supported when one of the parameters is of type 'blob'", functions.First(f => f.Name == "ReceiptParser").NotSupportedReason);
         }
 
         [Fact]
@@ -1691,6 +1757,124 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal("x-ms-api-version", resourceGroupsList.HiddenRequiredParameters[0].Name);
             StringValue sv = Assert.IsType<StringValue>(resourceGroupsList.HiddenRequiredParameters[0].DefaultValue);
             Assert.Equal("2020-01-01", sv.Value);
+        }
+
+        [Fact]
+        public async Task DVDynamicReturnType()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\Dataverse.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+
+            PowerFxConfig config = new PowerFxConfig();
+            string token = @"eyJ0eXAiO..";
+
+            using HttpClient httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "ba347af5-05f5-e331-a109-ad48533ebffc" /* env */, "393a9f94ee8841e7887da9d706387c33" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
+
+            ConnectorSettings connectorSettings = new ConnectorSettings("cds") { Compatibility = ConnectorCompatibility.SwaggerCompatibility };
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("cds", ppClient, console: _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
+            ConnectorFunction listRecordsWithOrganizations = functions.First(functions => functions.Name == "ListRecordsWithOrganization");
+
+            NamedValue[] parameters = new NamedValue[]
+            {
+                new NamedValue("organization", FormulaValue.New("https://aurorabapenv969d7.crm10.dynamics.com")),
+                new NamedValue("entityName", FormulaValue.New("accounts"))
+            };
+
+            testConnector.SetResponseFromFiles(Enumerable.Range(0, 23).Select(i => $@"Responses\Response_DVReturnType_{i:00}.json").ToArray());
+            ConnectorType returnType = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, 23, CancellationToken.None).ConfigureAwait(false);
+            string ft = returnType.FormulaType.ToStringWithDisplayNames();
+
+            string expected = @"!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id':s, _createdby_value:s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdbyexternalparty_value:s, " +
+                @"'_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdonbehalfby_value:s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _defaultpricelevelid_value:s, " +
+                @"'_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _masterid_value:s, '_masterid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _modifiedby_value:s, " +
+                @"'_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _modifiedbyexternalparty_value:s, '_modifiedbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _modifiedonbehalfby_value:s, " +
+                @"'_modifiedonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _msa_managingpartnerid_value:s, '_msa_managingpartnerid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _msdyn_accountkpiid_value:s, " +
+                @"'_msdyn_accountkpiid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _msdyn_salesaccelerationinsightid_value:s, '_msdyn_salesaccelerationinsightid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
+                @"_originatingleadid_value:s, '_originatingleadid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _ownerid_value:s, '_ownerid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owningbusinessunit_value:s, " +
+                @"'_owningbusinessunit_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owningteam_value:s, '_owningteam_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owninguser_value:s, " +
+                @"'_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _parentaccountid_value:s, '_parentaccountid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _preferredequipmentid_value:s, " +
+                @"'_preferredequipmentid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _preferredserviceid_value:s, '_preferredserviceid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
+                @"_preferredsystemuserid_value:s, '_preferredsystemuserid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _primarycontactid_value:s, '_primarycontactid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
+                @"_slaid_value:s, '_slaid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _slainvokedid_value:s, '_slainvokedid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _territoryid_value:s, " +
+                @"'_territoryid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _transactioncurrencyid_value:s, '_transactioncurrencyid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, accountcategorycode:w, " +
+                @"accountclassificationcode:w, accountid:s, accountnumber:s, accountratingcode:w, address1_addressid:s, address1_addresstypecode:w, address1_city:s, address1_composite:s, address1_country:s, " +
+                @"address1_county:s, address1_fax:s, address1_freighttermscode:w, address1_latitude:w, address1_line1:s, address1_line2:s, address1_line3:s, address1_longitude:w, address1_name:s, address1_postalcode:s, " +
+                @"address1_postofficebox:s, address1_primarycontactname:s, address1_shippingmethodcode:w, address1_stateorprovince:s, address1_telephone1:s, address1_telephone2:s, address1_telephone3:s, address1_upszone:s, " +
+                @"address1_utcoffset:w, address2_addressid:s, address2_addresstypecode:w, address2_city:s, address2_composite:s, address2_country:s, address2_county:s, address2_fax:s, address2_freighttermscode:w, " +
+                @"address2_latitude:w, address2_line1:s, address2_line2:s, address2_line3:s, address2_longitude:w, address2_name:s, address2_postalcode:s, address2_postofficebox:s, address2_primarycontactname:s, " +
+                @"address2_shippingmethodcode:w, address2_stateorprovince:s, address2_telephone1:s, address2_telephone2:s, address2_telephone3:s, address2_upszone:s, address2_utcoffset:w, adx_createdbyipaddress:s, " +
+                @"adx_createdbyusername:s, adx_modifiedbyipaddress:s, adx_modifiedbyusername:s, aging30:w, aging30_base:w, aging60:w, aging60_base:w, aging90:w, aging90_base:w, businesstypecode:w, createdon:d, " +
+                @"creditlimit:w, creditlimit_base:w, creditonhold:b, customersizecode:w, customertypecode:w, description:s, donotbulkemail:b, donotbulkpostalmail:b, donotemail:b, donotfax:b, donotphone:b, " +
+                @"donotpostalmail:b, donotsendmm:b, emailaddress1:s, emailaddress2:s, emailaddress3:s, entityimage:s, entityimageid:s, exchangerate:w, fax:s, followemail:b, ftpsiteurl:s, importsequencenumber:w, " +
+                @"industrycode:w, lastonholdtime:d, lastusedincampaign:d, marketcap:w, marketcap_base:w, marketingonly:b, merged:b, modifiedon:d, msdyn_gdproptout:b, name:s, numberofemployees:w, onholdtime:w, " +
+                @"opendeals:w, opendeals_date:d, opendeals_state:w, openrevenue:w, openrevenue_base:w, openrevenue_date:d, openrevenue_state:w, overriddencreatedon:d, ownershipcode:w, participatesinworkflow:b, " +
+                @"paymenttermscode:w, preferredappointmentdaycode:w, preferredappointmenttimecode:w, preferredcontactmethodcode:w, primarysatoriid:s, primarytwitterid:s, processid:s, revenue:w, revenue_base:w, " +
+                @"sharesoutstanding:w, shippingmethodcode:w, sic:s, stageid:s, statecode:w, statuscode:w, stockexchange:s, teamsfollowed:w, telephone1:s, telephone2:s, telephone3:s, territorycode:w, tickersymbol:s, " +
+                @"timespentbymeonemailandmeetings:s, timezoneruleversionnumber:w, traversedpath:s, utcconversiontimezonecode:w, versionnumber:w, websiteurl:s, yominame:s]]]";
+
+            // If we would return OptionSet type, this is the return type we'd get
+            // Keeping for reference
+
+            //@"!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id':s, _createdby_value:s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdbyexternalparty_value:s, " +
+            //@"'_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdonbehalfby_value:s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
+            //@"_defaultpricelevelid_value:s, '_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _masterid_value:s, '_masterid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
+            //@"_modifiedby_value:s, '_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _modifiedbyexternalparty_value:s, '_modifiedbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
+            //@"_modifiedonbehalfby_value:s, '_modifiedonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _msa_managingpartnerid_value:s, " +
+            //@"'_msa_managingpartnerid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _msdyn_accountkpiid_value:s, '_msdyn_accountkpiid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
+            //@"_msdyn_salesaccelerationinsightid_value:s, '_msdyn_salesaccelerationinsightid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _originatingleadid_value:s, " +
+            //@"'_originatingleadid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _ownerid_value:s, '_ownerid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owningbusinessunit_value:s, " +
+            //@"'_owningbusinessunit_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owningteam_value:s, '_owningteam_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owninguser_value:s, " +
+            //@"'_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _parentaccountid_value:s, '_parentaccountid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _preferredequipmentid_value:s, " +
+            //@"'_preferredequipmentid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _preferredserviceid_value:s, '_preferredserviceid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
+            //@"_preferredsystemuserid_value:s, '_preferredsystemuserid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _primarycontactid_value:s, " +
+            //@"'_primarycontactid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _slaid_value:s, '_slaid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _slainvokedid_value:s, " +
+            //@"'_slainvokedid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _territoryid_value:s, '_territoryid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _transactioncurrencyid_value:s, " +
+            //@"'_transactioncurrencyid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, accountcategorycode:l('Preferred Customer'=1,Standard=2), accountclassificationcode:l('Default Value'=1), accountid:s, " +
+            //@"accountnumber:s, accountratingcode:l('Default Value'=1), address1_addressid:s, address1_addresstypecode:l('Bill To'=1,Other=4,Primary=3,'Ship To'=2), address1_city:s, address1_composite:s, " +
+            //@"address1_country:s, address1_county:s, address1_fax:s, address1_freighttermscode:l(FOB=1,'No Charge'=2), address1_latitude:w, address1_line1:s, address1_line2:s, address1_line3:s, " +
+            //@"address1_longitude:w, address1_name:s, address1_postalcode:s, address1_postofficebox:s, address1_primarycontactname:s, address1_shippingmethodcode:l(Airborne=1,DHL=2,FedEx=3,'Full Load'=6,'Postal Mail'=5,UPS=4,'Will Call'=7), " +
+            //@"address1_stateorprovince:s, address1_telephone1:s, address1_telephone2:s, address1_telephone3:s, address1_upszone:s, address1_utcoffset:w, address2_addressid:s, address2_addresstypecode:l('Default Value'=1), " +
+            //@"address2_city:s, address2_composite:s, address2_country:s, address2_county:s, address2_fax:s, address2_freighttermscode:l('Default Value'=1), address2_latitude:w, address2_line1:s, address2_line2:s, " +
+            //@"address2_line3:s, address2_longitude:w, address2_name:s, address2_postalcode:s, address2_postofficebox:s, address2_primarycontactname:s, address2_shippingmethodcode:l('Default Value'=1), " +
+            //@"address2_stateorprovince:s, address2_telephone1:s, address2_telephone2:s, address2_telephone3:s, address2_upszone:s, address2_utcoffset:w, adx_createdbyipaddress:s, adx_createdbyusername:s, " +
+            //@"adx_modifiedbyipaddress:s, adx_modifiedbyusername:s, aging30:w, aging30_base:w, aging60:w, aging60_base:w, aging90:w, aging90_base:w, businesstypecode:l('Default Value'=1), createdon:d, creditlimit:w, " +
+            //@"creditlimit_base:w, creditonhold:b, customersizecode:l('Default Value'=1), customertypecode:l(Competitor=1,Consultant=2,Customer=3,Influencer=6,Investor=4,Other=12,Partner=5,Press=7,Prospect=8,Reseller=9,Supplier=10,Vendor=11), " +
+            //@"description:s, donotbulkemail:b, donotbulkpostalmail:b, donotemail:b, donotfax:b, donotphone:b, donotpostalmail:b, donotsendmm:b, emailaddress1:s, emailaddress2:s, emailaddress3:s, entityimage:s, " +
+            //@"entityimageid:s, exchangerate:w, fax:s, followemail:b, ftpsiteurl:s, importsequencenumber:w, industrycode:l(Accounting=1,'Agriculture and Non-petrol Natural Resource Extraction'=2," +
+            //@"'Broadcasting Printing and Publishing'=3,Brokers=4,'Building Supply Retail'=5,'Business Services'=6,Consulting=7,'Consumer Services'=8,'Design, Direction and Creative Management'=9," +
+            //@"'Distributors, Dispatchers and Processors'=10,'Doctor''s Offices and Clinics'=11,'Durable Manufacturing'=12,'Eating and Drinking Places'=13,'Entertainment Retail'=14,'Equipment Rental and Leasing'=15," +
+            //@"Financial=16,'Food and Tobacco Processing'=17,'Inbound Capital Intensive Processing'=18,'Inbound Repair and Services'=19,Insurance=20,'Legal Services'=21,'Non-Durable Merchandise Retail'=22," +
+            //@"'Outbound Consumer Service'=23,'Petrochemical Extraction and Distribution'=24,'SIG Affiliations'=26,'Service Retail'=25,'Social Services'=27,'Special Outbound Trade Contractors'=28," +
+            //@"'Specialty Realty'=29,Transportation=30,'Utility Creation and Distribution'=31,'Vehicle Retail'=32,Wholesale=33), lastonholdtime:d, lastusedincampaign:d, marketcap:w, marketcap_base:w, " +
+            //@"marketingonly:b, merged:b, modifiedon:d, msdyn_gdproptout:b, name:s, numberofemployees:w, onholdtime:w, opendeals:w, opendeals_date:d, opendeals_state:w, openrevenue:w, openrevenue_base:w, " +
+            //@"openrevenue_date:d, openrevenue_state:w, overriddencreatedon:d, ownershipcode:l(Other=4,Private=2,Public=1,Subsidiary=3), participatesinworkflow:b, paymenttermscode:l('2% 10, Net 30'=2,'Net 30'=1,'Net 45'=3,'Net 60'=4), " +
+            //@"preferredappointmentdaycode:l(Friday=5,Monday=1,Saturday=6,Sunday=0,Thursday=4,Tuesday=2,Wednesday=3), preferredappointmenttimecode:l(Afternoon=2,Evening=3,Morning=1), " +
+            //@"preferredcontactmethodcode:l(Any=1,Email=2,Fax=4,Mail=5,Phone=3), primarysatoriid:s, primarytwitterid:s, processid:s, revenue:w, revenue_base:w, sharesoutstanding:w, shippingmethodcode:l('Default Value'=1), sic:s, " +
+            //@"stageid:s, statecode:l(Active=0,Inactive=1), statuscode:l(Active=1,Inactive=2), stockexchange:s, teamsfollowed:w, telephone1:s, telephone2:s, telephone3:s, territorycode:l('Default Value'=1), tickersymbol:s, " +
+            //@"timespentbymeonemailandmeetings:s, timezoneruleversionnumber:w, traversedpath:s, utcconversiontimezonecode:w, versionnumber:w, websiteurl:s, yominame:s]]]";
+
+            Assert.Equal(expected, ft);
+            Assert.Equal("address1_addresstypecode", returnType.Fields[0].Fields[0].Fields[7].Name);
+            Assert.Equal("w", returnType.Fields[0].Fields[0].Fields[7].FormulaType.ToStringWithDisplayNames());
+            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);
+            Assert.Equal("1, 4, 3, 2", string.Join(", ", returnType.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));
+            Assert.Equal("Bill To=1, Other=4, Primary=3, Ship To=2", string.Join(", ", returnType.Fields[0].Fields[0].Fields[7].Enum.Select(kvp => $"{kvp.Key}={kvp.Value.ToObject()}")));
+
+            // Now, only make a single network call and see the difference: none of the option set values are populated.
+            testConnector.SetResponseFromFiles(Enumerable.Range(0, 1).Select(i => $@"Responses\Response_DVReturnType_{i:00}.json").ToArray());
+            ConnectorType returnType2 = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, CancellationToken.None).ConfigureAwait(false);
+            string ft2 = returnType2.FormulaType.ToStringWithDisplayNames();
+
+            Assert.Equal(expected, ft2);
+            Assert.Equal("address1_addresstypecode", returnType2.Fields[0].Fields[0].Fields[7].Name);
+            Assert.Equal("w", returnType2.Fields[0].Fields[0].Fields[7].FormulaType.ToStringWithDisplayNames());
+            Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);
+
+            // Key differences
+            Assert.Equal(string.Empty, string.Join(", ", returnType2.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));
+            Assert.Null(returnType2.Fields[0].Fields[0].Fields[7].Enum);
         }
     }
 }
