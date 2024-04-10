@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -27,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         private readonly SymbolTable _definedTypeSymbolTable;
 
-        private static readonly ISet<string> _restrictedTypeNames = new HashSet<string> { "Record" };
+        private static readonly ISet<string> _restrictedTypeNames = new HashSet<string> { "Record", "Boolean", "Color", "Date", "Time", "DateTime", "DateTimeTZInd", "GUID", "Number", "Decimal", "Text", "Hyperlink", "None", "UntypedObject" };
 
         internal Dictionary<DefinedType, HashSet<string>> UnresolvedTypes => _typeWithDependency;
 
@@ -136,15 +137,13 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (_restrictedTypeNames.Contains(typeName))
             {
-                // Todo: Change error message
-                errors.Add(new TexlError(dt.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                errors.Add(new TexlError(dt.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrNamedType_InvalidTypeName, typeName.Value));
                 return false;
             }
 
             if (symbols.LookupType(typeName, out var _))
             {
-                // Todo: Change error message
-                errors.Add(new TexlError(dt.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                errors.Add(new TexlError(dt.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrNamedType_TypeAlreadyDefined, typeName.Value));
                 return false;
             }
 
