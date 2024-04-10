@@ -27,10 +27,26 @@ namespace Microsoft.PowerFx
         /// <param name="config">Config to add the functions to.</param>
         /// <param name="connectorSettings">Connector settings containing Namespace and MaxRows to be returned.</param>
         /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
-        /// <param name="configurationLogger">Logger.</param>
-        /// <param name="globalValues">Global Values.</param>
+        /// <param name="configurationLogger">Logger.</param>        
         /// <returns>List of connector functions.</returns>
-        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
+        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
+        {
+            return config.AddActionConnector(connectorSettings, openApiDocument, null, configurationLogger);
+        }
+
+        /// <summary>
+        /// Add functions for each operation in the <see cref="OpenApiDocument"/>.
+        /// Functions names will be 'functionNamespace.operationName'.
+        /// Functions are invoked via rest via the httpClient. The client must handle authentication.
+        /// </summary>
+        ///
+        /// <param name="config">Config to add the functions to.</param>
+        /// <param name="connectorSettings">Connector settings containing Namespace and MaxRows to be returned.</param>
+        /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
+        /// <param name="globalValues">Global Values.</param>
+        /// <param name="configurationLogger">Logger.</param>        
+        /// <returns>List of connector functions.</returns>
+        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, ConnectorLogger configurationLogger = null)
         {
             try
             {
@@ -72,10 +88,25 @@ namespace Microsoft.PowerFx
         /// <param name="config">Config to add the functions to.</param>
         /// <param name="namespace">Namespace name.</param>
         /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
-        /// <param name="configurationLogger">Logger.</param>
-        /// <param name="globalValues">Global Values.</param>
+        /// <param name="configurationLogger">Logger.</param>        
         /// <returns>List of connector functions.</returns>
-        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
+        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
+        {
+            return config.AddActionConnector(@namespace, openApiDocument, null, configurationLogger);
+        }
+
+        /// <summary>
+        /// Add functions for each operation in the <see cref="OpenApiDocument"/>.
+        /// Functions names will be 'functionNamespace.operationName'.
+        /// Functions are invoked via rest via the httpClient. The client must handle authentication.
+        /// </summary>
+        /// <param name="config">Config to add the functions to.</param>
+        /// <param name="namespace">Namespace name.</param>
+        /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
+        /// <param name="globalValues">Global Values.</param>
+        /// <param name="configurationLogger">Logger.</param>        
+        /// <returns>List of connector functions.</returns>
+        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, ConnectorLogger configurationLogger = null)
         {
             try
             {

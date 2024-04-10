@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Connectors
             };
 
             // Swagger based tabular connectors
-            _tabularFunctions = _config.AddActionConnector(connectorSettings, _openApiDocument, _connectorLogger, _globalValues);
+            _tabularFunctions = _config.AddActionConnector(connectorSettings, _openApiDocument, _globalValues, _connectorLogger);
 
             BaseRuntimeConnectorContext runtimeConnectorContext = new RawRuntimeConnectorContext(_getHttpClient());
             FormulaValue schema = await MetadataService.InvokeAsync(Array.Empty<FormulaValue>(), runtimeConnectorContext, cancellationToken).ConfigureAwait(false);

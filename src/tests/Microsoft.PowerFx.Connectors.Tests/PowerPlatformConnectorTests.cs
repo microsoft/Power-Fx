@@ -1901,7 +1901,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             });
 
             // Action connector with global values
-            IReadOnlyList<ConnectorFunction> fList = config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output, true), globals);
+            IReadOnlyList<ConnectorFunction> fList = config.AddActionConnector("SQL", apiDoc, globals, new ConsoleLogger(_output, true));
             ConnectorFunction executeProcedureV2 = fList.First(f => f.Name == "ExecuteProcedureV2");
 
             var engine = new RecalcEngine(config);
