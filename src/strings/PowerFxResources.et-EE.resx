@@ -2847,7 +2847,7 @@
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>Kirjevõitabel</value>
+    <value>kirjevõitabel</value>
     
   </data>
   <data name="AboutTable_record_or_table" xml:space="preserve">
@@ -4372,7 +4372,7 @@
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
-    <value>Delegeerimise hoiatus. Selle argumendi tulemit {0} võib enne funktsioonile {1} edastamist kärbida suurte andmekogumite puhul.</value>
+    <value>Delegeerimise hoiatus. Selle argumendi tulemit {0} võib enne funktsioonile {1} edastamist kärpida suurte andmekogumite puhul.</value>
     
   </data>
 </root>
