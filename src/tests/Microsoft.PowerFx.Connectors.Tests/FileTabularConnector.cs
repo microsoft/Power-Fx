@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             FileTabularService tabularService = new FileTabularService(fileName);
             Assert.False(tabularService.IsInitialized);
 
-            await tabularService.InitAsync(CancellationToken.None).ConfigureAwait(false);
+            tabularService.Init();
             Assert.True(tabularService.IsInitialized);
 
             ConnectorTableValue fileTable = tabularService.GetTableValue();
@@ -75,13 +75,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _fileName = File.Exists(fileName) ? fileName : throw new FileNotFoundException($"File not found: {_fileName}");
         }
 
-        protected override Task<RecordType> GetSchemaAsync(CancellationToken cancellationToken)
+        // Initialization can be synchronous
+        public void Init()
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            return Task.FromResult(RecordType.Empty().Add("line", FormulaType.String));
+            SetTableType(RecordType.Empty().Add("line", FormulaType.String));
         }
 
-        public override async Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        protected override async Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             string[] lines = await File.ReadAllLinesAsync(_fileName, cancellationToken).ConfigureAwait(false);

@@ -25,15 +25,11 @@ namespace Microsoft.PowerFx.Connectors
         private IReadOnlyList<ConnectorFunction> _tabularFunctions;
         private ConnectorFunction _metadataService;
         private ConnectorFunction _getItems;
-        private readonly OpenApiDocument _openApiDocument;
         private readonly IReadOnlyDictionary<string, FormulaValue> _globalValues;
-        private readonly PowerFxConfig _config;
 
-        public SwaggerTabularService(PowerFxConfig config, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, Func<HttpClient> getHttpClient, ConnectorLogger logger = null)
-            : base(GetDataSetName(globalValues), GetTableName(globalValues), getHttpClient, useV2: false /* V2 is automatically determined in GetMetadataService() */, null, logger)
+        public SwaggerTabularService(IReadOnlyDictionary<string, FormulaValue> globalValues)
+            : base(GetDataSetName(globalValues), GetTableName(globalValues))
         {
-            _config = config;
-            _openApiDocument = openApiDocument;
             _globalValues = globalValues;
             _connectionId = TryGetString("connectionId", globalValues, out string connectorId) ? connectorId : throw new InvalidOperationException("Cannot determine connectionId.");
         }
@@ -42,13 +38,13 @@ namespace Microsoft.PowerFx.Connectors
         // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01
         internal ConnectorFunction MetadataService => _metadataService ??= GetMetadataService();
 
-        protected override async Task<RecordType> GetSchemaAsync(CancellationToken cancellationToken)
+        public async Task InitAsync(PowerFxConfig config, OpenApiDocument openApiDocument, HttpClient httpClient, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             try
             {
-                _configurationLogger?.LogInformation($"Entering in {nameof(CdpTabularService)} {nameof(GetSchemaAsync)} for {DataSetName}, {TableName}");
+                logger?.LogInformation($"Entering in {nameof(CdpTabularService)} {nameof(InitAsync)} for {DataSetName}, {TableName}");
 
                 ConnectorSettings connectorSettings = new ConnectorSettings(Namespace)
                 {
@@ -57,17 +53,21 @@ namespace Microsoft.PowerFx.Connectors
                 };
 
                 // Swagger based tabular connectors
-                _tabularFunctions = _config.AddActionConnector(connectorSettings, _openApiDocument, _globalValues, _configurationLogger);
+                _tabularFunctions = config.AddActionConnector(connectorSettings, openApiDocument, _globalValues, logger);
 
-                BaseRuntimeConnectorContext runtimeConnectorContext = new RawRuntimeConnectorContext(_getHttpClient());
+                BaseRuntimeConnectorContext runtimeConnectorContext = new RawRuntimeConnectorContext(httpClient);
                 FormulaValue schema = await MetadataService.InvokeAsync(Array.Empty<FormulaValue>(), runtimeConnectorContext, cancellationToken).ConfigureAwait(false);
 
-                _configurationLogger?.LogInformation($"Exiting {nameof(CdpTabularService)} {nameof(GetSchemaAsync)} for {DataSetName}, {TableName} {(schema is ErrorValue ev ? string.Join(", ", ev.Errors.Select(er => er.Message)) : string.Empty)}");
-                return schema is StringValue str ? GetSchema(str.Value) : null;
+                logger?.LogInformation($"Exiting {nameof(CdpTabularService)} {nameof(InitAsync)} for {DataSetName}, {TableName} {(schema is ErrorValue ev ? string.Join(", ", ev.Errors.Select(er => er.Message)) : string.Empty)}");
+
+                if (schema is StringValue str)
+                {
+                    SetTableType(GetSchema(str.Value));
+                }
             }
             catch (Exception ex)
             {
-                _configurationLogger?.LogException(ex, $"Exception in {nameof(SwaggerTabularService)} {nameof(GetSchemaAsync)} for {DataSetName}, {TableName}, {ConnectorHelperFunctions.LogException(ex)}");
+                logger?.LogException(ex, $"Exception in {nameof(SwaggerTabularService)} {nameof(InitAsync)} for {DataSetName}, {TableName}, {ConnectorHelperFunctions.LogException(ex)}");
                 throw;
             }
         }
@@ -81,11 +81,13 @@ namespace Microsoft.PowerFx.Connectors
         // LIST ITEMS - GET: /datasets/{datasetName}/tables/{tableName}/items?$filter=’CreatedBy’ eq ‘john.doe’&$top=50&$orderby=’Priority’ asc, ’CreationDate’ desc
         internal ConnectorFunction GetItems => _getItems ??= GetItemsFunction();
 
-        public override async Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        protected override async Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            ConnectorLogger executionLogger = serviceProvider?.GetService<ConnectorLogger>();
+
             try
             {
-                ConnectorLogger executionLogger = serviceProvider.GetService<ConnectorLogger>();
                 executionLogger?.LogInformation($"Entering in {nameof(SwaggerTabularService)} {nameof(GetItemsAsync)} for {DataSetName}, {TableName}");
 
                 BaseRuntimeConnectorContext runtimeConnectorContext = serviceProvider.GetService<BaseRuntimeConnectorContext>() ?? throw new InvalidOperationException("Cannot determine runtime connector context.");
@@ -103,7 +105,7 @@ namespace Microsoft.PowerFx.Connectors
             }
             catch (Exception ex)
             {
-                _configurationLogger?.LogException(ex, $"Exception in {nameof(SwaggerTabularService)} {nameof(GetItemsAsync)} for {DataSetName}, {TableName}, {ConnectorHelperFunctions.LogException(ex)}");
+                executionLogger?.LogException(ex, $"Exception in {nameof(SwaggerTabularService)} {nameof(GetItemsAsync)} for {DataSetName}, {TableName}, {ConnectorHelperFunctions.LogException(ex)}");
                 throw;
             }
         }

@@ -1585,13 +1585,13 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         public async Task EdenAITest()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\Eden AI.json", _output);
-            OpenApiDocument apiDoc = testConnector._apiDocument;           
+            OpenApiDocument apiDoc = testConnector._apiDocument;
 
             ConnectorSettings connectorSettings = new ConnectorSettings("edenai")
-            {                
+            {
                 Compatibility = ConnectorCompatibility.SwaggerCompatibility,
                 AllowUnsupportedFunctions = true,
-                IncludeInternalFunctions = true                
+                IncludeInternalFunctions = true
             };
 
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
@@ -1961,12 +1961,12 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // Use of tabular connector
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
-            SwaggerTabularService tabularService = new SwaggerTabularService(config, apiDoc, globals, () => client, new ConsoleLogger(_output));
+            SwaggerTabularService tabularService = new SwaggerTabularService(globals);
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Customers", tabularService.TableName);
             Assert.Equal("_tbl_e74bd8913489439e886426eba8dec1c8", tabularService.Namespace);
 
-            await tabularService.InitAsync(CancellationToken.None).ConfigureAwait(false);
+            await tabularService.InitAsync(config, apiDoc, client, CancellationToken.None, new ConsoleLogger(_output)).ConfigureAwait(false);
             Assert.True(tabularService.IsInitialized);
 
             ConnectorTableValue sqlTable = tabularService.GetTableValue();
@@ -1974,7 +1974,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
 
 #pragma warning disable CS0618 // Type or member is obsolete
-            
+
             // Enable IR rewritter to auto-inject ServiceProvider where needed
             engine.EnableTabularConnectors();
 
@@ -1991,7 +1991,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
             // Confirm that InjectServiceProviderFunction has properly been added
             string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
-            Assert.Equal("FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](InjectServiceProviderFunction:*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX'))), Address)", ir);            
+            Assert.Equal("FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](InjectServiceProviderFunction:*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX'))), Address)", ir);
 
             // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
@@ -2037,12 +2037,12 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
 
             ConsoleLogger logger = new ConsoleLogger(_output);
-            CdpTabularService tabularService = new CdpTabularService("pfxdev-sql.database.windows.net,connectortest", "Customers", () => client, useV2: true, $"/apim/sql/{connectionId}", logger);
+            CdpTabularService tabularService = new CdpTabularService("pfxdev-sql.database.windows.net,connectortest", "Customers");
 
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Customers", tabularService.TableName);
 
-            await tabularService.InitAsync(CancellationToken.None).ConfigureAwait(false);
+            await tabularService.InitAsync(client, $"/apim/sql/{connectionId}", true, CancellationToken.None, logger).ConfigureAwait(false);
             Assert.True(tabularService.IsInitialized);
 
             ConnectorTableValue sqlTable = tabularService.GetTableValue();
@@ -2057,7 +2057,9 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 #pragma warning restore CS0618 // Type or member is obsolete
 
             SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);
-            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues)
+                                    .AddService<ConnectorLogger>(logger)
+                                    .AddService<HttpClient>(client);
 
             // Expression with tabular connector
             string expr = @"First(Customers).Address";
@@ -2083,6 +2085,90 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         }
 
         [Fact]
+        public async Task SP_CdpTabular()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "0b905132239e463a9d12f816be201da9";
+            string jwt = "eyJ0eXAiOiJKV....";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
+            };
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New(connectionId) },
+                { "dataset", FormulaValue.New("https://microsofteur.sharepoint.com/teams/pfxtest") },
+                { "table", FormulaValue.New("Documents") },
+            });
+
+            // Use of tabular connector
+            // There is a network call here to retrieve the table's schema
+            testConnector.SetResponseFromFile(@"Responses\SP GetTable.json");
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            CdpTabularService tabularService = new CdpTabularService("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents");
+
+            Assert.False(tabularService.IsInitialized);
+            Assert.Equal("Documents", tabularService.TableName);
+
+            await tabularService.InitAsync(client, $"/apim/sharepointonline/{connectionId}", false, CancellationToken.None, logger).ConfigureAwait(false);
+            Assert.True(tabularService.IsInitialized);
+
+            ConnectorTableValue spTable = tabularService.GetTableValue();
+            Assert.True(spTable._tabularService.IsInitialized);
+
+            Assert.Equal(
+                "*[Author:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], " +
+                "ComplianceAssetId:s, Created:d, Editor:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag:s, OData__DisplayName:s, " +
+                "OData__ExtendedDescription:s, OData__ip_UnifiedCompliancePolicyProperties:s, Title:s, '{FilenameWithExtension}'`FilenameWithExtension:s, '{FullPath}'`FullPath:s, " +
+                "'{Identifier}'`Identifier:s, '{IsCheckedOut}'`IsCheckedOut:b, '{IsFolder}'`IsFolder:b, '{Link}'`Link:s, '{ModerationComment}'`ModerationComment:s, " +
+                "'{ModerationStatus}'`ModerationStatus:s, '{Name}'`Name:s, '{Path}'`Path:s, '{Thumbnail}'`Thumbnail:![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}'`TriggerWindowEndToken:s, " +
+                "'{TriggerWindowStartToken}'`TriggerWindowStartToken:s, '{VersionNumber}'`VersionNumber:s]", spTable.Type.ToStringWithDisplayNames());
+
+#pragma warning disable CS0618 // Type or member is obsolete
+
+            // Enable IR rewritter to auto-inject ServiceProvider where needed
+            engine.EnableTabularConnectors();
+
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            SymbolValues symbolValues = new SymbolValues().Add("Documents", spTable);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues)
+                                    .AddService<ConnectorLogger>(logger)
+                                    .AddService<HttpClient>(client);
+
+            // Expression with tabular connector
+            string expr = @"First(Documents).Name";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // Confirm that InjectServiceProviderFunction has properly been added
+            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
+            Assert.Equal(
+                "FieldAccess(First:![Author:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], " +
+                "ComplianceAssetId:s, Created:d, Editor:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag:s, OData__DisplayName:s, " +
+                "OData__ExtendedDescription:s, OData__ip_UnifiedCompliancePolicyProperties:s, Title:s, '{FilenameWithExtension}':s, '{FullPath}':s, '{Identifier}':s, '{IsCheckedOut}':b, '{IsFolder}':b, " +
+                "'{Link}':s, '{ModerationComment}':s, '{ModerationStatus}':s, '{Name}':s, '{Path}':s, '{Thumbnail}':![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}':s, '{TriggerWindowStartToken}':s, " +
+                "'{VersionNumber}':s](InjectServiceProviderFunction:*[Author:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser:![Claims:s, Department:s, DisplayName:s, " +
+                "Email:s, JobTitle:s, Picture:s], ComplianceAssetId:s, Created:d, Editor:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag:s, " +
+                "OData__DisplayName:s, OData__ExtendedDescription:s, OData__ip_UnifiedCompliancePolicyProperties:s, Title:s, '{FilenameWithExtension}':s, '{FullPath}':s, '{Identifier}':s, '{IsCheckedOut}':b, " +
+                "'{IsFolder}':b, '{Link}':s, '{ModerationComment}':s, '{ModerationStatus}':s, '{Name}':s, '{Path}':s, '{Thumbnail}':![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}':s, " +
+                "'{TriggerWindowStartToken}':s, '{VersionNumber}':s](ResolvedObject('Documents:RuntimeValues_XXX'))), {Name})", ir);
+
+            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            testConnector.SetResponseFromFile(@"Responses\SP GetData.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+
+            StringValue docName = Assert.IsType<StringValue>(result);
+            Assert.Equal("Document1", docName.Value);
+        }
+
+        [Fact]
         public async Task SP_Tabular()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
@@ -2091,7 +2177,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             var engine = new RecalcEngine(config);
 
             using var httpClient = new HttpClient(testConnector);
-            string jwt = "eyJ0eXAiOi...";
+            string jwt = "eyJ0eXAiO...";
             using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", "0b905132239e463a9d12f816be201da9", () => jwt, httpClient)
             {
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
@@ -2099,7 +2185,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
             IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
             {
-                { "connectionId", FormulaValue.New("cc276c328f62456bb944f0736b3cb3b1") },
+                { "connectionId", FormulaValue.New("0b905132239e463a9d12f816be201da9") },
                 { "dataset", FormulaValue.New("https://microsofteur.sharepoint.com/teams/pfxtest") },
                 { "table", FormulaValue.New("Documents") },
             });
@@ -2108,12 +2194,12 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SP GetTable.json");
 
-            SwaggerTabularService tabularService = new SwaggerTabularService(config, apiDoc, globals, () => client, new ConsoleLogger(_output));
+            SwaggerTabularService tabularService = new SwaggerTabularService(globals);
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Documents", tabularService.TableName);
-            Assert.Equal("_tbl_cc276c328f62456bb944f0736b3cb3b1", tabularService.Namespace);
+            Assert.Equal("_tbl_0b905132239e463a9d12f816be201da9", tabularService.Namespace);
 
-            await tabularService.InitAsync(CancellationToken.None).ConfigureAwait(false);
+            await tabularService.InitAsync(config, apiDoc, client, CancellationToken.None, new ConsoleLogger(_output)).ConfigureAwait(false);
             Assert.True(tabularService.IsInitialized);
 
             ConnectorTableValue spTable = tabularService.GetTableValue();

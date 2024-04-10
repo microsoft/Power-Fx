@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Connectors
                 return _cachedRows;
             }
 
-            _cachedRows = await _tabularService.GetItemsAsync(ServiceProvider, CancellationToken.None).ConfigureAwait(false);
+            _cachedRows = await _tabularService.GetItemsAsync(ServiceProvider, null /* no OData filtering */, CancellationToken.None).ConfigureAwait(false);
 
             return _cachedRows;
         }
