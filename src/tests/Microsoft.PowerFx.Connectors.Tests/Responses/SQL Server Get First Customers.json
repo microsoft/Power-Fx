@@ -1,0 +1,23 @@
+﻿{
+  "@odata.context": "https://tip2-001.azure-apihub.net/apim/sql/5a6d0eb8c4dd44178c46d85caa5593dc/$metadata#datasets('pfxdev-sql.database.windows.net%2Cconnectortest')/tables('Customers')/items",
+  "value": [
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "12a4c2d9-40f1-4840-8646-5955bbe6d705",
+      "CustomerId": 1,
+      "Name": "Luc",
+      "Address": "Juign\u00e9",
+      "Country": "France",
+      "Phone": "+33241010101"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "12a4c2d9-40f1-4842-8646-5955bbe6d705",
+      "CustomerId": 2,
+      "Name": "Mike",
+      "Address": "Kirkland",
+      "Country": "USA",
+      "Phone": "+1-425-705-0000"
+    }
+  ]
+}
