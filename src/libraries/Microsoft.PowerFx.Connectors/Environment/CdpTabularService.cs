@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
             ConnectorLogger executionLogger = serviceProvider?.GetService<ConnectorLogger>();
-            HttpClient httpClient = serviceProvider?.GetService<HttpClient>();
+            HttpClient httpClient = serviceProvider?.GetService<HttpClient>() ?? throw new InvalidOperationException("HttpClient is required on IServiceProvider");
 
             try
             {
