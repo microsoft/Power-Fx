@@ -2017,15 +2017,16 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             var engine = new RecalcEngine(config);
 
             using var httpClient = new HttpClient(testConnector);
-            string jwt = "eyJ0eXAiOi...";
-            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", "e74bd8913489439e886426eba8dec1c8", () => jwt, httpClient)
+            string connectionId = "18992e9477684930acd2cc5dc9bb94c2";
+            string jwt = "eyJ0eXAiOiJK...";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient)
             {
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
             IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
             {
-                { "connectionId", FormulaValue.New("e74bd8913489439e886426eba8dec1c8") },
+                { "connectionId", FormulaValue.New(connectionId) },
                 { "server", FormulaValue.New("pfxdev-sql.database.windows.net") },
                 { "database", FormulaValue.New("connectortest") },
                 { "table", FormulaValue.New("Customers") }
@@ -2035,12 +2036,8 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
 
-#pragma warning disable CS0618 // Type or member is obsolete
-
-            // IMPORTANT NOTE: This is NOT what PowerApps is doing as they use /v2 version and do NOT use "default" dataset.
-            CdpTabularService tabularService = new CdpTabularService("default", "Customers", () => client, "/apim/sql/e74bd8913489439e886426eba8dec1c8");
-
-#pragma warning disable CS0618 // Type or member is obsolete
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            CdpTabularService tabularService = new CdpTabularService("pfxdev-sql.database.windows.net,connectortest", "Customers", () => client, useV2: true, $"/apim/sql/{connectionId}", logger);
 
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Customers", tabularService.TableName);
@@ -2060,7 +2057,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 #pragma warning restore CS0618 // Type or member is obsolete
 
             SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);
-            RuntimeConfig rc = new RuntimeConfig(symbolValues);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
 
             // Expression with tabular connector
             string expr = @"First(Customers).Address";
