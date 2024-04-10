@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Syntax.Visitors;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Types
@@ -103,24 +104,30 @@ namespace Microsoft.PowerFx.Core.Types
                 _definedTypeSymbolTable.AddType(name, FormulaType.Build(resolvedType));
                 _userDefinedTypes.Add(new UserDefinedType(name, FormulaType.Build(resolvedType), currentType.Type));
 
-                if (_invertedDependency.TryGetValue(name, out var typeDependents))
-                {
-                    foreach (var typeDependent in typeDependents)
-                    {
-                        if (_typeWithDependency.TryGetValue(typeDependent, out var unresolvedTypes))
-                        {
-                            unresolvedTypes.Remove(name.Value);
+                AdjustResolveDependencies(name);
+            }
 
-                            if (!unresolvedTypes.Any())
-                            {
-                                _tsQueue.Enqueue(typeDependent);
-                            }
+            return _userDefinedTypes;
+        }
+
+        private void AdjustResolveDependencies(DName name)
+        {
+            if (_invertedDependency.TryGetValue(name, out var typeDependents))
+            {
+                foreach (var typeDependent in typeDependents)
+                {
+                    if (_typeWithDependency.TryGetValue(typeDependent, out var unresolvedTypes))
+                    {
+                        unresolvedTypes.Remove(name.Value);
+
+                        // Enqueue if all dependencies are resolved
+                        if (!unresolvedTypes.Any())
+                        {
+                            _tsQueue.Enqueue(typeDependent);
                         }
                     }
                 }
             }
-
-            return _userDefinedTypes;
         }
 
         private bool CheckTypeName(DefinedType dt, INameResolver symbols,  List<TexlError> errors)
