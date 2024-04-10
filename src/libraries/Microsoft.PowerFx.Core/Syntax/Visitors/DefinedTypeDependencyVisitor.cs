@@ -35,11 +35,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             {
                 return;
             }
-
-            if (((INameResolver)PrimitiveTypesSymbolTable.Instance).LookupType(name, out FormulaType _))
-            {
-                return;
-            }
             
             _dependencies.Add(name);
             return;

@@ -6,13 +6,18 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
@@ -216,6 +221,30 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
+        /// Parse the type expression without resolving type.
+        /// </summary>
+        public static TypeLiteralNode ParseType(string typeExpressionText, Features features = null, ParserOptions options = null)
+        {
+            if (typeExpressionText == null)
+            {
+                throw new ArgumentNullException(nameof(typeExpressionText));
+            }
+
+            options ??= new ParserOptions 
+            {
+                AllowParseAsTypeLiteral = true,
+            };
+            var result = options.Parse(typeExpressionText, features ?? Features.None);
+
+            if (result.Root is not TypeLiteralNode typeNode || result.HasError)
+            {
+                throw new InvalidOperationException("Invalid type expression");
+            }
+
+            return typeNode;
+        }
+
+        /// <summary>
         /// Parse and Bind an expression. 
         /// </summary>
         /// <param name="expressionText">the expression in plain text. </param>
@@ -253,6 +282,20 @@ namespace Microsoft.PowerFx
 
             CheckWorker(check);
             return check;
+        }
+
+        public FormulaType ResolveType(string typeExpression, SymbolTable symbols = null, ParserOptions options = null) 
+        {
+            var typeNode = ParseType(typeExpression, options: options);
+
+            var resolvedType = DTypeVisitor.Run(typeNode.TypeRoot, symbols);
+            
+            if (resolvedType == DType.Invalid)
+            {
+                throw new Exception("Invalid type expression Exception");
+            }
+
+            return FormulaType.Build(resolvedType);
         }
 
         // Apply a standard set of operations on the CheckResult.

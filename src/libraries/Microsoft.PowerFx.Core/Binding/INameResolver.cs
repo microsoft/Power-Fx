@@ -42,6 +42,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
         TexlFunctionSet Functions { get; }
 
+        // List of all valid types in a given namespace 
+        // Intellisense can use this when suggesting type options.
         IEnumerable<KeyValuePair<DName, FormulaType>> DefinedTypes { get; }
 
         // This advertises whether the INameResolver instance will suggest unqualified enums ("Hours")

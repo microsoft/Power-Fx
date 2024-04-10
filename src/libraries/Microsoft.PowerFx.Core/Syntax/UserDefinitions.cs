@@ -164,14 +164,14 @@ namespace Microsoft.PowerFx.Syntax
                     continue;
                 }
 
-                var parametersOk = CheckParameters(udf.Args, errors, nameResolver);
-                var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver);
+                var parametersOk = CheckParameters(udf.Args, errors, nameResolver, out var parameterTypes);
+                var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver, out var returnType);
                 if (!parametersOk || !returnTypeOk)
                 {
                     continue;
                 }
 
-                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType(nameResolver)._type, udf.Body, udf.IsImperative, udf.Args, udf.Args.Select(a => a.TypeIdent.GetFormulaType(nameResolver)._type).ToArray());
+                var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes.ToArray());
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
@@ -180,10 +180,11 @@ namespace Microsoft.PowerFx.Syntax
             return userDefinedFunctions;
         }
 
-        private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors, INameResolver nameResolver)
+        private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors, INameResolver nameResolver, out List<DType> parameterTypes)
         {
             var isParamCheckSuccessful = true;
             var argsAlreadySeen = new HashSet<string>();
+            parameterTypes = new List<DType>(); 
 
             foreach (var arg in args)
             {
@@ -196,11 +197,14 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     argsAlreadySeen.Add(arg.NameIdent.Name);
 
-                    var parameterType = arg.TypeIdent.GetFormulaType(nameResolver)._type;
-                    if (parameterType.Kind.Equals(DType.Unknown.Kind) || RestrictedTypes.Contains(parameterType))
+                    if (!nameResolver.LookupType(arg.TypeIdent.Name, out var parameterType) || RestrictedTypes.Contains(parameterType._type))
                     {
                         errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
                         isParamCheckSuccessful = false;
+                    }
+                    else
+                    {
+                        parameterTypes.Add(parameterType._type);
                     }
                 }
             }
@@ -208,18 +212,19 @@ namespace Microsoft.PowerFx.Syntax
             return isParamCheckSuccessful;
         }
 
-        private bool CheckReturnType(IdentToken returnType, List<TexlError> errors, INameResolver nameResolver)
+        private bool CheckReturnType(IdentToken returnTypeToken, List<TexlError> errors, INameResolver nameResolver, out DType returnType)
         {
-            var returnTypeFormulaType = returnType.GetFormulaType(nameResolver)._type;
-            var isReturnTypeCheckSuccessful = true;
-
-            if (returnTypeFormulaType.Kind.Equals(DType.Unknown.Kind) || RestrictedTypes.Contains(returnTypeFormulaType))
+            if (!nameResolver.LookupType(returnTypeToken.Name, out var returnTypeFormulaType) || RestrictedTypes.Contains(returnTypeFormulaType._type))
             {
-                errors.Add(new TexlError(returnType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnType.Name));
-                isReturnTypeCheckSuccessful = false;
+                errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnTypeToken.Name));
+                returnType = DType.Invalid;
+                return false;
             }
-
-            return isReturnTypeCheckSuccessful;
+            else
+            {
+                returnType = returnTypeFormulaType._type;
+                return true;
+            }
         }
 
 // This code is intended as a prototype of the Partial attribute system, for use in solution layering cases

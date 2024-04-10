@@ -64,11 +64,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
                 return cType._type;
             }
 
-            if (((INameResolver)PrimitiveTypesSymbolTable.Instance).LookupType(name, out FormulaType pType))
-            {
-                return pType._type;
-            }
-
             return DType.Invalid;
         }
 

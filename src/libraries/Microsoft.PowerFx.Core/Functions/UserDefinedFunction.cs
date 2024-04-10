@@ -36,6 +36,7 @@ namespace Microsoft.PowerFx.Core.Functions
     {
         private readonly bool _isImperative;
         private readonly IEnumerable<UDFArg> _args;
+        private readonly IEnumerable<DType> _argTypes;
         private TexlBinding _binding;
 
         public override bool IsAsync => _binding?.IsAsync(UdfBody) ?? false;
@@ -61,6 +62,7 @@ namespace Microsoft.PowerFx.Core.Functions
             this._args = args;
             this._isImperative = isImperative;
             this.UdfBody = body;
+            this._argTypes = argTypes;
         }
 
         /// <summary>
@@ -178,7 +180,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(binderGlue));
             }
 
-            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), _args.Select(a => a.TypeIdent.GetFormulaType(nameResolver)._type).ToArray());
+            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), _argTypes.ToArray());
             binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
 
             return func;
@@ -224,10 +226,16 @@ namespace Microsoft.PowerFx.Core.Functions
                 // lookup in the local scope i.e., function params & body and then look in global scope.
                 if (_args.TryGetValue(name, out var value))
                 {
-                    var type = value.TypeIdent.GetFormulaType(_globalNameResolver)._type;
-                    nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, value.ArgIndex, value.NameIdent.Name));
-
-                    return true;
+                    if (_globalNameResolver.LookupType(value.TypeIdent.Name, out var ft)) 
+                    {
+                        nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, ft._type, DPath.Root, 0, new UDFParameterInfo(ft._type, value.ArgIndex, value.NameIdent.Name));
+                        return true;
+                    }
+                    else
+                    {
+                        nameInfo = default;
+                        return false;
+                    }
                 }
 
                 return _globalNameResolver.Lookup(name, out nameInfo, preferences);

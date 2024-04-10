@@ -40,7 +40,23 @@ namespace Microsoft.PowerFx
 
         private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 
-        private readonly Dictionary<DName, FormulaType> _definedTypes = new Dictionary<DName, FormulaType>();
+        // Initialize with primitive types that are currently supported
+        private readonly Dictionary<DName, FormulaType> _definedTypes = new Dictionary<DName, FormulaType>()
+        {
+            { new DName("Boolean"), FormulaType.Boolean },
+            { new DName("Color"), FormulaType.Color },
+            { new DName("Date"), FormulaType.Date },
+            { new DName("Time"), FormulaType.Time },
+            { new DName("DateTime"), FormulaType.DateTime },
+            { new DName("DateTimeTZInd"), FormulaType.DateTimeNoTimeZone },
+            { new DName("GUID"), FormulaType.Guid },
+            { new DName("Number"), FormulaType.Number },
+            { new DName("Decimal"), FormulaType.Decimal },
+            { new DName("Text"), FormulaType.String },
+            { new DName("Hyperlink"), FormulaType.Hyperlink },
+            { new DName("None"), FormulaType.Blank },
+            { new DName("UntypedObject"), FormulaType.UntypedObject },
+        };
 
         IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.DefinedTypes => _definedTypes;
 
@@ -427,14 +443,6 @@ namespace Microsoft.PowerFx
             _definedTypes.Add(typeName, type);
         }
 
-        internal void RemoveType(DName typeName)
-        {
-            using var guard = _guard.Enter(); // Region is single threaded.
-            Inc();
-
-            _definedTypes.Remove(typeName);
-        }
-
         internal void AddTypes(IEnumerable<UserDefinedType> types)
         {
             using var guard = _guard.Enter(); // Region is single threaded.
@@ -443,16 +451,6 @@ namespace Microsoft.PowerFx
             foreach (var type in types)
             {
                 _definedTypes.Add(type.Name, type.Type);
-            }
-        }
-
-        internal void RemoveTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types)
-        {
-            using var guard = _guard.Enter(); // Region is single threaded.
-
-            foreach (var type in types)
-            {
-                RemoveType(type.Key);
             }
         }
 
