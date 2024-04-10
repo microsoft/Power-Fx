@@ -543,8 +543,76 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-        [Fact]
-        public void DefTypeTests()
+        [Theory]
+        [InlineData(
+            "Point = Type({x : Number, y : Number}); distance(a: Point, b: Point): Number = Sqrt(Power(b.x-a.x, 2) + Power(b.y-a.y, 2));",
+            "distance({x: 0, y: 0}, {x: 0, y: 5})",
+            true,
+            5.0)]
+
+        // Table types are accepted
+        [InlineData(
+            "People = Type([{Id:Number, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
+            "countMinors([{Id: 1, Age: 17}, {Id: 2, Age: 21}])",
+            true,
+            1.0)]
+        [InlineData(
+            "Numbers = Type([Number]); countEven(nums: Numbers): Number = CountRows(Filter(nums, Mod(Value, 2) = 0));",
+            "countEven([1,2,3,4,5,6,7,8,9,10])",
+            true,
+            5.0)]
+
+        // Type Aliases are allowed
+        [InlineData(
+            "CarYear = Type(Number); Car = Type({Model: Text, ModelYear: CarYear}); createCar(model:Number, year: Number): Car = {Model:model, ModelYear: year};",
+            "createCar(\"Model Y\", 2024).ModelYear",
+            true,
+            2024.0)]
+
+        // Type definitions order shouldn't matter
+        [InlineData(
+            "Person = Type({Id: IdType, Age: Number}); IdType = Type(Number); createUser(id:Number, a: Number): Person = {Id:id, Age: a};",
+            "createUser(1, 42).Age",
+            true,
+            42.0)]
+
+        // Functions accept record with more/less fields
+        [InlineData(
+            "People = Type([{Name: Text, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
+            "countMinors([{Name: \"Bob\", Age: 21, Title: \"Engineer\"}, {Name: \"Alice\", Age: 25, Title: \"Manager\"}])",
+            true,
+            0.0)]
+        [InlineData(
+            "Employee = Type({Name: Text, Age: Number, Title: Text}); getAge(e: Employee): Number = e.Age;",
+            "getAge({Name: \"Bob\", Age: 21, Title: \"Engineer\"})",
+            true,
+            21.0)]
+
+        // Cycles not allowed
+        [InlineData(
+            "Z = Type([{a: {b: Z}}]);",
+            "",
+            false)]
+        [InlineData(
+            "X = Type(Y); Y = Type(X);",
+            "",
+            false)]
+        [InlineData(
+            "C = Type({x: Boolean, y: Date, f: B});B = Type({ x: A }); A = Type([C]);",
+            "",
+            false)]
+
+        // Redeclaration not allowed
+        [InlineData(
+            "Number = Type(Text);",
+            "",
+            false)]
+        [InlineData(
+            "Point = Type({x : Number, y : Number}); Point = Type({x : Number, y : Number, z: Number})",
+            "",
+            false)]
+
+        public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
             var recalcEngine = new RecalcEngine(config);
@@ -553,28 +621,16 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
                 AllowParseAsTypeLiteral = true
             };
-            recalcEngine.AddUserDefinitions("People = Type([{Age: Number}]);countMinors(p: People): Number = CountRows(Filter(p, Age < 18)); createUser(a: Number): People = [{Age: a}];", CultureInfo.InvariantCulture);
-            recalcEngine.AddUserDefinitions("NWrap = Type({n: Number});getN(p: NWrap): Number = p.n;", CultureInfo.InvariantCulture);
-            Assert.Equal(1.0, recalcEngine.Eval("countMinors([{Age: 2}])", options: parserOptions).ToObject());
-            Assert.Equal(2.0, recalcEngine.Eval("getN({n: 2})", options: parserOptions).ToObject());
-        }
-
-        [Fact]
-        public void DefTypeTests2()
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
+            
+            if (isValid) 
             {
-                AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
-            };
-            recalcEngine.AddUserDefinitions("Person = Type({Id: MyNumber, Age: Number});MyNumber = Type(Number);", CultureInfo.InvariantCulture);
-            Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(" X = Type(Y); Y = Type(X);", CultureInfo.InvariantCulture));
-            Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(" Z = Type([{a: {b: Z}}]);", CultureInfo.InvariantCulture));
-            recalcEngine.AddUserDefinitions("createUser(id:Number, a: Number): Person = {Id:id, Age: a};", CultureInfo.InvariantCulture);
-
-            Assert.Equal(42.0, recalcEngine.Eval("createUser(1, 42).Age").ToObject());
+                recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
+                Assert.Equal(expectedResult, recalcEngine.Eval(evalExpression, options: parserOptions).ToObject());
+            }
+            else
+            {
+                Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture));
+            }
         }
 
         [Theory]
