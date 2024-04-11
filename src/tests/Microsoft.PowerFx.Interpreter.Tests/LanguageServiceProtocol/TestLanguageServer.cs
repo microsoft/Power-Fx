@@ -25,8 +25,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             LogUnhandledExceptionHandler += (e) => _unhandledExceptions.Add(e);
         }
 
-        public TestLanguageServer(ILanguageServerOperationHandlerFactory factory, IPowerFxScopeFactory scopeFactory, ILanguageServerLogger logger = null)
-            : base(factory, scopeFactory, logger)
+        public TestLanguageServer(ILanguageServerOperationHandlerFactory factory, IPowerFxScopeFactory scopeFactory, IHostTaskExecutor hostTaskExecutor, ILanguageServerLogger logger = null)
+            : base(factory, scopeFactory, hostTaskExecutor, logger)
         {
             LogUnhandledExceptionHandler += (e) => _unhandledExceptions.Add(e);
         }

@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.LanguageServerProtocol.LanguageServerOutput",
                 "Microsoft.PowerFx.LanguageServerProtocol.LanguageServerOutputBuilder",
                 "Microsoft.PowerFx.LanguageServerProtocol.ILanguageServerLogger",
-                "Microsoft.PowerFx.LanguageServerProtocol.IAsyncPowerFxScope",
+                "Microsoft.PowerFx.LanguageServerProtocol.IHostTaskExecutor",
                 "Microsoft.PowerFx.LanguageServerProtocol.Schemas.ControlToken",
                 "Microsoft.PowerFx.LanguageServerProtocol.Schemas.ControlTokens",
                 "Microsoft.PowerFx.LanguageServerProtocol.Handlers.BaseCodeActionsLanguageServerOperationHandler",

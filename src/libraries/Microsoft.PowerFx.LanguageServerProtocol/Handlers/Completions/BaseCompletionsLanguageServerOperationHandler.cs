@@ -28,6 +28,22 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         public string LspMethod => TextDocumentNames.Completion;
 
         /// <summary>
+        /// Provides the suggestions for the given expression.
+        /// </summary>
+        /// <param name="operationContext">Language Server Operation Context.</param>
+        /// <param name="uri">Document Uri.</param>
+        /// <param name="expression">Expression.</param>
+        /// <param name="cursorPosition">Cursor Position.</param>
+        /// <param name="cancellationToken">Cancellation Token.</param>
+        /// <returns>Suggestions and Signatures.</returns>
+        private Task<IIntellisenseResult> SuggestAsync(LanguageServerOperationContext operationContext, string uri, string expression, int cursorPosition, CancellationToken cancellationToken)
+        {
+            return operationContext.ExecuteHostTaskAsync(
+            () => Task.FromResult(operationContext.Suggest(uri, expression, cursorPosition)),
+            cancellationToken);
+        }
+
+        /// <summary>
         /// Handles the completion operation and computes the completions.
         /// </summary>
         /// <param name="operationContext">Operation Context.</param>
@@ -51,10 +67,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             }
 
             var cursorPosition = PositionRangeHelper.GetPosition(expression, completionParams.Position.Line, completionParams.Position.Character);
-            var scope = operationContext.GetScope(completionParams.TextDocument.Uri);
 
             operationContext.Logger?.LogInformation($"[PFX] HandleCompletionRequest: calling Suggest...");
-            var results = await operationContext.SuggestAsync(completionParams.TextDocument.Uri, expression, cursorPosition, cancellationToken).ConfigureAwait(false);
+            var results = await SuggestAsync(operationContext, completionParams.TextDocument.Uri, expression, cursorPosition, cancellationToken).ConfigureAwait(false);
 
             // Note: there are huge number of suggestions in initial requests
             // Including each of them in the log string is very expensive

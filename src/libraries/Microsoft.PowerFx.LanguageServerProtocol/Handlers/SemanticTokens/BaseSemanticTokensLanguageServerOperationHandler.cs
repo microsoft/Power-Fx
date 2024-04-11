@@ -38,19 +38,19 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="getTokensContext"> Context that might be needed to compute tokens. </param>
         /// <param name="cancellationToken">Cancellation Token.</param>
         /// <returns>A set of semantic tokens.</returns>
-        // TODO: Need to revisit this at some point in future
-        // TODO cont.: ITokenTextSpan is internal so this hook cannot be exposed
-        // TODO cont.: Cannot make it public due to it being transport type
-        private protected virtual async Task<IEnumerable<ITokenTextSpan>> GetTokensAsync(LanguageServerOperationContext operationContext, GetTokensContext getTokensContext, CancellationToken cancellationToken)
+        private Task<IEnumerable<ITokenTextSpan>> GetTokensAsync(LanguageServerOperationContext operationContext, GetTokensContext getTokensContext, CancellationToken cancellationToken)
         {
-            var result = await operationContext.CheckAsync(getTokensContext.documentUri, getTokensContext.expression, cancellationToken).ConfigureAwait(false);
-            if (result == null)
+            return operationContext.ExecuteHostTaskAsync(
+            () =>
             {
-                return null;
-            }
+                var result = operationContext.Check(getTokensContext.documentUri, getTokensContext.expression);
+                if (result == null)
+                {
+                    return null;
+                }
 
-            var tokens = result.GetTokens(getTokensContext.tokenTypesToSkip);
-            return tokens;
+                return Task.FromResult(result.GetTokens(getTokensContext.tokenTypesToSkip));
+            }, cancellationToken);
         }
 
         /// <summary>

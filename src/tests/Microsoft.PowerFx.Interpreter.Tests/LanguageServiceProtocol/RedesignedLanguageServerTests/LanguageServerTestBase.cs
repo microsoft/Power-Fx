@@ -28,6 +28,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         public TestLogger Logger { get; set; }
 
+        public TestHostTaskExecutor HostTaskExecutor { get; set; }
+
         public LanguageServerTestBase()
             : base()
         {
@@ -42,10 +44,14 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             var engine = new Engine(config);
             HandlerFactory = new TestHandlerFactory();
+            HostTaskExecutor = new TestHostTaskExecutor();
+            var random = new Random();
+            var useHostTaskExecutor = random.Next(0, 2) == 1;
+
             var scopeFactory = initParams?.scopeFactory ?? new TestPowerFxScopeFactory(
                                (string documentUri) => engine.CreateEditorScope(initParams?.options, GetFromUri(documentUri)));
 
-            TestServer = new TestLanguageServer(HandlerFactory, scopeFactory, Logger);
+            TestServer = new TestLanguageServer(HandlerFactory, scopeFactory, useHostTaskExecutor ? HostTaskExecutor : null, Logger);
         }
 
         internal void Init()

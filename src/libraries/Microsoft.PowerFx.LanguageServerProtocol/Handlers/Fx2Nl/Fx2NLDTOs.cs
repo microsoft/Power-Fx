@@ -23,12 +23,4 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <param name="fx2NlRequestParams">Parameters for Fx2Nl request.</param>
     /// <param name="preHandleResult">Result of Fx2Nl Prehandle stage.</param>
     public record Fx2NlHandleContext(CustomFx2NLParams fx2NlRequestParams, Fx2NlPreHandleResult preHandleResult);
-
-    /// <summary>
-    ///  Represents the result of pre-handling step of Fx2Nl for a handler that addresses backwards compatibility.
-    /// </summary>
-    /// <param name="nlHandler"> NlHandler instance to be used for Fx2Nl. </param>
-    /// <param name="basePreHandleResult"> Base pre handle result. </param>
-    internal record BackwardsCompatibleFx2NlPreHandleResult(NLHandler nlHandler, Fx2NlPreHandleResult basePreHandleResult)
-        : Fx2NlPreHandleResult(basePreHandleResult?.checkResult, basePreHandleResult?.parameters);
 }

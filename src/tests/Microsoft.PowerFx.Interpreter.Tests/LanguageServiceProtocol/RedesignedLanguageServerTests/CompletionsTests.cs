@@ -162,39 +162,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Assert.Equal("000", foundItems.First().SortText);
         }
 
-        [Theory]
-        [InlineData("'A", 1)]
-        [InlineData("'Acc", 1)]
-        public async Task TestCompletionWithIdentifierDelimiterUsingAsyncScope(string text, int offset)
-        {
-            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new TestAsyncPowerFxScope()
-            {
-                SuggestAsyncCallback = async (string expression, int position, CancellationToken token) =>
-                {
-                    await Task.Delay(100, token).ConfigureAwait(false);
-                    return new MockDataSourceEngine().Suggest(expression, position);
-                }
-            });
-            Init(new InitParams(scopeFactory: scopeFactory));
-            var params1 = new CompletionParams()
-            {
-                TextDocument = GetTextDocument(GetUri("expression=" + text)),
-                Text = text,
-                Position = GetPosition(offset),
-                Context = GetCompletionContext()
-            };
-            var payload = GetCompletionPayload(params1);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
-            var response = AssertAndGetResponsePayload<CompletionResult>(rawResponse, payload.id);
-            var foundItems = response.Items.Where(item => item.Label == "'Account'");
-            Assert.True(Enumerable.Count(foundItems) == 1, "'Account' should be found from suggestion result");
-
-            // Test that the Identifier delimiter is ignored in case of insertText,
-            // when preceding character is also the same identifier delimiter
-            Assert.Equal("Account'", foundItems.First().InsertText);
-            Assert.Equal("000", foundItems.First().SortText);
-        }
-
         private static (string payload, string id) GetCompletionPayload(CompletionParams completionParams)
         {
             return GetRequestPayload(completionParams, TextDocumentNames.Completion);

@@ -29,22 +29,25 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
          
         /// <summary>
         /// Compute quick fixes for the given expression.
-        /// Override this method to provide custom quick fixes.
         /// </summary>
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="expression">Expression for which quick fixes need to be computed.</param>
         /// <param name="codeActionParams">Code Action Params.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
         /// <returns>Code Action Results.</returns>
-        protected virtual async Task<CodeActionResult[]> HandleQuickFixes(LanguageServerOperationContext operationContext, string expression, CodeActionParams codeActionParams, CancellationToken cancellationToken)
+        private Task<CodeActionResult[]> HandleQuickFixes(LanguageServerOperationContext operationContext, string expression, CodeActionParams codeActionParams, CancellationToken cancellationToken)
         {
-            var scope = operationContext.GetScope(codeActionParams.TextDocument.Uri);
-            if (scope is EditorContextScope scopeQuickFix)
+            return operationContext.ExecuteHostTaskAsync(
+            () =>
             {
-                return scopeQuickFix.SuggestFixes(expression, _onLogUnhandledExceptionHandler);
-            }
+                var scope = operationContext.GetScope(codeActionParams.TextDocument.Uri);
+                if (scope is EditorContextScope scopeQuickFix)
+                {
+                    return Task.FromResult(scopeQuickFix.SuggestFixes(expression, _onLogUnhandledExceptionHandler));
+                }
 
-            return Array.Empty<CodeActionResult>();
+                return Task.FromResult(Array.Empty<CodeActionResult>());
+            }, cancellationToken);
         }
 
         /// <summary>

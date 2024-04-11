@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
@@ -63,6 +64,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         {
             return _scope ??= _scopeFactory.GetOrCreateInstance(uri);
         }
+
+        /// <summary>
+        /// Host Task Executor to run lsp tasks in host environment.
+        /// </summary>
+        public IHostTaskExecutor HostTaskExecutor { get; init; }
     }
 
     internal static class LanguageServerOperationContextExtensions
@@ -73,20 +79,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="context">Language Server Operation Context.</param>
         /// <param name="uri">Uri to use for check result creation.</param>
         /// <param name="expression">Expression to create check result for.</param>
-        /// <param name="cancellationToken">Cancellation Token.</param>
         /// <returns>CheckResult.</returns>
-        public static async Task<CheckResult> CheckAsync(this LanguageServerOperationContext context, string uri, string expression, CancellationToken cancellationToken)
+        public static CheckResult Check(this LanguageServerOperationContext context, string uri, string expression)
         {
             var scope = context.GetScope(uri);
-
-            // With the new SDK we support async scope which asynchronously creates the check result and run other operations
-            // For consumers not adapting this new SDK directly, they would still be using the old synchronous scope.
-            // Async scope extends the synchronous scope.
-            // If the scope is async, we should await the check operation.
-            // If the scope is not async, we should run the check operation synchronously.
-            return scope is IAsyncPowerFxScope asyncScope ?
-                   await asyncScope.CheckAsync(expression, cancellationToken).ConfigureAwait(false) :
-                   scope?.Check(expression);
+            return scope?.Check(expression);
         }
 
         /// <summary>
@@ -96,20 +93,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="uri">Uri to use for check result creation.</param>
         /// <param name="expression">Expression to create check result for.</param>
         /// <param name="cursorPosition">Cursor position in the expression.</param>
-        /// <param name="cancellationToken">Cancellation Token.</param>
         /// <returns>Intellisense results.</returns>
-        public static async Task<IIntellisenseResult> SuggestAsync(this LanguageServerOperationContext context, string uri, string expression, int cursorPosition, CancellationToken cancellationToken)
+        public static IIntellisenseResult Suggest(this LanguageServerOperationContext context, string uri, string expression, int cursorPosition)
         {
             var scope = context.GetScope(uri);
-
-            // With the new SDK we support async scope which asynchronously runs suggest and other operations
-            // For consumers not adapting this new SDK directly, they would still be using the old synchronous scope.
-            // Async scope extends the synchronous scope.
-            // If the scope is async, we should await the suggest operation.
-            // If the scope is not async, we should run the suggest operation synchronously.
-            return scope is IAsyncPowerFxScope asyncScope ?
-                   await asyncScope.SuggestAsync(expression, cursorPosition, cancellationToken).ConfigureAwait(false) :
-                   scope?.Suggest(expression, cursorPosition);
+            return scope?.Suggest(expression, cursorPosition);
         }
 
         /// <summary>
@@ -118,15 +106,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="context">Language Server Operation Context.</param>
         /// <param name="uri">Uri to use for check result creation.</param>
         /// <param name="expression">Expression to create check result for.</param>
-        /// <param name="cancellationToken">Cancellation Token.</param>
         /// <returns>Converted expression.</returns>
-        public static async Task<string> ConvertToDisplayAsync(this LanguageServerOperationContext context, string uri, string expression, CancellationToken cancellationToken)
+        public static string ConvertToDisplay(this LanguageServerOperationContext context, string uri, string expression)
         {
             var scope = context.GetScope(uri);
-
-            return scope is IAsyncPowerFxScope asyncScope ?
-                   await asyncScope.ConvertToDisplayAsync(expression, cancellationToken).ConfigureAwait(false) :
-                   scope?.ConvertToDisplay(expression);
+            return scope?.ConvertToDisplay(expression);
         }
 
         /// <summary>
@@ -145,6 +129,67 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             }
 
             return true;
+        }
+
+        /// <summary>
+        ///  A helper method to execute a task in host environment if host task executor is available.
+        ///  This is critical to trust between LSP and its hosts.
+        ///  LSP should correctly use this and wrap particulat steps that need to run in host using these methods. 
+        /// </summary>
+        /// <typeparam name="TInput">Input Type.</typeparam>
+        /// <typeparam name="TOutput">Output Type.</typeparam>
+        /// <param name="context">Language Server Operation Context.</param>
+        /// <param name="task">Task to run inside host.</param>
+        /// <param name="input">Input to the task.</param>
+        /// <param name="cancellationToken">Cancellation Token.</param>
+        /// <returns>Output.</returns>
+        public static async Task<TOutput> ExecuteHostTaskAsync<TInput, TOutput>(this LanguageServerOperationContext context, Func<TInput, Task<TOutput>> task, TInput input, CancellationToken cancellationToken)
+        {
+            if (context?.HostTaskExecutor == null)
+            {
+                return await task(input).ConfigureAwait(false);
+            }
+
+            return await context.HostTaskExecutor.ExecuteTaskAsync(task, input, context, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///  A helper method to execute a task in host environment if host task executor is available.
+        ///  This is critical to trust between LSP and its hosts.
+        ///  LSP should correctly use this and wrap particulat steps that need to run in host using these methods. 
+        /// </summary>
+        /// <typeparam name="TOutput">Output Type.</typeparam>
+        /// <param name="context">Language Server Operation Context.</param>
+        /// <param name="task">Task to run inside host.</param>
+        /// <param name="cancellationToken">Cancellation Token.</param>
+        /// <returns>Output.</returns>
+        public static async Task<TOutput> ExecuteHostTaskAsync<TOutput>(this LanguageServerOperationContext context, Func<Task<TOutput>> task,  CancellationToken cancellationToken)
+        {
+            if (context?.HostTaskExecutor == null)
+            {
+                return await task().ConfigureAwait(false);
+            }
+
+            return await context.HostTaskExecutor.ExecuteTaskAsync(task, context, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///  A helper method to execute a task in host environment if host task executor is available.
+        ///  This is critical to trust between LSP and its hosts.
+        ///  LSP should correctly use this and wrap particulat steps that need to run in host using these methods. 
+        /// </summary>
+        /// <param name="context">Language Server Operation Context.</param>
+        /// <param name="task">Task to run inside host.</param>
+        /// <param name="cancellationToken">Cancellation Token.</param>
+        public static async Task ExecuteHostTaskAsync(this LanguageServerOperationContext context, Action task, CancellationToken cancellationToken)
+        {
+            if (context?.HostTaskExecutor == null)
+            {
+                task();
+                return;
+            }
+
+            await context.HostTaskExecutor.ExecuteTaskAsync(task, context, cancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
@@ -21,6 +22,22 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         public string LspMethod => TextDocumentNames.SignatureHelp;
 
         public bool IsRequest => true;
+
+        /// <summary>
+        /// Provides the signature help for the given expression.
+        /// </summary>
+        /// <param name="operationContext">Language Server Operation Context.</param>
+        /// <param name="uri">Document Uri.</param>
+        /// <param name="expression">Expression.</param>
+        /// <param name="cursorPosition">Cursor Position.</param>
+        /// <param name="cancellationToken">Cancellation Token.</param>
+        /// <returns>Suggestions and Signatures.</returns>
+        private Task<IIntellisenseResult> SuggestAsync(LanguageServerOperationContext operationContext, string uri, string expression, int cursorPosition, CancellationToken cancellationToken)
+        {
+            return operationContext.ExecuteHostTaskAsync(
+            () => Task.FromResult(operationContext.Suggest(uri, expression, cursorPosition)),
+            cancellationToken);
+        }
 
         /// <summary>
         /// Handles the signature help operation and computes the signature help.
@@ -46,7 +63,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 
             var cursorPosition = PositionRangeHelper.GetPosition(expression, signatureHelpParams.Position.Line, signatureHelpParams.Position.Character);
             var scope = operationContext.GetScope(signatureHelpParams.TextDocument.Uri);
-            var results = await operationContext.SuggestAsync(signatureHelpParams.TextDocument.Uri, expression, cursorPosition, cancellationToken).ConfigureAwait(false);
+            var results = await SuggestAsync(operationContext, signatureHelpParams.TextDocument.Uri, expression, cursorPosition, cancellationToken).ConfigureAwait(false);
 
             var signatureHelp = new SignatureHelp(results.SignatureHelp);
             operationContext.OutputBuilder.AddSuccessResponse(operationContext.RequestId, signatureHelp);

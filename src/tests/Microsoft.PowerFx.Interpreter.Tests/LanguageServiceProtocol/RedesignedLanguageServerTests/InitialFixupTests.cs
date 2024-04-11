@@ -14,14 +14,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         [Fact]
         public async Task TestInitialFixup()
         {
-            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new TestAsyncPowerFxScope()
-            {
-                ConvertToDisplayAsyncCallback = async (string expr, CancellationToken token) =>
-                {
-                    await Task.Delay(150, token).ConfigureAwait(false);
-                    return new MockSqlEngine().ConvertToDisplay(expr);
-                }
-            });
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockSqlEngine());
 
             Init(new InitParams(scopeFactory: scopeFactory));
             var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}";

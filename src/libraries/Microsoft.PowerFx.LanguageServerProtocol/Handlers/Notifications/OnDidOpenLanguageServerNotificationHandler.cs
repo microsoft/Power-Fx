@@ -31,17 +31,21 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return;
             }
 
-            var checkResult = await operationContext.CheckAsync(didOpenParams.TextDocument.Uri, didOpenParams.TextDocument.Text, cancellationToken).ConfigureAwait(false);
-            if (checkResult == null)
+            await operationContext.ExecuteHostTaskAsync(
+            () => 
             {
-                return;
-            }
+                var checkResult = operationContext.Check(didOpenParams.TextDocument.Uri, didOpenParams.TextDocument.Text);
+                if (checkResult == null)
+                {
+                    return;
+                }
 
-            operationContext.OutputBuilder.WriteDiagnosticsNotification(didOpenParams.TextDocument.Uri, didOpenParams.TextDocument.Text, checkResult.Errors.ToArray());
+                operationContext.OutputBuilder.WriteDiagnosticsNotification(didOpenParams.TextDocument.Uri, didOpenParams.TextDocument.Text, checkResult.Errors.ToArray());
 
-            operationContext.OutputBuilder.WriteTokensNotification(didOpenParams.TextDocument.Uri, checkResult);
+                operationContext.OutputBuilder.WriteTokensNotification(didOpenParams.TextDocument.Uri, checkResult);
 
-            operationContext.OutputBuilder.WriteExpressionTypeNotification(didOpenParams.TextDocument.Uri, checkResult);
+                operationContext.OutputBuilder.WriteExpressionTypeNotification(didOpenParams.TextDocument.Uri, checkResult);
+            }, cancellationToken).ConfigureAwait(false);
         }
     }
 }

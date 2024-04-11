@@ -25,11 +25,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="cancellationToken">Cancellation Token.</param>
         /// <param name="handleContext">Fx2Nl Handle Context.</param>
         /// <returns>Fx2Nl Handle Context extended with pre-handle result.</returns>
-        protected virtual async Task<Fx2NlHandleContext> PreHandleFx2NlAsync(LanguageServerOperationContext operationContext, Fx2NlHandleContext handleContext, CancellationToken cancellationToken)
+        private Task<Fx2NlHandleContext> PreHandleFx2NlAsync(LanguageServerOperationContext operationContext, Fx2NlHandleContext handleContext, CancellationToken cancellationToken)
         {
-            var checkResult = await operationContext.CheckAsync(handleContext.fx2NlRequestParams.TextDocument.Uri, handleContext.fx2NlRequestParams.Expression, cancellationToken).ConfigureAwait(false) ?? throw new NullReferenceException("Check result was not found for Fx2NL operation");
-            var fx2NlParameters = GetFx2NlHints(operationContext, handleContext);
-            return handleContext with { preHandleResult = new Fx2NlPreHandleResult(checkResult, fx2NlParameters) };
+            return operationContext.ExecuteHostTaskAsync(
+            () =>
+            {
+                var checkResult = operationContext.Check(handleContext.fx2NlRequestParams.TextDocument.Uri, handleContext.fx2NlRequestParams.Expression) ?? throw new NullReferenceException("Check result was not found for Fx2NL operation");
+                var fx2NlParameters = GetFx2NlHints(operationContext, handleContext);
+                return Task.FromResult(handleContext with { preHandleResult = new Fx2NlPreHandleResult(checkResult, fx2NlParameters) });
+            }, cancellationToken);
         }
 
         /// <summary>
@@ -38,7 +42,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="handleContext">Fx2Nl Handle Context.</param>
         /// <returns>Fx2Nl hints.</returns>
-        protected virtual Fx2NLParameters GetFx2NlHints(LanguageServerOperationContext operationContext, Fx2NlHandleContext handleContext)
+        private Fx2NLParameters GetFx2NlHints(LanguageServerOperationContext operationContext, Fx2NlHandleContext handleContext)
         {
             var scope = operationContext.GetScope(handleContext.fx2NlRequestParams.TextDocument.Uri);
             return scope is IPowerFxScopeFx2NL fx2NLScope ? fx2NLScope.GetFx2NLParameters() : new Fx2NLParameters();

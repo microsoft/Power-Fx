@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="commandExecutedParams">Command Executed Params.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        protected virtual async Task HandleCodeActionApplied(LanguageServerOperationContext operationContext, CommandExecutedParams commandExecutedParams, CancellationToken cancellationToken)
+        private async Task HandleCodeActionApplied(LanguageServerOperationContext operationContext, CommandExecutedParams commandExecutedParams, CancellationToken cancellationToken)
         {
             var codeActionResult = JsonRpcHelper.Deserialize<CodeAction>(commandExecutedParams.Argument);
             if (codeActionResult.ActionResultContext == null)
@@ -31,11 +31,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return;
             }
 
-            var scope = operationContext.GetScope(commandExecutedParams.TextDocument.Uri);
-            if (scope is EditorContextScope scopeQuickFix)
+            await operationContext.ExecuteHostTaskAsync(
+            () =>
             {
-                scopeQuickFix.OnCommandExecuted(codeActionResult);
-            }
+                var scope = operationContext.GetScope(commandExecutedParams.TextDocument.Uri);
+                if (scope is EditorContextScope scopeQuickFix)
+                {
+                    scopeQuickFix.OnCommandExecuted(codeActionResult);
+                }
+            }, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

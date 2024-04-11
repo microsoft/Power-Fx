@@ -68,6 +68,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private readonly ILanguageServerOperationHandlerFactory _handlerFactory;
 
+        private readonly IHostTaskExecutor _hostTaskExecutor;
+
         [Obsolete("Use the constructor with ILanguageServerOperationHandlerFactory")]
         public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
         {
@@ -82,11 +84,21 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         public LanguageServer(
             ILanguageServerOperationHandlerFactory operationHandlerFactory, 
             IPowerFxScopeFactory scopeFactory,
+            IHostTaskExecutor hostTaskExecutor,
             ILanguageServerLogger languageServerLogger = null)
         {
             _scopeFactory = scopeFactory;
             _handlerFactory = operationHandlerFactory;
+            _hostTaskExecutor = hostTaskExecutor;
             _loggerInstance = languageServerLogger;
+        }
+
+        public LanguageServer(
+            IPowerFxScopeFactory scopeFactory,
+            IHostTaskExecutor hostTaskExecutor,
+            ILanguageServerLogger logger = null)
+            : this(null, scopeFactory, hostTaskExecutor, logger)
+        {
         }
    
         // Only exists for backward compat
@@ -184,7 +196,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     Logger = _loggerInstance,
                     RequestId = input.Id,
                     RawOperationInput = inputParams,
-                    OutputBuilder = outputBuilder
+                    OutputBuilder = outputBuilder,
+                    HostTaskExecutor = _hostTaskExecutor
                 };
 
                 await handler.HandleAsync(context, cancellationToken).ConfigureAwait(false);

@@ -19,6 +19,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 
         /// <summary>
         /// An overridable hook that lets hosts run custom logic when a document changes.
+        /// This was there in old sdk as well in the form of OnDidChange delegate.
+        /// This is not a traditional LSP step that is being exposed as a hook.
         /// </summary>
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="didChangeTextDocumentParams">Notification Params.</param>
@@ -43,7 +45,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             }
 
             if (didChangeParams.ContentChanges.Length != 1)
-            { 
+            {
                 return;
             }
 
@@ -51,17 +53,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             var documentUri = didChangeParams.TextDocument.Uri;
 
             var expression = didChangeParams.ContentChanges[0].Text;
-            var checkResult = await operationContext.CheckAsync(documentUri, expression, cancellationToken).ConfigureAwait(false);
-            if (checkResult == null)
+            await operationContext.ExecuteHostTaskAsync(
+            () =>
             {
-                return;
-            }
+                var checkResult = operationContext.Check(documentUri, expression);
 
-            operationContext.OutputBuilder.WriteDiagnosticsNotification(didChangeParams.TextDocument.Uri, expression, checkResult.Errors.ToArray());
+                operationContext.OutputBuilder.WriteDiagnosticsNotification(didChangeParams.TextDocument.Uri, expression, checkResult.Errors.ToArray());
 
-            operationContext.OutputBuilder.WriteTokensNotification(didChangeParams.TextDocument.Uri, checkResult);
+                operationContext.OutputBuilder.WriteTokensNotification(didChangeParams.TextDocument.Uri, checkResult);
 
-            operationContext.OutputBuilder.WriteExpressionTypeNotification(didChangeParams.TextDocument.Uri, checkResult);
+                operationContext.OutputBuilder.WriteExpressionTypeNotification(didChangeParams.TextDocument.Uri, checkResult);
+            }, cancellationToken).ConfigureAwait(false);
         }
     }
 }
