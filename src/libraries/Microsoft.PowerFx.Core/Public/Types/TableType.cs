@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,13 +9,13 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Types
-{       
+{
     /// <summary>
-    /// Represents a table type within Power Fx. 
+    /// Represents a table type within Power Fx.
     /// Build using <see cref="Empty()"/> and <see cref="Add(NamedFormulaType)"/>
     /// or call <see cref="RecordType.ToTable()"/> on a derived table type.
     /// </summary>
-    public sealed class TableType : AggregateType
+    public class TableType : AggregateType
     {
         public override IEnumerable<string> FieldNames => _type.GetRootFieldNames().Select(name => name.Value);
 
@@ -46,7 +45,7 @@ namespace Microsoft.PowerFx.Types
 
             return new KnownRecordType(_type.ToRecord());
         }
-        
+
         /// <summary>
         /// Adding a field to a TableType requires the type to be fully expanded.
         /// </summary>
@@ -55,7 +54,7 @@ namespace Microsoft.PowerFx.Types
         {
             return new TableType(AddFieldToType(field));
         }
-        
+
         /// <summary>
         /// Wrapper for <see cref="Add(NamedFormulaType)"/>.
         /// </summary>
@@ -65,7 +64,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         /// <summary>
-        /// Static builder method for constructing a TableType. 
+        /// Static builder method for constructing a TableType.
         /// Use with <see cref="Add(NamedFormulaType)"/> to construct a
         /// Table type.
         /// </summary>
@@ -74,7 +73,7 @@ namespace Microsoft.PowerFx.Types
         {
             return new TableType(DType.EmptyTable);
         }
-    
+
         internal string SingleColumnFieldName
         {
             get
@@ -111,7 +110,7 @@ namespace Microsoft.PowerFx.Types
             var symbolName = TableSymbolName;
             if (symbolName != null)
             {
-                // If this is coming from a symbol, we need to reference that. 
+                // If this is coming from a symbol, we need to reference that.
                 sb.Append(IdentToken.MakeValidIdentifier(symbolName));
                 return;
             }
