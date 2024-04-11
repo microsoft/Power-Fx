@@ -8,6 +8,7 @@ using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 using static Microsoft.PowerFx.Connectors.Constants;
 using static Microsoft.PowerFx.Connectors.OpenApiHelperFunctions;
@@ -18,10 +19,15 @@ namespace Microsoft.PowerFx.Connectors
     {
         public static IEnumerable<ConnectorFunction> GetFunctions(string @namespace, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
         {
+            return GetFunctions(@namespace, openApiDocument, null, configurationLogger);
+        }
+
+        public static IEnumerable<ConnectorFunction> GetFunctions(string @namespace, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, ConnectorLogger configurationLogger = null)
+        {
             try
             {
                 configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}");
-                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(new ConnectorSettings(@namespace), openApiDocument, configurationLogger);
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(new ConnectorSettings(@namespace), openApiDocument, configurationLogger, globalValues);
                 configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}, returning {functions.Count()} functions");
                 return functions.Where(f => ShouldIncludeFunction(f));
             }
@@ -34,10 +40,15 @@ namespace Microsoft.PowerFx.Connectors
 
         public static IEnumerable<ConnectorFunction> GetFunctions(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
         {
+            return GetFunctions(connectorSettings, openApiDocument, null, configurationLogger);
+        }
+
+        public static IEnumerable<ConnectorFunction> GetFunctions(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, ConnectorLogger configurationLogger = null)
+        {
             try
             {
                 configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");
-                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger);
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger, globalValues);
                 configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, returning {functions.Count()} functions");
                 return functions.Where(f => ShouldIncludeFunction(f, connectorSettings));
             }
@@ -53,10 +64,10 @@ namespace Microsoft.PowerFx.Connectors
             // By default, internal & unsupported functions are excluded
             // We don't use IsDeprecated here as those functions should be returned by default
             return (!function.IsInternal || settings?.IncludeInternalFunctions == true) &&
-                   (function.IsSupported || settings?.AllowUnsupportedFunctions == true);            
+                   (function.IsSupported || settings?.AllowUnsupportedFunctions == true);
         }
 
-        internal static IEnumerable<ConnectorFunction> GetFunctionsInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
+        internal static IEnumerable<ConnectorFunction> GetFunctionsInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
         {
             bool connectorIsSupported = true;
             string connectorNotSupportedReason = string.Empty;
@@ -84,7 +95,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 configurationLogger?.LogError($"{nameof(openApiDocument)} is null");
                 return functions;
-            }            
+            }
 
             if (!ValidateSupportedOpenApiDocument(openApiDocument, ref connectorIsSupported, ref connectorNotSupportedReason, connectorSettings.FailOnUnknownExtension, configurationLogger))
             {
@@ -156,9 +167,13 @@ namespace Microsoft.PowerFx.Connectors
                                               : !string.IsNullOrEmpty(notSupportedReasonForPath)
                                               ? notSupportedReasonForPath
                                               : notSupportedReasonForOperation;
-                    
-                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings, functions, configurationLogger) { Servers = openApiDocument.Servers };                                        
-                    functions.Add(connectorFunction);                    
+
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings, functions, configurationLogger, globalValues)
+                    {
+                        Servers = openApiDocument.Servers
+                    };
+
+                    functions.Add(connectorFunction);
                 }
             }
 
@@ -260,9 +275,9 @@ namespace Microsoft.PowerFx.Connectors
                 // openApiDocument.Components.RequestBodies is ok
                 // openApiDocument.Components.Responses contains references from "path" definitions
                 // openApiDocument.Components.Schemas contains global "definitions"
-                                
+
                 if (openApiDocument.Components.SecuritySchemes.Count > 0)
-                {                                        
+                {
                     logger?.LogInformation($"Unsupported document: {notSupportedReason}");
                 }
             }
@@ -335,7 +350,7 @@ namespace Microsoft.PowerFx.Connectors
                 isSupported = false;
                 notSupportedReason = $"OpenApiOperation contains unsupported Callbacks";
                 logger?.LogWarning($"Unsupported operationId {op.OperationId}: {notSupportedReason}");
-            }            
+            }
 
             if (failOnUnknownExtensions)
             {
@@ -430,11 +445,11 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Parse an OpenApiDocument and return functions. 
-        internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) ParseInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
+        internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) ParseInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
         {
-            List<ConnectorFunction> cFunctions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger).Where(f => ShouldIncludeFunction(f, connectorSettings)).ToList();
+            List<ConnectorFunction> cFunctions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger, globalValues).Where(f => ShouldIncludeFunction(f, connectorSettings)).ToList();
             List<ConnectorTexlFunction> tFunctions = cFunctions.Select(f => new ConnectorTexlFunction(f)).ToList();
-            
+
             return (cFunctions, tFunctions);
         }
 

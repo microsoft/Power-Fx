@@ -229,14 +229,19 @@ namespace Microsoft.PowerFx.Connectors
         internal IEnumerable<OpenApiServer> Servers { get; init; }
 
         /// <summary>
-        /// Dynamic schema extension on return type (response).
+        /// Filtered function.
         /// </summary>
-        internal ConnectorDynamicSchema DynamicReturnSchema => EnsureConnectorFunction(ReturnParameterType?.DynamicSchema, FunctionList);
+        internal bool Filtered { get; }
 
         /// <summary>
         /// Dynamic schema extension on return type (response).
         /// </summary>
-        internal ConnectorDynamicProperty DynamicReturnProperty => EnsureConnectorFunction(ReturnParameterType?.DynamicProperty, FunctionList);
+        internal ConnectorDynamicSchema DynamicReturnSchema => EnsureConnectorFunction(ReturnParameterType?.DynamicSchema, GlobalContext.FunctionList);
+
+        /// <summary>
+        /// Dynamic schema extension on return type (response).
+        /// </summary>
+        internal ConnectorDynamicProperty DynamicReturnProperty => EnsureConnectorFunction(ReturnParameterType?.DynamicProperty, GlobalContext.FunctionList);
 
         /// <summary>
         /// Return type when determined at runtime/by dynamic intellisense.
@@ -258,9 +263,10 @@ namespace Microsoft.PowerFx.Connectors
         private DType[] _parameterTypes;
 
         /// <summary>
-        /// List of functions in the same swagger file. Used for resolving dynamic schema/property.
+        /// Contains the list of functions in the same swagger file, used for resolving dynamic schema/property.
+        /// Also contains all global values.
         /// </summary>
-        internal IReadOnlyList<ConnectorFunction> FunctionList { get; }
+        internal ConnectorGlobalContext GlobalContext { get; }
 
         // Those parameters are protected by EnsureInitialized
         private int _arityMin;
@@ -286,18 +292,32 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly ConnectorLogger _configurationLogger = null;
 
-        internal ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, ConnectorSettings connectorSettings, List<ConnectorFunction> functionList, ConnectorLogger configurationLogger)
+        internal ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, ConnectorSettings connectorSettings, List<ConnectorFunction> functionList, ConnectorLogger configurationLogger, IReadOnlyDictionary<string, FormulaValue> globalValues)
         {
             Operation = openApiOperation;
             Name = name;
             OperationPath = operationPath;
             HttpMethod = httpMethod;
             ConnectorSettings = connectorSettings;
-            FunctionList = functionList;
+            GlobalContext = new ConnectorGlobalContext(functionList ?? throw new ArgumentNullException(nameof(functionList)), globalValues);
 
             _configurationLogger = configurationLogger;
             _isSupported = isSupported;
             _notSupportedReason = notSupportedReason ?? (isSupported ? string.Empty : throw new PowerFxConnectorException("Internal error on not supported reason"));
+
+            int nvCount = globalValues?.Count(nv => nv.Key != "connectionId") ?? 0;
+            if (nvCount > 0)
+            {
+                EnsureInitialized();
+                Filtered = _requiredParameters.Length < nvCount || !_requiredParameters.Take(nvCount).All(rp => globalValues.Keys.Contains(rp.Name));
+
+                if (!Filtered)
+                {
+                    _requiredParameters = _requiredParameters.Skip(nvCount).ToArray();
+                    _arityMin -= nvCount;
+                    _arityMax -= nvCount;
+                }
+            }
         }
 
         internal void SetUnsupported(string notSupportedReason)
@@ -906,10 +926,7 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            JsonElement je = ExtractFromJson(sv, cds.ValuePath);
-            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
-            OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
-            ConnectorType connectorType = new ConnectorType(schema, ConnectorSettings.Compatibility);
+            ConnectorType connectorType = GetConnectorType(cds.ValuePath, sv, ConnectorSettings.Compatibility);
 
             if (connectorType.HasErrors)
             {
@@ -919,6 +936,16 @@ namespace Microsoft.PowerFx.Connectors
             {
                 runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorSuggestionsFromDynamicSchemaAsync))}, with {LogConnectorType(connectorType)}");
             }
+
+            return connectorType;
+        }
+
+        internal static ConnectorType GetConnectorType(string valuePath, StringValue sv, ConnectorCompatibility compatibility)
+        {
+            JsonElement je = ExtractFromJson(sv, valuePath);
+            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
+            OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
+            ConnectorType connectorType = new ConnectorType(schema, compatibility);
 
             return connectorType;
         }
@@ -941,10 +968,7 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            JsonElement je = ExtractFromJson(sv, cdp.ItemValuePath);
-            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
-            OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
-            ConnectorType connectorType = new ConnectorType(schema, ConnectorSettings.Compatibility);
+            ConnectorType connectorType = GetConnectorType(cdp.ItemValuePath, sv, ConnectorSettings.Compatibility);
 
             if (connectorType.HasErrors)
             {
@@ -1060,7 +1084,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            EnsureConnectorFunction(dynamicApi, FunctionList);
+            EnsureConnectorFunction(dynamicApi, GlobalContext.FunctionList);
             if (dynamicApi.ConnectorFunction == null)
             {
                 runtimeContext.ExecutionLogger?.LogError($"Exiting {this.LogFunction(nameof(ConnectorDynamicCallAsync))}, {nameof(dynamicApi.ConnectorFunction)} is null");
@@ -1115,7 +1139,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             List<FormulaValue> arguments = new List<FormulaValue>();
 
-            ConnectorFunction functionToBeCalled = EnsureConnectorFunction(dynamicApi, FunctionList).ConnectorFunction;
+            ConnectorFunction functionToBeCalled = EnsureConnectorFunction(dynamicApi, GlobalContext.FunctionList).ConnectorFunction;
 
             foreach (ConnectorParameter connectorParameter in functionToBeCalled.RequiredParameters)
             {

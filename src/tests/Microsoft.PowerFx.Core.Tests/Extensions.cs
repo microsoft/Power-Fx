@@ -36,9 +36,14 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         public static string ToStringWithDisplayNames(this FormulaType ftype)
-        {            
+        {
+            return ftype._type.ToStringWithDisplayNames();
+        }
+
+        internal static string ToStringWithDisplayNames(this DType dtype)
+        {
             var sb = new StringBuilder();
-            sb.AppendToWithDisplayNames(ftype._type);
+            sb.AppendToWithDisplayNames(dtype);
             return sb.ToString();
         }
 
@@ -110,7 +115,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 // check if we have a corresponding display name
                 var kvp2 = nameProvider?.LogicalToDisplayPairs.FirstOrDefault(kvp2 => kvp2.Key == kvp.Key);
-                if (!string.IsNullOrEmpty(kvp2?.Value.Value))
+                if (!string.IsNullOrEmpty(kvp2?.Value.Value) && TexlLexer.EscapeName(kvp.Key) != TexlLexer.EscapeName(kvp2.Value.Value))
                 {
                     sb.Append("`");
                     sb.Append(TexlLexer.EscapeName(kvp2.Value.Value));
@@ -139,7 +144,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 // check if we have a corresponding display name
                 var kvp2 = nameProvider?.LogicalToDisplayPairs.FirstOrDefault(kvp2 => kvp2.Key == kvp.Key);
-                if (!string.IsNullOrEmpty(kvp2?.Value.Value))
+                if (!string.IsNullOrEmpty(kvp2?.Value.Value) && TexlLexer.EscapeName(kvp.Key) != TexlLexer.EscapeName(kvp2.Value.Value))
                 {
                     sb.Append("`");
                     sb.Append(TexlLexer.EscapeName(kvp2.Value.Value));
@@ -170,7 +175,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 // check if we have a corresponding display name
                 var kvp2 = nameProvider?.LogicalToDisplayPairs.FirstOrDefault(kvp2 => kvp2.Key == kvp.Key);
-                if (!string.IsNullOrEmpty(kvp2?.Value.Value))
+                if (!string.IsNullOrEmpty(kvp2?.Value.Value) && TexlLexer.EscapeName(kvp.Key) != TexlLexer.EscapeName(kvp2.Value.Value))
                 {
                     sb.Append("`");
                     sb.Append(TexlLexer.EscapeName(kvp2.Value.Value));
