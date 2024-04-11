@@ -2221,12 +2221,12 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestWarningsOnEqualWithIncompatibleTypes()
         {
-            TestBindingWarning("1 = \"hello\"", DType.Boolean, expectedErrorCount: 1);
-            TestBindingWarning("1 <> \"hello\"", DType.Boolean, expectedErrorCount: 1);
-            TestBindingWarning("true = 123", DType.Boolean, expectedErrorCount: 1);
-            TestBindingWarning("true <> 123", DType.Boolean, expectedErrorCount: 1);
-            TestBindingWarning("false = \"false\"", DType.Boolean, expectedErrorCount: 1);
-            TestBindingWarning("false <> \"false\"", DType.Boolean, expectedErrorCount: 1);
+            TestBindingWarning("1 = \"hello\"", expectedErrorCount: 1, expectedType: DType.Boolean);
+            TestBindingWarning("1 <> \"hello\"", expectedErrorCount: 1, expectedType: DType.Boolean);
+            TestBindingWarning("true = 123", expectedErrorCount: 1, expectedType: DType.Boolean);
+            TestBindingWarning("true <> 123", expectedErrorCount: 1, expectedType: DType.Boolean);
+            TestBindingWarning("false = \"false\"", expectedErrorCount: 1, expectedType: DType.Boolean);
+            TestBindingWarning("false <> \"false\"", expectedErrorCount: 1, expectedType: DType.Boolean);
         }
 
         [Fact]
@@ -3024,8 +3024,8 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.AddVariable("TW", new TableType(TestUtils.DT("*[Item:w]")));
             TestBindingWarning(
                 script,
-                TestUtils.DT(expectedType),
                 expectedErrorCount: null,
+                expectedType: TestUtils.DT(expectedType),
                 symbolTable: symbol);
         }
 
@@ -3043,8 +3043,8 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.AddVariable("TW", new TableType(TestUtils.DT("*[Item:w]")));
             TestBindingWarning(
                 script,
-                TestUtils.DT(expectedType),
                 expectedErrorCount: null,
+                expectedType: TestUtils.DT(expectedType),
                 symbolTable: symbol,
                 numberIsFloat: true);
         }
@@ -4196,9 +4196,43 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TestBindingWarning(
                 script,
-                TestUtils.DT(expectedSchema),
                 errorCount,
+                expectedType: TestUtils.DT(expectedSchema),
                 symbol,
+                features: Features.PowerFxV1);
+        }
+
+        [Theory]
+
+        [InlineData("logicalNum = logicalNum")]
+        [InlineData("ThisRecord.logicalNum = logicalNum")]
+        [InlineData("logicalNum = ThisRecord.logicalNum")]
+        [InlineData("ThisRecord.logicalNum = ThisRecord.logicalNum")]
+
+        [InlineData("DisplayNum = DisplayNum")]
+        [InlineData("ThisRecord.DisplayNum = DisplayNum")]
+        [InlineData("DisplayNum = ThisRecord.DisplayNum")]
+        [InlineData("ThisRecord.DisplayNum = ThisRecord.DisplayNum")]
+
+        [InlineData("Filter(tableVar, f1 = f1)")]
+        [InlineData("Filter(tableVar, ThisRecord.f1 = f1)")]
+        [InlineData("Filter(tableVar, f1 = ThisRecord.f1)")]
+        [InlineData("Filter(tableVar, ThisRecord.f1 = ThisRecord.f1)")]
+
+        [InlineData("Filter(tableVar, F1 = F1)")]
+        [InlineData("Filter(tableVar, ThisRecord.F1 = F1)")]
+        [InlineData("Filter(tableVar, F1 = ThisRecord.F1)")]
+        [InlineData("Filter(tableVar, ThisRecord.F1 = ThisRecord.F1)")]
+        public void SameFirstNameNodeComparisonWarning(string script)
+        {
+            var tableVarType = RecordType.Empty().Add("f1", FormulaType.String, "F1").ToTable();
+            var symbolRecord = RecordType.Empty().Add("logicalNum", FormulaType.Number, "DisplayNum").Add("tableVar", tableVarType, "TableVar");
+            var symbol = new SymbolTableOverRecordType(symbolRecord, allowThisRecord: true);
+
+            TestBindingWarning(
+                script,
+                expectedErrorCount: 1,
+                symbolTable: symbol,
                 features: Features.PowerFxV1);
         }
 
@@ -4216,7 +4250,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(isPure, result.Binding.IsPure(result.Parse.Root));
         }
 
-        private void TestBindingWarning(string script, DType expectedType, int? expectedErrorCount, SymbolTable symbolTable = null, bool numberIsFloat = false, Features features = null)
+        private void TestBindingWarning(string script, int? expectedErrorCount, DType expectedType = null, ReadOnlySymbolTable symbolTable = null, bool numberIsFloat = false, Features features = null)
         {
             var config = features != null ? new PowerFxConfig(features) : new PowerFxConfig(Features.None);
             var parserOptions = new ParserOptions()
@@ -4226,8 +4260,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var engine = new Engine(config);
             var result = engine.Check(script, parserOptions, symbolTable);
-            
-            Assert.Equal(expectedType, result.Binding.ResultType);
+
+            if (expectedType != null)
+            {
+                Assert.Equal(expectedType, result.Binding.ResultType);
+            }
+
             Assert.True(result.Binding.ErrorContainer.HasErrors());
             if (expectedErrorCount != null)
             {

@@ -3865,7 +3865,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Helps warn no op comparison, e.g. Filter(table, ThisRecord.Value = Value)) or Filter(table, Value = Value)
                 if (IsNoOPFirstNameComparison(node))
                 {
-                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.WrnNoOpFieldComparison);
+                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WrnNoOpFieldComparison);
                 }
 
                 var res = CheckBinaryOpCore(_txb.ErrorContainer, node, _txb.Features, leftType, rightType, _txb.BindingConfig.NumberIsFloat);
