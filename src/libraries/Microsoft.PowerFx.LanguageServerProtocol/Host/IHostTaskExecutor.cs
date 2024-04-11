@@ -24,8 +24,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <param name="task">Task to run inside host.</param>
         /// <param name="input">Input to the task.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
+        /// <param name="defaultOutput">Default Output to return if the provided task is canceled by host.</param>
         /// <returns>Output.</returns>
-        Task<TOutput> ExecuteTaskAsync<TInput, TOutput>(Func<TInput, Task<TOutput>> task, TInput input, LanguageServerOperationContext operationContext, CancellationToken cancellationToken);
+        Task<TOutput> ExecuteTaskAsync<TInput, TOutput>(Func<TInput, Task<TOutput>> task, TInput input, LanguageServerOperationContext operationContext, CancellationToken cancellationToken, TOutput defaultOutput = default);
 
         /// <summary>
         ///  Executes a task in host environment if host task executor is available.
@@ -36,8 +37,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <param name="task">Task to run inside host.</param>
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
+        /// <param name="defaultOutput">Default Output to return if the provided task is canceled by host.</param>
         /// <returns>Output.</returns>
-        Task<TOutput> ExecuteTaskAsync<TOutput>(Func<Task<TOutput>> task, LanguageServerOperationContext operationContext, CancellationToken cancellationToken);
+        Task<TOutput> ExecuteTaskAsync<TOutput>(Func<Task<TOutput>> task, LanguageServerOperationContext operationContext, CancellationToken cancellationToken, TOutput defaultOutput = default);
 
         /// <summary>
         ///  Executes a task in host environment if host task executor is available.

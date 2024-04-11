@@ -31,27 +31,27 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             switch (method)
             {
                 case CustomProtocolNames.NL2FX:
-                    return new BackwardsCompatibleNl2FxLanguageServerOperationHandler(null);
+                    return new Nl2FxLanguageServerOperationHandler(null);
                 case CustomProtocolNames.FX2NL:
-                    return new BackwardsCompatibleFx2NlLanguageServerOperationHandler(null);
+                    return new Fx2NlLanguageServerOperationHandler(null);
                 case CustomProtocolNames.GetCapabilities:
-                    return new BackwardsCompatibleGetCustomCapabilitiesLanguageServerOperationHandler(null);
+                    return new GetCustomCapabilitiesLanguageServerOperationHandler(null);
                 case TextDocumentNames.Completion:
-                    return new BaseCompletionsLanguageServerOperationHandler();
+                    return new CompletionsLanguageServerOperationHandler();
                 case TextDocumentNames.SignatureHelp:
-                    return new BaseSignatureHelpLanguageServerOperationHandler();
+                    return new SignatureHelpLanguageServerOperationHandler();
                 case TextDocumentNames.RangeDocumentSemanticTokens:
                     return new RangeSemanticTokensLanguageServerOperationHandler();
                 case TextDocumentNames.FullDocumentSemanticTokens:
                     return new BaseSemanticTokensLanguageServerOperationHandler();
                 case TextDocumentNames.CodeAction:
-                    return new BaseCodeActionsLanguageServerOperationHandler(creationContext.onLogUnhandledExceptionHandler);
+                    return new CodeActionsLanguageServerOperationHandler(creationContext.onLogUnhandledExceptionHandler);
                 case TextDocumentNames.DidChange:
                     return new OnDidChangeLanguageServerNotificationHandler();
                 case TextDocumentNames.DidOpen:
                     return new OnDidOpenLanguageServerNotificationHandler();
                 case CustomProtocolNames.CommandExecuted:
-                    return new BaseCommandExecutedLanguageServerOperationHandler();
+                    return new CommandExecutedLanguageServerOperationHandler();
                 case CustomProtocolNames.InitialFixup:
                     return new InitialFixupLanguageServerOperationHandler();
                 default:

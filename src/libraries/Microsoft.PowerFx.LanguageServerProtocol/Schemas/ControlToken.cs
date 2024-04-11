@@ -8,7 +8,7 @@ using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Schemas
 {
-    public class ControlToken
+    internal class ControlToken
     {
         private readonly string _name;
         private readonly ICollection<uint[]> _ranges;

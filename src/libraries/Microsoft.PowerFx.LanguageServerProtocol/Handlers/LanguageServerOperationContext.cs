@@ -142,15 +142,16 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="task">Task to run inside host.</param>
         /// <param name="input">Input to the task.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
+        /// <param name="defaultOutput"> Default Output if task is canceled by the host.</param>
         /// <returns>Output.</returns>
-        public static async Task<TOutput> ExecuteHostTaskAsync<TInput, TOutput>(this LanguageServerOperationContext context, Func<TInput, Task<TOutput>> task, TInput input, CancellationToken cancellationToken)
+        public static async Task<TOutput> ExecuteHostTaskAsync<TInput, TOutput>(this LanguageServerOperationContext context, Func<TInput, Task<TOutput>> task, TInput input, CancellationToken cancellationToken, TOutput defaultOutput = default)
         {
             if (context?.HostTaskExecutor == null)
             {
                 return await task(input).ConfigureAwait(false);
             }
 
-            return await context.HostTaskExecutor.ExecuteTaskAsync(task, input, context, cancellationToken).ConfigureAwait(false);
+            return await context.HostTaskExecutor.ExecuteTaskAsync(task, input, context, cancellationToken, defaultOutput).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -162,15 +163,16 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="context">Language Server Operation Context.</param>
         /// <param name="task">Task to run inside host.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
+        /// <param name="defaultOutput"> Default Output if task is canceled by the host.</param>
         /// <returns>Output.</returns>
-        public static async Task<TOutput> ExecuteHostTaskAsync<TOutput>(this LanguageServerOperationContext context, Func<Task<TOutput>> task,  CancellationToken cancellationToken)
+        public static async Task<TOutput> ExecuteHostTaskAsync<TOutput>(this LanguageServerOperationContext context, Func<Task<TOutput>> task,  CancellationToken cancellationToken, TOutput defaultOutput = default)
         {
             if (context?.HostTaskExecutor == null)
             {
                 return await task().ConfigureAwait(false);
             }
 
-            return await context.HostTaskExecutor.ExecuteTaskAsync(task, context, cancellationToken).ConfigureAwait(false);
+            return await context.HostTaskExecutor.ExecuteTaskAsync(task, context, cancellationToken, defaultOutput).ConfigureAwait(false);
         }
 
         /// <summary>

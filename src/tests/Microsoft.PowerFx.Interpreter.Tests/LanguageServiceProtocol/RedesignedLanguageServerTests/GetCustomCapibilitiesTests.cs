@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 testNLHandler = null;
             }
 
-            HandlerFactory.SetHandler(CustomProtocolNames.GetCapabilities, new BackwardsCompatibleGetCustomCapabilitiesLanguageServerOperationHandler(new BackwardsCompatibleNLHandlerFactory(testNLHandler)));
+            HandlerFactory.SetHandler(CustomProtocolNames.GetCapabilities, new GetCustomCapabilitiesLanguageServerOperationHandler(new BackwardsCompatibleNLHandlerFactory(testNLHandler)));
             var payload = GetRequestPayload(
             new CustomGetCapabilitiesParams()
             {

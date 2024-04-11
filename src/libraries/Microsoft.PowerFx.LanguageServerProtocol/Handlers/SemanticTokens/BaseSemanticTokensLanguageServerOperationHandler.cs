@@ -50,17 +50,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 }
 
                 return Task.FromResult(result.GetTokens(getTokensContext.tokenTypesToSkip));
-            }, cancellationToken);
+            }, cancellationToken,
+            defaultOutput: Enumerable.Empty<ITokenTextSpan>());
         }
 
         /// <summary>
         /// Handles publishing a control token notification if any control tokens found.
-        /// Overridable hook to allow consumers to avoid publishing control tokens if they do not support it.
         /// </summary>
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="controlTokensObj">Collection to add control tokens to.</param>
         /// <param name="queryParams">Collection of query params.</param>
-        protected virtual void PublishControlTokenNotification(LanguageServerOperationContext operationContext, ControlTokens controlTokensObj, NameValueCollection queryParams)
+        private void PublishControlTokenNotification(LanguageServerOperationContext operationContext, ControlTokens controlTokensObj, NameValueCollection queryParams)
         {
             if (controlTokensObj == null || queryParams == null)
             {

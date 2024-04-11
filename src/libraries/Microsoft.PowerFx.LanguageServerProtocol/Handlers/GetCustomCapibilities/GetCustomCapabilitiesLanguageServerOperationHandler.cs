@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// This is backwards compatible as it used the NLHandlerFactory to get the NLHandler.
     /// This should ideally be replaced with the LSP initialization protocol.
     /// </summary>
-    internal sealed class BackwardsCompatibleGetCustomCapabilitiesLanguageServerOperationHandler : ILanguageServerOperationHandler
+    internal sealed class GetCustomCapabilitiesLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         public bool IsRequest => true;
 
@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 
         private readonly INLHandlerFactory _nlHandlerFactory;
 
-        public BackwardsCompatibleGetCustomCapabilitiesLanguageServerOperationHandler(INLHandlerFactory nlHandlerFactory)
+        public GetCustomCapabilitiesLanguageServerOperationHandler(INLHandlerFactory nlHandlerFactory)
         {
             _nlHandlerFactory = nlHandlerFactory;
         }

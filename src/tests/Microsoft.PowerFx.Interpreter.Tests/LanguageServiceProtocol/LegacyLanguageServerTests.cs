@@ -26,6 +26,7 @@ using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Interpreter.Tests.Helpers;
 using Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol;
+using Microsoft.PowerFx.LanguageServerProtocol.Handlers;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Schemas;
 using Microsoft.PowerFx.Types;
@@ -1582,6 +1583,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 {
                     Explanation = sb.ToString()
                 };
+            }
+
+            public override void PreHandleNl2Fx(CustomNL2FxParams nl2FxRequestParams, NL2FxParameters nl2fxParameters, LanguageServerOperationContext operationContext)
+            {
+                // do nothing
             }
         }
 

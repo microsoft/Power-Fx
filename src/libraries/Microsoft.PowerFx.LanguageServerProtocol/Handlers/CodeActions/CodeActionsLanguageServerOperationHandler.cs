@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     /// Handler for code actions.
     /// </summary>
-    public class BaseCodeActionsLanguageServerOperationHandler : ILanguageServerOperationHandler
+    public class CodeActionsLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         public bool IsRequest => true;
 
@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 
         private readonly OnLogUnhandledExceptionHandler _onLogUnhandledExceptionHandler;
 
-        public BaseCodeActionsLanguageServerOperationHandler(OnLogUnhandledExceptionHandler onLogUnhandledExceptionHandler = null)
+        public CodeActionsLanguageServerOperationHandler(OnLogUnhandledExceptionHandler onLogUnhandledExceptionHandler = null)
         {
             _onLogUnhandledExceptionHandler = onLogUnhandledExceptionHandler;
         }
@@ -47,7 +47,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 }
 
                 return Task.FromResult(Array.Empty<CodeActionResult>());
-            }, cancellationToken);
+            }, cancellationToken,
+            defaultOutput: Array.Empty<CodeActionResult>());
         }
 
         /// <summary>

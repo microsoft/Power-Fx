@@ -13,8 +13,15 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 {
-    internal class TestFx2NlHandler : BaseFx2NlLanguageServerOperationHandler
+    internal class TestFx2NlHandler : NLHandler
     {
+        public bool _supportsNL2Fx = true;
+        public bool _supportsFx2NL = true;
+
+        public override bool SupportsNL2Fx => _supportsNL2Fx;
+
+        public override bool SupportsFx2NL => _supportsFx2NL;
+
         public const string ModelIdStr = "Model123";
 
         // Set the expected expression to return. 
@@ -26,11 +33,17 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         public bool SupportsParameterHints { get; set; } = false;
 
-        public async Task<CustomFx2NLResult> Fx2NlAsync(CheckResult check, CancellationToken cancellationToken)
+        public TestFx2NlHandler()
+        {
+        }
+
+#pragma warning disable CS0672 // Member overrides obsolete member
+        public override async Task<CustomFx2NLResult> Fx2NLAsync(CheckResult check, CancellationToken cancel)
+#pragma warning restore CS0672 // Member overrides obsolete member
         {
             if (this.Delay)
             {
-                await Task.Delay(100, cancellationToken).ConfigureAwait(false);
+                await Task.Delay(100, cancel).ConfigureAwait(false);
             }
 
             if (this.Throw)
@@ -53,9 +66,15 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             return result;
         }
 
-        public async Task<CustomFx2NLResult> Fx2NlAsync(CheckResult check, Fx2NLParameters hints, CancellationToken cancel)
+        public override async Task<CustomFx2NLResult> Fx2NLAsync(CheckResult check, Fx2NLParameters hints, CancellationToken cancel)
         {
-            if (this.Delay)
+            if (!this.SupportsParameterHints)
+            {
+#pragma warning disable CS0618 // Type or member is obsolete
+                return await Fx2NLAsync(check, cancel).ConfigureAwait(false);
+#pragma warning restore CS0618 // Type or member is obsolete
+            }
+
             {
                 await Task.Delay(100, cancel).ConfigureAwait(false);
             }
@@ -78,50 +97,12 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 Explanation = sb.ToString()
             };
         }
-
-        protected override async Task<Fx2NlHandleContext> Fx2NlAsync(LanguageServerOperationContext operationContext, Fx2NlHandleContext handleContext, CancellationToken cancellationToken)
-        {
-            var result = await (SupportsParameterHints ?
-                                Fx2NlAsync(handleContext.preHandleResult.checkResult, handleContext.preHandleResult.parameters, cancellationToken) :
-                                Fx2NlAsync(handleContext.preHandleResult.checkResult, cancellationToken)).ConfigureAwait(false);
-            operationContext.OutputBuilder.AddSuccessResponse(operationContext.RequestId, result);
-            return handleContext;
-        }
-    }
-
-    internal class BackwardsCompatTestFx2NlHandler : NLHandler
-    {
-        public bool _supportsNL2Fx = true;
-        public bool _supportsFx2NL = true;
-
-        public override bool SupportsNL2Fx => _supportsNL2Fx;
-
-        public override bool SupportsFx2NL => _supportsFx2NL;
-
-        private readonly TestFx2NlHandler _fx2NlHandler;
-
-        public BackwardsCompatTestFx2NlHandler(TestFx2NlHandler fx2NlHandler)
-        {
-            _fx2NlHandler = fx2NlHandler;
-        }
-
-        public override Task<CustomFx2NLResult> Fx2NLAsync(CheckResult check, Fx2NLParameters hints, CancellationToken cancel)
-        {
-            if (!_fx2NlHandler.SupportsParameterHints)
-            {
-                return _fx2NlHandler.Fx2NlAsync(check, cancel);
-            }
-
-            return _fx2NlHandler.Fx2NlAsync(check, hints, cancel);
-        }
     }
 
     public partial class LanguageServerTestBase
     {
-        [Theory]
-        [InlineData(false)]
-        [InlineData(true)]
-        public async Task TestFx2NL(bool targetBackwardsCompat)
+        [Fact]
+        public async Task TestFx2NL()
         {
             // Arrange
             var documentUri = "powerfx://app?context=1";
@@ -133,7 +114,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var scope = engine.CreateEditorScope(symbols: symbols);
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => scope);
             Init(new InitParams(scopeFactory: scopeFactory));
-            var handler = CreateAndConfigureFx2NlHandler(targetBackwardsCompat);
+            var handler = CreateAndConfigureFx2NlHandler();
             handler.Delay = true;
             handler.Expected = expectedExpr;
             handler.SupportsParameterHints = false;
@@ -148,10 +129,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Assert.Equal("Score > 3: True: sentence", response.Explanation);
         }
 
-        [Theory]
-        [InlineData(false)]
-        [InlineData(true)]
-        public async Task TestFx2NLUsageHints(bool targetBackwardsCompat)
+        [Fact]
+        public async Task TestFx2NLUsageHints()
         {
             // Arrange
             var documentUri = "powerfx://app?context=1";
@@ -171,7 +150,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             }; 
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => scope);
             Init(new InitParams(scopeFactory: scopeFactory));
-            var handler = CreateAndConfigureFx2NlHandler(targetBackwardsCompat);
+            var handler = CreateAndConfigureFx2NlHandler();
             handler.Delay = true;
             handler.Expected = expectedExpr;
             handler.SupportsParameterHints = true;
@@ -199,10 +178,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             AssertErrorPayload(rawResponse, payload.id, JsonRpcHelper.ErrorCode.MethodNotFound);
         }
 
-        [Theory]
-        [InlineData(false)]
-        [InlineData(true)]
-        public async Task TestFx2NLThrows(bool targetBackwardsCompat)
+        [Fact]
+        public async Task TestFx2NLThrows()
         {
             // Arrange
             var documentUri = "powerfx://app?context=1";
@@ -212,7 +189,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var scope = engine.CreateEditorScope(symbols: symbols);
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => scope);
             Init(new InitParams(scopeFactory: scopeFactory));
-            var handler = CreateAndConfigureFx2NlHandler(targetBackwardsCompat);
+            var handler = CreateAndConfigureFx2NlHandler();
             handler.Delay = true;
             handler.Throw = true;
             handler.SupportsParameterHints = false;
@@ -243,18 +220,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             return GetRequestPayload(fx2NlParams, CustomProtocolNames.FX2NL);
         }
 
-        private TestFx2NlHandler CreateAndConfigureFx2NlHandler(bool targetBackwardsCompat)
+        private TestFx2NlHandler CreateAndConfigureFx2NlHandler()
         {
             var fx2NlHandler = new TestFx2NlHandler();
-            if (targetBackwardsCompat)
-            {
-                HandlerFactory.SetHandler(CustomProtocolNames.FX2NL, new BackwardsCompatibleFx2NlLanguageServerOperationHandler(new BackwardsCompatibleNLHandlerFactory(new BackwardsCompatTestFx2NlHandler(fx2NlHandler))));
-            }
-            else
-            {
-                HandlerFactory.SetHandler(CustomProtocolNames.FX2NL, fx2NlHandler);
-            }
-
+            HandlerFactory.SetHandler(CustomProtocolNames.FX2NL, new Fx2NlLanguageServerOperationHandler(new BackwardsCompatibleNLHandlerFactory(fx2NlHandler)));
+        
             return fx2NlHandler;
         }
     }

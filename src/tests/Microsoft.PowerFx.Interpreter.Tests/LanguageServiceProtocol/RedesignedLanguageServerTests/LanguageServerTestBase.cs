@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var scopeFactory = initParams?.scopeFactory ?? new TestPowerFxScopeFactory(
                                (string documentUri) => engine.CreateEditorScope(initParams?.options, GetFromUri(documentUri)));
 
-            TestServer = new TestLanguageServer(HandlerFactory, scopeFactory, useHostTaskExecutor ? HostTaskExecutor : null, Logger);
+            TestServer = new TestLanguageServer(scopeFactory, HandlerFactory, useHostTaskExecutor ? HostTaskExecutor : null, Logger);
         }
 
         internal void Init()

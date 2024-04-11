@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Syntax;
@@ -21,7 +20,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// Those are not needed to be exposed as overridable methods/hooks.
     /// Therefore, there's only one HandleAsync method.
     /// </summary>
-    public class BaseCompletionsLanguageServerOperationHandler : ILanguageServerOperationHandler
+    public class CompletionsLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         public bool IsRequest => true;
 
@@ -70,6 +69,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 
             operationContext.Logger?.LogInformation($"[PFX] HandleCompletionRequest: calling Suggest...");
             var results = await SuggestAsync(operationContext, completionParams.TextDocument.Uri, expression, cursorPosition, cancellationToken).ConfigureAwait(false);
+            if (results == null || results == default)
+            {
+                operationContext.OutputBuilder.AddInternalError(operationContext.RequestId, "Failed to get suggestions for completions operation");
+                return;
+            }
 
             // Note: there are huge number of suggestions in initial requests
             // Including each of them in the log string is very expensive

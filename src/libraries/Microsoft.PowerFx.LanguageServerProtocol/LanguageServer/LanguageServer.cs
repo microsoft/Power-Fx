@@ -82,23 +82,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         }
 
         public LanguageServer(
-            ILanguageServerOperationHandlerFactory operationHandlerFactory, 
             IPowerFxScopeFactory scopeFactory,
-            IHostTaskExecutor hostTaskExecutor,
+            ILanguageServerOperationHandlerFactory operationHandlerFactory = null, 
+            IHostTaskExecutor hostTaskExecutor = null,
             ILanguageServerLogger languageServerLogger = null)
         {
             _scopeFactory = scopeFactory;
             _handlerFactory = operationHandlerFactory;
             _hostTaskExecutor = hostTaskExecutor;
             _loggerInstance = languageServerLogger;
-        }
-
-        public LanguageServer(
-            IPowerFxScopeFactory scopeFactory,
-            IHostTaskExecutor hostTaskExecutor,
-            ILanguageServerLogger logger = null)
-            : this(null, scopeFactory, hostTaskExecutor, logger)
-        {
         }
    
         // Only exists for backward compat

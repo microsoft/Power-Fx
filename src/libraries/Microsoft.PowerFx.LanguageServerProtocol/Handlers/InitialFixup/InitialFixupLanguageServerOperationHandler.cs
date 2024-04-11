@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return;
             }
 
-            var expression = await operationContext.ExecuteHostTaskAsync(() => Task.FromResult(operationContext.ConvertToDisplay(requestParams.TextDocument.Uri, requestParams.TextDocument.Text)), cancellationToken).ConfigureAwait(false);
+            var expression = await operationContext.ExecuteHostTaskAsync(() => Task.FromResult(operationContext.ConvertToDisplay(requestParams.TextDocument.Uri, requestParams.TextDocument.Text)), cancellationToken, defaultOutput: string.Empty).ConfigureAwait(false);
 
             operationContext.OutputBuilder.AddSuccessResponse(operationContext.RequestId, new TextDocumentItem()
             {

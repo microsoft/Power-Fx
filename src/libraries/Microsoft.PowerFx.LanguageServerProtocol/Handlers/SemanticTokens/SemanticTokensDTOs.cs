@@ -12,5 +12,5 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <param name="documentUri">The semantic tokens parameters.</param>
     /// <param name="expression">The expression to get tokens for.</param>
     /// </summary>
-    public record GetTokensContext(HashSet<TokenType> tokenTypesToSkip, string documentUri, string expression);
+    internal record GetTokensContext(HashSet<TokenType> tokenTypesToSkip, string documentUri, string expression);
 }

@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// Those are not needed to be exposed as overridable methods/hooks.
     /// Therefore, there's only one HandleAsync method.
     /// </summary>
-    public class BaseSignatureHelpLanguageServerOperationHandler : ILanguageServerOperationHandler
+    public class SignatureHelpLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         public string LspMethod => TextDocumentNames.SignatureHelp;
 
@@ -64,6 +64,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             var cursorPosition = PositionRangeHelper.GetPosition(expression, signatureHelpParams.Position.Line, signatureHelpParams.Position.Character);
             var scope = operationContext.GetScope(signatureHelpParams.TextDocument.Uri);
             var results = await SuggestAsync(operationContext, signatureHelpParams.TextDocument.Uri, expression, cursorPosition, cancellationToken).ConfigureAwait(false);
+            if (results == null || results == default)
+            {
+                operationContext.OutputBuilder.AddInternalError(operationContext.RequestId, "Failed to get suggestions for signature help operation");
+                return;
+            }
 
             var signatureHelp = new SignatureHelp(results.SignatureHelp);
             operationContext.OutputBuilder.AddSuccessResponse(operationContext.RequestId, signatureHelp);

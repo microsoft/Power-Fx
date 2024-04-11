@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     ///  Handler for CommandExecuted operation.
     /// </summary>
-    public class BaseCommandExecutedLanguageServerOperationHandler : ILanguageServerOperationHandler
+    public class CommandExecutedLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         public bool IsRequest => true;
 
