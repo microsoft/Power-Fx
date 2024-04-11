@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -291,6 +292,40 @@ namespace Microsoft.PowerFx
         private protected readonly TexlFunctionSet _functions = new TexlFunctionSet();
 
         public IEnumerable<string> FunctionNames => _functions.FunctionNames;
+
+        private static readonly IEnumerable<KeyValuePair<DName, FormulaType>> _primitiveTypes = new Dictionary<DName, FormulaType>()
+        {
+            { new DName("Boolean"), FormulaType.Boolean },
+            { new DName("Color"), FormulaType.Color },
+            { new DName("Date"), FormulaType.Date },
+            { new DName("Time"), FormulaType.Time },
+            { new DName("DateTime"), FormulaType.DateTime },
+            { new DName("DateTimeTZInd"), FormulaType.DateTimeNoTimeZone },
+            { new DName("GUID"), FormulaType.Guid },
+            { new DName("Number"), FormulaType.Number },
+            { new DName("Decimal"), FormulaType.Decimal },
+            { new DName("Text"), FormulaType.String },
+            { new DName("Hyperlink"), FormulaType.Hyperlink },
+            { new DName("None"), FormulaType.Blank },
+            { new DName("UntypedObject"), FormulaType.UntypedObject },
+        };
+
+        internal static ReadOnlySymbolTable NewDefaultTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types)
+        {
+            var s = new SymbolTable
+            {
+                DebugName = $"BuiltinTypes ({types?.Count()})"
+            };
+
+            if (types != null) 
+            {
+                s.AddTypes(types);
+            }
+
+            return s;
+        }
+
+        internal static readonly ReadOnlySymbolTable PrimitiveTypesTableInstance = NewDefaultTypes(_primitiveTypes);
 
         // Which enums are available. 
         // These do not compose - only bottom one wins. 

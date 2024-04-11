@@ -62,8 +62,6 @@ namespace Microsoft.PowerFx
         private TexlFunctionSet _nameResolverFunctions = null;
         private VersionHash _cachedVersionHash = VersionHash.New();
 
-        private IEnumerable<KeyValuePair<DName, FormulaType>> _definedTypes = null;
-
         // Expose the list to aide in intellisense suggestions. 
         TexlFunctionSet INameResolver.Functions
         {
@@ -90,19 +88,13 @@ namespace Microsoft.PowerFx
         {
             get
             {
-                var current = this.VersionHash;
-                if (current != _cachedVersionHash)
+                foreach (var table in _symbolTables)
                 {
-                    _definedTypes = null;
+                    foreach (var type in table.DefinedTypes)
+                    {
+                        yield return type;
+                    }
                 }
-
-                if (_definedTypes == null)
-                {
-                    _definedTypes = _symbolTables.SelectMany(t => t.DefinedTypes);
-                    _cachedVersionHash = current;
-                }
-
-                return _definedTypes;
             }
         }
 

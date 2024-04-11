@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Functions
     {
         private readonly bool _isImperative;
         private readonly IEnumerable<UDFArg> _args;
-        private readonly IEnumerable<DType> _argTypes;
+        private readonly DType[] _argTypes;
         private TexlBinding _binding;
 
         public override bool IsAsync => _binding?.IsAsync(UdfBody) ?? false;
@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
-            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args), bindingConfig, features: features, rule: rule);
+            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, _argTypes), bindingConfig, features: features, rule: rule);
 
             CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding);
 
@@ -180,7 +180,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(binderGlue));
             }
 
-            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), _argTypes.ToArray());
+            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), _argTypes);
             binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
 
             return func;
@@ -193,16 +193,18 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             private readonly INameResolver _globalNameResolver;
             private readonly IReadOnlyDictionary<string, UDFArg> _args;
+            private readonly DType[] _argTypes;
 
-            public static INameResolver Create(INameResolver globalNameResolver, IEnumerable<UDFArg> args)
+            public static INameResolver Create(INameResolver globalNameResolver, IEnumerable<UDFArg> args, DType[] argTypes)
             {
-                return new UserDefinitionsNameResolver(globalNameResolver, args);
+                return new UserDefinitionsNameResolver(globalNameResolver, args, argTypes);
             }
 
-            private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args)
+            private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args, DType[] argTypes)
             {
                 this._globalNameResolver = globalNameResolver;
                 this._args = args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => arg);
+                _argTypes = argTypes;
             }
 
             public IExternalDocument Document => _globalNameResolver.Document;
@@ -226,16 +228,10 @@ namespace Microsoft.PowerFx.Core.Functions
                 // lookup in the local scope i.e., function params & body and then look in global scope.
                 if (_args.TryGetValue(name, out var value))
                 {
-                    if (_globalNameResolver.LookupType(value.TypeIdent.Name, out var ft)) 
-                    {
-                        nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, ft._type, DPath.Root, 0, new UDFParameterInfo(ft._type, value.ArgIndex, value.NameIdent.Name));
-                        return true;
-                    }
-                    else
-                    {
-                        nameInfo = default;
-                        return false;
-                    }
+                    var type = this._argTypes[value.ArgIndex];
+                    nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, value.ArgIndex, value.NameIdent.Name));
+
+                    return true;
                 }
 
                 return _globalNameResolver.Lookup(name, out nameInfo, preferences);

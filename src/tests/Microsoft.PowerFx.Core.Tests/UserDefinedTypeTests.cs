@@ -15,6 +15,8 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class UserDefinedTypeTests : PowerFxTest
     {
+        private static readonly ReadOnlySymbolTable _primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
+
         [Theory]
         [InlineData("Point = Type({ x: Number, y: Number })", "![x:n,y:n]", true)]
         [InlineData("Points = Type([{ x: Number, y: Number }])", "*[x:n,y:n]", true)]
@@ -32,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowParseAsTypeLiteral = true
             };
 
-            UserDefinitions.ProcessUserDefinitions(typeDefinition, parseOptions, out UserDefinitionResult results);
+            UserDefinitions.ProcessUserDefinitions(typeDefinition, parseOptions, out UserDefinitionResult results, globalNameResolver: _primitiveTypes);
 
             if (isValid) 
             {
@@ -66,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowParseAsTypeLiteral = true
             };
 
-            UserDefinitions.ProcessUserDefinitions(typeDefinition, parseOptions, out UserDefinitionResult results);
+            UserDefinitions.ProcessUserDefinitions(typeDefinition, parseOptions, out UserDefinitionResult results, globalNameResolver: _primitiveTypes);
 
             Assert.Equal(expected, results.DefinedTypes.Count());
         }

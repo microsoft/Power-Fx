@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Types
     internal class DefinedTypeDependencyGraph
     {
         private readonly IEnumerable<DefinedType> _definedTypes;
-        private readonly ReadOnlySymbolTable _globalSymbols;
+        private readonly ReadOnlySymbolTable _globalTypes;
 
         private readonly Dictionary<DefinedType, HashSet<string>> _typeWithDependency;
         private readonly Dictionary<string, HashSet<DefinedType>> _invertedDependency;
@@ -28,23 +28,23 @@ namespace Microsoft.PowerFx.Core.Types
 
         private readonly SymbolTable _definedTypeSymbolTable;
 
-        private static readonly ISet<string> _restrictedTypeNames = new HashSet<string> { "Record", "Boolean", "Color", "Date", "Time", "DateTime", "DateTimeTZInd", "GUID", "Number", "Decimal", "Text", "Hyperlink", "None", "UntypedObject" };
+        // TODO: Add more future type names
+        private static readonly ISet<string> _restrictedTypeNames = new HashSet<string> { "Record", "Table", "Currency" };
 
         internal Dictionary<DefinedType, HashSet<string>> UnresolvedTypes => _typeWithDependency;
 
-        internal SymbolTable DefinedTypesTable => _definedTypeSymbolTable;
+        internal INameResolver DefinedTypeSymbols => ReadOnlySymbolTable.Compose(_definedTypeSymbolTable, _globalTypes);
 
-        private readonly HashSet<UserDefinedType> _userDefinedTypes;
-
-        public DefinedTypeDependencyGraph(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable symbols = null) 
+        public DefinedTypeDependencyGraph(IEnumerable<DefinedType> definedTypes, INameResolver globalSymbols) 
         {
             _definedTypes = definedTypes;
-            _globalSymbols = symbols ?? new SymbolTable();
+            _globalTypes = ReadOnlySymbolTable.NewDefaultTypes(globalSymbols?.DefinedTypes);
+
             _typeWithDependency = new Dictionary<DefinedType, HashSet<string>>();
             _invertedDependency = new Dictionary<string, HashSet<DefinedType>>();
             _tsQueue = new Queue<DefinedType>();
+
             _definedTypeSymbolTable = new SymbolTable();
-            _userDefinedTypes = new HashSet<UserDefinedType>();
 
             Build();
         }
@@ -52,10 +52,11 @@ namespace Microsoft.PowerFx.Core.Types
         // Build type dependency graph to perform topological sort and resolve types
         private void Build()
         {
+            //var composedSymbols = ReadOnlySymbolTable.Compose(_globalTypes, ReadOnlySymbolTable.PrimitiveTypesTableInstance);
             foreach (var defType in _definedTypes)
             {
                 var name = defType.Ident.Name.Value;
-                var dependencies = DefinedTypeDependencyVisitor.FindDependencies(defType.Type.TypeRoot, _globalSymbols);
+                var dependencies = DefinedTypeDependencyVisitor.FindDependencies(defType.Type.TypeRoot, _globalTypes);
 
                 _typeWithDependency.Add(defType, dependencies);
 
@@ -82,7 +83,8 @@ namespace Microsoft.PowerFx.Core.Types
         // Topological sort to resolve types
         internal IEnumerable<UserDefinedType> ResolveTypes(List<TexlError> errors)
         {
-            var composedSymbols = ReadOnlySymbolTable.Compose(_definedTypeSymbolTable, _globalSymbols);
+            var composedSymbols = ReadOnlySymbolTable.Compose(_definedTypeSymbolTable, _globalTypes);
+            var userDefinedTypes = new List<UserDefinedType>();
 
             while (_tsQueue.Any())
             {
@@ -103,12 +105,12 @@ namespace Microsoft.PowerFx.Core.Types
 
                 var name = currentType.Ident.Name;
                 _definedTypeSymbolTable.AddType(name, FormulaType.Build(resolvedType));
-                _userDefinedTypes.Add(new UserDefinedType(name, FormulaType.Build(resolvedType), currentType.Type));
+                userDefinedTypes.Add(new UserDefinedType(name, FormulaType.Build(resolvedType), currentType.Type));
 
                 AdjustResolveDependencies(name);
             }
 
-            return _userDefinedTypes;
+            return userDefinedTypes;
         }
 
         private void AdjustResolveDependencies(DName name)

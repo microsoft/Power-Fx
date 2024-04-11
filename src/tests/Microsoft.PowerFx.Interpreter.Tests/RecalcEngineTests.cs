@@ -643,7 +643,7 @@ namespace Microsoft.PowerFx.Tests
 
             engine.UpdateVariable("myArg", FormulaValue.New(10));
 
-            symbolTable.AddUserDefinedFunction(script, CultureInfo.InvariantCulture, engine.SupportedFunctions);
+            symbolTable.AddUserDefinedFunction(script, CultureInfo.InvariantCulture, engine.SupportedFunctions, engine.PrimitiveTypes);
 
             var check = engine.Check(expression, symbolTable: symbolTable);
             var result = check.GetEvaluator().Eval();
@@ -689,10 +689,10 @@ namespace Microsoft.PowerFx.Tests
         {
             // Inner table 
             SymbolTable stInner = new SymbolTable { DebugName = "Extras" };
-            stInner.AddUserDefinedFunction("Func1() : Text = \"inner\";");
+            stInner.AddUserDefinedFunction("Func1() : Text = \"inner\";", symbolTable: ReadOnlySymbolTable.PrimitiveTypesTableInstance);
 
             SymbolTable st = new SymbolTable { DebugName = "Extras" };
-            st.AddUserDefinedFunction("Func2() : Text = Func1() & \"2\";", symbolTable: stInner);
+            st.AddUserDefinedFunction("Func2() : Text = Func1() & \"2\";", symbolTable: stInner, extraSymbolTable: ReadOnlySymbolTable.PrimitiveTypesTableInstance);
 
             var engine = new RecalcEngine();
             engine.AddUserDefinedFunction("Func1() : Text = \"Outer\";", symbolTable: st);

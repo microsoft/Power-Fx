@@ -26,7 +26,7 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx
 {
     /// <summary>
-    /// Provides symbols to the engine. This includes variables (locals, globals), enums, options sets, and functions.
+    /// Provides symbols to the engine. This includes variables (locals, globals), enums, options sets, types and functions.
     /// SymbolTables are mutable to support sessionful scenarios and can be chained together. 
     /// This is a publicly facing class around a <see cref="INameResolver"/>.
     /// </summary>
@@ -41,22 +41,7 @@ namespace Microsoft.PowerFx
         private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 
         // Initialize with primitive types that are currently supported
-        private readonly Dictionary<DName, FormulaType> _definedTypes = new Dictionary<DName, FormulaType>()
-        {
-            { new DName("Boolean"), FormulaType.Boolean },
-            { new DName("Color"), FormulaType.Color },
-            { new DName("Date"), FormulaType.Date },
-            { new DName("Time"), FormulaType.Time },
-            { new DName("DateTime"), FormulaType.DateTime },
-            { new DName("DateTimeTZInd"), FormulaType.DateTimeNoTimeZone },
-            { new DName("GUID"), FormulaType.Guid },
-            { new DName("Number"), FormulaType.Number },
-            { new DName("Decimal"), FormulaType.Decimal },
-            { new DName("Text"), FormulaType.String },
-            { new DName("Hyperlink"), FormulaType.Hyperlink },
-            { new DName("None"), FormulaType.Blank },
-            { new DName("UntypedObject"), FormulaType.UntypedObject },
-        };
+        private readonly Dictionary<DName, FormulaType> _definedTypes = new Dictionary<DName, FormulaType>();
 
         IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.DefinedTypes => _definedTypes;
 
@@ -235,7 +220,10 @@ namespace Microsoft.PowerFx
             };
             var sb = new StringBuilder();
 
-            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult);
+            // Compose will handle null symbols
+            var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
+
+            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult, globalNameResolver: composedSymbols);
 
             if (userDefinitionResult.HasErrors)
             {
@@ -248,9 +236,6 @@ namespace Microsoft.PowerFx
 
                 throw new InvalidOperationException(sb.ToString());
             }
-
-            // Compose will handle null symbols
-            var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
 
             foreach (var udf in userDefinitionResult.UDFs)
             {
@@ -451,6 +436,17 @@ namespace Microsoft.PowerFx
             foreach (var type in types)
             {
                 _definedTypes.Add(type.Name, type.Type);
+            }
+        }
+
+        internal void AddTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types)
+        {
+            using var guard = _guard.Enter(); // Region is single threaded.
+            Inc();
+
+            foreach (var type in types)
+            {
+                _definedTypes.Add(type.Key, type.Value);
             }
         }
 

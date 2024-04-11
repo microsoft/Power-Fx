@@ -65,16 +65,16 @@ namespace Microsoft.PowerFx.Syntax
         /// <param name="parserOptions">Options for parsing an expression.</param>
         /// <param name="userDefinitionResult"><see cref="UserDefinitionResult"/>.</param>
         /// <param name="features">PowerFx feature flags.</param>
-        /// <param name="extraSymbols">Extra SymbolTable if needed.</param>
         /// <returns>True if there are no parser errors.</returns>
-        public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null, ReadOnlySymbolTable extraSymbols = null)
+        /// <param name="globalNameResolver">Global nameresolver for resolving types.</param>
+        public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null, INameResolver globalNameResolver = null)
         {
             var userDefinitions = new UserDefinitions(script, parserOptions, features);
 
-            return userDefinitions.ProcessUserDefinitions(out userDefinitionResult, extraSymbols);
+            return userDefinitions.ProcessUserDefinitions(out userDefinitionResult, globalNameResolver);
         }
 
-        private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult, ReadOnlySymbolTable extraSymbols = null)
+        private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult, INameResolver globalNameResolver = null)
         {
             var parseResult = Parse(_script, _parserOptions);
 
@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Syntax
             var definedTypes = parseResult.DefinedTypes.ToList();
 
             var typeErr = new List<TexlError>();
-            var typeGraph = new DefinedTypeDependencyGraph(definedTypes, extraSymbols);
+            var typeGraph = new DefinedTypeDependencyGraph(definedTypes, globalNameResolver);
             var resolvedTypes = typeGraph.ResolveTypes(typeErr);
 
             foreach (var unresolvedType in typeGraph.UnresolvedTypes)
@@ -94,10 +94,8 @@ namespace Microsoft.PowerFx.Syntax
                 typeErr.Add(new TexlError(unresolvedType.Key.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
             }
 
-            var composedSymbols = ReadOnlySymbolTable.Compose(typeGraph.DefinedTypesTable, extraSymbols);
-
             // Parser returns both complete & incomplete UDFs, and we are only interested in creating TexlFunctions for valid UDFs. 
-            var functions = CreateUserDefinedFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), composedSymbols, out var errors);
+            var functions = CreateUserDefinedFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), typeGraph.DefinedTypeSymbols, out var errors);
 
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
             errors.AddRange(typeErr);
@@ -116,10 +114,10 @@ namespace Microsoft.PowerFx.Syntax
         /// <param name="script">User script containing UDFs and/or named formulas.</param>
         /// <param name="parseCulture">CultureInfo to parse the script.</param>
         /// <param name="features">Features.</param>
-        /// <param name="extraSymbols">Extra SymbolTable if needed.</param>
+        /// <param name="globalNameResolver">Global nameresolver for resolving types.</param>
         /// <returns>Tuple.</returns>
         /// <exception cref="InvalidOperationException">Throw if the user script contains errors.</exception>
-        public static UserDefinitionResult Process(string script, CultureInfo parseCulture, Features features = null, ReadOnlySymbolTable extraSymbols = null)
+        public static UserDefinitionResult Process(string script, CultureInfo parseCulture, Features features = null, INameResolver globalNameResolver = null)
         {
             var options = new ParserOptions()
             {
@@ -130,7 +128,7 @@ namespace Microsoft.PowerFx.Syntax
 
             var sb = new StringBuilder();
 
-            ProcessUserDefinitions(script, options, out var userDefinitionResult, features, extraSymbols);
+            ProcessUserDefinitions(script, options, out var userDefinitionResult, features, globalNameResolver);
 
             if (userDefinitionResult.HasErrors)
             {
