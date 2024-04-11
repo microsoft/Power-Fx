@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     Assert.True(dtype.TryGetEnumValue(new DName(enumSymbolOption), out var enumValue), $"Enum doesn't contain {enumSymbolOption.Value}");
                     Assert.True(enumSymbol.Value.EnumType.TryGetEnumValue(new DName(enumSymbolOption), out var enumSymbolValue), $"EnumSymbol doesn't contain {enumSymbolOption.Value}");
                     Assert.True((enumValue is double && enumSymbolValue is double && (enumSymbol.Value.BackingKind == DKind.Color || enumSymbol.Value.BackingKind == DKind.Number)) ||
-                                (enumValue is string && enumSymbol.Value.BackingKind == DKind.String));
+                                (enumValue is string && enumSymbolValue is string && enumSymbol.Value.BackingKind == DKind.String));
                     Assert.Equal(enumValue, enumSymbolValue);
                 }
             }
