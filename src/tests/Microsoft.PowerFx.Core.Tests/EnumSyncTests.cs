@@ -64,6 +64,11 @@ namespace Microsoft.PowerFx.Core.Tests
                                 (enumValue is string && enumSymbolValue is string && enumSymbol.Value.BackingKind == DKind.String));
                     Assert.Equal(enumValue, enumSymbolValue);
                 }
+
+                foreach (var enumPair in dtype.ValueTree.GetPairs())
+                {
+                    Assert.Contains(new DName(enumPair.Key), enumSymbol.Value.OptionNames);
+                }
             }
         }
     }
