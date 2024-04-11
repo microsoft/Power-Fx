@@ -7,7 +7,7 @@ using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 {
-    public class TestHandlerFactory : ILanguageServerOperationHandlerFactory
+    internal class TestHandlerFactory : ILanguageServerOperationHandlerFactory
     {
         private readonly Dictionary<string, ILanguageServerOperationHandler> _handlers = new ();
 
@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 case TextDocumentNames.CodeAction:
                     return new CodeActionsLanguageServerOperationHandler(creationContext.onLogUnhandledExceptionHandler);
                 case TextDocumentNames.DidChange:
-                    return new OnDidChangeLanguageServerNotificationHandler();
+                    return new OnDidChangeLanguageServerNotificationHandler(null);
                 case TextDocumentNames.DidOpen:
                     return new OnDidOpenLanguageServerNotificationHandler();
                 case CustomProtocolNames.CommandExecuted:

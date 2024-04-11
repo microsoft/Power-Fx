@@ -22,9 +22,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
     public partial class LanguageServerTestBase : PowerFxTest
     {
-        public TestLanguageServer TestServer { get; private set; }
+        private LanguageServerForTesting TestServer { get; set; }
 
-        public TestHandlerFactory HandlerFactory { get; private set; }
+        private TestHandlerFactory HandlerFactory { get; set; }
 
         public TestLogger Logger { get; set; }
 
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var scopeFactory = initParams?.scopeFactory ?? new TestPowerFxScopeFactory(
                                (string documentUri) => engine.CreateEditorScope(initParams?.options, GetFromUri(documentUri)));
 
-            TestServer = new TestLanguageServer(scopeFactory, HandlerFactory, useHostTaskExecutor ? HostTaskExecutor : null, Logger);
+            TestServer = new LanguageServerForTesting(scopeFactory, HandlerFactory, useHostTaskExecutor ? HostTaskExecutor : null, Logger);
         }
 
         internal void Init()

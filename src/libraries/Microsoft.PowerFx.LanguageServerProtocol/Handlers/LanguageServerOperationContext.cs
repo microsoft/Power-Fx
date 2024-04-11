@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 {
@@ -53,6 +54,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// </summary>
         public LanguageServerOutputBuilder OutputBuilder { get; init; }
 
+        /// <summary>
+        /// Host Task Executor to run tasks in host environment.
+        /// </summary>
+        public IHostTaskExecutor HostTaskExecutor { get; init; }
+
         private IPowerFxScope _scope = null;
 
         /// <summary>
@@ -60,59 +66,79 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// </summary>
         /// <param name="uri">Uri to use for scope creation.</param>
         /// <returns>Scope.</returns>
-        public IPowerFxScope GetScope(string uri)
+        private IPowerFxScope GetScope(string uri)
         {
             return _scope ??= _scopeFactory.GetOrCreateInstance(uri);
         }
 
         /// <summary>
-        /// Host Task Executor to run lsp tasks in host environment.
+        /// A helper method to convert the expression to display format.
         /// </summary>
-        public IHostTaskExecutor HostTaskExecutor { get; init; }
+        /// <param name="uri">Uri to use for check result creation.</param>
+        /// <param name="expression">Expression to create check result for.</param>
+        /// <returns>Converted expression.</returns>
+        public string ConvertToDisplay(string uri, string expression)
+        {
+            var scope = GetScope(uri);
+            return scope?.ConvertToDisplay(expression);
+        }
+
+        /// <summary>
+        /// Get the NLHandler for the given uri and factory.
+        /// </summary>
+        /// <param name="uri">Uri to use for scope creation.</param>
+        /// <param name="factory">Nl Handler Factory.</param>
+        /// <param name="nLParams">Ml Params.</param>
+        /// <returns>NlHandler Instance.</returns>
+        public NLHandler GetNLHandler(string uri, INLHandlerFactory factory, BaseNLParams nLParams = null)
+        {
+            return factory.GetNLHandler(GetScope(uri), nLParams);
+        }
+
+        /// <summary>
+        ///  A helper method to execute a task in host environment if host task executor is available.
+        ///  This is critical to trust between LSP and its hosts.
+        ///  LSP should correctly use this and wrap particulat steps that need to run in host using these methods. 
+        /// </summary>
+        /// <typeparam name="TOutput">Output Type.</typeparam>
+        /// <param name="uri">Uri to use for scope creation.</param>
+        /// <param name="task">Task to run inside host.</param>
+        /// <param name="cancellationToken">Cancellation Token.</param>
+        /// <param name="defaultOutput"> Default Output if task is canceled by the host.</param>
+        /// <returns>Output.</returns>
+        public async Task<TOutput> ExecuteHostTaskAsync<TOutput>(string uri, Func<IPowerFxScope, Task<TOutput>> task, CancellationToken cancellationToken, TOutput defaultOutput = default)
+        {
+            if (HostTaskExecutor == null)
+            {
+                return await task(GetScope(uri)).ConfigureAwait(false);
+            }
+
+            Task<TOutput> WrappedTask() => task(GetScope(uri));
+            return await HostTaskExecutor.ExecuteTaskAsync(WrappedTask, this, cancellationToken, defaultOutput).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///  A helper method to execute a task in host environment if host task executor is available.
+        ///  This is critical to trust between LSP and its hosts.
+        ///  LSP should correctly use this and wrap particulat steps that need to run in host using these methods. 
+        /// </summary>
+        /// <param name="uri">Uri to use for scope creation.</param>
+        /// <param name="task">Task to run inside host.</param>
+        /// <param name="cancellationToken">Cancellation Token.</param>
+        public async Task ExecuteHostTaskAsync(string uri, Action<IPowerFxScope> task, CancellationToken cancellationToken)
+        {
+            if (HostTaskExecutor == null)
+            {
+                task(GetScope(uri));
+                return;
+            }
+
+            await HostTaskExecutor.ExecuteTaskAsync(() => task(GetScope(uri)), this, cancellationToken).ConfigureAwait(false);
+        }
     }
 
     internal static class LanguageServerOperationContextExtensions
     {
-        /// <summary>
-        ///  A helper method to construct a check result for the given uri and expression.
-        /// </summary>
-        /// <param name="context">Language Server Operation Context.</param>
-        /// <param name="uri">Uri to use for check result creation.</param>
-        /// <param name="expression">Expression to create check result for.</param>
-        /// <returns>CheckResult.</returns>
-        public static CheckResult Check(this LanguageServerOperationContext context, string uri, string expression)
-        {
-            var scope = context.GetScope(uri);
-            return scope?.Check(expression);
-        }
-
-        /// <summary>
-        /// A helper method to suggest intellisense for the given expression.
-        /// </summary>
-        /// <param name="context">Language Server Operation Context.</param>
-        /// <param name="uri">Uri to use for check result creation.</param>
-        /// <param name="expression">Expression to create check result for.</param>
-        /// <param name="cursorPosition">Cursor position in the expression.</param>
-        /// <returns>Intellisense results.</returns>
-        public static IIntellisenseResult Suggest(this LanguageServerOperationContext context, string uri, string expression, int cursorPosition)
-        {
-            var scope = context.GetScope(uri);
-            return scope?.Suggest(expression, cursorPosition);
-        }
-
-        /// <summary>
-        /// A helper method to convert the expression to display format.
-        /// </summary>
-        /// <param name="context">Language Server Operation Context.</param>
-        /// <param name="uri">Uri to use for check result creation.</param>
-        /// <param name="expression">Expression to create check result for.</param>
-        /// <returns>Converted expression.</returns>
-        public static string ConvertToDisplay(this LanguageServerOperationContext context, string uri, string expression)
-        {
-            var scope = context.GetScope(uri);
-            return scope?.ConvertToDisplay(expression);
-        }
-
         /// <summary>
         /// A helper method to help parse the raw input of the operation and add an error response if parsing fails.
         /// </summary>
@@ -129,69 +155,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             }
 
             return true;
-        }
-
-        /// <summary>
-        ///  A helper method to execute a task in host environment if host task executor is available.
-        ///  This is critical to trust between LSP and its hosts.
-        ///  LSP should correctly use this and wrap particulat steps that need to run in host using these methods. 
-        /// </summary>
-        /// <typeparam name="TInput">Input Type.</typeparam>
-        /// <typeparam name="TOutput">Output Type.</typeparam>
-        /// <param name="context">Language Server Operation Context.</param>
-        /// <param name="task">Task to run inside host.</param>
-        /// <param name="input">Input to the task.</param>
-        /// <param name="cancellationToken">Cancellation Token.</param>
-        /// <param name="defaultOutput"> Default Output if task is canceled by the host.</param>
-        /// <returns>Output.</returns>
-        public static async Task<TOutput> ExecuteHostTaskAsync<TInput, TOutput>(this LanguageServerOperationContext context, Func<TInput, Task<TOutput>> task, TInput input, CancellationToken cancellationToken, TOutput defaultOutput = default)
-        {
-            if (context?.HostTaskExecutor == null)
-            {
-                return await task(input).ConfigureAwait(false);
-            }
-
-            return await context.HostTaskExecutor.ExecuteTaskAsync(task, input, context, cancellationToken, defaultOutput).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        ///  A helper method to execute a task in host environment if host task executor is available.
-        ///  This is critical to trust between LSP and its hosts.
-        ///  LSP should correctly use this and wrap particulat steps that need to run in host using these methods. 
-        /// </summary>
-        /// <typeparam name="TOutput">Output Type.</typeparam>
-        /// <param name="context">Language Server Operation Context.</param>
-        /// <param name="task">Task to run inside host.</param>
-        /// <param name="cancellationToken">Cancellation Token.</param>
-        /// <param name="defaultOutput"> Default Output if task is canceled by the host.</param>
-        /// <returns>Output.</returns>
-        public static async Task<TOutput> ExecuteHostTaskAsync<TOutput>(this LanguageServerOperationContext context, Func<Task<TOutput>> task,  CancellationToken cancellationToken, TOutput defaultOutput = default)
-        {
-            if (context?.HostTaskExecutor == null)
-            {
-                return await task().ConfigureAwait(false);
-            }
-
-            return await context.HostTaskExecutor.ExecuteTaskAsync(task, context, cancellationToken, defaultOutput).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        ///  A helper method to execute a task in host environment if host task executor is available.
-        ///  This is critical to trust between LSP and its hosts.
-        ///  LSP should correctly use this and wrap particulat steps that need to run in host using these methods. 
-        /// </summary>
-        /// <param name="context">Language Server Operation Context.</param>
-        /// <param name="task">Task to run inside host.</param>
-        /// <param name="cancellationToken">Cancellation Token.</param>
-        public static async Task ExecuteHostTaskAsync(this LanguageServerOperationContext context, Action task, CancellationToken cancellationToken)
-        {
-            if (context?.HostTaskExecutor == null)
-            {
-                task();
-                return;
-            }
-
-            await context.HostTaskExecutor.ExecuteTaskAsync(task, context, cancellationToken).ConfigureAwait(false);
         }
     }
 }

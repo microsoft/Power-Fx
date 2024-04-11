@@ -33,8 +33,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return;
             }
 
-            var scope = operationContext.GetScope(customGetCapabilitiesParams.TextDocument.Uri);
-            var nlHandler = _nlHandlerFactory?.GetNLHandler(scope, null);
+            var nlHandler = operationContext.GetNLHandler(customGetCapabilitiesParams.TextDocument.Uri, _nlHandlerFactory, null);
             if (nlHandler == null)
             {
                 operationContext.OutputBuilder.AddSuccessResponse(operationContext.RequestId, new CustomGetCapabilitiesResult());

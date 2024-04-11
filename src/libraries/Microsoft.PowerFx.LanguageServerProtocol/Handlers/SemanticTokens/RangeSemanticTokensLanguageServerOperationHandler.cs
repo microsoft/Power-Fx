@@ -5,7 +5,7 @@ using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 {
-    public class RangeSemanticTokensLanguageServerOperationHandler : BaseSemanticTokensLanguageServerOperationHandler
+    internal sealed class RangeSemanticTokensLanguageServerOperationHandler : BaseSemanticTokensLanguageServerOperationHandler
     {
         public override string LspMethod => TextDocumentNames.RangeDocumentSemanticTokens;
     }

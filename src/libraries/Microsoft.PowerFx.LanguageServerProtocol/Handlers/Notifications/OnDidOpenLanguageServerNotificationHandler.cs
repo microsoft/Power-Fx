@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     /// Handler to handle the DidOpen notification from the client.
     /// </summary>
-    public class OnDidOpenLanguageServerNotificationHandler : ILanguageServerOperationHandler
+    internal sealed class OnDidOpenLanguageServerNotificationHandler : ILanguageServerOperationHandler
     {
         public string LspMethod => TextDocumentNames.DidOpen;
 
@@ -32,9 +32,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             }
 
             await operationContext.ExecuteHostTaskAsync(
-            () => 
+            didOpenParams.TextDocument.Uri,
+            (scope) => 
             {
-                var checkResult = operationContext.Check(didOpenParams.TextDocument.Uri, didOpenParams.TextDocument.Text);
+                var checkResult = scope?.Check(didOpenParams.TextDocument.Text);
                 if (checkResult == null)
                 {
                     return;

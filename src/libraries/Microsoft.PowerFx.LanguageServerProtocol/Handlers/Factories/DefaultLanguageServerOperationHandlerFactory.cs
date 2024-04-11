@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.LanguageServerProtocol.Handlers.Notifications;
+using Microsoft.PowerFx.LanguageServerProtocol.Handlers;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 case TextDocumentNames.CodeAction:
                     return new CodeActionsLanguageServerOperationHandler(creationContext.onLogUnhandledExceptionHandler);
                 case TextDocumentNames.DidChange:
-                    return new BackwardsCompatibleOnDidChangeNotificationHandler(_notifyDidChange);
+                    return new OnDidChangeLanguageServerNotificationHandler(_notifyDidChange);
                 case TextDocumentNames.DidOpen:
                     return new OnDidOpenLanguageServerNotificationHandler();
                 case CustomProtocolNames.CommandExecuted:

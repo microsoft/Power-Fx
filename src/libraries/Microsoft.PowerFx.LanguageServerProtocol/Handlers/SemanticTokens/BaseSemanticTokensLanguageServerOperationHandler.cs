@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     /// Handles all kinds of semantic tokens operations.
     /// </summary>
-    public class BaseSemanticTokensLanguageServerOperationHandler : ILanguageServerOperationHandler
+    internal class BaseSemanticTokensLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         public virtual string LspMethod => TextDocumentNames.FullDocumentSemanticTokens;
 
@@ -41,9 +41,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         private Task<IEnumerable<ITokenTextSpan>> GetTokensAsync(LanguageServerOperationContext operationContext, GetTokensContext getTokensContext, CancellationToken cancellationToken)
         {
             return operationContext.ExecuteHostTaskAsync(
-            () =>
+            getTokensContext.documentUri,
+            (scope) =>
             {
-                var result = operationContext.Check(getTokensContext.documentUri, getTokensContext.expression);
+                var result = scope?.Check(getTokensContext.expression);
                 if (result == null)
                 {
                     return null;

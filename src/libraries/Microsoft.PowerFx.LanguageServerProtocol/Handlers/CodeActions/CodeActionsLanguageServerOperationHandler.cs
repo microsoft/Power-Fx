@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using static Microsoft.PowerFx.LanguageServerProtocol.LanguageServer;
 
@@ -14,7 +15,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     /// Handler for code actions.
     /// </summary>
-    public class CodeActionsLanguageServerOperationHandler : ILanguageServerOperationHandler
+    internal sealed class CodeActionsLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         public bool IsRequest => true;
 
@@ -38,9 +39,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         private Task<CodeActionResult[]> HandleQuickFixes(LanguageServerOperationContext operationContext, string expression, CodeActionParams codeActionParams, CancellationToken cancellationToken)
         {
             return operationContext.ExecuteHostTaskAsync(
-            () =>
+            codeActionParams.TextDocument.Uri,
+            (scope) =>
             {
-                var scope = operationContext.GetScope(codeActionParams.TextDocument.Uri);
                 if (scope is EditorContextScope scopeQuickFix)
                 {
                     return Task.FromResult(scopeQuickFix.SuggestFixes(expression, _onLogUnhandledExceptionHandler));
@@ -56,7 +57,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// </summary>
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        public virtual async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        public async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
             operationContext.Logger?.LogInformation($"[PFX] HandleCodeActionRequest: id={operationContext.RequestId ?? "<null>"}, paramsJson={operationContext.RawOperationInput ?? "<null>"}");
 

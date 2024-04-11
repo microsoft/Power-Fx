@@ -4,6 +4,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
@@ -12,7 +13,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// An abstract handler for NL2FX operations.
     /// This is a class and not interface to allow us to add new methods in future without breaking existing implementations.
     /// </summary>
-    public class Nl2FxLanguageServerOperationHandler : ILanguageServerOperationHandler
+    internal sealed class Nl2FxLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         public bool IsRequest => true;
 
@@ -36,16 +37,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <summary>
         /// Performs pre-handle operations for NL2FX.
         /// </summary>
+        /// <param name="scope"> PowerFx Scope. </param>
         /// <param name="operationContext"> Language Server Operation Context. </param>
-        private void PreHandleNl2Fx(LanguageServerOperationContext operationContext)
+        private void PreHandleNl2Fx(IPowerFxScope scope, LanguageServerOperationContext operationContext)
         {
-            _nlHandler = _nLHandlerFactory?.GetNLHandler(operationContext.GetScope(_nl2FxRequestParams.TextDocument.Uri), _nl2FxRequestParams) ?? throw new NullReferenceException("No suitable handler found to handle Nl2Fx");
+            _nlHandler = operationContext.GetNLHandler(_nl2FxRequestParams.TextDocument.Uri, _nLHandlerFactory, _nl2FxRequestParams) ?? throw new NullReferenceException("No suitable handler found to handle Nl2Fx");
             if (!_nlHandler.SupportsNL2Fx)
             {
                 throw new NotSupportedException("Nl2fx is not supported");
             }
 
-            var check = operationContext.Check(_nl2FxRequestParams.TextDocument.Uri, LanguageServer.Nl2FxDummyFormula) ?? throw new NullReferenceException("Check result was not found for NL2Fx operation");
+            var check = scope?.Check(LanguageServer.Nl2FxDummyFormula) ?? throw new NullReferenceException("Check result was not found for NL2Fx operation");
             var summary = check.ApplyGetContextSummary();
             _nl2FxParameters = new NL2FxParameters
             {
@@ -69,8 +71,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <summary>
         /// Performs post-handle operations for NL2FX.
         /// </summary>
+        /// <param name="scope">PowerFx Scope.</param>
         /// <param name="operationContext">Language Server Operation Context.</param>
-        private void PostHandleNl2FxResults(LanguageServerOperationContext operationContext)
+        private void PostHandleNl2FxResults(IPowerFxScope scope, LanguageServerOperationContext operationContext)
         {
             var nl2FxResult = _nl2FxResult;
             if (nl2FxResult?.Expressions != null)
@@ -82,7 +85,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                         continue;
                     }
 
-                    var check = operationContext.Check(_nl2FxRequestParams.TextDocument.Uri, item.Expression);
+                    var check = scope?.Check(item.Expression);
                     if (check != null && !check.IsSuccess)
                     {
                         item.RawExpression = item.Expression;
@@ -109,9 +112,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             }
 
             await operationContext.ExecuteHostTaskAsync(
-            () => 
+            _nl2FxRequestParams.TextDocument.Uri,   
+            (scope) => 
             {
-                PreHandleNl2Fx(operationContext);
+                PreHandleNl2Fx(scope, operationContext);
                 _nlHandler.PreHandleNl2Fx(_nl2FxRequestParams, _nl2FxParameters, operationContext);
             }, 
             cancellationToken).ConfigureAwait(false);
@@ -126,7 +130,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return;
             }
 
-            await operationContext.ExecuteHostTaskAsync(() => PostHandleNl2FxResults(operationContext), cancellationToken).ConfigureAwait(false);
+            await operationContext.ExecuteHostTaskAsync(_nl2FxRequestParams.TextDocument.Uri, (scope) => PostHandleNl2FxResults(scope, operationContext), cancellationToken).ConfigureAwait(false);
         }
     }
 }

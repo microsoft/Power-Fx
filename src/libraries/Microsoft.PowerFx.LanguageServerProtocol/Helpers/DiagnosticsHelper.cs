@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
     /// <summary>
     /// Contains helper methods for managing diagnostics.
     /// </summary>
-    public static class DiagnosticsHelper
+    internal static class DiagnosticsHelper
     {
         /// <summary>
         /// Writes a diagnostics notification to the builder.

@@ -7,12 +7,12 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// Context for handler creation.
     /// </summary>
     /// <param name="onLogUnhandledExceptionHandler"> Handler for unhandled exceptions.</param>
-    public record HandlerCreationContext(LanguageServer.OnLogUnhandledExceptionHandler onLogUnhandledExceptionHandler);
+    internal record HandlerCreationContext(LanguageServer.OnLogUnhandledExceptionHandler onLogUnhandledExceptionHandler);
 
     /// <summary>
     /// Factory to get the handler for a given method.
     /// </summary>
-    public interface ILanguageServerOperationHandlerFactory
+    internal interface ILanguageServerOperationHandlerFactory
     {
         /// <summary>
         /// Get the handler for the given method.

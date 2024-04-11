@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     /// Handles the initial fixup operation.
     /// </summary>
-    public class InitialFixupLanguageServerOperationHandler : ILanguageServerOperationHandler
+    internal sealed class InitialFixupLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         public bool IsRequest => true;
 
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return;
             }
 
-            var expression = await operationContext.ExecuteHostTaskAsync(() => Task.FromResult(operationContext.ConvertToDisplay(requestParams.TextDocument.Uri, requestParams.TextDocument.Text)), cancellationToken, defaultOutput: string.Empty).ConfigureAwait(false);
+            var expression = await operationContext.ExecuteHostTaskAsync(requestParams.TextDocument.Uri, (scope) => Task.FromResult(scope?.ConvertToDisplay(requestParams.TextDocument.Text)), cancellationToken, defaultOutput: string.Empty).ConfigureAwait(false);
 
             operationContext.OutputBuilder.AddSuccessResponse(operationContext.RequestId, new TextDocumentItem()
             {

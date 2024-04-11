@@ -11,23 +11,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     /// Handler to handle the DidChangeTextDocument notification.
     /// </summary>
-    public class OnDidChangeLanguageServerNotificationHandler : ILanguageServerOperationHandler
+    internal sealed class OnDidChangeLanguageServerNotificationHandler : ILanguageServerOperationHandler
     {
         public string LspMethod => TextDocumentNames.DidChange;
 
         public bool IsRequest => false;
 
-        /// <summary>
-        /// An overridable hook that lets hosts run custom logic when a document changes.
-        /// This was there in old sdk as well in the form of OnDidChange delegate.
-        /// This is not a traditional LSP step that is being exposed as a hook.
-        /// </summary>
-        /// <param name="operationContext">Language Server Operation Context.</param>
-        /// <param name="didChangeTextDocumentParams">Notification Params.</param>
-        /// <param name="cancellationToken">Cancellation Token.</param>
-        protected virtual async Task OnDidChange(LanguageServerOperationContext operationContext, DidChangeTextDocumentParams didChangeTextDocumentParams, CancellationToken cancellationToken)
+        private readonly LanguageServer.NotifyDidChange _notifyDidChange;
+
+        public OnDidChangeLanguageServerNotificationHandler(LanguageServer.NotifyDidChange notifyDidChange)
         {
-            return;
+            _notifyDidChange = notifyDidChange;
         }
 
         /// <summary>
@@ -49,14 +43,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return;
             }
 
-            await OnDidChange(operationContext, didChangeParams, cancellationToken).ConfigureAwait(false);
+            _notifyDidChange?.Invoke(didChangeParams);
             var documentUri = didChangeParams.TextDocument.Uri;
 
             var expression = didChangeParams.ContentChanges[0].Text;
             await operationContext.ExecuteHostTaskAsync(
-            () =>
+            documentUri,
+            (scope) =>
             {
-                var checkResult = operationContext.Check(documentUri, expression);
+                var checkResult = scope?.Check(expression);
 
                 operationContext.OutputBuilder.WriteDiagnosticsNotification(didChangeParams.TextDocument.Uri, expression, checkResult.Errors.ToArray());
 

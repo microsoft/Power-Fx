@@ -3,6 +3,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
@@ -10,7 +11,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     ///  Handler for CommandExecuted operation.
     /// </summary>
-    public class CommandExecutedLanguageServerOperationHandler : ILanguageServerOperationHandler
+    internal sealed class CommandExecutedLanguageServerOperationHandler : ILanguageServerOperationHandler
     {
         public bool IsRequest => true;
 
@@ -32,9 +33,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             }
 
             await operationContext.ExecuteHostTaskAsync(
-            () =>
+            commandExecutedParams.TextDocument.Uri,
+            (scope) =>
             {
-                var scope = operationContext.GetScope(commandExecutedParams.TextDocument.Uri);
                 if (scope is EditorContextScope scopeQuickFix)
                 {
                     scopeQuickFix.OnCommandExecuted(codeActionResult);
@@ -47,7 +48,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// </summary>
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        public virtual async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
+        public async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
             operationContext.Logger?.LogInformation($"[PFX] HandleCommandExecutedRequest: id={operationContext.RequestId ?? "<null>"}, paramsJson={operationContext.RawOperationInput ?? "<null>"}");
             if (!TryParseAndValidateParams(operationContext, out var commandExecutedParams))

@@ -12,23 +12,12 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 {
     public class TestLanguageServer : LanguageServer
     {
-        private readonly List<Exception> _unhandledExceptions = new List<Exception>();
-
-        public List<Exception> UnhandledExceptions => _unhandledExceptions;
-
         public TestLanguageServer(ITestOutputHelper output, SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, INLHandlerFactory nlHandlerFactory = null)
 #pragma warning disable CS0618 // Type or member is obsolete
             : base(sendToClient, scopeFactory, (string s) => output.WriteLine(s))
 #pragma warning restore CS0618 // Type or member is obsolete
         {            
             NLHandlerFactory = nlHandlerFactory;
-            LogUnhandledExceptionHandler += (e) => _unhandledExceptions.Add(e);
-        }
-
-        public TestLanguageServer(IPowerFxScopeFactory scopeFactory, ILanguageServerOperationHandlerFactory factory, IHostTaskExecutor hostTaskExecutor, ILanguageServerLogger logger = null)
-            : base(scopeFactory, factory, hostTaskExecutor, logger)
-        {
-            LogUnhandledExceptionHandler += (e) => _unhandledExceptions.Add(e);
         }
 
         public int TestGetCharPosition(string expression, int position) => PositionRangeHelper.GetCharPosition(expression, position);

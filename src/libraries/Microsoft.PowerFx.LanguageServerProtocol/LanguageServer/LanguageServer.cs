@@ -66,7 +66,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private readonly ILanguageServerLogger _loggerInstance;
 
-        private readonly ILanguageServerOperationHandlerFactory _handlerFactory;
+        /// <summary>
+        /// This is internal for unit testing purpososes only.
+        /// </summary>
+        internal ILanguageServerOperationHandlerFactory HandlerFactory { get; set; }
 
         private readonly IHostTaskExecutor _hostTaskExecutor;
 
@@ -83,12 +86,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         public LanguageServer(
             IPowerFxScopeFactory scopeFactory,
-            ILanguageServerOperationHandlerFactory operationHandlerFactory = null, 
             IHostTaskExecutor hostTaskExecutor = null,
             ILanguageServerLogger languageServerLogger = null)
         {
             _scopeFactory = scopeFactory;
-            _handlerFactory = operationHandlerFactory;
             _hostTaskExecutor = hostTaskExecutor;
             _loggerInstance = languageServerLogger;
         }
@@ -104,7 +105,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         private ILanguageServerOperationHandlerFactory GetHandlerFactory()
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            return _handlerFactory ?? new DefaultLanguageServerOperationHandlerFactory(GetNLHandlerFactory(), OnDidChange);
+            return HandlerFactory ?? new DefaultLanguageServerOperationHandlerFactory(GetNLHandlerFactory(), OnDidChange);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 

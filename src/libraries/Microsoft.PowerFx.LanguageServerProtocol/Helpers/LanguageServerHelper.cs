@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
     /// <summary>
     /// Helper class for Language Server.
     /// </summary>
-    public static class LanguageServerHelper
+    internal static class LanguageServerHelper
     {
         internal static readonly JsonSerializerOptions DefaultJsonSerializerOptions = new ()
         {

@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
     /// <summary>
     /// A interface representing a handler for a language server operation.
     /// </summary>
-    public interface ILanguageServerOperationHandler
+    internal interface ILanguageServerOperationHandler
     {
         /// <summary>
         /// Indicates if the operation is a request.

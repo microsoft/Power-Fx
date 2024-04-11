@@ -2,50 +2,33 @@
 // Licensed under the MIT license.
 
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.LanguageServerProtocol.Handlers;
-using Microsoft.PowerFx.LanguageServerProtocol.Handlers.Notifications;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 {
-    internal class TestOnChangeHandler : OnDidChangeLanguageServerNotificationHandler
+    internal class TestOnChangeHandler
     {
         public int CallCounts = 0;
 
-        public bool Delay { get; set; } = false;
-
-        protected override async Task OnDidChange(LanguageServerOperationContext operationContext, DidChangeTextDocumentParams didChangeTextDocumentParams, CancellationToken cancellationToken)
+        public void OnDidChange(DidChangeTextDocumentParams didChangeTextDocumentParams)
         {
-            if (this.Delay)
-            {
-                await Task.Delay(100, cancellationToken).ConfigureAwait(false);
-            }
-
             CallCounts++;
-        }
-
-        public async Task OnDidChange(DidChangeTextDocumentParams didChangeTextDocumentParams, CancellationToken cancellationToken)
-        {
-            await OnDidChange(null, didChangeTextDocumentParams, cancellationToken).ConfigureAwait(false);
         }
     }
 
     public partial class LanguageServerTestBase
     {
         [Theory]
-        [InlineData("A+CountRows(B)", false, true)]
-        [InlineData("Behavior(); A+CountRows(B)", true, true)]
-        [InlineData("A+CountRows(B)", false, false)]
-        [InlineData("Behavior(); A+CountRows(B)", true, false)]
-        public async Task TestDidChange(string text, bool withAllowSideEffects, bool targetBackwardCompat)
+        [InlineData("A+CountRows(B)", false)]
+        [InlineData("Behavior(); A+CountRows(B)", true)]
+        public async Task TestDidChange(string text, bool withAllowSideEffects)
         {
             Init(new InitParams(options: GetParserOptions(withAllowSideEffects)));
-            var handler = CreateAndConfigureOnChangeHandler(targetBackwardCompat);
-            handler.Delay = true;
+            var handler = CreateAndConfigureOnChangeHandler();
 
             // test good formula
             var payload = GetNotificationPayload(
@@ -114,21 +97,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             return AssertAndGetNotificationParams<PublishDiagnosticsParams>(response, TextDocumentNames.PublishDiagnostics);
         }
 
-        private TestOnChangeHandler CreateAndConfigureOnChangeHandler(bool targetBackwardsCompat)
+        private TestOnChangeHandler CreateAndConfigureOnChangeHandler()
         {
             var handler = new TestOnChangeHandler();
-            if (targetBackwardsCompat)
-            {
-                HandlerFactory.SetHandler(TextDocumentNames.DidChange, new BackwardsCompatibleOnDidChangeNotificationHandler((DidChangeTextDocumentParams parameters) =>
-                {
-                    handler.OnDidChange(parameters, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
-                }));
-            }
-            else
-            {
-                HandlerFactory.SetHandler(TextDocumentNames.DidChange, handler);
-            }
-
+            HandlerFactory.SetHandler(TextDocumentNames.DidChange, new OnDidChangeLanguageServerNotificationHandler(handler.OnDidChange));
             return handler;
         }
 
