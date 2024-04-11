@@ -52,7 +52,7 @@ false
 >> Blob("Abc") <> Blob("Abc")
 true
 
->> With({ file: Blob("Abc") }, file <> Blob("Abc"))
+>> With({ file: Blob("Abc") }, file = file)
 true
 
 >> IsBlank(Blob(""))

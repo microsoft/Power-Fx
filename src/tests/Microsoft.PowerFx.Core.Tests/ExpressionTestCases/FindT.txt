@@ -26,7 +26,7 @@ Table({Value:2},{Value:Error({Kind:ErrorKind.NotApplicable})})
 >> Find(["b"], ["abc", "cde"], If(false, [0], Blank()))
 Blank()
 
->> Find(["b"], ["abc", "cde"], Filter([0], Value <> 0))
+>> Find(["b"], ["abc", "cde"], Filter([0], Value <> Value))
 Table({Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), [1, 2, 3])
@@ -89,37 +89,37 @@ Table({Value:9},{Value:2},{Value:Error({Kind:ErrorKind.NotApplicable})})
 >> Find(",", [Blank(), "lastName,firstName", "lastName,firstName"], [1, 2])
 Table({Value:Blank()},{Value:9},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
->> Find(Filter(["empty table"], Value <> "empty table"), "", 1)
+>> Find(Filter(["empty table"], Value <> Value), "", 1)
 Table()
 
->> Find("", Filter(["empty table"], Value <> "empty table"), 1)
+>> Find("", Filter(["empty table"], Value <> Value), 1)
 Table()
 
->> Find("textToFind", Filter(["empty table"], Value <> "empty table"), 2)
+>> Find("textToFind", Filter(["empty table"], Value <> Value), 2)
 Table()
 
->> Find(Filter(["empty table"], Value <> "empty table"), Filter(["empty table"], Value <> "empty table"))
+>> Find(Filter(["empty table"], Value <> Value), Filter(["empty table"], Value <> Value))
 Table()
 
->> Find(Filter(["empty table"], Value <> "empty table"), Filter(["empty table"], Value <> "empty table"), Filter(["empty table"], Value <> "empty table"))
+>> Find(Filter(["empty table"], Value <> Value), Filter(["empty table"], Value <> Value), Filter(["empty table"], Value <> Value))
 Table()
 
->> Find(Filter(["empty table"], Value <> "empty table"), [Blank(), "lastName,firstName", "lastName,firstName"], 2)
+>> Find(Filter(["empty table"], Value <> Value), [Blank(), "lastName,firstName", "lastName,firstName"], 2)
 Table({Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
->> Find(Filter(["empty table"], Value <> "empty table"), "textToSearch", [1, 2])
+>> Find(Filter(["empty table"], Value <> Value), "textToSearch", [1, 2])
 Table({Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
->> Find([",", Blank(), ""], Filter(["empty table"], Value <> "empty table"), 2)
+>> Find([",", Blank(), ""], Filter(["empty table"], Value <> Value), 2)
 Table({Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
->> Find(",", Filter(["empty table"], Value <> "empty table"), [1, 1])
+>> Find(",", Filter(["empty table"], Value <> Value), [1, 1])
 Table({Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
->> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName", "lastName,firstName"], Filter(["empty table"], Value <> "empty table"))
+>> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName", "lastName,firstName"], Filter(["empty table"], Value <> Value))
 Table({Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
->> Find(",", [Blank(), "lastName,firstName"], Filter(["empty table"], Value <> "empty table"))
+>> Find(",", [Blank(), "lastName,firstName"], Filter(["empty table"], Value <> Value))
 Table({Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Find("c", Table({ within: "abc" }, { within: Error({Kind: ErrorKind.Validation}) }, { within: "cde" }))

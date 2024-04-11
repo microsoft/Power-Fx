@@ -200,7 +200,7 @@ Error({Kind:ErrorKind.Div0})
 >> ForAll(Exp([0, 1000000000, 0, 1/0, 0, If(Char(0) = "a",-1)]), IfError(Value, -FirstError.Kind))
 Table({Value:1},{Value:-24},{Value:1},{Value:-13},{Value:1},{Value:-25})
 
->> Filter(If(1/0<2,[1,2,3]), Value = 1)
+>> Filter(If(1/0<2,[1,2,3]), Value = Value)
 Error({Kind:ErrorKind.Div0})
 
 >> Filter([2,-1,0,1,-2], Sqrt(Value) > 0)
