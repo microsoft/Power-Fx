@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
     internal sealed class EnumStoreBuilder
     {
         #region Default Enums
-        private static IReadOnlyDictionary<string, EnumSymbol> DefaultEnumSymbols { get; } =
+        internal static IReadOnlyDictionary<string, EnumSymbol> DefaultEnumSymbols { get; } =
             new Dictionary<string, EnumSymbol>()
             {
                 { LanguageConstants.ColorEnumString, BuiltInEnums.ColorEnum },
