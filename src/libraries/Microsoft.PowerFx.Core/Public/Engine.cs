@@ -297,7 +297,7 @@ namespace Microsoft.PowerFx
             
             if (resolvedType == DType.Invalid)
             {
-                throw new Exception("Invalid type expression Exception");
+                throw new InvalidOperationException("Invalid type expression");
             }
 
             return FormulaType.Build(resolvedType);
@@ -561,6 +561,11 @@ namespace Microsoft.PowerFx
         {
             var supportedFunctionsAndTypes = ReadOnlySymbolTable.Compose(SupportedFunctions, PrimitiveTypes);
             Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, supportedFunctionsAndTypes, symbolTable);
+        }
+
+        internal void AddUserDefinedType(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null)
+        {
+            Config.SymbolTable.AddUserDefinedType(script, parseCulture, PrimitiveTypes, symbolTable);
         }
     }
 }

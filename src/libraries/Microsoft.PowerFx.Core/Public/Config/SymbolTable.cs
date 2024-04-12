@@ -256,6 +256,45 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
+        /// Adds an user defined type.
+        /// </summary>
+        /// <param name="script">String representation of the user defined type.</param>
+        /// <param name="parseCulture">CultureInfo to parse the script against. Default is invariant.</param>
+        /// <param name="symbolTable">Extra symbols to resolve Type expression. Commonly coming from Engine.</param>
+        /// <param name="extraSymbolTable">Additional symbols to resolve Type expression.</param>
+        internal void AddUserDefinedType(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null)
+        {
+            // Phase 1: Side affects are not allowed.
+            var options = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true,
+                Culture = parseCulture ?? CultureInfo.InvariantCulture,
+            };
+
+            var sb = new StringBuilder();
+
+            // Compose will handle null symbols
+            var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
+
+            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult, nameResolver: composedSymbols);
+
+            if (userDefinitionResult.HasErrors)
+            {
+                sb.AppendLine("Something went wrong when processing user defined type.");
+
+                foreach (var error in userDefinitionResult.Errors)
+                {
+                    error.FormatCore(sb);
+                }
+
+                throw new InvalidOperationException(sb.ToString());
+            }
+
+            this.AddTypes(userDefinitionResult.DefinedTypes);
+        }
+
+        /// <summary>
         /// Remove variable, entity or constant of a given name. 
         /// </summary>
         /// <param name="name">display or logical name for the variable or entity to be removed. Logical name of constant to be removed.</param>

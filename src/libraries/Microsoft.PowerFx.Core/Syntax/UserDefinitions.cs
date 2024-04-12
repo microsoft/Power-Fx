@@ -83,10 +83,8 @@ namespace Microsoft.PowerFx.Syntax
                 parseResult = ProcessPartialAttributes(parseResult);
             }
 
-            var definedTypes = parseResult.DefinedTypes.ToList();
-
             var typeErr = new List<TexlError>();
-            var typeGraph = new DefinedTypeDependencyGraph(definedTypes, nameResolver);
+            var typeGraph = new DefinedTypeDependencyGraph(parseResult.DefinedTypes, nameResolver);
             var resolvedTypes = typeGraph.ResolveTypes(typeErr);
 
             foreach (var unresolvedType in typeGraph.UnresolvedTypes)
@@ -132,7 +130,7 @@ namespace Microsoft.PowerFx.Syntax
 
             if (userDefinitionResult.HasErrors)
             {
-                sb.AppendLine("Something went wrong when parsing named formulas and/or user defined functions.");
+                sb.AppendLine("Something went wrong when parsing named formulas and/or user definitions.");
 
                 foreach (var error in userDefinitionResult.Errors)
                 {
