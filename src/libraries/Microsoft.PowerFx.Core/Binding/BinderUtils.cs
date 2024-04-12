@@ -350,14 +350,15 @@ namespace Microsoft.PowerFx.Core.Binding
             //
             // Option sets need not (and shouldn't be) listed in calls to CheckTypeCore.  For consistency,
             // we always check option sets here against the backing types.
+            //
+            // Option sets can always coerce to string, V1 and pre-V1.
             var nodeBackingKind = nodeType.OptionSetInfo?.BackingKind;
             if (nodeBackingKind != null &&
-                ((((typeWant.Kind == DKind.String && nodeBackingKind == DKind.String) ||
-                   (typeWant.Kind == DKind.Boolean && nodeBackingKind == DKind.Boolean)) &&
-                    (!usePowerFxV1CompatibilityRules || nodeType.OptionSetInfo.CanCoerceToBackingKind)) ||
-                 ((((typeWant.Kind == DKind.Number || typeWant.Kind == DKind.Decimal) && nodeBackingKind == DKind.Number) ||
-                    (typeWant.Kind == DKind.Color && nodeBackingKind == DKind.Color)) &&
-                     usePowerFxV1CompatibilityRules && nodeType.OptionSetInfo.CanCoerceToBackingKind)))
+                (typeWant.Kind == DKind.String ||
+                ((!usePowerFxV1CompatibilityRules || nodeType.OptionSetInfo.CanCoerceToBackingKind) &&
+                   ((typeWant.Kind == DKind.Boolean && nodeBackingKind == DKind.Boolean) ||
+                    ((typeWant.Kind == DKind.Number || typeWant.Kind == DKind.Decimal) && nodeBackingKind == DKind.Number) ||
+                    (typeWant.Kind == DKind.Color && nodeBackingKind == DKind.Color)))))
             {
                 coercions.Add(new BinderCoercionResult() { Node = node, CoercedType = typeWant });
                 return new BinderCheckTypeResult() { Coercions = coercions };
@@ -1324,13 +1325,13 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (features.PowerFxV1CompatibilityRules)
                     {
-                        resLeftConcat = CheckTypeCore(errorContainer, leftNode, features, leftType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
-                        resRightConcat = CheckTypeCore(errorContainer, rightNode, features, rightType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
+                        resLeftConcat = CheckTypeCore(errorContainer, leftNode, features, leftType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.ViewValue, DType.UntypedObject);
+                        resRightConcat = CheckTypeCore(errorContainer, rightNode, features, rightType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.ViewValue, DType.UntypedObject);
                     }
                     else
                     {
-                        resLeftConcat = CheckTypeCore(errorContainer, leftNode, features, leftType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
-                        resRightConcat = CheckTypeCore(errorContainer, rightNode, features, rightType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
+                        resLeftConcat = CheckTypeCore(errorContainer, leftNode, features, leftType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.ViewValue, DType.UntypedObject);
+                        resRightConcat = CheckTypeCore(errorContainer, rightNode, features, rightType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.ViewValue, DType.UntypedObject);
                     }
 
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.String, Coercions = resLeftConcat.Coercions.Concat(resRightConcat.Coercions).ToList() };

@@ -409,7 +409,7 @@ false
 Errors: Error 0-4: The function 'Text' has some invalid arguments.|Error 18-25: Expected text or number. We expect text or a number at this point in the formula.
 
 >> "Label:" & TestBlueRamp.Blue50
-Errors: Error 23-30: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, OptionSetValue, ViewValue, UntypedObject.
+Errors: Error 23-30: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
 
 >> Mid( TestBlueRamp.Blue50, 2 )
 Errors: Error 0-3: The function 'Mid' has some invalid arguments.|Error 17-24: Invalid argument type (Color). Expecting a Text value instead.
@@ -421,7 +421,7 @@ Errors: Error 17-24: Invalid argument type (Color). Expecting a Text value inste
 Errors: Error 0-4: The function 'Text' has some invalid arguments.|Error 17-23: Expected text or number. We expect text or a number at this point in the formula.
 
 >> "Label:" & TestRedRamp.Red25
-Errors: Error 22-28: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, OptionSetValue, ViewValue, UntypedObject.
+Errors: Error 22-28: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
 
 >> Mid( TestRedRamp.Red25, 2 )
 Errors: Error 0-3: The function 'Mid' has some invalid arguments.|Error 16-22: Invalid argument type (Color). Expecting a Text value instead.

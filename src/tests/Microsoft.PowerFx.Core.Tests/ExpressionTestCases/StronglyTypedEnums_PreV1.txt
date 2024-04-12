@@ -41,7 +41,7 @@ false
 // Non string-backed enums use the name when coerced to string
 // This might not be great, but it matches the CDS Option Set behavior.
 >> "Color: " & Color.Red
-Errors: Error 17-21: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, OptionSetValue, ViewValue, UntypedObject.
+Errors: Error 17-21: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
 
 // Functions can enforce expecting an enum type
 >> DateAdd(Date(2011,1,15), 100000000, "milliseconds")
