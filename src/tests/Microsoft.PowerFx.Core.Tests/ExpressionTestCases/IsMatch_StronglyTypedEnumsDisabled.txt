@@ -55,8 +55,5 @@ Errors: Error 16-17: Regular expressions must be constant values.
 >> IsMatch("28", 28)
 Errors: Error 14-16: Regular expressions must be constant values.
 
->> IsMatch("HiHi", "Hi", "foo")
-true
-
 >> IsMatch("Hello", "Hello", "")
 true

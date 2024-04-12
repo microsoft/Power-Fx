@@ -221,6 +221,12 @@ Errors: Error 22-23: Incompatible types for comparison. These types can't be com
 >> JSONFormat.IndentFour <> Match.Email
 Errors: Error 22-24: Incompatible types for comparison. These types can't be compared: Enum (JSONFormat), Enum (Match).
 
+>> Match.Digit <> MatchOptions.Contains
+Errors: Error 12-14: Incompatible types for comparison. These types can't be compared: Enum (Match), Enum (MatchOptions).
+
+>> Match.Digit = MatchOptions.Contains
+Errors: Error 12-13: Incompatible types for comparison. These types can't be compared: Enum (Match), Enum (MatchOptions).
+
 //===========================================================================================================
 //
 //  5. By default, Equals/not equals with the backing kind is not supported.  For example, StartOfWeek.Tuesday = 12
@@ -237,6 +243,12 @@ Errors: Error 22-23: Incompatible types for comparison. These types can't be com
 
 >> JSONFormat.IndentFour <> "_"
 Errors: Error 22-24: Incompatible types for comparison. These types can't be compared: Enum (JSONFormat), Text.
+
+>> MatchOptions.Contains = "c"
+Errors: Error 22-23: Incompatible types for comparison. These types can't be compared: Enum (MatchOptions), Text.
+
+>> MatchOptions.Contains <> "c"
+Errors: Error 22-24: Incompatible types for comparison. These types can't be compared: Enum (MatchOptions), Text.
 
 //===========================================================================================================
 //
@@ -380,6 +392,24 @@ Table({FullMatch:"3",StartMatch:2,SubMatches:Table()},{FullMatch:"4",StartMatch:
 >> MatchAll( "a3d4", "\d")
 Table({FullMatch:"3",StartMatch:2,SubMatches:Table()},{FullMatch:"4",StartMatch:4,SubMatches:Table()})
 
+>> Match.Digit = "\d"
+true
+
+>> Match.Digit <> "\d"
+false
+
+>> Match.Digit > "\d"
+Errors: Error 12-13: Incompatible types for comparison. These types can't be compared: Enum (Match), Text.
+
+>> "\d" = Match.Digit
+true
+
+>> "\d" <> Match.Digit
+false
+
+>> "\d" > Match.Digit
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Text, Enum (Match).
+ 
 // Most other enums do not, see section 1 above
 
 //===========================================================================================================

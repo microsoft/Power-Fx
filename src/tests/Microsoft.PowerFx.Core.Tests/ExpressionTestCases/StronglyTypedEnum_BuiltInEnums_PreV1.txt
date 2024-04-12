@@ -240,6 +240,18 @@ true
 >> JSONFormat.IndentFour <> "_"
 true
 
+>> MatchOptions.Contains = "c"
+true
+
+>> MatchOptions.Contains <> "c"
+false
+
+>> "c" = MatchOptions.Contains
+true
+
+>> "c" <> MatchOptions.Contains
+false
+
 //===========================================================================================================
 //
 // 6. By default, Order comparisons between number based enums are not supported by default, for example StartOfWeek.Tuesday < StartOfWeek.Monday
@@ -381,6 +393,24 @@ Table({FullMatch:"3",StartMatch:2,SubMatches:Table()},{FullMatch:"4",StartMatch:
 
 >> MatchAll( "a3d4", "\d")
 Table({FullMatch:"3",StartMatch:2,SubMatches:Table()},{FullMatch:"4",StartMatch:4,SubMatches:Table()})
+
+>> Match.Digit = "\d"
+true
+
+>> Match.Digit <> "\d"
+false
+
+>> Match.Digit > "\d"
+Errors: Error 5-11: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 14-18: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "\d" = Match.Digit
+true
+
+>> "\d" <> Match.Digit
+false
+
+>> "\d" > Match.Digit
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 12-18: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 // Most other enums do not, see section 1 above
 
