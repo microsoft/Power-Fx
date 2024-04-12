@@ -4607,4 +4607,8 @@
     <value>Expected a text, numeric, boolean, or date/time value.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Function Summarize expects at least one group by column name.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>

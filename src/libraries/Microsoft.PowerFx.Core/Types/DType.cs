@@ -14,12 +14,10 @@ using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Conditional = System.Diagnostics.ConditionalAttribute;
-using DebuggerDisplay = System.Diagnostics.DebuggerDisplayAttribute;
 
 namespace Microsoft.PowerFx.Core.Types
 {
     [ThreadSafeImmutable]
-    [DebuggerDisplay("Name=Joyle")]
     internal class DType : ICheckable
     {
         public const char EnumPrefix = '%';

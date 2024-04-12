@@ -809,5 +809,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrTruncatedArgWarning = new ErrorResourceKey("ErrTruncatedArgWarning");
 
         public static ErrorResourceKey ErrNeedPrimitive = new ErrorResourceKey("ErrNeedPrimitive");
+        public static ErrorResourceKey ErrSummarizeNoGroupBy = new ErrorResourceKey("ErrSummarizeNoGroupBy");
     }
 }

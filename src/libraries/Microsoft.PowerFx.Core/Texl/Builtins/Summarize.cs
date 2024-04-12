@@ -2,21 +2,18 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Xml.Linq;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // Summarize(source, groupby_column, aggregation, ..., groupby_column, ..., aggregation, ...)
-    // !!!TODO [RequiresErrorContext]
+    // Summarize( Table, GroupByColumn1 [, GroupByColumn2 …], AggregateExpr1 As Name [, AggregateExpr1 As Name …] )
     internal sealed class SummarizeFunction : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
@@ -25,11 +22,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasColumnIdentifiers => true;
 
+        private static readonly IReadOnlyCollection<string> _supportedAggregateFunctions = new HashSet<string>()
+        {
+            "Sum", "Average"
+        };
+
         public SummarizeFunction()
             : base("Summarize", TexlStrings.AboutSummarize, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable)
         {
             SignatureConstraint = new SignatureConstraint(omitStartIndex: 3, repeatSpan: 1, endNonRepeatCount: 1, repeatTopLength: 6);
-            ScopeInfo = new FunctionScopeInfo(this);
+            ScopeInfo = new FunctionTableScopeInfo(this);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -96,10 +98,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 sourceType = DType.EmptyTable;
             }
 
-            int lastIndex = args.Length - 1;
-            DType groupKeyType = DType.EmptyTable, groupType = sourceType;
-
-            var supportColumnNamesAsIdentifiers = context.Features.SupportColumnNamesAsIdentifiers;
+            var atLeastOneGroupByColumn = false;
 
             for (int i = 1; i < args.Length; i++)
             {
@@ -109,6 +108,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 DName columnName;
                 DType existingType;
 
+                // All args starting at index 1 need to be identifiers or aggregate functions (wrapped in AsNode node).
                 switch (arg)
                 {
                     case AsNode nameNode:
@@ -117,21 +117,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         break;
 
                     case FirstNameNode:
-                        if (!TryGetColumnLogicalName(sourceType, supportColumnNamesAsIdentifiers, arg, errors, out columnName, out existingType))
+                        if (!TryGetColumnLogicalName(sourceType, context.Features.SupportColumnNamesAsIdentifiers, arg, errors, out columnName, out existingType))
                         {
                             isValid = false;
                             continue;
                         }
 
+                        atLeastOneGroupByColumn = true;
                         break;
 
                     default:
                         isValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Moderate, arg, TexlStrings.ErrNotSupportedFormat_Func, Name);
+                        errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrNotSupportedFormat_Func, Name);
                         continue;
                 }
-
-                // All args starting at index 1 need to be identifiers or primitives.
+                
                 if (!existingType.IsPrimitive)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrNeedPrimitive);
@@ -149,8 +149,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            Contracts.Assert(returnType.IsTable);
+            if (!atLeastOneGroupByColumn)
+            {
+                isValid = false;
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrSummarizeNoGroupBy);
+            }
 
+            Contracts.Assert(returnType.IsTable);
             return isValid;
         }
 
@@ -161,89 +166,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return ParamIdentifierStatus.NeverIdentifier;
             }
 
-            return index == 0 ? ParamIdentifierStatus.NeverIdentifier : ParamIdentifierStatus.AlwaysIdentifier;
+            return index == 0 ? ParamIdentifierStatus.NeverIdentifier : ParamIdentifierStatus.PossiblyIdentifier;
         }
 
-        // !!! TODO UNCOMMENT
-        /*
-        public override bool HasSuggestionsForParam(int argumentIndex)
+        public override bool TranslateAsNodeToRecordNode(TexlNode node)
         {
-            Contracts.Assert(0 <= argumentIndex);
+            Contracts.Assert(node != null);
 
-            return argumentIndex > 0 || base.HasSuggestionsForParam(argumentIndex);
+            return node is AsNode asNode && asNode.Left is CallNode;
         }
 
-        public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
+        public override bool ParameterCanBeIdentifier(TexlNode node, int index, Features features)
         {
-            if (!features.SupportColumnNamesAsIdentifiers)
-            {
-                return ParamIdentifierStatus.NeverIdentifier;
-            }
-
-            return index == 0 ? ParamIdentifierStatus.NeverIdentifier : ParamIdentifierStatus.AlwaysIdentifier;
+            return index > 0 && node is not AsNode;
         }
-
-        public override bool AffectsDataSourceQueryOptions { get { return true; } }
-
-        public override bool UpdateDataQuerySelects(CallNode callNode, TexlBinding binding, DataSourceToQueryOptionsMap dataSourceToQueryOptionsMap)
-        {
-            Contracts.AssertValue(callNode);
-            Contracts.AssertValue(binding);
-
-            if (!CheckArgsCount(callNode, binding))
-                return false;
-
-            var args = Contracts.VerifyValue(callNode.Args.Children);
-
-            DType dsType = binding.GetType(args[0]);
-            if (dsType.AssociatedDataSources == null)
-                return false;
-
-            bool retval = false;
-
-            var supportColumnNamesAsIdentifiers = binding.Features.SupportColumnNamesAsIdentifiers;
-
-            for (var i = 1; i < args.Count - 1; i++)
-            {
-                base.TryGetColumnLogicalName(
-                    dsType,
-                    supportColumnNamesAsIdentifiers,
-                    args[i],
-                    TexlFunction.DefaultErrorContainer,
-                    out var columnName,
-                    out var columnType).Verify("This has been validated by CheckTypes");
-
-                retval |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
-            }
-
-            return retval;
-        }
-
-        public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
-        {
-            Contracts.AssertValue(callNode);
-            Contracts.AssertValue(binding);
-
-            if (!CheckArgsCount(callNode, binding))
-            {
-                return false;
-            }
-
-            IExternalDataSource dataSource = null;
-
-            if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource))
-            {
-                if (dataSource != null && !dataSource.IsDelegatable)
-                {
-                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.DataSourceNotDelegatable, callNode, binding, this, DelegationTelemetryInfo.CreateDataSourceNotDelegatableTelemetryInfo(dataSource));
-                    return false;
-                }
-            }
-
-            // This function always returns false. We are recording telemetry for why it might not be delegable
-            TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.DelegationSuccessful, callNode, binding, this);
-            return false;
-        } 
-        */
     }
 }

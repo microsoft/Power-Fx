@@ -2786,9 +2786,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // fieldName (unqualified)
                 else if (IsRowScopeField(node, out scope, out fError, out var isWholeScope))
-                {
-                    Contracts.Assert(scope.Type.IsRecord || scope.Type.IsUntypedObject);
-
+                {                    
+                    Contracts.Assert(scope.Type.IsRecord || scope.Type.IsTable || scope.Type.IsUntypedObject);
+                    
                     // Detected access to a pageable dataEntity in row scope, error was set
                     if (fError)
                     {
@@ -4481,6 +4481,11 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     // Determine the scope identifier using the first node for lambda params
                     identRequired = _txb.GetScopeIdent(nodeInput, typeScope, out scopeIdent);
+
+                    if (!identRequired)
+                    {
+                        scopeIdent = scopeInfo.ScopeIdent;
+                    }
                 }
 
                 if (!fArgsValid)
@@ -4548,8 +4553,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     var isLambdaArg = maybeFunc.IsLambdaParam(i) && scopeInfo.AppliesToArgument(i);
 
+                    // !!!TODO This last validatio can be simplied.
+                    // !!!TODO Is this necessary?
+                    var scopeIdentMatches = args[i] is AsNode asnode 
+                        && asnode.Left is CallNode callnode 
+                        && callnode.Args != null && callnode.Args.ChildNodes != null && callnode.Args.ChildNodes.Any(node => node is FirstNameNode fnNode && fnNode.Ident.Name.Value == scopeInfo.ScopeIdent.Value);
+
                     // Use the new scope only for lambda or identifier args.
-                    _currentScope = (isIdentifier || isLambdaArg) ? scopeNew : scopeNew.Parent;
+                    _currentScope = (isIdentifier || isLambdaArg) || scopeIdentMatches ? scopeNew : scopeNew.Parent;
 
                     if (!isIdentifier || maybeFunc.GetIdentifierParamStatus(_features, i) == TexlFunction.ParamIdentifierStatus.PossiblyIdentifier)
                     {
@@ -4573,7 +4584,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     // Accept should leave the scope as it found it.
-                    Contracts.Assert(_currentScope == ((isLambdaArg || isIdentifier) ? scopeNew : scopeNew.Parent));
+                    Contracts.Assert(_currentScope == ((isLambdaArg || isIdentifier) || scopeIdentMatches ? scopeNew : scopeNew.Parent));
                 }
 
                 // Now check and mark the path as async.

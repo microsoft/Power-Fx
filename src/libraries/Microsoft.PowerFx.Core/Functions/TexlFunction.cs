@@ -653,6 +653,24 @@ namespace Microsoft.PowerFx.Core.Functions
                 paramIdentifierStatus == ParamIdentifierStatus.PossiblyIdentifier;
         }
 
+        public virtual bool ParameterCanBeIdentifier(TexlNode node, int index, Features features)
+        {
+            return ParameterCanBeIdentifier(features, index);
+        }
+
+        /// <summary>
+        /// Transformes a AsNode into a RecordNode.
+        /// Some functions (like Summarize) will need both information from left and right side.
+        /// Average(table, column) As average_column => {average_column:Average(table, column)}.
+        /// </summary>
+        /// <param name="node">Node.</param>
+        /// <returns></returns>
+        public virtual bool TranslateAsNodeToRecordNode(TexlNode node)
+        {
+            Contracts.Assert(node != null);
+            return false;
+        }
+
         /// <summary>
         /// Tries to retrieve the column logical name from the argument node.
         /// </summary>
