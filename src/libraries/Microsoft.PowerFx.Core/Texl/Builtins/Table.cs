@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -115,6 +116,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             for (var i = 0; i < argTypes.Length; i++)
             {
                 var ads = argTypes[i].AssociatedDataSources?.FirstOrDefault();
+
+                var isDelegable = ArgValidators.DelegatableDataSourceInfoValidator.TryGetValidValue(args[i], binding, out _);
 
                 if (argTypes[i].IsTableNonObjNull && ads is IExternalTabularDataSource)
                 {

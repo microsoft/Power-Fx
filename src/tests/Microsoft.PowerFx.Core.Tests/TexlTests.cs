@@ -4188,10 +4188,22 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table(Filter(DS, Sqrt(Age) > 5), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 2)]
         public void TexlFunctionTypeSemanticsTable_Delegation(string script, string expectedSchema, int errorCount)
         {
-            var dataSourceSchema = TestUtils.DT("*[Id:n, Name:s, Age:n]");
+            var schema = TestUtils.DT("*[Id:n, Name:s, Age:n]");
 
             var symbol = new SymbolTable();
-            symbol.AddEntity(new TestDataSource("DS", dataSourceSchema));
+            symbol.AddEntity(new TestDelegableDataSource(
+                    "DS",
+                    schema,
+                    new TestDelegationMetadata(
+                        DelegationCapability.Filter,
+                        schema,
+                        new FilterOpMetadata(
+                            schema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new DelegationCapability(DelegationCapability.Equal | DelegationCapability.StartsWith),
+                            null))));
+
             symbol.AddVariable("T1", new TableType(TestUtils.DT("*[a:n, b:s]")));
 
             TestBindingWarning(
