@@ -72,18 +72,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         }
 
         /// <summary>
-        /// A helper method to convert the expression to display format.
-        /// </summary>
-        /// <param name="uri">Uri to use for check result creation.</param>
-        /// <param name="expression">Expression to create check result for.</param>
-        /// <returns>Converted expression.</returns>
-        public string ConvertToDisplay(string uri, string expression)
-        {
-            var scope = GetScope(uri);
-            return scope?.ConvertToDisplay(expression);
-        }
-
-        /// <summary>
         /// Get the NLHandler for the given uri and factory.
         /// </summary>
         /// <param name="uri">Uri to use for scope creation.</param>
