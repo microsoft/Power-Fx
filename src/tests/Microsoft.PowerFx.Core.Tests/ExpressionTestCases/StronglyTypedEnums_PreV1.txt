@@ -64,10 +64,10 @@ Date(2011,1,16)
 1
 
 >> Text(Date(1970, 1, 1), DateTimeFormat.LongDate) 
-"'long1ate'"
+"Thursday, January 1, 1970"
 
 >> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime) 
-"'long1ateti1e'"
+"Thursday, January 1, 1970 12:00:00 AM"
 
 >> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime24)
-"'long1ateti1e24'"
+"Thursday, January 1, 1970 0:00:00"
