@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -45,7 +46,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             { "OptionSetSortTestSetup", (null, OptionSetSortTestSetup, null, null) },
             { "OptionSetTestSetup", (null, OptionSetTestSetup1, OptionSetTestSetup2, null) },
             { "RegEx", (null, RegExSetup, null, null) },
-            { "TraceSetup", (null, null, null, TraceSetup) }
+            { "TraceSetup", (null, null, null, TraceSetup) },
+            { "LoadDataTestSetup", (null, null, null, LoadDataTestSetup) }
         };
 
         private static object EnableJsonFunctions(PowerFxConfig config, SymbolTable symbolTable)
@@ -330,6 +332,28 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var t_bsType = TableType.Empty().Add("b", FormulaType.String);
             engine.UpdateVariable("t_bs1", FormulaValue.NewTable(t_bsType.ToRecord()));
             engine.UpdateVariable("t_bs2", FormulaValue.NewTable(t_bsType.ToRecord()));
+        }
+
+        private static void LoadDataTestSetup(RecalcEngine engine, bool numberIsFloat)
+        {
+            var fullPath = Path.Combine(System.Environment.CurrentDirectory, "Data", "Summarize.txt");
+            var lines = File.ReadAllLines(fullPath);
+            var recordValue = (RecordValue)engine.Eval("{Supplier:\"Contoso\",  Fruit:\"Grapes\",  Price:220, Purchase:Date(2015,10,1)}");
+
+            var tableValue = FormulaValue.NewTable(recordValue.Type);
+
+            engine.UpdateVariable("Sales", tableValue);
+            engine.Config.SymbolTable.EnableMutationFunctions();
+
+            foreach (var line in lines)
+            {
+                var result = engine.Eval($"Collect(Sales, {line})", options: new ParserOptions() { AllowsSideEffects = true });
+
+                if (result is ErrorValue error)
+                {
+                    throw new Exception($"Error in line: {line} - {error.Errors.First().Message}");
+                }
+            }
         }
 
         private static void TraceSetup(RecalcEngine engine, bool numberIsFloat)
