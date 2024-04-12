@@ -26,6 +26,54 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             return node.Accept(new DTypeVisitor(), context);
         }
 
+        public override DType Visit(FirstNameNode node, INameResolver context)
+        {
+            var name = node.Ident.Name;
+            if (context.LookupType(name, out FormulaType cType))
+            {
+                return cType._type;
+            }
+
+            return DType.Invalid;
+        }
+
+        public override DType Visit(RecordNode node, INameResolver context)
+        {
+            var list = new List<TypedName>();
+            foreach (var (cNode, ident) in node.ChildNodes.Zip(node.Ids, (a, b) => (a, b)))
+            {
+                var ty = cNode.Accept(this, context);
+                if (ty == DType.Invalid)
+                {
+                    return DType.Invalid;
+                }
+
+                list.Add(new TypedName(ty, new DName(ident.Name.Value)));
+            }
+
+            return DType.CreateRecord(list);
+        }
+
+        public override DType Visit(TableNode node, INameResolver context)
+        {
+            var childNode = node.ChildNodes.First();
+            var ty = childNode.Accept(this, context);
+            if (ty == DType.Invalid)
+            {
+                return DType.Invalid;
+            }
+
+            if (ty.IsRecord || ty.IsTable)
+            {
+                return ty.ToTable();
+            }
+
+            // single column table syntax
+            var rowType = DType.EmptyRecord.Add(new TypedName(ty, TableValue.ValueDName));
+
+            return rowType.ToTable();
+        }
+
         public override DType Visit(ErrorNode node, INameResolver context)
         {
             return DType.Invalid;
@@ -53,17 +101,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public override DType Visit(DecLitNode node, INameResolver context)
         {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(FirstNameNode node, INameResolver context)
-        {
-            var name = node.Ident.Name;
-            if (context.LookupType(name, out FormulaType cType))
-            {
-                return cType._type;
-            }
-
             return DType.Invalid;
         }
 
@@ -110,42 +147,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
         public override DType Visit(ListNode node, INameResolver context)
         {
             return DType.Invalid;
-        }
-
-        public override DType Visit(RecordNode node, INameResolver context)
-        {
-            var list = new List<TypedName>();
-            foreach (var (cNode, ident) in node.ChildNodes.Zip(node.Ids, (a, b) => (a, b)))
-            {
-                var ty = cNode.Accept(this, context);
-                if (ty == DType.Invalid)
-                {
-                    return DType.Invalid;
-                }
-
-                list.Add(new TypedName(ty, new DName(ident.Name.Value)));
-            }
-
-            return DType.CreateRecord(list);
-        }
-
-        public override DType Visit(TableNode node, INameResolver context)
-        {
-            var childNode = node.ChildNodes.First();
-            var ty = childNode.Accept(this, context);
-            if (ty == DType.Invalid)
-            {
-                return DType.Invalid;
-            }
-
-            if (ty.IsRecord || ty.IsTable)
-            {
-                return ty.ToTable();
-            }
-
-            var rowType = DType.EmptyRecord.Add(new TypedName(ty, TableValue.ValueDName));
-
-            return rowType.ToTable();
         }
 
         public override DType Visit(AsNode node, INameResolver context)
