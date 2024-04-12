@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -24,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         private static readonly IReadOnlyCollection<string> _supportedAggregateFunctions = new HashSet<string>()
         {
-            "Sum", "Average"
+            "Sum", "Average", "Max", "Min", "StdevP", "VarP", "Count", "CountA", "CountRows", "CountIf"
         };
 
         public SummarizeFunction()

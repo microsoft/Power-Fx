@@ -1,0 +1,148 @@
+﻿#SETUP: SummarizeLoadDataTestSetup,SupportColumnNamesAsIdentifiers,ConsistentOneColumnTableResult,PowerFxV1CompatibilityRules
+
+>> Summarize(t1, department)
+Table({department:"Human Resources"},{department:"Marketing"},{department:"Finance"},{department:"Sales"},{department:"Information Technology"},{department:"Operations"},{department:"Customer Service"},{department:"Research and Development"},{department:"Production"},{department:"Quality Assurance"})
+
+// Sum
+>> Summarize(t1, department, Sum(ThisGroup, annual_salary) As dep_cost)
+Table({dep_cost:200000,department:"Human Resources"},{dep_cost:205000,department:"Marketing"},{dep_cost:233000,department:"Finance"},{dep_cost:225000,department:"Sales"},{dep_cost:253000,department:"Information Technology"},{dep_cost:210000,department:"Operations"},{dep_cost:203000,department:"Customer Service"},{dep_cost:218000,department:"Research and Development"},{dep_cost:224000,department:"Production"},{dep_cost:235000,department:"Quality Assurance"})
+
+// Average
+
+//Max
+
+// Min
+
+// StdevP
+
+// VarP
+
+// Count
+
+// CountA
+
+// CountRows
+
+// CountIf
+
+
+// Invalid functions
+
+// Earlier test cases
+
+#FORMULA: Sales = Table(
+        {Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1)},
+        {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1)},
+        {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2)},
+        {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2)},
+        {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3)},
+        {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3)}
+    )
+
+//===================================================================================================================
+//
+// Basic grouping with aggregates
+//
+
+>> Summarize( Sales, Supplier, Fruit, CountRows( ThisGroup ) As Count )
+Table({Count:2,Fruit:"Grapes",Supplier:"Contoso"},
+    {Count:2,Fruit:"Lemons",Supplier:"Fabrikam"},
+    {Count:1,Fruit:"Lemons",Supplier:"Contoso"},
+    {Count:1,Fruit:"Bananas",Supplier:"Contoso"})
+
+// Aggregates last
+
+>> Summarize( Sales, Supplier, Fruit, Average( ThisGroup, Price ) As Avg_Price )
+Table({Avg_Price:215,Fruit:"Grapes",Supplier:"Contoso"},
+    {Avg_Price:30.5,Fruit:"Lemons",Supplier:"Fabrikam"},
+    {Avg_Price:29,Fruit:"Lemons",Supplier:"Contoso"},
+    {Avg_Price:12,Fruit:"Bananas",Supplier:"Contoso"})
+
+// Aggregates first
+
+>> Summarize( Sales, CountRows( ThisGroup ) As Count, Supplier, Fruit )
+Table({Count:2,Fruit:"Grapes",Supplier:"Contoso"},
+    {Count:2,Fruit:"Lemons",Supplier:"Fabrikam"},
+    {Count:1,Fruit:"Lemons",Supplier:"Contoso"},
+    {Count:1,Fruit:"Bananas",Supplier:"Contoso"})
+
+>> Summarize( Sales, CountRows( ThisGroup ) As Count, Supplier )
+Table({Count:4,Supplier:"Contoso"},{Count:2,Supplier:"Fabrikam"})
+
+>> Summarize( Sales, CountRows( ThisGroup ) As Count, Fruit )
+Table({Count:2,Fruit:"Grapes"},{Count:3,Fruit:"Lemons"},{Count:1,Fruit:"Bananas"})
+
+>> Summarize( Sales, Fruit, Sum( ThisGroup, Price ) As Sales_By_Fruit )
+Table({Fruit:"Grapes",Sales_By_Fruit:430},{Fruit:"Lemons",Sales_By_Fruit:90},{Fruit:"Bananas",Sales_By_Fruit:12})
+
+// DCount
+
+>> Summarize( Sales, Fruit, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
+Table({CountOfSuppliers:1,Fruit:"Grapes"},{CountOfSuppliers:2,Fruit:"Lemons"},{CountOfSuppliers:1,Fruit:"Bananas"})
+
+//===================================================================================================================
+//
+// Grouping with ThisRecord reference
+//
+
+>> Summarize( Sales, Fruit, Average( ThisGroup, Price * Len(ThisRecord.Fruit) ) As Avg_Len_Price )
+Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})
+
+// Group by fields included in GroupBy
+
+>> Summarize( Sales, Fruit, Average( ThisGroup, Price * Len(Fruit) ) As Avg_Len_Price )
+Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})
+
+//===================================================================================================================
+//
+// Grouping with constant values
+//
+
+>> Summarize( Sales, Supplier, 1 As One, 2 As Two, 3 As Three )
+Table({One:1,Supplier:"Contoso",Three:3,Two:2},{One:1,Supplier:"Fabrikam",Three:3,Two:2})
+
+
+//===================================================================================================================
+//
+// As on table
+//
+
+// with group by columns in ThisGroup...
+
+>> Summarize( Sales As SAS, Fruit, Average( SAS.ThisGroup, Price * Len(Fruit) ) As Avg_Len_Price )
+Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})
+
+// or without them...
+
+>> Summarize( Sales As SAS, Fruit, Average( SAS.ThisGroup, Price * Len(SAS.Fruit) ) As Avg_Len_Price )
+Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})
+
+//===================================================================================================================
+//
+// Nesting
+//
+
+>> Summarize( Summarize( Sales, Supplier, Fruit, Average( ThisGroup, Price ) As Avg_Price ), Supplier, CountRows( ThisGroup ) As Count )
+Table({Count:3,Supplier:"Contoso"},{Count:1,Supplier:"Fabrikam"})
+
+//===================================================================================================================
+//
+// Errors
+//
+
+// No grouping columns
+
+>> Summarize( Sales, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
+Errors: Error 0-84: Summarize requires at least one grouping column.
+
+// Unnamed aggregate
+
+>> Summarize( Sales, Fruit, CountRows( Distinct( ThisGroup, Supplier ) ) )
+Errors: Error 0-71: Summarize arguments must be either existing column names to group by or formulas named with the As keyword.
+
+// Can't reference aggregate column from other aggregates
+
+>> Summarize( Sales, Fruit, Average( ThisGroup, Price ) As Avg_Price, Sum( ThisGruop, Price ) As Total_Cost, Total_Cost/Avg_Price As Ratio )
+Errors
+
+// Can't reference group by columns in ThisGroup
