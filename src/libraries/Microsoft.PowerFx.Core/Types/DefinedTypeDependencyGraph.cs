@@ -22,8 +22,13 @@ namespace Microsoft.PowerFx.Core.Types
         private readonly IEnumerable<DefinedType> _definedTypes;
         private readonly ReadOnlySymbolTable _globalTypes;
 
+        // stores unresolvedType -> its dependencies
         private readonly Dictionary<DefinedType, HashSet<string>> _typeWithDependency;
+
+        // stores unresolvedType -> its dependendents
         private readonly Dictionary<string, HashSet<DefinedType>> _invertedDependency;
+
+        // queue with types ready to be resolved
         private readonly Queue<DefinedType> _tsQueue;
 
         private readonly SymbolTable _definedTypeSymbolTable;
@@ -52,14 +57,15 @@ namespace Microsoft.PowerFx.Core.Types
         // Build type dependency graph to perform topological sort and resolve types
         private void Build()
         {
-            //var composedSymbols = ReadOnlySymbolTable.Compose(_globalTypes, ReadOnlySymbolTable.PrimitiveTypesTableInstance);
             foreach (var defType in _definedTypes)
             {
                 var name = defType.Ident.Name.Value;
                 var dependencies = DefinedTypeDependencyVisitor.FindDependencies(defType.Type.TypeRoot, _globalTypes);
 
+                // establish unresolvedType -> its dependencies
                 _typeWithDependency.Add(defType, dependencies);
 
+                // establish unresolvedType -> its dependendents
                 foreach (var typeSource in dependencies)
                 {
                     if (_invertedDependency.TryGetValue(typeSource, out var typeDependents))
@@ -73,6 +79,7 @@ namespace Microsoft.PowerFx.Core.Types
                     }
                 }
 
+                // Enqueue if no unresolved dependencies
                 if (!dependencies.Any())
                 {
                     _tsQueue.Enqueue(defType);
@@ -84,6 +91,7 @@ namespace Microsoft.PowerFx.Core.Types
         internal IEnumerable<UserDefinedType> ResolveTypes(List<TexlError> errors)
         {
             var composedSymbols = ReadOnlySymbolTable.Compose(_definedTypeSymbolTable, _globalTypes);
+
             var userDefinedTypes = new List<UserDefinedType>();
 
             while (_tsQueue.Any())
@@ -91,6 +99,7 @@ namespace Microsoft.PowerFx.Core.Types
                 var currentType = _tsQueue.Dequeue();
                 _typeWithDependency.Remove(currentType);
 
+                // check if typename is restricted or already defined
                 if (!CheckTypeName(currentType, composedSymbols, errors))
                 {
                     continue;
@@ -113,6 +122,7 @@ namespace Microsoft.PowerFx.Core.Types
             return userDefinedTypes;
         }
 
+        // Removes resolved type name from dependencies and queue any name that is ready to be resolved.
         private void AdjustResolveDependencies(DName name)
         {
             if (_invertedDependency.TryGetValue(name, out var typeDependents))
@@ -121,9 +131,10 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     if (_typeWithDependency.TryGetValue(typeDependent, out var unresolvedTypes))
                     {
+                        // Remove depenpendency since the type name is resolved
                         unresolvedTypes.Remove(name.Value);
 
-                        // Enqueue if all dependencies are resolved
+                        // Enqueue if no unresolved dependencies
                         if (!unresolvedTypes.Any())
                         {
                             _tsQueue.Enqueue(typeDependent);

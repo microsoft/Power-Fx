@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.PowerFx.Core.Entities;
@@ -71,6 +72,23 @@ namespace Microsoft.PowerFx.Types
         {
             _type = type;
         }
+
+        public static readonly IEnumerable<KeyValuePair<DName, FormulaType>> _primitiveTypes = new Dictionary<DName, FormulaType>()
+        {
+            { new DName("Boolean"), FormulaType.Boolean },
+            { new DName("Color"), FormulaType.Color },
+            { new DName("Date"), FormulaType.Date },
+            { new DName("Time"), FormulaType.Time },
+            { new DName("DateTime"), FormulaType.DateTime },
+            { new DName("DateTimeTZInd"), FormulaType.DateTimeNoTimeZone },
+            { new DName("GUID"), FormulaType.Guid },
+            { new DName("Number"), FormulaType.Number },
+            { new DName("Decimal"), FormulaType.Decimal },
+            { new DName("Text"), FormulaType.String },
+            { new DName("Hyperlink"), FormulaType.Hyperlink },
+            { new DName("None"), FormulaType.Blank },
+            { new DName("UntypedObject"), FormulaType.UntypedObject },
+        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FormulaType"/> class.

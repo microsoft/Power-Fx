@@ -40,7 +40,6 @@ namespace Microsoft.PowerFx
 
         private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 
-        // Initialize with primitive types that are currently supported
         private readonly Dictionary<DName, FormulaType> _definedTypes = new Dictionary<DName, FormulaType>();
 
         IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.DefinedTypes => _definedTypes;
@@ -223,7 +222,7 @@ namespace Microsoft.PowerFx
             // Compose will handle null symbols
             var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
 
-            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult, globalNameResolver: composedSymbols);
+            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult, nameResolver: composedSymbols);
 
             if (userDefinitionResult.HasErrors)
             {

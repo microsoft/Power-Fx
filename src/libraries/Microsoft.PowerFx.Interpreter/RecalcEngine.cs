@@ -380,7 +380,7 @@ namespace Microsoft.PowerFx
             // Compose will handle null symbols
             var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, _symbolTable, PrimitiveTypes);
 
-            var userDefinitionResult = UserDefinitions.Process(script, parseCulture, features: Config.Features, globalNameResolver: composedSymbols);
+            var userDefinitionResult = UserDefinitions.Process(script, parseCulture, features: Config.Features, nameResolver: composedSymbols);
 
             if (userDefinitionResult.DefinedTypes.Any()) 
             {

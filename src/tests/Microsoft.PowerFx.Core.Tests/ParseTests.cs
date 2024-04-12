@@ -903,7 +903,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
 
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult, globalNameResolver: primitiveTypes);
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult, nameResolver: primitiveTypes);
 
             Assert.Equal(udfCount, userDefinitionResult.UDFs.Count());
             Assert.Equal(namedFormulaCount, userDefinitionResult.NamedFormulas.Count());

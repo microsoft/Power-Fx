@@ -293,23 +293,7 @@ namespace Microsoft.PowerFx
 
         public IEnumerable<string> FunctionNames => _functions.FunctionNames;
 
-        private static readonly IEnumerable<KeyValuePair<DName, FormulaType>> _primitiveTypes = new Dictionary<DName, FormulaType>()
-        {
-            { new DName("Boolean"), FormulaType.Boolean },
-            { new DName("Color"), FormulaType.Color },
-            { new DName("Date"), FormulaType.Date },
-            { new DName("Time"), FormulaType.Time },
-            { new DName("DateTime"), FormulaType.DateTime },
-            { new DName("DateTimeTZInd"), FormulaType.DateTimeNoTimeZone },
-            { new DName("GUID"), FormulaType.Guid },
-            { new DName("Number"), FormulaType.Number },
-            { new DName("Decimal"), FormulaType.Decimal },
-            { new DName("Text"), FormulaType.String },
-            { new DName("Hyperlink"), FormulaType.Hyperlink },
-            { new DName("None"), FormulaType.Blank },
-            { new DName("UntypedObject"), FormulaType.UntypedObject },
-        };
-
+        // Helper to create a ReadOnly symbol table around a set of core types. 
         internal static ReadOnlySymbolTable NewDefaultTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types)
         {
             var s = new SymbolTable
@@ -325,7 +309,26 @@ namespace Microsoft.PowerFx
             return s;
         }
 
-        internal static readonly ReadOnlySymbolTable PrimitiveTypesTableInstance = NewDefaultTypes(_primitiveTypes);
+        // Overload Helper to create a ReadOnly symbol table around a set of core functions and types.
+        internal static ReadOnlySymbolTable NewDefault(TexlFunctionSet coreFunctions, IEnumerable<KeyValuePair<DName, FormulaType>> types)
+        {
+            var s = new SymbolTable
+            {
+                EnumStoreBuilder = new EnumStoreBuilder(),
+                DebugName = $"BuiltinFunctions ({coreFunctions.Count()}), BuiltinTypes ({types?.Count()})"
+            };
+
+            s.AddFunctions(coreFunctions);
+
+            if (types != null)
+            {
+                s.AddTypes(types);
+            }
+
+            return s;
+        }
+
+        internal static readonly ReadOnlySymbolTable PrimitiveTypesTableInstance = NewDefaultTypes(FormulaType._primitiveTypes);
 
         // Which enums are available. 
         // These do not compose - only bottom one wins. 

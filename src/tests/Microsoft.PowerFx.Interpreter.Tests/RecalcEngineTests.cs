@@ -689,10 +689,11 @@ namespace Microsoft.PowerFx.Tests
         {
             // Inner table 
             SymbolTable stInner = new SymbolTable { DebugName = "Extras" };
-            stInner.AddUserDefinedFunction("Func1() : Text = \"inner\";", symbolTable: ReadOnlySymbolTable.PrimitiveTypesTableInstance);
+            stInner.AddTypes(FormulaType._primitiveTypes);
+            stInner.AddUserDefinedFunction("Func1() : Text = \"inner\";");
 
             SymbolTable st = new SymbolTable { DebugName = "Extras" };
-            st.AddUserDefinedFunction("Func2() : Text = Func1() & \"2\";", symbolTable: stInner, extraSymbolTable: ReadOnlySymbolTable.PrimitiveTypesTableInstance);
+            st.AddUserDefinedFunction("Func2() : Text = Func1() & \"2\";", symbolTable: stInner);
 
             var engine = new RecalcEngine();
             engine.AddUserDefinedFunction("Func1() : Text = \"Outer\";", symbolTable: st);

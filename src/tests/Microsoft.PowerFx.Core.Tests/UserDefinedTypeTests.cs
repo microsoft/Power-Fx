@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowParseAsTypeLiteral = true
             };
 
-            UserDefinitions.ProcessUserDefinitions(typeDefinition, parseOptions, out UserDefinitionResult results, globalNameResolver: _primitiveTypes);
+            UserDefinitions.ProcessUserDefinitions(typeDefinition, parseOptions, out UserDefinitionResult results, nameResolver: _primitiveTypes);
 
             if (isValid) 
             {
@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowParseAsTypeLiteral = true
             };
 
-            UserDefinitions.ProcessUserDefinitions(typeDefinition, parseOptions, out UserDefinitionResult results, globalNameResolver: _primitiveTypes);
+            UserDefinitions.ProcessUserDefinitions(typeDefinition, parseOptions, out UserDefinitionResult results, nameResolver: _primitiveTypes);
 
             Assert.Equal(expected, results.DefinedTypes.Count());
         }

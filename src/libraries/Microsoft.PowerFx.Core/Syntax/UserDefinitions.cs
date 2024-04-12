@@ -66,15 +66,15 @@ namespace Microsoft.PowerFx.Syntax
         /// <param name="userDefinitionResult"><see cref="UserDefinitionResult"/>.</param>
         /// <param name="features">PowerFx feature flags.</param>
         /// <returns>True if there are no parser errors.</returns>
-        /// <param name="globalNameResolver">Global nameresolver for resolving types.</param>
-        public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null, INameResolver globalNameResolver = null)
+        /// <param name="nameResolver">Optional name resolver for resolving types.</param>
+        public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null, INameResolver nameResolver = null)
         {
             var userDefinitions = new UserDefinitions(script, parserOptions, features);
 
-            return userDefinitions.ProcessUserDefinitions(out userDefinitionResult, globalNameResolver);
+            return userDefinitions.ProcessUserDefinitions(out userDefinitionResult, nameResolver);
         }
 
-        private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult, INameResolver globalNameResolver = null)
+        private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult, INameResolver nameResolver = null)
         {
             var parseResult = Parse(_script, _parserOptions);
 
@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Syntax
             var definedTypes = parseResult.DefinedTypes.ToList();
 
             var typeErr = new List<TexlError>();
-            var typeGraph = new DefinedTypeDependencyGraph(definedTypes, globalNameResolver);
+            var typeGraph = new DefinedTypeDependencyGraph(definedTypes, nameResolver);
             var resolvedTypes = typeGraph.ResolveTypes(typeErr);
 
             foreach (var unresolvedType in typeGraph.UnresolvedTypes)
@@ -114,10 +114,10 @@ namespace Microsoft.PowerFx.Syntax
         /// <param name="script">User script containing UDFs and/or named formulas.</param>
         /// <param name="parseCulture">CultureInfo to parse the script.</param>
         /// <param name="features">Features.</param>
-        /// <param name="globalNameResolver">Global nameresolver for resolving types.</param>
+        /// <param name="nameResolver">Optional name resolver for resolving types.</param>
         /// <returns>Tuple.</returns>
         /// <exception cref="InvalidOperationException">Throw if the user script contains errors.</exception>
-        public static UserDefinitionResult Process(string script, CultureInfo parseCulture, Features features = null, INameResolver globalNameResolver = null)
+        public static UserDefinitionResult Process(string script, CultureInfo parseCulture, Features features = null, INameResolver nameResolver = null)
         {
             var options = new ParserOptions()
             {
@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx.Syntax
 
             var sb = new StringBuilder();
 
-            ProcessUserDefinitions(script, options, out var userDefinitionResult, features, globalNameResolver);
+            ProcessUserDefinitions(script, options, out var userDefinitionResult, features, nameResolver);
 
             if (userDefinitionResult.HasErrors)
             {

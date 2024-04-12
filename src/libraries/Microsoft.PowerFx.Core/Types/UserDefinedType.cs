@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Types
 {
+    // To use with clients that may need Type definition tree for analysis
     internal class UserDefinedType
     {
         public DName Name { get; }

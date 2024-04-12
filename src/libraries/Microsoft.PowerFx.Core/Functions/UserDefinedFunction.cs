@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="body">TexlNode for user defined function body.</param>
         /// <param name="isImperative"></param>
         /// <param name="args"></param>
-        /// <param name="argTypes"></param>
+        /// <param name="argTypes">Resolved Dtype of args in order.</param>
         public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes)
         : base(DPath.Root, functionName, functionName, SG(functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, argTypes)
         {
@@ -228,6 +228,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 // lookup in the local scope i.e., function params & body and then look in global scope.
                 if (_args.TryGetValue(name, out var value))
                 {
+                    // Fetch type from resolved argTypes
                     var type = this._argTypes[value.ArgIndex];
                     nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, value.ArgIndex, value.NameIdent.Name));
 
