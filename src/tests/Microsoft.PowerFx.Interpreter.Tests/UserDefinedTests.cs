@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
+using System.Linq;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -30,11 +32,42 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b); };")]
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(abc, { bcd: 1 }) };")]
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(abc, { bcd: 1 }) }; num = 3;")]
-        public void UserDefinedFunctions(string script)
+        public void ValidUDFBodyTest(string script)
         {
             var result = UserDefinitions.Process(script, null);
 
             Assert.False(result.HasErrors);
+        }
+
+        [Theory]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b);")]
+        public void InvalidUDFBodyTest(string script)
+        {
+            var options = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                Culture = CultureInfo.InvariantCulture
+            };
+            UserDefinitions.ProcessUserDefinitions(script, options, out var result);
+
+            Assert.True(result.HasErrors);
+        }
+
+        [Theory]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(,) ;}; num = 3;", 1, 1)]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(,) ;};;;;;;;; num = 3;", 1, 1)]
+        public void InvalidUDFBodyTest2(string script, int udfCount, int nfCount)
+        {
+            var options = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                Culture = CultureInfo.InvariantCulture
+            };
+            UserDefinitions.ProcessUserDefinitions(script, options, out var result);
+
+            Assert.True(result.HasErrors);
+            Assert.Equal(udfCount, result.UDFs.Count());
+            Assert.Equal(nfCount, result.NamedFormulas.Count());
         }
     }
 }

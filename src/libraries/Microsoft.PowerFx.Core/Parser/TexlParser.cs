@@ -94,8 +94,7 @@ namespace Microsoft.PowerFx.Core.Parser
             var flags = Flags.NamedFormulas |
                 (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0) |
                 (parserOptions.AllowParseAsTypeLiteral ? Flags.AllowTypeLiteral : 0) | 
-                (parserOptions.AllowAttributes ? Flags.AllowAttributes : 0) |
-                (parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : 0);
+                (parserOptions.AllowAttributes ? Flags.AllowAttributes : 0);
             var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
             var parser = new TexlParser(formulaTokens, flags);
 
