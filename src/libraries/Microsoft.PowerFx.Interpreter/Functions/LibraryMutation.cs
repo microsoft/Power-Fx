@@ -232,34 +232,28 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    internal class CollectImpl : CollectFunction, IAsyncTexlFunction5
+    internal class CollectImpl : CollectFunction, IAsyncTexlFunction3
     {
-        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            return await new CollectProcess().Process(runtimeServiceProvider, irContext, args, cancellationToken).ConfigureAwait(false);
+            return await new CollectProcess().Process(irContext, args, cancellationToken).ConfigureAwait(false);
         }
     }
 
-    internal class CollectScalarImpl : CollectScalarFunction, IAsyncTexlFunction5
+    internal class CollectScalarImpl : CollectScalarFunction, IAsyncTexlFunction3
     {
-        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            return await new CollectProcess().Process(runtimeServiceProvider, irContext, args, cancellationToken).ConfigureAwait(false);
+            return await new CollectProcess().Process(irContext, args, cancellationToken).ConfigureAwait(false);
         }
     }
 
     internal class CollectProcess
     {
-        internal async Task<FormulaValue> Process(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        internal async Task<FormulaValue> Process(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
             FormulaValue arg0;
             var argc = args.Length;
-            var features = runtimeServiceProvider.GetService<Features>();
-
-            if (!features.PowerFxV1CompatibilityRules)
-            {
-                throw new InvalidOperationException("Collect funtion can only be executed if PowerFx V1 feature is active.");
-            }
 
             // Need to check if the Lazy first argument has been evaluated since it may have already been
             // evaluated in the ClearCollect case.
@@ -340,11 +334,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 return CompileTimeTypeWrapperRecordValue.AdjustType(tableValue.Type.ToRecord(), (RecordValue)resultRows.First().ToFormulaValue());
             }
-        }
-
-        private RecordValue CreateRecordFromPrimitive(TableValue tableValue, FormulaValue arg)
-        {
-            return FormulaValue.NewRecordFromFields(tableValue.Type.ToRecord(), new NamedValue("Value", arg));
         }
     }
 }

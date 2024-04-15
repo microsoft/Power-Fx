@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argType;
         }
 
-        public bool TryGetUnifiedCollectedTypeCanvas(TexlNode[] args, DType[] argTypes, IErrorContainer errors, Features features, out DType collectedType)
+        private bool TryGetUnifiedCollectedTypeCanvas(TexlNode[] args, DType[] argTypes, IErrorContainer errors, Features features, out DType collectedType)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -404,7 +404,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return argType;
             }
 
-            // Passed a scalar; make a record out of it, using a name that depends on the type.
+            // Passed a scalar; make a record out of it.
             var fieldName = Contracts.VerifyValue(CreateInvariantFieldName(features, argType.Kind));
             return DType.CreateRecord(new TypedName[] { new TypedName(argType, new DName(fieldName)) });
         }

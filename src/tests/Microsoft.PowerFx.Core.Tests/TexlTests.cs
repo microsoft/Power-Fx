@@ -5,16 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection.Metadata;
 using Microsoft.CodeAnalysis;
-using Microsoft.PowerFx.Core.App.Controls;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
-using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests.Helpers;
@@ -23,7 +18,6 @@ using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -132,6 +126,42 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(DType.TryParse(expectedType, out var expectedDType));
             Assert.Equal(expectedDType, result.Binding.ResultType);
             Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        
+        // Collect
+        [InlineData("Collect(t1, {a:1})", "![a:w, b:s]")]
+        [InlineData("Collect(t1, {a:1},{a:2})", "*[a:w, b:s]")]
+        [InlineData("Collect(t1, Table({a:1}))", "*[a:w, b:s]")]
+        [InlineData("Collect(t2, 2)", "![Value:w]")]
+        [InlineData("Collect(t2, 2, 3, 4)", "*[Value:w]")]
+        [InlineData("Collect(t1, {a:1})", "*[a:w, b:s]", false)]
+        [InlineData("Collect(t1, {a:1},{a:2})", "*[a:w, b:s]", false)]
+        [InlineData("Collect(t1, Table({a:1}))", "*[a:w, b:s]", false)]
+        [InlineData("Collect(t2, 2)", "*[Value:w]", false)]
+        [InlineData("Collect(t2, 2, 3, 4)", "*[Value:w]", false)]
+        public void TexlMutationFunctionsV1Tests(string expression, string expectedType, bool isPFxV1 = true)
+        {
+            var engine = new Engine(new PowerFxConfig(isPFxV1 ? Features.PowerFxV1 : Features.None));
+            var options = new ParserOptions() { AllowsSideEffects = true };
+
+            DType.TryParse("*[a:w,b:s]", out var expectedDType);
+            DType.TryParse("*[Value:w]", out var expectedDTypeScalar);
+
+            engine.Config.SymbolTable.AddFunction(new CollectFunction());
+            engine.Config.SymbolTable.AddFunction(new CollectScalarFunction());
+            engine.Config.SymbolTable.AddFunction(new PatchFunction());
+            engine.Config.SymbolTable.AddFunction(new PatchSingleRecordFunction());
+            engine.Config.SymbolTable.AddFunction(new PatchAggregateFunction());
+            engine.Config.SymbolTable.AddFunction(new PatchAggregateSingleTableFunction());
+            engine.Config.SymbolTable.AddVariable("t1", FormulaType.Build(expectedDType), mutable: true);
+            engine.Config.SymbolTable.AddVariable("t2", FormulaType.Build(expectedDTypeScalar), mutable: true);
+
+            var check = engine.Check(expression, options);
+
+            Assert.True(check.IsSuccess);
+            Assert.Equal(expectedType, check.Binding.ResultType.ToString());
         }
 
         [Theory]
