@@ -1,7 +1,4 @@
-﻿// (UTC-08:00) Pacific Time (US & Canada)
-#SETUP: TimeZoneInfo("Pacific Standard Time")
-#SETUP: OptionSetTestSetup
-#SETUP: EnableJsonFunctions
+﻿#SETUP: EnableJsonFunctions
 
 >> JSON()
 Errors: Error 0-6: Invalid number of arguments: received 0, expected 1-2.
@@ -53,9 +50,6 @@ Errors: Error 5-25: The JSON function cannot serialize objects of type 'Void'.
 >> JSON(Color.Turquoise)
 """#40e0d0ff"""
 
->> JSON(OptionSet.Option2)
-"""option_2"""
-
 >> JSON(TimeUnit.Hours)
 """hours"""
 
@@ -64,10 +58,6 @@ Errors: Error 5-25: The JSON function cannot serialize objects of type 'Void'.
 
 >> JSON(DateTimeValue("1970-01-01T00:00:00Z"))
 """1970-01-01T00:00:00.000Z"""
-
-// Midnight local time in Pacific Time is 8 AM UTC
->> JSON(DateTimeValue("1970-01-01T00:00:00"))
-"""1970-01-01T08:00:00.000Z"""
 
 // Independent from local timezone
 >> With({dt: DateTime(1987,6,5,4,30,0)}, JSON(DateAdd(dt,-TimeZoneOffset(dt),TimeUnit.Minutes), JSONFormat.IndentFour))
@@ -94,10 +84,6 @@ Errors: Error 5-25: The JSON function cannot serialize objects of type 'Void'.
 >> JSON(DateTimeValue("2022-08-07T12:34:56Z"))
 """2022-08-07T12:34:56.000Z"""
 
-// DateTime is local time, so 1AM in UTC
->> JSON(Table({a:DateTime(2014,11,29,17,5,1,997),b:Date(2019, 4, 22),c:Time(12, 34, 56, 789)}))
-"[{""a"":""2014-11-30T01:05:01.997Z"",""b"":""2019-04-22"",""c"":""12:34:56.789""}]"
-
 >> JSON(Table({a:GUID("01234567-89AB-CDEF-0123-456789ABCDEF"),b:RGBA(18, 52, 86, 0.5),c:"https://www.microsoft.com",d:Sqrt(9)}))
 "[{""a"":""01234567-89ab-cdef-0123-456789abcdef"",""b"":""#12345680"",""c"":""https://www.microsoft.com"",""d"":3}]"
 
@@ -123,3 +109,25 @@ Error({Kind:ErrorKind.Div0})
 // Error records
 >> JSON(Filter([-2,-1,0,1,2], 1/Value>0))
 Error({Kind:ErrorKind.Div0})
+
+// Flattened tables
+>> JSON([1, 2, 3], JSONFormat.FlattenValueTables)
+"[1,2,3]"
+
+>> JSON({a:["one", "two"]}, JSONFormat.FlattenValueTables)
+"{""a"":[""one"",""two""]}"
+
+>> JSON([true, false, true], JSONFormat.FlattenValueTables)
+"[true,false,true]"
+
+// Only flatten single-column tables where the column name is 'Value'
+>> JSON([{a:1}, {a:2}], JSONFormat.FlattenValueTables)
+"[{""a"":1},{""a"":2}]"
+
+// No difference between blank records and blank values
+>> JSON([{Value:1},Blank(),{Value:3},{Value:Blank()},{Value:5}], JSONFormat.FlattenValueTables)
+"[1,null,3,null,5]"
+
+// Flattening nested tables
+>> JSON([[1,2,3],[4,5],[6]], JSONFormat.FlattenValueTables)
+"[[1,2,3],[4,5],[6]]"

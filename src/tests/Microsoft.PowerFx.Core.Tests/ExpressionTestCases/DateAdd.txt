@@ -371,7 +371,7 @@ DateTime(2000,1,2,0,0,0,0)
 
 // Boolean to date
 >> DateAdd(false, 1)
-Errors: Error 8-13: Invalid argument type (Boolean). Expecting a DateTime value instead.|Error 0-17: The function 'DateAdd' has some invalid arguments.
+Errors: Error 8-13: Invalid argument type (Boolean). Expecting a DateTime value instead.|Error 0-7: The function 'DateAdd' has some invalid arguments.
 
 // Date to number
 >> DateAdd(Date(1900,1,1), Date(2022,1,1))

@@ -1,0 +1,829 @@
+{
+  "value": [
+    {
+      "value": 1,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Accounting",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "6798ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Accounting",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "6798ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 2,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Agriculture and Non-petrol Natural Resource Extraction",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "6998ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Agriculture and Non-petrol Natural Resource Extraction",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "6998ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 3,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Broadcasting Printing and Publishing",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "6b98ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Broadcasting Printing and Publishing",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "6b98ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 4,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Brokers",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "6d98ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Brokers",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "6d98ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 5,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Building Supply Retail",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "6f98ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Building Supply Retail",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "6f98ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 6,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Business Services",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7198ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Business Services",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7198ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 7,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Consulting",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7398ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Consulting",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7398ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 8,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Consumer Services",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7598ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Consumer Services",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7598ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 9,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Design, Direction and Creative Management",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7798ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Design, Direction and Creative Management",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7798ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 10,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Distributors, Dispatchers and Processors",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7998ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Distributors, Dispatchers and Processors",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7998ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 11,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Doctor's Offices and Clinics",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7b98ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Doctor's Offices and Clinics",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7b98ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 12,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Durable Manufacturing",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7d98ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Durable Manufacturing",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7d98ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 13,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Eating and Drinking Places",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "7f98ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Eating and Drinking Places",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "7f98ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 14,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Entertainment Retail",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "8198ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Entertainment Retail",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "8198ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 15,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Equipment Rental and Leasing",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "8398ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Equipment Rental and Leasing",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "8398ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 16,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Financial",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "8598ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Financial",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "8598ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 17,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Food and Tobacco Processing",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "8798ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Food and Tobacco Processing",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "8798ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 18,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Inbound Capital Intensive Processing",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "8998ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Inbound Capital Intensive Processing",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "8998ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 19,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Inbound Repair and Services",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "8b98ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Inbound Repair and Services",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "8b98ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 20,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Insurance",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "8d98ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Insurance",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "8d98ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 21,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Legal Services",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "8f98ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Legal Services",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "8f98ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 22,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Non-Durable Merchandise Retail",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "9198ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Non-Durable Merchandise Retail",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "9198ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 23,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Outbound Consumer Service",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "9398ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Outbound Consumer Service",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "9398ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 24,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Petrochemical Extraction and Distribution",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "9598ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Petrochemical Extraction and Distribution",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "9598ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 25,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Service Retail",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "9798ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Service Retail",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "9798ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 26,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "SIG Affiliations",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "9998ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "SIG Affiliations",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "9998ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 27,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Social Services",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "9b98ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Social Services",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "9b98ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 28,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Special Outbound Trade Contractors",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "9d98ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Special Outbound Trade Contractors",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "9d98ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 29,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Specialty Realty",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "9f98ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Specialty Realty",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "9f98ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 30,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Transportation",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "a198ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Transportation",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "a198ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 31,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Utility Creation and Distribution",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "a398ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Utility Creation and Distribution",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "a398ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 32,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Vehicle Retail",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "a598ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Vehicle Retail",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "a598ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 33,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Wholesale",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "a798ba00-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Wholesale",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "a798ba00-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    }
+  ]
+}

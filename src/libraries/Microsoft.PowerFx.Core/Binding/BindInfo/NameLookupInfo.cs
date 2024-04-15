@@ -47,22 +47,21 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
 
         public bool TryToSymbolEntry(out SymbolEntry x)
         {
-            var ns = this.Data as NameSymbol;
-            if (ns == null)
+            if (this.Data is NameSymbol ns)
             {
-                x = null;
-                return false;
+                x = new SymbolEntry
+                {
+                    Name = ns.Name,
+                    DisplayName = this.DisplayName,                
+                    Properties = ns.Props,
+                    Type = FormulaType.Build(this.Type),
+                    Slot = ns
+                };
+                return true;
             }
 
-            x = new SymbolEntry
-            {
-                Name = ns.Name,
-                DisplayName = this.DisplayName,                
-                Properties = ns.Props,
-                Type = FormulaType.Build(this.Type),
-                Slot = ns
-            };
-            return true;
+            x = null;
+            return false;
         }            
     }
 }

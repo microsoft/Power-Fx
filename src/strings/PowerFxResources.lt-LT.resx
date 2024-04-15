@@ -1962,6 +1962,14 @@
     <value>Negalima naudoti ne įrašo reikšmės šiame kontekste.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Negalima naudoti ne įrašo reikšmės šiame kontekste: „{0}“.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Šiame kontekste galima naudoti tik įrašų arba lentelių reikšmes.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Negalima naudoti šio įrašo. Jame gali būti nesuderinamų tipų susikertančių laukų.</value>
     
@@ -2835,15 +2843,16 @@
     <value>Pateikto teksto kalbos kodas.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Sukuria lentelę iš nurodytų įrašų su tiek stulpelių, kiek yra unikalių įrašų laukų. Pavyzdžiui: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Sukuria lentelę iš nurodytų įrašų ir lentelių su tiek stulpelių, kiek yra unikalių įrašų laukų. Pavyzdžiui: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>įrašas</value>
+    <value>įrašas_arba_lentelė</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Įrašas, kuris taps eilute gautoje lentelėje.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Įrašas arba lentelė, kuri bus gautos lentelės dalis.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Pateikia lentelę iš šaltinio lentelės pašalinus visus stulpelius, išskyrus nurodytus.</value>
@@ -3065,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>duomenų_šaltinis</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3081,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>duomenų_šaltinis</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>duomenų_šaltinis</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3096,16 +3105,55 @@
     <value>Taiko naujinimus nurodytai eilutei ir pakeičia eilutę į nurodytą duomenų šaltinį. Pateikia atnaujintą eilutę.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Paima vieną įrašą su pirminiais raktais bei atnaujintomis reikšmėmis ir atnaujina atitinkamą eilutę nurodytame duomenų šaltinyje. Pateikia atnaujintą eilutę.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Paima eilučių lentelę ir po vieną taiko naujinimus, nurodytus naujinimų lentelėje. Pateikia atnaujintų eilučių lentelę.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Paima eilučių lentelę su pirminiais raktais bei atnaujintais laukais ir taiko tuos naujinimus duomenų šaltiniui. Pateikia atnaujintų eilučių lentelę.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Pateikia eilutę su pritaikytais naujinimais.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Duomenų šaltinis, kurį reikia pataisyti.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Įrašas, kurį reikia pataisyti.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Naujinimas, kurį reikia taikyti pateiktam įrašui.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Eilučių lentelė, kuriai turi būti taikoma pataisa.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Naujinimų, kurie turi būti taikomi pateiktoms eilutėms, lentelė.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>šaltinis</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>įrašas</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>naujinti</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>eilutės</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>naujinimai</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3113,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>duomenų_šaltinis</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>pašalinti_įrašus</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -3940,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL, kuris bus užkoduotas.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Konvertuoja tekstą į HTML koduotą tekstą.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>reikšmė</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Tekstas, kurį reikia koduoti.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}“ funkcija yra atpažįstama, bet nepalaikoma.</value>
     
@@ -4179,7 +4238,7 @@
     
   </data>
   <data name="TraceArg3" xml:space="preserve">
-    <value>custom_record</value>
+    <value>pasirinktinis_įrašas</value>
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
@@ -4208,6 +4267,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>JSONFormat reikšmių {0} ir {1} negalima naudoti kartu.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Reikšmė „{0}“ JSON funkcijoje nepalaikoma kaip parinktis.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
@@ -4306,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Nežinomas Partial operatorius.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Perdavimo įspėjimas. Šio argumento rezultatas „{0}“ dideliuose duomenų rinkiniuose gali būti sutrumpintas per perduodant „{1}“ funkcijai.</value>
     
   </data>
 </root>

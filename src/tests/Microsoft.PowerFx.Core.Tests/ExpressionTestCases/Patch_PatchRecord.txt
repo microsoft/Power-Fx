@@ -1,0 +1,66 @@
+﻿#SETUP: SupportColumnNamesAsIdentifiers,PowerFxV1CompatibilityRules,disable:NumberIsFloat
+
+// **********************************************************
+// Patch(Record, Updates1, Updates2,…)
+// **********************************************************
+
+>> Patch({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Patch({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}, {}, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Patch(Blank(), {Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Patch({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}, {ErrorField:1/0})
+{ErrorField:Error({Kind:ErrorKind.Div0}),Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Patch({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}, 1/0)
+Errors: Error 153-154: Cannot use a non-record value in this context: '1 / 0'.|Error 0-5: The function 'Patch' has some invalid arguments.
+
+// Flattening record fields
+>> With({ rec: { Name: "John Doe", Address: { Country: "USA", State: "WA", City: "Seattle", Street: "85 Pike Street" } } },Patch(DropColumns(rec, Address),rec.Address))
+{City:"Seattle",Country:"USA",Name:"John Doe",State:"WA",Street:"85 Pike Street"}
+
+>> With({ tbl:Table({a:1,b:2}, {a:11,b:22}, {a:111,b:222}) },ForAll(Sequence(CountRows(tbl)),Patch({ Index: ThisRecord.Value },Index(tbl, ThisRecord.Value))))
+Table({Index:1,a:1,b:2},{Index:2,a:11,b:22},{Index:3,a:111,b:222})
+
+>> Patch({a:1},If(1/0<2,{b:3}))
+Error({Kind:ErrorKind.Div0})
+
+>> Patch({a:1,b:2},{b:3})
+{a:1,b:3}
+
+>> Patch({a:1,b:2},{b:3},{b:4})
+{a:1,b:4}
+
+>> Patch({a:1,b:"hello",c:false}, {b:"hello 2"},{c:true},{d:[1,2,3]})
+{a:1,b:"hello 2",c:true,d:Table({Value:1},{Value:2},{Value:3})}
+
+>> Patch({a:[1,2,3]}, {a:[4,5,6]})
+{a:Table({Value:4},{Value:5},{Value:6})}
+
+>> Patch({name:"John Doe",address:{street:"One Main St",city:"Springfield",country:"USA"}},{address:{street:"Avenida Paulista",city:"Sao Paulo",country:"BRA"}})
+{address:{city:"Sao Paulo",country:"BRA",street:"Avenida Paulista"},name:"John Doe"}
+
+>> Patch({name:"John Doe",address:{street:"One Main St",city:"Springfield",country:"USA"}},{address:{country:"BRA"}})
+Errors: Error 88-113: The type of this argument 'address' does not match the expected type 'Record'. Found type 'Record'.|Error 0-5: The function 'Patch' has some invalid arguments.
+
+>> Patch({a:Table({a:1,b:1}),b:If(false,1)},{b:1})
+{a:Table({a:1,b:1}),b:1}
+
+>> Patch({a:Table({a:1,b:1}),b:1},{a:Table({a:0,b:0}, {a:10,b:10})})
+{a:Table({a:0,b:0},{a:10,b:10}),b:1}
+
+>> Patch({a:1},{a:[2]})
+Errors: Error 12-19: The type of this argument 'a' does not match the expected type 'Decimal'. Found type 'Table'.|Error 0-5: The function 'Patch' has some invalid arguments.
+
+>> Patch({a:1},{a:"2"})
+Errors: Error 12-19: The type of this argument 'a' does not match the expected type 'Decimal'. Found type 'Text'.|Error 0-5: The function 'Patch' has some invalid arguments.
+
+>> Patch({a:"1"},{a:2})
+Errors: Error 14-19: The type of this argument 'a' does not match the expected type 'Text'. Found type 'Decimal'.|Error 0-5: The function 'Patch' has some invalid arguments.
+
+>> Patch({a:Table({a:1,b:1}),b:Blank()},{b:1})
+Errors: Error 37-42: The type of this argument 'b' does not match the expected type 'ObjNull'. Found type 'Decimal'.|Error 0-5: The function 'Patch' has some invalid arguments.

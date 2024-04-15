@@ -1,0 +1,16 @@
+﻿{
+  "name": "[dbo].[sp_2]",
+  "title": "[dbo].[sp_2]",
+  "schema": {
+    "inputparameters": {
+      "type": "object",
+      "properties": {
+        "p1": {
+          "title": "p1",
+          "type": "integer"
+        },
+        "p2": {
+          "title": "p2",
+          "type": "string",
+
+// Malformed Json to generate an exception when reading the file //

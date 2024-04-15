@@ -1514,7 +1514,7 @@
     <value>Өрнекті кестенің бір немесе бірнеше бағаны бойынша есептейді және есептелетін өрнек үшін бөлек (бірегей) мәндері бар бір бағанды кестені қайтарады.</value>
   </data>
   <data name="DistinctArg1" xml:space="preserve">
-    <value>бастапқы</value>
+    <value>көз</value>
     
   </data>
   <data name="DistinctArg2" xml:space="preserve">
@@ -1960,6 +1960,14 @@
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>Бұл контекстте жазба емес мәнді пайдалану мүмкін емес.</value>
+    
+  </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Бұл контекстте жазба емес мәнді пайдалану мүмкін емес: "{0}".</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Бұл контексте тек жазбаны немесе кесте мәндерін ғана пайдалануға болады.</value>
     
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
@@ -2835,15 +2843,16 @@
     <value>Берілген мәтіннің тіл коды.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Барлық бірегей жазба өрістері сыятындай етіп көрсетілген жазбалардан кесте жасайды. Мысалы: Кесте({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Бірегей жазба өрістері болғандықтан, көрсетілген жазбалар мен кестелерден бағандары көп кесте жасайды. Мысалы: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>жазба</value>
+    <value>жазба_немесе_кесте</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Алынатын кестедегі жол болатын жазба.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Нәтижесіндегі кестенің бөлігі болатын жазба немесе кесте.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Бастапқы кестеден көрсетілген бағандардан басқа барлық бағандары жойылған кестені қайтарады.</value>
@@ -3065,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>деректер_көзі</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3081,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>деректер_көзі</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>деректер_көзі</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3096,16 +3105,55 @@
     <value>Жаңартуларды көрсетілген жолға қолданады және көрсетілген деректер көзіндегі жолды өзгертеді. Жаңартылған жолды қайтарады.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Бастапқы кілттері бар бір жазба мен жаңартылған мәндерді алады және көрсетілген деректер көзінде сәйкес жолды жаңартады. Жаңартылған жолды қайтарады.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Жолдар кестесін алады және бірге-бір түрінде жаңартулар кестесінде көрсетілген жаңартуларды қолданады. Жаңартылған жолдардың кестесін қайтарады.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Бастапқы кілттері бар жолдар кестесі мен жаңартылған өрістерді алады және сол жаңартуларды деректер көзіне қолданады. Жаңартылған жолдардың кестесін қайтарады.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Жаңартулар қолданылған жолды қайтарады.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Түзетілуі тиіс деректер көзі.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Түзетілуі тиіс жазба.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Берілген жазбаға қолданылуы қажет жаңарту.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Түзетілетін жолдар кестесі.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Берілген жолдар үшін түзетілетін жаңартулардың кестесі.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>деректер_көзі</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>жазба</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>жаңарту</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>жолдар</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>жаңартулар</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3113,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>деректер_көзі</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>жазба(лар)_өшіру</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -3940,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Кодталатын URL.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Мәтінді HTML кодталған мәтініне түрлендіреді.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>мән</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Кодталатын мәтін.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" — танылған, бірақ қолдау көрсетілмейтін функция.</value>
     
@@ -4035,7 +4094,7 @@
     
   </data>
   <data name="MatchArg2" xml:space="preserve">
-    <value>тұрақтыөрнек</value>
+    <value>тұрақты_өрнек</value>
     
   </data>
   <data name="MatchArg3" xml:space="preserve">
@@ -4047,7 +4106,7 @@
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
-    <value>қосылған_дереккөз</value>
+    <value>қосылған_деректер_көзі</value>
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
@@ -4183,7 +4242,7 @@
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>қадағалау_опциялары</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
@@ -4208,6 +4267,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>"{0}" және "{1}" JSONFormat мәндерін бірге пайдалану мүмкін емес.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>"{0}" мәні JSON функциясында опция ретінде қолданылмайды.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
@@ -4306,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Белгісіз Partial амалы.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Өкілдік ету ескертуі. Бұл "{0}" аргументінің нәтижесі "{1}" функциясына өту алдында үлкен деректер жиыны үшін қысқартылуы мүмкін.</value>
     
   </data>
 </root>

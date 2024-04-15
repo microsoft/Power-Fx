@@ -10,6 +10,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
@@ -17,6 +19,7 @@ using Microsoft.PowerFx.Connectors.Localization;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
@@ -150,7 +153,7 @@ namespace Microsoft.PowerFx.Connectors
         /// Return type of the function.
         /// </summary>
         public FormulaType ReturnType => Operation.GetReturnType(ConnectorSettings.Compatibility);
-        
+
         /// <summary>
         /// Minimum number of arguments.
         /// </summary>
@@ -206,9 +209,9 @@ namespace Microsoft.PowerFx.Connectors
 
         /// <summary>
         /// Hidden required parameters.
-        /// Defined as 
+        /// Defined as
         /// - part "required" swagger array
-        /// - "x-ms-visibility" string set to "internal" 
+        /// - "x-ms-visibility" string set to "internal"
         /// - has a default value.
         /// </summary>
         internal ConnectorParameter[] HiddenRequiredParameters
@@ -226,14 +229,19 @@ namespace Microsoft.PowerFx.Connectors
         internal IEnumerable<OpenApiServer> Servers { get; init; }
 
         /// <summary>
-        /// Dynamic schema extension on return type (response).
+        /// Filtered function.
         /// </summary>
-        internal ConnectorDynamicSchema DynamicReturnSchema => EnsureConnectorFunction(ReturnParameterType?.DynamicSchema, FunctionList);
+        internal bool Filtered { get; }
 
         /// <summary>
         /// Dynamic schema extension on return type (response).
         /// </summary>
-        internal ConnectorDynamicProperty DynamicReturnProperty => EnsureConnectorFunction(ReturnParameterType?.DynamicProperty, FunctionList);
+        internal ConnectorDynamicSchema DynamicReturnSchema => EnsureConnectorFunction(ReturnParameterType?.DynamicSchema, GlobalContext.FunctionList);
+
+        /// <summary>
+        /// Dynamic schema extension on return type (response).
+        /// </summary>
+        internal ConnectorDynamicProperty DynamicReturnProperty => EnsureConnectorFunction(ReturnParameterType?.DynamicProperty, GlobalContext.FunctionList);
 
         /// <summary>
         /// Return type when determined at runtime/by dynamic intellisense.
@@ -255,19 +263,28 @@ namespace Microsoft.PowerFx.Connectors
         private DType[] _parameterTypes;
 
         /// <summary>
-        /// List of functions in the same swagger file. Used for resolving dynamic schema/property.
+        /// Contains the list of functions in the same swagger file, used for resolving dynamic schema/property.
+        /// Also contains all global values.
         /// </summary>
-        internal IReadOnlyList<ConnectorFunction> FunctionList { get; }
+        internal ConnectorGlobalContext GlobalContext { get; }
 
         // Those parameters are protected by EnsureInitialized
         private int _arityMin;
+
         private int _arityMax;
+
         private ConnectorParameter[] _requiredParameters;
+
         private ConnectorParameter[] _hiddenRequiredParameters;
+
         private ConnectorParameter[] _optionalParameters;
+
         private ConnectorType _returnType;
+
         private bool _isSupported;
+
         private string _notSupportedReason;
+
         private List<ErrorResourceKey> _warnings;
 
         // Those properties are only used by HttpFunctionInvoker
@@ -275,18 +292,32 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly ConnectorLogger _configurationLogger = null;
 
-        internal ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, ConnectorSettings connectorSettings, List<ConnectorFunction> functionList, ConnectorLogger configurationLogger)
+        internal ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, ConnectorSettings connectorSettings, List<ConnectorFunction> functionList, ConnectorLogger configurationLogger, IReadOnlyDictionary<string, FormulaValue> globalValues)
         {
             Operation = openApiOperation;
             Name = name;
             OperationPath = operationPath;
             HttpMethod = httpMethod;
             ConnectorSettings = connectorSettings;
-            FunctionList = functionList;
+            GlobalContext = new ConnectorGlobalContext(functionList ?? throw new ArgumentNullException(nameof(functionList)), globalValues);
 
             _configurationLogger = configurationLogger;
             _isSupported = isSupported;
             _notSupportedReason = notSupportedReason ?? (isSupported ? string.Empty : throw new PowerFxConnectorException("Internal error on not supported reason"));
+
+            int nvCount = globalValues?.Count(nv => nv.Key != "connectionId") ?? 0;
+            if (nvCount > 0)
+            {
+                EnsureInitialized();
+                Filtered = _requiredParameters.Length < nvCount || !_requiredParameters.Take(nvCount).All(rp => globalValues.Keys.Contains(rp.Name));
+
+                if (!Filtered)
+                {
+                    _requiredParameters = _requiredParameters.Skip(nvCount).ToArray();
+                    _arityMin -= nvCount;
+                    _arityMax -= nvCount;
+                }
+            }
         }
 
         internal void SetUnsupported(string notSupportedReason)
@@ -445,12 +476,44 @@ namespace Microsoft.PowerFx.Connectors
                 cancellationToken.ThrowIfCancellationRequested();
                 runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorParameterTypeAsync))}, with {LogKnownParameters(knownParameters)}, {LogConnectorParameter(connectorParameter)}");
 
-                ConnectorType result = await GetConnectorTypeInternalAsync(knownParameters, connectorParameter.ConnectorType ?? ReturnParameterType, runtimeContext, cancellationToken).ConfigureAwait(false);
+                ConnectorType result = await GetConnectorParameterTypeAsync(knownParameters, connectorParameter, runtimeContext, new CallCounter() { CallsLeft = 1 }, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorParameterTypeAsync))}, returning from {nameof(GetConnectorTypeInternalAsync)} with {LogConnectorType(result)}");
                 return result;
             }
             catch (Exception ex)
             {
+                runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in {this.LogFunction(nameof(GetConnectorParameterTypeAsync))}, Context {LogKnownParameters(knownParameters)} {LogConnectorParameter(connectorParameter)}, {LogException(ex)}");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Dynamic intellisense (dynamic property/schema) on a given parameter.
+        /// </summary>
+        /// <param name="knownParameters">Known parameters.</param>
+        /// <param name="connectorParameter">Parameter for which we need the (dynamic) type.</param>
+        /// <param name="runtimeContext">Connector context.</param>
+        /// <param name="maxCalls">Max number of recursive network calls.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Formula Type determined by dynamic Intellisense.</returns>
+        public async Task<ConnectorType> GetConnectorParameterTypeAsync(NamedValue[] knownParameters, ConnectorParameter connectorParameter, BaseRuntimeConnectorContext runtimeContext, int maxCalls, CancellationToken cancellationToken)
+        {
+            return await GetConnectorParameterTypeAsync(knownParameters, connectorParameter, runtimeContext, new CallCounter() { CallsLeft = maxCalls }, cancellationToken).ConfigureAwait(false);
+        }
+       
+        internal async Task<ConnectorType> GetConnectorParameterTypeAsync(NamedValue[] knownParameters, ConnectorParameter connectorParameter, BaseRuntimeConnectorContext runtimeContext, CallCounter maxCalls, CancellationToken cancellationToken)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorParameterTypeAsync))}, with {LogKnownParameters(knownParameters)}, callsLeft {maxCalls.CallsLeft}, {LogConnectorParameter(connectorParameter)}");
+
+                ConnectorType result = await GetConnectorTypeInternalAsync(knownParameters, connectorParameter.ConnectorType ?? ReturnParameterType, runtimeContext, maxCalls, cancellationToken).ConfigureAwait(false);
+                runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorParameterTypeAsync))}, returning from {nameof(GetConnectorTypeInternalAsync)} with {LogConnectorType(result)}, callsLeft {maxCalls.CallsLeft}");
+                return result;
+            }
+            catch (Exception ex)
+            {                
                 runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in {this.LogFunction(nameof(GetConnectorParameterTypeAsync))}, Context {LogKnownParameters(knownParameters)} {LogConnectorParameter(connectorParameter)}, {LogException(ex)}");
                 throw;
             }
@@ -470,7 +533,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorTypeAsync))}, with {LogKnownParameters(knownParameters)} for {LogConnectorType(connectorType)}");
-                ConnectorType connectorType2 = await GetConnectorTypeInternalAsync(knownParameters, connectorType, runtimeContext, cancellationToken).ConfigureAwait(false);
+                ConnectorType connectorType2 = await GetConnectorTypeAsync(knownParameters, connectorType, runtimeContext, new CallCounter() { CallsLeft = 1 }, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorTypeAsync))}, returning from {nameof(GetConnectorTypeInternalAsync)} with {LogConnectorType(connectorType2)}");
                 return connectorType2;
             }
@@ -481,26 +544,149 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal async Task<ConnectorType> GetConnectorTypeInternalAsync(NamedValue[] knownParameters, ConnectorType connectorType, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        /// <summary>
+        /// Dynamic intellisense (dynamic property/schema) on a given connector type (coming from a parameter or returned from GetConnectorTypeAsync).
+        /// </summary>
+        /// <param name="knownParameters">Known parameters.</param>
+        /// <param name="connectorType">Connector type for which we need the (dynamic) type.</param>
+        /// <param name="runtimeContext">Connector context.</param>
+        /// <param name="maxCalls">Max number of recursive network calls.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Formula Type determined by dynamic Intellisense.</returns>
+        public async Task<ConnectorType> GetConnectorTypeAsync(NamedValue[] knownParameters, ConnectorType connectorType, BaseRuntimeConnectorContext runtimeContext, int maxCalls, CancellationToken cancellationToken)
+        {
+            return await GetConnectorTypeAsync(knownParameters, connectorType, runtimeContext, new CallCounter() { CallsLeft = maxCalls }, cancellationToken).ConfigureAwait(false);
+        }
+
+        internal async Task<ConnectorType> GetConnectorTypeAsync(NamedValue[] knownParameters, ConnectorType connectorType, BaseRuntimeConnectorContext runtimeContext, CallCounter maxCalls, CancellationToken cancellationToken)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorTypeAsync))}, with {LogKnownParameters(knownParameters)} and callsLeft {maxCalls.CallsLeft} for {LogConnectorType(connectorType)}");
+                ConnectorType connectorType2 = await GetConnectorTypeInternalAsync(knownParameters, connectorType, runtimeContext, maxCalls, cancellationToken).ConfigureAwait(false);
+                runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorTypeAsync))}, returning from {nameof(GetConnectorTypeInternalAsync)} with {LogConnectorType(connectorType2)}, callsLeft {maxCalls.CallsLeft}");
+                return connectorType2;
+            }
+            catch (Exception ex)
+            {                
+                runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in {this.LogFunction(nameof(GetConnectorTypeAsync))}, Context {LogKnownParameters(knownParameters)}, callsLeft {maxCalls.CallsLeft} {LogConnectorType(connectorType)}, {LogException(ex)}");
+                throw;
+            }
+        }
+
+        internal async Task<ConnectorType> GetConnectorTypeInternalAsync(NamedValue[] knownParameters, ConnectorType connectorType, BaseRuntimeConnectorContext runtimeContext, CallCounter maxCalls, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, with {LogKnownParameters(knownParameters)} for {LogConnectorType(connectorType)}");
+            runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, with {LogKnownParameters(knownParameters)}, callsLeft {maxCalls.CallsLeft} for {LogConnectorType(connectorType)}");
 
             if (connectorType.DynamicProperty != null && !string.IsNullOrEmpty(connectorType.DynamicProperty.ItemValuePath))
             {
+                maxCalls.CallsLeft--;
                 ConnectorType result = await GetConnectorSuggestionsFromDynamicPropertyAsync(knownParameters, runtimeContext, connectorType.DynamicProperty, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, returning from {nameof(GetConnectorSuggestionsFromDynamicPropertyAsync)} with {LogConnectorType(result)}");
                 return result;
             }
             else if (connectorType.DynamicSchema != null && !string.IsNullOrEmpty(connectorType.DynamicSchema.ValuePath))
             {
+                maxCalls.CallsLeft--;
                 ConnectorType result = await GetConnectorSuggestionsFromDynamicSchemaAsync(knownParameters, runtimeContext, connectorType.DynamicSchema, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, returning from {nameof(GetConnectorSuggestionsFromDynamicSchemaAsync)} with {LogConnectorType(result)}");
                 return result;
             }
+            else if (connectorType.DynamicList != null && !string.IsNullOrEmpty(connectorType.DynamicList.ItemPath))
+            {
+                maxCalls.CallsLeft--;
+                ConnectorEnhancedSuggestions result = await GetConnectorSuggestionsFromDynamicListAsync(knownParameters, runtimeContext, connectorType.DynamicList, cancellationToken).ConfigureAwait(false);
+
+                // This is an OptionSet
+                if (result != null && (connectorType.FormulaType is DecimalType || connectorType.FormulaType is NumberType))
+                {
+                    ConnectorType connectorType2 = GetOptionSetFromSuggestions(connectorType, result);
+                    runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, returning from {nameof(GetConnectorSuggestionsFromDynamicListAsync)} with {LogConnectorType(connectorType2)}");
+                    return connectorType2;
+                }
+            }
+            else if (connectorType.DynamicValues != null && !string.IsNullOrEmpty(connectorType.DynamicValues.ValuePath))
+            {
+                maxCalls.CallsLeft--;
+                ConnectorEnhancedSuggestions result = await GetConnectorSuggestionsFromDynamicValueAsync(knownParameters, runtimeContext, connectorType.DynamicValues, cancellationToken).ConfigureAwait(false);
+
+                // This is an OptionSet
+                if (result != null && (connectorType.FormulaType is DecimalType || connectorType.FormulaType is NumberType))
+                {
+                    ConnectorType connectorType2 = GetOptionSetFromSuggestions(connectorType, result);
+                    runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, returning from {nameof(GetConnectorSuggestionsFromDynamicValueAsync)} with {LogConnectorType(connectorType2)}");
+                    return connectorType2;
+                }
+            }
+            else if (connectorType.ContainsDynamicIntellisense && connectorType.Fields.Any() && connectorType.FormulaType is AggregateType aggregateType)
+            {
+                List<ConnectorType> fieldTypes = new List<ConnectorType>();
+                RecordType recordType = RecordType.Empty();
+
+                foreach (ConnectorType field in connectorType.Fields)
+                {
+                    ConnectorType newFieldType = field;
+
+                    while (newFieldType.ContainsDynamicIntellisense && maxCalls.CallsLeft > 0)
+                    {
+                        ConnectorType newFieldType2 = await GetConnectorTypeInternalAsync(knownParameters, newFieldType, runtimeContext, maxCalls, cancellationToken).ConfigureAwait(false);
+
+                        if (newFieldType2 == null)
+                        {
+                            break;
+                        }
+
+                        newFieldType = newFieldType2;
+                    }
+
+                    if (maxCalls.CallsLeft <= 0)
+                    {
+                        runtimeContext.ExecutionLogger?.LogDebug($"In {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, callsLeft {maxCalls.CallsLeft}.");
+                    }
+
+                    fieldTypes.Add(newFieldType);
+                    recordType = recordType.Add(field.Name, newFieldType.FormulaType, field.DisplayName);
+                }
+
+                FormulaType formulaType = connectorType.FormulaType is RecordType ? recordType : recordType.ToTable();
+                ConnectorType newConnectorType = new ConnectorType(connectorType, fieldTypes.ToArray(), formulaType);
+                runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, returning from {nameof(GetConnectorSuggestionsFromDynamicSchemaAsync)} with {LogConnectorType(newConnectorType)}");
+                return newConnectorType;
+            }
 
             runtimeContext.ExecutionLogger?.LogWarning($"Exiting {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, returning null as no dynamic extension defined for {LogConnectorType(connectorType)}");
             return null;
+        }
+
+        private static ConnectorType GetOptionSetFromSuggestions(ConnectorType connectorType, ConnectorEnhancedSuggestions result)
+        {
+            IEnumerable<KeyValuePair<string, object>> values = result.ConnectorSuggestions.Suggestions.Select(cs => new KeyValuePair<string, object>(cs.DisplayName, cs.Suggestion.AsDouble()));
+            EnumSymbol optionSet = new EnumSymbol(new DName(connectorType.Name), DType.Number, values);
+            OpenApiParameter openApiParameter = new OpenApiParameter()
+            {
+                Name = connectorType.Name,
+                Required = connectorType.IsRequired,
+                Extensions = new Dictionary<string, IOpenApiExtension>()
+                {
+                    { Constants.XMsVisibility, new OpenApiString(connectorType.Visibility.ToString()) },
+                    { Constants.XMsMediaKind, new OpenApiString(connectorType.MediaKind.ToString()) }
+                }
+            };
+
+            OpenApiSchema schema = new OpenApiSchema(connectorType.Schema)
+            {
+                Enum = optionSet.EnumType.ValueTree.GetPairs().Select(kvp => new OpenApiDouble((double)kvp.Value.Object) as IOpenApiAny).ToList()
+            };
+
+            OpenApiArray array = new OpenApiArray();
+            array.AddRange(optionSet.EnumType.ValueTree.GetPairs().Select(kvp => new OpenApiString(kvp.Key)));
+
+            schema.Extensions.Add(new KeyValuePair<string, IOpenApiExtension>(Constants.XMsEnumDisplayName, array));
+
+            // For now, we keep the original formula type (number/string/bool...)
+            return new ConnectorType(schema, openApiParameter, connectorType.FormulaType /* optionSet.FormulaType */);
         }
 
         /// <summary>
@@ -516,7 +702,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorReturnTypeAsync))}, with {LogKnownParameters(knownParameters)}");
-                ConnectorType connectorType = await GetConnectorTypeAsync(knownParameters, ReturnParameterType, runtimeContext, cancellationToken).ConfigureAwait(false);
+                ConnectorType connectorType = await GetConnectorReturnTypeAsync(knownParameters, runtimeContext, new CallCounter() { CallsLeft = 1 }, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorReturnTypeAsync))}, returning {nameof(GetConnectorTypeAsync)}, with {LogConnectorType(connectorType)}");
                 return connectorType;
             }
@@ -527,18 +713,38 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal async Task<ConnectorType> GetConnectorReturnTypeInternalAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        /// <summary>
+        /// Dynamic intellisense on return value.
+        /// </summary>
+        /// <param name="knownParameters">Known parameters.</param>
+        /// <param name="runtimeContext">Connector context.</param>
+        /// <param name="maxCalls">Max number of recursive network calls.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Formula Type determined by dynamic Intellisense.</returns>
+        public async Task<ConnectorType> GetConnectorReturnTypeAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, int maxCalls, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(GetConnectorReturnTypeInternalAsync))}, with {LogKnownParameters(knownParameters)}");
+            return await GetConnectorReturnTypeAsync(knownParameters, runtimeContext, new CallCounter() { CallsLeft = maxCalls }, cancellationToken).ConfigureAwait(false);
+        }
 
-            ConnectorType connectorType = await GetConnectorTypeInternalAsync(knownParameters, ReturnParameterType, runtimeContext, cancellationToken).ConfigureAwait(false);
-            runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorReturnTypeInternalAsync))}, returning {nameof(GetConnectorTypeInternalAsync)}, with {LogConnectorType(connectorType)}");
-            return connectorType;
+        internal async Task<ConnectorType> GetConnectorReturnTypeAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, CallCounter maxCalls, CancellationToken cancellationToken)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorReturnTypeAsync))}, with {LogKnownParameters(knownParameters)} and callsLeft {maxCalls.CallsLeft}");
+                ConnectorType connectorType = await GetConnectorTypeAsync(knownParameters, ReturnParameterType, runtimeContext, maxCalls, cancellationToken).ConfigureAwait(false);
+                runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorReturnTypeAsync))}, returning {nameof(GetConnectorTypeAsync)}, with {LogConnectorType(connectorType)}");
+                return connectorType;
+            }
+            catch (Exception ex)
+            {
+                runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in {this.LogFunction(nameof(GetConnectorReturnTypeAsync))}, Context {LogKnownParameters(knownParameters)}, {LogException(ex)}");
+                throw;
+            }
         }
 
         /// <summary>
-        /// Generates a Power Fx expression that will invoke this function with the given parameters. 
+        /// Generates a Power Fx expression that will invoke this function with the given parameters.
         /// </summary>
         /// <param name="parameters">Parameters.</param>
         /// <returns>Power Fx expression.</returns>
@@ -583,7 +789,7 @@ namespace Microsoft.PowerFx.Connectors
         /// Call connector function.
         /// </summary>
         /// <param name="arguments">Arguments.</param>
-        /// <param name="runtimeContext">RuntimeConnectorContext.</param>        
+        /// <param name="runtimeContext">RuntimeConnectorContext.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Function result.</returns>
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
@@ -609,7 +815,7 @@ namespace Microsoft.PowerFx.Connectors
 
             EnsureInitialized();
             runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(InvokeInternalAsync))}, with {LogArguments(arguments)}");
-            
+
             if (!IsSupported)
             {
                 throw new InvalidOperationException($"In namespace {Namespace}, function {Name} is not supported.");
@@ -720,10 +926,7 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            JsonElement je = ExtractFromJson(sv, cds.ValuePath);
-            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
-            OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
-            ConnectorType connectorType = new ConnectorType(schema, ConnectorSettings.Compatibility);
+            ConnectorType connectorType = GetConnectorType(cds.ValuePath, sv, ConnectorSettings.Compatibility);
 
             if (connectorType.HasErrors)
             {
@@ -733,6 +936,16 @@ namespace Microsoft.PowerFx.Connectors
             {
                 runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorSuggestionsFromDynamicSchemaAsync))}, with {LogConnectorType(connectorType)}");
             }
+
+            return connectorType;
+        }
+
+        internal static ConnectorType GetConnectorType(string valuePath, StringValue sv, ConnectorCompatibility compatibility)
+        {
+            JsonElement je = ExtractFromJson(sv, valuePath);
+            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
+            OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
+            ConnectorType connectorType = new ConnectorType(schema, compatibility);
 
             return connectorType;
         }
@@ -755,10 +968,7 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            JsonElement je = ExtractFromJson(sv, cdp.ItemValuePath);            
-            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
-            OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
-            ConnectorType connectorType = new ConnectorType(schema, ConnectorSettings.Compatibility);
+            ConnectorType connectorType = GetConnectorType(cdp.ItemValuePath, sv, ConnectorSettings.Compatibility);
 
             if (connectorType.HasErrors)
             {
@@ -806,6 +1016,11 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             JsonElement je = ExtractFromJson(sv, cdv.ValueCollection);
+
+            if (je.ValueKind != JsonValueKind.Array && string.IsNullOrEmpty(cdv.ValueCollection))
+            {
+                je = ExtractFromJson(sv, "value");
+            }
 
             if (je.ValueKind == JsonValueKind.Array)
             {
@@ -869,7 +1084,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            EnsureConnectorFunction(dynamicApi, FunctionList);
+            EnsureConnectorFunction(dynamicApi, GlobalContext.FunctionList);
             if (dynamicApi.ConnectorFunction == null)
             {
                 runtimeContext.ExecutionLogger?.LogError($"Exiting {this.LogFunction(nameof(ConnectorDynamicCallAsync))}, {nameof(dynamicApi.ConnectorFunction)} is null");
@@ -924,7 +1139,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             List<FormulaValue> arguments = new List<FormulaValue>();
 
-            ConnectorFunction functionToBeCalled = EnsureConnectorFunction(dynamicApi, FunctionList).ConnectorFunction;
+            ConnectorFunction functionToBeCalled = EnsureConnectorFunction(dynamicApi, GlobalContext.FunctionList).ConnectorFunction;
 
             foreach (ConnectorParameter connectorParameter in functionToBeCalled.RequiredParameters)
             {
@@ -934,7 +1149,7 @@ namespace Microsoft.PowerFx.Connectors
                 // doc: https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions
                 // e.g. make this example working:
                 // "destinationInputParam1/property1": {
-                //  "parameterReference": "sourceInputParam1/property1"
+                //    "parameterReference": "sourceInputParam1/property1"
                 // }
                 if (dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is StaticConnectorExtensionValue && GetLastPart(kvp.Key) == requiredParameterName).Value is StaticConnectorExtensionValue sValue)
                 {
@@ -999,7 +1214,7 @@ namespace Microsoft.PowerFx.Connectors
                 if (parameter == null)
                 {
                     errorsAndWarnings.AddError($"OpenApiParameter is null, this swagger file is probably containing errors");
-                    fatalError = true;                    
+                    fatalError = true;
                     break;
                 }
 
@@ -1013,7 +1228,7 @@ namespace Microsoft.PowerFx.Connectors
                             continue;
                         }
 
-                        // Ex: Api-Version 
+                        // Ex: Api-Version
                         hiddenRequired = true;
                     }
                     else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
@@ -1172,7 +1387,7 @@ namespace Microsoft.PowerFx.Connectors
 
             // Required params are first N params in the final list, "in" parameters first.
             // Optional params are fields on a single record argument at the end.
-            // Hidden required parameters do not count here            
+            // Hidden required parameters do not count here
             _requiredParameters = ConnectorSettings.Compatibility == ConnectorCompatibility.PowerAppsCompatibility ? GetPowerAppsParameterOrder(requiredParameters) : requiredParameters.ToArray();
             _optionalParameters = optionalParameters.ToArray();
             _hiddenRequiredParameters = hiddenRequiredParameters.ToArray();
@@ -1183,10 +1398,15 @@ namespace Microsoft.PowerFx.Connectors
             _returnType = errorsAndWarnings.AggregateErrorsAndWarnings(Operation.GetConnectorReturnType(ConnectorSettings.Compatibility));
 
             if (IsDeprecated)
-            {                
+            {
                 _warnings.Add(ConnectorStringResources.WarnDeprecatedFunction);
                 string msg = ErrorUtils.FormatMessage(StringResources.Get(ConnectorStringResources.WarnDeprecatedFunction), null, Name, Namespace);
                 _configurationLogger?.LogWarning($"{msg}");
+            }
+
+            if (openApiBodyParameters.Count > 1 && openApiBodyParameters.Any(p => p.Key.FormulaType._type.Kind == DKind.Blob))
+            {
+                errorsAndWarnings.AddError("Body with multiple parameters is not supported when one of the parameters is of type 'blob'");
             }
 
             if (errorsAndWarnings.HasErrors)
@@ -1273,6 +1493,11 @@ namespace Microsoft.PowerFx.Connectors
                     _configurationLogger?.LogError($"{this.LogFunction(nameof(VerifyCanHandle))}, unsupported {location.Value}");
                     return false;
             }
+        }
+
+        internal class CallCounter
+        {
+            internal int CallsLeft;
         }
     }
 }
