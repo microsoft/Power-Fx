@@ -535,6 +535,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                             item.RawExpression = item.Expression;
                             item.Expression = null;
                         }
+
+                        item.AnonymizedExpression = check.ApplyGetLogging();
                     }
                 }
             }

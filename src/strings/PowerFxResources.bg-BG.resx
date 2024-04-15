@@ -1962,6 +1962,14 @@
     <value>Не може да се използва стойност, която не е запис, в този контекст.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Не може да се използва стойност, която не е запис, в този контекст: „{0}“.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>В този контекст могат да се използват само стойности на записи или таблици.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Този запис не може да се използва. Може да съдържа сблъскващи се полета от несъвместим тип.</value>
     
@@ -2835,15 +2843,16 @@
     <value>Езиков код на предоставения текст.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Създава таблица от указаните записи с брой колони, равен на броя на уникалните полета на записите. Например: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Създава таблица от указаните записи и таблици, като броят на колоните в нея е равен на броя на уникалните полета в записите. Например: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>запис</value>
+    <value>запис_или_таблица</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Запис, който ще стане един ред в получената таблица.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Запис или таблица, които ще бъдат част от новата таблица.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Връща таблица с всички колони, премахнати от таблицата на „източник“, с изключение на указаните колони.</value>
@@ -3065,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>източник_на_данни</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3081,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>източник_на_данни</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>източник_на_данни</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3096,16 +3105,55 @@
     <value>Прилага актуализациите към указания ред и променя реда в указания източник на данни. Връща актуализирания ред.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Взима единичен запис с първични ключове и актуализирани стойности и актуализира съответния ред в указания източник на данни. Връща актуализирания ред.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Взима таблица с редове и прилага актуализациите, указани в таблица с актуализации, една по една. Връща таблица с актуализираните редове.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Взима таблица с редове с първични ключове и актуализирани полета и прилага тези актуализации към източника на данни. Връща таблица с актуализираните редове.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Връща реда с приложени актуализации.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Източникът на данни, който ще се коригира.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Записът, който трябва да се коригира.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Актуализацията, която трябва да се коригира в дадения запис.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Таблицата с редове за корекция.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Таблицата с актуализации, които трябва да бъдат извършени в дадените редове.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>източник</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>запис</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>актуализация</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>редове</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>актуализации</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3113,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>източник_на_данни</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>записи_за_премахване</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -3940,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL адрес, който да бъде кодиран.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Преобразува текст в такъв с кодировка за HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>стойност</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Текстът, който да бъде кодиран.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}“ е разпозната функция, която обаче не се поддържа.</value>
     
@@ -4210,6 +4269,10 @@
     <value>Стойностите на JSONFormat „{0}“ и „{1}“ не може да се използват заедно.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Стойността „{0}“ не се поддържа като опция във функцията JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Стойността, подадена на функцията JSON, съдържа мултимедийно съдържание и не се поддържа по подразбиране. За да разрешите JSON сериализиране на мултимедийни стойности, се уверете, че използвате опцията IncludeBinaryData в параметъра format.</value>
     
@@ -4306,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Неизвестен оператор Partial.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Предупреждение за делегиране. Резултатът от този аргумент „{0}“ може да бъде отрязан за големи набори от данни, преди да бъде предаден на функцията {1}.</value>
     
   </data>
 </root>

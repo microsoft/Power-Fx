@@ -1100,7 +1100,7 @@
     
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
-    <value>Número de meses para alterar a data. Um valor positivo gera uma data futura, um valor negativo uma data no passado e zero não alterará o mês.</value>
+    <value>Número de meses para alterar a data. Um valor positivo gera uma data futura, um valor negativo gera uma data no passado e zero não alterará o mês.</value>
     
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
@@ -1514,7 +1514,7 @@
     <value>Avalia uma expressão sobre uma ou mais colunas da tabela e retorna uma tabela de coluna única que contém valores distintos (exclusivos) para a expressão avaliada.</value>
   </data>
   <data name="DistinctArg1" xml:space="preserve">
-    <value>origem</value>
+    <value>fonte</value>
     
   </data>
   <data name="DistinctArg2" xml:space="preserve">
@@ -1960,6 +1960,14 @@
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>Não é possível usar um valor diferente de registro nesse contexto.</value>
+    
+  </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Não é possível usar um valor diferente de registro neste contexto: '{0}'.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Somente valores de registro ou de tabela podem ser usados neste contexto.</value>
     
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
@@ -2835,15 +2843,16 @@
     <value>Código de idioma do texto fornecido.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Cria uma tabela dos registros especificados, com tantas colunas quantos forem os campos de registro exclusivos. Por exemplo: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Cria uma tabela dos registros e das tabelas especificados, com o número de colunas igual ao número de campos de registro exclusivos. Por exemplo: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>registro</value>
+    <value>registro_ou_tabela</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Um registro que se tornará uma linha na tabela resultante.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Um registro ou uma tabela que fará parte da tabela resultante.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Retorna uma tabela com todas as colunas removidas da tabela 'source' (origem), exceto as colunas especificadas.</value>
@@ -3065,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>fonte_de_dados</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3081,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>fonte_de_dados</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>fonte_de_dados</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3096,16 +3105,55 @@
     <value>Aplica as atualizações para a linha especificada e altera a linha na fonte de dados especificada. Retorna a linha atualizada.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Tira um registro único com chaves primárias e valores atualizados e atualiza a linha correspondente na fonte de dados especificada. Retorna a linha atualizada.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Tira uma tabela de linhas e aplica as atualizações especificadas em uma tabela de atualizações com um estilo individual. Retorna uma tabela de linhas atualizadas.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Tira uma tabela de linhas com chaves primárias e campos atualizados e aplica essas atualizações à fonte de dados. Retorna uma tabela de linhas atualizadas.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Retorna a linha com atualizações aplicadas.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Fonte de dados a ser corrigida.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Registro que deve ser corrigido.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Atualização que precisa ser corrigida para o registro fornecido.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>A tabela de linhas a ser corrigida.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>A tabela de atualizações que precisa ser corrigida para as linhas fornecidas.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>fonte</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>registro</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>atualizar</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>linhas</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>atualizações</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3113,7 +3161,7 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>fonte_de_dados</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
@@ -3940,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL a ser codificada.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Converte um texto em um texto codificado em HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Um texto a ser codificado.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" é uma função reconhecida, mas sem suporte.</value>
     
@@ -4051,7 +4110,7 @@
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
-    <value>Um valor de registro ou de tabela esperado.</value>
+    <value>Esperado um registro ou valor de tabela.</value>
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
@@ -4210,6 +4269,10 @@
     <value>Os valores JSONFormat '{0}' e '{1}' não podem ser usados juntos.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>O valor "{0}" não tem suporte como uma opção na função JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>O valor passado para a função JSON contém mídia e por padrão não há suporte para ele. Para permitir a serialização JSON de valores de mídia, não se esqueça de usar a opção IncludeBinaryData no parâmetro 'format'.</value>
     
@@ -4306,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operador Partial desconhecido.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Aviso de delegação. O resultado deste argumento "{0}" pode ser truncado para conjuntos de dados grandes antes de ser passado para a função "{1}".</value>
     
   </data>
 </root>

@@ -48,5 +48,26 @@ namespace Microsoft.PowerFx.Core.Types
 
             return retval;
         }
+
+        public static bool HasMetaField(this DType type)
+        {
+            return type.TryGetMetaField(out _);
+        }
+
+        // Fetch the meta field for this DType, if there is one.
+        public static bool TryGetMetaField(this DType self, out IExternalControlType metaFieldType)
+        {
+            if (!self.IsAggregate ||
+                !self.TryGetType(new DName(DType.MetaFieldName), out var field) ||
+                !(field is IExternalControlType control) ||
+                !control.ControlTemplate.IsMetaLoc)
+            {
+                metaFieldType = null;
+                return false;
+            }
+
+            metaFieldType = control;
+            return true;
+        }
     }
 }

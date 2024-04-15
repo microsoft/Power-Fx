@@ -1,0 +1,179 @@
+{
+  "value": [
+    {
+      "value": 0,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Sunday",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "21d6a218-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Sunday",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "21d6a218-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 1,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Monday",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "23d6a218-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Monday",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "23d6a218-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 2,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Tuesday",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "25d6a218-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Tuesday",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "25d6a218-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 3,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Wednesday",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "27d6a218-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Wednesday",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "27d6a218-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 4,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Thursday",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "29d6a218-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Thursday",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "29d6a218-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 5,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Friday",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "2bd6a218-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Friday",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "2bd6a218-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    },
+    {
+      "value": 6,
+      "label": {
+        "localizedLabels": [
+          {
+            "label": "Saturday",
+            "languageCode": 1033,
+            "isManaged": true,
+            "metadataId": "2dd6a218-2341-db11-898a-0007e9e17ebd"
+          }
+        ],
+        "userLocalizedLabel": {
+          "label": "Saturday",
+          "languageCode": 1033,
+          "isManaged": true,
+          "metadataId": "2dd6a218-2341-db11-898a-0007e9e17ebd"
+        }
+      },
+      "description": {
+        "localizedLabels": [
+        ]
+      },
+      "isManaged": true,
+      "isHidden": false
+    }
+  ]
+}

@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 using MemoryStream memoryStream = new MemoryStream();
                 using Utf8JsonWriter writer = new Utf8JsonWriter(memoryStream, new JsonWriterOptions() { Indented = flags.IndentFour, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
-                Utf8JsonWriterVisitor jsonWriterVisitor = new Utf8JsonWriterVisitor(writer, _timeZoneInfo);
+                Utf8JsonWriterVisitor jsonWriterVisitor = new Utf8JsonWriterVisitor(writer, _timeZoneInfo, flattenValueTables: flags.FlattenValueTables);
 
                 _arguments[0].Visit(jsonWriterVisitor);
                 writer.Flush();
@@ -89,6 +89,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     flags.IgnoreUnsupportedTypes = arg1string.Value.Contains("I");
                     flags.IncludeBinaryData = arg1string.Value.Contains("B");
                     flags.IndentFour = arg1string.Value.Contains("4");
+                    flags.FlattenValueTables = arg1string.Value.Contains("_");
                 }
 
                 if (_arguments.Length > 1 && _arguments[1] is OptionSetValue arg1optionset)
@@ -97,6 +98,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     flags.IgnoreUnsupportedTypes = arg1optionset.Option == "IgnoreUnsupportedTypes";
                     flags.IncludeBinaryData = arg1optionset.Option == "IncludeBinaryData";
                     flags.IndentFour = arg1optionset.Option == "IndentFour";
+                    flags.FlattenValueTables = arg1optionset.Option == "FlattenValueTables";
                 }
 
                 if ((flags.IncludeBinaryData && flags.IgnoreBinaryData) ||
@@ -113,13 +115,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 private readonly Utf8JsonWriter _writer;
                 private readonly TimeZoneInfo _timeZoneInfo;
+                private readonly bool _flattenValueTables;
 
                 internal readonly List<ErrorValue> ErrorValues = new List<ErrorValue>();
 
-                internal Utf8JsonWriterVisitor(Utf8JsonWriter writer, TimeZoneInfo timeZoneInfo)
+                internal Utf8JsonWriterVisitor(Utf8JsonWriter writer, TimeZoneInfo timeZoneInfo, bool flattenValueTables)
                 {
                     _writer = writer;
                     _timeZoneInfo = timeZoneInfo;
+                    _flattenValueTables = flattenValueTables;
                 }
 
                 public void Visit(BlankValue blankValue)
@@ -254,6 +258,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     _writer.WriteStartArray();
 
+                    var isSingleColumnValueTable = false;
+                    if (_flattenValueTables)
+                    {
+                        var fieldTypes = tableValue.Type.GetFieldTypes();
+                        var firstField = fieldTypes.FirstOrDefault();
+                        if (firstField != null && !fieldTypes.Skip(1).Any() && firstField.Name.Value == TexlFunction.ColumnName_ValueStr)
+                        {
+                            isSingleColumnValueTable = true;
+                        }
+                    }
+
                     foreach (DValue<RecordValue> row in tableValue.Rows)
                     {
                         if (row.IsBlank)
@@ -266,7 +281,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         }
                         else
                         {
-                            row.Value.Visit(this);
+                            if (isSingleColumnValueTable)
+                            {
+                                var namedValue = row.Value.Fields.First();
+                                namedValue.Value.Visit(this);
+                            }
+                            else
+                            {
+                                row.Value.Visit(this);
+                            }
                         }
                     }
 
@@ -311,6 +334,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 internal bool IncludeBinaryData = false;
 
                 internal bool IndentFour = false;
+
+                internal bool FlattenValueTables = false;
             }
 
             private static DateTime ConvertToUTC(DateTime dateTime, TimeZoneInfo fromTimeZone)

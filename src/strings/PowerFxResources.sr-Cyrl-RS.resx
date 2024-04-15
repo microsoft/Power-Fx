@@ -1962,6 +1962,14 @@
     <value>Није могуће користити вредност која није запис у овом контексту.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Није могуће користити вредност која није запис у овом контексту: „{0}“.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>У овом контексту могу да се користе само вредности записа или табеле.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Није могуће користити овај запис. Он можда садржи преклапајућа поља некомпатибилних типова.</value>
     
@@ -2835,15 +2843,16 @@
     <value>Шифра језика наведеног текста.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Креира табелу од наведених записа, са онолико колона колико постоји јединствених поља записа. На пример: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Креира табелу од наведених записа и табела, са онолико колона колико постоји јединствених поља записа. На пример: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>запис</value>
+    <value>запис_или_табела</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Запис који ће постати ред у добијеној табели.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Запис или табела који ће бити део добијене табеле.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Враћа табелу са свим колонама уклоњеним из табеле „извор“ осим наведених колона.</value>
@@ -3096,16 +3105,55 @@
     <value>Примењује исправке на наведени ред и мења ред у наведени извор података. Враћа ажурирани ред.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Узима један запис са примарним кључевима и ажурираним вредностима и ажурира одговарајући ред у наведеном извору података. Враћа ажурирани ред.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Узима табелу редова и примењује једну по једну исправку наведену у табели исправки. Враћа табелу ажурираних редова.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Узима табелу редова са примарним кључевима и ажурираним пољима и примењује те исправке на извор података. Враћа табелу ажурираних редова.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Враћа ред са примењеним ажурирањима.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Извор података на који треба применити закрпу.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>На запис се мора применити закрпа.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Исправка коју треба применити а дати запис.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Табела редова коју треба закрпити.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Табела исправки коју треба закрпити са датим редовима.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>запис</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>ажурирај</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>редови</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>исправке</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3940,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL адреса коју треба кодирати.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Конвертује текст у текст кодиран за HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>вредност</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Текст који треба кодирати.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}“ је препозната, али не и подржана функција.</value>
     
@@ -4086,7 +4145,7 @@
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Уклања сво обликовање и враћа вредност чистог текста.</value>
+    <value>Уклања сва обликовања и враћа вредност чистог текста.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
@@ -4210,6 +4269,10 @@
     <value>JSONFormat вредности „{0}“ и „{1}“ не могу се користити заједно.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Вредност „{0}“ није подржана као опција у функцији JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Вредност прослеђена функцији JSON садржи медије, а није подржана по подразумеваној вредности. Да бисте дозволили JSON серијализацију медијских вредности, уверите се да користите опцију IncludeBinaryData у параметру „формат“.</value>
     
@@ -4306,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Непознат Partial оператер.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Упозорење о делегирању. Резултат овог аргумента „{0}“ може да буде скраћен за велике скупове података пре него што буде прослеђен у функцију „{1}“.</value>
     
   </data>
 </root>

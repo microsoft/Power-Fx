@@ -17,17 +17,21 @@ using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Tests
 {
-    // Simulate a test server (Connector, ASP.Net site, etc). 
-    // This logs all received SendAsync() calls to _log for easy verification. 
+    // Simulate a test server (Connector, ASP.Net site, etc).
+    // This logs all received SendAsync() calls to _log for easy verification.
     // Test can call SetResponse() to set what each SendAsync() should return.
     internal class LoggingTestServer : HttpMessageHandler
     {
-        // Log HTTP calls. 
+        // Log HTTP calls.
         public StringBuilder _log = new ();
+
         public OpenApiDocument _apiDocument;
+
         public bool SendAsyncCalled = false;
+
         public bool Live = false;
-        public HttpClient LiveClient = null;        
+
+        public HttpClient LiveClient = null;
 
         public LoggingTestServer(string swaggerName, ITestOutputHelper output, bool live = false)
         {
@@ -42,12 +46,16 @@ namespace Microsoft.PowerFx.Tests
 
         // Set the response, returned by SendAsync
 #pragma warning disable CA2213 // Disposable fields should be disposed
+
         public HttpResponseMessage _nextResponse;
 #pragma warning restore CA2213 // Disposable fields should be disposed
 
         public object[] Responses = Array.Empty<object>(); // array of string or byte[]
+
         public HttpStatusCode[] Statuses = Array.Empty<HttpStatusCode>();
+
         public int CurrentResponse = 0;
+
         public bool ResponseSetMode = false;
 
         public void SetResponseSet(string filename)
@@ -201,7 +209,7 @@ namespace Microsoft.PowerFx.Tests
             }
 
             _nextResponse = null;
-            return response ?? new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            return response ?? new HttpResponseMessage((HttpStatusCode)599);
         }
     }
 }

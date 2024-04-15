@@ -1,0 +1,131 @@
+{
+  "value": [
+    {
+      "@odata.etag": "\"5\"",
+      "ItemInternalId": "1",
+      "ID": 1,
+      "Modified": "2024-04-04T14:25:33Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|lq@contoso.com",
+        "DisplayName": "Louis XIV",
+        "Email": "lq@contoso.com",
+        "Picture": "https://microsofteur.sharepoint.com/teams/pfxtest/_layouts/15/UserPhoto.aspx?Size=L&AccountName=lq@contoso.com",
+        "Department": "Versailles",
+        "JobTitle": "King"
+      },
+      "Editor#Claims": "i:0#.f|membership|lq@contoso.com",
+      "Created": "2024-04-04T14:24:36Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|lq@contoso.com",
+        "DisplayName": "Louis XIV",
+        "Email": "lq@contoso.com",
+        "Picture": "https://microsofteur.sharepoint.com/teams/pfxtest/_layouts/15/UserPhoto.aspx?Size=L&AccountName=lq@contoso.com",
+        "Department": "Versailles",
+        "JobTitle": "King"
+      },
+      "Author#Claims": "i:0#.f|membership|lq@contoso.com",
+      "OData__DisplayName": "General",
+      "{Identifier}": "Shared%2bDocuments%252fDocument1.docx",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": "https://westeurope1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=docx&cs=fFNQTw&docid=https%3a%2f%2fmicrosofteur.sharepoint.com%3a443%2f_api%2fv2.0%2fdrives%2fb!u8N2qh_YIEeW5D20B2Nozktfs5ISI0xAioue535ZuhIWedNLJgAmR5ToWgy8jkdq%2fitems%2f01374WNPHN3JXTLA763BBIVM2UHNZMJKYQ%3fversion%3dPublished&access_token=at1&width=800&height=800",
+        "Medium": "https://westeurope1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=docx&cs=fFNQTw&docid=https%3a%2f%2fmicrosofteur.sharepoint.com%3a443%2f_api%2fv2.0%2fdrives%2fb!u8N2qh_YIEeW5D20B2Nozktfs5ISI0xAioue535ZuhIWedNLJgAmR5ToWgy8jkdq%2fitems%2f01374WNPHN3JXTLA763BBIVM2UHNZMJKYQ%3fversion%3dPublished&access_token=at2&width=176&height=176",
+        "Small": "https://westeurope1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=docx&cs=fFNQTw&docid=https%3a%2f%2fmicrosofteur.sharepoint.com%3a443%2f_api%2fv2.0%2fdrives%2fb!u8N2qh_YIEeW5D20B2Nozktfs5ISI0xAioue535ZuhIWedNLJgAmR5ToWgy8jkdq%2fitems%2f01374WNPHN3JXTLA763BBIVM2UHNZMJKYQ%3fversion%3dPublished&access_token=at3&width=96&height=96"
+      },
+      "{Link}": "https://microsofteur.sharepoint.com/teams/pfxtest/Shared%20Documents/Document1.docx?d=w356fdaedfe8342d88ab3543b72c4ab10",
+      "{Name}": "Document1",
+      "{FilenameWithExtension}": "Document1.docx",
+      "{Path}": "Shared Documents/",
+      "{FullPath}": "Shared Documents/Document1.docx",
+      "{IsCheckedOut}": false,
+      "{VersionNumber}": "2.0"
+    },
+    {
+      "@odata.etag": "\"4\"",
+      "ItemInternalId": "2",
+      "ID": 2,
+      "Modified": "2024-04-04T14:25:56Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|lq@contoso.com",
+        "DisplayName": "Louis XIV",
+        "Email": "lq@contoso.com",
+        "Picture": "https://microsofteur.sharepoint.com/teams/pfxtest/_layouts/15/UserPhoto.aspx?Size=L&AccountName=lq@contoso.com",
+        "Department": "Versailles",
+        "JobTitle": "King"
+      },
+      "Editor#Claims": "i:0#.f|membership|lq@contoso.com",
+      "Created": "2024-04-04T14:25:44Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|lq@contoso.com",
+        "DisplayName": "Louis XIV",
+        "Email": "lq@contoso.com",
+        "Picture": "https://microsofteur.sharepoint.com/teams/pfxtest/_layouts/15/UserPhoto.aspx?Size=L&AccountName=lq@contoso.com",
+        "Department": "Versailles",
+        "JobTitle": "King"
+      },
+      "Author#Claims": "i:0#.f|membership|lq@contoso.com",
+      "OData__DisplayName": "",
+      "{Identifier}": "Shared%2bDocuments%252fDocument2.xlsx",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": "https://westeurope1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=xlsx&cs=fFNQTw&docid=https%3a%2f%2fmicrosofteur.sharepoint.com%3a443%2f_api%2fv2.0%2fdrives%2fb!u8N2qh_YIEeW5D20B2Nozktfs5ISI0xAioue535ZuhIWedNLJgAmR5ToWgy8jkdq%2fitems%2f01374WNPBUU7YDXVYHL5ELAHYMLTHMYRR3%3fversion%3dPublished&access_token=at4&width=800&height=800",
+        "Medium": "https://westeurope1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=xlsx&cs=fFNQTw&docid=https%3a%2f%2fmicrosofteur.sharepoint.com%3a443%2f_api%2fv2.0%2fdrives%2fb!u8N2qh_YIEeW5D20B2Nozktfs5ISI0xAioue535ZuhIWedNLJgAmR5ToWgy8jkdq%2fitems%2f01374WNPBUU7YDXVYHL5ELAHYMLTHMYRR3%3fversion%3dPublished&access_token=at5&width=176&height=176",
+        "Small": "https://westeurope1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=xlsx&cs=fFNQTw&docid=https%3a%2f%2fmicrosofteur.sharepoint.com%3a443%2f_api%2fv2.0%2fdrives%2fb!u8N2qh_YIEeW5D20B2Nozktfs5ISI0xAioue535ZuhIWedNLJgAmR5ToWgy8jkdq%2fitems%2f01374WNPBUU7YDXVYHL5ELAHYMLTHMYRR3%3fversion%3dPublished&access_token=at6&width=96&height=96"
+      },
+      "{Link}": "https://microsofteur.sharepoint.com/teams/pfxtest/Shared%20Documents/Document2.xlsx?d=w3bf0a73407d7485fb01f0c5ccecc463b",
+      "{Name}": "Document2",
+      "{FilenameWithExtension}": "Document2.xlsx",
+      "{Path}": "Shared Documents/",
+      "{FullPath}": "Shared Documents/Document2.xlsx",
+      "{IsCheckedOut}": false,
+      "{VersionNumber}": "2.0"
+    },
+    {
+      "@odata.etag": "\"5\"",
+      "ItemInternalId": "3",
+      "ID": 3,
+      "Title": "PowerPoint Presentation",
+      "Modified": "2024-04-04T14:26:28Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|lq@contoso.com",
+        "DisplayName": "Louis XIV",
+        "Email": "lq@contoso.com",
+        "Picture": "https://microsofteur.sharepoint.com/teams/pfxtest/_layouts/15/UserPhoto.aspx?Size=L&AccountName=lq@contoso.com",
+        "Department": "Versailles",
+        "JobTitle": "King"
+      },
+      "Editor#Claims": "i:0#.f|membership|lq@contoso.com",
+      "Created": "2024-04-04T14:26:17Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|lq@contoso.com",
+        "DisplayName": "Louis XIV",
+        "Email": "lq@contoso.com",
+        "Picture": "https://microsofteur.sharepoint.com/teams/pfxtest/_layouts/15/UserPhoto.aspx?Size=L&AccountName=lq@contoso.com",
+        "Department": "Versailles",
+        "JobTitle": "King"
+      },
+      "Author#Claims": "i:0#.f|membership|lq@contoso.com",
+      "OData__DisplayName": "General",
+      "{Identifier}": "Shared%2bDocuments%252fDocument3.pptx",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": "https://westeurope1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=pptx&cs=fFNQTw&docid=https%3a%2f%2fmicrosofteur.sharepoint.com%3a443%2f_api%2fv2.0%2fdrives%2fb!u8N2qh_YIEeW5D20B2Nozktfs5ISI0xAioue535ZuhIWedNLJgAmR5ToWgy8jkdq%2fitems%2f01374WNPDLDMYSILCD6NHIQMKJICMKIDBE%3fversion%3dPublished&access_token=at7&width=800&height=800",
+        "Medium": "https://westeurope1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=pptx&cs=fFNQTw&docid=https%3a%2f%2fmicrosofteur.sharepoint.com%3a443%2f_api%2fv2.0%2fdrives%2fb!u8N2qh_YIEeW5D20B2Nozktfs5ISI0xAioue535ZuhIWedNLJgAmR5ToWgy8jkdq%2fitems%2f01374WNPDLDMYSILCD6NHIQMKJICMKIDBE%3fversion%3dPublished&access_token=at8&width=176&height=176",
+        "Small": "https://westeurope1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=pptx&cs=fFNQTw&docid=https%3a%2f%2fmicrosofteur.sharepoint.com%3a443%2f_api%2fv2.0%2fdrives%2fb!u8N2qh_YIEeW5D20B2Nozktfs5ISI0xAioue535ZuhIWedNLJgAmR5ToWgy8jkdq%2fitems%2f01374WNPDLDMYSILCD6NHIQMKJICMKIDBE%3fversion%3dPublished&access_token=at9&width=96&height=96"
+      },
+      "{Link}": "https://microsofteur.sharepoint.com/teams/pfxtest/Shared%20Documents/Document3.pptx?d=w24311b6b432c4ef38831494098a40c24",
+      "{Name}": "Document3",
+      "{FilenameWithExtension}": "Document3.pptx",
+      "{Path}": "Shared Documents/",
+      "{FullPath}": "Shared Documents/Document3.pptx",
+      "{IsCheckedOut}": false,
+      "{VersionNumber}": "2.0"
+    }
+  ]
+}

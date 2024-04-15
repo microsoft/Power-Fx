@@ -59,5 +59,18 @@ namespace Microsoft.PowerFx.Core
 
             return false;
         }
+
+        /// <summary>
+        /// Create a new display name provider with the given logical to display pairs.
+        /// </summary>
+        public static DisplayNameProvider New(IEnumerable<KeyValuePair<DName, DName>> logicalToDisplayPairs)
+        {
+            if (logicalToDisplayPairs == null) 
+            { 
+                throw new ArgumentNullException(nameof(logicalToDisplayPairs)); 
+            }
+
+            return new SingleSourceDisplayNameProvider(logicalToDisplayPairs);
+        }
     }
 }

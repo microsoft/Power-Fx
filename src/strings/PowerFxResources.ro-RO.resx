@@ -1962,6 +1962,14 @@
     <value>Nu se poate utiliza o valoare non-înregistrare în acest context.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Nu se poate utiliza o valoare non-înregistrare în acest context: „{0}”.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Doar valorile de înregistrare sau de tabel pot fi utilizate în acest context.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Nu se poate utiliza această înregistrare. Poate conține câmpuri conflictuale, cu tipuri incompatibile.</value>
     
@@ -2835,15 +2843,16 @@
     <value>Codul de limbă al textului furnizat.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Creează un tabel din înregistrările specificate, având numărul de coloane egal cu numărul de câmpuri unice din înregistrare. De exemplu: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Creează un tabel din înregistrările și tabelele specificate, având numărul de coloane egal cu numărul de câmpuri unice din înregistrare. De exemplu: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>înregistrare</value>
+    <value>înregistrare_sau_tabel</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>O înregistrare care va deveni un rând în tabelul rezultat.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>O înregistrare sau tabel care va face parte din tabelul rezultat.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Returnează un tabel cu toate coloanele eliminate din tabelul „sursă”, cu excepția coloanelor specificate.</value>
@@ -3065,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>sursă_date</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3081,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>sursă_date</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>sursă_date</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3096,16 +3105,55 @@
     <value>Aplică actualizările la rândul specificat și modifică rândul în sursa de date specificată. Returnează rândul actualizat.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Preia o singură înregistrare cu chei primare și valori actualizate și actualizează rândul corespunzător din sursa de date specificată. Returnează rândul actualizat.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Preia un tabel de rânduri și aplică actualizările specificate într-un tabel de actualizări într-o modalitate unu-la-unu. Returnează un tabel de rânduri actualizate.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Preia un tabel de rânduri cu chei primare și câmpuri actualizate și aplică aceste actualizări la sursa de date. Returnează un tabel de rânduri actualizate.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Returnează rândul cu actualizări aplicate.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Sursa de date care urmează să fie corectată.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Înregistrarea care trebuie corectată.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Actualizarea care trebuie aplicată la înregistrarea dată.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Tabelul de rânduri de remediat.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Tabelul de actualizări care trebuie remediat la rândurile date.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>înregistrare</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>actualizare</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>rânduri</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>actualizări</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3113,7 +3161,7 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>sursă_date</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
@@ -3940,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Un URL de codificat.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Convertește un text normal la un text codificat HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>valoare</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Un text de codificat.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}” este o funcție recunoscută, dar nu este acceptată.</value>
     
@@ -4183,7 +4242,7 @@
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>opțiuni_urmărire</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
@@ -4208,6 +4267,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Valorile JSONFormat „{0}” și „{1}” nu pot fi utilizate împreună.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Valoarea „{0}” nu este acceptată ca opțiune în funcția JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
@@ -4306,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operator Partial necunoscut.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Avertisment de delegare. Rezultatul argumentului „{0}” este posibil să se fi trunchiat datorită seturilor mari de date înainte de a fi transmis funcției „{1}”.</value>
     
   </data>
 </root>

@@ -659,6 +659,7 @@ namespace Microsoft.PowerFx.Core.IR
 
                     case BindKind.OptionSet:
                     case BindKind.PowerFxResolvedObject:
+                    case BindKind.Data:
                         {
                             result = new ResolvedObjectNode(context.GetIRContext(node), info.Data);
                             break;

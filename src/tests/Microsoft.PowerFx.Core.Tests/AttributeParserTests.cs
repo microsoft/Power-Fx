@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("And", "And")]
         [InlineData("Or", "Or")]
         [InlineData("Record", "MergeRecords")]
-        [InlineData("Table", "TableConcatenate")]
+        [InlineData("Table", "Table")]
         public void TestNFAttributeOperationsCombined(string op, string combinedFunctionName)
         {
             UserDefinitions.ProcessUserDefinitions(
